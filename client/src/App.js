@@ -214,7 +214,14 @@ export default function App(props) {
               <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
                 <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
                 <h5>
-                  &lt;screen&gt;&lt;always-on-top&gt;true&lt;/always-on-top&gt;&lt;/screen&gt;
+                &lt;screen&gt;
+                &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+                &lt;x&gt;0&lt;/x&gt;
+                &lt;y&gt;680&lt;/y&gt;
+                &lt;width&gt;680&lt;/width&gt;
+                &lt;height&gt;680&lt;/height&gt;
+
+                &lt;/screen&gt;
                 </h5>
               </div>
 
@@ -281,11 +288,7 @@ export default function App(props) {
 
 
             Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} option value={val}>{val}</option> })} </select>
-            <button className='stopButton' onClick={() => {
-              endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`);
-              endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`);
-
-            }}>Set</button>
+            <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
 
             <div style={{ border: '4px solid yellow' }}>
               <DrawingController />
@@ -397,7 +400,17 @@ export default function App(props) {
             <h2>Help</h2>
             <ol>
               <li>It works only with server 2.3</li>
-              <li> Put as below in casparcg.config file and drag screen consumer below Designer window  &lt;screen&gt;&lt;always-on-top&gt;true&lt;/always-on-top&gt;&lt;/screen&gt;</li>
+              <li> Put as below in casparcg.config file and drag screen consumer below Designer window  
+                &lt;screen&gt;
+                &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+                &lt;x&gt;0&lt;/x&gt;
+                &lt;y&gt;680&lt;/y&gt;
+                &lt;width&gt;680&lt;/width&gt;
+                &lt;height&gt;680&lt;/height&gt;
+
+                &lt;/screen&gt;
+                </li>
+         
               <li>Select same mode and tab menu </li>
               <li>By defalut Drawing mode will open</li>
               <li>In drawing mode first we need to click initialise drawing button</li>

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock, VscMove } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { stringify } from 'uuid';
 
 fabric.Object.prototype.noScaleCache = false;
 
@@ -57,9 +59,6 @@ export const addClock = canvas => {
     }, 1000);
 }
 // window.addClock = addClock;
-var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-
-window.clock1 = new fabric.Textbox(ss1, {})
 window.addClock = canvas => {
 
     const sss = new fabric.Textbox('', {
@@ -80,16 +79,17 @@ window.addClock = canvas => {
     setInterval(() => {
         animate(canvas, sss)
     }, 1000);
+
+    sss.animate('top', 350, { onChange: canvas.renderAll.bind(canvas) })
 }
 
-const animate = (canvas, sss) => {
+function animate(canvas, sss) {
     var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     sss.set({
         text: ss1,
     })
     canvas.requestRenderAll();
 }
-window.animate = animate;
 export const createText = (canvas) => {
     canvas.isDrawingMode = false;
     const text = new fabric.Textbox("Vimlesh Kumar From Doordarshan", {
@@ -331,18 +331,36 @@ export function paste() {
         window.editor.canvas.requestRenderAll();
     });
 }
-var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
 const DrawingController = () => {
     const [fontList, setFontList] = useState([])
     const [canvaslist, setCanvaslist] = useState([])
     const [currentPage, setCurentPage] = useState()
 
+    const onDragEnd = (result) => {
+        const aa = [...canvaslist]
+        if (result.destination != null) {
+            aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
+            setCanvaslist(aa)
+            if (currentPage === result.source?.index) {
+                setCurentPage(result.destination?.index)
+            }
+            else if ((currentPage >= result.destination?.index) && (currentPage < result.source?.index)) {
+                setCurentPage(currentPage => currentPage + 1)
+            }
+            else if ((currentPage <= result.destination?.index) && (currentPage > result.source?.index)) {
+                setCurentPage(currentPage => currentPage - 1)
+            }
+        }
+    }
+
     const drawingFileSave = () => {
         const element = document.createElement("a");
         var aa = ''
         canvaslist.forEach(val => {
-            aa += val + '\r\n'
+            // aa += val + '\r\n'
+            aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -363,9 +381,14 @@ const DrawingController = () => {
         const content = fileReader.result;
         var aa = content.split('\r\n')
         aa.splice(-1)
-        setCanvaslist([...aa])
-
+        var bb = []
+        aa.forEach(element => {
+            var cc = JSON.parse(element)
+            bb.push(cc)
+        });
+        setCanvaslist([...bb])
     };
+
     const handleFileChosen = (file) => {
         if (file) {
             fileReader = new FileReader();
@@ -396,10 +419,17 @@ const DrawingController = () => {
     }
     const updatePage = (canvas) => {
         const updatedCanvasList = canvaslist.map((val, i) => {
-            return (i === currentPage) ? canvas.toJSON() : val;
+            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON() } : val;
         });
         setCanvaslist([...updatedCanvasList])
     }
+    const updatePageName = e => {
+        const updatedCanvasList = canvaslist.map((val, i) => {
+            return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.innerText, 'pageValue': val.pageValue } : val;
+        });
+        setCanvaslist([...updatedCanvasList])
+    }
+
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {
             setCurentPage(currentPage => currentPage - 1)
@@ -421,6 +451,8 @@ const DrawingController = () => {
             }
         });
     };
+
+
 
     useEffect(() => {
 
@@ -445,6 +477,11 @@ const DrawingController = () => {
         }
     }, [])
 
+    // const onpageNameChange = (e, val) => {
+    //     alert(e.target.value)
+    //     setCanvaslist([...canvaslist, { 'pageName': e.target.value, 'pageValue': val.pageValue }])
+    // }
+
     return (<>
         <div>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
@@ -457,17 +494,10 @@ const DrawingController = () => {
                 <button onClick={() => addClock(window.editor.canvas)}>addClock</button>
                 <button onClick={() => {
                     endpoint(`play 1-120 [html] http://localhost:3000/drawing`);
-                    // endpoint(`call 1-120 addClock(editor.canvas)`);
-                    endpoint(`call 1-120 editor.canvas.add(clock1);clock1.set({'textAlign':'center','backgroundColor':'${options.backgroundColor}','height':'${window.editor.canvas.getActiveObject().height}','width':'${window.editor.canvas.getActiveObject().width}','scaleX':${window.editor.canvas.getActiveObject().scaleX},'scaleY':${window.editor.canvas.getActiveObject().scaleY},'fontWeight':'${window.editor.canvas.getActiveObject().fontWeight}','fontSize':${window.editor.canvas.getActiveObject().fontSize},'left':${window.editor.canvas.getActiveObject().left},'fontFamily':'${window.editor.canvas.getActiveObject().fontFamily}','top':${window.editor.canvas.getActiveObject().top},'fill':'${options.currentColor}'});setInterval(()=>{animate(editor.canvas,clock1)},1000);`);
+                    endpoint(`call 1-120 addClock(editor.canvas)`);
+
+
                 }}>Add Clock to Casparcg</button>
-
-
-
-
-
-
-
-
                 <button onClick={() => endpoint(`stop 1-120`)}>Remove Clock from Casparcg</button>
 
 
@@ -508,7 +538,7 @@ const DrawingController = () => {
                 <div>
 
                 </div>
-                <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
+                <div>
                     <button onClick={() => drawingFileNew(window.editor.canvas)}>File New</button>
                     <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save</button>
 
@@ -519,19 +549,57 @@ const DrawingController = () => {
                         accept='.txt'
                         onChange={e => handleFileChosen(e.target.files[0])}
                     />
-                    <button onClick={() => setCanvaslist([...canvaslist, `${JSON.stringify((window.editor?.canvas.toJSON()))}`])}>Save in New Page</button>
-                    <button onClick={() => updatePage(window.editor.canvas)}>Update Page</button>
-                    <table border='1'>
-                        <tbody>
-                            {canvaslist.map((val, i) => {
-                                return (<>
-                                    <tr key={i}><td style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                        recallPage(val, window.editor.canvas, i);
-                                    }}>Page {i}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td></tr>
-                                </>)
-                            })}
-                        </tbody>
-                    </table>
+                    <button onClick={() => {
+                        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+                        var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
+                        if (retVal !== null) {
+                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON()))}` }]);
+                        }
+                    }}
+
+                    >Save in New Page</button>
+                    <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+                    <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
+
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="droppable-1" type="PERSON">
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                        {...provided.droppableProps}
+                                    >
+                                        <table border='1'>
+                                            <tbody>
+                                                {canvaslist.map((val, i) => {
+                                                    return (<>
+                                                        <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
+                                                            {(provided, snapshot) => (
+                                                                <tr ref={provided.innerRef}
+                                                                    {...provided.draggableProps}
+                                                                    style={{
+                                                                        ...provided.draggableProps.style,
+                                                                        backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                                        boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                                        // margin: '10px'
+                                                                    }}
+                                                                >
+                                                                    <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                        recallPage(val.pageValue, window.editor.canvas, i);
+                                                                    }} key1={i} key2={'vimlesh'} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
+                                                                </tr>
+                                                            )}
+                                                        </Draggable>
+                                                    </>)
+                                                })}
+                                            </tbody>
+                                        </table>
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                    </div>
                 </div>
             </div>
 
