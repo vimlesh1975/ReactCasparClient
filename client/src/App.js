@@ -281,7 +281,11 @@ export default function App(props) {
 
 
             Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} option value={val}>{val}</option> })} </select>
-            <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
+            <button className='stopButton' onClick={() => {
+              endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`);
+              endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`);
+
+            }}>Set</button>
 
             <div style={{ border: '4px solid yellow' }}>
               <DrawingController />

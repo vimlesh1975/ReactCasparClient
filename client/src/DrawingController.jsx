@@ -57,6 +57,9 @@ export const addClock = canvas => {
     }, 1000);
 }
 // window.addClock = addClock;
+var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+
+window.clock1 = new fabric.Textbox(ss1, {})
 window.addClock = canvas => {
 
     const sss = new fabric.Textbox('', {
@@ -79,13 +82,14 @@ window.addClock = canvas => {
     }, 1000);
 }
 
-function animate(canvas, sss) {
+const animate = (canvas, sss) => {
     var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     sss.set({
         text: ss1,
     })
     canvas.requestRenderAll();
 }
+window.animate = animate;
 export const createText = (canvas) => {
     canvas.isDrawingMode = false;
     const text = new fabric.Textbox("Vimlesh Kumar From Doordarshan", {
@@ -327,6 +331,7 @@ export function paste() {
         window.editor.canvas.requestRenderAll();
     });
 }
+var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
 const DrawingController = () => {
     const [fontList, setFontList] = useState([])
@@ -452,10 +457,17 @@ const DrawingController = () => {
                 <button onClick={() => addClock(window.editor.canvas)}>addClock</button>
                 <button onClick={() => {
                     endpoint(`play 1-120 [html] http://localhost:3000/drawing`);
-                    endpoint(`call 1-120 addClock(editor.canvas)`);
-
-
+                    // endpoint(`call 1-120 addClock(editor.canvas)`);
+                    endpoint(`call 1-120 editor.canvas.add(clock1);clock1.set({'textAlign':'center','backgroundColor':'${options.backgroundColor}','height':'${window.editor.canvas.getActiveObject().height}','width':'${window.editor.canvas.getActiveObject().width}','scaleX':${window.editor.canvas.getActiveObject().scaleX},'scaleY':${window.editor.canvas.getActiveObject().scaleY},'fontWeight':'${window.editor.canvas.getActiveObject().fontWeight}','fontSize':${window.editor.canvas.getActiveObject().fontSize},'left':${window.editor.canvas.getActiveObject().left},'fontFamily':'${window.editor.canvas.getActiveObject().fontFamily}','top':${window.editor.canvas.getActiveObject().top},'fill':'${options.currentColor}'});setInterval(()=>{animate(editor.canvas,clock1)},1000);`);
                 }}>Add Clock to Casparcg</button>
+
+
+
+
+
+
+
+
                 <button onClick={() => endpoint(`stop 1-120`)}>Remove Clock from Casparcg</button>
 
 
