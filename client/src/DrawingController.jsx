@@ -11,6 +11,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 fabric.Object.prototype.noScaleCache = false;
 
+
 const options = {
     currentMode: "",
     currentColor: "#ff0000",
