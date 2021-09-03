@@ -21,7 +21,7 @@ import OnelinerTable from './OnelinerTable'
 import TextEditor from './TextEditor'
 
 import DrawingController, { addImage } from './DrawingController';
-const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
+
 
 export default function App(props) {
 
@@ -43,7 +43,6 @@ export default function App(props) {
   const [remainingTime, setRemainingTime] = useState()
   const [filename, setfilename] = useState('amb')
   const [imageName, setImageName] = useState('img/pine-wood-500x500.jpg')
-  const [currentscreenSize, setCurrentscreenSize] = useState(1024)
 
   useEffect(() => {
     window.imageName = imageName
@@ -279,17 +278,7 @@ export default function App(props) {
           </TabList>
           <TabPanel>
             <h2>Drawing</h2>
-            <button
-              onClick={() => {
-                endpoint(`play 1-109 [html] http://localhost:3000/drawing`)
-              }}
-            >Initialise Drawing</button>
-            <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
-
-
-            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} option value={val}>{val}</option> })} </select>
-            <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
-
+        
             <div style={{ border: '4px solid yellow' }}>
               <DrawingController />
             </div>

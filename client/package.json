@@ -9,7 +9,7 @@
     "axios": "^0.21.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
-    "fabric": "^4.5.1",
+    "fabric": "^4.6.0",
     "fabric-history": "^1.6.0",
     "fabricjs-react": "^1.0.8",
     "gsap": "^3.7.1",
