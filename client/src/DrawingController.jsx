@@ -317,24 +317,24 @@ const onSizeChange = (e) => {
 
 export const groupObjects = (canvas, shouldGroup) => {
     if (shouldGroup) {
-        const objects = canvas.getActiveObjects();
-        deleteSelectedItem(canvas);
-        const group = new fabric.Group(objects, { left: 100, top: 100 });
-        canvas.add(group);
+        if (!canvas.getActiveObject()) {
+            return;
+        }
+        if (canvas.getActiveObject().type !== 'activeSelection') {
+            return;
+        }
+        canvas.getActiveObject().toGroup();
         canvas.requestRenderAll();
     }
     else {
-        var activeObject = canvas.getActiveObject();
-        if (activeObject?.type === "group") {
-            var items = activeObject._objects;
-            activeObject._restoreObjectsState();
-            canvas.remove(activeObject);
-            for (var i = 0; i < items.length; i++) {
-                canvas.add(items[i]);
-                canvas.item(canvas.size() - 1).hasControls = true;
-            }
-            canvas.renderAll();
+        if (!canvas.getActiveObject()) {
+            return;
         }
+        if (canvas.getActiveObject().type !== 'group') {
+            return;
+        }
+        canvas.getActiveObject().toActiveSelection();
+        canvas.requestRenderAll();
     }
 };
 
