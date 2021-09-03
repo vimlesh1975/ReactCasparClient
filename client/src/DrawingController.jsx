@@ -137,7 +137,7 @@ export const createText = (canvas) => {
         padding: 5,
 
     });
-    canvas.add(text).setActiveObject(text);;
+    canvas.add(text).setActiveObject(text);
     canvas.renderAll();
     text.animate('top', 350, { onChange: canvas.renderAll.bind(canvas) })
 };
@@ -317,18 +317,23 @@ const onSizeChange = (e) => {
 
 export const groupObjects = (canvas, shouldGroup) => {
     if (shouldGroup) {
-        const objects = canvas.getObjects();
-        options.group.value = new fabric.Group(objects);
-        canvas.clear()
-        canvas.add(options.group.value);
-    } else {
-        if (options.group.value) {
-            options.group.value.destroy();
-            const oldGroup = options.group.value.getObjects();
-            canvas.remove(options.group.value);
-            canvas.add(...oldGroup);
-            options.group.value = null;
-            canvas.requestRenderAll();
+        const objects = canvas.getActiveObjects();
+        deleteSelectedItem(canvas);
+        const group = new fabric.Group(objects, { left: 100, top: 100 });
+        canvas.add(group);
+        canvas.requestRenderAll();
+    }
+    else {
+        var activeObject = canvas.getActiveObject();
+        if (activeObject?.type === "group") {
+            var items = activeObject._objects;
+            activeObject._restoreObjectsState();
+            canvas.remove(activeObject);
+            for (var i = 0; i < items.length; i++) {
+                canvas.add(items[i]);
+                canvas.item(canvas.size() - 1).hasControls = true;
+            }
+            canvas.renderAll();
         }
     }
 };

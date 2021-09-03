@@ -34,8 +34,8 @@ const ContextMenu = ({ editor }) => {
         <li onClick={() => sendToBack(editor.canvas)}>Send To Back</li>
         <li onClick={() => lock(editor.canvas)}>Lock <VscLock /></li>
         <li onClick={() => unlockAll(editor.canvas)}>Unlock All <VscUnlock /></li>
-        <li onClick={() => groupObjects(editor.canvas, true)}>Group All</li>
-        <li onClick={() => groupObjects(editor.canvas, false)}>Un Group All</li>
+        <li onClick={() => groupObjects(editor.canvas, true)}>Group Selected</li>
+        <li onClick={() => groupObjects(editor.canvas, false)}>UnGroup Selected</li>
         <li>Add<ul >
           <li onClick={() => createText(editor.canvas)}>Text T</li>
           <li onClick={() => createRect(editor.canvas)}>Rectangle <VscPrimitiveSquare /></li>
