@@ -1,6 +1,6 @@
 import useContextMenu from './useContextMenu'
 import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, savetoCasparcgStore, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock, VscMove } from "react-icons/vsc";
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
 
@@ -10,7 +10,7 @@ const ContextMenu = ({ editor }) => {
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
         <li onClick={() => savetoCasparcgStore(editor.canvas)}>Show to Casparcg</li>
-        <li onClick={() => deleteSelectedItem(editor.canvas)}>Delete Seleted
+        <li onClick={() => deleteSelectedItem(editor.canvas)}>Delete Selected <VscTrash />
           <ul>
             <li onClick={() => deleteAll(editor.canvas)}>Delete All</li>
           </ul>
@@ -32,8 +32,8 @@ const ContextMenu = ({ editor }) => {
         </li>
         <li onClick={() => bringToFront(editor.canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(editor.canvas)}>Send To Back</li>
-        <li onClick={() => lock(editor.canvas)}>Lock</li>
-        <li onClick={() => unlockAll(editor.canvas)}>Unlock All</li>
+        <li onClick={() => lock(editor.canvas)}>Lock <VscLock /></li>
+        <li onClick={() => unlockAll(editor.canvas)}>Unlock All <VscUnlock /></li>
         <li onClick={() => groupObjects(editor.canvas, true)}>Group All</li>
         <li onClick={() => groupObjects(editor.canvas, false)}>Un Group All</li>
         <li>Add<ul >
@@ -61,7 +61,7 @@ const ContextMenu = ({ editor }) => {
         <li onClick={() => undo(editor.canvas)}>Undo <AiOutlineUndo /></li>
         <li onClick={() => copy()}>Copy</li>
         <li onClick={() => paste()}>Paste</li>
-        <li onClick={() => toggleMode("drawing", editor.canvas)}>Toggle Drawing Mode</li>
+        <li onClick={() => toggleMode("drawing", editor.canvas)}>Toggle Draw Mode <VscEdit /></li>
       </ul>
     </div>) : ''}
   </>);

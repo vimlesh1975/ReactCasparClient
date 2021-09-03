@@ -11,25 +11,56 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 fabric.Object.prototype.noScaleCache = false;
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
-fabric.TextboxWithPadding = fabric.util.createClass(fabric.Textbox, {
-    _renderBackground: function (ctx) {
-        if (!this.backgroundColor) {
-            return;
-        }
-        var dim = this._getNonTransformedDimensions();
-        ctx.fillStyle = this.backgroundColor;
+const STEP = 5;
 
-        ctx.fillRect(
-            -dim.x / 2 - this.padding,
-            -dim.y / 2 - this.padding,
-            dim.x + this.padding * 2,
-            dim.y + this.padding * 2
-        );
-        // if there is background color no other shadows
-        // should be casted
-        this._removeShadow(ctx);
+var Direction = {
+    LEFT: 0,
+    UP: 1,
+    RIGHT: 2,
+    DOWN: 3
+};
+
+
+fabric.util.addListener(document.body, 'keydown', function (options) {
+    // if (options.repeat) {
+    //     return;
+    // }
+    var key = options.which || options.keyCode; // key detection
+    if (key === 37) { // handle Left key
+        moveSelected(Direction.LEFT);
+    } else if (key === 38) { // handle Up key
+        moveSelected(Direction.UP);
+    } else if (key === 39) { // handle Right key
+        moveSelected(Direction.RIGHT);
+    } else if (key === 40) { // handle Down key
+        moveSelected(Direction.DOWN);
     }
 });
+function moveSelected(direction) {
+    var activeObject = window.editor.canvas.getActiveObject();
+    if (activeObject) {
+        switch (direction) {
+            case Direction.LEFT:
+                activeObject.set({ left: activeObject.left - STEP });
+                break;
+            case Direction.UP:
+                activeObject.set({ top: activeObject.top - STEP });
+                break;
+            case Direction.RIGHT:
+                activeObject.set({ left: activeObject.left + STEP });
+                break;
+            case Direction.DOWN:
+                activeObject.set({ top: activeObject.top + STEP });
+                break;
+        }
+        activeObject.setCoords();
+        window.editor.canvas.renderAll();
+        console.log('selected objects was moved');
+    }
+    else {
+        console.log('no object selected');
+    }
+}
 
 const options = {
     currentMode: "",
@@ -91,7 +122,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.TextboxWithPadding("दूरदर्शन से विमलेश कुमार", {
+    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार", {
         left: 60,
         top: 0,
         width: 285,
@@ -478,15 +509,6 @@ const DrawingController = () => {
         });
         setCanvaslist([...updatedCanvasList])
     }
-
-    const clearCanvas = canvas => {
-        canvas.getObjects().forEach(item => {
-            if (item !== canvas.backgroundImage) {
-                canvas.remove(item);
-            }
-        });
-    };
-
     useEffect(() => {
 
         axios.post('http://localhost:8080/getfonts').then((aa) => {
@@ -495,19 +517,18 @@ const DrawingController = () => {
         return () => {
         }
     }, [])
-
     useEffect(() => {
         window.addEventListener('keydown', e => {
             // console.log(e.keyCode);
-            if (e.keyCode === 46) {
+            if (e.key === 'Delete') {
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     window.editor.canvas.remove(item);
                 });
             }
-            if (e.ctrlKey && e.keyCode === 67) {
+            if (e.ctrlKey && e.key === 'c') {
                 copy();
             }
-            if (e.ctrlKey && e.keyCode === 86) {
+            if (e.ctrlKey && e.key === 'v') {
                 paste();
             }
 

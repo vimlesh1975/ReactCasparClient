@@ -16,6 +16,8 @@ const Drawing = ({ canvasOutput }) => {
   window.ReadToCasparcgfromStore = () => canvasFromJson(editor.canvas)
   window.canvasFromJson = canvasFromJson
   window.editor = editor;
+
+
   return (<>
     <FabricJSCanvas className={canvasOutput ? 'canvasOutput' : 'canvas'} onReady={onReady} />
     <ContextMenu editor={editor} />
