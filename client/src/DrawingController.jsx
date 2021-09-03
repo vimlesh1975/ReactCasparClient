@@ -325,6 +325,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         }
         canvas.getActiveObject().toGroup();
         canvas.requestRenderAll();
+
     }
     else {
         if (!canvas.getActiveObject()) {
