@@ -90,11 +90,15 @@ export default function App(props) {
   }
   const connectbutton = useRef();
 
-  useEffect(() => {
-
+  const refreshMedia = () => {
     axios.post('http://localhost:8080/getmedia').then((aa) => {
       setMedia(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
+  }
+
+  useEffect(() => {
+
+
     return () => {
     }
   }, [])
@@ -218,7 +222,7 @@ export default function App(props) {
                   &lt;x&gt;0&lt;/x&gt;
                   &lt;y&gt;680&lt;/y&gt;
                   &lt;width&gt;680&lt;/width&gt;
-                  &lt;height&gt;680&lt;/height&gt;
+                  &lt;height&gt;325&lt;/height&gt;
 
                   &lt;/screen&gt;
                 </h5>
@@ -295,8 +299,9 @@ export default function App(props) {
                 </table>
               </div>
               <div style={{ border: '4px solid green' }}>
+                <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
                 Selected Image  <button onClick={addImage}>Add This Image</button><br />
-                <img src={imageName} alt='' width="160" height="90"></img>
+                <img src={imageName} alt='' width="300" height="150"></img>
               </div>
             </div>
           </TabPanel>
@@ -355,13 +360,14 @@ export default function App(props) {
             </div>
           </TabPanel >
           <TabPanel>
-            <h2>Video</h2>{media.length} files
+            <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
               <button className='palyButton' onClick={() => endpoint(`play 1-1 "${filename}" loop`)}>Play Video</button>
               <button className='stopButton' onClick={() => endpoint(`pause 1-1`)}>Pause</button>
               <button className='stopButton' onClick={() => endpoint(`resume 1-1`)}>Resume</button>
               <button className='stopButton' onClick={() => endpoint(`stop 1-1`)}>Stop</button>
             </div>
+            <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
             <div style={{ maxHeight: '300px', maxWidth: '400px', overflow: 'scroll' }}>
               <table border='1' >
                 <tbody>

@@ -45,13 +45,14 @@ var logPath;
 
 const PATH = require('path');
 const dirTree = require("directory-tree");
-const media = [];
-aa.onConnected = () => {
+var media = [];
+
+const refreshMedia = () => {
     aa.getCasparCGPaths().then((aa1) => {
         mediaPath = aa1.absoluteMedia;
         templatePath = aa1.absoluteTemplate;
         logPath = aa1.absoluteLog;
-
+        media = []
         var tree = dirTree(mediaPath, {}, (item, PATH, stats) => {
             // console.log(item.path, item.name)
             // console.log(item)
@@ -61,7 +62,9 @@ aa.onConnected = () => {
         console.log(media.length)
 
     }).catch((aa2) => console.log(aa2));
-
+}
+aa.onConnected = () => {
+    refreshMedia()
     aa.getCasparCGVersion().then((aa1) => {
         console.log('version', aa1)
 
@@ -86,8 +89,12 @@ app.post('/getfonts', (req, res) => {
 
 
 app.post('/getmedia', (req, res) => {
-    res.send(media)
-    res.end()
+    refreshMedia()
+    setTimeout(() => {
+        res.send(media)
+        res.end()
+    }, 2000);
+
 })
 
 

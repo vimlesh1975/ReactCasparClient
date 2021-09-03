@@ -344,7 +344,7 @@ export const savetoCasparcgStore = () => {
 
     setTimeout(() => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
-    }, 300);
+    }, 680);
 
     setTimeout(() => {
         endpoint(`mixer 1-109 fill 0 0 1 1 25 easeinsine`)
@@ -520,6 +520,9 @@ const DrawingController = () => {
     useEffect(() => {
         window.addEventListener('keydown', e => {
             // console.log(e.keyCode);
+            if (e.repeat) {
+                return;
+            }
             if (e.key === 'Delete') {
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     window.editor.canvas.remove(item);
