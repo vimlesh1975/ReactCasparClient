@@ -1,24 +1,32 @@
 import useContextMenu from './useContextMenu'
-import { createText, createRect, createCircle, createTriangle, deleteItem, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, savetoCasparcgStore, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
+import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, savetoCasparcgStore, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock, VscMove } from "react-icons/vsc";
+import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+
+
 const ContextMenu = ({ editor }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
   return (<>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
         <li onClick={() => savetoCasparcgStore(editor.canvas)}>Show to Casparcg</li>
-        <li onClick={() => deleteItem(editor.canvas)}>Delete</li>
+        <li onClick={() => deleteSelectedItem(editor.canvas)}>Delete Seleted
+          <ul>
+            <li onClick={() => deleteAll(editor.canvas)}>Delete All</li>
+          </ul>
+        </li>
         <li>setOpacity
           <ul>
-            <li onClick={() => setOpacity(editor.canvas,0.1)}>0.1</li>
-            <li onClick={() => setOpacity(editor.canvas,0.2)}>0.2</li>
-            <li onClick={() => setOpacity(editor.canvas,0.3)}>0.3</li>
-            <li onClick={() => setOpacity(editor.canvas,0.4)}>0.4</li>
-            <li onClick={() => setOpacity(editor.canvas,0.5)}>0.5</li>
-            <li onClick={() => setOpacity(editor.canvas,0.6)}>0.6</li>
-            <li onClick={() => setOpacity(editor.canvas,0.7)}>0.7</li>
-            <li onClick={() => setOpacity(editor.canvas,0.8)}>0.8</li>
-            <li onClick={() => setOpacity(editor.canvas,0.9)}>0.9</li>
-            <li onClick={() => setOpacity(editor.canvas,1.0)}>1.0</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.1)}>0.1</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.2)}>0.2</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.3)}>0.3</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.4)}>0.4</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.5)}>0.5</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.6)}>0.6</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.7)}>0.7</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.8)}>0.8</li>
+            <li onClick={() => setOpacity(editor.canvas, 0.9)}>0.9</li>
+            <li onClick={() => setOpacity(editor.canvas, 1.0)}>1.0</li>
 
           </ul>
         </li>
@@ -29,10 +37,10 @@ const ContextMenu = ({ editor }) => {
         <li onClick={() => groupObjects(editor.canvas, true)}>Group All</li>
         <li onClick={() => groupObjects(editor.canvas, false)}>Un Group All</li>
         <li>Add<ul >
-          <li onClick={() => createText(editor.canvas)}>Text</li>
-          <li onClick={() => createRect(editor.canvas)}>Rectangle</li>
-          <li onClick={() => createCircle(editor.canvas)}>Circle</li>
-          <li onClick={() => createTriangle(editor.canvas)}>Triangle</li>
+          <li onClick={() => createText(editor.canvas)}>Text T</li>
+          <li onClick={() => createRect(editor.canvas)}>Rectangle <VscPrimitiveSquare /></li>
+          <li onClick={() => createCircle(editor.canvas)}>Circle <VscCircleFilled /></li>
+          <li onClick={() => createTriangle(editor.canvas)}>Triangle <VscTriangleUp /></li>
           <li onClick={() => addImage()}>Image</li>
         </ul></li>
         <li>Text Align<ul >
@@ -49,8 +57,8 @@ const ContextMenu = ({ editor }) => {
           <li onClick={() => removeBg(editor.canvas)}>Remove BG</li>
           <li onClick={() => setGradientColor(editor.canvas)}>setGradientColor</li>
         </ul></li>
-        <li onClick={() => redo(editor.canvas)}>Redo</li>
-        <li onClick={() => undo(editor.canvas)}>Undo</li>
+        <li onClick={() => redo(editor.canvas)}>Redo <AiOutlineRedo /></li>
+        <li onClick={() => undo(editor.canvas)}>Undo <AiOutlineUndo /></li>
         <li onClick={() => copy()}>Copy</li>
         <li onClick={() => paste()}>Paste</li>
         <li onClick={() => toggleMode("drawing", editor.canvas)}>Toggle Drawing Mode</li>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock, VscMove } from "react-icons/vsc";
-import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { VscTrash, VscMove } from "react-icons/vsc";
 import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
@@ -12,6 +11,25 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 fabric.Object.prototype.noScaleCache = false;
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
+fabric.TextboxWithPadding = fabric.util.createClass(fabric.Textbox, {
+    _renderBackground: function (ctx) {
+        if (!this.backgroundColor) {
+            return;
+        }
+        var dim = this._getNonTransformedDimensions();
+        ctx.fillStyle = this.backgroundColor;
+
+        ctx.fillRect(
+            -dim.x / 2 - this.padding,
+            -dim.y / 2 - this.padding,
+            dim.x + this.padding * 2,
+            dim.y + this.padding * 2
+        );
+        // if there is background color no other shadows
+        // should be casted
+        this._removeShadow(ctx);
+    }
+});
 
 const options = {
     currentMode: "",
@@ -40,6 +58,7 @@ export var gradient = new fabric.Gradient({
 });
 
 export const addClock = canvas => {
+
     const sss = new fabric.Textbox('', {
         left: 10,
         top: 530,
@@ -62,30 +81,6 @@ export const addClock = canvas => {
         animate(canvas, sss)
     }, 1000);
 }
-// window.addClock = addClock;
-// window.addClock = canvas => {
-
-//     const sss = new fabric.Textbox('', {
-//         left: 10,
-//         top: 10,
-//         width: 100,
-//         fill: options.currentColor,
-//         backgroundColor: options.backgroundColor,
-//         fontFamily: options.currentFont,
-//         fontWeight: 'bold',
-//         fontSize: options.currentFontSize,
-//         editable: true,
-//         objectCaching: false,
-//         textAlign: 'center'
-//     });
-//     canvas.add(sss);
-//     canvas.requestRenderAll();
-//     setInterval(() => {
-//         animate(canvas, sss)
-//     }, 1000);
-
-//     sss.animate('top', 350, { onChange: canvas.renderAll.bind(canvas) })
-// }
 
 function animate(canvas, sss) {
     var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -95,11 +90,11 @@ function animate(canvas, sss) {
     canvas.requestRenderAll();
 }
 export const createText = (canvas) => {
-    canvas.isDrawingMode = false;
-    const text = new fabric.Textbox("Vimlesh Kumar From Doordarshan", {
+
+    const text = new fabric.TextboxWithPadding("दूरदर्शन से विमलेश कुमार", {
         left: 60,
         top: 0,
-        width: 300,
+        width: 285,
         fill: options.currentColor,
         backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -107,7 +102,8 @@ export const createText = (canvas) => {
         fontSize: options.currentFontSize,
         editable: true,
         objectCaching: false,
-        textAlign: 'left'
+        textAlign: 'left',
+        padding: 5,
 
     });
     canvas.add(text).setActiveObject(text);;
@@ -207,18 +203,23 @@ export const removeBg = canvas => { if (window.editor.canvas.getActiveObject()) 
 
 // export const deleteItem = canvas => canvas.remove(canvas.getActiveObject())
 
-export const deleteItem = canvas => {
+export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => { canvas.remove(element) });
 }
+export const deleteAll = canvas => {
+    const aa = canvas.getObjects()
+    aa.forEach(element => { canvas.remove(element) });
+}
+
 export const bringToFront = canvas => canvas.bringToFront(canvas.getActiveObject())
 export const sendToBack = canvas => canvas.sendToBack(canvas.getActiveObject())
 export const undo = canvas => canvas.undo()
 export const redo = canvas => canvas.redo()
 
-export const setOpacity=(canvas, val=0.5)=>{
+export const setOpacity = (canvas, val = 0.5) => {
     const aa = canvas.getActiveObjects()
-    aa.forEach(element => element.set({'opacity':val}));
+    aa.forEach(element => element.set({ 'opacity': val }));
 }
 
 export const lock = canvas => {
@@ -332,13 +333,13 @@ export const updatetoCasparcgStore = () => {
 }
 
 var _clipboard;
-export function copy() {
+export const copy = () => {
     window.editor.canvas.getActiveObject()?.clone(cloned => {
         _clipboard = cloned;
     });
 }
 
-export function paste() {
+export const paste = () => {
     _clipboard?.clone(clonedObj => {
         window.editor.canvas.discardActiveObject();
         clonedObj.set({
@@ -497,12 +498,19 @@ const DrawingController = () => {
 
     useEffect(() => {
         window.addEventListener('keydown', e => {
-            console.log(e.keyCode);
+            // console.log(e.keyCode);
             if (e.keyCode === 46) {
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     window.editor.canvas.remove(item);
                 });
             }
+            if (e.ctrlKey && e.keyCode === 67) {
+                copy();
+            }
+            if (e.ctrlKey && e.keyCode === 86) {
+                paste();
+            }
+
         });
         return () => {
             window.removeEventListener('keydown', null)
@@ -515,10 +523,10 @@ const DrawingController = () => {
             <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
-            
+
             Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} option value={val}>{val}</option> })} </select>
             <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
-         
+
             <div>
                 Face <input type="color" defaultValue='#ff0000' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#ffff00' onChange={e => changeBackGroundColor(e)} />
@@ -551,7 +559,7 @@ const DrawingController = () => {
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON()))}` }]);
-                        setCurentPage(canvaslist.length)
+                            setCurentPage(canvaslist.length)
                         }
                     }}
 
@@ -599,16 +607,16 @@ const DrawingController = () => {
                         </DragDropContext>
                     </div>
 
-                    
-                <div style={{ border: '2px solid black', backgroundColor: 'darksalmon' }}>
-                    <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
-                    <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
 
-                    <button onClick={() => { endpoint(`play 1-120 [html] http://localhost:3000/drawing`) }} >Initialise</button>
-                    <button className='stopButton' onClick={() => endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set screen size as above</button>
-                    <button onClick={() => {
-                        endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)
-                        endpoint(`call 1-120 "
+                    <div style={{ border: '2px solid black', backgroundColor: 'darksalmon' }}>
+                        <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
+                        <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
+
+                        <button onClick={() => { endpoint(`play 1-120 [html] http://localhost:3000/drawing`) }} >Initialise</button>
+                        <button className='stopButton' onClick={() => endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set screen size as above</button>
+                        <button onClick={() => {
+                            endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)
+                            endpoint(`call 1-120 "
                         var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
                         var sss = new fabric.Textbox(ss1,{
                         'left':${window.editor.canvas.getActiveObject()?.left},
@@ -642,11 +650,11 @@ const DrawingController = () => {
                     "`)
 
 
-                    }}>Add to Casparcg</button>
-                    <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
+                        }}>Add to Casparcg</button>
+                        <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
 
 
-                </div>
+                    </div>
 
                 </div>
             </div>
