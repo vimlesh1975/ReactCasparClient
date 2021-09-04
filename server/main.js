@@ -4,6 +4,8 @@ const app = express();
 var serveStatic = require("serve-static");
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
 
+
+
 const { CasparCG, Priority, ConnectionOptions, CasparCGSocket, Options, AMCP } = require('casparcg-connection');
 
 const fontList = require('font-list')
@@ -43,7 +45,9 @@ var mediaPath = 'c:/casparcg/_media';
 var templatePath;
 var logPath;
 
-const PATH = require('path');
+// const PATH = require('path');
+
+
 const dirTree = require("directory-tree");
 var media = [];
 
@@ -152,4 +156,8 @@ io.on('connection', (socket) => {
     })
 })
 
-
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
