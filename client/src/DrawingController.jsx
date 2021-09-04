@@ -52,6 +52,8 @@ function moveSelected(direction) {
             case Direction.DOWN:
                 activeObject.set({ top: activeObject.top + STEP });
                 break;
+            default:
+            //nothing
         }
         activeObject.setCoords();
         window.editor.canvas.renderAll();
@@ -565,8 +567,8 @@ const DrawingController = () => {
             </div>
 
             <div>
-                Font:  <select onChange={e => onFontChange(e)}>
-                    <option value="Arial" selected>Arial</option>
+                Font:  <select onChange={e => onFontChange(e)} defaultValue="Arial">
+                    {/* <option value="Arial" selected>Arial</option> */}
                     {fontList.map((val) => { return <option key={val} option value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
@@ -622,7 +624,7 @@ const DrawingController = () => {
                                                                 >
                                                                     <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                         recallPage(val.pageValue, window.editor.canvas, i);
-                                                                    }} key1={i} key2={'vimlesh'} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
+                                                                    }} key1={i} key2={'vimlesh'} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
                                                                 </tr>
                                                             )}
                                                         </Draggable>
