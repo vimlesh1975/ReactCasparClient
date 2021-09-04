@@ -18,9 +18,9 @@ const Drawing = ({ canvasOutput }) => {
   window.editor = editor;
 
 
-  return (<>
+  return (<div>
     <FabricJSCanvas className={canvasOutput ? 'canvasOutput' : 'canvas'} onReady={onReady} />
     <ContextMenu editor={editor} />
-  </>);
+  </div>);
 };
 export default Drawing;

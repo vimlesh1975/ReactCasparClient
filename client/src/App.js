@@ -5,12 +5,15 @@ import Oneliner from './Oneliner';
 import Twoliner from './Twoliner'
 import TopLeft from './TopLeft';
 import React from "react";
+import ReactDOM from 'react-dom';
+
 import Clock from './Clock'
 import Scroll from './Scroll';
+import Video from './Video';
+
 import Drawing from './Drawing';
 import { useDispatch } from 'react-redux'
 import { endpoint } from './common'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios'
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -19,6 +22,8 @@ import OnelinerTable from './OnelinerTable'
 
 import DrawingController, { addImage } from './DrawingController';
 
+import { Provider } from 'react-redux'
+import store from './store'
 
 export default function App(props) {
 
@@ -48,21 +53,11 @@ export default function App(props) {
     }
   }, [imageName])
 
-  useEffect(() => {
-    var defaultModule = document.getElementById("defaultModule");
-    defaultModule.click()
-    return () => {
-      // cleanup
-    }
-  }, [])
-
   const [f0, setF0] = useState('Vimlesh Kumar')
   const [f1, setF1] = useState('Engineering Assistant, DDK Mumbai')
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
   const refPreviewContainer = useRef()
   const [media, setMedia] = useState([])
-
-  const [currenMode, setCurrenMode] = useState('Home')
 
   const connectHandler = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
@@ -90,13 +85,6 @@ export default function App(props) {
       setMedia(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
   }
-
-  useEffect(() => {
-
-
-    return () => {
-    }
-  }, [])
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
@@ -127,15 +115,34 @@ export default function App(props) {
     }
   }
 
-  // const addTwoliner = () => {
-  //   ReactDOM.render(<><div style={{ position: 'relative', left: 180, top: 40 + 70 * twoliner }} ><Twoliner f0={f0} f1={f1} cahngeText={cahngeText} /></div></>, document.getElementById('twoliner' + twoliner));
-  //   setTwoliner(val => val + 1)
-  // }
-  // const addTopleft = () => {
-  //   alert('gggggg')
-  //   ReactDOM.render(<><Clock /></>, document.getElementById('topleft' + topleft));
-  //   setTopleft(val => val + 1)
-  // }
+  const onTabChange = (index, prevIndex) => {
+    // console.log(index, prevIndex);
+    switch (index) {
+      case 0:
+        ReactDOM.render(<Provider store={store}><Drawing /></Provider>, document.getElementById('preview-container'))
+        break;
+      case 1:
+        ReactDOM.render(<Provider store={store}><Oneliner f0={f0} cahngeText={cahngeText} /></Provider>, document.getElementById('preview-container'))
+        break;
+      case 2:
+        ReactDOM.render(<Twoliner f0={f0} f1={f1} />, document.getElementById('preview-container'))
+        break;
+      case 3:
+        ReactDOM.render(<TopLeft f0={f0} cahngeText={cahngeText} />, document.getElementById('preview-container'))
+        break;
+      case 4:
+        ReactDOM.render(<Scroll f0={scrollData} cahngeText={cahngeText} />, document.getElementById('preview-container'))
+        break;
+      case 5:
+        ReactDOM.render(<Clock />, document.getElementById('preview-container'))
+        break;
+      case 6:
+        ReactDOM.render(<Video video="http://localhost:8080/media/amb.mp4" />, document.getElementById('preview-container'))
+        break;
+      default:
+      //nothing
+    }
+  }
 
   // let fileReader;
   // const handleFileRead = (e) => {
@@ -183,81 +190,40 @@ export default function App(props) {
       height: '100vh',
       flexWrap: 'nowrap'
     }}>
+      <div style={{ width: '1035px' }} >
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          border: '1px dashed blue',
+          height: '100vh',
+          flexWrap: 'nowrap'
+        }}>
 
-      <div style={{ width: '62vw' }} >
-
-        <Router>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            border: '1px dashed blue',
-            height: '100vh',
-            flexWrap: 'nowrap'
-          }}>
-
-            <div>
-              <Switch>
-                <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
-
-                  <Route exact path='/oneliner' render={() => (<Oneliner f0={f0} cahngeText={cahngeText} />)} />
-                  <Route exact path='/twoliner' render={() => (<Twoliner f0={f0} f1={f1} cahngeText={cahngeText} />)} />
-                  <Route exact path='/topleft' render={() => (<TopLeft f0={f0} cahngeText={cahngeText} />)} />
-                  <Route exact path='/clock' render={() => (<Clock />)} />
-                  <Route exact path='/scroll' render={() => (<Scroll />)} />
-                  <Route exact path='/drawing' render={() => (<Drawing />)} />
-                </div>
-              </Switch>
-              <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
-                <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
-                <h5>
-                  &lt;screen&gt;
-                  &lt;always-on-top&gt;true&lt;/always-on-top&gt;
-                  &lt;x&gt;0&lt;/x&gt;
-                  &lt;y&gt;680&lt;/y&gt;
-                  &lt;width&gt;680&lt;/width&gt;
-                  &lt;height&gt;325&lt;/height&gt;
-
-                  &lt;/screen&gt;
-                </h5>
-              </div>
-
+          <div>
+            <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
+              <Provider store={store}><Drawing /></Provider>
             </div>
 
-            <div>
-              <nav className='nav-bar'>
-                <ul>
-                  <li>
-                    <Link to="/" onClick={() => setCurrenMode('Home')}>Home</Link>
-                  </li>
-                  <li>
-                    <Link to="/oneliner" onClick={() => setCurrenMode('Oneliner')}>Oneliner</Link>
-                  </li>
-                  <li>
-                    <Link to="/twoliner" onClick={() => setCurrenMode('Twoliner')}>Twoliner</Link>
-                  </li>
-                  <li>
-                    <Link to="/topleft" onClick={() => setCurrenMode('Top Left')}>Top Left</Link>
-                  </li>
-                  <li>
-                    <Link to="/clock" onClick={() => setCurrenMode('Clock')}>Clock</Link>
-                  </li>
-                  <li>
-                    <Link to="/scroll" onClick={() => setCurrenMode('Scroll')}>Scroll</Link>
-                  </li>
-                  <li>
-                    <Link id='defaultModule' to="/drawing" onClick={() => setCurrenMode('Drawing')}>Drawing</Link>
-                  </li>
-                 
-                </ul>
-              </nav>
-              <h1> {currenMode}</h1>
+            <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
+              <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
+              <h5>
+                &lt;screen&gt;
+                &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+                &lt;x&gt;0&lt;/x&gt;
+                &lt;y&gt;680&lt;/y&gt;
+                &lt;width&gt;680&lt;/width&gt;
+                &lt;height&gt;325&lt;/height&gt;
+
+                &lt;/screen&gt;
+              </h5>
             </div>
 
           </div>
-        </Router>
+
+        </div>
       </div>
       <div style={{ width: '38vw', minWidth: '400px' }}>
-        <Tabs forceRenderTabPanel={true}>
+        <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Drawing</Tab>
             <Tab>Oneliner</Tab>
@@ -265,9 +231,9 @@ export default function App(props) {
             <Tab>Top left</Tab>
             <Tab>Scroll</Tab>
             <Tab>Clock</Tab>
-          
+
             <Tab>Video</Tab>
-          
+
             <Tab>Help</Tab>
 
           </TabList>
@@ -339,7 +305,7 @@ export default function App(props) {
             <button onClick={() => endpoint(`play 1-105 [html] "http://localhost:3000/clock"`)}> Clock</button>
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-105`)}>Stop</button>
           </TabPanel>
-         
+
           <TabPanel>
             <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
@@ -353,7 +319,25 @@ export default function App(props) {
               <table border='1' >
                 <tbody>
                   {media.map((val, i) => {
-                    return <tr key={i}><td onClick={(e) => setfilename((e.target.innerText).split('.')[0])}>{val}</td></tr>
+                    return <tr key={i}><td onClick={(e) => {
+                      setfilename((e.target.innerText).split('.')[0]);
+                      var video = document.getElementById('video');
+                      var source = document.getElementsByTagName('source')[0];
+
+                      if ((`http://localhost:8080/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
+
+                        video.setAttribute("poster", `http://localhost:8080/media/${e.target.innerText}`);
+
+                      }
+                      else {
+                        video.setAttribute("poster", ``);
+                        source.setAttribute("src", `http://localhost:8080/media/${e.target.innerText}`);
+                        video.load();
+                      }
+
+
+                    }
+                    }>{val}</td></tr>
                   })}
                 </tbody>
               </table>
@@ -362,7 +346,7 @@ export default function App(props) {
 
 
 
-         
+
           <TabPanel>
             <h2>Help</h2>
             <ol>
@@ -404,5 +388,5 @@ export default function App(props) {
     <button onClick={saveFile}>Save file</button> <br /> */}
 
 
-</React.Fragment>);
+  </React.Fragment>);
 }

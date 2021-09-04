@@ -6,6 +6,8 @@ import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit } from "react-icons/vsc";
+
 // import { stringify } from 'uuid';
 
 fabric.Object.prototype.noScaleCache = false;
@@ -445,7 +447,10 @@ const DrawingController = () => {
 
 
     }
-    const drawingFileNew = () => setCanvaslist([])
+    const drawingFileNew = () => {
+        setCanvaslist([]);
+        // setCurentPage('')
+    }
 
     let fileReader;
     const handleFileRead = (e) => {
@@ -462,9 +467,11 @@ const DrawingController = () => {
 
     const handleFileChosen = (file) => {
         if (file) {
+            setCurentPage('')
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead;
             fileReader.readAsText(file);
+
         }
 
     };
@@ -530,7 +537,7 @@ const DrawingController = () => {
             }
             if (e.key === 'Delete') {
                 window.editor.canvas.getActiveObjects().forEach(item => {
-                    window.editor.canvas.remove(item);
+                    if (item.type !== 'textbox' || !item.isEditing) { window.editor.canvas.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
@@ -546,16 +553,25 @@ const DrawingController = () => {
         }
     }, [])
 
-    return (<>
+    return (<div>
         <div>
-            <button onClick={() => { endpoint(`play 1-109 [html] http://localhost:3000/drawing`) }} >Initialise</button>
-            <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
+            <div>
+                <button onClick={() => { endpoint(`play 1-109 [html] http://localhost:3000/drawing`) }} >Initialise</button>
+                <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
+            </div>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
 
             Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
             <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
+            <div>
+                <button onClick={() => createText(window.editor.canvas)}>T</button>
+                <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
+                <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
+                <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
+                <button onClick={() => toggleMode("drawing", window.editor.canvas)}>Toggle<VscEdit /></button>
 
+            </div>
             <div>
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
@@ -589,6 +605,7 @@ const DrawingController = () => {
                         if (retVal !== null) {
                             setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON()))}` }]);
                             setCurentPage(canvaslist.length)
+
                         }
                     }}
 
@@ -607,7 +624,7 @@ const DrawingController = () => {
                                         <table border='1'>
                                             <tbody>
                                                 {canvaslist.map((val, i) => {
-                                                    return (<>
+                                                    return (<div>
                                                         <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                             {(provided, snapshot) => (
                                                                 <tr ref={provided.innerRef}
@@ -625,7 +642,7 @@ const DrawingController = () => {
                                                                 </tr>
                                                             )}
                                                         </Draggable>
-                                                    </>)
+                                                    </div>)
                                                 })}
                                             </tbody>
                                         </table>
@@ -691,7 +708,7 @@ const DrawingController = () => {
         </div>
 
 
-    </>)
+    </div>)
 }
 
 export default DrawingController
