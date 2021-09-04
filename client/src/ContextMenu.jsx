@@ -6,7 +6,7 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
 const ContextMenu = ({ editor }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
-  return (<>
+  return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
         <li onClick={() => savetoCasparcgStore(editor.canvas)}>Show to Casparcg</li>
@@ -64,7 +64,7 @@ const ContextMenu = ({ editor }) => {
         <li onClick={() => toggleMode("drawing", editor.canvas)}>Toggle Draw Mode <VscEdit /></li>
       </ul>
     </div>) : ''}
-  </>);
+  </div>);
 };
 
 export default ContextMenu

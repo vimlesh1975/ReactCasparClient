@@ -12,6 +12,7 @@
     "fabric": "^4.6.0",
     "fabric-history": "^1.6.0",
     "fabricjs-react": "^1.0.8",
+    "gh-pages": "^3.2.3",
     "gsap": "^3.7.1",
     "npm": "^7.22.0",
     "react": "^17.0.2",
@@ -34,6 +35,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

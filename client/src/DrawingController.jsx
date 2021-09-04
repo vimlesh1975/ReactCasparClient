@@ -126,10 +126,10 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार", {
+    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         left: 100,
         top: 0,
-        width: 285,
+        width: 500,
         fill: '#ffffff',
         // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -143,7 +143,7 @@ export const createText = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 350, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addImage = canvas => {
@@ -166,8 +166,9 @@ export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         top: -100,
         left: 90,
-        width: 300,
-        height: 45,
+        width: 500,
+        height: 80,
+        opacity: 0.9,
         fill: 'rgb(80, 3, 124)',
         hasRotatingPoint: true,
         objectCaching: false,
@@ -177,7 +178,7 @@ export const createRect = (canvas) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 500, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 430, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const createCircle = (canvas) => {
@@ -565,8 +566,8 @@ const DrawingController = () => {
             Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
             <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
             <div>
-                <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
+                <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                 <button onClick={() => toggleMode("drawing", window.editor.canvas)}>Toggle<VscEdit /></button>

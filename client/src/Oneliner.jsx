@@ -16,7 +16,7 @@ export default function Oneliner({ f0, cahngeText, color, backgroundColor }) {
         endpoint(`mixer 1-101 fill ${data.x / 1024} ${data.y / 576} 1 1`)
     }
 
-    return (<>
+    return (<div>
 
         <Draggable onDrag={ddd} >
             <div id='oneliner' ref={(el) => (intro = el)} contentEditable functionname='setF0' onKeyUp={(e) => cahngeText(e)} className='graphic' suppressContentEditableWarning={true}
@@ -34,5 +34,5 @@ export default function Oneliner({ f0, cahngeText, color, backgroundColor }) {
         </Draggable>
 
 
-    </>)
+    </div>)
 }
