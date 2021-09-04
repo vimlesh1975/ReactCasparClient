@@ -66,10 +66,10 @@ function moveSelected(direction) {
 
 const options = {
     currentMode: "",
-    currentColor: "#ff0000",
+    currentColor: "#ffffff",
     currentFont: 'Arial',
     currentFontSize: 25,
-    backgroundColor: "#ffff00",
+    backgroundColor: "#50037c",
     // currentWidth: 5,
     group: {},
     stroke: '#ffffff',
@@ -96,7 +96,7 @@ export const addClock = canvas => {
         left: 10,
         top: 530,
         width: 100,
-        fill: options.currentColor,
+        fill: '#ffffff',
         backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
@@ -128,8 +128,8 @@ export const createText = (canvas) => {
         left: 60,
         top: 0,
         width: 285,
-        fill: options.currentColor,
-        backgroundColor: options.backgroundColor,
+        fill: '#ffffff',
+        // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
@@ -166,10 +166,7 @@ export const createRect = (canvas) => {
         left: 100,
         width: 200,
         height: 70,
-        // fill: options.currentColor,
-        fill: new fabric.Pattern({
-            source: 'img/pine-wood-500x500.jpg',
-        }),
+        fill: 'rgb(80, 3, 124)',
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -186,7 +183,7 @@ export const createCircle = (canvas) => {
         top: 160,
         left: -100,
         radius: 50,
-        fill: options.currentColor,
+        fill: 'rgb(80, 3, 124)',
         cornerSize: 7,
         objectCaching: false,
         hasRotatingPoint: true,
@@ -208,7 +205,7 @@ export const createTriangle = (canvas) => {
         left: -100,
         width: 100,
         height: 100,
-        fill: options.currentColor,
+        fill: 'rgb(80, 3, 124)',
         cornerSize: 7,
         objectCaching: false,
         hasRotatingPoint: true,
@@ -556,12 +553,12 @@ const DrawingController = () => {
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
 
-            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} option value={val}>{val}</option> })} </select>
+            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val}  value={val}>{val}</option> })} </select>
             <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
 
             <div>
-                Face <input type="color" defaultValue='#ff0000' onChange={e => changeCurrentColor(e)} />
-                BG <input type="color" defaultValue='#ffff00' onChange={e => changeBackGroundColor(e)} />
+                Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
+                BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
                 stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
                 Stroke/Brush width<input style={{ width: '30px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
             </div>
@@ -569,7 +566,7 @@ const DrawingController = () => {
             <div>
                 Font:  <select onChange={e => onFontChange(e)} defaultValue="Arial">
                     {/* <option value="Arial" selected>Arial</option> */}
-                    {fontList.map((val) => { return <option key={val} option value={val}>{val}</option> })}
+                    {fontList.map((val) => { return <option key={val}  value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
