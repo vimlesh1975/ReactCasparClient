@@ -247,9 +247,7 @@ export default function App(props) {
                   <li>
                     <Link id='defaultModule' to="/drawing" onClick={() => setCurrenMode('Drawing')}>Drawing</Link>
                   </li>
-                  <li>
-                    <Link to="/texteditor" onClick={() => setCurrenMode('Text Editor')}>Text Editor</Link>
-                  </li>
+                 
                 </ul>
               </nav>
               <h1> {currenMode}</h1>
