@@ -125,7 +125,7 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार", {
-        left: 60,
+        left: 100,
         top: 0,
         width: 285,
         fill: '#ffffff',
@@ -163,9 +163,9 @@ export const setGradientColor = canvas => {
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         top: -100,
-        left: 100,
-        width: 200,
-        height: 70,
+        left: 90,
+        width: 300,
+        height: 45,
         fill: 'rgb(80, 3, 124)',
         hasRotatingPoint: true,
         objectCaching: false,
@@ -175,7 +175,7 @@ export const createRect = (canvas) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 270, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 500, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const createCircle = (canvas) => {
@@ -553,7 +553,7 @@ const DrawingController = () => {
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
 
-            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val}  value={val}>{val}</option> })} </select>
+            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
             <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
 
             <div>
@@ -566,7 +566,7 @@ const DrawingController = () => {
             <div>
                 Font:  <select onChange={e => onFontChange(e)} defaultValue="Arial">
                     {/* <option value="Arial" selected>Arial</option> */}
-                    {fontList.map((val) => { return <option key={val}  value={val}>{val}</option> })}
+                    {fontList.map((val) => { return <option key={val} value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
