@@ -5,10 +5,8 @@ import Oneliner from './Oneliner';
 import Twoliner from './Twoliner'
 import TopLeft from './TopLeft';
 import React from "react";
-import ReactDOM from "react-dom";
 import Clock from './Clock'
 import Scroll from './Scroll';
-import BlankDiv from './BlankDiv';
 import Drawing from './Drawing';
 import { useDispatch } from 'react-redux'
 import { endpoint } from './common'
@@ -18,7 +16,6 @@ import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import OnelinerTable from './OnelinerTable'
-import TextEditor from './TextEditor'
 
 import DrawingController, { addImage } from './DrawingController';
 
@@ -61,8 +58,6 @@ export default function App(props) {
 
   const [f0, setF0] = useState('Vimlesh Kumar')
   const [f1, setF1] = useState('Engineering Assistant, DDK Mumbai')
-  const [twoliner, setTwoliner] = useState(1)
-  const [topleft, setTopleft] = useState(1)
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
   const refPreviewContainer = useRef()
   const [media, setMedia] = useState([])
@@ -132,15 +127,15 @@ export default function App(props) {
     }
   }
 
-  const addTwoliner = () => {
-    ReactDOM.render(<><div style={{ position: 'relative', left: 180, top: 40 + 70 * twoliner }} ><Twoliner f0={f0} f1={f1} cahngeText={cahngeText} /></div></>, document.getElementById('twoliner' + twoliner));
-    setTwoliner(val => val + 1)
-  }
-  const addTopleft = () => {
-    alert('gggggg')
-    ReactDOM.render(<><Clock /></>, document.getElementById('topleft' + topleft));
-    setTopleft(val => val + 1)
-  }
+  // const addTwoliner = () => {
+  //   ReactDOM.render(<><div style={{ position: 'relative', left: 180, top: 40 + 70 * twoliner }} ><Twoliner f0={f0} f1={f1} cahngeText={cahngeText} /></div></>, document.getElementById('twoliner' + twoliner));
+  //   setTwoliner(val => val + 1)
+  // }
+  // const addTopleft = () => {
+  //   alert('gggggg')
+  //   ReactDOM.render(<><Clock /></>, document.getElementById('topleft' + topleft));
+  //   setTopleft(val => val + 1)
+  // }
 
   // let fileReader;
   // const handleFileRead = (e) => {
@@ -168,7 +163,7 @@ export default function App(props) {
 
 
 
-  return (<>
+  return (<React.Fragment>
     <div className='menu_bar'>
       <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear 1`)}>Stop Channel</button>
       <button onClick={getPaths}>GetPaths</button>mediaPath={mediaPath}
@@ -210,8 +205,6 @@ export default function App(props) {
                   <Route exact path='/clock' render={() => (<Clock />)} />
                   <Route exact path='/scroll' render={() => (<Scroll />)} />
                   <Route exact path='/drawing' render={() => (<Drawing />)} />
-                  <Route exact path='/texteditor' render={() => (<TextEditor />)} />
-                  <BlankDiv key={'gggggg'} />
                 </div>
               </Switch>
               <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
@@ -274,9 +267,9 @@ export default function App(props) {
             <Tab>Top left</Tab>
             <Tab>Scroll</Tab>
             <Tab>Clock</Tab>
-            <Tab>All Element</Tab>
+          
             <Tab>Video</Tab>
-            <Tab>Text Editor</Tab>
+          
             <Tab>Help</Tab>
 
           </TabList>
@@ -348,17 +341,7 @@ export default function App(props) {
             <button onClick={() => endpoint(`play 1-105 [html] "http://localhost:3000/clock"`)}> Clock</button>
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-105`)}>Stop</button>
           </TabPanel>
-          <TabPanel>
-            <h2>All element</h2>
-            <button onClick={() => endpoint(`play 1-106 [html] http://localhost:3000/allelements/${(refPreviewContainer.current.innerHTML).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))}`)} >All Graphics on Preview</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-106`)}>Stop</button>
-
-            <div style={{ border: '2px solid blue', margin: 5 }}>
-              <label>Add to Preview </label>
-              <button onClick={addTwoliner}>Two liner</button>
-              <button onClick={addTopleft}>Top Left</button>
-            </div>
-          </TabPanel >
+         
           <TabPanel>
             <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
@@ -381,16 +364,7 @@ export default function App(props) {
 
 
 
-          <TabPanel>
-            <h2>Text Editor</h2>
-            <button
-              onClick={() => {
-                endpoint(`play 1-110 [html] http://localhost:3000/texteditor`)
-              }}
-            >Initialise Text Editor</button>
-            <button className='stopButton' onClick={() => endpoint(`stop 1-110`)}>Stop</button>
-            <button className={props.hidetoolbar} onClick={window.savetoCasparcgStore}>Show to Casparcg</button>
-          </TabPanel>
+         
           <TabPanel>
             <h2>Help</h2>
             <ol>
@@ -432,5 +406,5 @@ export default function App(props) {
     <button onClick={saveFile}>Save file</button> <br /> */}
 
 
-  </>);
+</React.Fragment>);
 }
