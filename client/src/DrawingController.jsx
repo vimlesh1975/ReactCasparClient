@@ -188,7 +188,7 @@ export const createCircle = (canvas) => {
         radius: 50,
         fill: 'rgb(80, 3, 124)',
         cornerSize: 7,
-        objectCaching: false,
+        // objectCaching: false,
         hasRotatingPoint: true,
         stroke: options.stroke,
         strokeWidth: 3,
@@ -337,6 +337,8 @@ export const groupObjects = (canvas, shouldGroup) => {
             return;
         }
         canvas.getActiveObject().toActiveSelection();
+        const aa = canvas.getObjects();
+        aa.forEach(element => element.set({ objectCaching: false}));
         canvas.requestRenderAll();
     }
 };
@@ -490,11 +492,18 @@ const DrawingController = () => {
         const data = JSON.parse(state2);
         canvas.loadFromJSON(data);
         canvas.requestRenderAll();
+
+      
+
+
     };
     const recallPage = (json, canvas, i) => {
-        canvas.loadFromJSON(json);
-        canvas.requestRenderAll();
         setCurentPage(i)
+        canvas.loadFromJSON(json, function () {
+            const aa = canvas.getObjects();
+            aa.forEach(element => element.set({ objectCaching: false}));
+            canvas.renderAll();
+          });
     }
     const updatePage = (canvas) => {
         const updatedCanvasList = canvaslist.map((val, i) => {
@@ -508,7 +517,14 @@ const DrawingController = () => {
         });
         setCanvaslist([...updatedCanvasList])
     }
-
+const onDoubleClickPageName=(event)=>{
+    event.preventDefault();
+    var sel = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(event.target);
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {
             setCurentPage(currentPage => currentPage - 1)
@@ -557,7 +573,7 @@ const DrawingController = () => {
     return (<div>
         <div>
             <div>
-                <button onClick={() => { endpoint(`play 1-109 [html] http://localhost:3000/drawing`) }} >Initialise</button>
+                <button onClick={() => { endpoint(`play 1-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
                 <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
             </div>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
@@ -639,7 +655,7 @@ const DrawingController = () => {
                                                                 >
                                                                     <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                         recallPage(val.pageValue, window.editor.canvas, i);
-                                                                    }} key1={i} key2={'vimlesh'} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
+                                                                    }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
                                                                 </tr>
                                                             )}
                                                         </Draggable>
@@ -659,7 +675,7 @@ const DrawingController = () => {
                         <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
                         <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
 
-                        <button onClick={() => { endpoint(`play 1-120 [html] http://localhost:3000/drawing`) }} >Initialise</button>
+                        <button onClick={() => { endpoint(`play 1-120 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
                         <button className='stopButton' onClick={() => endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set screen size as above</button>
                         <button onClick={() => {
                             endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)

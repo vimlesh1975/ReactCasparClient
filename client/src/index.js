@@ -22,6 +22,8 @@ ReactDOM.render(
 
   <Provider store={store}>
     <Router basename={process.env.PUBLIC_URL}>
+    {/* <Router > */}
+
       <Switch>
         <Route exact path='/' render={() => (<App />)} />
         <Route exact path='/oneliner/:f0/:color/:backgroundColor' render={({ match }) => (<Oneliner f0={match.params.f0} color={match.params.color} backgroundColor={match.params.backgroundColor} />)} />

@@ -271,14 +271,14 @@ export default function App(props) {
             <h2>Two Liner</h2>
             <div><input onChange={(e) => setF0(e.target.value)} value={f0}></input> </div>
             <div><input size='30' onChange={(e) => setF1(e.target.value)} value={f1}></input></div>
-            <button onClick={() => endpoint(`play 1-102 [html] "http://localhost:3000/twoliner/${f0}/${f1}"`)}>two Liner</button>
+            <button onClick={() => endpoint(`play 1-102 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/twoliner/${f0}/${f1}"`)}>two Liner</button>
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-102`)}>Stop</button>
           </TabPanel>
 
           <TabPanel>
             <h2>Top Left</h2>
             <div><input onChange={(e) => setF0(e.target.value)} value={f0}></input> </div>
-            <button onClick={() => endpoint(`play 1-103 [html] "http://localhost:3000/topleft/${f0}"`)}>Top Left</button>
+            <button onClick={() => endpoint(`play 1-103 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/topleft/${f0}"`)}>Top Left</button>
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-103`)}>Stop</button>
           </TabPanel>
 
@@ -289,7 +289,7 @@ export default function App(props) {
 
             <br />
             <button onClick={() => {
-              endpoint(`play 1-104 [html] "http://localhost:3000/scroll/${scrollData}"`)
+              endpoint(`play 1-104 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/scroll/${scrollData}"`)
             }}  >Start</button>
 
             <button className='stopButton' onClick={() => endpoint(`call 1-104 pauseScroll()`)}>Pause</button>
@@ -302,7 +302,7 @@ export default function App(props) {
           </TabPanel>
           <TabPanel>
             <h2>Clock</h2>
-            <button onClick={() => endpoint(`play 1-105 [html] "http://localhost:3000/clock"`)}> Clock</button>
+            <button onClick={() => endpoint(`play 1-105 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/clock"`)}> Clock</button>
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-105`)}>Stop</button>
           </TabPanel>
 
@@ -370,6 +370,8 @@ export default function App(props) {
 
               <li>There is right click menu also for drawing mode. </li>
               <li><a href='https://github.com/vimlesh1975/ReactCasparClient' target='_blank' rel="noreferrer">Github Page</a> </li>
+              <li><a href='https://vimlesh1975.github.io/ReactCasparClient/' target='_blank' rel="noreferrer">Github Online Client</a> </li>
+
               <li><a href='https://casparcgforum.org/t/react-caspar-client' target='_blank' rel="noreferrer">Casparcg Forum Topic</a> </li>
               <li><a href='https://bit.ly/3jRrhDL' target='_blank' rel="noreferrer">Latest Build</a> </li>
 

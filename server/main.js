@@ -104,7 +104,7 @@ app.post('/getmedia', (req, res) => {
 
 app.post('/endpoint', (req, res) => {
     aa.do(new AMCP.CustomCommand(req.body.string)).then((aa1) => {
-        // console.log(req.body.string)
+        console.log(req.body.string)
         console.log(aa1.response.raw)
     }).catch((aa2) => console.log(aa2));
     res.end()
