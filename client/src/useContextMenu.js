@@ -10,7 +10,6 @@ const useContextMenu = () => {
       e.preventDefault();
 
       setXPos(`${e.clientX - 60}px`);
-      console.log(e.clientY)
       if (e.clientY > 145) {
         setYPos(`${60}px`);
       }

@@ -59,10 +59,7 @@ function moveSelected(direction) {
         }
         activeObject.setCoords();
         window.editor.canvas.renderAll();
-        console.log('selected objects was moved');
-    }
-    else {
-        console.log('no object selected');
+
     }
 }
 
@@ -388,7 +385,6 @@ const changeText = (key, val) => {
 
 }
 
-
 var _clipboard;
 export const copy = () => {
     window.editor.canvas.getActiveObject()?.clone(cloned => {
@@ -434,10 +430,10 @@ const DrawingController = () => {
     const [id, setId] = useState('f0');
 
 
-    const getStateProperty = () => {
-        console.log(window.editor.canvas.getActiveObject().toObject(['id']).id);
-        setId(window.editor.canvas.getActiveObject().toObject(['id']).id)
-    }
+    // const getStateProperty = () => {
+    //     console.log(window.editor.canvas.getActiveObject().toObject(['id']).id);
+    //     setId(window.editor.canvas.getActiveObject().toObject(['id']).id)
+    // }
 
     const onDragEnd = (result) => {
         const aa = [...canvaslist]
@@ -597,24 +593,27 @@ const DrawingController = () => {
     }, [])
     function HandleElement(obj) {
         //Handle the object here 
-        alert(obj.target.backgroundColor);
-        // obj.left
-
+        console.log(obj.target.left);
+        GetStateProperties();
     }
-    // useEffect(() => {
-    //     window.editor.canvas.on({
-    //         // 'selection:updated': HandleElement,
-    //         'selection:created': HandleElement
-    //     });
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.editor.canvas.on({
+                'selection:updated': HandleElement,
+                'selection:created': HandleElement
+            });
+        }, 2000);
+    }, [])
 
 
-    //     return () => {
-    //         // cleanup
-    //     }
-    // }, [])
+    const [objectPropertyName, setObjectPropertyName] = useState([])
+    const GetStateProperties = () => {
+        if (window.editor.canvas.getActiveObject()) {
+            setObjectPropertyName(window.editor.canvas.getActiveObject()?.stateProperties)
+        }
+    }
 
-
-    const [objectProperty, setObjectProperty] = useState([{ 'aa': 'aa1' }])
 
     return (<div style={{ display: 'flex' }}>
         <div>
@@ -775,7 +774,17 @@ const DrawingController = () => {
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-            {/* <input type="text" id="fname" name="fname" size="10" /> */}
+            <button onClick={GetStateProperties}>Get state properties of selected object</button><br />
+            {objectPropertyName?.length}
+            <div style={{ maxHeight: '300px', maxWidth: '400px', overflow: 'scroll' }}>
+                <table border='1'>
+                    <tbody>
+                        {objectPropertyName?.map((val, i) => {
+                            return window.editor.canvas.getActiveObject() && <tr key={uuidv4()}><td>{val}</td><td>{window.editor.canvas.getActiveObject()?.get(val)}</td></tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
 
         </div>
 

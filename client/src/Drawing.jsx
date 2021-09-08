@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from './ContextMenu'
-
+import { useEffect } from 'react'
 const Drawing = ({ canvasOutput }) => {
 
 
@@ -19,6 +19,7 @@ const Drawing = ({ canvasOutput }) => {
   window.ReadToCasparcgfromStore = () => canvasFromJson(editor.canvas)
   window.canvasFromJson = canvasFromJson
   window.editor = editor;
+
 
 
   return (<div>
