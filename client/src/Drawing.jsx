@@ -14,6 +14,8 @@ const Drawing = ({ canvasOutput }) => {
     canvas.requestRenderAll();
 
   };
+
+
   window.ReadToCasparcgfromStore = () => canvasFromJson(editor.canvas)
   window.canvasFromJson = canvasFromJson
   window.editor = editor;

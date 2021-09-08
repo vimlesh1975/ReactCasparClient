@@ -8,7 +8,7 @@ import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit } from "react-icons/vsc";
 
-// import { stringify } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 fabric.Object.prototype.noScaleCache = false;
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
@@ -92,6 +92,8 @@ export var gradient = new fabric.Gradient({
     ]
 });
 
+
+
 export const addClock = canvas => {
 
     const sss = new fabric.Textbox('', {
@@ -127,6 +129,7 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+        id: 'f0',
         left: 100,
         top: 0,
         width: 500,
@@ -295,9 +298,9 @@ const changeStrokeCurrentColor = e => {
 
 const onstrokeSizeChange = e => {
     if (window.editor.canvas.getActiveObject()) {
-        window.editor.canvas.getActiveObject().strokeWidth = e.target.value;
+        window.editor.canvas.getActiveObject().strokeWidth = parseInt(e.target.value);
     }
-    options.strokeWidth = e.target.value
+    options.strokeWidth = parseInt(e.target.value);
     window.editor.canvas.freeDrawingBrush.width = parseInt(e.target.value);
 
     window.editor.canvas.requestRenderAll();
@@ -338,13 +341,13 @@ export const groupObjects = (canvas, shouldGroup) => {
         }
         canvas.getActiveObject().toActiveSelection();
         const aa = canvas.getObjects();
-        aa.forEach(element => element.set({ objectCaching: false}));
+        aa.forEach(element => element.set({ objectCaching: false }));
         canvas.requestRenderAll();
     }
 };
 
 export const savetoCasparcgStore = () => {
-    var dd = window.editor.canvas.toJSON()
+    var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
     endpoint(`call 1-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
 
@@ -363,15 +366,28 @@ export const savetoCasparcgStore = () => {
 }
 
 export const updatetoCasparcgStore = () => {
-    var dd = window.editor.canvas.toJSON()
+    var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
     endpoint(`call 1-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
 
     setTimeout(() => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
+        // changeText('f0', Math.random())
     }, 200);
 
 }
+
+const changeText = (key, val) => {
+    window.editor.canvas.getObjects().forEach((element) => {
+        if (element.id === key) {
+            element.set({ text: val.toString() })
+            window.editor.canvas.requestRenderAll();
+        }
+    })
+    endpoint(`call 1-109 "window.editor.canvas.getObjects().forEach((element)=>{if(element.id==='${key}'){element.set({text:'${val}'});window.editor.canvas.requestRenderAll();}})"`)
+
+}
+
 
 var _clipboard;
 export const copy = () => {
@@ -411,7 +427,17 @@ const DrawingController = () => {
     const [canvaslist, setCanvaslist] = useState([])
     const [currentPage, setCurentPage] = useState()
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
+    const [f0, setF0] = useState('Ganesh Tiwari');
+    const [f1, setF1] = useState('Suresh Malhotra');
+    const [f2, setF2] = useState('Mahesh prasad');
 
+    const [id, setId] = useState('f0');
+
+
+    const getStateProperty = () => {
+        console.log(window.editor.canvas.getActiveObject().toObject(['id']).id);
+        setId(window.editor.canvas.getActiveObject().toObject(['id']).id)
+    }
 
     const onDragEnd = (result) => {
         const aa = [...canvaslist]
@@ -482,7 +508,7 @@ const DrawingController = () => {
     const dispatch = useDispatch()
     // eslint-disable-next-line
     const canvasToJson = (canvas) => {
-        dispatch({ type: 'CHANGE_CANVAS1', payload: (JSON.stringify(canvas.toJSON())) })
+        dispatch({ type: 'CHANGE_CANVAS1', payload: (JSON.stringify(canvas.toJSON(['id']))) })
     };
 
     const state1 = useSelector(state => state.canvas1Reducer.aa)
@@ -493,7 +519,7 @@ const DrawingController = () => {
         canvas.loadFromJSON(data);
         canvas.requestRenderAll();
 
-      
+
 
 
     };
@@ -501,13 +527,13 @@ const DrawingController = () => {
         setCurentPage(i)
         canvas.loadFromJSON(json, function () {
             const aa = canvas.getObjects();
-            aa.forEach(element => element.set({ objectCaching: false}));
+            aa.forEach(element => element.set({ objectCaching: false }));
             canvas.renderAll();
-          });
+        });
     }
     const updatePage = (canvas) => {
         const updatedCanvasList = canvaslist.map((val, i) => {
-            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON() } : val;
+            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id']) } : val;
         });
         setCanvaslist([...updatedCanvasList])
     }
@@ -517,14 +543,14 @@ const DrawingController = () => {
         });
         setCanvaslist([...updatedCanvasList])
     }
-const onDoubleClickPageName=(event)=>{
-    event.preventDefault();
-    var sel = window.getSelection();
-    var range = document.createRange();
-    range.selectNodeContents(event.target);
-    sel.removeAllRanges();
-    sel.addRange(range);
-}
+    const onDoubleClickPageName = (event) => {
+        event.preventDefault();
+        var sel = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(event.target);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {
             setCurentPage(currentPage => currentPage - 1)
@@ -569,8 +595,28 @@ const onDoubleClickPageName=(event)=>{
             window.removeEventListener('keydown', null)
         }
     }, [])
+    function HandleElement(obj) {
+        //Handle the object here 
+        alert(obj.target.backgroundColor);
+        // obj.left
 
-    return (<div>
+    }
+    // useEffect(() => {
+    //     window.editor.canvas.on({
+    //         // 'selection:updated': HandleElement,
+    //         'selection:created': HandleElement
+    //     });
+
+
+    //     return () => {
+    //         // cleanup
+    //     }
+    // }, [])
+
+
+    const [objectProperty, setObjectProperty] = useState([{ 'aa': 'aa1' }])
+
+    return (<div style={{ display: 'flex' }}>
         <div>
             <div>
                 <button onClick={() => { endpoint(`play 1-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
@@ -599,7 +645,7 @@ const onDoubleClickPageName=(event)=>{
             <div>
                 Font:  <select onChange={e => onFontChange(e)} defaultValue="Arial">
                     {/* <option value="Arial" selected>Arial</option> */}
-                    {fontList.map((val) => { return <option key={val} value={val}>{val}</option> })}
+                    {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
@@ -620,7 +666,7 @@ const onDoubleClickPageName=(event)=>{
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON()))}` }]);
+                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
                             setCurentPage(canvaslist.length)
 
                         }
@@ -723,9 +769,18 @@ const onDoubleClickPageName=(event)=>{
             </div>
 
         </div>
+        <div>
+
+            {/* <button onClick={getStateProperty}>Get Id</button> */}
+            <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
+            <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
+            <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
+            {/* <input type="text" id="fname" name="fname" size="10" /> */}
+
+        </div>
 
 
-    </div>)
+    </div >)
 }
 
 export default DrawingController

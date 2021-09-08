@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
+
 import Oneliner from './Oneliner';
 import Twoliner from './Twoliner'
 import TopLeft from './TopLeft';
@@ -240,7 +241,7 @@ export default function App(props) {
           <TabPanel>
             <h2>Drawing</h2>
 
-            <div style={{ border: '4px solid yellow' }}>
+            <div style={{ border: '4px solid yellow', width: 900 }}>
               <DrawingController />
             </div>
             <div style={{ display: 'flex' }}>
