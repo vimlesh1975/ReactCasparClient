@@ -593,7 +593,7 @@ const DrawingController = () => {
     }, [])
     function HandleElement(obj) {
         //Handle the object here 
-        console.log(obj.target.left);
+        // console.log(obj.target.left);
         GetStateProperties();
     }
 
@@ -601,7 +601,10 @@ const DrawingController = () => {
         setTimeout(() => {
             window.editor.canvas.on({
                 'selection:updated': HandleElement,
-                'selection:created': HandleElement
+                'selection:created': HandleElement,
+                'object:moving': HandleElement,
+                'object:moved': HandleElement,
+                'mouseup': HandleElement
             });
         }, 2000);
     }, [])
@@ -686,7 +689,7 @@ const DrawingController = () => {
                                         <table border='1'>
                                             <tbody>
                                                 {canvaslist.map((val, i) => {
-                                                    return (<div>
+                                                    return (
                                                         <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                             {(provided, snapshot) => (
                                                                 <tr ref={provided.innerRef}
@@ -704,7 +707,7 @@ const DrawingController = () => {
                                                                 </tr>
                                                             )}
                                                         </Draggable>
-                                                    </div>)
+                                                    )
                                                 })}
                                             </tbody>
                                         </table>
@@ -780,7 +783,7 @@ const DrawingController = () => {
                 <table border='1'>
                     <tbody>
                         {objectPropertyName?.map((val, i) => {
-                            return window.editor.canvas.getActiveObject() && <tr key={uuidv4()}><td>{val}</td><td>{window.editor.canvas.getActiveObject()?.get(val)}</td></tr>
+                            if (typeof window.editor.canvas.getActiveObject()?.get(val) !== 'object' && window.editor.canvas.getActiveObject()?.get(val) !== null) return window.editor.canvas.getActiveObject() && <tr key={uuidv4()}><td>{val}</td><td>{window.editor.canvas.getActiveObject()?.get(val)}</td></tr>
                         })}
                     </tbody>
                 </table>

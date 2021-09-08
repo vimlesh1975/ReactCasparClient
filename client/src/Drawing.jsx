@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from './ContextMenu'
-import { useEffect } from 'react'
 const Drawing = ({ canvasOutput }) => {
 
 
