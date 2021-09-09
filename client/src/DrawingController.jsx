@@ -157,6 +157,17 @@ export const addImage = canvas => {
     });
 }
 
+const addImagefromUrl = (canvas, url = 'https://www.goodreturns.in/img/2015/07/03-1435900173-online-600.jpg') => {
+    fabric.Image.fromURL(url, myImg => {
+        myImg.scaleToWidth(160);
+        myImg.scaleToHeight(90);
+        myImg.set({ left: 0, top: 0 });
+        window.editor.canvas.add(myImg);
+        window.editor.canvas.renderAll();
+
+    });
+}
+
 
 export const setGradientColor = canvas => {
     if (window.editor.canvas.getActiveObject()) { canvas.getActiveObject().fill = gradient };
@@ -426,6 +437,7 @@ const DrawingController = () => {
     const [f0, setF0] = useState('Ganesh Tiwari');
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
+    const [onlineImageUrl, setOnlineImageUrl] = useState('https://img.freepik.com/free-photo/wooden-background_24972-623.jpg?size=626&ext=jpg')
 
     const [id, setId] = useState('f0');
 
@@ -591,32 +603,6 @@ const DrawingController = () => {
             window.removeEventListener('keydown', null)
         }
     }, [])
-    function HandleElement(obj) {
-        //Handle the object here 
-        // console.log(obj.target.left);
-        GetStateProperties();
-    }
-
-    useEffect(() => {
-        setTimeout(() => {
-            window.editor.canvas.on({
-                'selection:updated': HandleElement,
-                'selection:created': HandleElement,
-                'object:moving': HandleElement,
-                'object:moved': HandleElement,
-                'mouseup': HandleElement
-            });
-        }, 2000);
-    }, [])
-
-
-    const [objectPropertyName, setObjectPropertyName] = useState([])
-    const GetStateProperties = () => {
-        if (window.editor.canvas.getActiveObject()) {
-            setObjectPropertyName(window.editor.canvas.getActiveObject()?.stateProperties)
-        }
-    }
-
 
     return (<div style={{ display: 'flex' }}>
         <div>
@@ -718,7 +704,7 @@ const DrawingController = () => {
                         </DragDropContext>
                     </div>
 
-
+                    <div><input onChange={(e) => setOnlineImageUrl(e.target.value)} size="100" type='text' defaultValue={onlineImageUrl}></input><button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add image from this URL</button></div>
                     <div style={{ border: '2px solid black', backgroundColor: 'darksalmon' }}>
                         <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
                         <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
@@ -773,21 +759,9 @@ const DrawingController = () => {
         </div>
         <div>
 
-            {/* <button onClick={getStateProperty}>Get Id</button> */}
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-            <button onClick={GetStateProperties}>Get state properties of selected object</button><br />
-            {objectPropertyName?.length}
-            <div style={{ maxHeight: '300px', maxWidth: '400px', overflow: 'scroll' }}>
-                <table border='1'>
-                    <tbody>
-                        {objectPropertyName?.map((val, i) => {
-                            if (typeof window.editor.canvas.getActiveObject()?.get(val) !== 'object' && window.editor.canvas.getActiveObject()?.get(val) !== null) return window.editor.canvas.getActiveObject() && <tr key={uuidv4()}><td>{val}</td><td>{window.editor.canvas.getActiveObject()?.get(val)}</td></tr>
-                        })}
-                    </tbody>
-                </table>
-            </div>
 
         </div>
 
