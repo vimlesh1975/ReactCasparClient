@@ -7,6 +7,9 @@ const useContextMenu = () => {
 
   const handleContextMenu = useCallback(
     (e) => {
+      if (e.clientX > 1024) return
+      if (e.clientY > 610) return
+
       e.preventDefault();
 
       setXPos(`${e.clientX - 60}px`);
@@ -17,9 +20,9 @@ const useContextMenu = () => {
         setYPos(`${e.clientY - 50}px`);
       }
 
-
-
       setShowMenu(true);
+
+
     },
     [setXPos, setYPos]
   );

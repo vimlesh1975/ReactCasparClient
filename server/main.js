@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
 
+const cors = require("cors");
+const corsOptions = {
+    // "Access-Control-Allow-Origin": "*",
+}
+app.use(cors(corsOptions))
 var serveStatic = require("serve-static");
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
 
@@ -19,8 +24,9 @@ fontList.getFonts({ disableQuoting: true })
         console.log(err)
     })
 
-const cors = require('cors')
-app.use(cors())
+// const cors = require('cors')
+// app.use(cors())
+
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();

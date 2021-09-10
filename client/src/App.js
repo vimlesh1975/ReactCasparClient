@@ -108,6 +108,13 @@ export default function App(props) {
     }
   }, []);
 
+  useEffect(() => {
+    refreshMedia()
+    return () => {
+      // cleanup
+    }
+  }, [mediaPath])
+
   const cahngeText = (e) => {
     if (e.keyCode === 27) {
       var aa = e.target.getAttribute('functionname');
@@ -258,7 +265,7 @@ export default function App(props) {
               </div>
               <div style={{ border: '4px solid green' }}>
                 <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
-                Selected Image  <button onClick={addImage}>Add This Image</button><br />
+                Selected Image  <button onClick={() => addImage(window.editor.canvas)}>Add This Image</button><br />
                 <img src={imageName} alt='' width="300" height="150"></img>
               </div>
             </div>

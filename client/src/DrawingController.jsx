@@ -150,21 +150,24 @@ export const addImage = canvas => {
     fabric.Image.fromURL(window.imageName, myImg => {
         myImg.scaleToWidth(160);
         myImg.scaleToHeight(90);
-        myImg.set({ left: 0, top: 0 });
-        window.editor.canvas.add(myImg);
-        window.editor.canvas.renderAll();
+        myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true });
+        canvas.add(myImg);
+        canvas.renderAll();
 
+        // }, { crossOrigin: 'anonymous' });
     });
+
 }
 
-const addImagefromUrl = (canvas, url = 'https://www.goodreturns.in/img/2015/07/03-1435900173-online-600.jpg') => {
+const addImagefromUrl = (canvas, url) => {
     fabric.Image.fromURL(url, myImg => {
-        myImg.scaleToWidth(160);
-        myImg.scaleToHeight(90);
-        myImg.set({ left: 0, top: 0 });
-        window.editor.canvas.add(myImg);
-        window.editor.canvas.renderAll();
+        myImg.scaleToWidth(320);
+        myImg.scaleToHeight(180);
+        myImg.set({ left: 100, top: 100, stroke: '#ffffff', strokeWidth: 2, strokeUniform: true });
 
+        canvas.add(myImg).setActiveObject(myImg);
+        canvas.renderAll();
+        // }, { crossOrigin: 'anonymous' });
     });
 }
 
@@ -199,7 +202,7 @@ export const createCircle = (canvas) => {
         radius: 50,
         fill: 'rgb(80, 3, 124)',
         cornerSize: 7,
-        // objectCaching: false,
+        objectCaching: false,
         hasRotatingPoint: true,
         stroke: options.stroke,
         strokeWidth: 3,
@@ -437,7 +440,7 @@ const DrawingController = () => {
     const [f0, setF0] = useState('Ganesh Tiwari');
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
-    const [onlineImageUrl, setOnlineImageUrl] = useState('https://img.freepik.com/free-photo/wooden-background_24972-623.jpg?size=626&ext=jpg')
+    const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
 
     const [id, setId] = useState('f0');
 
@@ -704,7 +707,11 @@ const DrawingController = () => {
                         </DragDropContext>
                     </div>
 
-                    <div><input onChange={(e) => setOnlineImageUrl(e.target.value)} size="100" type='text' defaultValue={onlineImageUrl}></input><button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add image from this URL</button></div>
+                    <div>
+                        <sapn> URL: </sapn> <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="70" type='text' defaultValue={onlineImageUrl}></input>
+                        <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add image from this URL</button>
+
+                    </div>
                     <div style={{ border: '2px solid black', backgroundColor: 'darksalmon' }}>
                         <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
                         <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
