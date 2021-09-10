@@ -316,6 +316,21 @@ const onstrokeSizeChange = e => {
 
     window.editor.canvas.requestRenderAll();
 }
+const onSkewXSizeChange = e => {
+    if (window.editor.canvas.getActiveObject()) {
+        window.editor.canvas.getActiveObject().skewX = parseInt(e.target.value);
+        window.editor.canvas.requestRenderAll();
+
+    }
+}
+const onSkewYSizeChange = e => {
+    if (window.editor.canvas.getActiveObject()) {
+        window.editor.canvas.getActiveObject().skewY = parseInt(e.target.value);
+        window.editor.canvas.requestRenderAll();
+
+    }
+}
+
 
 const onFontChange = (e) => {
     options.currentFont = e.target.value;
@@ -403,7 +418,7 @@ var _clipboard;
 export const copy = () => {
     window.editor.canvas.getActiveObject()?.clone(cloned => {
         _clipboard = cloned;
-    });
+    }, ['id']);
 }
 
 export const paste = () => {
@@ -413,6 +428,8 @@ export const paste = () => {
             left: clonedObj.left + 10,
             top: clonedObj.top + 10,
             evented: true,
+            objectCaching: false,
+
         });
         if (clonedObj.type === 'activeSelection') {
             // active selection needs a reference to the canvas.
@@ -429,7 +446,7 @@ export const paste = () => {
         _clipboard.left += 10;
         window.editor.canvas.setActiveObject(clonedObj);
         window.editor.canvas.requestRenderAll();
-    });
+    }, ['id']);
 }
 
 const DrawingController = () => {
@@ -630,7 +647,12 @@ const DrawingController = () => {
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
                 stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
-                Stroke/Brush width<input style={{ width: '30px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+                Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+                <div>
+                    SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                    SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+
+                </div>
             </div>
 
             <div>
