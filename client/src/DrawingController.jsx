@@ -364,7 +364,7 @@ export const savetoCasparcgStore = () => {
     endpoint(`call 1-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
 
     setTimeout(() => {
-        endpoint(`mixer 1-109 fill 0 0 0 0 12 easeinsine`)
+        endpoint(`mixer 1-109 fill 0 0 0 1 12 ${window.animationMethod}`)
     }, 200);
 
     setTimeout(() => {
@@ -372,7 +372,10 @@ export const savetoCasparcgStore = () => {
     }, 680);
 
     setTimeout(() => {
-        endpoint(`mixer 1-109 fill 0 0 1 1 25 easeinsine`)
+        endpoint(`mixer 1-109 fill 0 0 1 1 12 ${window.animationMethod}`)
+        // endpoint(`mixer 1-109 fill 0 0 1 1 25 ${animationMethod}`)
+
+        
     }, 700);
 
 }
@@ -595,12 +598,14 @@ const DrawingController = () => {
             <div>
                 <button onClick={() => { endpoint(`play 1-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
                 <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
+
+                Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
+                <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
+
             </div>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
-
-            Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
-            <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
+           
             <div>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>

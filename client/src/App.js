@@ -25,6 +25,7 @@ import DrawingController, { addImage } from './DrawingController';
 
 import { Provider } from 'react-redux'
 import store from './store'
+import { v4 as uuidv4 } from 'uuid';
 
 export default function App(props) {
 
@@ -46,19 +47,70 @@ export default function App(props) {
   const [remainingTime, setRemainingTime] = useState()
   const [filename, setfilename] = useState('amb')
   const [imageName, setImageName] = useState('img/pine-wood-500x500.jpg')
-
-  useEffect(() => {
-    window.imageName = imageName
-    return () => {
-      // cleanup
-    }
-  }, [imageName])
-
   const [f0, setF0] = useState('Vimlesh Kumar')
   const [f1, setF1] = useState('Engineering Assistant, DDK Mumbai')
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
   const refPreviewContainer = useRef()
   const [media, setMedia] = useState([])
+  const animationMethods = [
+    'linear',
+    'easenone',
+    'easeinquad',
+    'easeoutquad',
+    'easeinoutquad',
+    'easeoutinquad',
+    'easeincubic',
+    'easeoutcubic',
+    'easeinoutcubic',
+    'easeoutincubic',
+    'easeinquart',
+    'easeoutquart',
+    'easeinoutquart',
+    'easeoutinquart',
+    'easeinquint',
+    'easeoutquint',
+    'easeinoutquint',
+    'easeoutinquint',
+    'easeinsine',
+    'easeoutsine',
+    'easeinoutsine',
+    'easeoutinsine',
+    'easeinexpo',
+    'easeoutexpo',
+    'easeinoutexpo',
+    'easeoutinexpo',
+    'easeincirc',
+    'easeoutcirc',
+    'easeinoutcirc',
+    'easeoutincirc',
+    "easeinelastic",
+    "easeoutelastic",
+    "easeinoutelastic",
+    "easeoutinelastic",
+    "easeinback",
+    "easeoutback",
+    "easeinoutback",
+    "easeoutintback",
+    "easeoutbounce",
+    "easeinbounce",
+    "easeinoutbounce",
+    "easeoutinbounce",
+  ]
+  const [animationMethod, setAnimationMethod] = useState('easeinsine')
+
+  useEffect(() => {
+    window.imageName = imageName;
+    return () => {
+      // cleanup
+    }
+  }, [imageName])
+
+  useEffect(() => {
+    window.animationMethod = animationMethod;
+    return () => {
+      // cleanup
+    }
+  }, [animationMethod])
 
   const connectHandler = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
@@ -176,7 +228,9 @@ export default function App(props) {
   //   element.click();
   // }
 
-
+const changeAnimationMethod=e=>{
+  setAnimationMethod(e.target.value)
+}
 
   return (<React.Fragment>
     <div className='menu_bar'>
@@ -187,6 +241,14 @@ export default function App(props) {
       <input onChange={changeStyle1} ref={refFontColor} type="color" defaultValue='#ffffff' />
       <label htmlFor="favcolor">Strip Color:</label>
       <input onChange={changeStyle1} ref={refStripColor} type="color" defaultValue='#50037c' />
+
+      Animation Method:<select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
+      {/* <select onChange={e => onFontChange(e)} defaultValue="Arial"> */}
+        {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+            {/* {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} */}
+
+      </select>
+      {animationMethod}
       <span style={{ position: 'absolute', right: '10px' }}><b >Server 2.3 only</b></span>
       {/* remainingTime={parseInt(remainingTime)} */}
     </div>

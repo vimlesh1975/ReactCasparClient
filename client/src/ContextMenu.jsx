@@ -9,7 +9,7 @@ const ContextMenu = ({ editor }) => {
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
-        <li onClick={() => savetoCasparcgStore(editor.canvas)}>Show to Casparcg</li>
+        <li onClick={() => savetoCasparcgStore()}>Show to Casparcg</li>
         <li onClick={() => deleteSelectedItem(editor.canvas)}>Delete Selected <VscTrash />
           <ul>
             <li onClick={() => deleteAll(editor.canvas)}>Delete All</li>
