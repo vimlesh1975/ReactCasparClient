@@ -290,59 +290,45 @@ export const toggleMode = (mode, canvas) => {
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
     window.editor.canvas.freeDrawingBrush.color = e.target.value;
-
-    if (window.editor.canvas.getActiveObject()) { window.editor.canvas.getActiveObject().fill = e.target.value; }
+    window.editor.canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
     window.editor.canvas.requestRenderAll();
 };
 
 const changeBackGroundColor = (e) => {
     options.backgroundColor = e.target.value;
-    if (window.editor.canvas.getActiveObject()) { window.editor.canvas.getActiveObject().backgroundColor = e.target.value; }
+    window.editor.canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
     window.editor.canvas.requestRenderAll();
 }
 
 const changeStrokeCurrentColor = e => {
     options.stroke = e.target.value;
-    if (window.editor.canvas.getActiveObject()) { window.editor.canvas.getActiveObject().stroke = e.target.value; }
+    window.editor.canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
     window.editor.canvas.requestRenderAll();
 }
 
 const onstrokeSizeChange = e => {
-    if (window.editor.canvas.getActiveObject()) {
-        window.editor.canvas.getActiveObject().strokeWidth = parseInt(e.target.value);
-    }
     options.strokeWidth = parseInt(e.target.value);
     window.editor.canvas.freeDrawingBrush.width = parseInt(e.target.value);
-
+    window.editor.canvas.getActiveObjects().forEach(item => item.strokeWidth = parseInt(e.target.value))
     window.editor.canvas.requestRenderAll();
 }
 const onSkewXSizeChange = e => {
-    if (window.editor.canvas.getActiveObject()) {
-        window.editor.canvas.getActiveObject().skewX = parseInt(e.target.value);
-        window.editor.canvas.requestRenderAll();
-
-    }
+    window.editor.canvas.getActiveObjects().forEach(item => item.skewX = parseInt(e.target.value))
+    window.editor.canvas.requestRenderAll();
 }
 const onSkewYSizeChange = e => {
-    if (window.editor.canvas.getActiveObject()) {
-        window.editor.canvas.getActiveObject().skewY = parseInt(e.target.value);
-        window.editor.canvas.requestRenderAll();
-
-    }
+    window.editor.canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
+    window.editor.canvas.requestRenderAll();
 }
-
-
 const onFontChange = (e) => {
     options.currentFont = e.target.value;
-    if (window.editor.canvas.getActiveObject()) {
-        window.editor.canvas.getActiveObject().fontFamily = e.target.value;
-    }
+    window.editor.canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
     window.editor.canvas.requestRenderAll();
 }
 
 const onSizeChange = (e) => {
-    if (window.editor.canvas.getActiveObject()) { window.editor.canvas.getActiveObject().fontSize = e.target.value; }
     options.currentFontSize = e.target.value
+    window.editor.canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
     window.editor.canvas.requestRenderAll();
 }
 
@@ -398,7 +384,6 @@ export const updatetoCasparcgStore = () => {
 
     setTimeout(() => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
-        // changeText('f0', Math.random())
     }, 200);
 
 }
@@ -461,12 +446,6 @@ const DrawingController = () => {
 
     const [id, setId] = useState('f0');
 
-
-    // const getStateProperty = () => {
-    //     console.log(window.editor.canvas.getActiveObject().toObject(['id']).id);
-    //     setId(window.editor.canvas.getActiveObject().toObject(['id']).id)
-    // }
-
     const onDragEnd = (result) => {
         const aa = [...canvaslist]
         if (result.destination != null) {
@@ -488,9 +467,7 @@ const DrawingController = () => {
         const element = document.createElement("a");
         var aa = ''
         canvaslist.forEach(val => {
-            // aa += val + '\r\n'
             aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
-
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -501,12 +478,9 @@ const DrawingController = () => {
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
-
-
     }
     const drawingFileNew = () => {
         setCanvaslist([]);
-        // setCurentPage('')
     }
 
     let fileReader;
@@ -528,9 +502,7 @@ const DrawingController = () => {
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead;
             fileReader.readAsText(file);
-
         }
-
     };
 
     const dispatch = useDispatch()
@@ -546,10 +518,6 @@ const DrawingController = () => {
         const data = JSON.parse(state2);
         canvas.loadFromJSON(data);
         canvas.requestRenderAll();
-
-
-
-
     };
     const recallPage = (json, canvas, i) => {
         setCurentPage(i)
@@ -585,7 +553,6 @@ const DrawingController = () => {
         }
         else if (currentPage === parseInt(e.target.getAttribute('key1'))) {
             setCurentPage(null)
-            // alert('pp')
         }
         const updatedCanvasList = canvaslist.filter((_, i) => {
             return (parseInt(e.target.getAttribute('key1')) !== i)
@@ -617,7 +584,6 @@ const DrawingController = () => {
             if (e.ctrlKey && e.key === 'v') {
                 paste();
             }
-
         });
         return () => {
             window.removeEventListener('keydown', null)
