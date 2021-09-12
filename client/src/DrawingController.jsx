@@ -10,11 +10,6 @@ import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit } from "rea
 import { FaAlignLeft, FaAlignRight, FaSave } from "react-icons/fa";
 import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
-// import './App.css';
-
-import { RiAlignTop, RiAlignBottom } from "react-icons/ri";
-
-
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -175,7 +170,6 @@ const addImagefromUrl = (canvas, url) => {
 
         canvas.add(myImg).setActiveObject(myImg);
         canvas.renderAll();
-        // }, { crossOrigin: 'anonymous' });
     });
 }
 

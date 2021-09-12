@@ -3,8 +3,7 @@ import socketIOClient from "socket.io-client";
 import './App.css';
 
 import Oneliner from './Oneliner';
-import Twoliner from './Twoliner'
-import TopLeft from './TopLeft';
+
 import React from "react";
 import ReactDOM from 'react-dom';
 
@@ -46,7 +45,7 @@ export default function App(props) {
   // eslint-disable-next-line
   const [remainingTime, setRemainingTime] = useState()
   const [filename, setfilename] = useState('amb')
-  const [imageName, setImageName] = useState('img/pine-wood-500x500.jpg')
+  const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
   const [f0, setF0] = useState('Vimlesh Kumar')
   const [f1, setF1] = useState('Engineering Assistant, DDK Mumbai')
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
@@ -185,18 +184,12 @@ export default function App(props) {
         ReactDOM.render(<Provider store={store}><Oneliner f0={f0} cahngeText={cahngeText} /></Provider>, document.getElementById('preview-container'))
         break;
       case 2:
-        ReactDOM.render(<Twoliner f0={f0} f1={f1} />, document.getElementById('preview-container'))
-        break;
-      case 3:
-        ReactDOM.render(<TopLeft f0={f0} cahngeText={cahngeText} />, document.getElementById('preview-container'))
-        break;
-      case 4:
         ReactDOM.render(<Scroll f0={scrollData} cahngeText={cahngeText} />, document.getElementById('preview-container'))
         break;
-      case 5:
+      case 3:
         ReactDOM.render(<Clock />, document.getElementById('preview-container'))
         break;
-      case 6:
+      case 4:
         ReactDOM.render(<Video video="http://localhost:8080/media/amb.mp4" />, document.getElementById('preview-container'))
         break;
       default:
@@ -204,33 +197,9 @@ export default function App(props) {
     }
   }
 
-  // let fileReader;
-  // const handleFileRead = (e) => {
-  //   const content = fileReader.result;
-  //   var aa = content.split(String.fromCharCode(2))
-  //   setfilename(aa[0])
-  //   setF0(aa[1])
-  //   setF1(aa[2])
-  // };
-  // const handleFileChosen = (file) => {
-  //   fileReader = new FileReader();
-  //   fileReader.onloadend = handleFileRead;
-  //   fileReader.readAsText(file);
-  // };
-  // const saveFile = () => {
-  //   const element = document.createElement("a");
-  //   const file = new Blob([filename, String.fromCharCode(2), f0, String.fromCharCode(2), f1], { type: 'text/plain' });
-  //   element.href = URL.createObjectURL(file);
-  //   var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-  //   var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-  //   element.download = retVal;
-  //   document.body.appendChild(element); // Required for this to work in FireFox
-  //   element.click();
-  // }
-
-const changeAnimationMethod=e=>{
-  setAnimationMethod(e.target.value)
-}
+  const changeAnimationMethod = e => {
+    setAnimationMethod(e.target.value)
+  }
 
   return (<React.Fragment>
     <div className='menu_bar'>
@@ -243,14 +212,10 @@ const changeAnimationMethod=e=>{
       <input onChange={changeStyle1} ref={refStripColor} type="color" defaultValue='#50037c' />
 
       Animation Method:<select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
-      {/* <select onChange={e => onFontChange(e)} defaultValue="Arial"> */}
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-            {/* {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} */}
-
       </select>
       {animationMethod}
       <span style={{ position: 'absolute', right: '10px' }}><b >Server 2.3 only</b></span>
-      {/* remainingTime={parseInt(remainingTime)} */}
     </div>
 
     <div style={{
@@ -297,8 +262,7 @@ const changeAnimationMethod=e=>{
           <TabList>
             <Tab>Drawing</Tab>
             <Tab>Oneliner</Tab>
-            <Tab>TwoLiner</Tab>
-            <Tab>Top left</Tab>
+
             <Tab>Scroll</Tab>
             <Tab>Clock</Tab>
 
@@ -337,21 +301,6 @@ const changeAnimationMethod=e=>{
             <OnelinerTable endpoint={endpoint} />
             <button className='stopButton' onClick={(e) => endpoint(`stop 1-101`)}>Stop</button>
           </TabPanel>
-          <TabPanel>
-            <h2>Two Liner</h2>
-            <div><input onChange={(e) => setF0(e.target.value)} value={f0}></input> </div>
-            <div><input size='30' onChange={(e) => setF1(e.target.value)} value={f1}></input></div>
-            <button onClick={() => endpoint(`play 1-102 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/twoliner/${f0}/${f1}"`)}>two Liner</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-102`)}>Stop</button>
-          </TabPanel>
-
-          <TabPanel>
-            <h2>Top Left</h2>
-            <div><input onChange={(e) => setF0(e.target.value)} value={f0}></input> </div>
-            <button onClick={() => endpoint(`play 1-103 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/topleft/${f0}"`)}>Top Left</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-103`)}>Stop</button>
-          </TabPanel>
-
           <TabPanel>
             <h2>Scroll</h2>
             <label htmlFor="w3review">Scroll Content</label><br />
