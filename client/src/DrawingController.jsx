@@ -110,6 +110,7 @@ export const addClock = canvas => {
         textAlign: 'center',
         stroke: '',
         strokeWidth: 0,
+        id: 'clock1',
 
     });
     canvas.add(sss).setActiveObject(sss);
@@ -410,7 +411,6 @@ export const savetoCasparcgStore = () => {
     var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
     endpoint(`call 1-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
-
     setTimeout(() => {
         endpoint(`mixer 1-109 fill 0 0 0 1 12 ${window.animationMethod}`)
     }, 200);
@@ -418,15 +418,27 @@ export const savetoCasparcgStore = () => {
     setTimeout(() => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
     }, 680);
-
     setTimeout(() => {
         endpoint(`mixer 1-109 fill 0 0 1 1 12 ${window.animationMethod}`)
-        // endpoint(`mixer 1-109 fill 0 0 1 1 25 ${animationMethod}`)
-
-
     }, 700);
-
 }
+
+export const savetoCasparcgStoreClock = () => {
+    var dd = window.editor.canvas.toJSON()
+    const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
+    endpoint(`call 1-120 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+    setTimeout(() => {
+        endpoint(`mixer 1-120 fill 0 0 0 1 12 ${window.animationMethod}`)
+    }, 200);
+
+    setTimeout(() => {
+        endpoint(`call 1-120 ReadToCasparcgfromStore()`)
+    }, 680);
+    setTimeout(() => {
+        endpoint(`mixer 1-120 fill 0 0 1 1 12 ${window.animationMethod}`)
+    }, 700);
+}
+
 
 export const updatetoCasparcgStore = () => {
     var dd = window.editor.canvas.toJSON(['id'])
@@ -614,7 +626,6 @@ const DrawingController = () => {
         setCanvaslist([...updatedCanvasList])
     }
     useEffect(() => {
-
         axios.post('http://localhost:8080/getfonts').then((aa) => {
             setFontList(aa.data)
         }).catch((aa) => { console.log('Error', aa) });
@@ -641,8 +652,6 @@ const DrawingController = () => {
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
             }
-
-
         });
         return () => {
             window.removeEventListener('keydown', null)
@@ -662,8 +671,6 @@ const DrawingController = () => {
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
             <button className='stopButton' onClick={() => removeFromCaspar()}>Remove from Casparcg</button>
-
-
             <div>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -686,8 +693,6 @@ const DrawingController = () => {
                     <button onClick={() => alignAllRight()}><FaAlignRight /></button>
                     <button onClick={() => alignAllTop()}>RiAlignTop </button>
                     <button onClick={() => alignAllButtom()}>RiAlignBottom</button>
-
-
                 </div>
             </div>
 
@@ -774,11 +779,25 @@ const DrawingController = () => {
                         <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
                         <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
 
-                        <button onClick={() => { endpoint(`play 1-120 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
+                        <button onClick={() => {
+                            endpoint(`play 1-120 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`);
+
+                        }} >Initialise</button>
                         <button className='stopButton' onClick={() => endpoint(`call 1-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set screen size as above</button>
                         <button onClick={() => {
                             endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)
-                            endpoint(`call 1-120 "
+                            savetoCasparcgStoreClock();
+                            if (!window.editor.canvas.getActiveObject() || (window.editor.canvas.getActiveObject()?.id !== 'clock1')) {
+                                var aa = window.editor.canvas.getObjects();
+                                aa.forEach(element => {
+                                    if ((element.type === 'textbox') && (element.id === 'clock1')) {
+                                        // alert(element.id)
+                                        window.editor.canvas.setActiveObject(element)
+                                    }
+                                });
+                            }
+                            setTimeout(() => {
+                                endpoint(`call 1-120 "
                         var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
                         var sss = new fabric.Textbox(ss1,{
                         'left':${window.editor.canvas.getActiveObject()?.left},
@@ -798,8 +817,9 @@ const DrawingController = () => {
                         'fontStyle':'${window.editor.canvas.getActiveObject()?.fontStyle}',
                         'underline':${window.editor.canvas.getActiveObject()?.underline},
                         'linethrough':${window.editor.canvas.getActiveObject()?.linethrough},
+                        'skewX':${window.editor.canvas.getActiveObject()?.skewX},
+                        'skewY':${window.editor.canvas.getActiveObject()?.skewY},
 
-                      
                     });
                     editor.canvas.add(sss);
                     editor.canvas.requestRenderAll();
@@ -809,28 +829,20 @@ const DrawingController = () => {
                         editor.canvas.requestRenderAll();
                     }, 1000);
 
-                    "`)
-
-
+                    "`);
+                            }, 1000);
                         }}>Add to Casparcg</button>
                         <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
 
-
                     </div>
-
                 </div>
             </div>
-
         </div>
         <div>
-
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-
         </div>
-
-
     </div >)
 }
 
