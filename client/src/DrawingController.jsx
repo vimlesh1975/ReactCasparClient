@@ -7,6 +7,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit } from "react-icons/vsc";
+import { FaAlignLeft, FaAlignRight, FaSave } from "react-icons/fa";
+import { FiFile } from "react-icons/fi";
+import Casparlogo from './casparlogo.png'
+// import './App.css';
+
+import { RiAlignTop, RiAlignBottom } from "react-icons/ri";
+
+
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -326,6 +334,52 @@ const onFontChange = (e) => {
     window.editor.canvas.requestRenderAll();
 }
 
+const alignAllLeft = () => {
+    const arr = [];
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        arr.push(item.left)
+    })
+    const min = Math.min(...arr);
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        item.left = min;
+    })
+    window.editor.canvas.requestRenderAll();
+}
+
+const alignAllTop = () => {
+    const arr = [];
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        arr.push(item.top)
+    })
+    const min = Math.min(...arr);
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        item.top = min;
+    })
+    window.editor.canvas.requestRenderAll();
+}
+
+const alignAllRight = () => {
+    const arr = [];
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        arr.push(item.left + (item.width * item.scaleX))
+    })
+    const max = Math.max(...arr);
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        item.left = max - (item.width * item.scaleX);
+    })
+    window.editor.canvas.requestRenderAll();
+}
+const alignAllButtom = () => {
+    const arr = [];
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        arr.push(item.top + (item.height * item.scaleY))
+    })
+    const max = Math.max(...arr);
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        item.top = max - (item.height * item.scaleY);
+    })
+    window.editor.canvas.requestRenderAll();
+}
 const onSizeChange = (e) => {
     options.currentFontSize = e.target.value
     window.editor.canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
@@ -375,7 +429,7 @@ export const savetoCasparcgStore = () => {
         endpoint(`mixer 1-109 fill 0 0 1 1 12 ${window.animationMethod}`)
         // endpoint(`mixer 1-109 fill 0 0 1 1 25 ${animationMethod}`)
 
-        
+
     }, 700);
 
 }
@@ -389,6 +443,9 @@ export const updatetoCasparcgStore = () => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
     }, 200);
 
+}
+const removeFromCaspar = () => {
+    endpoint(`mixer 1-109 fill 0 0 0 1 12 ${window.animationMethod}`)
 }
 
 const changeText = (key, val) => {
@@ -587,6 +644,11 @@ const DrawingController = () => {
             if (e.ctrlKey && e.key === 'v') {
                 paste();
             }
+            if (e.ctrlKey && e.key === 'z') {
+                window.editor.canvas.undo();
+            }
+
+
         });
         return () => {
             window.removeEventListener('keydown', null)
@@ -603,9 +665,11 @@ const DrawingController = () => {
                 <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
 
             </div>
-            <button onClick={() => savetoCasparcgStore()}>Show To Casparcg</button>
+            <button onClick={() => savetoCasparcgStore()}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
-           
+            <button className='stopButton' onClick={() => removeFromCaspar()}>Remove from Casparcg</button>
+
+
             <div>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -622,6 +686,13 @@ const DrawingController = () => {
                 <div>
                     SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
                     SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                </div>
+                <div>
+                    <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
+                    <button onClick={() => alignAllRight()}><FaAlignRight /></button>
+                    <button onClick={() => alignAllTop()}>RiAlignTop </button>
+                    <button onClick={() => alignAllButtom()}>RiAlignBottom</button>
+
 
                 </div>
             </div>
@@ -636,8 +707,8 @@ const DrawingController = () => {
             <div>
 
                 <div>
-                    <button onClick={() => drawingFileNew(window.editor.canvas)}>File New</button>
-                    <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save</button>
+                    <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
+                    <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button>
 
                     <input
                         type='file'
@@ -656,7 +727,7 @@ const DrawingController = () => {
                         }
                     }}
 
-                    >Save in New Page</button>
+                    ><FaSave /> in New Page</button>
                     <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
                     <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
 
