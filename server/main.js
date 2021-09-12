@@ -128,12 +128,7 @@ app.post('/getPaths', (req, res) => {
 
 
 
-var osc = require('osc')
-var udpPort = new osc.UDPPort({
-    localAddress: "127.0.0.1",
-    localPort: 6250,
-    metadata: true
-});
+
 
 const io = require("socket.io")(http, options);
 const ccgsocket = new CasparCGSocket('localhost', 5250)
@@ -149,8 +144,13 @@ const ccgsocket = new CasparCGSocket('localhost', 5250)
 //         io.emit("FromAPI", oscMessage.args[0].value);
 //     }
 // });
-
-udpPort.open();
+// var osc = require('osc')
+// var udpPort = new osc.UDPPort({
+//     localAddress: "127.0.0.1",
+//     localPort: 6250,
+//     metadata: true
+// });
+// udpPort.open();
 
 global.app = app;
 
