@@ -47,7 +47,6 @@ export default function App(props) {
   const [filename, setfilename] = useState('amb')
   const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
   const [f0, setF0] = useState('Vimlesh Kumar')
-  const [f1, setF1] = useState('Engineering Assistant, DDK Mumbai')
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
   const refPreviewContainer = useRef()
   const [media, setMedia] = useState([])
