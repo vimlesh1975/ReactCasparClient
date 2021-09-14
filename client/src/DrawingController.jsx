@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { VscTrash, VscMove } from "react-icons/vsc";
 import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit } from "react-icons/vsc";
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock,  VscTrash, VscMove } from "react-icons/vsc";
+
 import { FaAlignLeft, FaAlignRight, FaSave } from "react-icons/fa";
+import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom ,AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+
 import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
 
@@ -251,7 +253,7 @@ export const textNormal = canvas => { if (window.editor.canvas.getActiveObject()
 
 export const removeBg = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().set('backgroundColor', '') };
 
-// export const deleteItem = canvas => canvas.remove(canvas.getActiveObject())
+
 
 export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
@@ -699,11 +701,20 @@ const DrawingController = () => {
                 <div>
                     <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
                     <button onClick={() => alignAllRight()}><FaAlignRight /></button>
-                    <button onClick={() => alignAllTop()}>RiAlignTop </button>
-                    <button onClick={() => alignAllButtom()}>RiAlignBottom</button>
+                    <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                    <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+
+                    <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
+                    <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
+
+                    <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
+                    <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
+
+                    <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
+                    <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
+
                 </div>
             </div>
-
             <div>
                 Font:  <select onChange={e => onFontChange(e)} value={currentFont}>
                     {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
@@ -839,7 +850,7 @@ const DrawingController = () => {
                     "`);
                             }, 1000);
                         }}>Add to Casparcg</button>
-                      
+
                         <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
 
                     </div>
