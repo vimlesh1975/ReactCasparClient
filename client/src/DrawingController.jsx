@@ -323,11 +323,6 @@ const onSkewYSizeChange = e => {
     window.editor.canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
     window.editor.canvas.requestRenderAll();
 }
-const onFontChange = (e) => {
-    options.currentFont = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
-    window.editor.canvas.requestRenderAll();
-}
 
 const alignAllLeft = () => {
     const arr = [];
@@ -417,10 +412,10 @@ export const savetoCasparcgStore = () => {
 
     setTimeout(() => {
         endpoint(`call 1-109 ReadToCasparcgfromStore()`)
-    }, 680);
+    }, 800);
     setTimeout(() => {
         endpoint(`mixer 1-109 fill 0 0 1 1 12 ${window.animationMethod}`)
-    }, 700);
+    }, 1000);
 }
 
 export const savetoCasparcgStoreClock = () => {
@@ -502,6 +497,7 @@ export const paste = () => {
 
 const DrawingController = () => {
     const [fontList, setFontList] = useState([])
+    const [currentFont, setCurrentFont] = useState('Arial')
     const [canvaslist, setCanvaslist] = useState([])
     const [currentPage, setCurentPage] = useState()
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
@@ -511,6 +507,14 @@ const DrawingController = () => {
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
 
     const [id, setId] = useState('f0');
+
+    const onFontChange = (e) => {
+        options.currentFont = e.target.value;
+        setCurrentFont(e.target.value);
+        window.editor.canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
+        window.editor.canvas.requestRenderAll();
+    }
+
 
     const onDragEnd = (result) => {
         const aa = [...canvaslist]
@@ -634,7 +638,7 @@ const DrawingController = () => {
     }, [])
     useEffect(() => {
         window.addEventListener('keydown', e => {
-            // console.log(e.keyCode);
+            // console.log(e.key);
             if (e.repeat) {
                 return;
             }
@@ -652,6 +656,10 @@ const DrawingController = () => {
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
             }
+            if (e.key === 'F2') {
+                savetoCasparcgStore();
+            }
+
         });
         return () => {
             window.removeEventListener('keydown', null)
@@ -697,8 +705,7 @@ const DrawingController = () => {
             </div>
 
             <div>
-                Font:  <select onChange={e => onFontChange(e)} defaultValue="Arial">
-                    {/* <option value="Arial" selected>Arial</option> */}
+                Font:  <select onChange={e => onFontChange(e)} value={currentFont}>
                     {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
@@ -771,7 +778,7 @@ const DrawingController = () => {
                     </div>
 
                     <div>
-                        <sapn> URL: </sapn> <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="70" type='text' defaultValue={onlineImageUrl}></input>
+                        <span> URL: </span> <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="70" type='text' defaultValue={onlineImageUrl}></input>
                         <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add image from this URL</button>
 
                     </div>
@@ -832,6 +839,7 @@ const DrawingController = () => {
                     "`);
                             }, 1000);
                         }}>Add to Casparcg</button>
+                      
                         <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
 
                     </div>

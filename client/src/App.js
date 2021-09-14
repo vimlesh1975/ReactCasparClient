@@ -13,7 +13,7 @@ import Video from './Video';
 
 import Drawing from './Drawing';
 import { useDispatch } from 'react-redux'
-import { endpoint } from './common'
+import { endpoint, address1 } from './common'
 import axios from 'axios'
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -112,27 +112,27 @@ export default function App(props) {
 
   const connectHandler = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
-      axios.post('http://localhost:8080/disconnect').then((aa) => {
+      axios.post(address1 + '/disconnect').then((aa) => {
         // console.log('success', aa)
       }).catch((aa) => { console.log('Error', aa) });
     }
     else {
       const data = { host: 'localhost', port: 5250 }
-      axios.post('http://localhost:8080/connect', data).then((aa) => {
+      axios.post(address1 + '/connect', data).then((aa) => {
         // console.log('success', aa)
       }).catch((aa) => { console.log('Error', aa) });
     }
 
   }
   const getPaths = () => {
-    axios.post('http://localhost:8080/getPaths').then((aa) => {
+    axios.post(address1 + '/getPaths').then((aa) => {
       setmediaPath(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
   }
   const connectbutton = useRef();
 
   const refreshMedia = () => {
-    axios.post('http://localhost:8080/getmedia').then((aa) => {
+    axios.post(address1 + '/getmedia').then((aa) => {
       setMedia(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
   }
@@ -189,7 +189,7 @@ export default function App(props) {
         ReactDOM.render(<Clock />, document.getElementById('preview-container'))
         break;
       case 4:
-        ReactDOM.render(<Video video="http://localhost:8080/media/amb.mp4" />, document.getElementById('preview-container'))
+        ReactDOM.render(<Video video={address1 + '/media/amb.mp4'} />, document.getElementById('preview-container'))
         break;
       default:
       //nothing
@@ -282,7 +282,7 @@ export default function App(props) {
                   <tbody>
                     {media.map((val, i) => {
                       return <tr key={i}><td onClick={(e) => {
-                        setImageName((`http://localhost:8080/media/` + e.target.innerText));
+                        setImageName((address1 + `/media/` + e.target.innerText));
                       }}>{val}</td></tr>
                     })}
                   </tbody>
@@ -342,14 +342,14 @@ export default function App(props) {
                       var video = document.getElementById('video');
                       var source = document.getElementsByTagName('source')[0];
 
-                      if ((`http://localhost:8080/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
+                      if ((`${address1}/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
 
-                        video.setAttribute("poster", `http://localhost:8080/media/${e.target.innerText}`);
+                        video.setAttribute("poster", `${address1}/media/${e.target.innerText}`);
 
                       }
                       else {
                         video.setAttribute("poster", ``);
-                        source.setAttribute("src", `http://localhost:8080/media/${e.target.innerText}`);
+                        source.setAttribute("src", `${address1}/media/${e.target.innerText}`);
                         video.load();
                       }
 
