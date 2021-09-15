@@ -5,10 +5,10 @@ import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock,  VscTrash, VscMove } from "react-icons/vsc";
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock, VscTrash, VscMove } from "react-icons/vsc";
 
 import { FaAlignLeft, FaAlignRight, FaSave } from "react-icons/fa";
-import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom ,AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
 import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
@@ -577,6 +577,28 @@ const DrawingController = () => {
         }
     };
 
+    const exportSvg = (canvas) => {
+        console.log(canvas.toSVG());
+
+        endpoint(`play 1-110 [HTML] xyz.html`);
+        endpoint(`call 1-110 "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+        document.body.style.overflow='hidden';
+        aa.style.top='100%';
+        setInterval(() => {
+            var dd=aa.getBoundingClientRect().top;
+            if (dd<-aa.getBoundingClientRect().height)
+            {aa.style.top='100%'}
+            else
+            {aa.style.top = (dd-0.5)+'px';}
+        }, 1);
+
+        "`)
+    }
+
     const dispatch = useDispatch()
     // eslint-disable-next-line
     const canvasToJson = (canvas) => {
@@ -650,10 +672,12 @@ const DrawingController = () => {
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
-                copy();
+                var item = window.editor.canvas.getActiveObjects()[0];
+                if (item?.type !== 'textbox' || !item?.isEditing) { copy() }
             }
             if (e.ctrlKey && e.key === 'v') {
-                paste();
+                var item = window.editor.canvas.getActiveObjects()[0];
+                if (item?.type !== 'textbox' || !item?.isEditing) { paste() }
             }
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
@@ -665,6 +689,82 @@ const DrawingController = () => {
         });
         return () => {
             window.removeEventListener('keydown', null)
+        }
+    }, [])
+
+    function cancesetZoomAndPan(canvas) {
+        canvas.removeEventListener('mouse:wheel');
+        canvas.removeEventListener('mouse:down');
+        canvas.removeEventListener('mouse:move');
+        canvas.removeEventListener('mouse:up');
+    }
+
+    function setZoomAndPan(canvas) {
+        canvas.on('mouse:wheel', function (opt) {
+            var delta = opt.e.deltaY;
+            var zoom = canvas.getZoom();
+            zoom *= 0.999 ** delta;
+            if (zoom > 20) zoom = 20;
+            if (zoom < 0.01) zoom = 0.01;
+            canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+            opt.e.preventDefault();
+            opt.e.stopPropagation();
+            var vpt = this.viewportTransform;
+            if (zoom < 400 / 1000) {
+                vpt[4] = 200 - 1024 * zoom / 2;
+                vpt[5] = 200 - 576 * zoom / 2;
+            } else {
+                if (vpt[4] >= 0) {
+                    vpt[4] = 0;
+                } else if (vpt[4] < canvas.getWidth() - 1024 * zoom) {
+                    vpt[4] = canvas.getWidth() - 1024 * zoom;
+                }
+                if (vpt[5] >= 0) {
+                    vpt[5] = 0;
+                } else if (vpt[5] < canvas.getHeight() - 576 * zoom) {
+                    vpt[5] = canvas.getHeight() - 576 * zoom;
+                }
+            }
+        })
+
+        canvas.on('mouse:down', function (opt) {
+            var evt = opt.e;
+            if (evt.altKey === true) {
+                this.isDragging = true;
+                this.selection = false;
+                this.lastPosX = evt.clientX;
+                this.lastPosY = evt.clientY;
+            }
+        });
+        canvas.on('mouse:move', function (opt) {
+            if (this.isDragging) {
+                var e = opt.e;
+                var vpt = this.viewportTransform;
+                vpt[4] += e.clientX - this.lastPosX;
+                vpt[5] += e.clientY - this.lastPosY;
+                this.requestRenderAll();
+                this.lastPosX = e.clientX;
+                this.lastPosY = e.clientY;
+            }
+        });
+        canvas.on('mouse:up', function (opt) {
+            // on mouse up we want to recalculate new interaction
+            // for all objects, so we call setViewportTransform
+            this.setViewportTransform(this.viewportTransform);
+            this.isDragging = false;
+            this.selection = true;
+        });
+
+
+
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setZoomAndPan(window.editor.canvas);
+        }, 2000);
+        return () => {
+            cancesetZoomAndPan(window.editor.canvas)
         }
     }, [])
 
@@ -680,7 +780,13 @@ const DrawingController = () => {
             </div>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
+
             <button className='stopButton' onClick={() => removeFromCaspar()}>Remove from Casparcg</button>
+            <div>
+                <button onClick={() => exportSvg(window.editor?.canvas)}>Test Vertical Scroll</button>
+                <button className='stopButton' onClick={() => endpoint(`stop 1-110`)}>Stop Vertical Scroll</button>
+
+            </div>
             <div>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -712,6 +818,10 @@ const DrawingController = () => {
 
                     <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
                     <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
+
+                    <button onClick={() => copy(window.editor.canvas)}> Copy</button>
+                    <button onClick={() => paste(window.editor.canvas)}> Paste</button>
+
 
                 </div>
             </div>
@@ -746,6 +856,8 @@ const DrawingController = () => {
 
                     ><FaSave /> in New Page</button>
                     <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+
+
                     <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
 
                         <DragDropContext onDragEnd={onDragEnd}>
@@ -852,6 +964,12 @@ const DrawingController = () => {
                         }}>Add to Casparcg</button>
 
                         <button onClick={() => endpoint(`call 1-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
+
+                    </div>
+
+                    <div>
+                        <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
+                        <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
 
                     </div>
                 </div>
