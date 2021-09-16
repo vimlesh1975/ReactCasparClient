@@ -16,6 +16,7 @@ import Casparlogo from './casparlogo.png'
 import { v4 as uuidv4 } from 'uuid';
 
 fabric.Object.prototype.noScaleCache = false;
+
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 const STEP = 5;
@@ -469,6 +470,15 @@ export const copy = () => {
     }, ['id']);
 }
 
+export const selectAll=(canvas)=>{
+    canvas.discardActiveObject();
+    var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+      canvas: canvas,
+    });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
+}
+
 export const paste = () => {
     _clipboard?.clone(clonedObj => {
         window.editor.canvas.discardActiveObject();
@@ -507,6 +517,9 @@ const DrawingController = () => {
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
+    const [verticalSpeed, setVerticalSpeed]=useState(0.25)
+    const [horizontalSpeed, setHorizontalSpeed]=useState(0.25)
+
 
     const [id, setId] = useState('f0');
 
@@ -577,28 +590,52 @@ const DrawingController = () => {
         }
     };
 
-    const exportSvg = (canvas) => {
+    const onVerticalSpeedChange=(e)=>{
+        setVerticalSpeed(e.target.value)
+        endpoint(`call 1-110 "speed=${e.target.value}"`);
+    }
+    const onHorizontalSpeedChange=(e)=>{
+        setHorizontalSpeed(e.target.value)
+        endpoint(`call 1-111 "speed=${e.target.value}"`);
+    }
+    const startVerticalScroll = (canvas) => {
         console.log(canvas.toSVG());
-
         endpoint(`play 1-110 [HTML] xyz.html`);
         endpoint(`call 1-110 "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
-        document.body.style.overflow='hidden';
+        document.getElementsByTagName('svg')[0].style.height='10000';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 10000');
         aa.style.top='100%';
-        setInterval(() => {
-            var dd=aa.getBoundingClientRect().top;
-            if (dd<-aa.getBoundingClientRect().height)
-            {aa.style.top='100%'}
-            else
-            {aa.style.top = (dd-0.5)+'px';}
-        }, 1);
-
+       document.body.style.overflow='hidden';
+       var speed=${verticalSpeed};
+       setInterval(() => {
+         aa.style.top =aa.getBoundingClientRect().top-speed;
+          }, 1);
         "`)
     }
 
+    const startHorizontalScroll = (canvas) => {
+        console.log(canvas.toSVG());
+        // alert(canvas.toSVG().replaceAll('"', '\\"').replaceAll('/\r?\n|\r/', ""));
+        endpoint(`play 1-111 [HTML] xyz.html`);
+        endpoint(`call 1-111 "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+        document.getElementsByTagName('svg')[0].style.width='10000';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 10000 576');
+        aa.style.left='100%';
+        document.body.style.overflow='hidden';
+        var speed=${horizontalSpeed};
+        setInterval(() => {
+         aa.style.left =aa.getBoundingClientRect().left-speed;
+          }, 1);
+        "`)
+    }
     const dispatch = useDispatch()
     // eslint-disable-next-line
     const canvasToJson = (canvas) => {
@@ -667,17 +704,19 @@ const DrawingController = () => {
                 return;
             }
             if (e.key === 'Delete') {
+                
                 window.editor.canvas.getActiveObjects().forEach(item => {
-                    if (item.type !== 'textbox' || !item.isEditing) { window.editor.canvas.remove(item); }
+                    //  alert(item.type);
+                    if (!( (item.type === 'textbox' ||  item.type === 'i-text') && item.isEditing)) { window.editor.canvas.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
                 var item = window.editor.canvas.getActiveObjects()[0];
-                if (item?.type !== 'textbox' || !item?.isEditing) { copy() }
+                if (!( (item?.type === 'textbox' ||  item?.type === 'i-text') && item?.isEditing)) { copy() }
             }
             if (e.ctrlKey && e.key === 'v') {
                 var item = window.editor.canvas.getActiveObjects()[0];
-                if (item?.type !== 'textbox' || !item?.isEditing) { paste() }
+                if (!( (item?.type === 'textbox' ||  item?.type === 'i-text') && item?.isEditing)) { paste() }
             }
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
@@ -693,38 +732,26 @@ const DrawingController = () => {
     }, [])
 
     function cancesetZoomAndPan(canvas) {
-        canvas.removeEventListener('mouse:wheel');
-        canvas.removeEventListener('mouse:down');
-        canvas.removeEventListener('mouse:move');
-        canvas.removeEventListener('mouse:up');
+        canvas.on('mouse:wheel', null);
+        canvas.on('mouse:down', null);
+        canvas.on('mouse:move', null);
+        canvas.on('mouse:up', null);
     }
 
     function setZoomAndPan(canvas) {
         canvas.on('mouse:wheel', function (opt) {
+            // window.editor.canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', window.editor.canvas.renderAll.bind(window.editor.canvas));
+
             var delta = opt.e.deltaY;
             var zoom = canvas.getZoom();
             zoom *= 0.999 ** delta;
             if (zoom > 20) zoom = 20;
             if (zoom < 0.01) zoom = 0.01;
+            // canvas.setZoom(zoom);
             canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
             opt.e.preventDefault();
             opt.e.stopPropagation();
-            var vpt = this.viewportTransform;
-            if (zoom < 400 / 1000) {
-                vpt[4] = 200 - 1024 * zoom / 2;
-                vpt[5] = 200 - 576 * zoom / 2;
-            } else {
-                if (vpt[4] >= 0) {
-                    vpt[4] = 0;
-                } else if (vpt[4] < canvas.getWidth() - 1024 * zoom) {
-                    vpt[4] = canvas.getWidth() - 1024 * zoom;
-                }
-                if (vpt[5] >= 0) {
-                    vpt[5] = 0;
-                } else if (vpt[5] < canvas.getHeight() - 576 * zoom) {
-                    vpt[5] = canvas.getHeight() - 576 * zoom;
-                }
-            }
+           
         })
 
         canvas.on('mouse:down', function (opt) {
@@ -783,10 +810,21 @@ const DrawingController = () => {
 
             <button className='stopButton' onClick={() => removeFromCaspar()}>Remove from Casparcg</button>
             <div>
-                <button onClick={() => exportSvg(window.editor?.canvas)}>Test Vertical Scroll</button>
+                <button onClick={() => startVerticalScroll(window.editor?.canvas)}>Test Vertical Scroll</button>
+                Vertical Scroll Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
+                <button onClick={() => endpoint(`call 1-110 "speed=0"`)}>Pause</button>
+                <button onClick={() => endpoint(`call 1-110 "speed=${verticalSpeed}"`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop 1-110`)}>Stop Vertical Scroll</button>
-
             </div>
+
+            <div>
+                <button onClick={() => startHorizontalScroll(window.editor?.canvas)}>Test Horizontal Scroll</button>
+                Vertical Scroll Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
+                <button onClick={() => endpoint(`call 1-111 "speed=0"`)}>Pause</button>
+                <button onClick={() => endpoint(`call 1-111 "speed=${horizontalSpeed}"`)}>Resume</button>
+                <button className='stopButton' onClick={() => endpoint(`stop 1-111`)}>Stop Horizontal Scroll</button>
+            </div>
+
             <div>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -821,6 +859,8 @@ const DrawingController = () => {
 
                     <button onClick={() => copy(window.editor.canvas)}> Copy</button>
                     <button onClick={() => paste(window.editor.canvas)}> Paste</button>
+                    <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
+
 
 
                 </div>
