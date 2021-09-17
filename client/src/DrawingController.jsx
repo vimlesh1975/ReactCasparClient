@@ -470,10 +470,10 @@ export const copy = () => {
     }, ['id']);
 }
 
-export const selectAll=(canvas)=>{
+export const selectAll = (canvas) => {
     canvas.discardActiveObject();
     var sel = new fabric.ActiveSelection(canvas.getObjects(), {
-      canvas: canvas,
+        canvas: canvas,
     });
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
@@ -517,8 +517,8 @@ const DrawingController = () => {
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
-    const [verticalSpeed, setVerticalSpeed]=useState(0.25)
-    const [horizontalSpeed, setHorizontalSpeed]=useState(0.25)
+    const [verticalSpeed, setVerticalSpeed] = useState(0.25)
+    const [horizontalSpeed, setHorizontalSpeed] = useState(0.25)
 
 
     const [id, setId] = useState('f0');
@@ -590,11 +590,11 @@ const DrawingController = () => {
         }
     };
 
-    const onVerticalSpeedChange=(e)=>{
+    const onVerticalSpeedChange = (e) => {
         setVerticalSpeed(e.target.value)
         endpoint(`call 1-110 "speed=${e.target.value}"`);
     }
-    const onHorizontalSpeedChange=(e)=>{
+    const onHorizontalSpeedChange = (e) => {
         setHorizontalSpeed(e.target.value)
         endpoint(`call 1-111 "speed=${e.target.value}"`);
     }
@@ -704,19 +704,19 @@ const DrawingController = () => {
                 return;
             }
             if (e.key === 'Delete') {
-                
+
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     //  alert(item.type);
-                    if (!( (item.type === 'textbox' ||  item.type === 'i-text') && item.isEditing)) { window.editor.canvas.remove(item); }
+                    if (!((item.type === 'textbox' || item.type === 'i-text') && item.isEditing)) { window.editor.canvas.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
                 var item = window.editor.canvas.getActiveObjects()[0];
-                if (!( (item?.type === 'textbox' ||  item?.type === 'i-text') && item?.isEditing)) { copy() }
+                if (!((item?.type === 'textbox' || item?.type === 'i-text') && item?.isEditing)) { copy() }
             }
             if (e.ctrlKey && e.key === 'v') {
                 var item = window.editor.canvas.getActiveObjects()[0];
-                if (!( (item?.type === 'textbox' ||  item?.type === 'i-text') && item?.isEditing)) { paste() }
+                if (!((item?.type === 'textbox' || item?.type === 'i-text') && item?.isEditing)) { paste() }
             }
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
@@ -728,70 +728,6 @@ const DrawingController = () => {
         });
         return () => {
             window.removeEventListener('keydown', null)
-        }
-    }, [])
-
-    function cancesetZoomAndPan(canvas) {
-        canvas.on('mouse:wheel', null);
-        canvas.on('mouse:down', null);
-        canvas.on('mouse:move', null);
-        canvas.on('mouse:up', null);
-    }
-
-    function setZoomAndPan(canvas) {
-        canvas.on('mouse:wheel', function (opt) {
-            // window.editor.canvas.setBackgroundColor('rgba(255, 73, 64, 0.6)', window.editor.canvas.renderAll.bind(window.editor.canvas));
-
-            var delta = opt.e.deltaY;
-            var zoom = canvas.getZoom();
-            zoom *= 0.999 ** delta;
-            if (zoom > 20) zoom = 20;
-            if (zoom < 0.01) zoom = 0.01;
-            // canvas.setZoom(zoom);
-            canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-            opt.e.preventDefault();
-            opt.e.stopPropagation();
-           
-        })
-
-        canvas.on('mouse:down', function (opt) {
-            var evt = opt.e;
-            if (evt.altKey === true) {
-                this.isDragging = true;
-                this.selection = false;
-                this.lastPosX = evt.clientX;
-                this.lastPosY = evt.clientY;
-            }
-        });
-        canvas.on('mouse:move', function (opt) {
-            if (this.isDragging) {
-                var e = opt.e;
-                var vpt = this.viewportTransform;
-                vpt[4] += e.clientX - this.lastPosX;
-                vpt[5] += e.clientY - this.lastPosY;
-                this.requestRenderAll();
-                this.lastPosX = e.clientX;
-                this.lastPosY = e.clientY;
-            }
-        });
-        canvas.on('mouse:up', function (opt) {
-            // on mouse up we want to recalculate new interaction
-            // for all objects, so we call setViewportTransform
-            this.setViewportTransform(this.viewportTransform);
-            this.isDragging = false;
-            this.selection = true;
-        });
-
-
-
-    }
-
-    useEffect(() => {
-        setTimeout(() => {
-            setZoomAndPan(window.editor.canvas);
-        }, 2000);
-        return () => {
-            cancesetZoomAndPan(window.editor.canvas)
         }
     }, [])
 

@@ -95,6 +95,7 @@ export default function App(props) {
     "easeoutinbounce",
   ]
   const [animationMethod, setAnimationMethod] = useState('easeinsine')
+  const [currentModule, setCurrentModule] = useState('drawing');
 
   useEffect(() => {
     window.imageName = imageName;
@@ -177,6 +178,7 @@ export default function App(props) {
     // console.log(index, prevIndex);
     switch (index) {
       case 0:
+        setCurrentModule('drawing');
         ReactDOM.render(<Provider store={store}><Drawing /></Provider>, document.getElementById('preview-container'))
         break;
       case 1:
