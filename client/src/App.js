@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
 
-import Oneliner from './Oneliner';
-
 import React from "react";
 import ReactDOM from 'react-dom';
 
@@ -18,7 +16,6 @@ import axios from 'axios'
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import OnelinerTable from './OnelinerTable'
 
 import DrawingController, { addImage } from './DrawingController';
 
@@ -95,7 +92,6 @@ export default function App(props) {
     "easeoutinbounce",
   ]
   const [animationMethod, setAnimationMethod] = useState('easeinsine')
-  const [currentModule, setCurrentModule] = useState('drawing');
 
   useEffect(() => {
     window.imageName = imageName;
@@ -178,19 +174,15 @@ export default function App(props) {
     // console.log(index, prevIndex);
     switch (index) {
       case 0:
-        setCurrentModule('drawing');
         ReactDOM.render(<Provider store={store}><Drawing /></Provider>, document.getElementById('preview-container'))
         break;
       case 1:
-        ReactDOM.render(<Provider store={store}><Oneliner f0={f0} cahngeText={cahngeText} /></Provider>, document.getElementById('preview-container'))
-        break;
-      case 2:
         ReactDOM.render(<Scroll f0={scrollData} cahngeText={cahngeText} />, document.getElementById('preview-container'))
         break;
-      case 3:
+      case 2:
         ReactDOM.render(<Clock />, document.getElementById('preview-container'))
         break;
-      case 4:
+      case 3:
         ReactDOM.render(<Video video={address1 + '/media/amb.mp4'} />, document.getElementById('preview-container'))
         break;
       default:
@@ -205,17 +197,9 @@ export default function App(props) {
   return (<React.Fragment>
     <div className='menu_bar'>
       <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear 1`)}>Stop Channel</button>
-      <button onClick={getPaths}>GetPaths</button>mediaPath={mediaPath}
-
-      <label htmlFor="favcolor">Font Color:</label>
-      <input onChange={changeStyle1} ref={refFontColor} type="color" defaultValue='#ffffff' />
-      <label htmlFor="favcolor">Strip Color:</label>
-      <input onChange={changeStyle1} ref={refStripColor} type="color" defaultValue='#50037c' />
-
-      Animation Method:<select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
+          Animation Method:<select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
-      {animationMethod}
       <span style={{ position: 'absolute', right: '10px' }}><b >Server 2.3 only</b></span>
     </div>
 
@@ -262,24 +246,20 @@ export default function App(props) {
         <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Drawing</Tab>
-            <Tab>Oneliner</Tab>
-
             <Tab>Scroll</Tab>
             <Tab>Clock</Tab>
-
             <Tab>Video</Tab>
-
             <Tab>Help</Tab>
-
           </TabList>
           <TabPanel>
-            <h2>Drawing</h2>
-
             <div style={{ border: '4px solid yellow', width: 900 }}>
               <DrawingController />
             </div>
+            <b>Select image from casparcg media folder: </b>
             <div style={{ display: 'flex' }}>
+
               <div style={{ maxHeight: '200px', overflow: 'scroll', border: '4px solid red' }}>
+
                 <table border='1' >
                   <tbody>
                     {media.map((val, i) => {
@@ -290,17 +270,13 @@ export default function App(props) {
                   </tbody>
                 </table>
               </div>
-              <div style={{ border: '4px solid green' }}>
+
+              <div style={{ border: '1px solid black' }}>
                 <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
                 Selected Image  <button onClick={() => addImage(window.editor.canvas)}>Add This Image</button><br />
-                <img src={imageName} alt='' width="300" height="150"></img>
+                <img src={imageName} alt='' width="270" height="150"></img>
               </div>
             </div>
-          </TabPanel>
-          <TabPanel>
-            <h2>One Liner</h2>
-            <OnelinerTable endpoint={endpoint} />
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-101`)}>Stop</button>
           </TabPanel>
           <TabPanel>
             <h2>Scroll</h2>

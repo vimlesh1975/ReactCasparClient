@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Oneliner from './Oneliner';
 
 import Clock from './Clock';
 import Scroll from './Scroll';
@@ -25,7 +24,6 @@ ReactDOM.render(
 
       <Switch>
         <Route exact path='/' render={() => (<App />)} />
-        <Route exact path='/oneliner/:f0/:color/:backgroundColor' render={({ match }) => (<Oneliner f0={match.params.f0} color={match.params.color} backgroundColor={match.params.backgroundColor} />)} />
         <Route exact path='/clock' render={() => (<Clock />)} />
         <Route exact path='/scroll/:f0' render={({ match }) => (<Scroll f0={match.params.f0} />)} />
         <Route exact path='/drawing' render={() => <Drawing canvasOutput={true} />} />

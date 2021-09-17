@@ -518,7 +518,7 @@ const DrawingController = () => {
     const [f2, setF2] = useState('Mahesh prasad');
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
     const [verticalSpeed, setVerticalSpeed] = useState(0.25)
-    const [horizontalSpeed, setHorizontalSpeed] = useState(0.25)
+    const [horizontalSpeed, setHorizontalSpeed] = useState(2)
 
 
     const [id, setId] = useState('f0');
@@ -599,16 +599,20 @@ const DrawingController = () => {
         endpoint(`call 1-111 "speed=${e.target.value}"`);
     }
     const startVerticalScroll = (canvas) => {
-        console.log(canvas.toSVG());
+        // console.log(canvas.toSVG());
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas) ;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().height;
         endpoint(`play 1-110 [HTML] xyz.html`);
         endpoint(`call 1-110 "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
-        document.getElementsByTagName('svg')[0].style.height='10000';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 10000');
+        document.getElementsByTagName('svg')[0].style.height='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 ${hh}');
         aa.style.top='100%';
+        aa.style.zoom=(${currentscreenSize*100}/1024)+'%';
        document.body.style.overflow='hidden';
        var speed=${verticalSpeed};
        setInterval(() => {
@@ -619,20 +623,24 @@ const DrawingController = () => {
 
     const startHorizontalScroll = (canvas) => {
         console.log(canvas.toSVG());
-        // alert(canvas.toSVG().replaceAll('"', '\\"').replaceAll('/\r?\n|\r/', ""));
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas) ;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width;
         endpoint(`play 1-111 [HTML] xyz.html`);
         endpoint(`call 1-111 "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
-        document.getElementsByTagName('svg')[0].style.width='10000';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 10000 576');
+        document.getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
         aa.style.left='100%';
+        aa.style.zoom=(${currentscreenSize*100}/1024)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed};
         setInterval(() => {
          aa.style.left =aa.getBoundingClientRect().left-speed;
+         if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
           }, 1);
         "`)
     }
@@ -731,37 +739,42 @@ const DrawingController = () => {
         }
     }, [])
 
+
+
     return (<div style={{ display: 'flex' }}>
         <div>
-            <div>
-                <button onClick={() => { endpoint(`play 1-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
-
+        <div style={{border: '1px solid black'}}>
+            <b> Screen Setup: </b>
                 Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
                 <button className='stopButton' onClick={() => endpoint(`call 1-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
-
             </div>
+            <div style={{border: '1px solid black'}}>
+            <b> Solid Caption: </b>
+            <button onClick={() => { endpoint(`play 1-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
             <button onClick={() => savetoCasparcgStore()}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
             <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
+            <button className='stopButton' onClick={() => removeFromCaspar()}>Out Animation</button>
+            <button className='stopButton' onClick={() => endpoint(`stop 1-109`)}>Stop</button>
 
-            <button className='stopButton' onClick={() => removeFromCaspar()}>Remove from Casparcg</button>
-            <div>
-                <button onClick={() => startVerticalScroll(window.editor?.canvas)}>Test Vertical Scroll</button>
-                Vertical Scroll Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
+            </div>
+
+            <div style={{border: '1px solid black'}}>
+            <b> Vertical  Scroll: </b>  <button onClick={() => startVerticalScroll(window.editor?.canvas)}>Start </button>
+                Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
                 <button onClick={() => endpoint(`call 1-110 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call 1-110 "speed=${verticalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => endpoint(`stop 1-110`)}>Stop Vertical Scroll</button>
-            </div>
-
-            <div>
-                <button onClick={() => startHorizontalScroll(window.editor?.canvas)}>Test Horizontal Scroll</button>
-                Vertical Scroll Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
+                <button className='stopButton' onClick={() => endpoint(`stop 1-110`)}>Stop</button>
+          <br />
+          <b> Horizntl Scroll: </b> 
+                <button onClick={() => startHorizontalScroll(window.editor?.canvas)}>Start</button>
+                 Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='2.0' />
                 <button onClick={() => endpoint(`call 1-111 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call 1-111 "speed=${horizontalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => endpoint(`stop 1-111`)}>Stop Horizontal Scroll</button>
+                <button className='stopButton' onClick={() => endpoint(`stop 1-111`)}>Stop</button>
             </div>
 
-            <div>
+            <div style={{border: '1px solid black'}}>
+               <b> Drawing Tools: </b>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
@@ -769,12 +782,14 @@ const DrawingController = () => {
                 <button onClick={() => toggleMode("drawing", window.editor.canvas)}>Toggle<VscEdit /></button>
 
             </div>
-            <div>
+            <div style={{border: '1px solid black'}}>
+            <b> Colors: </b>
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
                 stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
                 Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
-                <div>
+                <div style={{border: '1px solid black'}}>
+                <b> Skew: </b>
                     SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
                     SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
                 </div>
@@ -801,15 +816,17 @@ const DrawingController = () => {
 
                 </div>
             </div>
-            <div>
-                Font:  <select onChange={e => onFontChange(e)} value={currentFont}>
+            <div style={{border: '1px solid black'}}>
+            <b> Font: </b> 
+                Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
                     {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                 </select>
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
             <div>
 
-                <div>
+            <div style={{border: '1px solid black'}}>
+            <b> Save: </b> 
                     <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
                     <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button>
 
@@ -876,13 +893,16 @@ const DrawingController = () => {
                         </DragDropContext>
                     </div>
 
-                    <div>
-                        <span> URL: </span> <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="70" type='text' defaultValue={onlineImageUrl}></input>
-                        <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add image from this URL</button>
+                    <div style={{border: '1px solid black'}}>
+            <b> Image from URL: </b> 
+             <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
+                        <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add</button>
 
                     </div>
-                    <div style={{ border: '2px solid black', backgroundColor: 'darksalmon' }}>
-                        <b> Operate Clock from separate page, Add, select in preview, then send to Casparcg</b> <br />
+                    <div style={{border: '1px solid black'}}>
+                    <b>Clock: </b>
+                    Operate from separate page, Add, select in preview, then send to Casparcg
+                       <br />
                         <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
 
                         <button onClick={() => {
@@ -943,7 +963,8 @@ const DrawingController = () => {
 
                     </div>
 
-                    <div>
+                    <div style={{border: '1px solid black'}}>
+                    <b>Zoom and Pan: </b>
                         <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
                         <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
 
