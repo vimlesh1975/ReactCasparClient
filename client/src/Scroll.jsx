@@ -9,7 +9,7 @@ export default function Scroll({ f0 = 'Test scroll' }) {
     const [speed, setSpeed] = useState(0.05)
     const [oldSpeed, setOldSpeed] = useState(0.05)
     const ddd = (e, data) => {
-        endpoint(`mixer 1-104 fill ${data.x / 1024} ${data.y / 576} 1 1`)
+        endpoint(`mixer ${window.chNumber}-104 fill ${data.x / 1024} ${data.y / 576} 1 1`)
     }
     useEffect(() => {
         const timer = setInterval(() => {

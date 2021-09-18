@@ -9,7 +9,7 @@ export default function Clock() {
     const locale = 'en';
     const [today, setDate] = useState(new Date());
     const ddd = (e, data) => {
-        endpoint(`mixer 1-105 fill ${data.x / 1024} ${data.y / 576} 1 1`)
+        endpoint(`mixer ${window.chNumber}-105 fill ${data.x / 1024} ${data.y / 576} 1 1`)
     }
     useEffect(() => {
         const timer = setInterval(() => {

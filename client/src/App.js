@@ -38,15 +38,19 @@ export default function App(props) {
     localStorage.setItem('ReactCasparClient', JSON.stringify(newStyle))
   }
 
-  const [mediaPath, setmediaPath] = useState()
+  const [mediaPath, setmediaPath] = useState();
   // eslint-disable-next-line
   const [remainingTime, setRemainingTime] = useState()
-  const [filename, setfilename] = useState('amb')
+  const [filename, setfilename] = useState('amb');
   const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
-  const [f0, setF0] = useState('Vimlesh Kumar')
+  const [f0, setF0] = useState('Vimlesh Kumar');
   const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
-  const refPreviewContainer = useRef()
-  const [media, setMedia] = useState([])
+  const refPreviewContainer = useRef();
+  const [media, setMedia] = useState([]);
+  const chNumbers = [1, 2, 3, 4, 5, 6];
+
+  const [chNumber, setChNumber] = useState(1)
+
   const animationMethods = [
     'linear',
     'easenone',
@@ -106,6 +110,14 @@ export default function App(props) {
       // cleanup
     }
   }, [animationMethod])
+
+  useEffect(() => {
+    window.chNumber = chNumber;
+    document.title = `CH #${chNumber} React Caspar Client`;
+    return () => {
+      // cleanup
+    }
+  }, [chNumber])
 
   const connectHandler = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
@@ -191,14 +203,22 @@ export default function App(props) {
   }
 
   const changeAnimationMethod = e => {
-    setAnimationMethod(e.target.value)
+    setAnimationMethod(e.target.value);
+  }
+  const changeChannelNumber = e => {
+    setChNumber(e.target.value);
   }
 
   return (<React.Fragment>
+
     <div className='menu_bar'>
       <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear 1`)}>Stop Channel</button>
-          Animation Method:<select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
+      <b> Animation Method: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+      </select>
+      <b>Channel Number:</b>
+      <select onChange={e => changeChannelNumber(e)} value={chNumber}>
+        {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
       <span style={{ position: 'absolute', right: '10px' }}><b >Server 2.3 only</b></span>
     </div>
@@ -285,30 +305,30 @@ export default function App(props) {
 
             <br />
             <button onClick={() => {
-              endpoint(`play 1-104 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/scroll/${scrollData}"`)
+              endpoint(`play ${chNumber}-104 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/scroll/${scrollData}"`)
             }}  >Start</button>
 
-            <button className='stopButton' onClick={() => endpoint(`call 1-104 pauseScroll()`)}>Pause</button>
-            <button className='stopButton' onClick={() => endpoint(`call 1-104 resumeScroll()`)}>Resume</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-104`)}>Stop</button>
+            <button className='stopButton' onClick={() => endpoint(`call ${chNumber}-104 pauseScroll()`)}>Pause</button>
+            <button className='stopButton' onClick={() => endpoint(`call ${chNumber}-104 resumeScroll()`)}>Resume</button>
+            <button className='stopButton' onClick={(e) => endpoint(`stop ${chNumber}-104`)}>Stop</button>
 
-            <button className='stopButton' onClick={(e) => endpoint(`call 1-104 fontcolor('${refFontColor.current.value}')`)}>Update Color</button>
+            <button className='stopButton' onClick={(e) => endpoint(`call ${chNumber}-104 fontcolor('${refFontColor.current.value}')`)}>Update Color</button>
 
-            Speed<input onChange={(e) => endpoint(`call 1-104 setSpeed(${e.target.value})`)} type="number" id='scrollSpeed' min='-5' max='5' step='0.01' defaultValue='0.05' />
+            Speed<input onChange={(e) => endpoint(`call ${chNumber}-104 setSpeed(${e.target.value})`)} type="number" id='scrollSpeed' min='-5' max='5' step='0.01' defaultValue='0.05' />
           </TabPanel>
           <TabPanel>
             <h2>Clock</h2>
-            <button onClick={() => endpoint(`play 1-105 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/clock"`)}> Clock</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop 1-105`)}>Stop</button>
+            <button onClick={() => endpoint(`play ${chNumber}-105 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/clock"`)}> Clock</button>
+            <button className='stopButton' onClick={(e) => endpoint(`stop ${chNumber}-105`)}>Stop</button>
           </TabPanel>
 
           <TabPanel>
             <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
-              <button className='palyButton' onClick={() => endpoint(`play 1-1 "${filename}" loop`)}>Play Video</button>
-              <button className='stopButton' onClick={() => endpoint(`pause 1-1`)}>Pause</button>
-              <button className='stopButton' onClick={() => endpoint(`resume 1-1`)}>Resume</button>
-              <button className='stopButton' onClick={() => endpoint(`stop 1-1`)}>Stop</button>
+              <button className='palyButton' onClick={() => endpoint(`play ${chNumber}-1 "${filename}" loop`)}>Play Video</button>
+              <button className='stopButton' onClick={() => endpoint(`pause ${chNumber}-1`)}>Pause</button>
+              <button className='stopButton' onClick={() => endpoint(`resume ${chNumber}-1`)}>Resume</button>
+              <button className='stopButton' onClick={() => endpoint(`stop ${chNumber}-1`)}>Stop</button>
             </div>
             <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
             <div style={{ maxHeight: '300px', maxWidth: '400px', overflow: 'scroll' }}>
