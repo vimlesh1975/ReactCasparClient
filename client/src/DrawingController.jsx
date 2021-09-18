@@ -405,19 +405,19 @@ export const groupObjects = (canvas, shouldGroup) => {
     }
 };
 
-export const savetoCasparcgStore = () => {
+export const savetoCasparcgStore = (layerNumber) => {
     var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-    endpoint(`call ${window.chNumber}-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+    endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
     setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-109 fill 0 0 0 1 12 ${window.animationMethod}`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     }, 200);
 
     setTimeout(() => {
-        endpoint(`call ${window.chNumber}-109 ReadToCasparcgfromStore()`)
+        endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
     }, 800);
     setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-109 fill 0 0 1 1 12 ${window.animationMethod}`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
     }, 1000);
 }
 
@@ -438,18 +438,18 @@ export const savetoCasparcgStoreClock = () => {
 }
 
 
-export const updatetoCasparcgStore = () => {
+export const updatetoCasparcgStore = (layerNumber) => {
     var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-    endpoint(`call ${window.chNumber}-109 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+    endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
 
     setTimeout(() => {
-        endpoint(`call ${window.chNumber}-109 ReadToCasparcgfromStore()`)
+        endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
     }, 200);
 
 }
-const removeFromCaspar = () => {
-    endpoint(`mixer ${window.chNumber}-109 fill 0 0 0 1 12 ${window.animationMethod}`)
+const removeFromCaspar = (layerNumber) => {
+    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
 }
 
 const changeText = (key, val) => {
@@ -599,7 +599,6 @@ const DrawingController = ({ chNumber }) => {
         endpoint(`call ${window.chNumber}-111 "speed=${e.target.value}"`);
     }
     const startVerticalScroll = (canvas) => {
-        // console.log(canvas.toSVG());
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
@@ -622,7 +621,6 @@ const DrawingController = ({ chNumber }) => {
     }
 
     const startHorizontalScroll = (canvas) => {
-        console.log(canvas.toSVG());
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
@@ -646,7 +644,6 @@ const DrawingController = ({ chNumber }) => {
     }
 
     const startClock = (canvas) => {
-        console.log(canvas.toSVG());
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
 
@@ -772,13 +769,39 @@ const DrawingController = ({ chNumber }) => {
                 <button className='stopButton' onClick={() => endpoint(`call ${window.chNumber}-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
             </div>
             <div style={{ border: '1px solid black' }}>
-                <b> Solid Caption: </b>
+                <b> Solid Caption 1: </b>
+                <button onClick={() => { endpoint(`play ${window.chNumber}-108 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(108)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(108)}>Update To Casparcg</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(108)}>Out Animation</button>
+                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-108`)}>Stop</button>
+
+            </div>
+            <div style={{ border: '1px solid black' }}>
+                <b> Solid Caption 2: </b>
                 <button onClick={() => { endpoint(`play ${window.chNumber}-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore()}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore()}>Update To Casparcg</button>
-                <button className='stopButton' onClick={() => removeFromCaspar()}>Out Animation</button>
+                <button onClick={() => savetoCasparcgStore(109)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(109)}>Update To Casparcg</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(109)}>Out Animation</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-109`)}>Stop</button>
 
+            </div>
+
+            <div style={{ border: '1px solid black' }}>
+                <b> Logo: </b>
+                <button onClick={() => { endpoint(`play ${window.chNumber}-200 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(200)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(200)}>Update To Casparcg</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(200)}>Out Animation</button>
+                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-200`)}>Stop</button>
+            </div>
+            <div style={{ border: '1px solid black' }}>
+                <b> Location Band: </b>
+                <button onClick={() => { endpoint(`play ${window.chNumber}-210 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(210)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(210)}>Update To Casparcg</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(210)}>Out Animation</button>
+                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-210`)}>Stop</button>
             </div>
 
             <div style={{ border: '1px solid black' }}>
