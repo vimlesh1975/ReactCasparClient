@@ -4,9 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import Clock from './Clock';
-import Scroll from './Scroll';
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Provider } from 'react-redux'
@@ -24,8 +21,7 @@ ReactDOM.render(
 
       <Switch>
         <Route exact path='/' render={() => (<App />)} />
-        <Route exact path='/clock' render={() => (<Clock />)} />
-        <Route exact path='/scroll/:f0' render={({ match }) => (<Scroll f0={match.params.f0} />)} />
+
         <Route exact path='/drawing' render={() => <Drawing canvasOutput={true} />} />
       </Switch>
     </Router>

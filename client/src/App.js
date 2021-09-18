@@ -1,30 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
-
 import React from "react";
 import ReactDOM from 'react-dom';
-
-import Clock from './Clock'
-import Scroll from './Scroll';
 import Video from './Video';
-
 import Drawing from './Drawing';
 import { useDispatch } from 'react-redux'
 import { endpoint, address1 } from './common'
 import axios from 'axios'
-
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-
 import DrawingController, { addImage } from './DrawingController';
-
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
-
 export default function App(props) {
-
 
   const refFontColor = useRef();
   const refStripColor = useRef();
@@ -189,12 +179,6 @@ export default function App(props) {
         ReactDOM.render(<Provider store={store}><Drawing /></Provider>, document.getElementById('preview-container'))
         break;
       case 1:
-        ReactDOM.render(<Scroll f0={scrollData} cahngeText={cahngeText} />, document.getElementById('preview-container'))
-        break;
-      case 2:
-        ReactDOM.render(<Clock />, document.getElementById('preview-container'))
-        break;
-      case 3:
         ReactDOM.render(<Video video={address1 + '/media/amb.mp4'} />, document.getElementById('preview-container'))
         break;
       default:
@@ -266,8 +250,6 @@ export default function App(props) {
         <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Drawing</Tab>
-            <Tab>Scroll</Tab>
-            <Tab>Clock</Tab>
             <Tab>Video</Tab>
             <Tab>Help</Tab>
           </TabList>
@@ -299,30 +281,6 @@ export default function App(props) {
             </div>
           </TabPanel>
           <TabPanel>
-            <h2>Scroll</h2>
-            <label htmlFor="w3review">Scroll Content</label><br />
-            <textarea id="w3review" defaultValue={scrollData} name="w3review" rows="10" cols="40" onChange={(e) => setScrollData(e.target.value)} />
-
-            <br />
-            <button onClick={() => {
-              endpoint(`play ${chNumber}-104 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/scroll/${scrollData}"`)
-            }}  >Start</button>
-
-            <button className='stopButton' onClick={() => endpoint(`call ${chNumber}-104 pauseScroll()`)}>Pause</button>
-            <button className='stopButton' onClick={() => endpoint(`call ${chNumber}-104 resumeScroll()`)}>Resume</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop ${chNumber}-104`)}>Stop</button>
-
-            <button className='stopButton' onClick={(e) => endpoint(`call ${chNumber}-104 fontcolor('${refFontColor.current.value}')`)}>Update Color</button>
-
-            Speed<input onChange={(e) => endpoint(`call ${chNumber}-104 setSpeed(${e.target.value})`)} type="number" id='scrollSpeed' min='-5' max='5' step='0.01' defaultValue='0.05' />
-          </TabPanel>
-          <TabPanel>
-            <h2>Clock</h2>
-            <button onClick={() => endpoint(`play ${chNumber}-105 [html] "http://${window.location.host}${process.env.PUBLIC_URL}/clock"`)}> Clock</button>
-            <button className='stopButton' onClick={(e) => endpoint(`stop ${chNumber}-105`)}>Stop</button>
-          </TabPanel>
-
-          <TabPanel>
             <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
               <button className='palyButton' onClick={() => endpoint(`play ${chNumber}-1 "${filename}" loop`)}>Play Video</button>
@@ -341,17 +299,13 @@ export default function App(props) {
                       var source = document.getElementsByTagName('source')[0];
 
                       if ((`${address1}/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
-
                         video.setAttribute("poster", `${address1}/media/${e.target.innerText}`);
-
                       }
                       else {
                         video.setAttribute("poster", ``);
                         source.setAttribute("src", `${address1}/media/${e.target.innerText}`);
                         video.load();
                       }
-
-
                     }
                     }>{val}</td></tr>
                   })}
@@ -359,9 +313,6 @@ export default function App(props) {
               </table>
             </div>
           </TabPanel>
-
-
-
 
           <TabPanel>
             <h2>Help</h2>
@@ -391,7 +342,6 @@ export default function App(props) {
               <li><a href='https://casparcgforum.org/t/react-caspar-client' target='_blank' rel="noreferrer">Casparcg Forum Topic</a> </li>
               <li><a href='https://bit.ly/3jRrhDL' target='_blank' rel="noreferrer">Latest Build</a> </li>
 
-
               <li>test</li>
             </ol>
           </TabPanel>
@@ -399,16 +349,6 @@ export default function App(props) {
       </div >
 
     </div>
-
-    {/* <input
-      type='file'
-      id='file'
-      className='input-file'
-      accept='.txt'
-      onChange={e => handleFileChosen(e.target.files[0])}
-    />
-    <button onClick={saveFile}>Save file</button> <br /> */}
-
 
   </React.Fragment>);
 }

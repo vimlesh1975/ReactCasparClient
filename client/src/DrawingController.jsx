@@ -945,6 +945,7 @@ const DrawingController = ({ chNumber }) => {
                         'linethrough':${window.editor.canvas.getActiveObject()?.linethrough},
                         'skewX':${window.editor.canvas.getActiveObject()?.skewX},
                         'skewY':${window.editor.canvas.getActiveObject()?.skewY},
+                        'objectCaching':false,
 
                     });
                     editor.canvas.add(sss);
