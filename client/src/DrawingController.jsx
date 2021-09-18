@@ -12,6 +12,7 @@ import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo,
 
 import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
+import demofile from './demo.txt'
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -327,6 +328,12 @@ const onSkewYSizeChange = e => {
     window.editor.canvas.requestRenderAll();
 }
 
+const putat00 = (canvas) => {
+    // canvas.setZoom(1)
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    selectAll(canvas);
+    canvas.getActiveObject()?.set({ left: 0, top: 0 });
+}
 const alignAllLeft = () => {
     const arr = [];
     window.editor.canvas.getActiveObjects().forEach(item => {
@@ -653,7 +660,10 @@ const DrawingController = ({ chNumber }) => {
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
-      
+
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
         var cc=document.getElementsByTagName('tspan')[0];
@@ -735,22 +745,19 @@ const DrawingController = ({ chNumber }) => {
 
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     //  alert(item.type);
-                    if (!((item.type === 'textbox' || item.type === 'i-text') && item.isEditing)) { window.editor.canvas.remove(item); }
+                    if (!((item.type === 'textbox') && item.isEditing)) { window.editor.canvas.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
-                var item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox' || item?.type === 'i-text') && item?.isEditing)) { copy() }
+                const item = window.editor.canvas.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { copy() }
             }
             if (e.ctrlKey && e.key === 'v') {
-                var item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox' || item?.type === 'i-text') && item?.isEditing)) { paste() }
+                const item = window.editor.canvas.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { paste() }
             }
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
-            }
-            if (e.key === 'F2') {
-                savetoCasparcgStore();
             }
 
         });
@@ -806,14 +813,14 @@ const DrawingController = ({ chNumber }) => {
 
             <div style={{ border: '1px solid black' }}>
                 <b> Vertical  Scroll: </b>  <button onClick={() => startVerticalScroll(window.editor?.canvas)}>Start </button>
-                Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.25' />
+                Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
                 <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=${verticalSpeed}"`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-110`)}>Stop</button>
                 <br />
                 <b> Horizntl Scroll: </b>
                 <button onClick={() => startHorizontalScroll(window.editor?.canvas)}>Start</button>
-                Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='2.0' />
+                Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
                 <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-111`)}>Stop</button>
@@ -848,6 +855,8 @@ const DrawingController = ({ chNumber }) => {
                     <b>Zoom and Pan: </b>
                     <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
                     <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
+                    <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
+
                 </div>
                 <div>
                     <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>

@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, savetoCasparcgStore, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
+import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
@@ -9,7 +9,6 @@ const ContextMenu = ({ editor }) => {
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
-        <li onClick={() => savetoCasparcgStore()}>Show to Casparcg</li>
         <li onClick={() => deleteSelectedItem(editor.canvas)}>Delete Selected <VscTrash />
           <ul>
             <li onClick={() => deleteAll(editor.canvas)}>Delete All</li>

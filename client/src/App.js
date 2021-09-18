@@ -5,7 +5,6 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import Video from './Video';
 import Drawing from './Drawing';
-import { useDispatch } from 'react-redux'
 import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -16,25 +15,11 @@ import store from './store'
 import { v4 as uuidv4 } from 'uuid';
 export default function App(props) {
 
-  const refFontColor = useRef();
-  const refStripColor = useRef();
-  const dispatch1 = useDispatch()
-  const changeStyle1 = () => {
-    const newStyle = { color: refFontColor.current.value, backgroundColor: refStripColor.current.value }
-    dispatch1({
-      type: 'CHANGE_STYLE1',
-      payload: newStyle
-    });
-    localStorage.setItem('ReactCasparClient', JSON.stringify(newStyle))
-  }
-
   const [mediaPath, setmediaPath] = useState();
   // eslint-disable-next-line
   const [remainingTime, setRemainingTime] = useState()
   const [filename, setfilename] = useState('amb');
   const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
-  const [f0, setF0] = useState('Vimlesh Kumar');
-  const [scrollData, setScrollData] = useState('At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.')
   const refPreviewContainer = useRef();
   const [media, setMedia] = useState([]);
   const chNumbers = [1, 2, 3, 4, 5, 6];
@@ -123,11 +108,7 @@ export default function App(props) {
     }
 
   }
-  const getPaths = () => {
-    axios.post(address1 + '/getPaths').then((aa) => {
-      setmediaPath(aa.data)
-    }).catch((aa) => { console.log('Error', aa) });
-  }
+
   const connectbutton = useRef();
 
   const refreshMedia = () => {
@@ -164,13 +145,6 @@ export default function App(props) {
     }
   }, [mediaPath])
 
-  const cahngeText = (e) => {
-    if (e.keyCode === 27) {
-      var aa = e.target.getAttribute('functionname');
-      // eslint-disable-next-line
-      eval(aa)(e.target.innerText);
-    }
-  }
 
   const onTabChange = (index, prevIndex) => {
     // console.log(index, prevIndex);
