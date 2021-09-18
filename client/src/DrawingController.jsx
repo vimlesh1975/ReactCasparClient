@@ -12,7 +12,6 @@ import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo,
 
 import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
-import demofile from './demo.txt'
 
 import { v4 as uuidv4 } from 'uuid';
 
