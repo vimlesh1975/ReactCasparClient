@@ -644,6 +644,29 @@ const DrawingController = ({ chNumber }) => {
           }, 1);
         "`)
     }
+
+    const startClock = (canvas) => {
+        console.log(canvas.toSVG());
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+
+        endpoint(`play ${window.chNumber}-112 [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-112 "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+      
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.body.style.overflow='hidden';
+        var cc=document.getElementsByTagName('tspan')[0];
+
+        setInterval(() => {
+            var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+         cc.textContent  =ss1;
+          }, 1000);
+        "`)
+    }
     const dispatch = useDispatch()
     // eslint-disable-next-line
     const canvasToJson = (canvas) => {
@@ -772,7 +795,12 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-111`)}>Stop</button>
             </div>
-
+            <div style={{ border: '1px solid black' }}>
+                <b>Clock: </b>
+                <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
+                <button onClick={() => startClock(window.editor.canvas)}>Show On Casparcg</button>
+                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-112`)}>Stop</button>
+            </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Drawing Tools: </b>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
@@ -792,6 +820,11 @@ const DrawingController = ({ chNumber }) => {
                     <b> Skew: </b>
                     SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
                     SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                </div>
+                <div style={{ border: '1px solid black' }}>
+                    <b>Zoom and Pan: </b>
+                    <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
+                    <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
                 </div>
                 <div>
                     <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
@@ -899,77 +932,7 @@ const DrawingController = ({ chNumber }) => {
                         <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add</button>
 
                     </div>
-                    <div style={{ border: '1px solid black' }}>
-                        <b>Clock: </b>
-                        Operate from separate page, Add, select in preview, then send to Casparcg
-                        <br />
-                        <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
 
-                        <button onClick={() => {
-                            endpoint(`play ${window.chNumber}-120 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`);
-
-                        }} >Initialise</button>
-                        <button className='stopButton' onClick={() => endpoint(`call ${window.chNumber}-120 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set screen size as above</button>
-                        <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)
-                            savetoCasparcgStoreClock();
-                            if (!window.editor.canvas.getActiveObject() || (window.editor.canvas.getActiveObject()?.id !== 'clock1')) {
-                                var aa = window.editor.canvas.getObjects();
-                                aa.forEach(element => {
-                                    if ((element.type === 'textbox') && (element.id === 'clock1')) {
-                                        // alert(element.id)
-                                        window.editor.canvas.setActiveObject(element)
-                                    }
-                                });
-                            }
-                            setTimeout(() => {
-                                endpoint(`call ${window.chNumber}-120 "
-                        var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                        var sss = new fabric.Textbox(ss1,{
-                        'left':${window.editor.canvas.getActiveObject()?.left},
-                        'top':${window.editor.canvas.getActiveObject()?.top},
-                        'fontFamily':'${window.editor.canvas.getActiveObject()?.fontFamily}',
-                        'fontSize':${window.editor.canvas.getActiveObject()?.fontSize},
-                        'fontWeight':'${window.editor.canvas.getActiveObject()?.fontWeight}',
-                        'fill':'${window.editor.canvas.getActiveObject()?.fill}',
-                        'backgroundColor':'${window.editor.canvas.getActiveObject()?.backgroundColor}',
-                        'width':${window.editor.canvas.getActiveObject()?.width},
-                        'scaleX':${window.editor.canvas.getActiveObject()?.scaleX},
-                        'scaleY':${window.editor.canvas.getActiveObject()?.scaleY},
-                        'textAlign':'${window.editor.canvas.getActiveObject()?.textAlign}',
-                        'angle':${window.editor.canvas.getActiveObject()?.angle},
-                        'stroke':'${window.editor.canvas.getActiveObject()?.stroke}',
-                        'strokeWidth':${window.editor.canvas.getActiveObject()?.strokeWidth},
-                        'fontStyle':'${window.editor.canvas.getActiveObject()?.fontStyle}',
-                        'underline':${window.editor.canvas.getActiveObject()?.underline},
-                        'linethrough':${window.editor.canvas.getActiveObject()?.linethrough},
-                        'skewX':${window.editor.canvas.getActiveObject()?.skewX},
-                        'skewY':${window.editor.canvas.getActiveObject()?.skewY},
-                        'objectCaching':false,
-
-                    });
-                    editor.canvas.add(sss);
-                    editor.canvas.requestRenderAll();
-                    setInterval(() => {
-                        var ss2 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                        sss.set({'text': ss2});
-                        editor.canvas.requestRenderAll();
-                    }, 1000);
-
-                    "`);
-                            }, 1000);
-                        }}>Add to Casparcg</button>
-
-                        <button onClick={() => endpoint(`call ${window.chNumber}-120 "(editor.canvas.getObjects()).forEach(element => editor.canvas.remove(element))";`)}>Remove from Casparcg</button>
-
-                    </div>
-
-                    <div style={{ border: '1px solid black' }}>
-                        <b>Zoom and Pan: </b>
-                        <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
-                        <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
-
-                    </div>
                 </div>
             </div>
         </div>
