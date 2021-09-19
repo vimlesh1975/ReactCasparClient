@@ -28,10 +28,14 @@ fontList.getFonts({ disableQuoting: true })
 // app.use(cors())
 
 
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
+// const bodyParser = require('body-parser');
+// app.use(bodyParser({limit: '50mb'}));
+// const jsonParser = bodyParser.json();
 
-app.use(jsonParser);
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+
+// app.use(jsonParser);
 
 const port = process.env.PORT || 8080;
 const options = { cors: true };
@@ -110,8 +114,8 @@ app.post('/getmedia', (req, res) => {
 
 app.post('/endpoint', (req, res) => {
     aa.do(new AMCP.CustomCommand(req.body.string)).then((aa1) => {
-        console.log(req.body.string)
-        console.log(aa1.response.raw)
+        // console.log(req.body.string)
+        // console.log(aa1.response.raw)
     }).catch((aa2) => console.log(aa2));
     res.end()
 })

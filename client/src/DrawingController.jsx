@@ -80,6 +80,15 @@ const options = {
     stroke: '#ffffff',
     strokeWidth: 3,
 };
+
+const shadowOptions = {
+    color: 'black',
+    blur: 30,
+    offsetX: 0,
+    offsetY: 0,
+    affectStroke: false
+};
+
 export var gradient = new fabric.Gradient({
     type: 'linear',
     // gradientUnits: 'pixels', // or 'percentage'
@@ -95,11 +104,9 @@ export var gradient = new fabric.Gradient({
     ]
 });
 
-
-
 export const addClock = canvas => {
-
     const sss = new fabric.Textbox('', {
+        shadow: shadowOptions,
         left: 10,
         top: 530,
         width: 100,
@@ -133,6 +140,7 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+        shadow: shadowOptions,
         id: 'f0',
         left: 100,
         top: 0,
@@ -184,6 +192,7 @@ export const setGradientColor = canvas => {
 
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
+        shadow: shadowOptions,
         top: -100,
         left: 90,
         width: 500,
@@ -203,6 +212,7 @@ export const createRect = (canvas) => {
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
+        shadow: shadowOptions,
         top: 160,
         left: -100,
         radius: 50,
@@ -224,6 +234,7 @@ export const createCircle = (canvas) => {
 export const createTriangle = (canvas) => {
     canvas.isDrawingMode = false;
     const triangle = new fabric.Triangle({
+        shadow: shadowOptions,
         top: 50,
         left: -100,
         width: 100,
@@ -312,6 +323,32 @@ const changeStrokeCurrentColor = e => {
     window.editor.canvas.requestRenderAll();
 }
 
+const changeShadowCurrentColor = e => {
+    shadowOptions.color = e.target.value;
+    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.color = e.target.value)
+    window.editor.canvas.requestRenderAll();
+}
+const onBlurSizeChange = e => {
+    shadowOptions.blur = e.target.value;
+    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.blur = e.target.value)
+    window.editor.canvas.requestRenderAll();
+}
+const onoffsetXChange = e => {
+    shadowOptions.offsetX = e.target.value;
+    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.offsetX = e.target.value)
+    window.editor.canvas.requestRenderAll();
+}
+
+const onoffsetYChange = e => {
+    shadowOptions.offsetY = e.target.value;
+    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.offsetY = e.target.value)
+    window.editor.canvas.requestRenderAll();
+}
+const affectStroke = e => {
+    shadowOptions.affectStroke = e.target.checked;
+    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.affectStroke = e.target.checked)
+    window.editor.canvas.requestRenderAll();
+}
 const onstrokeSizeChange = e => {
     options.strokeWidth = parseInt(e.target.value);
     window.editor.canvas.freeDrawingBrush.width = parseInt(e.target.value);
@@ -414,17 +451,18 @@ export const groupObjects = (canvas, shouldGroup) => {
 export const savetoCasparcgStore = (layerNumber) => {
     var dd = window.editor.canvas.toJSON(['id'])
     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-    endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+
+    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-    }, 200);
+        endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+    }, 100);
 
     setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
-    }, 800);
+    }, 1000);
     setTimeout(() => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
-    }, 1000);
+    }, 1100);
 }
 
 export const savetoCasparcgStoreClock = () => {
@@ -523,8 +561,8 @@ const DrawingController = ({ chNumber }) => {
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
-    const [verticalSpeed, setVerticalSpeed] = useState(0.25)
-    const [horizontalSpeed, setHorizontalSpeed] = useState(2)
+    const [verticalSpeed, setVerticalSpeed] = useState(0.3)
+    const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
 
 
     const id = 'f0';
@@ -771,43 +809,63 @@ const DrawingController = ({ chNumber }) => {
         <div>
             <div style={{ border: '1px solid black' }}>
                 <b> Screen Setup: </b>
-                Casparcg Screen Sizes  <select onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
-                <button className='stopButton' onClick={() => endpoint(`call ${window.chNumber}-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)}>Set</button>
+                Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
             </div>
+
             <div style={{ border: '1px solid black' }}>
                 <b> Solid Caption 1: </b>
-                <button onClick={() => { endpoint(`play ${window.chNumber}-108 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(108)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(108)}>Update To Casparcg</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(108)}>Out Animation</button>
+                <button onClick={() => {
+                    endpoint(`play ${window.chNumber}-108 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
+                    setTimeout(() => {
+                        endpoint(`call ${window.chNumber}-108 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
+                    }, 2000);
+                }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(108)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(108)}>Update</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(108)}>Out</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-108`)}>Stop</button>
-
-            </div>
+                   </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Solid Caption 2: </b>
-                <button onClick={() => { endpoint(`play ${window.chNumber}-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(109)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(109)}>Update To Casparcg</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(109)}>Out Animation</button>
+                <button onClick={() => {
+                    endpoint(`play ${window.chNumber}-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`);
+                    setTimeout(() => {
+                        endpoint(`call ${window.chNumber}-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
+                    }, 2000);
+                }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(109)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(109)}>Update</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(109)}>Out</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-109`)}>Stop</button>
-
-            </div>
+                  </div>
 
             <div style={{ border: '1px solid black' }}>
                 <b> Logo: </b>
-                <button onClick={() => { endpoint(`play ${window.chNumber}-200 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(200)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(200)}>Update To Casparcg</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(200)}>Out Animation</button>
+                <button onClick={() => {
+                    endpoint(`play ${window.chNumber}-200 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
+                    setTimeout(() => {
+                        endpoint(`call ${window.chNumber}-200 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
+                    }, 2000);
+                }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(200)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(200)}>Update</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(200)}>Out</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-200`)}>Stop</button>
+              
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Location Band: </b>
-                <button onClick={() => { endpoint(`play ${window.chNumber}-210 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`) }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(210)}>Show To Casparcg <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(210)}>Update To Casparcg</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(210)}>Out Animation</button>
+                <button onClick={() => {
+                    endpoint(`play ${window.chNumber}-210 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
+                    setTimeout(() => {
+                        endpoint(`call ${window.chNumber}-210 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
+                    }, 2000);
+                }} >Initialise</button>
+                <button onClick={() => savetoCasparcgStore(210)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updatetoCasparcgStore(210)}>Update</button>
+                <button className='stopButton' onClick={() => removeFromCaspar(210)}>Out</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-210`)}>Stop</button>
+              
             </div>
 
             <div style={{ border: '1px solid black' }}>
@@ -843,8 +901,20 @@ const DrawingController = ({ chNumber }) => {
                 <b> Colors: </b>
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
-                stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
+                Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
+
                 Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+
+                <div style={{ border: '1px solid black' }}>
+                    <b> Shadow: </b>
+                    <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
+                    Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
+                    offsetX: <input style={{ width: '50px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                    offsetY: <input style={{ width: '50px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                    affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
+
+                </div>
+
                 <div style={{ border: '1px solid black' }}>
                     <b> Skew: </b>
                     SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
