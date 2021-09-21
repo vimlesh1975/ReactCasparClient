@@ -714,17 +714,16 @@ const DrawingController = ({ chNumber }) => {
          aa +=  '<div>' + canvas.toSVG() +'</div>';
          aa += `
          <script>
-  var aa = document.getElementsByTagName('div')[0];
+        var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.height='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 ${hh}');
-        aa.style.top='90%';
+        aa.style.top='100%';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
        document.body.style.overflow='hidden';
        var speed=${verticalSpeed};
           setInterval(function(){
-              aa.style.top =aa.getBoundingClientRect().top-speed;
-              console.log('hi');
+              aa.style.top =(aa.getBoundingClientRect().top-speed)+'px';
              }, 1);
          </script>
          `;
@@ -741,6 +740,95 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
+    const exportHorizontalScrollAsHTML=canvas=>{
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
+        const element = document.createElement("a");
+        var aa=`<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+        `;
+         aa +=  '<div>' + canvas.toSVG() +'</div>';
+         aa += `
+         <script>
+        var aa = document.getElementsByTagName('div')[0];
+        aa.style.position='absolute';
+        document.getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        aa.style.left='100%';
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+       document.body.style.overflow='hidden';
+       var speed=${horizontalSpeed};
+          setInterval(function(){
+              aa.style.left =(aa.getBoundingClientRect().left-speed)+'px';
+              if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+             }, 1);
+         </script>
+         `;
+            aa += `
+            </body>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+const exportClockAsHTML=canvas=>{
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const element = document.createElement("a");
+        var aa=`<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        
+        <body>
+        `;
+         aa += '<div>' + canvas.toSVG() + '</div>';
+            aa += `
+            </body>
+            <script>
+
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            document.body.style.overflow='hidden';
+
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.position='absolute';
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            var cc=document.getElementsByTagName('tspan')[0];
+            cc.textContent='';
+            setInterval(function() {
+                var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+             cc.textContent  =ss1;
+              }, 1000);
+              </script>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+}
     const startVerticalScroll = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -799,11 +887,11 @@ const DrawingController = ({ chNumber }) => {
 
         document.body.style.margin='0';
         document.body.style.padding='0';
-
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
-        var cc=document.getElementsByTagName('tspan')[0];
 
+        var cc=document.getElementsByTagName('tspan')[0];
+        cc.textContent='';
         setInterval(function() {
             var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
          cc.textContent  =ss1;
@@ -1026,8 +1114,8 @@ const DrawingController = ({ chNumber }) => {
                     endpoint(`stop ${window.chNumber}-110`);
                     setVerticalScroll('')
                 }}>Stop</button>
-                <span> {verticalScroll} </span>
                 <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
+                <span> {verticalScroll} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Horizntl Scroll: </b>
@@ -1042,6 +1130,7 @@ const DrawingController = ({ chNumber }) => {
                     endpoint(`stop ${window.chNumber}-111`);
                     setHorizontalScroll('');
                 }}>Stop</button>
+                <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {horizontalScroll} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
@@ -1055,6 +1144,7 @@ const DrawingController = ({ chNumber }) => {
                     endpoint(`stop ${window.chNumber}-112`);
                     setClock('');
                 }}>Stop</button>
+                <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {clock} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
