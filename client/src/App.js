@@ -178,7 +178,7 @@ export default function App(props) {
       <select onChange={e => changeChannelNumber(e)} value={chNumber}>
         {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
-      <span style={{ position: 'absolute', right: '10px' }}><b >Server 2.3 only</b></span>
+      <span style={{ position: 'absolute', right: '10px' }}><b >All version of casparcg server</b></span>
     </div>
 
     <div style={{

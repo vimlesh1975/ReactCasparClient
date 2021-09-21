@@ -757,7 +757,7 @@ const DrawingController = ({ chNumber }) => {
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
        document.body.style.overflow='hidden';
        var speed=${verticalSpeed};
-       setInterval(() => {
+       setInterval(function() {
          aa.style.top =aa.getBoundingClientRect().top-speed;
           }, 1);
         "`)
@@ -779,7 +779,7 @@ const DrawingController = ({ chNumber }) => {
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed};
-        setInterval(() => {
+        setInterval(function() {
          aa.style.left =aa.getBoundingClientRect().left-speed;
          if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
           }, 1);
@@ -804,7 +804,7 @@ const DrawingController = ({ chNumber }) => {
         document.body.style.overflow='hidden';
         var cc=document.getElementsByTagName('tspan')[0];
 
-        setInterval(() => {
+        setInterval(function() {
             var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
          cc.textContent  =ss1;
           }, 1000);
