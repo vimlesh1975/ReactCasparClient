@@ -652,11 +652,11 @@ const DrawingController = ({ chNumber }) => {
         setHorizontalSpeed(e.target.value)
         endpoint(`call ${window.chNumber}-111 "speed=${e.target.value}"`);
     }
-    const exportXML = canvas => {
-        console.log(canvas.toSVG());
+    const exportSVG = canvas => {
+        // console.log(canvas.toSVG());
         const element = document.createElement("a");
         var aa = canvas.toSVG()
-            // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+        // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
         const file = new Blob([aa], { type: 'text/xml' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -667,9 +667,23 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
+    const importSVG = file => {
+        if (file) {
+            var site_url = URL.createObjectURL(file);
+            fabric.loadSVGFromURL(site_url, function (objects) {
+                objects?.forEach(element => {
+                    window.editor.canvas.add(element);
+                    element.objectCaching = false;
+                    element.shadow=shadowOptions;
+                });
+            });
+            window.editor.canvas.renderAll();
+        }
+    }
+
     const exportHTML = canvas => {
         const element = document.createElement("a");
-        var aa=`<!DOCTYPE html>
+        var aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -680,10 +694,17 @@ const DrawingController = ({ chNumber }) => {
         
         <body>
         `;
-         aa += canvas.toSVG();
-            // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
-            aa += `
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+        aa += `
             </body>
+            <script>
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            document.body.style.overflow='hidden';
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            </script>
             </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
@@ -696,12 +717,12 @@ const DrawingController = ({ chNumber }) => {
         }
     }
 
-    const exportVerticalScrollAsHTML=canvas=>{
+    const exportVerticalScrollAsHTML = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
         const element = document.createElement("a");
-        var aa=`<!DOCTYPE html>
+        var aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -711,8 +732,8 @@ const DrawingController = ({ chNumber }) => {
         </head>
         <body>
         `;
-         aa +=  '<div>' + canvas.toSVG() +'</div>';
-         aa += `
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += `
          <script>
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
@@ -727,7 +748,7 @@ const DrawingController = ({ chNumber }) => {
              }, 1);
          </script>
          `;
-            aa += `
+        aa += `
             </body>
             </html>`
         const file = new Blob([aa], { type: 'text/html' });
@@ -740,12 +761,12 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
-    const exportHorizontalScrollAsHTML=canvas=>{
+    const exportHorizontalScrollAsHTML = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
         const element = document.createElement("a");
-        var aa=`<!DOCTYPE html>
+        var aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -755,8 +776,8 @@ const DrawingController = ({ chNumber }) => {
         </head>
         <body>
         `;
-         aa +=  '<div>' + canvas.toSVG() +'</div>';
-         aa += `
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += `
          <script>
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
@@ -772,7 +793,7 @@ const DrawingController = ({ chNumber }) => {
              }, 1);
          </script>
          `;
-            aa += `
+        aa += `
             </body>
             </html>`
         const file = new Blob([aa], { type: 'text/html' });
@@ -785,10 +806,10 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
-const exportClockAsHTML=canvas=>{
-    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const element = document.createElement("a");
-        var aa=`<!DOCTYPE html>
+    const exportClockAsHTML = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        const element = document.createElement("a");
+        var aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -799,8 +820,8 @@ const exportClockAsHTML=canvas=>{
         
         <body>
         `;
-         aa += '<div>' + canvas.toSVG() + '</div>';
-            aa += `
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += `
             </body>
             <script>
 
@@ -828,7 +849,7 @@ const exportClockAsHTML=canvas=>{
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
-}
+    }
     const startVerticalScroll = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -1290,9 +1311,13 @@ const exportClockAsHTML=canvas=>{
                         <b> Image from URL: </b>
                         <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
                         <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add</button>
-
                     </div>
-
+                    <div style={{ border: '1px solid black' }}>
+                        <b> Export Import SVG: </b>
+                        <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
+                        <input   type='file' className='input-file'  accept='.xml,.svg'  onChange={e => importSVG(e.target.files[0])}  />
+                        <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1300,8 +1325,7 @@ const exportClockAsHTML=canvas=>{
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-            <button onClick={() => exportXML(window.editor.canvas)}>Export XML</button>
-            <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+
 
         </div>
     </div >)
