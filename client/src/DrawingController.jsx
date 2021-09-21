@@ -165,7 +165,7 @@ export const addImage = canvas => {
     fabric.Image.fromURL(window.imageName, myImg => {
         myImg.scaleToWidth(160);
         myImg.scaleToHeight(90);
-        myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true });
+        myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
         canvas.add(myImg);
         canvas.renderAll();
 
@@ -178,7 +178,7 @@ const addImagefromUrl = (canvas, url) => {
     fabric.Image.fromURL(url, myImg => {
         myImg.scaleToWidth(320);
         myImg.scaleToHeight(180);
-        myImg.set({ left: 100, top: 100, stroke: '#ffffff', strokeWidth: 2, strokeUniform: true });
+        myImg.set({ left: 100, top: 100, stroke: '#ffffff', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
 
         canvas.add(myImg).setActiveObject(myImg);
         canvas.renderAll();
@@ -492,9 +492,9 @@ export const updatetoCasparcgStore = (layerNumber) => {
     }, 200);
 
 }
-const removeFromCaspar = (layerNumber) => {
-    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-}
+// const removeFromCaspar = (layerNumber) => {
+//     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+// }
 
 const changeText = (key, val) => {
     window.editor.canvas.getObjects().forEach((element) => {
@@ -563,6 +563,16 @@ const DrawingController = ({ chNumber }) => {
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
+    const [solidcaption1, setSolidcaption1] = useState('');
+    const [solidcaption2, setSolidcaption2] = useState('');
+    const [logo, setLogo] = useState('');
+    const [locationBand, setLocationBand] = useState('');
+
+    const [verticalScroll, setVerticalScroll] = useState('');
+    const [horizontalScroll, setHorizontalScroll] = useState('');
+    const [clock, setClock] = useState('');
+
+
 
 
     const id = 'f0';
@@ -711,6 +721,55 @@ const DrawingController = ({ chNumber }) => {
           }, 1000);
         "`)
     }
+
+
+    const startGraphics = (canvas, layerNumber) => {
+
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        // selectAll(canvas);
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+
+        setTimeout(() => {
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+
+        }, 200);
+
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            document.body.appendChild(aa);
+    
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+    
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            document.body.style.overflow='hidden';
+            "`)
+        }, 400);
+
+        setTimeout(() => {
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
+        }, 800);
+
+    }
+
+    const updateGraphics = (canvas, layerNumber) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            "`)
+    }
+
+    const stopGraphics = layerNumber => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        }, 1000);
+
+    }
+
+
     const dispatch = useDispatch()
     // eslint-disable-next-line
     const canvasToJson = (canvas) => {
@@ -814,79 +873,107 @@ const DrawingController = ({ chNumber }) => {
 
             <div style={{ border: '1px solid black' }}>
                 <b> Solid Caption 1: </b>
+
                 <button onClick={() => {
-                    endpoint(`play ${window.chNumber}-108 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
-                    setTimeout(() => {
-                        endpoint(`call ${window.chNumber}-108 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
-                    }, 2000);
-                }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(108)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(108)}>Update</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(108)}>Out</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-108`)}>Stop</button>
-                   </div>
+                    startGraphics(window.editor.canvas, 108);
+                    setSolidcaption1(canvaslist[currentPage]?.pageName);
+                }
+                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updateGraphics(window.editor.canvas, 108)}>Update</button>
+                <button className='stopButton' onClick={() => {
+                    stopGraphics(108);
+                    setSolidcaption1('');
+
+                }}>Stop</button>
+                <span> {solidcaption1} </span>
+            </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Solid Caption 2: </b>
                 <button onClick={() => {
-                    endpoint(`play ${window.chNumber}-109 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`);
-                    setTimeout(() => {
-                        endpoint(`call ${window.chNumber}-109 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
-                    }, 2000);
-                }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(109)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(109)}>Update</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(109)}>Out</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-109`)}>Stop</button>
-                  </div>
+                    startGraphics(window.editor.canvas, 109);
+                    setSolidcaption2(canvaslist[currentPage]?.pageName);
+                }
+                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>  <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
+                <button className='stopButton' onClick={() => {
+                    stopGraphics(109);
+                    setSolidcaption2('');
+                }}>Stop</button>
+                <span> {solidcaption2} </span>
+            </div>
 
             <div style={{ border: '1px solid black' }}>
                 <b> Logo: </b>
+
                 <button onClick={() => {
-                    endpoint(`play ${window.chNumber}-200 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
-                    setTimeout(() => {
-                        endpoint(`call ${window.chNumber}-200 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
-                    }, 2000);
-                }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(200)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(200)}>Update</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(200)}>Out</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-200`)}>Stop</button>
-              
+                    startGraphics(window.editor.canvas, 215);
+                    setLogo(canvaslist[currentPage]?.pageName);
+                }
+                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>  
+                <button onClick={() => updateGraphics(window.editor.canvas, 215)}>Update</button>
+                <button className='stopButton' onClick={() => {
+                    stopGraphics(215);
+                    setLogo('');
+                }}>Stop</button>
+                <span> {logo} </span>
+
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Location Band: </b>
                 <button onClick={() => {
-                    endpoint(`play ${window.chNumber}-210 [html] http://${window.location.host}${process.env.PUBLIC_URL}/drawing`)
-                    setTimeout(() => {
-                        endpoint(`call ${window.chNumber}-210 window.editor.canvas.setZoom(${currentscreenSize}/1024)`)
-                    }, 2000);
-                }} >Initialise</button>
-                <button onClick={() => savetoCasparcgStore(210)}>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updatetoCasparcgStore(210)}>Update</button>
-                <button className='stopButton' onClick={() => removeFromCaspar(210)}>Out</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-210`)}>Stop</button>
-              
+                    startGraphics(window.editor.canvas, 210);
+                    setLocationBand(canvaslist[currentPage]?.pageName);
+                }
+                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
+                <button onClick={() => updateGraphics(window.editor.canvas, 210)}>Update</button>
+                <button className='stopButton' onClick={() => {
+                    stopGraphics(210);
+                    setLocationBand('');
+                }}>Stop</button>
+                <span> {locationBand} </span>
             </div>
 
             <div style={{ border: '1px solid black' }}>
-                <b> Vertical  Scroll: </b>  <button onClick={() => startVerticalScroll(window.editor?.canvas)}>Start </button>
+                <b> Vertical  Scroll: </b>  <button onClick={() => {
+                    startVerticalScroll(window.editor?.canvas);
+                    setVerticalScroll(canvaslist[currentPage]?.pageName)
+                }}>Start </button>
                 Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
                 <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=${verticalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-110`)}>Stop</button>
-                <br />
+                <button className='stopButton' onClick={() => {
+                    endpoint(`stop ${window.chNumber}-110`);
+                    setVerticalScroll('')
+                }}>Stop</button>
+                <span> {verticalScroll} </span>
+            </div>
+            <div style={{ border: '1px solid black' }}>
                 <b> Horizntl Scroll: </b>
-                <button onClick={() => startHorizontalScroll(window.editor?.canvas)}>Start</button>
+                <button onClick={() => {
+                    startHorizontalScroll(window.editor?.canvas);
+                    setHorizontalScroll(canvaslist[currentPage]?.pageName);
+                }}>Start</button>
                 Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
                 <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}>Pause</button>
                 <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-111`)}>Stop</button>
+                <button className='stopButton' onClick={() => {
+                    endpoint(`stop ${window.chNumber}-111`);
+                    setHorizontalScroll('');
+                }}>Stop</button>
+                <span> {horizontalScroll} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b>Clock: </b>
                 <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
-                <button onClick={() => startClock(window.editor.canvas)}>Show On Casparcg</button>
-                <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-112`)}>Stop</button>
+                <button onClick={() => {
+                    startClock(window.editor.canvas);
+                    setClock(canvaslist[currentPage]?.pageName);
+                }}>Show On Casparcg</button>
+                <button className='stopButton' onClick={() => {
+                    endpoint(`stop ${window.chNumber}-112`);
+                    setClock('');
+                }}>Stop</button>
+                <span> {clock} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Drawing Tools: </b>

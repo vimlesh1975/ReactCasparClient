@@ -170,7 +170,7 @@ export default function App(props) {
   return (<React.Fragment>
 
     <div className='menu_bar'>
-      <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear 1`)}>Stop Channel</button>
+      <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear ${chNumber}`)}>Stop Channel</button>
       <b> Animation Method: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
