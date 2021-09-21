@@ -652,6 +652,95 @@ const DrawingController = ({ chNumber }) => {
         setHorizontalSpeed(e.target.value)
         endpoint(`call ${window.chNumber}-111 "speed=${e.target.value}"`);
     }
+    const exportXML = canvas => {
+        console.log(canvas.toSVG());
+        const element = document.createElement("a");
+        var aa = canvas.toSVG()
+            // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+        const file = new Blob([aa], { type: 'text/xml' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+    const exportHTML = canvas => {
+        const element = document.createElement("a");
+        var aa=`<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        
+        <body>
+        `;
+         aa += canvas.toSVG();
+            // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+            aa += `
+            </body>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+
+    const exportVerticalScrollAsHTML=canvas=>{
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
+        const element = document.createElement("a");
+        var aa=`<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+        `;
+         aa +=  '<div>' + canvas.toSVG() +'</div>';
+         aa += `
+         <script>
+  var aa = document.getElementsByTagName('div')[0];
+        aa.style.position='absolute';
+        document.getElementsByTagName('svg')[0].style.height='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 ${hh}');
+        aa.style.top='90%';
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+       document.body.style.overflow='hidden';
+       var speed=${verticalSpeed};
+          setInterval(function(){
+              aa.style.top =aa.getBoundingClientRect().top-speed;
+              console.log('hi');
+             }, 1);
+         </script>
+         `;
+            aa += `
+            </body>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
     const startVerticalScroll = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -728,30 +817,23 @@ const DrawingController = ({ chNumber }) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         // selectAll(canvas);
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-
-        setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-
-        }, 200);
-
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             document.body.appendChild(aa);
-    
             document.body.style.margin='0';
             document.body.style.padding='0';
-    
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
             "`)
-        }, 400);
+        }, 100);
 
         setTimeout(() => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
-        }, 800);
+        }, 1000);
 
     }
 
@@ -908,7 +990,7 @@ const DrawingController = ({ chNumber }) => {
                     startGraphics(window.editor.canvas, 215);
                     setLogo(canvaslist[currentPage]?.pageName);
                 }
-                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>  
+                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
                 <button onClick={() => updateGraphics(window.editor.canvas, 215)}>Update</button>
                 <button className='stopButton' onClick={() => {
                     stopGraphics(215);
@@ -924,7 +1006,6 @@ const DrawingController = ({ chNumber }) => {
                     setLocationBand(canvaslist[currentPage]?.pageName);
                 }
                 }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
                 <button onClick={() => updateGraphics(window.editor.canvas, 210)}>Update</button>
                 <button className='stopButton' onClick={() => {
                     stopGraphics(210);
@@ -946,6 +1027,7 @@ const DrawingController = ({ chNumber }) => {
                     setVerticalScroll('')
                 }}>Stop</button>
                 <span> {verticalScroll} </span>
+                <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Horizntl Scroll: </b>
@@ -1128,6 +1210,9 @@ const DrawingController = ({ chNumber }) => {
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
+            <button onClick={() => exportXML(window.editor.canvas)}>Export XML</button>
+            <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+
         </div>
     </div >)
 }

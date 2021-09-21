@@ -4,13 +4,17 @@
 <desc>Created with Fabric.js 4.6.0</desc>
 <defs>
 </defs>
-<g transform="matrix(1 0 0 1 350.5 474.01)" style="" id="f0"  >
-		<text xml:space="preserve" font-family="Arial" font-size="25" font-style="normal" font-weight="bold" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(18,243,25); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-250" y="-8.53" >दूरदर्शन से विमलेश कुमार Vimlesh Kumar</tspan><tspan x="-250" y="24.24" >From Doordarshan</tspan></text>
-</g>
-<g transform="matrix(1 0 0 1 500.5 380.5)"  >
-<rect style="stroke: rgb(255,255,255); stroke-width: 3; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(80,3,124); fill-rule: nonzero; opacity: 0.9;" vector-effect="non-scaling-stroke"  x="-250" y="-40" rx="0" ry="0" width="500" height="80" />
-</g>
-<g transform="matrix(1 0 0 1 519.5 380.01)" style="" id="f0"  >
-		<text xml:space="preserve" font-family="Arial" font-size="25" font-style="normal" font-weight="bold" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-250" y="-8.53" >दूरदर्शन से विमलेश कुमार Vimlesh Kumar</tspan><tspan x="-250" y="24.24" >From Doordarshan</tspan></text>
+<g transform="matrix(1 0 0 1 350.5 474.01)" style="filter: url(#SVGID_1);" id="f0"  >
+<filter id="SVGID_1" y="-69%" height="238%" x="-26%" width="152%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+		<text xml:space="preserve" font-family="Arial" font-size="25" font-style="normal" font-weight="bold" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(230,234,16); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-250" y="-8.53" >दूरदर्शन से विमलेश कुमार Vimlesh Kumar</tspan><tspan x="-250" y="24.24" >From Doordarshan</tspan></text>
 </g>
 </svg>
