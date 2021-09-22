@@ -199,23 +199,58 @@ export default function App(props) {
 
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
-              <Provider store={store}><Drawing /></Provider>
+              <Provider store={store}>
+
+                <Drawing />
+              </Provider>
             </div>
+            <div style={{ display: 'flex' }}>
+              <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
+                <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
+                <h5>
+                  &lt;screen&gt;
+                  &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+                  &lt;x&gt;0&lt;/x&gt;
+                  &lt;y&gt;680&lt;/y&gt;
+                  &lt;width&gt;680&lt;/width&gt;
+                  &lt;height&gt;325&lt;/height&gt;
 
-            <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
-              <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
-              <h5>
-                &lt;screen&gt;
-                &lt;always-on-top&gt;true&lt;/always-on-top&gt;
-                &lt;x&gt;0&lt;/x&gt;
-                &lt;y&gt;680&lt;/y&gt;
-                &lt;width&gt;680&lt;/width&gt;
-                &lt;height&gt;325&lt;/height&gt;
+                  &lt;/screen&gt;
+                </h5>
+              </div>
+              <div>
+                <b>Select image from casparcg media folder: </b><br />
+                <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
 
-                &lt;/screen&gt;
-              </h5>
+                  <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '4px solid red' }}>
+
+                    <table border='1' >
+                      <tbody>
+                        {media.map((val, i) => {
+                          return <tr key={i}><td onClick={(e) => {
+                            setImageName((address1 + `/media/` + e.target.innerText));
+                          }}>{val}</td></tr>
+                        })}
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                  <div style={{ border: '4px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
+                    <div>
+                      <img src={imageName} alt='' width="200" height="130" style={{ border: '3px solid #555' }}></img>
+                    </div>
+                    <div>
+                      Selected Image <br />
+                      <button onClick={() => addImage(window.editor.canvas)}>Add This Image</button>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
-
           </div>
 
         </div>
@@ -225,33 +260,12 @@ export default function App(props) {
           <TabList>
             <Tab>Drawing</Tab>
             <Tab>Video</Tab>
+            <Tab>Test</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
             <div style={{ border: '4px solid yellow', width: 900 }}>
               <DrawingController />
-            </div>
-            <b>Select image from casparcg media folder: </b>
-            <div style={{ display: 'flex' }}>
-
-              <div style={{ maxHeight: '200px', overflow: 'scroll', border: '4px solid red' }}>
-
-                <table border='1' >
-                  <tbody>
-                    {media.map((val, i) => {
-                      return <tr key={i}><td onClick={(e) => {
-                        setImageName((address1 + `/media/` + e.target.innerText));
-                      }}>{val}</td></tr>
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              <div style={{ border: '1px solid black' }}>
-                <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
-                Selected Image  <button onClick={() => addImage(window.editor.canvas)}>Add This Image</button><br />
-                <img src={imageName} alt='' width="270" height="150"></img>
-              </div>
             </div>
           </TabPanel>
           <TabPanel>
@@ -287,7 +301,9 @@ export default function App(props) {
               </table>
             </div>
           </TabPanel>
-
+          <TabPanel>
+            <h2>Test</h2>
+          </TabPanel>
           <TabPanel>
             <h2>Help</h2>
             <ol>

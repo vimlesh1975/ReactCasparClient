@@ -130,6 +130,42 @@ export const addClock = canvas => {
     }, 1000);
 }
 
+export const addUpTimer = canvas => {
+    const sss = new fabric.Textbox('', {
+        shadow: shadowOptions,
+        left: 10,
+        top: 530,
+        width: 100,
+        fill: '#ffffff',
+        backgroundColor: options.backgroundColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'center',
+        stroke: '',
+        strokeWidth: 0,
+        id: 'uptimer1',
+
+    });
+    canvas.add(sss).setActiveObject(sss);
+    canvas.requestRenderAll();
+    var startTime = new Date();
+    setInterval(() => {
+        // animateUpTimer(canvas, sss)
+        var diff = (new Date()).getTime() - startTime.getTime();
+        var date_diff = new Date(diff - 30 * 60 * 1000);
+        var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+        sss.set({
+            'text': ss1,
+        })
+        canvas.requestRenderAll();
+
+    }, 100);
+}
+
+
 function animate(canvas, sss) {
     var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     sss.set({
@@ -674,7 +710,7 @@ const DrawingController = ({ chNumber }) => {
                 objects?.forEach(element => {
                     window.editor.canvas.add(element);
                     element.objectCaching = false;
-                    element.shadow=shadowOptions;
+                    element.shadow = shadowOptions;
                 });
             });
             window.editor.canvas.renderAll();
@@ -919,6 +955,35 @@ const DrawingController = ({ chNumber }) => {
           }, 1000);
         "`)
     }
+    const startUpTimer = (canvas) => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+
+        endpoint(`play ${window.chNumber}-115 [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-115 "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.body.style.overflow='hidden';
+
+        var cc=document.getElementsByTagName('tspan')[0];
+        cc.textContent='';
+        var startTime = new Date();
+        setInterval(function() {
+            var diff = (new Date()).getTime() - startTime.getTime();
+            var date_diff = new Date(diff - 30 * 60 * 1000);
+            var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+          
+            cc.textContent  =ss1;
+          }, 100);
+        "`)
+    }
+
 
 
     const startGraphics = (canvas, layerNumber) => {
@@ -1169,6 +1234,20 @@ const DrawingController = ({ chNumber }) => {
                 <span> {clock} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
+                <b>Count Up Timer: </b>
+                <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
+                <button onClick={() => {
+                    startUpTimer(window.editor.canvas);
+                    // setUpTimer(canvaslist[currentPage]?.pageName);
+                }}>Show On Casparcg</button>
+                <button className='stopButton' onClick={() => {
+                    endpoint(`stop ${window.chNumber}-115`);
+                    // setClock('');
+                }}>Stop</button>
+                {/* <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button> */}
+                {/* <span> {clock} </span> */}
+            </div>
+            <div style={{ border: '1px solid black' }}>
                 <b> Drawing Tools: </b>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -1315,13 +1394,14 @@ const DrawingController = ({ chNumber }) => {
                     <div style={{ border: '1px solid black' }}>
                         <b> Export Import SVG: </b>
                         <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
-                        <input   type='file' className='input-file'  accept='.xml,.svg'  onChange={e => importSVG(e.target.files[0])}  />
+                        <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                         <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div>
+        <div style={{ display: 'none' }}>
+
             <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
             <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
             <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
