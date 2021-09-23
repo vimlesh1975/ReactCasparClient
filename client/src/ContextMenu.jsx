@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, toggleMode, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
+import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
@@ -60,7 +60,21 @@ const ContextMenu = ({ editor }) => {
         <li onClick={() => undo(editor.canvas)}>Undo <AiOutlineUndo /></li>
         <li onClick={() => copy()}>Copy</li>
         <li onClick={() => paste()}>Paste</li>
-        <li onClick={() => toggleMode("drawing", editor.canvas)}>Toggle Draw Mode <VscEdit /></li>
+        <li>Drawing Mode<ul >
+          <li onClick={() => window.toggleModeDrawing(editor.canvas)}>Off<VscEdit /></li>
+          <li onClick={() => {
+            editor.canvas.isDrawingMode = true;
+            window.onDrawingModeChange('Pencil', editor.canvas)
+          }}>Pencil <VscEdit /></li>
+          <li onClick={() => {
+            editor.canvas.isDrawingMode = true;
+            window.onDrawingModeChange('Spray', editor.canvas)
+          }}>Spray <VscEdit /></li>
+          <li onClick={() => {
+            editor.canvas.isDrawingMode = true;
+            window.onDrawingModeChange('Erase', editor.canvas)
+          }}>Erase <VscEdit /></li>
+        </ul></li>
       </ul>
     </div>) : ''}
   </div>);

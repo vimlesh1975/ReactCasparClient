@@ -147,13 +147,11 @@ export const addUpTimer = canvas => {
         stroke: '',
         strokeWidth: 0,
         id: 'uptimer1',
-
     });
     canvas.add(sss).setActiveObject(sss);
     canvas.requestRenderAll();
     var startTime = new Date();
     setInterval(() => {
-        // animateUpTimer(canvas, sss)
         var diff = (new Date()).getTime() - startTime.getTime();
         var date_diff = new Date(diff - 30 * 60 * 1000);
         var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
@@ -161,10 +159,8 @@ export const addUpTimer = canvas => {
             'text': ss1,
         })
         canvas.requestRenderAll();
-
-    }, 100);
+    }, 40);
 }
-
 
 function animate(canvas, sss) {
     var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -307,6 +303,16 @@ export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => { canvas.remove(element) });
 }
+export const swapFaceandStrokeColors = canvas => {
+    const aa = canvas.getActiveObjects()
+    aa.forEach(element => {
+        var oldFill = element.fill;
+        var oldStroke = element.stroke;
+        element.fill = oldStroke;
+        element.stroke = oldFill;
+    });
+    canvas.requestRenderAll();
+}
 export const deleteAll = canvas => {
     const aa = canvas.getObjects()
     aa.forEach(element => { canvas.remove(element) });
@@ -333,12 +339,118 @@ export const unlockAll = canvas => {
     aa.forEach(element => element.selectable = true);
 }
 
-export const toggleMode = (mode, canvas) => {
-    canvas.freeDrawingBrush.color = options.stroke;
-    canvas.freeDrawingBrush.width = options.strokeWidth;
 
-    canvas.isDrawingMode = !(canvas.isDrawingMode);
-};
+
+export const toggleModeErase = (mode, canvas) => {
+    canvas.isDrawingMode = !canvas.isDrawingMode;
+    const EraserBrush1 = new EraserBrush(canvas);
+    EraserBrush1.width = options.strokeWidth;
+    EraserBrush1.color = "#ffffff";
+    canvas.freeDrawingBrush = EraserBrush1;
+}
+
+const ErasedGroup = fabric.util.createClass(fabric.Group, {
+    original: null,
+    ErasedPath: null,
+    initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
+        this.original = original;
+        this.ErasedPath = ErasedPath;
+        this.callSuper('initialize', [this.original, this.ErasedPath], options, isAlreadyGrouped);
+    },
+
+    _calcBounds: function (onlyWidthHeight) {
+        const aX = [],
+            aY = [],
+            props = ['tr', 'br', 'bl', 'tl'],
+            jLen = props.length,
+            ignoreZoom = true;
+
+        let o = this.original;
+        o.setCoords(ignoreZoom);
+        for (let j = 0; j < jLen; j++) {
+            var prop = props[j];
+            aX.push(o.oCoords[prop].x);
+            aY.push(o.oCoords[prop].y);
+        }
+
+        this._getBounds(aX, aY, onlyWidthHeight);
+    },
+});
+const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+
+    /**
+     * On mouseup after drawing the path on contextTop canvas
+     * we use the points captured to create an new fabric path object
+     * and add it to the fabric canvas.
+     */
+    _finalizeAndAddPath: function () {
+        var ctx = this.canvas.contextTop;
+        ctx.closePath();
+        if (this.decimate) {
+            this._points = this.decimatePoints(this._points, this.decimate);
+        }
+        var pathData = this.convertPointsToSVGPath(this._points).join('');
+        if (pathData === 'M 0 0 Q 0 0 0 0 L 0 0') {
+            // do not create 0 width/height paths, as they are
+            // rendered inconsistently across browsers
+            // Firefox 4, for example, renders a dot,
+            // whereas Chrome 10 renders nothing
+            this.canvas.requestRenderAll();
+            return;
+        }
+
+        // use globalCompositeOperation to 'fake' Eraser
+        var path = this.createPath(pathData);
+        path.globalCompositeOperation = 'destination-out';
+        path.selectable = false;
+        path.evented = false;
+        path.absolutePositioned = true;
+
+        // grab all the objects that intersects with the path
+        const objects = this.canvas.getObjects().filter((obj) => {
+            // if (obj instanceof fabric.Textbox) return false;
+            // if (obj instanceof fabric.IText) return false;
+            if (!obj.intersectsWithObject(path)) return false;
+            return true;
+        });
+
+        if (objects.length > 0) {
+
+            // merge those objects into a group
+            const mergedGroup = new fabric.Group(objects);
+            const newPath = new ErasedGroup(mergedGroup, path);
+
+            const left = newPath.left;
+            const top = newPath.top;
+
+            // convert it into a dataURL, then back to a fabric image
+            try {
+                const newData = newPath.toDataURL({
+                    withoutTransform: true
+                });
+                fabric.Image.fromURL(newData, (fabricImage) => {
+                    fabricImage.set({
+                        left: left,
+                        top: top,
+                        shadow: { ...shadowOptions, blur: 0 },
+                    });
+
+                    // remove the old objects then add the new image
+                    this.canvas.remove(...objects);
+                    this.canvas.add(fabricImage);
+                });
+
+            } catch (error) {
+                return
+            }
+        }
+
+        this.canvas.clearContext(this.canvas.contextTop);
+        this.canvas.renderAll();
+        this._resetShadow();
+    },
+});
+
 
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
@@ -466,7 +578,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         if (canvas.getActiveObject().type !== 'activeSelection') {
             return;
         }
-        canvas.getActiveObject().toGroup();
+        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions });
         canvas.requestRenderAll();
 
     }
@@ -479,7 +591,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         }
         canvas.getActiveObject().toActiveSelection();
         const aa = canvas.getObjects();
-        aa.forEach(element => element.set({ objectCaching: false }));
+        aa.forEach(element => element.set({ objectCaching: false, shadow: shadowOptions }));
         canvas.requestRenderAll();
     }
 };
@@ -607,9 +719,40 @@ const DrawingController = ({ chNumber }) => {
     const [verticalScroll, setVerticalScroll] = useState('');
     const [horizontalScroll, setHorizontalScroll] = useState('');
     const [clock, setClock] = useState('');
+    const [upTimer, setUpTimer] = useState('');
+    const modes = ['Pencil', 'Spray', 'Erase'];
 
+    const [currentMode, setCurrentMode] = useState('');
+    // window.currentMode = currentMode;
 
+    const onDrawingModeChange = (mode, canvas) => {
+        setCurrentMode(mode);
+        canvas.isDrawingMode = true;
 
+        if (mode === 'Pencil') {
+            canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+            canvas.freeDrawingBrush.color = options.currentColor;
+            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+        }
+        else if (mode === 'Spray') {
+            canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
+            canvas.freeDrawingBrush.color = options.currentColor;
+            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+        }
+
+        else if (mode === 'Erase') {
+            canvas.freeDrawingBrush = new EraserBrush(canvas);
+            canvas.freeDrawingBrush.color = options.currentColor;
+            canvas.freeDrawingBrush.color = 'white';
+            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+        }
+    }
+    window.onDrawingModeChange = onDrawingModeChange;
+    const toggleModeDrawing = (canvas) => {
+        canvas.isDrawingMode = false;
+        setCurrentMode('');
+    }
+    window.toggleModeDrawing = toggleModeDrawing;
 
     const id = 'f0';
 
@@ -886,6 +1029,53 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
+    const exportUpTimerAsHTML = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        const element = document.createElement("a");
+        var aa = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        
+        <body>
+        `;
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += `
+            </body>
+            <script>
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            document.body.style.overflow='hidden';
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.position='absolute';
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            var cc=document.getElementsByTagName('tspan')[0];
+            cc.textContent='';
+            var startTime = new Date();
+        setInterval(function() {
+            var diff = (new Date()).getTime() - startTime.getTime();
+            var date_diff = new Date(diff - 30 * 60 * 1000);
+            var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+            cc.textContent  =ss1;
+          }, 40);
+              </script>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+
+
     const startVerticalScroll = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -958,19 +1148,16 @@ const DrawingController = ({ chNumber }) => {
     const startUpTimer = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-
         endpoint(`play ${window.chNumber}-115 [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-115 "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
-
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
-
         var cc=document.getElementsByTagName('tspan')[0];
         cc.textContent='';
         var startTime = new Date();
@@ -978,20 +1165,20 @@ const DrawingController = ({ chNumber }) => {
             var diff = (new Date()).getTime() - startTime.getTime();
             var date_diff = new Date(diff - 30 * 60 * 1000);
             var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
-          
             cc.textContent  =ss1;
-          }, 100);
+          }, 40);
         "`)
     }
-
-
 
     const startGraphics = (canvas, layerNumber) => {
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         // selectAll(canvas);
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        setTimeout(() => {
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        }, 500);
+
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
@@ -1003,7 +1190,7 @@ const DrawingController = ({ chNumber }) => {
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
             "`)
-        }, 100);
+        }, 600);
 
         setTimeout(() => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
@@ -1238,14 +1425,14 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
                 <button onClick={() => {
                     startUpTimer(window.editor.canvas);
-                    // setUpTimer(canvaslist[currentPage]?.pageName);
+                    setUpTimer(canvaslist[currentPage]?.pageName);
                 }}>Show On Casparcg</button>
                 <button className='stopButton' onClick={() => {
                     endpoint(`stop ${window.chNumber}-115`);
-                    // setClock('');
+                    setUpTimer('');
                 }}>Stop</button>
-                {/* <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button> */}
-                {/* <span> {clock} </span> */}
+                <button onClick={() => exportUpTimerAsHTML(window.editor.canvas)}>Export HTML</button>
+                <span> {upTimer} </span>
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b> Drawing Tools: </b>
@@ -1253,7 +1440,13 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
-                <button onClick={() => toggleMode("drawing", window.editor.canvas)}>Toggle<VscEdit /></button>
+                <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
+                {modes.map((val, i) => {
+                    return (<>
+                        <input checked={currentMode === val}
+                            onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} /> <label key={uuidv4()} htmlFor={val}>{val}</label>
+                    </>)
+                })}
 
             </div>
             <div style={{ border: '1px solid black' }}>
@@ -1261,54 +1454,50 @@ const DrawingController = ({ chNumber }) => {
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
                 Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
-
                 Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
-
-                <div style={{ border: '1px solid black' }}>
-                    <b> Shadow: </b>
-                    <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
-                    Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
-                    offsetX: <input style={{ width: '50px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                    offsetY: <input style={{ width: '50px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                    affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
-
-                </div>
-
-                <div style={{ border: '1px solid black' }}>
-                    <b> Skew: </b>
-                    SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
-                    SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
-                </div>
-                <div style={{ border: '1px solid black' }}>
-                    <b>Zoom and Pan: </b>
-                    <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
-                    <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
-                    <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
-
-                </div>
-                <div>
-                    <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
-                    <button onClick={() => alignAllRight()}><FaAlignRight /></button>
-                    <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                    <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-
-                    <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
-                    <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
-
-                    <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
-                    <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
-
-                    <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
-                    <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
-
-                    <button onClick={() => copy(window.editor.canvas)}> Copy</button>
-                    <button onClick={() => paste(window.editor.canvas)}> Paste</button>
-                    <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
-
-
-
-                </div>
+                <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face and Stroke Colors</button>
             </div>
+            <div style={{ border: '1px solid black' }}>
+                <b> Shadow: </b>
+                <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
+                Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
+                offsetX: <input style={{ width: '50px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                offsetY: <input style={{ width: '50px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
+            </div>
+
+            <div style={{ border: '1px solid black' }}>
+                <b> Skew: </b>
+                SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+            </div>
+            <div style={{ border: '1px solid black' }}>
+                <b>Zoom and Pan: </b>
+                <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
+                <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
+                <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
+
+            </div>
+            <div>
+                <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
+                <button onClick={() => alignAllRight()}><FaAlignRight /></button>
+                <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+
+                <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
+                <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
+
+                <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
+                <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
+
+                <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
+                <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
+
+                <button onClick={() => copy(window.editor.canvas)}> Copy</button>
+                <button onClick={() => paste(window.editor.canvas)}> Paste</button>
+                <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
+            </div>
+
             <div style={{ border: '1px solid black' }}>
                 <b> Font: </b>
                 Name:  <select onChange={e => onFontChange(e)} value={currentFont}>

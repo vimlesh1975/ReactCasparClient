@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
 import React from "react";
-import ReactDOM from 'react-dom';
 import Video from './Video';
 import Drawing from './Drawing';
 import { endpoint, address1 } from './common'
@@ -24,7 +23,8 @@ export default function App(props) {
   const [media, setMedia] = useState([]);
   const chNumbers = [1, 2, 3, 4, 5, 6];
 
-  const [chNumber, setChNumber] = useState(1)
+  const [chNumber, setChNumber] = useState(1);
+  const [currentTab, setCurrentTab] = useState('Drawing');
 
   const animationMethods = [
     'linear',
@@ -70,7 +70,9 @@ export default function App(props) {
     "easeinoutbounce",
     "easeoutinbounce",
   ]
-  const [animationMethod, setAnimationMethod] = useState('easeinsine')
+  const channelModes = ['PAL', '1080i5000', '720p2500'];
+  const [channelMode, setChannelMode] = useState('PAL')
+  const [animationMethod, setAnimationMethod] = useState('easeinsine');
 
   useEffect(() => {
     window.imageName = imageName;
@@ -145,15 +147,13 @@ export default function App(props) {
     }
   }, [mediaPath])
 
-
   const onTabChange = (index, prevIndex) => {
-    // console.log(index, prevIndex);
     switch (index) {
       case 0:
-        ReactDOM.render(<Provider store={store}><Drawing /></Provider>, document.getElementById('preview-container'))
+        setCurrentTab('Drawing')
         break;
       case 1:
-        ReactDOM.render(<Video video={address1 + '/media/amb.mp4'} />, document.getElementById('preview-container'))
+        setCurrentTab('Video')
         break;
       default:
       //nothing
@@ -165,6 +165,10 @@ export default function App(props) {
   }
   const changeChannelNumber = e => {
     setChNumber(e.target.value);
+  }
+  const changeChannelMode = e => {
+    setChannelMode(e.target.value);
+    endpoint(`set ${chNumber} mode ${e.target.value}`)
   }
 
   return (<React.Fragment>
@@ -178,6 +182,8 @@ export default function App(props) {
       <select onChange={e => changeChannelNumber(e)} value={chNumber}>
         {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
+      <button onClick={() => endpoint(`swap 1 2`)}>Swap Channels</button>
+
       <span style={{ position: 'absolute', right: '10px' }}><b >All version of casparcg server</b></span>
     </div>
 
@@ -199,10 +205,8 @@ export default function App(props) {
 
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
-              <Provider store={store}>
 
-                <Drawing />
-              </Provider>
+              <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}> <Video video={address1 + '/media/amb.mp4'} /></div><div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}><Provider store={store}><Drawing /></Provider></div>
             </div>
             <div style={{ display: 'flex' }}>
               <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
@@ -271,7 +275,8 @@ export default function App(props) {
           <TabPanel>
             <h2>Video</h2>
             <div> <input onChange={(e) => setfilename(e.target.value)} value={filename}></input>
-              <button className='palyButton' onClick={() => endpoint(`play ${chNumber}-1 "${filename}" loop`)}>Play Video</button>
+              <button className='palyButton' onClick={() => endpoint(`load ${chNumber}-1 "${filename}"`)}>Cue</button>
+              <button className='palyButton' onClick={() => endpoint(`play ${chNumber}-1 "${filename}" loop`)}>Play</button>
               <button className='stopButton' onClick={() => endpoint(`pause ${chNumber}-1`)}>Pause</button>
               <button className='stopButton' onClick={() => endpoint(`resume ${chNumber}-1`)}>Resume</button>
               <button className='stopButton' onClick={() => endpoint(`stop ${chNumber}-1`)}>Stop</button>
@@ -303,6 +308,10 @@ export default function App(props) {
           </TabPanel>
           <TabPanel>
             <h2>Test</h2>
+            <b>Set Video Mode to This Channel:</b>
+            <select onChange={e => changeChannelMode(e)} value={channelMode}>
+              {channelModes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+            </select>
           </TabPanel>
           <TabPanel>
             <h2>Help</h2>
@@ -340,5 +349,5 @@ export default function App(props) {
 
     </div>
 
-  </React.Fragment>);
+  </React.Fragment >);
 }
