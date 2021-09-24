@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, addImage, setGradientColor, setOpacity } from './DrawingController'
+import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg,  setGradientColor, setOpacity } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
@@ -40,7 +40,7 @@ const ContextMenu = ({ editor }) => {
           <li onClick={() => createRect(editor.canvas)}>Rectangle <VscPrimitiveSquare /></li>
           <li onClick={() => createCircle(editor.canvas)}>Circle <VscCircleFilled /></li>
           <li onClick={() => createTriangle(editor.canvas)}>Triangle <VscTriangleUp /></li>
-          <li onClick={() => addImage()}>Image</li>
+          
         </ul></li>
         <li>Text Align<ul >
           <li onClick={() => alignLeft(editor.canvas)}>Left</li>

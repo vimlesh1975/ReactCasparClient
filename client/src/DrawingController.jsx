@@ -193,18 +193,39 @@ export const createText = (canvas) => {
     text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-export const addImage = canvas => {
-    fabric.Image.fromURL(window.imageName, myImg => {
-        myImg.scaleToWidth(160);
-        myImg.scaleToHeight(90);
-        myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
-        canvas.add(myImg);
-        canvas.renderAll();
+// export const addImage = canvas => {
+//     fabric.Image.fromURL(window.imageName, myImg => {
+//         myImg.scaleToWidth(160);
+//         myImg.scaleToHeight(90);
+//         myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
+//         canvas.add(myImg);
+//         canvas.renderAll();
+//     });
+// }
 
-        // }, { crossOrigin: 'anonymous' });
+export const addRoundedCornerImage = (canvas, imageName1) => {
+    var rect = new fabric.Rect({
+        left: 10,
+        top: 10,
+        width: 160,
+        height: 90,
+        stroke: 'red',
+        strokeWidth: 3,
+        id:'rectwithimg',
+        rx: 30,
+        objectCaching:false,
+        shadow:shadowOptions,
+        ry: 30
     });
-
+    canvas.add(rect).setActiveObject(rect);;
+    fabric.util.loadImage(imageName1, myImg => {
+        rect.set({width:myImg.width, height:myImg.height ,fill:new fabric.Pattern({ source: myImg, repeat: 'no-repeat'})
+        });
+        rect.set({scaleX:0.5, scaleY:0.5})
+        canvas.renderAll();
+    });
 }
+
 
 const addImagefromUrl = (canvas, url) => {
     fabric.Image.fromURL(url, myImg => {
@@ -339,16 +360,6 @@ export const unlockAll = canvas => {
     aa.forEach(element => element.selectable = true);
 }
 
-
-
-export const toggleModeErase = (mode, canvas) => {
-    canvas.isDrawingMode = !canvas.isDrawingMode;
-    const EraserBrush1 = new EraserBrush(canvas);
-    EraserBrush1.width = options.strokeWidth;
-    EraserBrush1.color = "#ffffff";
-    canvas.freeDrawingBrush = EraserBrush1;
-}
-
 const ErasedGroup = fabric.util.createClass(fabric.Group, {
     original: null,
     ErasedPath: null,
@@ -410,39 +421,34 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
         const objects = this.canvas.getObjects().filter((obj) => {
             // if (obj instanceof fabric.Textbox) return false;
             // if (obj instanceof fabric.IText) return false;
+            if (obj instanceof fabric.Rect) {
+            if (obj.id==='rectwithimg'){ return false}
+               
+            }
             if (!obj.intersectsWithObject(path)) return false;
             return true;
         });
 
         if (objects.length > 0) {
-
             // merge those objects into a group
             const mergedGroup = new fabric.Group(objects);
             const newPath = new ErasedGroup(mergedGroup, path);
-
             const left = newPath.left;
             const top = newPath.top;
-
             // convert it into a dataURL, then back to a fabric image
-            try {
-                const newData = newPath.toDataURL({
-                    withoutTransform: true
+            const newData = newPath.toDataURL({
+                withoutTransform: true
+            });
+            fabric.Image.fromURL(newData, (fabricImage) => {
+                fabricImage.set({
+                    left: left,
+                    top: top,
+                    shadow: { ...shadowOptions, blur: 0 },
                 });
-                fabric.Image.fromURL(newData, (fabricImage) => {
-                    fabricImage.set({
-                        left: left,
-                        top: top,
-                        shadow: { ...shadowOptions, blur: 0 },
-                    });
-
-                    // remove the old objects then add the new image
-                    this.canvas.remove(...objects);
-                    this.canvas.add(fabricImage);
-                });
-
-            } catch (error) {
-                return
-            }
+                // remove the old objects then add the new image
+                this.canvas.remove(...objects);
+                this.canvas.add(fabricImage);
+            });
         }
 
         this.canvas.clearContext(this.canvas.contextTop);
@@ -450,7 +456,6 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
         this._resetShadow();
     },
 });
-
 
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
@@ -511,7 +516,16 @@ const onSkewYSizeChange = e => {
     window.editor.canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
     window.editor.canvas.requestRenderAll();
 }
-
+const onRxSizeChange = e => {
+    window.editor.canvas.getActiveObjects().forEach(item => {
+        item.rx = parseInt(e.target.value)
+    })
+    window.editor.canvas.requestRenderAll();
+}
+const onRySizeChange = e => {
+    window.editor.canvas.getActiveObjects().forEach(item => item.ry = parseInt(e.target.value))
+    window.editor.canvas.requestRenderAll();
+}
 const putat00 = (canvas) => {
     // canvas.setZoom(1)
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1469,7 +1483,12 @@ const DrawingController = ({ chNumber }) => {
             <div style={{ border: '1px solid black' }}>
                 <b> Skew: </b>
                 SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
-                SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
+                RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
+                RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
+
+
+
             </div>
             <div style={{ border: '1px solid black' }}>
                 <b>Zoom and Pan: </b>
@@ -1578,7 +1597,7 @@ const DrawingController = ({ chNumber }) => {
                     <div style={{ border: '1px solid black' }}>
                         <b> Image from URL: </b>
                         <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
-                        <button onClick={() => addImagefromUrl(window.editor.canvas, onlineImageUrl)}>Add</button>
+                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
                     </div>
                     <div style={{ border: '1px solid black' }}>
                         <b> Export Import SVG: </b>

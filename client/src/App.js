@@ -8,7 +8,7 @@ import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import DrawingController, { addImage } from './DrawingController';
+import DrawingController, {  addRoundedCornerImage} from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
@@ -247,7 +247,7 @@ export default function App(props) {
                     </div>
                     <div>
                       Selected Image <br />
-                      <button onClick={() => addImage(window.editor.canvas)}>Add This Image</button>
+                      <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
                     </div>
                   </div>
 
@@ -316,7 +316,7 @@ export default function App(props) {
           <TabPanel>
             <h2>Help</h2>
             <ol>
-              <li>It works only with server 2.3</li>
+              <li>It works with all version of Server</li>
               <li> Put as below in casparcg.config file and drag screen consumer below Designer window
                 &lt;screen&gt;
                 &lt;always-on-top&gt;true&lt;/always-on-top&gt;
@@ -328,10 +328,7 @@ export default function App(props) {
                 &lt;/screen&gt;
               </li>
 
-              <li>Select same mode and tab menu </li>
-              <li>By defalut Drawing mode will open</li>
-              <li>In drawing mode first we need to click initialise drawing button</li>
-              <li>Select Casparcg Screen Sizes from drop down and click set</li>
+              <li>Select Casparcg Screen Sizes from drop down</li>
               <li>Add some text or rectangle by clicking on buttons and then click Show to Casparcg</li>
 
               <li>There is right click menu also for drawing mode. </li>
