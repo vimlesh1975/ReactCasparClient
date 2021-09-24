@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg,  setGradientColor, setOpacity } from './DrawingController'
+import {removeShadow, removeFill,removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, setGradientColor, setOpacity } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
@@ -40,7 +40,7 @@ const ContextMenu = ({ editor }) => {
           <li onClick={() => createRect(editor.canvas)}>Rectangle <VscPrimitiveSquare /></li>
           <li onClick={() => createCircle(editor.canvas)}>Circle <VscCircleFilled /></li>
           <li onClick={() => createTriangle(editor.canvas)}>Triangle <VscTriangleUp /></li>
-          
+
         </ul></li>
         <li>Text Align<ul >
           <li onClick={() => alignLeft(editor.canvas)}>Left</li>
@@ -53,8 +53,15 @@ const ContextMenu = ({ editor }) => {
           <li onClick={() => textItalic(editor.canvas)}>Itallic</li>
           <li onClick={() => txtBold(editor.canvas)}>Bold</li>
           <li onClick={() => textNormal(editor.canvas)}>Normal</li>
-          <li onClick={() => removeBg(editor.canvas)}>Remove BG</li>
+
           <li onClick={() => setGradientColor(editor.canvas)}>setGradientColor</li>
+        </ul></li>
+        <li>Remove<ul >
+          <li onClick={() => removeBg(editor.canvas)}> BG</li>
+          <li onClick={() => removeFill(editor.canvas)}> Fill</li>
+          <li onClick={() => removeStroke(editor.canvas)}> Stroke</li>
+          <li onClick={() => removeShadow(editor.canvas)}> shadow</li>
+
         </ul></li>
         <li onClick={() => redo(editor.canvas)}>Redo <AiOutlineRedo /></li>
         <li onClick={() => undo(editor.canvas)}>Undo <AiOutlineUndo /></li>

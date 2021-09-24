@@ -81,7 +81,7 @@ const options = {
     strokeWidth: 3,
 };
 
-const shadowOptions = {
+export const shadowOptions = {
     color: 'black',
     blur: 30,
     offsetX: 0,
@@ -193,51 +193,30 @@ export const createText = (canvas) => {
     text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-// export const addImage = canvas => {
-//     fabric.Image.fromURL(window.imageName, myImg => {
-//         myImg.scaleToWidth(160);
-//         myImg.scaleToHeight(90);
-//         myImg.set({ left: 0, top: 0, stroke: 'yellow', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
-//         canvas.add(myImg);
-//         canvas.renderAll();
-//     });
-// }
+
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
     var rect = new fabric.Rect({
         left: 10,
         top: 10,
-        width: 160,
-        height: 90,
         stroke: 'red',
         strokeWidth: 3,
-        id:'rectwithimg',
+        id: 'rectwithimg',
         rx: 30,
-        objectCaching:false,
-        shadow:shadowOptions,
+        objectCaching: false,
+        shadow: shadowOptions,
         ry: 30
     });
-    canvas.add(rect).setActiveObject(rect);;
+    canvas.add(rect).setActiveObject(rect);
     fabric.util.loadImage(imageName1, myImg => {
-        rect.set({width:myImg.width, height:myImg.height ,fill:new fabric.Pattern({ source: myImg, repeat: 'no-repeat'})
+        // fabric.Image.fromURL(imageName1,  myImg => {
+        rect.set({
+            width: myImg.width, height: myImg.height, fill: new fabric.Pattern({ source: myImg, repeat: 'no-repeat' })
         });
-        rect.set({scaleX:0.5, scaleY:0.5})
+        rect.set({ scaleX: 0.5, scaleY: 0.5 })
         canvas.renderAll();
     });
 }
-
-
-const addImagefromUrl = (canvas, url) => {
-    fabric.Image.fromURL(url, myImg => {
-        myImg.scaleToWidth(320);
-        myImg.scaleToHeight(180);
-        myImg.set({ left: 100, top: 100, stroke: '#ffffff', strokeWidth: 2, strokeUniform: true, shadow: shadowOptions });
-
-        canvas.add(myImg).setActiveObject(myImg);
-        canvas.renderAll();
-    });
-}
-
 
 export const setGradientColor = canvas => {
     if (window.editor.canvas.getActiveObject()) { canvas.getActiveObject().fill = gradient };
@@ -262,6 +241,27 @@ export const createRect = (canvas) => {
     canvas.requestRenderAll();
     rect.animate('top', 430, { onChange: canvas.renderAll.bind(canvas) })
 };
+export const createEllipse = (canvas) => {
+    const rect = new fabric.Ellipse({
+        shadow: shadowOptions,
+        top: -100,
+        left: 180,
+        rx: 50,
+        ry: 80,
+        inverted: true,
+        opacity: 0.9,
+        fill: 'blue',
+        hasRotatingPoint: true,
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+};
+
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
@@ -316,7 +316,23 @@ export const textItalic = canvas => { if (window.editor.canvas.getActiveObject()
 export const txtBold = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().fontWeight = 'bold' };
 export const textNormal = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().fontWeight = 'normal' };
 
-export const removeBg = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().set('backgroundColor', '') };
+export const removeBg = canvas => {
+    const aa = canvas.getActiveObjects();
+    aa.forEach(element => { element.set('backgroundColor', '') });
+};
+
+export const removeFill = canvas => {
+    const aa = canvas.getActiveObjects();
+    aa.forEach(element => { element.set('fill', '') });
+};
+export const removeStroke = canvas => {
+    const aa = canvas.getActiveObjects();
+    aa.forEach(element => { element.set('strokeWidth', 0) });
+};
+export const removeShadow = canvas => {
+    const aa = canvas.getActiveObjects();
+    aa.forEach(element => { element.set('shadow', {...shadowOptions,blur:0}) });
+};
 
 
 
@@ -324,6 +340,7 @@ export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => { canvas.remove(element) });
 }
+
 export const swapFaceandStrokeColors = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => {
@@ -421,10 +438,7 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
         const objects = this.canvas.getObjects().filter((obj) => {
             // if (obj instanceof fabric.Textbox) return false;
             // if (obj instanceof fabric.IText) return false;
-            if (obj instanceof fabric.Rect) {
-            if (obj.id==='rectwithimg'){ return false}
-               
-            }
+            if ((obj instanceof fabric.Rect) && (obj.id === 'rectwithimg')) { return false }
             if (!obj.intersectsWithObject(path)) return false;
             return true;
         });
@@ -1188,10 +1202,10 @@ const DrawingController = ({ chNumber }) => {
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         // selectAll(canvas);
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        }, 500);
+        }, 250);
 
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -1204,11 +1218,11 @@ const DrawingController = ({ chNumber }) => {
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
             "`)
-        }, 600);
+        }, 300);
 
         setTimeout(() => {
-            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
-        }, 1000);
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+        }, 800);
 
     }
 
@@ -1454,6 +1468,11 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
+                <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
+
+            </div>
+            <div style={{ border: '1px solid black' }}>
+                <b> Free Drwing: </b>
                 <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
                 {modes.map((val, i) => {
                     return (<>
@@ -1461,8 +1480,9 @@ const DrawingController = ({ chNumber }) => {
                             onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} /> <label key={uuidv4()} htmlFor={val}>{val}</label>
                     </>)
                 })}
-
             </div>
+
+
             <div style={{ border: '1px solid black' }}>
                 <b> Colors: </b>
                 Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
@@ -1525,7 +1545,6 @@ const DrawingController = ({ chNumber }) => {
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
             <div>
-
                 <div style={{ border: '1px solid black' }}>
                     <b> Save: </b>
                     <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
@@ -1544,14 +1563,22 @@ const DrawingController = ({ chNumber }) => {
                         if (retVal !== null) {
                             setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
                             setCurentPage(canvaslist.length)
-
                         }
                     }}
 
                     ><FaSave /> in New Page</button>
                     <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
-
-
+                    <div style={{ border: '1px solid black' }}>
+                        <b> Image from URL: </b>
+                        <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
+                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
+                    </div>
+                    <div style={{ border: '1px solid black' }}>
+                        <b> Export Import SVG: </b>
+                        <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
+                        <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                        <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+                    </div>
                     <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
 
                         <DragDropContext onDragEnd={onDragEnd}>
@@ -1593,29 +1620,15 @@ const DrawingController = ({ chNumber }) => {
                             </Droppable>
                         </DragDropContext>
                     </div>
-
-                    <div style={{ border: '1px solid black' }}>
-                        <b> Image from URL: </b>
-                        <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
-                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
-                    </div>
-                    <div style={{ border: '1px solid black' }}>
-                        <b> Export Import SVG: </b>
-                        <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
-                        <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                        <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+                    <div style={{ display: 'none1' }}>
+                        <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
+                        <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
+                        <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
                     </div>
                 </div>
             </div>
         </div>
-        <div style={{ display: 'none' }}>
 
-            <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
-            <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
-            <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-
-
-        </div>
     </div >)
 }
 

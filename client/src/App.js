@@ -332,6 +332,8 @@ export default function App(props) {
               <li>Add some text or rectangle by clicking on buttons and then click Show to Casparcg</li>
 
               <li>There is right click menu also for drawing mode. </li>
+             
+
               <li><a href='https://github.com/vimlesh1975/ReactCasparClient' target='_blank' rel="noreferrer">Github Page</a> </li>
               <li><a href='https://vimlesh1975.github.io/ReactCasparClient/' target='_blank' rel="noreferrer">Github Online Client</a> </li>
 
@@ -339,7 +341,13 @@ export default function App(props) {
               <li><a href='https://bit.ly/3jRrhDL' target='_blank' rel="noreferrer">Latest Build</a> </li>
 
               <li>test</li>
+             
+             
             </ol>
+            <h2>Not work</h2>
+            <ol>
+            <li>Erase will not work on Images </li>
+              </ol>
           </TabPanel>
         </Tabs >
       </div >
