@@ -6,6 +6,7 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
 const ContextMenu = ({ editor }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
+  window.showMenu=showMenu;
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >

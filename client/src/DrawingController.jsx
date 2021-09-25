@@ -14,6 +14,7 @@ import { FiFile } from "react-icons/fi";
 import Casparlogo from './casparlogo.png'
 
 import { v4 as uuidv4 } from 'uuid';
+import { saveAs } from 'file-saver';
 
 fabric.Object.prototype.noScaleCache = false;
 
@@ -261,7 +262,24 @@ export const createEllipse = (canvas) => {
     canvas.requestRenderAll();
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
+export const createLine = (canvas) => {
+    const rect = new fabric.Line([500, 450, 800, 450], {
+        shadow: shadowOptions,
+        top: -100,
+        left: 90,
 
+        opacity: 0.9,
+        fill: 'rgb(80, 3, 124)',
+        hasRotatingPoint: true,
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
+};
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
@@ -331,7 +349,7 @@ export const removeStroke = canvas => {
 };
 export const removeShadow = canvas => {
     const aa = canvas.getActiveObjects();
-    aa.forEach(element => { element.set('shadow', {...shadowOptions,blur:0}) });
+    aa.forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
 };
 
 
@@ -339,6 +357,8 @@ export const removeShadow = canvas => {
 export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => { canvas.remove(element) });
+    canvas.discardActiveObject();
+    canvas.renderAll();
 }
 
 export const swapFaceandStrokeColors = canvas => {
@@ -354,6 +374,8 @@ export const swapFaceandStrokeColors = canvas => {
 export const deleteAll = canvas => {
     const aa = canvas.getObjects()
     aa.forEach(element => { canvas.remove(element) });
+    canvas.discardActiveObject();
+    canvas.renderAll();
 }
 
 export const bringToFront = canvas => canvas.bringToFront(canvas.getActiveObject())
@@ -860,10 +882,8 @@ const DrawingController = ({ chNumber }) => {
         endpoint(`call ${window.chNumber}-111 "speed=${e.target.value}"`);
     }
     const exportSVG = canvas => {
-        // console.log(canvas.toSVG());
         const element = document.createElement("a");
         var aa = canvas.toSVG()
-        // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
         const file = new Blob([aa], { type: 'text/xml' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -888,39 +908,31 @@ const DrawingController = ({ chNumber }) => {
         }
     }
 
-    const exportHTML = canvas => {
-        const element = document.createElement("a");
-        var aa = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        </head>
-        
-        <body>
-        `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
-        // aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
-        aa += `
-            </body>
-            <script>
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            document.body.style.overflow='hidden';
-            var aa = document.getElementsByTagName('div')[0];
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-            </script>
-            </html>`
-        const file = new Blob([aa], { type: 'text/html' });
-        element.href = URL.createObjectURL(file);
+    const exportHTML1 = canvas => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
+            var aa = `<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Document</title>
+                </head>
+                <body>
+                <div> ${canvas.toSVG()}  </div>
+                 </body>
+                 <script>
+                document.body.style.margin='0';
+                document.body.style.padding='0';
+                document.body.style.overflow='hidden';
+                var aa = document.getElementsByTagName('div')[0];
+                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                </script>
+                </html>`
+            const file = new Blob([aa], { type: 'text/html' });
+            saveAs(file, retVal + '.html')
         }
     }
 
@@ -963,7 +975,7 @@ const DrawingController = ({ chNumber }) => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
+            element.download = retVal + '.html';
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1008,7 +1020,7 @@ const DrawingController = ({ chNumber }) => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
+            element.download = retVal + '.html';
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1052,7 +1064,7 @@ const DrawingController = ({ chNumber }) => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
+            element.download = retVal + '.html';
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1097,7 +1109,7 @@ const DrawingController = ({ chNumber }) => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
+            element.download = retVal + '.html';
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1469,6 +1481,7 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                 <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
+                <button onClick={() => createLine(window.editor.canvas)}>Line</button>
 
             </div>
             <div style={{ border: '1px solid black' }}>
@@ -1485,7 +1498,7 @@ const DrawingController = ({ chNumber }) => {
 
             <div style={{ border: '1px solid black' }}>
                 <b> Colors: </b>
-                Face <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
+                Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
                 Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
                 Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
@@ -1577,7 +1590,8 @@ const DrawingController = ({ chNumber }) => {
                         <b> Export Import SVG: </b>
                         <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
                         <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                        <button onClick={() => exportHTML(window.editor.canvas)}>Export HTML</button>
+                        <button onClick={() => exportHTML1(window.editor.canvas)}>Export HTML</button>
+
                     </div>
                     <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
 

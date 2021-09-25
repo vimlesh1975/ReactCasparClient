@@ -312,6 +312,7 @@ export default function App(props) {
             <select onChange={e => changeChannelMode(e)} value={channelMode}>
               {channelModes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
             </select>
+            <button onClick={()=>{window.showMenu=true}}>Show Right Click Menu</button>
           </TabPanel>
           <TabPanel>
             <h2>Help</h2>
