@@ -132,5 +132,10 @@ cursor: pointer;
 display: inline;
 
 }
+.drawingToolsRow{
+  border: 1px solid rgb(235, 232, 232);
+  width: 875px;
+  margin-top: 3px;
+}
 
 

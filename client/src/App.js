@@ -268,7 +268,7 @@ export default function App(props) {
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
-            <div style={{ border: '4px solid yellow', width: 900 }}>
+            <div style={{ border: '1px dashed blue', width: 900 }}>
               <DrawingController />
             </div>
           </TabPanel>
@@ -348,6 +348,10 @@ export default function App(props) {
             <h2>Not work</h2>
             <ol>
             <li>Erase will not work on Images </li>
+            <li>Erase will work on Images from local pc </li>
+            <li>Images from local pc will be slow </li>
+
+
               </ol>
           </TabPanel>
         </Tabs >

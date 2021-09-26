@@ -16,6 +16,7 @@ import Casparlogo from './casparlogo.png'
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
 
+
 fabric.Object.prototype.noScaleCache = false;
 
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
@@ -172,7 +173,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार 😀🙋‍♂️👋 Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
         id: 'f0',
         left: 100,
@@ -219,6 +220,32 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
     });
 }
 
+const Upload = e => {
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        var imgObj = new Image();
+        imgObj.src = event.target.result;
+        imgObj.onload = function () {
+            var image = new fabric.Image(imgObj);
+            image
+                .set({
+                    left: 10,
+                    top: 10,
+                    shadow: shadowOptions,
+                    stroke: 'white',
+                    strokeWidth: 3,
+                    strokeUniform: true,
+                    objectCaching: false,
+                })
+                .scale(0.5);
+
+            window.editor.canvas.add(image).setActiveObject(image);
+        };
+    };
+    reader.readAsDataURL(e.target.files[0]);
+
+}
+
 export const setGradientColor = canvas => {
     if (window.editor.canvas.getActiveObject()) { canvas.getActiveObject().fill = gradient };
 }
@@ -263,16 +290,16 @@ export const createEllipse = (canvas) => {
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
 export const createLine = (canvas) => {
-    const rect = new fabric.Line([500, 450, 800, 450], {
-        shadow: shadowOptions,
+    const rect = new fabric.Line([500, 450, 800, 450.00001], {
+        shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
-
+        height: 1,
         opacity: 0.9,
-        fill: 'rgb(80, 3, 124)',
+        fill: 'blue',
         hasRotatingPoint: true,
         objectCaching: false,
-        stroke: options.stroke,
+        stroke: 'yellow',
         strokeWidth: 3,
         strokeUniform: true,
     });
@@ -280,6 +307,63 @@ export const createLine = (canvas) => {
     canvas.requestRenderAll();
     rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
 };
+
+
+const createHeart = canvas => {
+    const heart = new fabric.Path("M0 200 v-200 h200 a100,100 90 0,1 0,200 a100,100 90 0,1 -200,0 z");
+    heart.set({
+        shadow: shadowOptions,
+        originX: "center",
+        originY: "center",
+        selectable: true,
+        evented: true,
+        left: 825,
+        top: -100,
+        scaleX: 0.3,
+        scaleY: 0.3,
+        angle: 225,
+        fill: "red",
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(heart).setActiveObject(heart);
+    canvas.requestRenderAll();
+    heart.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
+}
+
+const createArrow = canvas => {
+    const element1 = new fabric.Path(
+        "M121.32,0L44.58,0C36.67,0,29.5,3.22,24.31,8.41\
+      c-5.19,5.19-8.41,12.37-8.41,20.28c0,15.82,12.87,28.69,28.69,28.69c0,0,4.4,\
+      0,7.48,0C36.66,72.78,8.4,101.04,8.4,101.04C2.98,106.45,0,113.66,0,121.32\
+      c0,7.66,2.98,14.87,8.4,20.29l0,0c5.42,5.42,12.62,8.4,20.28,8.4c7.66,0,14.87\
+      -2.98,20.29-8.4c0,0,28.26-28.25,43.66-43.66c0,3.08,0,7.48,0,7.48c0,15.82,\
+      12.87,28.69,28.69,28.69c7.66,0,14.87-2.99,20.29-8.4c5.42-5.42,8.4-12.62,8.4\
+      -20.28l0-76.74c0-7.66-2.98-14.87-8.4-20.29C136.19,2.98,128.98,0,121.32,0z"
+    );
+    element1.set({
+        shadow: shadowOptions,
+        originX: "center",
+        originY: "center",
+        selectable: true,
+        evented: true,
+        left: 1225,
+        top: 100,
+        scaleX: 0.3,
+        scaleY: 0.3,
+        angle: 225,
+        fill: "red",
+        stroke: 'white',
+        objectCaching: false,
+        strokeWidth: 1,
+        strokeUniform: true,
+    });
+    canvas.add(element1).setActiveObject(element1);
+    canvas.requestRenderAll();
+    element1.animate('left', 450, { onChange: canvas.renderAll.bind(canvas) })
+}
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
@@ -514,28 +598,28 @@ const changeStrokeCurrentColor = e => {
 
 const changeShadowCurrentColor = e => {
     shadowOptions.color = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.color = e.target.value)
+    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.color = e.target.value}})
     window.editor.canvas.requestRenderAll();
 }
 const onBlurSizeChange = e => {
     shadowOptions.blur = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.blur = e.target.value)
+    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.blur = e.target.value}})
     window.editor.canvas.requestRenderAll();
 }
 const onoffsetXChange = e => {
     shadowOptions.offsetX = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.offsetX = e.target.value)
+    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.offsetX = e.target.value}})
     window.editor.canvas.requestRenderAll();
 }
 
 const onoffsetYChange = e => {
     shadowOptions.offsetY = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.offsetY = e.target.value)
+    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.offsetY = e.target.value}})
     window.editor.canvas.requestRenderAll();
 }
 const affectStroke = e => {
     shadowOptions.affectStroke = e.target.checked;
-    window.editor.canvas.getActiveObjects().forEach(item => item.shadow.affectStroke = e.target.checked)
+    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.affectStroke = e.target.checked}})
     window.editor.canvas.requestRenderAll();
 }
 const onstrokeSizeChange = e => {
@@ -750,7 +834,19 @@ export const paste = () => {
 }
 
 const DrawingController = ({ chNumber }) => {
-    const [fontList, setFontList] = useState([])
+    const [fontList, setFontList] = useState(['Helvetica',
+        'Calibri',
+        'Futura',
+        'Garamond',
+        'Times New Roman',
+        'Arial',
+        'Cambria',
+        'Verdana',
+        'Rockwell',
+        'Franklin Gothic',
+        'ARVO',
+        'Gigi'
+    ])
     const [currentFont, setCurrentFont] = useState('Arial')
     const [canvaslist, setCanvaslist] = useState([])
     const [currentPage, setCurentPage] = useState()
@@ -1237,13 +1333,11 @@ const DrawingController = ({ chNumber }) => {
         }, 800);
 
     }
-
     const updateGraphics = (canvas, layerNumber) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
-
     const stopGraphics = layerNumber => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1251,7 +1345,6 @@ const DrawingController = ({ chNumber }) => {
         }, 1000);
 
     }
-
 
     const dispatch = useDispatch()
     // eslint-disable-next-line
@@ -1345,16 +1438,14 @@ const DrawingController = ({ chNumber }) => {
         }
     }, [])
 
-
-
     return (<div style={{ display: 'flex' }}>
         <div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Screen Setup: </b>
                 Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
             </div>
 
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Solid Caption 1: </b>
 
                 <button onClick={() => {
@@ -1370,7 +1461,7 @@ const DrawingController = ({ chNumber }) => {
                 }}>Stop</button>
                 <span> {solidcaption1} </span>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Solid Caption 2: </b>
                 <button onClick={() => {
                     startGraphics(window.editor.canvas, 109);
@@ -1384,7 +1475,7 @@ const DrawingController = ({ chNumber }) => {
                 <span> {solidcaption2} </span>
             </div>
 
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Logo: </b>
 
                 <button onClick={() => {
@@ -1400,7 +1491,7 @@ const DrawingController = ({ chNumber }) => {
                 <span> {logo} </span>
 
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Location Band: </b>
                 <button onClick={() => {
                     startGraphics(window.editor.canvas, 210);
@@ -1415,7 +1506,7 @@ const DrawingController = ({ chNumber }) => {
                 <span> {locationBand} </span>
             </div>
 
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Vertical  Scroll: </b>  <button onClick={() => {
                     startVerticalScroll(window.editor?.canvas);
                     setVerticalScroll(canvaslist[currentPage]?.pageName)
@@ -1430,7 +1521,7 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {verticalScroll} </span>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Horizntl Scroll: </b>
                 <button onClick={() => {
                     startHorizontalScroll(window.editor?.canvas);
@@ -1446,7 +1537,7 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {horizontalScroll} </span>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b>Clock: </b>
                 <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
                 <button onClick={() => {
@@ -1460,7 +1551,7 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {clock} </span>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b>Count Up Timer: </b>
                 <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
                 <button onClick={() => {
@@ -1474,7 +1565,7 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => exportUpTimerAsHTML(window.editor.canvas)}>Export HTML</button>
                 <span> {upTimer} </span>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Drawing Tools: </b>
                 <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
@@ -1482,9 +1573,14 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                 <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
                 <button onClick={() => createLine(window.editor.canvas)}>Line</button>
+                <button onClick={() => createHeart(window.editor.canvas)}>Heart</button>
+                <button onClick={() => createArrow(window.editor.canvas)}>Arrow</button>
+
+
+
 
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Free Drwing: </b>
                 <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
                 {modes.map((val, i) => {
@@ -1495,8 +1591,7 @@ const DrawingController = ({ chNumber }) => {
                 })}
             </div>
 
-
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Colors: </b>
                 Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                 BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
@@ -1504,7 +1599,7 @@ const DrawingController = ({ chNumber }) => {
                 Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
                 <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face and Stroke Colors</button>
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Shadow: </b>
                 <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
                 Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
@@ -1513,44 +1608,38 @@ const DrawingController = ({ chNumber }) => {
                 affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
             </div>
 
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Skew: </b>
                 SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
                 SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
                 RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
                 RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
 
-
-
             </div>
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b>Zoom and Pan: </b>
                 <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
                 <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
                 <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
 
             </div>
-            <div>
+            <div className='drawingToolsRow' >
                 <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
                 <button onClick={() => alignAllRight()}><FaAlignRight /></button>
                 <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                 <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-
                 <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
                 <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
-
                 <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
                 <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
-
                 <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
                 <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
-
                 <button onClick={() => copy(window.editor.canvas)}> Copy</button>
                 <button onClick={() => paste(window.editor.canvas)}> Paste</button>
                 <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
             </div>
 
-            <div style={{ border: '1px solid black' }}>
+            <div className='drawingToolsRow' >
                 <b> Font: </b>
                 Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
                     {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
@@ -1558,12 +1647,28 @@ const DrawingController = ({ chNumber }) => {
                 Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
             </div>
             <div>
-                <div style={{ border: '1px solid black' }}>
+
+                <div className='drawingToolsRow' >
+                    <b> Image from URL: </b>
+                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
+                    <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Image from Local PC: </b>
+                    <input type="file" accept="image/*" onChange={e => Upload(e)} />
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Export Import SVG: </b>
+                    <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
+                    <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <button onClick={() => exportHTML1(window.editor.canvas)}>Export HTML</button>
+                </div>
+                <div className='drawingToolsRow' >
                     <b> Save: </b>
                     <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
                     <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button>
 
-                    <input
+                    <span>Open File:</span>  <input
                         type='file'
                         id='file'
                         className='input-file'
@@ -1581,65 +1686,56 @@ const DrawingController = ({ chNumber }) => {
 
                     ><FaSave /> in New Page</button>
                     <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
-                    <div style={{ border: '1px solid black' }}>
-                        <b> Image from URL: </b>
-                        <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
-                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
-                    </div>
-                    <div style={{ border: '1px solid black' }}>
-                        <b> Export Import SVG: </b>
-                        <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
-                        <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                        <button onClick={() => exportHTML1(window.editor.canvas)}>Export HTML</button>
-
-                    </div>
-                    <div style={{ height: 200, overflow: 'scroll', border: '2px solid black' }}>
-
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            <Droppable droppableId="droppable-1" type="PERSON">
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
-                                        {...provided.droppableProps}
-                                    >
-                                        <table border='1'>
-                                            <tbody>
-                                                {canvaslist.map((val, i) => {
-                                                    return (
-                                                        <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
-                                                            {(provided, snapshot) => (
-                                                                <tr ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    style={{
-                                                                        ...provided.draggableProps.style,
-                                                                        backgroundColor: snapshot.isDragging ? 'red' : 'white',
-                                                                        boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
-                                                                        // margin: '10px'
-                                                                    }}
-                                                                >
-                                                                    <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                        recallPage(val.pageValue, window.editor.canvas, i);
-                                                                    }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
-                                                                </tr>
-                                                            )}
-                                                        </Draggable>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </table>
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        </DragDropContext>
-                    </div>
-                    <div style={{ display: 'none1' }}>
-                        <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
-                        <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
-                        <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-                    </div>
                 </div>
+                <div style={{ height: 200, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable-1" type="PERSON">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                    {...provided.droppableProps}
+                                >
+                                    <table border='1'>
+                                        <tbody>
+                                            {canvaslist.map((val, i) => {
+                                                return (
+                                                    <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
+                                                        {(provided, snapshot) => (
+                                                            <tr ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                style={{
+                                                                    ...provided.draggableProps.style,
+                                                                    backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                                    boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                                    // margin: '10px'
+                                                                }}
+                                                            >
+                                                                <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                    recallPage(val.pageValue, window.editor.canvas, i);
+                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
+                                                            </tr>
+                                                        )}
+                                                    </Draggable>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </div>
+
+
+                <div style={{ display: 'none' }}>
+                    <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
+                    <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
+                    <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
+                </div>
+
             </div>
         </div>
 
