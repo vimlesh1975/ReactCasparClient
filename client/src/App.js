@@ -8,7 +8,7 @@ import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import DrawingController, {  addRoundedCornerImage} from './DrawingController';
+import DrawingController, { addRoundedCornerImage } from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
@@ -312,7 +312,7 @@ export default function App(props) {
             <select onChange={e => changeChannelMode(e)} value={channelMode}>
               {channelModes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
             </select>
-            <button onClick={()=>{window.showMenu=true}}>Show Right Click Menu</button>
+            <button onClick={() => { window.showMenu = true }}>Show Right Click Menu</button>
           </TabPanel>
           <TabPanel>
             <h2>Help</h2>
@@ -333,7 +333,7 @@ export default function App(props) {
               <li>Add some text or rectangle by clicking on buttons and then click Show to Casparcg</li>
 
               <li>There is right click menu also for drawing mode. </li>
-             
+
 
               <li><a href='https://github.com/vimlesh1975/ReactCasparClient' target='_blank' rel="noreferrer">Github Page</a> </li>
               <li><a href='https://vimlesh1975.github.io/ReactCasparClient/' target='_blank' rel="noreferrer">Github Online Client</a> </li>
@@ -342,17 +342,18 @@ export default function App(props) {
               <li><a href='https://bit.ly/3jRrhDL' target='_blank' rel="noreferrer">Latest Build</a> </li>
 
               <li>test</li>
-             
-             
+
+
             </ol>
             <h2>Not work</h2>
             <ol>
-            <li>Erase will not work on Images </li>
-            <li>Erase will work on Images from local pc </li>
-            <li>Images from local pc will be slow </li>
+              <li>Erase will not work on Images </li>
+              <li>Erase will work on Images from local pc </li>
+              <li>Images from local pc will be slow </li>
+              <li>Emoji is not supported in server2.07 and 2.1 </li>
 
 
-              </ol>
+            </ol>
           </TabPanel>
         </Tabs >
       </div >

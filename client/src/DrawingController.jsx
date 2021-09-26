@@ -173,7 +173,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार 😀🙋‍♂️👋 Vimlesh Kumar From Doordarshan", {
+    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
         id: 'f0',
         left: 100,
@@ -308,63 +308,6 @@ export const createLine = (canvas) => {
     rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-
-const createHeart = canvas => {
-    const heart = new fabric.Path("M0 200 v-200 h200 a100,100 90 0,1 0,200 a100,100 90 0,1 -200,0 z");
-    heart.set({
-        shadow: shadowOptions,
-        originX: "center",
-        originY: "center",
-        selectable: true,
-        evented: true,
-        left: 825,
-        top: -100,
-        scaleX: 0.3,
-        scaleY: 0.3,
-        angle: 225,
-        fill: "red",
-        objectCaching: false,
-        stroke: options.stroke,
-        strokeWidth: 3,
-        strokeUniform: true,
-    });
-    canvas.add(heart).setActiveObject(heart);
-    canvas.requestRenderAll();
-    heart.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
-}
-
-const createArrow = canvas => {
-    const element1 = new fabric.Path(
-        "M121.32,0L44.58,0C36.67,0,29.5,3.22,24.31,8.41\
-      c-5.19,5.19-8.41,12.37-8.41,20.28c0,15.82,12.87,28.69,28.69,28.69c0,0,4.4,\
-      0,7.48,0C36.66,72.78,8.4,101.04,8.4,101.04C2.98,106.45,0,113.66,0,121.32\
-      c0,7.66,2.98,14.87,8.4,20.29l0,0c5.42,5.42,12.62,8.4,20.28,8.4c7.66,0,14.87\
-      -2.98,20.29-8.4c0,0,28.26-28.25,43.66-43.66c0,3.08,0,7.48,0,7.48c0,15.82,\
-      12.87,28.69,28.69,28.69c7.66,0,14.87-2.99,20.29-8.4c5.42-5.42,8.4-12.62,8.4\
-      -20.28l0-76.74c0-7.66-2.98-14.87-8.4-20.29C136.19,2.98,128.98,0,121.32,0z"
-    );
-    element1.set({
-        shadow: shadowOptions,
-        originX: "center",
-        originY: "center",
-        selectable: true,
-        evented: true,
-        left: 1225,
-        top: 100,
-        scaleX: 0.3,
-        scaleY: 0.3,
-        angle: 225,
-        fill: "red",
-        stroke: 'white',
-        objectCaching: false,
-        strokeWidth: 1,
-        strokeUniform: true,
-    });
-    canvas.add(element1).setActiveObject(element1);
-    canvas.requestRenderAll();
-    element1.animate('left', 450, { onChange: canvas.renderAll.bind(canvas) })
-}
-
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
         shadow: shadowOptions,
@@ -383,7 +326,6 @@ export const createCircle = (canvas) => {
     canvas.add(circle).setActiveObject(circle);;
     canvas.requestRenderAll();
     circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
-
 };
 
 export const createTriangle = (canvas) => {
@@ -598,28 +540,28 @@ const changeStrokeCurrentColor = e => {
 
 const changeShadowCurrentColor = e => {
     shadowOptions.color = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.color = e.target.value}})
+    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
     window.editor.canvas.requestRenderAll();
 }
 const onBlurSizeChange = e => {
     shadowOptions.blur = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.blur = e.target.value}})
+    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
     window.editor.canvas.requestRenderAll();
 }
 const onoffsetXChange = e => {
     shadowOptions.offsetX = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.offsetX = e.target.value}})
+    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetX = e.target.value } })
     window.editor.canvas.requestRenderAll();
 }
 
 const onoffsetYChange = e => {
     shadowOptions.offsetY = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.offsetY = e.target.value}})
+    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetY = e.target.value } })
     window.editor.canvas.requestRenderAll();
 }
 const affectStroke = e => {
     shadowOptions.affectStroke = e.target.checked;
-    window.editor.canvas.getActiveObjects().forEach(item => {if (item.shadow){item.shadow.affectStroke = e.target.checked}})
+    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.affectStroke = e.target.checked } })
     window.editor.canvas.requestRenderAll();
 }
 const onstrokeSizeChange = e => {
@@ -1573,11 +1515,6 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                 <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
                 <button onClick={() => createLine(window.editor.canvas)}>Line</button>
-                <button onClick={() => createHeart(window.editor.canvas)}>Heart</button>
-                <button onClick={() => createArrow(window.editor.canvas)}>Arrow</button>
-
-
-
 
             </div>
             <div className='drawingToolsRow' >
