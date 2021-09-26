@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
+    "caniuse-lite": "^1.0.30001260",
     "fabric": "^4.6.0",
     "fabric-history": "^1.6.0",
     "fabricjs-react": "^1.0.8",

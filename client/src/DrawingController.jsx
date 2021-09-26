@@ -1574,6 +1574,9 @@ const DrawingController = ({ chNumber }) => {
                 <button onClick={() => copy(window.editor.canvas)}> Copy</button>
                 <button onClick={() => paste(window.editor.canvas)}> Paste</button>
                 <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
+                <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
+                <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
+
             </div>
 
             <div className='drawingToolsRow' >
