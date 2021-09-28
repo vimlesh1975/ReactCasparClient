@@ -1696,12 +1696,14 @@ const DrawingController = ({ chNumber }) => {
                                             {provided.placeholder}
                                         </tbody>
                                     </table>
+
                                 </div>
                             )}
                         </Droppable>
                     </DragDropContext>
                 </div>
 
+                Current Page:  {canvaslist[currentPage]?.pageName}
 
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
