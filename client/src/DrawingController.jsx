@@ -518,8 +518,8 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     },
 });
 
-const crop=canvas=>{
-    
+const crop = canvas => {
+
 }
 
 const changeCurrentColor = (e) => {
@@ -1406,7 +1406,7 @@ const DrawingController = ({ chNumber }) => {
         <div>
             <div className='drawingToolsRow' >
                 <b> Screen Setup: </b>
-                Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={val} value={val}>{val}</option> })} </select>
+                Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
             </div>
 
             <div className='drawingToolsRow' >
@@ -1531,7 +1531,7 @@ const DrawingController = ({ chNumber }) => {
             </div>
             <div className='drawingToolsRow' >
                 <b> Drawing Tools: </b>
-           <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button> 
+                <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
@@ -1545,7 +1545,8 @@ const DrawingController = ({ chNumber }) => {
                 {modes.map((val, i) => {
                     return (<>
                         <input checked={currentMode === val}
-                            onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} /> <label key={uuidv4()} htmlFor={val}>{val}</label>
+                            onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} />
+                        <label key={uuidv4()} htmlFor={val}>{val}</label>
                     </>)
                 })}
             </div>
@@ -1573,7 +1574,7 @@ const DrawingController = ({ chNumber }) => {
                 SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
                 RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
                 RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
-                <button onClick={() =>crop(window.editor.canvas)}>Crop</button>
+                <button onClick={() => crop(window.editor.canvas)}>Crop</button>
 
             </div>
             <div className='drawingToolsRow' >
@@ -1673,7 +1674,8 @@ const DrawingController = ({ chNumber }) => {
                                                 return (
                                                     <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                         {(provided, snapshot) => (
-                                                            <tr ref={provided.innerRef}
+                                                            <tr
+                                                                ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                                 style={{
                                                                     ...provided.draggableProps.style,
@@ -1686,13 +1688,14 @@ const DrawingController = ({ chNumber }) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
                                                                 }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
                                                             </tr>
-                                                        )}
+                                                        )
+                                                        }
                                                     </Draggable>
                                                 )
                                             })}
+                                            {provided.placeholder}
                                         </tbody>
                                     </table>
-                                    {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>
