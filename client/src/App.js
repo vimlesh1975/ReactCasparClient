@@ -12,8 +12,12 @@ import DrawingController, { addRoundedCornerImage } from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
-export default function App(props) {
 
+import CasparcgTools from './CasparcgTools';
+
+
+
+export default function App(props) {
   const [mediaPath, setmediaPath] = useState();
   // eslint-disable-next-line
   const [remainingTime, setRemainingTime] = useState()
@@ -70,8 +74,7 @@ export default function App(props) {
     "easeinoutbounce",
     "easeoutinbounce",
   ]
-  const channelModes = ['PAL', '1080i5000', '720p2500'];
-  const [channelMode, setChannelMode] = useState('PAL')
+
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
 
   useEffect(() => {
@@ -166,11 +169,7 @@ export default function App(props) {
   const changeChannelNumber = e => {
     setChNumber(e.target.value);
   }
-  const changeChannelMode = e => {
-    setChannelMode(e.target.value);
-    endpoint(`set ${chNumber} mode ${e.target.value}`)
-  }
-
+  
   return (<React.Fragment>
 
     <div className='menu_bar'>
@@ -264,7 +263,7 @@ export default function App(props) {
           <TabList>
             <Tab>Drawing</Tab>
             <Tab>Video</Tab>
-            <Tab>Test</Tab>
+            <Tab>Casparcg Tools</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -307,12 +306,9 @@ export default function App(props) {
             </div>
           </TabPanel>
           <TabPanel>
-            <h2>Test</h2>
-            <b>Set Video Mode to This Channel:</b>
-            <select onChange={e => changeChannelMode(e)} value={channelMode}>
-              {channelModes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-            </select>
-            <button onClick={() => { window.showMenu = true }}>Show Right Click Menu</button>
+            <h2>Casparcg Tools</h2>
+          
+            <CasparcgTools />
           </TabPanel>
           <TabPanel>
             <h2>Help</h2>

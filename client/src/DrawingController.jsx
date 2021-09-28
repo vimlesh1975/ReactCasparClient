@@ -16,7 +16,6 @@ import Casparlogo from './casparlogo.png'
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
 
-
 fabric.Object.prototype.noScaleCache = false;
 
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
@@ -519,6 +518,10 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     },
 });
 
+const crop=canvas=>{
+    
+}
+
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
     window.editor.canvas.freeDrawingBrush.color = e.target.value;
@@ -909,6 +912,25 @@ const DrawingController = ({ chNumber }) => {
             fileReader.onloadend = handleFileRead;
             fileReader.readAsText(file);
         }
+    };
+    const handleFileChosen2 = (file) => {
+        if (file) {
+            setCurentPage('')
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead2;
+            fileReader.readAsText(file);
+        }
+    };
+    const handleFileRead2 = (e) => {
+        const content = fileReader.result;
+        var aa = content.split('\r\n')
+        aa.splice(-1)
+        var bb = [...canvaslist]
+        aa.forEach(element => {
+            var cc = JSON.parse(element)
+            bb.push(cc)
+        });
+        setCanvaslist([...bb])
     };
 
     const onVerticalSpeedChange = (e) => {
@@ -1509,7 +1531,7 @@ const DrawingController = ({ chNumber }) => {
             </div>
             <div className='drawingToolsRow' >
                 <b> Drawing Tools: </b>
-                <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
+           <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button> 
                 <button onClick={() => createText(window.editor.canvas)}>T</button>
                 <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                 <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
@@ -1518,7 +1540,7 @@ const DrawingController = ({ chNumber }) => {
 
             </div>
             <div className='drawingToolsRow' >
-                <b> Free Drwing: </b>
+                <b> Free Drawing: </b>
                 <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
                 {modes.map((val, i) => {
                     return (<>
@@ -1551,6 +1573,7 @@ const DrawingController = ({ chNumber }) => {
                 SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
                 RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
                 RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
+                <button onClick={() =>crop(window.editor.canvas)}>Crop</button>
 
             </div>
             <div className='drawingToolsRow' >
@@ -1614,6 +1637,13 @@ const DrawingController = ({ chNumber }) => {
                         className='input-file'
                         accept='.txt'
                         onChange={e => handleFileChosen(e.target.files[0])}
+                    />
+                    <span>Add File:</span>  <input
+                        type='file'
+                        id='file'
+                        className='input-file'
+                        accept='.txt'
+                        onChange={e => handleFileChosen2(e.target.files[0])}
                     />
                     <button onClick={() => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });

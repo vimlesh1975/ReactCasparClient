@@ -23,6 +23,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "react-tabs": "^3.2.2",
+    "react-tooltip": "^4.2.21",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6",
