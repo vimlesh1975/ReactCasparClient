@@ -1428,219 +1428,219 @@ const DrawingController = ({ chNumber }) => {
         }
     }, [])
 
-    return (<div style={{ display: 'flex' }}>
-        <div>
+    return (
+        <div style={{ display: 'flex' }}>
+            <div style={{ width: 475 }}>
+                <div className='drawingToolsRow' >
+                    <b> Screen Setup: </b>
+                    Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+                </div>
 
-            <div className='drawingToolsRow' >
-                <b> Screen Setup: </b>
-                Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Solid Caption 1: </b>
 
-            <div className='drawingToolsRow' >
-                <b> Solid Caption 1: </b>
+                    <button onClick={() => {
+                        startGraphics(window.editor.canvas, 108);
+                        setSolidcaption1(canvaslist[currentPage]?.pageName);
+                    }
+                    }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                    <button onClick={() => updateGraphics(window.editor.canvas, 108)}>Update</button>
+                    <button className='stopButton' onClick={() => {
+                        stopGraphics(108);
+                        setSolidcaption1('');
 
-                <button onClick={() => {
-                    startGraphics(window.editor.canvas, 108);
-                    setSolidcaption1(canvaslist[currentPage]?.pageName);
-                }
-                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updateGraphics(window.editor.canvas, 108)}>Update</button>
-                <button className='stopButton' onClick={() => {
-                    stopGraphics(108);
-                    setSolidcaption1('');
+                    }}>Stop</button>
+                    <span> {solidcaption1} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Solid Caption 2: </b>
+                    <button onClick={() => {
+                        startGraphics(window.editor.canvas, 109);
+                        setSolidcaption2(canvaslist[currentPage]?.pageName);
+                    }
+                    }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>  <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
+                    <button className='stopButton' onClick={() => {
+                        stopGraphics(109);
+                        setSolidcaption2('');
+                    }}>Stop</button>
+                    <span> {solidcaption2} </span>
+                </div>
 
-                }}>Stop</button>
-                <span> {solidcaption1} </span>
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Solid Caption 2: </b>
-                <button onClick={() => {
-                    startGraphics(window.editor.canvas, 109);
-                    setSolidcaption2(canvaslist[currentPage]?.pageName);
-                }
-                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>  <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
-                <button className='stopButton' onClick={() => {
-                    stopGraphics(109);
-                    setSolidcaption2('');
-                }}>Stop</button>
-                <span> {solidcaption2} </span>
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Logo: </b>
 
-            <div className='drawingToolsRow' >
-                <b> Logo: </b>
+                    <button onClick={() => {
+                        startGraphics(window.editor.canvas, 215);
+                        setLogo(canvaslist[currentPage]?.pageName);
+                    }
+                    }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                    <button onClick={() => updateGraphics(window.editor.canvas, 215)}>Update</button>
+                    <button className='stopButton' onClick={() => {
+                        stopGraphics(215);
+                        setLogo('');
+                    }}>Stop</button>
+                    <span> {logo} </span>
 
-                <button onClick={() => {
-                    startGraphics(window.editor.canvas, 215);
-                    setLogo(canvaslist[currentPage]?.pageName);
-                }
-                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updateGraphics(window.editor.canvas, 215)}>Update</button>
-                <button className='stopButton' onClick={() => {
-                    stopGraphics(215);
-                    setLogo('');
-                }}>Stop</button>
-                <span> {logo} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Location Band: </b>
+                    <button onClick={() => {
+                        startGraphics(window.editor.canvas, 210);
+                        setLocationBand(canvaslist[currentPage]?.pageName);
+                    }
+                    }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
+                    <button onClick={() => updateGraphics(window.editor.canvas, 210)}>Update</button>
+                    <button className='stopButton' onClick={() => {
+                        stopGraphics(210);
+                        setLocationBand('');
+                    }}>Stop</button>
+                    <span> {locationBand} </span>
+                </div>
 
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Location Band: </b>
-                <button onClick={() => {
-                    startGraphics(window.editor.canvas, 210);
-                    setLocationBand(canvaslist[currentPage]?.pageName);
-                }
-                }>Play <img src={Casparlogo} alt='' style={{ width: 15, height: 15 }} /></button>
-                <button onClick={() => updateGraphics(window.editor.canvas, 210)}>Update</button>
-                <button className='stopButton' onClick={() => {
-                    stopGraphics(210);
-                    setLocationBand('');
-                }}>Stop</button>
-                <span> {locationBand} </span>
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Vertical  Scroll: </b>  <button onClick={() => {
+                        startVerticalScroll(window.editor?.canvas);
+                        setVerticalScroll(canvaslist[currentPage]?.pageName)
+                    }}>Start </button>
+                    Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
+                    <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}>Pause</button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=${verticalSpeed}"`)}>Resume</button>
+                    <button className='stopButton' onClick={() => {
+                        endpoint(`stop ${window.chNumber}-110`);
+                        setVerticalScroll('')
+                    }}>Stop</button>
+                    <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
+                    <span> {verticalScroll} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Horizntl Scroll: </b>
+                    <button onClick={() => {
+                        startHorizontalScroll(window.editor?.canvas);
+                        setHorizontalScroll(canvaslist[currentPage]?.pageName);
+                    }}>Start</button>
+                    Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
+                    <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}>Pause</button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}>Resume</button>
+                    <button className='stopButton' onClick={() => {
+                        endpoint(`stop ${window.chNumber}-111`);
+                        setHorizontalScroll('');
+                    }}>Stop</button>
+                    <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
+                    <span> {horizontalScroll} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b>Clock: </b>
+                    <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
+                    <button onClick={() => {
+                        startClock(window.editor.canvas);
+                        setClock(canvaslist[currentPage]?.pageName);
+                    }}>Show On Casparcg</button>
+                    <button className='stopButton' onClick={() => {
+                        endpoint(`stop ${window.chNumber}-112`);
+                        setClock('');
+                    }}>Stop</button>
+                    <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button>
+                    <span> {clock} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b>Count Up Timer: </b>
+                    <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
+                    <button onClick={() => {
+                        startUpTimer(window.editor.canvas);
+                        setUpTimer(canvaslist[currentPage]?.pageName);
+                    }}>Show On Casparcg</button>
+                    <button className='stopButton' onClick={() => {
+                        endpoint(`stop ${window.chNumber}-115`);
+                        setUpTimer('');
+                    }}>Stop</button>
+                    <button onClick={() => exportUpTimerAsHTML(window.editor.canvas)}>Export HTML</button>
+                    <span> {upTimer} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Drawing Tools: </b>
+                    <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
+                    <button onClick={() => createText(window.editor.canvas)}>T</button>
+                    <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
+                    <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
+                    <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
+                    <button onClick={() => createLine(window.editor.canvas)}>Line</button>
 
-            <div className='drawingToolsRow' >
-                <b> Vertical  Scroll: </b>  <button onClick={() => {
-                    startVerticalScroll(window.editor?.canvas);
-                    setVerticalScroll(canvaslist[currentPage]?.pageName)
-                }}>Start </button>
-                Speed:<input style={{ width: '50px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
-                <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}>Pause</button>
-                <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=${verticalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => {
-                    endpoint(`stop ${window.chNumber}-110`);
-                    setVerticalScroll('')
-                }}>Stop</button>
-                <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
-                <span> {verticalScroll} </span>
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Horizntl Scroll: </b>
-                <button onClick={() => {
-                    startHorizontalScroll(window.editor?.canvas);
-                    setHorizontalScroll(canvaslist[currentPage]?.pageName);
-                }}>Start</button>
-                Speed:<input style={{ width: '50px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
-                <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}>Pause</button>
-                <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}>Resume</button>
-                <button className='stopButton' onClick={() => {
-                    endpoint(`stop ${window.chNumber}-111`);
-                    setHorizontalScroll('');
-                }}>Stop</button>
-                <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
-                <span> {horizontalScroll} </span>
-            </div>
-            <div className='drawingToolsRow' >
-                <b>Clock: </b>
-                <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
-                <button onClick={() => {
-                    startClock(window.editor.canvas);
-                    setClock(canvaslist[currentPage]?.pageName);
-                }}>Show On Casparcg</button>
-                <button className='stopButton' onClick={() => {
-                    endpoint(`stop ${window.chNumber}-112`);
-                    setClock('');
-                }}>Stop</button>
-                <button onClick={() => exportClockAsHTML(window.editor.canvas)}>Export HTML</button>
-                <span> {clock} </span>
-            </div>
-            <div className='drawingToolsRow' >
-                <b>Count Up Timer: </b>
-                <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
-                <button onClick={() => {
-                    startUpTimer(window.editor.canvas);
-                    setUpTimer(canvaslist[currentPage]?.pageName);
-                }}>Show On Casparcg</button>
-                <button className='stopButton' onClick={() => {
-                    endpoint(`stop ${window.chNumber}-115`);
-                    setUpTimer('');
-                }}>Stop</button>
-                <button onClick={() => exportUpTimerAsHTML(window.editor.canvas)}>Export HTML</button>
-                <span> {upTimer} </span>
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Drawing Tools: </b>
-                <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
-                <button onClick={() => createText(window.editor.canvas)}>T</button>
-                <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
-                <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
-                <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
-                <button onClick={() => createLine(window.editor.canvas)}>Line</button>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Free Drawing: </b>
+                    <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
+                    {modes.map((val, i) => {
+                        return (<>
+                            <input checked={currentMode === val}
+                                onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} />
+                            <label key={uuidv4()} htmlFor={val}>{val}</label>
+                        </>)
+                    })}
+                </div>
 
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Free Drawing: </b>
-                <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
-                {modes.map((val, i) => {
-                    return (<>
-                        <input checked={currentMode === val}
-                            onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} />
-                        <label key={uuidv4()} htmlFor={val}>{val}</label>
-                    </>)
-                })}
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Colors: </b>
+                    Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
+                    BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
+                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
+                    Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+                    <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face and Stroke Colors</button>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Shadow: </b>
+                    <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
+                    Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
+                    offsetX: <input style={{ width: '50px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                    offsetY: <input style={{ width: '50px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
+                    affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
+                </div>
 
-            <div className='drawingToolsRow' >
-                <b> Colors: </b>
-                Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
-                BG <input type="color" defaultValue='#50037c' onChange={e => changeBackGroundColor(e)} />
-                Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
-                Stroke/Brush width:<input style={{ width: '50px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
-                <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face and Stroke Colors</button>
-            </div>
-            <div className='drawingToolsRow' >
-                <b> Shadow: </b>
-                <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
-                Blur: <input style={{ width: '50px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
-                offsetX: <input style={{ width: '50px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                offsetY: <input style={{ width: '50px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Skew: </b>
+                    SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
+                    SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
+                    RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
+                    RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
 
-            <div className='drawingToolsRow' >
-                <b> Skew: </b>
-                SkewX:<input style={{ width: '50px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
-                SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
-                RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
-                RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
+                </div>
+                <div className='drawingToolsRow' >
+                    <b>Zoom and Pan: </b>
+                    <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
+                    <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
+                    <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
 
-            </div>
-            <div className='drawingToolsRow' >
-                <b>Zoom and Pan: </b>
-                <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zomm of Screen</button>
-                <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan of Screen</button>
-                <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
+                </div>
+                <div className='drawingToolsRow' >
+                    <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
+                    <button onClick={() => alignAllRight()}><FaAlignRight /></button>
+                    <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                    <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                    <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
+                    <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
+                    <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
+                    <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
+                    <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
+                    <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
+                    <button onClick={() => copy(window.editor.canvas)}> Copy</button>
+                    <button onClick={() => paste(window.editor.canvas)}> Paste</button>
+                    <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
+                    <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
+                    <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
 
-            </div>
-            <div className='drawingToolsRow' >
-                <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
-                <button onClick={() => alignAllRight()}><FaAlignRight /></button>
-                <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-                <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
-                <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
-                <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
-                <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
-                <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
-                <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
-                <button onClick={() => copy(window.editor.canvas)}> Copy</button>
-                <button onClick={() => paste(window.editor.canvas)}> Paste</button>
-                <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
-                <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
-                <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
+                </div>
 
-            </div>
+                <div className='drawingToolsRow' >
+                    <b> Font: </b>
+                    Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
+                        {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                    </select>
+                    Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
+                </div>
 
-            <div className='drawingToolsRow' >
-                <b> Font: </b>
-                Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
-                    {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                </select>
-                Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
-            </div>
-            <div>
 
                 <div className='drawingToolsRow' >
                     <b> Image from URL: </b>
-                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="65" type='text' defaultValue={onlineImageUrl}></input>
+                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="62" type='text' defaultValue={onlineImageUrl}></input>
                     <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
                 </div>
                 <div className='drawingToolsRow' >
@@ -1655,25 +1655,20 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => exportPng(window.editor.canvas)}>Export PNG</button>
 
                 </div>
-                <div className='drawingToolsRow' >
-                    <b> Save: </b>
+
+
+                <div style={{ display: 'none' }}>
+                    <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
+                    <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
+                    <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
+                </div>
+            </div>
+            <div style={{ width: 400 }}>
+                <div  >
+
+                    <b> Save: </b> <br />
                     <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
                     <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button>
-
-                    <span>Open File:</span>  <input
-                        type='file'
-                        id='file'
-                        className='input-file'
-                        accept='.txt'
-                        onChange={e => handleFileChosen(e.target.files[0])}
-                    />
-                    <span>Add File:</span>  <input
-                        type='file'
-                        id='file'
-                        className='input-file'
-                        accept='.txt'
-                        onChange={e => handleFileChosen2(e.target.files[0])}
-                    />
                     <button onClick={() => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
@@ -1685,8 +1680,23 @@ const DrawingController = ({ chNumber }) => {
 
                     ><FaSave /> in New Page</button>
                     <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+                    <span>Open File:</span>  <input
+                        type='file'
+                        id='file'
+                        className='input-file'
+                        accept='.txt'
+                        onChange={e => handleFileChosen(e.target.files[0])}
+                    /><br />
+                    <span>Add File:</span>  <input
+                        type='file'
+                        id='file'
+                        className='input-file'
+                        accept='.txt'
+                        onChange={e => handleFileChosen2(e.target.files[0])}
+                    /><br />
+
                 </div>
-                <div style={{ height: 200, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+                <div style={{ height: 800, width: 400, overflow: 'scroll', border: '1px solid black' }}>
 
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1" type="PERSON">
@@ -1730,19 +1740,10 @@ const DrawingController = ({ chNumber }) => {
                         </Droppable>
                     </DragDropContext>
                 </div>
-
                 Current Page:  {canvaslist[currentPage]?.pageName}
-
-                <div style={{ display: 'none' }}>
-                    <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
-                    <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
-                    <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
-                </div>
-
             </div>
-        </div>
-
-    </div >)
+        </div >
+    )
 }
 
 export default DrawingController
