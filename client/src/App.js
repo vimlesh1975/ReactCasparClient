@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
-import "react-resizable/css/styles.css";
 
 import React from "react";
 import Video from './Video';

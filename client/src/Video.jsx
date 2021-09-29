@@ -1,35 +1,37 @@
-import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
-import { Resizable, ResizableBox } from 'react-resizable';
 import React, { useState } from 'react';
-import { endpoint } from './common'
-
-
+import { endpoint } from './common';
+import { Rnd } from 'react-rnd';
 
 const Video = (props) => {
     const [videoWidth, setVideoWidth] = useState(1024);
     const [videoHeight, setVideoHeight] = useState(576);
-
-    const onResize = (event, { element, size }) => {
-        setVideoWidth(size.width);
-        setVideoHeight(size.height)
-        endpoint(`mixer 1-1 fill 0 0 ${videoWidth / 1024} ${videoHeight / 576}`)
-
-        // this.setState({ width: size.width, height: size.height });
-    };
-    const ddd = (e, data) => {
-        endpoint(`mixer 1-1 fill ${data.x / 1024} ${data.y / 576} ${videoWidth / 1024} ${videoHeight / 576}`)
-    }
+    const [videoX, setVideoX] = useState(0);
+    const [videoY, setVideoY] = useState(0);
 
     return (<>
-        {/* <Draggable onDrag={ddd}> */}
-        <Resizable className="box" width={videoWidth} height={videoHeight} onResize={onResize} resizer='All'>
-            <div className="box" style={{ backgroundColor: 'red', width: videoWidth, height: videoHeight }} >
-                <video id='video' width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }}>
-                    <source src={props.video} type="video/mp4" />
-                </video>
+        <Rnd
+            size={{ width: videoWidth, height: videoHeight }}
+            position={{ x: videoX, y: videoY }}
+            onDrag={(e, d) => {
+                setVideoX(d.x);
+                setVideoY(d.y)
+                endpoint(`mixer 1-1 fill ${d.x / 1024} ${d.y / 576} ${videoWidth / 1024} ${videoHeight / 576}`)
+            }}
+            onResize={(e, direction, ref, delta, position) => {
+
+                setVideoWidth(parseInt(ref.style.width));
+                setVideoHeight(parseInt(ref.style.height));
+                endpoint(`mixer 1-1 fill ${videoX / 1024} ${videoY / 576} ${parseInt(ref.style.width) / 1024} ${parseInt(ref.style.height) / 576}`)
+            }}
+        >
+            <div>
+                <div className="box" style={{ backgroundColor: 'red', width: videoWidth, height: videoHeight }} >
+                    <video id='video' width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }}>
+                        <source src={props.video} type="video/mp4" />
+                    </video>
+                </div>
             </div>
-        </Resizable>
-        {/* </Draggable> */}
+        </Rnd>
     </>)
 }
 
