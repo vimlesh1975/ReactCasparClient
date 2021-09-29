@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint } from './common'
+import { endpoint, address1 } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -733,14 +733,6 @@ const changeText = (key, val) => {
     endpoint(`call ${window.chNumber}-109 "window.editor.canvas.getObjects().forEach((element)=>{if(element.id==='${key}'){element.set({text:'${val}'});window.editor.canvas.requestRenderAll();}})"`)
 
 }
-
-var _clipboard;
-export const copy = () => {
-    window.editor.canvas.getActiveObject()?.clone(cloned => {
-        _clipboard = cloned;
-    }, ['id']);
-}
-
 export const selectAll = (canvas) => {
     canvas.discardActiveObject();
     var sel = new fabric.ActiveSelection(canvas.getObjects(), {
@@ -748,6 +740,12 @@ export const selectAll = (canvas) => {
     });
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
+}
+var _clipboard;
+export const copy = () => {
+    window.editor.canvas.getActiveObject()?.clone(cloned => {
+        _clipboard = cloned;
+    }, ['id']);
 }
 
 export const paste = () => {
@@ -758,7 +756,6 @@ export const paste = () => {
             top: clonedObj.top + 10,
             evented: true,
             objectCaching: false,
-
         });
         if (clonedObj.type === 'activeSelection') {
             // active selection needs a reference to the canvas.
@@ -822,20 +819,19 @@ const DrawingController = ({ chNumber }) => {
 
         if (mode === 'Pencil') {
             canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-            canvas.freeDrawingBrush.color = options.currentColor;
-            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+            canvas.freeDrawingBrush.color = options.stroke;
+            canvas.freeDrawingBrush.width = options.strokeWidth;
         }
         else if (mode === 'Spray') {
             canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
-            canvas.freeDrawingBrush.color = options.currentColor;
-            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+            canvas.freeDrawingBrush.color = options.stroke;
+            canvas.freeDrawingBrush.width = options.strokeWidth;
         }
 
         else if (mode === 'Erase') {
             canvas.freeDrawingBrush = new EraserBrush(canvas);
-            canvas.freeDrawingBrush.color = options.currentColor;
             canvas.freeDrawingBrush.color = 'white';
-            canvas.freeDrawingBrush.width = 10;// options.strokeWidth;
+            canvas.freeDrawingBrush.width = options.strokeWidth;
         }
     }
     window.onDrawingModeChange = onDrawingModeChange;
@@ -994,6 +990,38 @@ const DrawingController = ({ chNumber }) => {
             const file = new Blob([aa], { type: 'text/html' });
             saveAs(file, retVal + '.html')
         }
+    }
+    const exportPng = canvas => {
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            saveAs(canvas.toDataURL("image/png"), retVal + '.png')
+        }
+        // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        // var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        // if (retVal !== null) {
+        //     var aa = `<!DOCTYPE html>
+        //         <html lang="en">
+        //         <head>
+        //             <meta charset="UTF-8">
+        //             <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        //             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        //             <title>Document</title>
+        //         </head>
+        //         <body>
+        //         <div> ${canvas.toSVG()}  </div>
+        //          </body>
+        //          <script>
+        //         document.body.style.margin='0';
+        //         document.body.style.padding='0';
+        //         document.body.style.overflow='hidden';
+        //         var aa = document.getElementsByTagName('div')[0];
+        //         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        //         </script>
+        //         </html>`
+        //     const file = new Blob([aa], { type: 'text/html' });
+        //     saveAs(file, retVal + '.html')
+        // }
     }
 
     const exportVerticalScrollAsHTML = canvas => {
@@ -1404,6 +1432,7 @@ const DrawingController = ({ chNumber }) => {
 
     return (<div style={{ display: 'flex' }}>
         <div>
+
             <div className='drawingToolsRow' >
                 <b> Screen Setup: </b>
                 Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
@@ -1574,7 +1603,6 @@ const DrawingController = ({ chNumber }) => {
                 SkewY:<input style={{ width: '50px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
                 RX: <input style={{ width: '50px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
                 RY: <input style={{ width: '50px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
-                <button onClick={() => crop(window.editor.canvas)}>Crop</button>
 
             </div>
             <div className='drawingToolsRow' >
@@ -1626,6 +1654,8 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => exportSVG(window.editor.canvas)}>Export SVG</button>
                     <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <button onClick={() => exportHTML1(window.editor.canvas)}>Export HTML</button>
+                    <button onClick={() => exportPng(window.editor.canvas)}>Export PNG</button>
+
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Save: </b>

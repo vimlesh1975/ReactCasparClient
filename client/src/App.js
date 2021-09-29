@@ -29,6 +29,12 @@ export default function App(props) {
 
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
+  const [searchText, setSearchText] = useState('');
+
+  const searchedMedia =
+    media.filter((value) => {
+      return (value.toLowerCase().search(searchText.toLowerCase()) > -1)
+    })
 
   const animationMethods = [
     'linear',
@@ -121,6 +127,9 @@ export default function App(props) {
       setMedia(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
   }
+  const onChangeSearchText = e => {
+
+  }
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
@@ -169,7 +178,7 @@ export default function App(props) {
   const changeChannelNumber = e => {
     setChNumber(e.target.value);
   }
-  
+
   return (<React.Fragment>
 
     <div className='menu_bar'>
@@ -185,7 +194,6 @@ export default function App(props) {
 
       <span style={{ position: 'absolute', right: '10px' }}><b >All version of casparcg server</b></span>
     </div>
-
     <div style={{
       display: 'flex',
       flexDirection: 'row',
@@ -201,10 +209,8 @@ export default function App(props) {
           height: '100vh',
           flexWrap: 'nowrap'
         }}>
-
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
-
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}> <Video video={address1 + '/media/amb.mp4'} /></div><div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}><Provider store={store}><Drawing /></Provider></div>
             </div>
             <div style={{ display: 'flex' }}>
@@ -223,35 +229,29 @@ export default function App(props) {
               </div>
               <div>
                 <b>Select image from casparcg media folder: </b><br />
-                <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
+                <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia.length} files<br />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-
                   <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '4px solid red' }}>
-
                     <table border='1' >
                       <tbody>
-                        {media.map((val, i) => {
+                        {searchedMedia.map((val, i) => {
                           return <tr key={i}><td onClick={(e) => {
                             setImageName((address1 + `/media/` + e.target.innerText));
                           }}>{val}</td></tr>
                         })}
                       </tbody>
                     </table>
-
                   </div>
-
                   <div style={{ border: '4px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
                     <div>
                       <img src={imageName} alt='' width="200" height="130" style={{ border: '3px solid #555' }}></img>
                     </div>
                     <div>
-                      Selected Image <br />
+                      Selected Image/video <br />
                       <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
                     </div>
                   </div>
-
                 </div>
-
               </div>
             </div>
           </div>
@@ -280,12 +280,13 @@ export default function App(props) {
               <button className='stopButton' onClick={() => endpoint(`resume ${chNumber}-1`)}>Resume</button>
               <button className='stopButton' onClick={() => endpoint(`stop ${chNumber}-1`)}>Stop</button>
             </div>
-            <button onClick={refreshMedia}>Refresh Media</button>{media.length} files<br />
+            <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia.length} files<br />
+            <span>search:</span><input type='text' onChange={e => setSearchText(e.target.value)} />
             <div style={{ maxHeight: '300px', maxWidth: '400px', overflow: 'scroll' }}>
               <table border='1' >
                 <tbody>
-                  {media.map((val, i) => {
-                    return <tr key={i}><td onClick={(e) => {
+                  {searchedMedia.map((val, i) => {
+                    return <tr key={uuidv4()}><td onClick={(e) => {
                       setfilename((e.target.innerText).split('.')[0]);
                       var video = document.getElementById('video');
                       var source = document.getElementsByTagName('source')[0];
@@ -307,7 +308,7 @@ export default function App(props) {
           </TabPanel>
           <TabPanel>
             <h2>Casparcg Tools</h2>
-          
+
             <CasparcgTools />
           </TabPanel>
           <TabPanel>
