@@ -263,6 +263,8 @@ export const createRect = (canvas) => {
         stroke: options.stroke,
         strokeWidth: 3,
         strokeUniform: true,
+        rx: 10,
+        ry: 10
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();

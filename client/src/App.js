@@ -17,7 +17,7 @@ import CasparcgTools from './CasparcgTools';
 
 
 
-export default function App(props) {
+const App = (props) => {
   const [mediaPath, setmediaPath] = useState();
   // eslint-disable-next-line
   const [remainingTime, setRemainingTime] = useState()
@@ -30,10 +30,17 @@ export default function App(props) {
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
   const [searchText, setSearchText] = useState('');
+  const [searchText2, setSearchText2] = useState('');
+
 
   const searchedMedia =
     media.filter((value) => {
       return (value.toLowerCase().search(searchText.toLowerCase()) > -1)
+    })
+
+  const searchedMedia2 =
+    media.filter((value) => {
+      return (value.toLowerCase().search(searchText2.toLowerCase()) > -1)
     })
 
   const animationMethods = [
@@ -126,9 +133,6 @@ export default function App(props) {
     axios.post(address1 + '/getmedia').then((aa) => {
       setMedia(aa.data)
     }).catch((aa) => { console.log('Error', aa) });
-  }
-  const onChangeSearchText = e => {
-
   }
 
   useEffect(() => {
@@ -229,12 +233,14 @@ export default function App(props) {
               </div>
               <div>
                 <b>Select image from casparcg media folder: </b><br />
-                <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia.length} files<br />
+                <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
+                <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
+
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '4px solid red' }}>
                     <table border='1' >
                       <tbody>
-                        {searchedMedia.map((val, i) => {
+                        {searchedMedia2.map((val, i) => {
                           return <tr key={i}><td onClick={(e) => {
                             setImageName((address1 + `/media/` + e.target.innerText));
                           }}>{val}</td></tr>
@@ -359,3 +365,5 @@ export default function App(props) {
 
   </React.Fragment >);
 }
+
+export default App
