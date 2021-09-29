@@ -19,6 +19,7 @@
     "react-draggable": "^4.4.4",
     "react-icons": "^4.2.0",
     "react-redux": "^7.2.4",
+    "react-resizable": "^3.0.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",

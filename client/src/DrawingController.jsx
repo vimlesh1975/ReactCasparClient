@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, address1 } from './common'
+import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -519,10 +519,6 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
         this._resetShadow();
     },
 });
-
-const crop = canvas => {
-
-}
 
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
