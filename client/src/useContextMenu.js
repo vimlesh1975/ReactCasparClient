@@ -19,9 +19,7 @@ const useContextMenu = () => {
       else {
         setYPos(`${e.clientY - 50}px`);
       }
-
-      setShowMenu(true);
-
+     setShowMenu(true)
 
     },
     [setXPos, setYPos]

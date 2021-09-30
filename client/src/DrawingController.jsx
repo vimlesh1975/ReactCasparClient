@@ -16,6 +16,7 @@ import Casparlogo from './casparlogo.png'
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
 
+
 fabric.Object.prototype.noScaleCache = false;
 
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
@@ -194,28 +195,32 @@ export const createText = (canvas) => {
     text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-
-
 export const addRoundedCornerImage = (canvas, imageName1) => {
-    var rect = new fabric.Rect({
-        left: 10,
-        top: 10,
-        stroke: 'red',
-        strokeWidth: 3,
-        id: 'rectwithimg',
-        rx: 30,
-        objectCaching: false,
-        shadow: shadowOptions,
-        ry: 30
-    });
-    canvas.add(rect).setActiveObject(rect);
+
     fabric.util.loadImage(imageName1, myImg => {
         // fabric.Image.fromURL(imageName1,  myImg => {
-        rect.set({
-            width: myImg.width, height: myImg.height, fill: new fabric.Pattern({ source: myImg, repeat: 'no-repeat' })
-        });
-        rect.set({ scaleX: 0.5, scaleY: 0.5 })
-        canvas.renderAll();
+        if (myImg == null) {
+            alert("Error!");
+        } else {
+            var rect = new fabric.Rect({
+                left: 10,
+                top: 10,
+                stroke: 'red',
+                strokeWidth: 3,
+                id: 'rectwithimg',
+                rx: 30,
+                objectCaching: false,
+                shadow: shadowOptions,
+                ry: 30
+            });
+            canvas.add(rect).setActiveObject(rect);
+
+            rect.set({
+                width: myImg.width, height: myImg.height, fill: new fabric.Pattern({ source: myImg, repeat: 'no-repeat' })
+            });
+            rect.set({ scaleX: 0.5, scaleY: 0.5 })
+            canvas.renderAll();
+        }
     });
 }
 
@@ -351,15 +356,43 @@ export const createTriangle = (canvas) => {
     triangle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
 
 };
-export const alignLeft = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().textAlign = 'left' };
-export const alignRight = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().textAlign = 'right' };
-export const alignCenter = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().textAlign = 'center' };
+export const alignLeft = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('textAlign', 'left') });
+    canvas.requestRenderAll();
 
-export const textUnderline = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().underline = !canvas.getActiveObject().underline };
-export const textLineThrough = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().linethrough = !canvas.getActiveObject().linethrough };
-export const textItalic = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().fontStyle = 'italic' };
-export const txtBold = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().fontWeight = 'bold' };
-export const textNormal = canvas => { if (window.editor.canvas.getActiveObject()) canvas.getActiveObject().fontWeight = 'normal' };
+};
+export const alignRight = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('textAlign', 'right') });
+    canvas.requestRenderAll();
+
+};
+export const alignCenter = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('textAlign', 'center') });
+    canvas.requestRenderAll();
+};
+
+export const textUnderline = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('underline', !element.underline) });
+    canvas.requestRenderAll();
+};
+
+export const textLineThrough = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('linethrough', !element.linethrough) });
+    canvas.requestRenderAll();
+};
+export const textItalic = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('fontStyle', 'italic') });
+    canvas.requestRenderAll();
+};
+export const txtBold = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', 'bold') });
+    canvas.requestRenderAll();
+};
+
+export const textNormal = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', 'normal') });
+    canvas.requestRenderAll();
+};
 
 export const removeBg = canvas => {
     const aa = canvas.getActiveObjects();
@@ -739,6 +772,11 @@ export const selectAll = (canvas) => {
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
 }
+export const deSelectAll = (canvas) => {
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+}
+
 var _clipboard;
 export const copy = () => {
     window.editor.canvas.getActiveObject()?.clone(cloned => {
@@ -747,34 +785,41 @@ export const copy = () => {
 }
 
 export const paste = () => {
-    _clipboard?.clone(clonedObj => {
-        window.editor.canvas.discardActiveObject();
-        clonedObj.set({
-            left: clonedObj.left + 10,
-            top: clonedObj.top + 10,
-            evented: true,
-            objectCaching: false,
-        });
-        if (clonedObj.type === 'activeSelection') {
-            // active selection needs a reference to the canvas.
-            clonedObj.canvas = window.editor.canvas;
-            clonedObj.forEachObject(obj => {
-                window.editor.canvas.add(obj);
+    try {
+
+
+        _clipboard?.clone(clonedObj => {
+            window.editor.canvas.discardActiveObject();
+            clonedObj.set({
+                left: clonedObj.left + 10,
+                top: clonedObj.top + 10,
+                evented: true,
+                objectCaching: false,
             });
-            // this should solve the unselectability
-            clonedObj.setCoords();
-        } else {
-            window.editor.canvas.add(clonedObj);
-        }
-        _clipboard.top += 10;
-        _clipboard.left += 10;
-        window.editor.canvas.setActiveObject(clonedObj);
-        window.editor.canvas.requestRenderAll();
-    }, ['id']);
+            if (clonedObj.type === 'activeSelection') {
+                // active selection needs a reference to the canvas.
+                clonedObj.canvas = window.editor.canvas;
+                clonedObj.forEachObject(obj => {
+                    window.editor.canvas.add(obj);
+                });
+                // this should solve the unselectability
+                clonedObj.setCoords();
+            } else {
+                window.editor.canvas.add(clonedObj);
+            }
+            _clipboard.top += 10;
+            _clipboard.left += 10;
+            window.editor.canvas.setActiveObject(clonedObj);
+            window.editor.canvas.requestRenderAll();
+        }, ['id']);
+    } catch (error) {
+        alert(error)
+    }
 }
 
 const DrawingController = ({ chNumber }) => {
-    const [fontList, setFontList] = useState(['Helvetica',
+    const [fontList, setFontList] = useState([
+        'Helvetica',
         'Calibri',
         'Futura',
         'Garamond',
@@ -787,6 +832,7 @@ const DrawingController = ({ chNumber }) => {
         'ARVO',
         'Gigi'
     ])
+
     const [currentFont, setCurrentFont] = useState('Arial')
     const [canvaslist, setCanvaslist] = useState([])
     const [currentPage, setCurentPage] = useState()
@@ -993,33 +1039,13 @@ const DrawingController = ({ chNumber }) => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            saveAs(canvas.toDataURL("image/png"), retVal + '.png')
+            try {
+                saveAs(canvas.toDataURL("image/png"), retVal + '.png')
+
+            } catch (error) {
+                alert(error)
+            }
         }
-        // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        // var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-        // if (retVal !== null) {
-        //     var aa = `<!DOCTYPE html>
-        //         <html lang="en">
-        //         <head>
-        //             <meta charset="UTF-8">
-        //             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        //             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        //             <title>Document</title>
-        //         </head>
-        //         <body>
-        //         <div> ${canvas.toSVG()}  </div>
-        //          </body>
-        //          <script>
-        //         document.body.style.margin='0';
-        //         document.body.style.padding='0';
-        //         document.body.style.overflow='hidden';
-        //         var aa = document.getElementsByTagName('div')[0];
-        //         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-        //         </script>
-        //         </html>`
-        //     const file = new Blob([aa], { type: 'text/html' });
-        //     saveAs(file, retVal + '.html')
-        // }
     }
 
     const exportVerticalScrollAsHTML = canvas => {
@@ -1353,10 +1379,18 @@ const DrawingController = ({ chNumber }) => {
     const recallPage = (json, canvas, i) => {
         setCurentPage(i)
         canvas.loadFromJSON(json, function () {
-            const aa = canvas.getObjects();
-            aa.forEach(element => element.set({ objectCaching: false }));
-            canvas.renderAll();
+                const aa = canvas.getObjects();
+                aa.forEach(element => {
+                    try {
+                    element.set({ objectCaching: false  })
+                } catch (error) {
+                    alert(error);
+                    return;
+                }
+                    });
+                canvas.renderAll();
         });
+
     }
     const updatePage = (canvas) => {
         const updatedCanvasList = canvaslist.map((val, i) => {
@@ -1397,14 +1431,16 @@ const DrawingController = ({ chNumber }) => {
         return () => {
         }
     }, [])
+
+
     useEffect(() => {
         window.addEventListener('keydown', e => {
             // console.log(e.key);
             if (e.repeat) {
                 return;
             }
-            if (e.key === 'Delete') {
 
+            if (e.key === 'Delete') {
                 window.editor.canvas.getActiveObjects().forEach(item => {
                     //  alert(item.type);
                     if (!((item.type === 'textbox') && item.isEditing)) { window.editor.canvas.remove(item); }
@@ -1624,6 +1660,8 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => copy(window.editor.canvas)}> Copy</button>
                     <button onClick={() => paste(window.editor.canvas)}> Paste</button>
                     <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
+                    <button onClick={() => deSelectAll(window.editor.canvas)}> Deselect All</button>
+
                     <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
                     <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
 
