@@ -397,19 +397,27 @@ export const textNormal = canvas => {
 export const removeBg = canvas => {
     const aa = canvas.getActiveObjects();
     aa.forEach(element => { element.set('backgroundColor', '') });
+    canvas.requestRenderAll();
+
 };
 
 export const removeFill = canvas => {
     const aa = canvas.getActiveObjects();
     aa.forEach(element => { element.set('fill', '') });
+    canvas.requestRenderAll();
+
 };
 export const removeStroke = canvas => {
     const aa = canvas.getActiveObjects();
     aa.forEach(element => { element.set('strokeWidth', 0) });
+    canvas.requestRenderAll();
+
 };
 export const removeShadow = canvas => {
     const aa = canvas.getActiveObjects();
     aa.forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
+    canvas.requestRenderAll();
+
 };
 
 
@@ -418,7 +426,8 @@ export const deleteSelectedItem = canvas => {
     const aa = canvas.getActiveObjects()
     aa.forEach(element => { canvas.remove(element) });
     canvas.discardActiveObject();
-    canvas.renderAll();
+    canvas.requestRenderAll();
+
 }
 
 export const swapFaceandStrokeColors = canvas => {
@@ -1379,16 +1388,16 @@ const DrawingController = ({ chNumber }) => {
     const recallPage = (json, canvas, i) => {
         setCurentPage(i)
         canvas.loadFromJSON(json, function () {
-                const aa = canvas.getObjects();
-                aa.forEach(element => {
-                    try {
-                    element.set({ objectCaching: false  })
+            const aa = canvas.getObjects();
+            aa.forEach(element => {
+                try {
+                    element.set({ objectCaching: false })
                 } catch (error) {
                     alert(error);
                     return;
                 }
-                    });
-                canvas.renderAll();
+            });
+            canvas.renderAll();
         });
 
     }
