@@ -444,22 +444,37 @@ export const deleteAll = canvas => {
     const aa = canvas.getObjects()
     aa.forEach(element => { canvas.remove(element) });
     canvas.discardActiveObject();
-    canvas.renderAll();
+    canvas.requestRenderAll();
+
 }
 
-export const bringToFront = canvas => canvas.bringToFront(canvas.getActiveObject())
-export const sendToBack = canvas => canvas.sendToBack(canvas.getActiveObject())
+export const bringToFront = canvas => {
+    canvas.getActiveObjects().forEach(element => canvas.bringToFront(element));
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+}
+
+export const sendToBack = canvas => {
+    canvas.getActiveObjects().forEach(element => canvas.sendToBack(element));
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+}
+
+
 export const undo = canvas => canvas.undo()
 export const redo = canvas => canvas.redo()
 
 export const setOpacity = (canvas, val = 0.5) => {
-    const aa = canvas.getActiveObjects()
-    aa.forEach(element => element.set({ 'opacity': val }));
+    canvas.getActiveObjects().forEach(element => element.set({ 'opacity': val }));
+    canvas.requestRenderAll();
+
 }
 
 export const lock = canvas => {
-    const aa = canvas.getActiveObjects()
-    aa.forEach(element => element.selectable = false);
+    canvas.getActiveObjects().forEach(element => element.selectable = false);
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+
 }
 
 
@@ -564,7 +579,6 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
 
 const changeCurrentColor = (e) => {
     options.currentColor = e.target.value;
-    window.editor.canvas.freeDrawingBrush.color = e.target.value;
     window.editor.canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
     window.editor.canvas.requestRenderAll();
 };
@@ -577,6 +591,7 @@ const changeBackGroundColor = (e) => {
 
 const changeStrokeCurrentColor = e => {
     options.stroke = e.target.value;
+    window.editor.canvas.freeDrawingBrush.color = e.target.value;
     window.editor.canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
     window.editor.canvas.requestRenderAll();
 }
