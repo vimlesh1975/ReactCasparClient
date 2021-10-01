@@ -867,6 +867,8 @@ const DrawingController = ({ chNumber }) => {
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
+    const [ltr, setLtr] = useState(false);
+
     const [solidcaption1, setSolidcaption1] = useState('');
     const [solidcaption2, setSolidcaption2] = useState('');
     const [logo, setLogo] = useState('');
@@ -1138,14 +1140,23 @@ const DrawingController = ({ chNumber }) => {
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.left='100%';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
        document.body.style.overflow='hidden';
        var speed=${horizontalSpeed};
+        if (${!ltr}){
+          aa.style.left='100%';
           setInterval(function(){
               aa.style.left =(aa.getBoundingClientRect().left-speed)+'px';
               if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+           }, 1);
+        }
+        else{
+            aa.style.left=-${hh};
+            setInterval(function(){
+                aa.style.left =(aa.getBoundingClientRect().left+speed)+'px';
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left=-${hh}};
              }, 1);
+        }
          </script>
          `;
         aa += `
@@ -1277,7 +1288,7 @@ const DrawingController = ({ chNumber }) => {
     const startHorizontalScroll = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width;
         endpoint(`play ${window.chNumber}-111 [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-111 "
         var aa = document.createElement('div');
@@ -1286,14 +1297,23 @@ const DrawingController = ({ chNumber }) => {
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.left='100%';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed};
-        setInterval(function() {
-         aa.style.left =aa.getBoundingClientRect().left-speed;
-         if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
-          }, 1);
+        if (${!ltr}){
+                    aa.style.left='100%';
+                    setInterval(function() {
+                    aa.style.left =aa.getBoundingClientRect().left-speed;
+                    if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+                    }, 1);
+                    }
+        else{
+            aa.style.left=-${hh};
+            setInterval(function() {
+            aa.style.left =aa.getBoundingClientRect().left+speed;
+            if (aa.getBoundingClientRect().left > ${currentscreenSize}){aa.style.left=-${hh}};
+            }, 1);
+        }
         "`)
     }
 
@@ -1584,7 +1604,8 @@ const DrawingController = ({ chNumber }) => {
                     <button className='stopButton' onClick={() => {
                         endpoint(`stop ${window.chNumber}-111`);
                         setHorizontalScroll('');
-                    }}>Stop</button>
+                    }}>Stop</button><br />
+                    <span> Left to Right:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                     <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>Export HTML</button>
                     <span> {horizontalScroll} </span>
                 </div>
