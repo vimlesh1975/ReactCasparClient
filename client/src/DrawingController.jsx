@@ -859,8 +859,9 @@ const DrawingController = ({ chNumber }) => {
     ])
 
     const [currentFont, setCurrentFont] = useState('Arial')
-    const [canvaslist, setCanvaslist] = useState([])
-    const [currentPage, setCurentPage] = useState()
+    var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+    const [canvaslist, setCanvaslist] = useState([{ 'pageName': ss + '_pageName', 'pageValue': '' }])
+    const [currentPage, setCurentPage] = useState(0)
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
     const [f0, setF0] = useState('Ganesh Tiwari');
     const [f1, setF1] = useState('Suresh Malhotra');
@@ -940,6 +941,7 @@ const DrawingController = ({ chNumber }) => {
     }
 
     const drawingFileSave = () => {
+        updatePage(window.editor.canvas);
         const element = document.createElement("a");
         var aa = ''
         canvaslist.forEach(val => {
@@ -947,7 +949,13 @@ const DrawingController = ({ chNumber }) => {
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var ss
+        if (currentFile === 'new') {
+            ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        } else {
+            ss = currentFile;
+        }
+
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
             element.download = retVal;
@@ -971,8 +979,10 @@ const DrawingController = ({ chNumber }) => {
         });
         setCanvaslist([...bb])
     };
+    var currentFile = 'new';
 
     const handleFileChosen = (file) => {
+        currentFile = file.name
         if (file) {
             setCurentPage('')
             fileReader = new FileReader();
@@ -1443,6 +1453,7 @@ const DrawingController = ({ chNumber }) => {
         });
         setCanvaslist([...updatedCanvasList])
     }
+
     const updatePageName = e => {
         const updatedCanvasList = canvaslist.map((val, i) => {
             return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.innerText, 'pageValue': val.pageValue } : val;
@@ -1478,6 +1489,17 @@ const DrawingController = ({ chNumber }) => {
     }, [])
 
 
+    // useEffect(() => {
+    //     const autoPageUpdate = setInterval((
+    //     ) => {
+    //         updatePage(window.editor?.canvas)
+    //     }, 1000);
+    //     return () => {
+    //         clearInterval(autoPageUpdate)
+    //     }
+    // }, [])
+
+
     useEffect(() => {
         window.addEventListener('keydown', e => {
             // console.log(e.key);
@@ -1511,7 +1533,7 @@ const DrawingController = ({ chNumber }) => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <div style={{ width: 475 }}>
+            <div style={{ width: 475, backgroundColor: '#f4f0e7' }}>
                 <div className='drawingToolsRow' >
                     <b> Screen Setup: </b>
                     Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
@@ -1749,39 +1771,59 @@ const DrawingController = ({ chNumber }) => {
                     <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
                 </div>
             </div>
-            <div style={{ width: 400 }}>
-                <div  >
+            <div style={{ width: 400, backgroundColor: '#ddf0db' }}>
+                <div>
+                    <div className='drawingToolsRow' >
+                        <b> Save: </b>
+                        <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
+                        <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button><br />
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <span>Open File:</span>  <input
+                            type='file'
+                            id='file'
+                            className='input-file'
+                            accept='.txt'
+                            onChange={e => handleFileChosen(e.target.files[0])}
+                        /><br />
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <span>Add File:</span>  <input
+                            type='file'
+                            id='file'
+                            className='input-file'
+                            accept='.txt'
+                            onChange={e => handleFileChosen2(e.target.files[0])}
+                        /><br />
+                    </div>
+                    <div className='drawingToolsRow' >
 
-                    <b> Save: </b>
-                    <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
-                    <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save <FaSave /></button><br />
+                        <b> Pages: </b>
+                        <button onClick={() => {
+                            var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+                            var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
+                            if (retVal !== null) {
+                                deleteAll(window.editor?.canvas);
+                                setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
 
-                    <span>Open File:</span>  <input
-                        type='file'
-                        id='file'
-                        className='input-file'
-                        accept='.txt'
-                        onChange={e => handleFileChosen(e.target.files[0])}
-                    /><br />
-                    <span>Add File:</span>  <input
-                        type='file'
-                        id='file'
-                        className='input-file'
-                        accept='.txt'
-                        onChange={e => handleFileChosen2(e.target.files[0])}
-                    /><br />
-                    <b> Pages: </b>   <button onClick={() => {
-                        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-                        var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
-                        if (retVal !== null) {
-                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
-                            setCurentPage(canvaslist.length)
-                        }
-                    }}
+                                setCurentPage(canvaslist.length)
+                            }
+                        }}
+                        > Add Blank Page</button>
 
-                    ><FaSave /> in New Page</button>
-                    <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+                        <button onClick={() => {
+                            var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+                            var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
+                            if (retVal !== null) {
+                                setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
+                                setCurentPage(canvaslist.length)
+                            }
+                        }}
 
+                        ><FaSave /> in New Page</button>
+
+                        <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+                    </div>
                 </div>
                 <div style={{ height: 800, width: 400, overflow: 'scroll', border: '1px solid black' }}>
 
