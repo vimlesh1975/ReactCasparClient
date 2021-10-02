@@ -468,9 +468,11 @@ export const redo = canvas => canvas.redo()
 export const setOpacity = (canvas, val = 0.5) => {
     canvas.getActiveObjects().forEach(element => element.set({ 'opacity': val }));
     canvas.requestRenderAll();
-
 }
-
+export const setOpacity1 = (canvas, e) => {
+    canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
+    canvas.requestRenderAll();
+}
 export const lock = canvas => {
     canvas.getActiveObjects().forEach(element => element.selectable = false);
     canvas.discardActiveObject();
@@ -1046,6 +1048,8 @@ const DrawingController = ({ chNumber }) => {
     }
 
     const exportHTML1 = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
@@ -1073,11 +1077,20 @@ const DrawingController = ({ chNumber }) => {
         }
     }
     const exportPng = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var br=(canvas.getActiveObject())?.getBoundingRect();
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter file name to save : ", ss + "_FileName");
         if (retVal !== null) {
             try {
-                saveAs(canvas.toDataURL("image/png"), retVal + '.png')
+                saveAs(canvas.toDataURL({
+                    format: 'png',
+                    left: br.left,
+                    top: br.top,
+                    width: br.width,
+                    height: br.height
+                }), retVal + '.png')
 
             } catch (error) {
                 alert(error)
@@ -1672,11 +1685,14 @@ const DrawingController = ({ chNumber }) => {
 
                 </div>
                 <div className='drawingToolsRow' >
+                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(window.editor.canvas,e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
+                </div>
+                <div className='drawingToolsRow' >
                     <b> Font: </b>
                     Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    Size<input style={{ width: '150px' }} onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                    <br />  Size<input className='inputRange' onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
@@ -1697,35 +1713,35 @@ const DrawingController = ({ chNumber }) => {
                     Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
                     <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
-                    <input style={{ width: 250 }} onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+                    <input className='inputRange' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
                 </div>
-                <div style={{display:'flex'}}>
-                <div  >
-                    <table border='1'>
-                        <tbody>
-                            <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />   </td></tr>
-                            <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
-                            <tr><td>Blur</td><td> <input style={{ width: 150 }} onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
-                            <tr><td>offsetX</td><td> <input style={{ width: 150 }} onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
-                            <tr><td> offsetY</td><td><input style={{ width: 150 }} onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
-                        </tbody>
-                    </table>
+                <div style={{ display: 'flex' }}>
+                    <div  >
+                        <table border='1'>
+                            <tbody>
+                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />   </td></tr>
+                                <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
+                                <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
+                                <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
+                                <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div  >
+
+                        <table border='1'>
+                            <tbody>
+                                <tr><td colSpan='2'> <b> Skew: </b></td></tr>
+                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
+                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
+                                <tr><td>RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' defaultValue='30' />   </td></tr>
+                                <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' defaultValue='30' /></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div  >
-                   
-                    <table border='1'>
-                        <tbody>
-                        <tr><td colSpan='2'> <b> Skew: </b></td></tr>
-                            <tr><td>SkewX:</td><td> <input style={{ width: 150 }} onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
-                            <tr><td>SkewY:</td><td> <input style={{ width: 150 }} onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
-                            <tr><td>RX:</td><td>  <input style={{ width: 150 }} onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' defaultValue='30' />   </td></tr>
-                            <tr><td> RY:</td><td><input style={{ width: 150 }} onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' defaultValue='30' /></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-               
 
 
                 <div className='drawingToolsRow' >
@@ -1757,7 +1773,7 @@ const DrawingController = ({ chNumber }) => {
 
                 </div>
 
-               
+
                 <div className='drawingToolsRow' >
                     <b> Image from URL: </b>
                     <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="55" type='text' defaultValue={onlineImageUrl}></input>

@@ -1,7 +1,7 @@
+
 import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
-
 import React from "react";
 import Video from './Video';
 import Drawing from './Drawing';
@@ -13,10 +13,9 @@ import DrawingController, { addRoundedCornerImage } from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
-
 import CasparcgTools from './CasparcgTools';
 
-
+const buildDate='021021_3'
 
 const App = (props) => {
   const [mediaPath, setmediaPath] = useState();
@@ -107,7 +106,7 @@ const App = (props) => {
 
   useEffect(() => {
     window.chNumber = chNumber;
-    document.title = `CH #${chNumber} React Caspar Client`;
+    document.title = `CH #${chNumber} RCC_${buildDate}`;
     return () => {
       // cleanup
     }

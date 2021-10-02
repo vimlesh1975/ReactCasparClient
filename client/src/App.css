@@ -149,3 +149,8 @@ display: inline;
   height: 25px;
   border: none;
 }
+
+.inputRange{
+  width: 150px;
+  height: 3px;
+}
