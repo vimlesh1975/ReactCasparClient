@@ -268,7 +268,7 @@ const App = (props) => {
       <div style={{ width: '38vw', minWidth: '400px' }}>
         <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
-            <Tab>Drawing</Tab>
+            <Tab>Graphics</Tab>
             <Tab>Video</Tab>
             <Tab>Casparcg Tools</Tab>
             <Tab>Help</Tab>

@@ -1672,6 +1672,13 @@ const DrawingController = ({ chNumber }) => {
 
                 </div>
                 <div className='drawingToolsRow' >
+                    <b> Font: </b>
+                    Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
+                        {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                    </select>
+                    Size<input style={{ width: '150px' }} onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                </div>
+                <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
                     <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
                     {modes.map((val, i) => {
@@ -1691,29 +1698,36 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
                     <input style={{ width: 250 }} onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
-
                 </div>
-                <div className='drawingToolsRow' >
-                    <b> Shadow: </b>
+                <div style={{display:'flex'}}>
+                <div  >
                     <table border='1'>
                         <tbody>
-                            <tr><td>color</td><td> <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} /> affectStroke <input type="checkbox" onChange={(e) => affectStroke(e)} /> </td></tr>
-                            <tr><td>Blur</td><td> <input style={{ width: 350 }} onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
-                            <tr><td>offsetX</td><td> <input style={{ width: 350 }} onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
-                            <tr><td> offsetY</td><td><input style={{ width: 350 }} onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                            <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />   </td></tr>
+                            <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
+                            <tr><td>Blur</td><td> <input style={{ width: 150 }} onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
+                            <tr><td>offsetX</td><td> <input style={{ width: 150 }} onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
+                            <tr><td> offsetY</td><td><input style={{ width: 150 }} onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
                         </tbody>
                     </table>
-
                 </div>
 
-                <div className='drawingToolsRow' >
-                    <b> Skew: </b>
-                    SkewX:<input style={{ width: '40px' }} onChange={e => onSkewXSizeChange(e)} type="number" id='skewX' min='-360' max='360' step='1' defaultValue='0' />
-                    SkewY:<input style={{ width: '40px' }} onChange={e => onSkewYSizeChange(e)} type="number" id='skewY' min='-360' max='360' step='1' defaultValue='0' />
-                    RX: <input style={{ width: '40px' }} onChange={e => onRxSizeChange(e)} type="number" id='RX' min='-360' max='360' step='1' defaultValue='30' />
-                    RY: <input style={{ width: '40px' }} onChange={e => onRySizeChange(e)} type="number" id='RY' min='-360' max='360' step='1' defaultValue='30' />
-
+                <div  >
+                   
+                    <table border='1'>
+                        <tbody>
+                        <tr><td colSpan='2'> <b> Skew: </b></td></tr>
+                            <tr><td>SkewX:</td><td> <input style={{ width: 150 }} onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
+                            <tr><td>SkewY:</td><td> <input style={{ width: 150 }} onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
+                            <tr><td>RX:</td><td>  <input style={{ width: 150 }} onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' defaultValue='30' />   </td></tr>
+                            <tr><td> RY:</td><td><input style={{ width: 150 }} onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' defaultValue='30' /></td></tr>
+                        </tbody>
+                    </table>
                 </div>
+                </div>
+               
+
+
                 <div className='drawingToolsRow' >
                     <b>Zoom and Pan: </b>
                     <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zoom</button>
@@ -1743,19 +1757,10 @@ const DrawingController = ({ chNumber }) => {
 
                 </div>
 
-                <div className='drawingToolsRow' >
-                    <b> Font: </b>
-                    Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
-                        {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                    </select>
-                    Size<input style={{ width: '150px' }} onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
-
-                </div>
-
-
+               
                 <div className='drawingToolsRow' >
                     <b> Image from URL: </b>
-                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="62" type='text' defaultValue={onlineImageUrl}></input>
+                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="55" type='text' defaultValue={onlineImageUrl}></input>
                     <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
                 </div>
                 <div className='drawingToolsRow' >
@@ -1763,15 +1768,12 @@ const DrawingController = ({ chNumber }) => {
                     <input type="file" accept="image/*" onChange={e => Upload(e)} />
                 </div>
                 <div className='drawingToolsRow' >
-                    <b> Export Import SVG: </b>
-                    <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
-                    <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <b> Export Import: </b>
                     <button onClick={() => exportHTML1(window.editor.canvas)}>To HTML</button>
                     <button onClick={() => exportPng(window.editor.canvas)}>To PNG</button>
-
+                    <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
+                    <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                 </div>
-
-
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
                     <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
