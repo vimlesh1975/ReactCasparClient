@@ -219,7 +219,7 @@ const App = (props) => {
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}> <Video video={address1 + '/media/amb.mp4'} /></div><div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}><Provider store={store}><Drawing /></Provider></div>
             </div>
             <div style={{ display: 'flex' }}>
-              <div style={{ backgroundColor: 'grey', border: '2px solid yellow', width: 700, height: 400 }}>
+              <div style={{ backgroundColor: 'grey', border: '1px solid yellow', width: 715, height: 400 }}>
                 <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
                 <h5>
                   &lt;screen&gt;
@@ -238,7 +238,7 @@ const App = (props) => {
                 <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
 
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '4px solid red' }}>
+                  <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '1px solid red' }}>
                     <table border='1' >
                       <tbody>
                         {searchedMedia2.map((val, i) => {
@@ -249,7 +249,7 @@ const App = (props) => {
                       </tbody>
                     </table>
                   </div>
-                  <div style={{ border: '4px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
+                  <div style={{ border: '1px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
                     <div>
                       <img src={imageName} alt='' width="200" height="130" style={{ border: '3px solid #555' }}></img>
                     </div>

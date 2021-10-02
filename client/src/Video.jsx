@@ -25,7 +25,7 @@ const Video = (props) => {
             }}
         >
             <div>
-                <div className="box" style={{ backgroundColor: 'red', width: videoWidth, height: videoHeight }} >
+                <div className="box" style={{  width: videoWidth, height: videoHeight }} >
                     <video id='video' width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }}>
                         <source src={props.video} type="video/mp4" />
                     </video>

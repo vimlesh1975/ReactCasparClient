@@ -1688,16 +1688,22 @@ const DrawingController = ({ chNumber }) => {
                     Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                     BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e)} />
                     Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
-                    Stroke/Brush width:<input style={{ width: '40px' }} onChange={e => onstrokeSizeChange(e)} type="number" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
-                    <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face and Stroke Colors</button>
+                    <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face/Stroke Color</button>
+                    Stroke/Brush width:
+                    <input style={{ width: 250 }} onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Shadow: </b>
-                    <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />
-                    Blur: <input style={{ width: '40px' }} onChange={e => onBlurSizeChange(e)} type="number" min='0' max='100' step='1' defaultValue='30' />
-                    offsetX: <input style={{ width: '40px' }} onChange={e => onoffsetXChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                    offsetY: <input style={{ width: '40px' }} onChange={e => onoffsetYChange(e)} type="number" min='-5000' max='5000' step='1' defaultValue='0' />
-                    affectStroke:  <input type="checkbox" onChange={(e) => affectStroke(e)} />
+                    <table border='1'>
+                        <tbody>
+                            <tr><td>color</td><td> <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} /> affectStroke <input type="checkbox" onChange={(e) => affectStroke(e)} /> </td></tr>
+                            <tr><td>Blur</td><td> <input style={{ width: 350 }} onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
+                            <tr><td>offsetX</td><td> <input style={{ width: 350 }} onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
+                            <tr><td> offsetY</td><td><input style={{ width: 350 }} onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                        </tbody>
+                    </table>
+
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1742,7 +1748,8 @@ const DrawingController = ({ chNumber }) => {
                     Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    Size<input style={{ width: '35px' }} onChange={e => onSizeChange(e)} type="number" id='fontSizeOSD' min='0' max='100' step='2' defaultValue='25' />
+                    Size<input style={{ width: '150px' }} onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
+
                 </div>
 
 
