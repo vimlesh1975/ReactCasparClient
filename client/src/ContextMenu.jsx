@@ -1,12 +1,12 @@
 import useContextMenu from './useContextMenu'
-import {removeShadow, removeFill,removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, setGradientColor, setOpacity } from './DrawingController'
+import { gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg,  setOpacity } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
 
 const ContextMenu = ({ editor }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
-  window.showMenu=showMenu;
+  window.showMenu = showMenu;
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
@@ -54,16 +54,19 @@ const ContextMenu = ({ editor }) => {
           <li onClick={() => textItalic(editor.canvas)}>Itallic</li>
           <li onClick={() => txtBold(editor.canvas)}>Bold</li>
           <li onClick={() => textNormal(editor.canvas)}>Normal</li>
-
-          <li onClick={() => setGradientColor(editor.canvas)}>setGradientColor</li>
         </ul></li>
         <li>Remove<ul >
-          <li onClick={() => removeBg(editor.canvas)}> BG</li>
           <li onClick={() => removeFill(editor.canvas)}> Fill</li>
+          <li onClick={() => removeBg(editor.canvas)}> BG</li>
           <li onClick={() => removeStroke(editor.canvas)}> Stroke</li>
           <li onClick={() => removeShadow(editor.canvas)}> shadow</li>
-
         </ul></li>
+
+        <li>Set Gradient<ul >
+          <li onClick={() => gradientFill(editor.canvas)}> Fill</li>
+          <li onClick={() => gradientStroke(editor.canvas)}> Stroke</li>
+        </ul></li>
+
         <li onClick={() => redo(editor.canvas)}>Redo <AiOutlineRedo /></li>
         <li onClick={() => undo(editor.canvas)}>Undo <AiOutlineUndo /></li>
         <li onClick={() => copy()}>Copy</li>

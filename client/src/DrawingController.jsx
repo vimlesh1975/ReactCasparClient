@@ -252,7 +252,8 @@ const Upload = e => {
 }
 
 export const setGradientColor = canvas => {
-    if (window.editor.canvas.getActiveObject()) { canvas.getActiveObject().fill = gradient };
+   canvas.getActiveObjects().forEach(element=>element.fill = gradient) ;
+   canvas.requestRenderAll();
 }
 
 export const createRect = (canvas) => {
@@ -318,8 +319,8 @@ export const createLine = (canvas) => {
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
         shadow: shadowOptions,
-        top: 160,
-        left: -100,
+        top: 0,
+        left: 0,
         radius: 50,
         fill: 'rgb(80, 3, 124)',
         cornerSize: 7,
@@ -332,7 +333,7 @@ export const createCircle = (canvas) => {
 
     canvas.add(circle).setActiveObject(circle);;
     canvas.requestRenderAll();
-    circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
+    // circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const createTriangle = (canvas) => {
@@ -396,44 +397,43 @@ export const textNormal = canvas => {
 };
 
 export const removeBg = canvas => {
-    const aa = canvas.getActiveObjects();
-    aa.forEach(element => { element.set('backgroundColor', '') });
+    canvas.getActiveObjects().forEach(element => { element.set('backgroundColor', '') });
     canvas.requestRenderAll();
 
 };
 
 export const removeFill = canvas => {
-    const aa = canvas.getActiveObjects();
-    aa.forEach(element => { element.set('fill', '') });
+    canvas.getActiveObjects().forEach(element => { element.set('fill', '') });
     canvas.requestRenderAll();
 
 };
 export const removeStroke = canvas => {
-    const aa = canvas.getActiveObjects();
-    aa.forEach(element => { element.set('strokeWidth', 0) });
+
+    canvas.getActiveObjects().forEach(element => { element.set('strokeWidth', 0) });
     canvas.requestRenderAll();
 
 };
 export const removeShadow = canvas => {
-    const aa = canvas.getActiveObjects();
-    aa.forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
+   canvas.getActiveObjects().forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
     canvas.requestRenderAll();
-
+};
+export const gradientFill = canvas => {
+     canvas.getActiveObjects().forEach(element => { element.set('fill', gradient)});
+    canvas.requestRenderAll();
+};
+export const gradientStroke = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('stroke', gradient)});
+    canvas.requestRenderAll();
 };
 
-
-
 export const deleteSelectedItem = canvas => {
-    const aa = canvas.getActiveObjects()
-    aa.forEach(element => { canvas.remove(element) });
+    canvas.getActiveObjects().forEach(element => { canvas.remove(element) });
     canvas.discardActiveObject();
     canvas.requestRenderAll();
-
 }
 
 export const swapFaceandStrokeColors = canvas => {
-    const aa = canvas.getActiveObjects()
-    aa.forEach(element => {
+    canvas.getActiveObjects().forEach(element => {
         var oldFill = element.fill;
         var oldStroke = element.stroke;
         element.fill = oldStroke;
