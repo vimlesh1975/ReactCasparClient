@@ -1813,8 +1813,8 @@ const DrawingController = ({ chNumber }) => {
                         <table border='1'>
                             <tbody>
                                 <tr><td colSpan='2'> <b> Skew: </b></td></tr>
-                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
-                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-360' max='360' step='1' defaultValue='0' /></td></tr>
+                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-60' max='60' step='1' defaultValue='0' /></td></tr>
+                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-60' max='60' step='1' defaultValue='0' /></td></tr>
                                 <tr><td>RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' defaultValue='30' />   </td></tr>
                                 <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' defaultValue='30' /></td></tr>
                             </tbody>
