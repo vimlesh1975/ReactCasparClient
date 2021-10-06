@@ -36,24 +36,7 @@ const ColorGradient = () => {
         ]
     });
 
-    const gradient3 = new fabric.Gradient({
-        type: 'radial',
-        gradientUnits: 'percentage',
-        coords: {
-            x1: 25,
-            y1: 33,
-            x2: 5,
-            y2: 25,
-            r1: 20,
-            r2: 80,
-           
-        },
-        colorStops: [
-            { offset: 0, color: color1 },
-            { offset: 1, color: color2 }
-        ]
-    });
-
+   
     const changeColor1 = e => {
         setColor1(e.target.value)
     }

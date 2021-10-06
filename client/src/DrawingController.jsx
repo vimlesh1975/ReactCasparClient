@@ -5,7 +5,7 @@ import { endpoint } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock, VscTrash, VscMove } from "react-icons/vsc";
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash, VscMove } from "react-icons/vsc";
 
 import { FaAlignLeft, FaAlignRight, FaSave, FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { GrResume } from 'react-icons/gr';
@@ -179,7 +179,7 @@ export const createText = (canvas) => {
         id: 'f0',
         left: 100,
         top: 0,
-        width: 500,
+        width: 480,
         fill: '#ffffff',
         // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -252,8 +252,8 @@ const Upload = e => {
 }
 
 export const setGradientColor = canvas => {
-   canvas.getActiveObjects().forEach(element=>element.fill = gradient) ;
-   canvas.requestRenderAll();
+    canvas.getActiveObjects().forEach(element => element.fill = gradient);
+    canvas.requestRenderAll();
 }
 
 export const createRect = (canvas) => {
@@ -414,15 +414,15 @@ export const removeStroke = canvas => {
 
 };
 export const removeShadow = canvas => {
-   canvas.getActiveObjects().forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
+    canvas.getActiveObjects().forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });
     canvas.requestRenderAll();
 };
 export const gradientFill = canvas => {
-     canvas.getActiveObjects().forEach(element => { element.set('fill', gradient)});
+    canvas.getActiveObjects().forEach(element => { element.set('fill', gradient) });
     canvas.requestRenderAll();
 };
 export const gradientStroke = canvas => {
-    canvas.getActiveObjects().forEach(element => { element.set('stroke', gradient)});
+    canvas.getActiveObjects().forEach(element => { element.set('stroke', gradient) });
     canvas.requestRenderAll();
 };
 
@@ -873,6 +873,13 @@ const DrawingController = ({ chNumber }) => {
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
     const [ltr, setLtr] = useState(false);
 
+    const strokeLineCaps = ["butt", "round", "square"];
+    const [currentstrokeLineCap, setCurrentstrokeLineCap] = useState('round');
+
+
+
+
+
     const [solidcaption1, setSolidcaption1] = useState('');
     const [solidcaption2, setSolidcaption2] = useState('');
     const [logo, setLogo] = useState('');
@@ -882,14 +889,20 @@ const DrawingController = ({ chNumber }) => {
     const [horizontalScroll, setHorizontalScroll] = useState('');
     const [clock, setClock] = useState('');
     const [upTimer, setUpTimer] = useState('');
-    const modes = ['Pencil', 'Spray', 'Erase'];
+    const modes = ['Pencil', 'Spray', 'Erase', 'none'];
 
-    const [currentMode, setCurrentMode] = useState('');
+    const [currentMode, setCurrentMode] = useState('none');
     // window.currentMode = currentMode;
 
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
-        canvas.isDrawingMode = true;
+        if (mode === 'none') {
+            canvas.isDrawingMode = false;
+            return;
+        } else {
+            canvas.isDrawingMode = true;
+        }
+
 
         if (mode === 'Pencil') {
             canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -907,11 +920,13 @@ const DrawingController = ({ chNumber }) => {
             canvas.freeDrawingBrush.color = 'white';
             canvas.freeDrawingBrush.width = options.strokeWidth;
         }
+        canvas.freeDrawingBrush.strokeLineCap = currentstrokeLineCap;
+
     }
     window.onDrawingModeChange = onDrawingModeChange;
     const toggleModeDrawing = (canvas) => {
         canvas.isDrawingMode = false;
-        setCurrentMode('');
+        setCurrentMode('none');
     }
     window.toggleModeDrawing = toggleModeDrawing;
 
@@ -923,7 +938,10 @@ const DrawingController = ({ chNumber }) => {
         window.editor.canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
         window.editor.canvas.requestRenderAll();
     }
-
+    const onstrokeLineCapChange = e => {
+        window.editor.canvas.freeDrawingBrush.strokeLineCap = e.target.value;
+        setCurrentstrokeLineCap(e.target.value);
+    }
 
     const onDragEnd = (result) => {
         const aa = [...canvaslist]
@@ -1033,6 +1051,69 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
+    const test = (canvas) => {
+        // set to the event when the user pressed the mouse button down
+        var mouseDown;
+        // only allow one crop. turn it off after that
+        var disabled = false;
+        var rectangle = new fabric.Rect({
+            fill: 'transparent',
+            stroke: '#ccc',
+            strokeDashArray: [2, 2],
+            visible: false
+        });
+        var container = document.getElementsByClassName('preview-container')[0].getBoundingClientRect();
+        // var canvas = new fabric.Canvas('canvas');
+        canvas.add(rectangle);
+        var image;
+        fabric.util.loadImage("./img/pine-wood-500x500.jpg", function (img) {
+            image = new fabric.Image(img);
+            image.selectable = false;
+            canvas.setWidth(image.getWidth());
+            canvas.setHeight(image.getHeight());
+            canvas.add(image);
+            canvas.centerObject(image);
+            canvas.renderAll();
+        });
+        // capture the event when the user clicks the mouse button down
+        canvas.on("mouse:down", function (event) {
+            if (!disabled) {
+                rectangle.width = 2;
+                rectangle.height = 2;
+                rectangle.left = event.e.pageX - container.left;
+                rectangle.top = event.e.pageY - container.top;
+                rectangle.visible = true;
+                mouseDown = event.e;
+                canvas.bringToFront(rectangle);
+            }
+        });
+        // draw the rectangle as the mouse is moved after a down click
+        canvas.on("mouse:move", function (event) {
+            if (mouseDown && !disabled) {
+                rectangle.width = event.e.pageX - mouseDown.pageX;
+                rectangle.height = event.e.pageY - mouseDown.pageY;
+                canvas.renderAll();
+            }
+        });
+        // when mouse click is released, end cropping mode
+        canvas.on("mouse:up", function () {
+            mouseDown = null;
+        });
+
+        image.clipTo = function (ctx) {
+            // origin is the center of the image
+            var x = rectangle.left - image.getWidth() / 2;
+            var y = rectangle.top - image.getHeight() / 2;
+            ctx.rect(x, y, rectangle.width, rectangle.height);
+        };
+        image.selectable = true;
+        disabled = true;
+        rectangle.visible = false;
+        canvas.renderAll();
+
+
+
+    }
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1079,7 +1160,7 @@ const DrawingController = ({ chNumber }) => {
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var br=(canvas.getActiveObject())?.getBoundingRect();
+        var br = (canvas.getActiveObject())?.getBoundingRect();
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter file name to save : ", ss + "_FileName");
         if (retVal !== null) {
@@ -1685,7 +1766,7 @@ const DrawingController = ({ chNumber }) => {
 
                 </div>
                 <div className='drawingToolsRow' >
-                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(window.editor.canvas,e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
+                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(window.editor.canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Font: </b>
@@ -1696,14 +1777,13 @@ const DrawingController = ({ chNumber }) => {
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
-                    <button onClick={() => toggleModeDrawing(window.editor.canvas)}>{window.editor?.canvas.isDrawingMode ? 'ON ' : 'Off '}<VscEdit /></button>
-                    {modes.map((val, i) => {
-                        return (<>
-                            <input checked={currentMode === val}
-                                onChange={(e) => onDrawingModeChange(e.target.value, window.editor.canvas)} type="radio" name='DrawingModes' value={val} id={val} key={uuidv4()} />
-                            <label key={uuidv4()} htmlFor={val}>{val}</label>
-                        </>)
-                    })}
+                    Type:  <select onChange={e => onDrawingModeChange(e.target.value, window.editor.canvas)} value={currentMode}>
+                        {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                    </select>
+
+                    End:  <select onChange={e => onstrokeLineCapChange(e)} value={currentstrokeLineCap}>
+                        {strokeLineCaps.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                    </select>
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1789,6 +1869,7 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => exportPng(window.editor.canvas)}>To PNG</button>
                     <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
                     <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <button onClick={() => test(window.editor.canvas)}>test</button>
                 </div>
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
