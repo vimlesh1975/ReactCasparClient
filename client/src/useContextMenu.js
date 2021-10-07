@@ -13,13 +13,15 @@ const useContextMenu = () => {
       e.preventDefault();
 
       setXPos(`${e.clientX - 60}px`);
+
       if (e.clientY > 145) {
-        setYPos(`${60}px`);
+
+        setYPos(`${30}px`);
       }
       else {
         setYPos(`${e.clientY - 50}px`);
       }
-     setShowMenu(true)
+      setShowMenu(true)
 
     },
     [setXPos, setYPos]

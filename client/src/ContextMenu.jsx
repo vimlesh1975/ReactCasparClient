@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg,  setOpacity } from './DrawingController'
+import { setasClipPath, cliptoPath, gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 
@@ -15,23 +15,12 @@ const ContextMenu = ({ editor }) => {
             <li onClick={() => deleteAll(editor.canvas)}>Delete All</li>
           </ul>
         </li>
-        <li>setOpacity
-          <ul>
-            <li onClick={() => setOpacity(editor.canvas, 0.1)}>0.1</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.2)}>0.2</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.3)}>0.3</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.4)}>0.4</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.5)}>0.5</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.6)}>0.6</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.7)}>0.7</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.8)}>0.8</li>
-            <li onClick={() => setOpacity(editor.canvas, 0.9)}>0.9</li>
-            <li onClick={() => setOpacity(editor.canvas, 1.0)}>1.0</li>
-
-          </ul>
-        </li>
         <li onClick={() => bringToFront(editor.canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(editor.canvas)}>Send To Back</li>
+
+        <li onClick={() => setasClipPath(editor.canvas)}>Set as ClipPath</li>
+        <li onClick={() => cliptoPath(editor.canvas)}>Clip to Path</li>
+
         <li onClick={() => lock(editor.canvas)}>Lock <VscLock /></li>
         <li onClick={() => unlockAll(editor.canvas)}>Unlock All <VscUnlock /></li>
         <li onClick={() => groupObjects(editor.canvas, true)}>Group Selected</li>

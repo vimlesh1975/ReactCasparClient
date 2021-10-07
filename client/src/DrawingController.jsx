@@ -107,6 +107,27 @@ export var gradient = new fabric.Gradient({
     ]
 });
 
+var clipPath1 = null;
+export const setasClipPath = canvas => {
+    clipPath1 = canvas.getActiveObjects();
+}
+export const cliptoPath = canvas => {
+    var img = canvas.getActiveObjects();
+    if (clipPath1.length > 0 && img.length > 0) {
+        clipPath1.forEach(element => {
+            element.set({ shadow: { ...shadowOptions, blur: 0 } });
+        });
+        var group = new fabric.Group([...clipPath1]);
+        group.set({ absolutePositioned: true });
+        canvas.sendToBack(group);
+        img[0].set('clipPath', group)
+        clipPath1.forEach(element => {
+            canvas.remove(element);
+        });
+        canvas.requestRenderAll();
+    }
+}
+
 export const addClock = canvas => {
     const sss = new fabric.Textbox('', {
         shadow: shadowOptions,
@@ -284,7 +305,6 @@ export const createEllipse = (canvas) => {
         left: 180,
         rx: 50,
         ry: 80,
-        inverted: true,
         opacity: 0.9,
         fill: 'blue',
         hasRotatingPoint: true,
@@ -1051,69 +1071,9 @@ const DrawingController = ({ chNumber }) => {
             element.click();
         }
     }
-    const test = (canvas) => {
-        // set to the event when the user pressed the mouse button down
-        var mouseDown;
-        // only allow one crop. turn it off after that
-        var disabled = false;
-        var rectangle = new fabric.Rect({
-            fill: 'transparent',
-            stroke: '#ccc',
-            strokeDashArray: [2, 2],
-            visible: false
-        });
-        var container = document.getElementsByClassName('preview-container')[0].getBoundingClientRect();
-        // var canvas = new fabric.Canvas('canvas');
-        canvas.add(rectangle);
-        var image;
-        fabric.util.loadImage("./img/pine-wood-500x500.jpg", function (img) {
-            image = new fabric.Image(img);
-            image.selectable = false;
-            canvas.setWidth(image.getWidth());
-            canvas.setHeight(image.getHeight());
-            canvas.add(image);
-            canvas.centerObject(image);
-            canvas.renderAll();
-        });
-        // capture the event when the user clicks the mouse button down
-        canvas.on("mouse:down", function (event) {
-            if (!disabled) {
-                rectangle.width = 2;
-                rectangle.height = 2;
-                rectangle.left = event.e.pageX - container.left;
-                rectangle.top = event.e.pageY - container.top;
-                rectangle.visible = true;
-                mouseDown = event.e;
-                canvas.bringToFront(rectangle);
-            }
-        });
-        // draw the rectangle as the mouse is moved after a down click
-        canvas.on("mouse:move", function (event) {
-            if (mouseDown && !disabled) {
-                rectangle.width = event.e.pageX - mouseDown.pageX;
-                rectangle.height = event.e.pageY - mouseDown.pageY;
-                canvas.renderAll();
-            }
-        });
-        // when mouse click is released, end cropping mode
-        canvas.on("mouse:up", function () {
-            mouseDown = null;
-        });
-
-        image.clipTo = function (ctx) {
-            // origin is the center of the image
-            var x = rectangle.left - image.getWidth() / 2;
-            var y = rectangle.top - image.getHeight() / 2;
-            ctx.rect(x, y, rectangle.width, rectangle.height);
-        };
-        image.selectable = true;
-        disabled = true;
-        rectangle.visible = false;
-        canvas.renderAll();
 
 
 
-    }
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1869,7 +1829,10 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => exportPng(window.editor.canvas)}>To PNG</button>
                     <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
                     <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                    <button onClick={() => test(window.editor.canvas)}>test</button>
+                </div>
+                <div className='drawingToolsRow' >
+                    <button onClick={() => setasClipPath(window.editor.canvas)}>Set as CipPath</button>
+                    <button onClick={() => cliptoPath(window.editor.canvas)}>Clip to Path</button>
                 </div>
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
