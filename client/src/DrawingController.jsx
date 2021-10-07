@@ -6,17 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash, VscMove } from "react-icons/vsc";
-
 import { FaAlignLeft, FaAlignRight, FaSave, FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { GrResume } from 'react-icons/gr';
-
 import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
-
 import { FiFile } from "react-icons/fi";
-
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
-
 
 fabric.Object.prototype.noScaleCache = false;
 
@@ -883,6 +878,7 @@ const DrawingController = ({ chNumber }) => {
     const [currentFont, setCurrentFont] = useState('Arial')
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     const [canvaslist, setCanvaslist] = useState([{ 'pageName': ss + '_pageName', 'pageValue': '' }])
+
     const [currentPage, setCurentPage] = useState(0)
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
     const [f0, setF0] = useState('Ganesh Tiwari');

@@ -36,7 +36,7 @@ const ColorGradient = () => {
         ]
     });
 
-   
+
     const changeColor1 = e => {
         setColor1(e.target.value)
     }
@@ -48,23 +48,25 @@ const ColorGradient = () => {
         canvas.requestRenderAll();
     }
     const setGradient3Fill = canvas => {
-        canvas.getActiveObjects().forEach(element => { element.set('fill', new fabric.Gradient({
-            type: 'radial',
-            gradientUnits: 'pixel',
-            coords: {
-                x1:element.width/2,
-                y1:element.height/2,
-                r1:element.width/8,
-                x2:element.width/2,
-                y2:element.height/2,
-                r2:element.width/2,
-               
-            },
-            colorStops: [
-                { offset: 0, color: color1 },
-                { offset: 1, color: color2 }
-            ]
-        })) });
+        canvas.getActiveObjects().forEach(element => {
+            element.set('fill', new fabric.Gradient({
+                type: 'radial',
+                gradientUnits: 'pixel',
+                coords: {
+                    x1: element.width / 2,
+                    y1: element.height / 2,
+                    r1: element.width / 8,
+                    x2: element.width / 2,
+                    y2: element.height / 2,
+                    r2: element.width / 2,
+
+                },
+                colorStops: [
+                    { offset: 0, color: color1 },
+                    { offset: 1, color: color2 }
+                ]
+            }))
+        });
         canvas.requestRenderAll();
     }
 
@@ -81,15 +83,15 @@ const ColorGradient = () => {
         </div>
         {directions.map((val, i) => {
             return (<>
-                <div style={{ margin: 5 }}>
+                <div key={uuidv4()} style={{ margin: 5 }}>
                     <input checked={direction === val}
                         onChange={
                             e => {
                                 setDirection(e.target.value);
                                 setCoords(e.target.value)
                             }
-                        } type="radio" value={val} id={val} key={uuidv4()} />
-                    <label key={uuidv4()} htmlFor={val}>{val}</label>
+                        } type="radio" value={val} id={val} />
+                    <label htmlFor={val}>{val}</label>
                 </div>
             </>)
         })}
