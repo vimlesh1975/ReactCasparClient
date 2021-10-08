@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import axios from 'axios';
 import { fabric } from "fabric";
 import { endpoint } from './common'
@@ -12,6 +13,7 @@ import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo,
 import { FiFile } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
+import Tooltip from '@mui/material/Tooltip';
 
 fabric.Object.prototype.noScaleCache = false;
 
@@ -1579,6 +1581,7 @@ const DrawingController = ({ chNumber }) => {
         setCanvaslist([...updatedCanvasList])
     }
     useEffect(() => {
+        setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'))
         axios.post('http://localhost:8080/getfonts').then((aa) => {
             setFontList(aa.data)
         }).catch((aa) => { console.log('Error', aa) });
@@ -1634,7 +1637,11 @@ const DrawingController = ({ chNumber }) => {
             <div style={{ width: 475, backgroundColor: '#f4f0e7' }}>
                 <div className='drawingToolsRow' >
                     <b> Screen Setup: </b>
-                    Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => setCurrentscreenSize(e.target.value)}>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+                    Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
+                        setCurrentscreenSize(e.target.value);
+                        localStorage.setItem('RCC_currentscreenSize', e.target.value)
+                    }
+                    }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1762,9 +1769,9 @@ const DrawingController = ({ chNumber }) => {
                 <div className='drawingToolsRow' >
                     <b> Drawing Elements: </b>
                     <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
-                    <button onClick={() => createTextBox(window.editor.canvas)}>TB</button>
-                    <button onClick={() => createIText(window.editor.canvas)}>IT</button>
-                    <button onClick={() => createText(window.editor.canvas)}>T</button>
+                    <Tooltip title="MutliLine Text Box"><button onClick={() => createTextBox(window.editor.canvas)}>TB</button></Tooltip>
+                    <Tooltip title="Single Line Text Box"><button onClick={() => createIText(window.editor.canvas)}>IT</button></Tooltip>
+                    <Tooltip title="Single Line Text Box Not Editable"><button onClick={() => createText(window.editor.canvas)}>T</button></Tooltip>
                     <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                     <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
