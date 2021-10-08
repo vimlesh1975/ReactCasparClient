@@ -190,6 +190,54 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
+    const text = new fabric.Text("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+        shadow: shadowOptions,
+        id: 'f0',
+        left: 100,
+        top: 0,
+        width: 480,
+        fill: '#ffffff',
+        // backgroundColor: options.backgroundColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'left',
+        padding: 5,
+
+    });
+    canvas.add(text).setActiveObject(text);
+    canvas.renderAll();
+    text.animate('top', 243, { onChange: canvas.renderAll.bind(canvas) })
+};
+export const createIText = (canvas) => {
+
+    const text = new fabric.IText("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+        shadow: shadowOptions,
+        id: 'f0',
+        left: 100,
+        top: 0,
+        width: 480,
+        fill: '#ffffff',
+        // backgroundColor: options.backgroundColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'left',
+        padding: 5,
+
+    });
+    canvas.add(text).setActiveObject(text);
+    canvas.renderAll();
+    text.animate('top', 343, { onChange: canvas.renderAll.bind(canvas) })
+};
+
+
+export const createTextBox = (canvas) => {
+
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
         id: 'f0',
@@ -1714,11 +1762,14 @@ const DrawingController = ({ chNumber }) => {
                 <div className='drawingToolsRow' >
                     <b> Drawing Elements: </b>
                     <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
+                    <button onClick={() => createTextBox(window.editor.canvas)}>TB</button>
+                    <button onClick={() => createIText(window.editor.canvas)}>IT</button>
                     <button onClick={() => createText(window.editor.canvas)}>T</button>
                     <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
                     <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
                     <button onClick={() => createLine(window.editor.canvas)}>Line</button>
+
 
                 </div>
                 <div className='drawingToolsRow' >
