@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CasparcgTools from './CasparcgTools';
 import ColorGradient from './ColorGradient';
 
-const buildDate = '031021'
+const buildDate = '091021'
 
 const App = (props) => {
   const [mediaPath, setmediaPath] = useState();

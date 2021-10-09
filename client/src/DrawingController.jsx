@@ -1076,6 +1076,7 @@ const DrawingController = ({ chNumber }) => {
             fileReader.readAsText(file);
         }
     };
+
     const handleFileChosen2 = (file) => {
         if (file) {
             setCurentPage('')
@@ -1084,6 +1085,23 @@ const DrawingController = ({ chNumber }) => {
             fileReader.readAsText(file);
         }
     };
+    const importJSON = (file, canvas) => {
+        if (file) {
+            // setCurentPage('')
+            fileReader = new FileReader();
+            fileReader.onloadend = () => handleFileReadJSON(canvas);
+            fileReader.readAsText(file);
+        }
+    };
+
+    const handleFileReadJSON = canvas => {
+        const content = fileReader.result;
+        canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
+        })
+
+    };
+
+
     const handleFileRead2 = (e) => {
         const content = fileReader.result;
         var aa = content.split('\r\n')
@@ -1113,6 +1131,19 @@ const DrawingController = ({ chNumber }) => {
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
             element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+    const exportJSON = canvas => {
+        const element = document.createElement("a");
+        var aa = JSON.stringify(canvas.toJSON());
+        const file = new Blob([aa], { type: 'text/json' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal + '.json';
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1882,7 +1913,11 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => exportHTML1(window.editor.canvas)}>To HTML</button>
                     <button onClick={() => exportPng(window.editor.canvas)}>To PNG</button>
                     <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
+                    <button onClick={() => exportJSON(window.editor.canvas)}>To JSON</button>
+
                     <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], window.editor.canvas)} />
+
                 </div>
                 <div className='drawingToolsRow' >
                     <button onClick={() => setasClipPath(window.editor.canvas)}>Set as CipPath</button>
