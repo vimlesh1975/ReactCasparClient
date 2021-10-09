@@ -12,6 +12,7 @@ const Video = (props) => {
         <Rnd
             size={{ width: videoWidth, height: videoHeight }}
             position={{ x: videoX, y: videoY }}
+            enableResizing={{ right: true, bottom: true }}
             onDrag={(e, d) => {
                 setVideoX(d.x);
                 setVideoY(d.y)
@@ -26,7 +27,7 @@ const Video = (props) => {
         >
             <div>
                 <div className="box" style={{ width: videoWidth, height: videoHeight, backgroundColor: 'white' }} >
-                    <video id='video' width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }}>
+                    <video id='video' width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }} controls>
                         <source src={props.video} type="video/mp4" />
                     </video>
                 </div>
