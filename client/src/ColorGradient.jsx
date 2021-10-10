@@ -75,7 +75,6 @@ const ColorGradient = () => {
         canvas.requestRenderAll();
     }
     return (<>
-        <b>Color Gradient</b>
         <div style={{ margin: 5, border: '2px solid blue', width: 295, height: 100, backgroundImage: `linear-gradient(${direction}, ${color1}, ${color2})` }} />
         <div>
             Color 1 <input type="color" defaultValue='#ff0000' onChange={e => changeColor1(e)} />

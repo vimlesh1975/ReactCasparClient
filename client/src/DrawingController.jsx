@@ -942,12 +942,9 @@ const DrawingController = ({ chNumber }) => {
     const strokeLineCaps = ["butt", "round", "square"];
     const [currentstrokeLineCap, setCurrentstrokeLineCap] = useState('round');
 
-
-
-
-
     const [solidcaption1, setSolidcaption1] = useState('');
     const [solidcaption2, setSolidcaption2] = useState('');
+    const [solidcaption3, setSolidcaption3] = useState('');
     const [logo, setLogo] = useState('');
     const [locationBand, setLocationBand] = useState('');
 
@@ -1665,7 +1662,7 @@ const DrawingController = ({ chNumber }) => {
 
     return (
         <div style={{ display: 'flex' }}>
-            <div style={{ width: 475, backgroundColor: '#f4f0e7' }}>
+            <div style={{ width: 495,height:900, backgroundColor: '#f4f0e7', overflow:'scroll' }}>
                 <div className='drawingToolsRow' >
                     <b> Screen Setup: </b>
                     Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
@@ -1674,10 +1671,8 @@ const DrawingController = ({ chNumber }) => {
                     }
                     }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 </div>
-
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 1: </b>
-
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 108);
                         setSolidcaption1(canvaslist[currentPage]?.pageName);
@@ -1703,6 +1698,19 @@ const DrawingController = ({ chNumber }) => {
                         setSolidcaption2('');
                     }} ><FaStop /></button>
                     <span> {solidcaption2} </span>
+                </div>
+                <div className='drawingToolsRow' >
+                    <b> Solid Caption 3: </b>
+                    <button onClick={() => {
+                        startGraphics(window.editor.canvas, 110);
+                        setSolidcaption3(canvaslist[currentPage]?.pageName);
+                    }
+                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(window.editor.canvas, 110)}>Update</button>
+                    <button className='stopButton' onClick={() => {
+                        stopGraphics(110);
+                        setSolidcaption3('');
+                    }} ><FaStop /></button>
+                    <span> {solidcaption3} </span>
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1766,7 +1774,7 @@ const DrawingController = ({ chNumber }) => {
                     }} ><FaStop /></button>
                     Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' />
                     <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>To HTML</button>
-                    <br /> <span> Left to Right:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
+                    <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                     <span> {horizontalScroll} </span>
                 </div>
                 <div className='drawingToolsRow' >
@@ -1814,11 +1822,10 @@ const DrawingController = ({ chNumber }) => {
                     <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(window.editor.canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
                 </div>
                 <div className='drawingToolsRow' >
-                    <b> Font: </b>
-                    Name:  <select onChange={e => onFontChange(e)} value={currentFont}>
+                <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    <br />  Size<input className='inputRange' onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                       Size<input className='inputRange' onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
@@ -1929,7 +1936,7 @@ const DrawingController = ({ chNumber }) => {
                     <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
                 </div>
             </div>
-            <div style={{ width: 400, backgroundColor: '#ddf0db' }}>
+            <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
                 <div>
                     <div className='drawingToolsRow' >
                         <b> Save: </b>
@@ -1983,7 +1990,7 @@ const DrawingController = ({ chNumber }) => {
                         <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
                     </div>
                 </div>
-                <div style={{ height: 800, width: 400, overflow: 'scroll', border: '1px solid black' }}>
+                <div style={{ height: 780, width: 380, overflow: 'scroll', border: '1px solid black' }}>
 
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-1" type="PERSON">
@@ -2009,7 +2016,7 @@ const DrawingController = ({ chNumber }) => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
-                                                                <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: '300px', backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: 280, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
                                                                 }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
                                                             </tr>
@@ -2021,13 +2028,11 @@ const DrawingController = ({ chNumber }) => {
                                             {provided.placeholder}
                                         </tbody>
                                     </table>
-
                                 </div>
                             )}
                         </Droppable>
                     </DragDropContext>
                 </div>
-                Current Page:  {canvaslist[currentPage]?.pageName}
             </div>
         </div >
     )

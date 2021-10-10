@@ -219,7 +219,7 @@ const App = (props) => {
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}> <Video video={address1 + '/media/amb.mp4'} /></div><div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}><Provider store={store}><Drawing /></Provider></div>
             </div>
             <div style={{ display: 'flex' }}>
-              <div style={{ backgroundColor: 'grey', border: '1px solid yellow', width: 750, height: 400 }}>
+              <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth:690,minWidth:690, height: 400 }}>
                 <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
                 <h5>
                   &lt;screen&gt;
@@ -233,7 +233,45 @@ const App = (props) => {
                 </h5>
               </div>
               <div >
-                <ColorGradient />
+                <Tabs forceRenderTabPanel={true}>
+                  <TabList>
+                  <Tab>Image</Tab>
+                    <Tab>ColorGradient</Tab>
+                  </TabList>
+                 
+                  <TabPanel>
+                    <div>
+                      <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
+                      <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ maxHeight: '160px', maxWidth: '330px', overflow: 'scroll', border: '1px solid red' }}>
+                          <table border='1' >
+                            <tbody>
+                              {searchedMedia2.map((val, i) => {
+                                return <tr key={i}><td onClick={(e) => {
+                                  setImageName((address1 + `/media/` + e.target.innerText));
+                                }}>{val}</td></tr>
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div style={{ border: '1px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
+                          <div>
+                            <img src={imageName} alt='' width="90" height="60" style={{ border: '1px solid #555' }}></img>
+                          </div>
+                          <div>
+                            Selected Image<br />
+                            <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </TabPanel>
+                  <TabPanel>
+                    <ColorGradient />
+                  </TabPanel>
+                </Tabs>
               </div>
             </div>
           </div>
@@ -293,35 +331,6 @@ const App = (props) => {
           <TabPanel>
             <h2>Casparcg Tools</h2>
             <CasparcgTools />
-
-            <div>
-              <b>Select image from casparcg media folder: </b><br />
-              <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
-              <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
-
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ maxHeight: '160px', maxWidth: '315px', overflow: 'scroll', border: '1px solid red' }}>
-                  <table border='1' >
-                    <tbody>
-                      {searchedMedia2.map((val, i) => {
-                        return <tr key={i}><td onClick={(e) => {
-                          setImageName((address1 + `/media/` + e.target.innerText));
-                        }}>{val}</td></tr>
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-                <div style={{ border: '1px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-                  <div>
-                    <img src={imageName} alt='' width="200" height="130" style={{ border: '3px solid #555' }}></img>
-                  </div>
-                  <div>
-                    Selected Image/video <br />
-                    <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
           </TabPanel>
 
