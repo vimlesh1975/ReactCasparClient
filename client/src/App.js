@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CasparcgTools from './CasparcgTools';
 import ColorGradient from './ColorGradient';
 
-const buildDate = '091021'
+const buildDate = '121021'
 
 const App = (props) => {
   const [mediaPath, setmediaPath] = useState();
@@ -187,7 +187,11 @@ const App = (props) => {
   return (<React.Fragment>
 
     <div className='menu_bar'>
-      <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => endpoint(`clear ${chNumber}`)}>Stop Channel</button>
+      <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => {
+        endpoint(`clear ${chNumber}`);
+        endpoint(`mixer ${chNumber} clear`);
+
+        }}>Stop Channel</button>
       <b> Animation Method: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>

@@ -922,7 +922,9 @@ const DrawingController = ({ chNumber }) => {
         'Rockwell',
         'Franklin Gothic',
         'ARVO',
-        'Gigi'
+        'Gigi',
+        'AkrutiDevNewPriyaExpand',
+        'AkrutiDevPriya'
     ])
 
     const [currentFont, setCurrentFont] = useState('Arial')
