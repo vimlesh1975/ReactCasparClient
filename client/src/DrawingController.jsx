@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint } from './common'
+import { endpoint, fontLists } from './common'
 import { useDispatch, useSelector } from 'react-redux'
 import "fabric-history";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -910,22 +910,7 @@ export const paste = () => {
 }
 
 const DrawingController = ({ chNumber }) => {
-    const [fontList, setFontList] = useState([
-        'Helvetica',
-        'Calibri',
-        'Futura',
-        'Garamond',
-        'Times New Roman',
-        'Arial',
-        'Cambria',
-        'Verdana',
-        'Rockwell',
-        'Franklin Gothic',
-        'ARVO',
-        'Gigi',
-        'AkrutiDevNewPriyaExpand',
-        'AkrutiDevPriya'
-    ])
+    const [fontList, setFontList] = useState(fontLists);
     const [currentFileName, setCurrentFileName] = useState('')
     const [currentFont, setCurrentFont] = useState('Arial')
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1653,6 +1638,7 @@ const DrawingController = ({ chNumber }) => {
 
         axios.post('http://localhost:8080/getfonts').then((aa) => {
             setFontList(aa.data)
+   
         }).catch((aa) => { console.log('Error', aa) });
         return () => {
         }
@@ -1819,7 +1805,7 @@ const DrawingController = ({ chNumber }) => {
                         localStorage.setItem('RCC_verticalScroll','');
 
                     }} ><FaStop /></button>
-                    Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' value={verticalSpeed} />
+                    Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01'  value={verticalSpeed} />
 
                     <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>To HTML</button>
                     <span> {verticalScroll} </span>
@@ -1840,7 +1826,7 @@ const DrawingController = ({ chNumber }) => {
                         localStorage.setItem('RCC_horizontalScroll','');
 
                     }} ><FaStop /></button>
-                    Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' defaultValue='0.3' value={horizontalSpeed} />
+                    Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01'  value={horizontalSpeed} />
                     <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>To HTML</button>
                     <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                     <span> {horizontalScroll} </span>
