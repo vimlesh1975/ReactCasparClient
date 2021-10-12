@@ -238,12 +238,12 @@ const App = (props) => {
               </div>
               <div >
                 <Tabs forceRenderTabPanel={true}>
-                  <TabList key={uuidv4()}>
-                    <Tab key={uuidv4()}>Image</Tab>
-                    <Tab key={uuidv4()}>ColorGradient</Tab>
+                  <TabList >
+                    <Tab>Image</Tab>
+                    <Tab >ColorGradient</Tab>
                   </TabList>
 
-                  <TabPanel key={uuidv4()}>
+                  <TabPanel>
                     <div>
                       <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
                       <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
@@ -272,10 +272,12 @@ const App = (props) => {
                     </div>
 
                   </TabPanel>
-                  <TabPanel key={uuidv4()}>
+                  <TabPanel >
                     <ColorGradient />
                   </TabPanel>
                 </Tabs>
+                  
+
               </div>
             </div>
           </div>

@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
-
-
 const ColorGradient = () => {
     const [color1, setColor1] = useState('red')
     const [color2, setColor2] = useState('green')
@@ -25,7 +23,6 @@ const ColorGradient = () => {
             //nothing
         }
     }
-
     const gradient2 = new fabric.Gradient({
         type: 'linear',
         gradientUnits: 'percentage',
@@ -35,7 +32,6 @@ const ColorGradient = () => {
             { offset: 1, color: color2 }
         ]
     });
-
 
     const changeColor1 = e => {
         setColor1(e.target.value)
@@ -81,9 +77,9 @@ const ColorGradient = () => {
             Color 2 <input type="color" defaultValue='#00ff00' onChange={e => changeColor2(e)} />
         </div>
         {directions.map((val, i) => {
-            return (<>
+            return (
                 <div key={uuidv4()} style={{ margin: 5 }}>
-                    <input checked={direction === val}
+                    <input checked={(direction === val)}
                         onChange={
                             e => {
                                 setDirection(e.target.value);
@@ -92,17 +88,13 @@ const ColorGradient = () => {
                         } type="radio" value={val} id={val} />
                     <label htmlFor={val}>{val}</label>
                 </div>
-            </>)
+            )
         })}
         <div style={{ margin: 5 }} >
-            <button on onClick={() => setGradient2Fill(window.editor.canvas)}>Set Gradient Fill</button>
-            <button on onClick={() => setGradient2Stroke(window.editor.canvas)}>Set Gradient Stroke</button>
-
-            <button on onClick={() => setGradient3Fill(window.editor.canvas)}>Set Radial Gradient Fill</button>
-
-
+            <button onClick={() => setGradient2Fill(window.editor.canvas)}>Set Gradient Fill</button>
+            <button onClick={() => setGradient2Stroke(window.editor.canvas)}>Set Gradient Stroke</button>
+            <button onClick={() => setGradient3Fill(window.editor.canvas)}>Set Radial Gradient Fill</button>
         </div>
     </>)
 }
-
 export default ColorGradient
