@@ -279,10 +279,10 @@ const App = (props) => {
                     <ColorGradient />
                   </TabPanel>
                   <TabPanel >
-                    <Layers layers={window.editor?.canvas}/>
+                    <Layers />
                   </TabPanel>
                 </Tabs>
-                  
+
 
               </div>
             </div>
