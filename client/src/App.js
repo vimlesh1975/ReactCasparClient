@@ -15,6 +15,7 @@ import store from './store'
 import { v4 as uuidv4 } from 'uuid';
 import CasparcgTools from './CasparcgTools';
 import ColorGradient from './ColorGradient';
+import Layers from './Layers';
 
 const buildDate = '121021'
 
@@ -241,6 +242,8 @@ const App = (props) => {
                   <TabList >
                     <Tab>Image</Tab>
                     <Tab >ColorGradient</Tab>
+                    <Tab >Layers</Tab>
+
                   </TabList>
 
                   <TabPanel>
@@ -274,6 +277,9 @@ const App = (props) => {
                   </TabPanel>
                   <TabPanel >
                     <ColorGradient />
+                  </TabPanel>
+                  <TabPanel >
+                    <Layers layers={window.editor?.canvas}/>
                   </TabPanel>
                 </Tabs>
                   

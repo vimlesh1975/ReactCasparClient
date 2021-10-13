@@ -2084,7 +2084,7 @@ const DrawingController = ({ chNumber }) => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
-                                                                <td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: 280, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                               <td>{i+1}</td><td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: 270, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
                                                                 }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
                                                             </tr>
