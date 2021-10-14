@@ -22,8 +22,8 @@ const Video = ({ video, layerNumber }) => {
             onResize={(e, direction, ref, delta, position) => {
                 setVideoWidth(parseInt(ref.style.width));
                 setVideoHeight(parseInt(ref.style.height));
-                if (operateOnline) {  endpoint(`mixer 1-1 fill ${videoX / 1024} ${videoY / 576} ${parseInt(ref.style.width) / 1024} ${parseInt(ref.style.height) / 576}`)};
-                
+                if (operateOnline) { endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${videoX / 1024} ${videoY / 576} ${parseInt(ref.style.width) / 1024} ${parseInt(ref.style.height) / 576}`) };
+
             }}
         >
             <div>

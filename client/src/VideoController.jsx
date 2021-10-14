@@ -37,7 +37,7 @@ const VideoController = ({ layerNumber }) => {
                     <tbody>
                         {searchedMedia.map((val, i) => {
                             return <tr key={uuidv4()}><td onClick={(e) => {
-                                setfilename((e.target.innerText).split('.')[0]);
+                                setfilename(((e.target.innerText).replaceAll('\\', '/')).split('.')[0]);
                                 var video = document.getElementById(`video${layerNumber}`);
                                 var source = document.getElementsByTagName('source')[layerNumber - 1];
 
