@@ -17,6 +17,7 @@ import CasparcgTools from './CasparcgTools';
 import ColorGradient from './ColorGradient';
 import Layers from './Layers';
 import VideoController from './VideoController';
+import ImageFilterController from './ImageFilterController';
 
 const buildDate = '131021'
 
@@ -297,6 +298,7 @@ const App = (props) => {
             <Tab>Graphics</Tab>
             <Tab>Video</Tab>
             <Tab>Casparcg Tools</Tab>
+            <Tab>Image Filter</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -315,11 +317,11 @@ const App = (props) => {
             </div>
           </TabPanel>
           <TabPanel>
-            <h2>Casparcg Tools</h2>
             <CasparcgTools />
-
           </TabPanel>
-
+          <TabPanel>
+            <ImageFilterController canvas={window.editor?.canvas}/>
+          </TabPanel>
           <TabPanel>
             <h2>Help</h2>
             <ol>

@@ -292,29 +292,29 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 }
 
 const Upload = e => {
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        var imgObj = new Image();
-        imgObj.src = event.target.result;
-        imgObj.onload = function () {
-            var image = new fabric.Image(imgObj);
-            image
-                .set({
-                    left: 10,
-                    top: 10,
-                    shadow: shadowOptions,
-                    stroke: 'white',
-                    strokeWidth: 3,
-                    strokeUniform: true,
-                    objectCaching: false,
-                })
-                .scale(0.5);
-
-            window.editor.canvas.add(image).setActiveObject(image);
+    if (e.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var imgObj = new Image();
+            imgObj.src = event.target.result;
+            imgObj.onload = function () {
+                var image = new fabric.Image(imgObj);
+                image
+                    .set({
+                        left: 10,
+                        top: 10,
+                        shadow: shadowOptions,
+                        stroke: 'white',
+                        strokeWidth: 3,
+                        strokeUniform: true,
+                        objectCaching: false,
+                    })
+                    .scale(0.5);
+                window.editor.canvas.add(image).setActiveObject(image);
+            };
         };
-    };
-    reader.readAsDataURL(e.target.files[0]);
-
+        reader.readAsDataURL(e.target.files[0]);
+    }
 }
 
 export const setGradientColor = canvas => {
