@@ -31,7 +31,21 @@ const Video = ({ video, layerNumber }) => {
                     <video id={`video${layerNumber}`} width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }} controls muted>
                         <source src={video} type="video/mp4" />
                     </video>
-                    <b style={{ display: 'inline' }}>{layerNumber}</b>  <label htmlFor={`vehicle${layerNumber}`}> Operate Online</label><input id={`vehicle${layerNumber}`} type="checkbox" value={operateOnline} onChange={e => setOperateOnline(val => !val)} />
+                    <div style={{ backgroundColor: 'white' }}>
+                        <b style={{ display: 'inline' }}>{layerNumber}</b>
+                        <label htmlFor={`vehicle${layerNumber}`}> Operate Online</label>
+                        <input id={`vehicle${layerNumber}`} type="checkbox" value={operateOnline} onChange={e => setOperateOnline(val => !val)} />
+                        <button onClick={() => {
+                            setVideoWidth(1024);
+                            setVideoHeight(576);
+                            setVideoX(0);
+                            setVideoY(0);
+                            if (operateOnline) {
+                                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1`);
+                            };
+
+                        }}>Make Full Screen</button>
+                    </div>
                 </div>
             </div>
         </Rnd>

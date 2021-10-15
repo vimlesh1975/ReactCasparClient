@@ -19,7 +19,7 @@ import Layers from './Layers';
 import VideoController from './VideoController';
 import ImageFilterController from './ImageFilterController';
 
-const buildDate = '131021'
+const buildDate = '151021'
 
 const App = (props) => {
   const [mediaPath, setmediaPath] = useState();
