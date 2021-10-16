@@ -16,18 +16,15 @@ import { saveAs } from 'file-saver';
 import Tooltip from '@mui/material/Tooltip';
 
 fabric.Object.prototype.noScaleCache = false;
-
+var currentFile = 'new';
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
-
 const STEP = 5;
-
 var Direction = {
     LEFT: 0,
     UP: 1,
     RIGHT: 2,
     DOWN: 3
 };
-
 
 fabric.util.addListener(document.body, 'keydown', function (options) {
     // if (options.repeat) {
@@ -1070,11 +1067,10 @@ const DrawingController = ({ chNumber }) => {
         });
         setCanvaslist([...bb])
     };
-    var currentFile = 'new';
 
     const handleFileChosen = (file) => {
-        currentFile = file.name
         if (file) {
+        currentFile = file.name
             setCurentPage('')
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead;
