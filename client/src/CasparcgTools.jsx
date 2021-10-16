@@ -21,7 +21,7 @@ const CasparcgTools = () => {
             <p>AMCP Commands:</p>
             <div style={{ display: 'flex' }}>
                 <div>
-                    <textarea rows="4" cols="50" onChange={e => setTextAreaContent(e.target.value)} defaultValue='play 1-1 amb loop' />
+                    <textarea rows="4" cols="30" onChange={e => setTextAreaContent(e.target.value)} defaultValue='play 1-1 amb loop' />
                 </div>
                 <div>
                     <button style={{ height: 65, marginLeft: 10 }} onClick={sendAMCPCommand}>Send Command</button>
