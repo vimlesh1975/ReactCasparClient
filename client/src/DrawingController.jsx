@@ -16,7 +16,7 @@ import SavePannel from './SavePannel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
-import Help from './Help'
+import Images from './Images';
 
 
 
@@ -292,7 +292,9 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
     });
 }
 
-const Upload = e => {
+
+
+export const Upload = e => {
     if (e.target.files[0]) {
         var reader = new FileReader();
         reader.onload = function (event) {
@@ -910,22 +912,19 @@ export const paste = () => {
     }
 }
 
-const DrawingController = ({ chNumber }) => {
+const DrawingController = () => {
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
-    // const [canvaslist, setCanvaslist] = useState([{ 'pageName': ss + '_pageName', 'pageValue': '' }])
     const canvaslist = [{ 'pageName': ss + '_pageName', 'pageValue': '' }];
 
-    // const [currentPage, setCurentPage] = useState(0)
     const currentPage = 0;
 
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
     const [f0, setF0] = useState('Ganesh Tiwari');
     const [f1, setF1] = useState('Suresh Malhotra');
     const [f2, setF2] = useState('Mahesh prasad');
-    const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
     const [ltr, setLtr] = useState(false);
@@ -1814,22 +1813,10 @@ const DrawingController = ({ chNumber }) => {
                     <button onClick={() => paste(window.editor.canvas)}> Paste</button>
                     <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
                     <button onClick={() => deSelectAll(window.editor.canvas)}> Deselect All</button>
-
                     <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
                     <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
-
                 </div>
 
-
-                <div className='drawingToolsRow' >
-                    <b> Image from URL: </b>
-                    <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="55" type='text' defaultValue={onlineImageUrl}></input>
-                    <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add</button>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Image from Local PC: </b>
-                    <input type="file" accept="image/*" onChange={e => Upload(e)} />
-                </div>
                 <div className='drawingToolsRow' >
                     <b> Export Import: </b>
                     <button onClick={() => exportHTML1(window.editor.canvas)}>To HTML</button>
@@ -1857,7 +1844,7 @@ const DrawingController = ({ chNumber }) => {
                         <Tab>Save</Tab>
                         <Tab>IMG Filter</Tab>
                         <Tab>Casparcg Tools</Tab>
-                        <Tab>Help</Tab>
+                        <Tab>Images</Tab>
                     </TabList>
                     <TabPanel>
                         <SavePannel />
@@ -1869,7 +1856,8 @@ const DrawingController = ({ chNumber }) => {
                         <CasparcgTools />
                     </TabPanel>
                     <TabPanel>
-                        <Help />
+
+                        <Images />
                     </TabPanel>
                 </Tabs>
 

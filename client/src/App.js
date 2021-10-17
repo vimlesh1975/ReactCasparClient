@@ -9,30 +9,24 @@ import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import DrawingController, { addRoundedCornerImage } from './DrawingController';
+import DrawingController from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
 import ColorGradient from './ColorGradient';
 import Layers from './Layers';
 import VideoController from './VideoController';
+import Help from './Help';
 
-const buildDate = '161021'
+const buildDate = '171021'
 
 const App = (props) => {
   const [mediaPath, setmediaPath] = useState();
-  const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
   const refPreviewContainer = useRef();
   const [media, setMedia] = useState([]);
   const chNumbers = [1, 2, 3, 4, 5, 6];
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
-  const [searchText2, setSearchText2] = useState('');
-
-  const searchedMedia2 =
-    media.filter((value) => {
-      return (value.toLowerCase().search(searchText2.toLowerCase()) > -1)
-    })
 
   const animationMethods = [
     'linear',
@@ -82,13 +76,6 @@ const App = (props) => {
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
 
   useEffect(() => {
-    window.imageName = imageName;
-    return () => {
-      // cleanup
-    }
-  }, [imageName])
-
-  useEffect(() => {
     window.animationMethod = animationMethod;
     return () => {
       // cleanup
@@ -128,9 +115,6 @@ const App = (props) => {
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
-    // socket.on("FromAPI", data => {
-    //   setRemainingTime(data);
-    // });
     socket.on("Fromccgsocket", data => {
       setmediaPath(data);
     });
@@ -240,41 +224,9 @@ const App = (props) => {
               <div >
                 <Tabs forceRenderTabPanel={true}>
                   <TabList >
-                    <Tab>Image</Tab>
                     <Tab >ColorGradient</Tab>
                     <Tab >Layers</Tab>
-
                   </TabList>
-
-                  <TabPanel>
-                    <div>
-                      <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
-                      <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ maxHeight: '160px', maxWidth: '330px', overflow: 'scroll', border: '1px solid red' }}>
-                          <table border='1' >
-                            <tbody>
-                              {searchedMedia2.map((val, i) => {
-                                return <tr key={i}><td onClick={(e) => {
-                                  setImageName((address1 + `/media/` + e.target.innerText));
-                                }}>{val}</td></tr>
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                        <div style={{ border: '1px solid red', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-                          <div>
-                            <img src={imageName} alt='' width="90" height="60" style={{ border: '1px solid #555' }}></img>
-                          </div>
-                          <div>
-                            Selected Image<br />
-                            <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </TabPanel>
                   <TabPanel >
                     <ColorGradient />
                   </TabPanel>
@@ -295,6 +247,8 @@ const App = (props) => {
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>Video</Tab>
+            <Tab>Help</Tab>
+
           </TabList>
           <TabPanel>
             <div style={{ border: '1px dashed blue', width: 900 }}>
@@ -311,7 +265,11 @@ const App = (props) => {
               <VideoController layerNumber={4} />
             </div>
           </TabPanel>
-        
+          <TabPanel>
+            <Help />
+
+          </TabPanel>
+
         </Tabs >
       </div >
 
