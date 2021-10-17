@@ -1441,7 +1441,9 @@ const DrawingController = ({ chNumber }) => {
         setTimeout(() => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
         }, 800);
-
+        setTimeout(() => {
+            updateGraphics(canvas, layerNumber);
+        }, 1100);
     }
     const updateGraphics = (canvas, layerNumber) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
