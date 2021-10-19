@@ -25,8 +25,7 @@ const Layers = () => {
         canvas.requestRenderAll();
     }
     return (<div>
-        <button onClick={() => {
-        }}>Refresh</button>{layers?.length}
+       <b>Total Layers: </b>{layers?.length}
         <div style={{ height: 280, width: 330, overflow: 'scroll', border: '1px solid black' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">

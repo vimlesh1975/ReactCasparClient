@@ -19,9 +19,6 @@ import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 
 
-
-
-
 fabric.Object.prototype.noScaleCache = false;
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 const STEP = 5;
@@ -296,7 +293,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 
 
 
-export const Upload = e => {
+export const Upload = (e, canvas) => {
     if (e.target.files[0]) {
         var reader = new FileReader();
         reader.onload = function (event) {
@@ -315,7 +312,7 @@ export const Upload = e => {
                         objectCaching: false,
                     })
                     .scale(0.5);
-                window.editor.canvas.add(image).setActiveObject(image);
+                canvas.add(image).setActiveObject(image);
             };
         };
         reader.readAsDataURL(e.target.files[0]);
@@ -403,7 +400,7 @@ export const createCircle = (canvas) => {
 
     canvas.add(circle).setActiveObject(circle);;
     canvas.requestRenderAll();
-    // circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
+    circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const createTriangle = (canvas) => {
@@ -703,10 +700,10 @@ const alignAllButtom = (canvas) => {
     })
     canvas.requestRenderAll();
 }
-const onSizeChange = (e) => {
+const onSizeChange = (e, canvas) => {
     options.currentFontSize = e.target.value
-    window.editor.canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
-    window.editor.canvas.requestRenderAll();
+    canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
+    canvas.requestRenderAll();
 }
 
 export const groupObjects = (canvas, shouldGroup) => {
@@ -734,51 +731,6 @@ export const groupObjects = (canvas, shouldGroup) => {
         canvas.requestRenderAll();
     }
 };
-
-export const savetoCasparcgStore = (layerNumber) => {
-    var dd = window.editor.canvas.toJSON(['id'])
-    const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-
-    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-    setTimeout(() => {
-        endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
-    }, 100);
-
-    setTimeout(() => {
-        endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
-    }, 1000);
-    setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 12 ${window.animationMethod}`)
-    }, 1100);
-}
-
-export const savetoCasparcgStoreClock = () => {
-    var dd = window.editor.canvas.toJSON()
-    const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-    endpoint(`call ${window.chNumber}-120 store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
-    setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-120 fill 0 0 0 1 12 ${window.animationMethod}`)
-    }, 200);
-
-    setTimeout(() => {
-        endpoint(`call ${window.chNumber}-120 ReadToCasparcgfromStore()`)
-    }, 680);
-    setTimeout(() => {
-        endpoint(`mixer ${window.chNumber}-120 fill 0 0 1 1 12 ${window.animationMethod}`)
-    }, 700);
-}
-
-
-// export const updatetoCasparcgStore = (layerNumber) => {
-//     var dd = canvas.toJSON(['id'])
-//     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-//     endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
-
-//     setTimeout(() => {
-//         endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
-//     }, 200);
-
-// }
 
 const changeText = (key, val) => {
     window.editor.canvas.getObjects().forEach((element) => {
@@ -938,7 +890,7 @@ const DrawingController = () => {
         }
     };
 
-    const handleFileReadJSON = canvas => {
+    const handleFileReadJSON = () => {
         const content = fileReader.result;
         canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
         })
@@ -946,29 +898,30 @@ const DrawingController = () => {
     };
 
 
+
     const changeCurrentColor = (e) => {
         options.currentColor = e.target.value;
-        window.editor.canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
-        window.editor.canvas.requestRenderAll();
+        canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
+        canvas.requestRenderAll();
     };
 
     const changeBackGroundColor = (e) => {
         options.backgroundColor = e.target.value;
-        window.editor.canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
-        window.editor.canvas.requestRenderAll();
+        canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
+        canvas.requestRenderAll();
     }
 
     const changeStrokeCurrentColor = e => {
         options.stroke = e.target.value;
-        window.editor.canvas.freeDrawingBrush.color = e.target.value;
-        window.editor.canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
-        window.editor.canvas.requestRenderAll();
+        canvas.freeDrawingBrush.color = e.target.value;
+        canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
+        canvas.requestRenderAll();
     }
 
     const changeShadowCurrentColor = e => {
         shadowOptions.color = e.target.value;
-        window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
-        window.editor.canvas.requestRenderAll();
+      canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
+       canvas.requestRenderAll();
     }
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
@@ -1310,7 +1263,7 @@ const DrawingController = () => {
     }
 
 
-    const startVerticalScroll = (canvas) => {
+    const startVerticalScroll = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
@@ -1332,7 +1285,7 @@ const DrawingController = () => {
         "`)
     }
 
-    const startHorizontalScroll = (canvas) => {
+    const startHorizontalScroll = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width;
@@ -1364,7 +1317,7 @@ const DrawingController = () => {
         "`)
     }
 
-    const startClock = (canvas) => {
+    const startClock = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
 
@@ -1388,7 +1341,7 @@ const DrawingController = () => {
           }, 1000);
         "`)
     }
-    const startUpTimer = (canvas) => {
+    const startUpTimer = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         endpoint(`play ${window.chNumber}-115 [HTML] xyz.html`);
@@ -1479,35 +1432,35 @@ const DrawingController = () => {
 
 
     useEffect(() => {
-        window.addEventListener('keydown', e => {
+      window.addEventListener('keydown', e => {
             // console.log(e.key);
             if (e.repeat) {
                 return;
             }
 
             if (e.key === 'Delete') {
-                window.editor.canvas.getActiveObjects().forEach(item => {
+               canvas?.getActiveObjects().forEach(item => {
                     //  alert(item.type);
-                    if (!((item.type === 'textbox') && item.isEditing)) { window.editor.canvas.remove(item); }
+                    if (!((item.type === 'textbox') && item.isEditing)) { canvas?.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
-                const item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+                const item = canvas.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(canvas) }
             }
             if (e.ctrlKey && e.key === 'v') {
-                const item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+                const item = canvas.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
             }
             if (e.ctrlKey && e.key === 'z') {
-                window.editor.canvas.undo();
+               canvas.undo();
             }
 
         });
         return () => {
             window.removeEventListener('keydown', null)
         }
-    }, [])
+    }, [canvas])
 
     return (
         <div style={{ display: 'flex' }}>
@@ -1614,7 +1567,7 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b> V Scroll: </b>  <button onClick={() => {
-                        startVerticalScroll(window.editor?.canvas);
+                        startVerticalScroll();
                         setVerticalScroll(canvasList[currentPage]?.pageName)
                         localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
 
@@ -1657,7 +1610,7 @@ const DrawingController = () => {
                     <b>Clock: </b>
                     <button onClick={() => addClock(canvas)}>Add to Preview</button>
                     <button onClick={() => {
-                        startClock(canvas);
+                        startClock();
                         setClock(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
 
@@ -1675,7 +1628,7 @@ const DrawingController = () => {
                     <b>Count Up Timer: </b>
                     <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
                     <button onClick={() => {
-                        startUpTimer(canvas);
+                        startUpTimer();
                         setUpTimer(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
 
@@ -1695,7 +1648,7 @@ const DrawingController = () => {
                     <Tooltip title="MutliLine Text Box"><button onClick={() => createTextBox(canvas)}>TB</button></Tooltip>
                     <Tooltip title="Single Line Text Box"><button onClick={() => createIText(canvas)}>IT</button></Tooltip>
                     <Tooltip title="Single Line Text Box Not Editable"><button onClick={() => createText(canvas)}>T</button></Tooltip>
-                    <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
+                    <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                     <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(canvas)}>Ellipse</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
@@ -1709,7 +1662,7 @@ const DrawingController = () => {
                     <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    Size<input className='inputRange' onChange={e => onSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                    Size<input className='inputRange' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' defaultValue='25' />
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
@@ -1724,7 +1677,7 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b> Colors: </b>
-                    Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
+                    Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
                     BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e)} />
                     Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
                     <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
@@ -1820,7 +1773,7 @@ const DrawingController = () => {
                         <SavePannel />
                     </TabPanel>
                     <TabPanel>
-                        <ImageFilterController canvas={window.editor?.canvas} />
+                        <ImageFilterController />
                     </TabPanel>
                     <TabPanel>
                         <CasparcgTools />

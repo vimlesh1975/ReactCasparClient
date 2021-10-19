@@ -20,7 +20,7 @@ import Help from './Help';
 import { useDispatch } from 'react-redux'
 import { animationMethods, chNumbers } from './common'
 
-const buildDate = '191021'
+const buildDate = '201021'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();

@@ -1,5 +1,8 @@
 import React, { useRef } from 'react';
 import { fabric } from "fabric";
+import { useDispatch, useSelector } from 'react-redux'
+
+
 // var filters = ['grayscale', 'invert', 'remove-color', 'sepia', 'brownie',
 //     'brightness', 'contrast', 'saturation', 'vibrance', 'noise', 'vintage',
 //     'pixelate', 'blur', 'sharpen', 'emboss', 'technicolor',
@@ -7,7 +10,9 @@ import { fabric } from "fabric";
 //     'blackwhite', 'blend-image', 'hue', 'resize'];
 
 var f = fabric.Image.filters;
-const ImageFilterController = ({ canvas }) => {
+const ImageFilterController = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+
     const refBrightness = useRef();
     const refBlur = useRef();
     const refHue = useRef();

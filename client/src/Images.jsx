@@ -9,7 +9,8 @@ const Images = () => {
     const media = useSelector(state => state.mediaReducer.media)
     const [searchText2, setSearchText2] = useState('');
     const onlineImageUrl = useSelector(state => state.onlineImageUrleReducer.onlineImageUrl);
-    // const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+
     const imageName = useSelector(state => state.imageNameReducer.imageName)
 
     const searchedMedia2 = media.filter((value) => {
@@ -25,11 +26,11 @@ const Images = () => {
         <div>
             <b> Image from URL: </b>
             <input onChange={(e) => dispatch({ type: 'CHANGE_ONLINEIMAGE_URL', payload: e.target.value })} size="55" type='text' defaultValue={onlineImageUrl}></input>
-            <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add Rounded Rectange Image</button>
+            <button onClick={() => addRoundedCornerImage(canvas, onlineImageUrl)}>Add Rounded Rectange Image</button>
         </div>
         <div className='drawingToolsRow' >
             <b> Image from Local PC: </b>
-            <input type="file" accept="image/*" onChange={e => Upload(e)} />
+            <input type="file" accept="image/*" onChange={(e) => Upload(e, canvas)} />
         </div>
 
         <div>
@@ -54,7 +55,7 @@ const Images = () => {
                     </div>
                     <div>
                         Selected Image<br />
-                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, imageName)}>Add Image</button>
+                        <button onClick={() => addRoundedCornerImage(canvas, imageName)}>Add Image</button>
                     </div>
                 </div>
             </div>

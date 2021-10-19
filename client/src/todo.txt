@@ -1,1 +1,0 @@
-pages are not loading from ip:3000 and appliaction crashes.
