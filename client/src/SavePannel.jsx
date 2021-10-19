@@ -3,6 +3,7 @@ import { FiFile } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
+import { useSelector, useDispatch } from 'react-redux'
 
 
 
@@ -10,31 +11,39 @@ var currentFile = 'new';
 let fileReader;
 
 
-var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+// var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
 const SavePannel = () => {
-    const [canvaslist, setCanvaslist] = useState([{ 'pageName': ss + '_pageName', 'pageValue': '' }])
-    const [currentPage, setCurentPage] = useState(0)
+    const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+    const dispatch = useDispatch();
+
+    const currentPage = useSelector(state => state.currentPageReducer.currentPage);
+
     const [currentFileName, setCurrentFileName] = useState('')
 
 
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {
-            setCurentPage(currentPage => currentPage - 1)
+
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage - 1 })
+
         }
         else if (currentPage === parseInt(e.target.getAttribute('key1'))) {
-            setCurentPage(null)
+
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: null })
         }
-        const updatedCanvasList = canvaslist.filter((_, i) => {
+        const updatedcanvasList = canvasList.filter((_, i) => {
             return (parseInt(e.target.getAttribute('key1')) !== i)
         });
-        setCanvaslist([...updatedCanvasList])
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+
     }
     const updatePageName = e => {
-        const updatedCanvasList = canvaslist.map((val, i) => {
+        const updatedcanvasList = canvasList.map((val, i) => {
             return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.innerText, 'pageValue': val.pageValue } : val;
         });
-        setCanvaslist([...updatedCanvasList])
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+
     }
     const onDoubleClickPageName = (event) => {
         event.preventDefault();
@@ -45,7 +54,9 @@ const SavePannel = () => {
         sel.addRange(range);
     }
     const recallPage = (json, canvas, i) => {
-        setCurentPage(i)
+
+        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i })
+
         canvas.loadFromJSON(json, function () {
             const aa = canvas.getObjects();
             aa.forEach(element => {
@@ -71,16 +82,19 @@ const SavePannel = () => {
         const content = fileReader.result;
         var aa = content.split('\r\n')
         aa.splice(-1)
-        var bb = [...canvaslist]
+        var updatedcanvasList = [...canvasList]
         aa.forEach(element => {
             var cc = JSON.parse(element)
-            bb.push(cc)
+            updatedcanvasList.push(cc)
         });
-        setCanvaslist([...bb])
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+
     };
     const handleFileChosen2 = (file) => {
         if (file) {
-            setCurentPage('')
+
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
+
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead2;
             fileReader.readAsText(file);
@@ -90,27 +104,32 @@ const SavePannel = () => {
         const content = fileReader.result;
         var aa = content.split('\r\n')
         aa.splice(-1)
-        var bb = []
+        var updatedcanvasList = []
         aa.forEach(element => {
             var cc = JSON.parse(element)
-            bb.push(cc)
+            updatedcanvasList.push(cc)
         });
-        setCanvaslist([...bb])
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+
     };
     const drawingFileNew = () => {
-        setCanvaslist([]);
+        var updatedcanvasList = [];
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        setCurrentFileName('')
+
     }
-    const updatePage = (canvas) => {
-        const updatedCanvasList = canvaslist.map((val, i) => {
+    const updatePage = () => {
+        const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': window.editor.canvas.toJSON(['id']) } : val;
         });
-        setCanvaslist([...updatedCanvasList])
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+
     }
     const drawingFileSaveAs = () => {
-        updatePage(window.editor.canvas);
+      
         const element = document.createElement("a");
         var aa = ''
-        canvaslist.forEach(val => {
+        canvasList.forEach(val => {
             aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
@@ -122,7 +141,7 @@ const SavePannel = () => {
             ss = currentFile;
         }
 
-        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        var retVal = prompt("Enter  file name to save : ", ss );
         if (retVal !== null) {
             element.download = retVal;
             document.body.appendChild(element); // Required for this to work in FireFox
@@ -134,7 +153,7 @@ const SavePannel = () => {
         updatePage(window.editor.canvas);
         const element = document.createElement("a");
         var aa = ''
-        canvaslist.forEach(val => {
+        canvasList.forEach(val => {
             aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
@@ -148,25 +167,33 @@ const SavePannel = () => {
     const handleFileChosen = (file) => {
         if (file) {
             currentFile = file.name
-            setCurentPage('')
+
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
+
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead;
             fileReader.readAsText(file);
         }
     }
     const onDragEnd = (result) => {
-        const aa = [...canvaslist]
+        const aa = [...canvasList]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
-            setCanvaslist(aa)
+
+            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: aa })
+
             if (currentPage === result.source?.index) {
-                setCurentPage(result.destination?.index)
+                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: result.destination?.index })
+
             }
             else if ((currentPage >= result.destination?.index) && (currentPage < result.source?.index)) {
-                setCurentPage(currentPage => currentPage + 1)
+                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage + 1 })
+
+
             }
             else if ((currentPage <= result.destination?.index) && (currentPage > result.source?.index)) {
-                setCurentPage(currentPage => currentPage - 1)
+                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage - 1 })
+
             }
         }
     }
@@ -210,9 +237,9 @@ const SavePannel = () => {
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             deleteAll(window.editor?.canvas);
-                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
+                            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
 
-                            setCurentPage(canvaslist.length)
                         }
                     }}
                     > Add Blank Page</button>
@@ -221,8 +248,10 @@ const SavePannel = () => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            setCanvaslist([...canvaslist, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }]);
-                            setCurentPage(canvaslist.length)
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
+
+                            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
+
                         }
                     }}
 
@@ -243,7 +272,7 @@ const SavePannel = () => {
                             >
                                 <table border='1'>
                                     <tbody>
-                                        {canvaslist.map((val, i) => {
+                                        {canvasList.map((val, i) => {
                                             return (
                                                 <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                     {(provided, snapshot) => (

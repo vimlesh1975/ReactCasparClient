@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
 import { endpoint, fontLists } from './common'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
 import { FaAlignLeft, FaAlignRight, FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -17,6 +17,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
 import Images from './Images';
+
 
 
 
@@ -915,11 +916,12 @@ export const paste = () => {
 const DrawingController = () => {
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
-    var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+    // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
-    const canvaslist = [{ 'pageName': ss + '_pageName', 'pageValue': '' }];
+    // const canvasList = [{ 'pageName': ss + '_pageName', 'pageValue': '' }];
+    const canvasList = useSelector(state => state.canvasListReducer.canvasList);
 
-    const currentPage = 0;
+    const currentPage =  useSelector(state => state.currentPageReducer.currentPage);
 
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
     const [f0, setF0] = useState('Ganesh Tiwari');
@@ -1001,7 +1003,6 @@ const DrawingController = () => {
 
     const importJSON = (file, canvas) => {
         if (file) {
-            // setCurentPage('')
             fileReader = new FileReader();
             fileReader.onloadend = () => handleFileReadJSON(canvas);
             fileReader.readAsText(file);
@@ -1418,7 +1419,6 @@ const DrawingController = () => {
     const startGraphics = (canvas, layerNumber) => {
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        // selectAll(canvas);
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -1457,20 +1457,7 @@ const DrawingController = () => {
 
     }
 
-    const dispatch = useDispatch()
-    // eslint-disable-next-line
-    const canvasToJson = (canvas) => {
-        dispatch({ type: 'CHANGE_CANVAS1', payload: (JSON.stringify(canvas.toJSON(['id']))) })
-    };
-
-    const state1 = useSelector(state => state.canvas1Reducer.aa)
-    // eslint-disable-next-line
-    const canvasFromJson = (canvas) => {
-        var state2 = state1.replace(new RegExp('asdfgh', "g"), ' ')
-        const data = JSON.parse(state2);
-        canvas.loadFromJSON(data);
-        canvas.requestRenderAll();
-    };
+   
 
     useEffect(() => {
         setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
@@ -1482,11 +1469,8 @@ const DrawingController = () => {
         setClock(localStorage.getItem('RCC_clock'));
         setVerticalScroll(localStorage.getItem('RCC_verticalScroll'));
         setHorizontalScroll(localStorage.getItem('RCC_horizontalScroll'));
-
         setHorizontalSpeed(localStorage.getItem('RCC_horizontalSpeed'));
         setVerticalSpeed(localStorage.getItem('RCC_verticalSpeed'));
-
-
 
         axios.post('http://localhost:8080/getfonts').then((aa) => {
             setFontList(aa.data)
@@ -1495,17 +1479,6 @@ const DrawingController = () => {
         return () => {
         }
     }, [])
-
-
-    // useEffect(() => {
-    //     const autoPageUpdate = setInterval((
-    //     ) => {
-    //         updatePage(window.editor?.canvas)
-    //     }, 1000);
-    //     return () => {
-    //         clearInterval(autoPageUpdate)
-    //     }
-    // }, [])
 
 
     useEffect(() => {
@@ -1554,15 +1527,15 @@ const DrawingController = () => {
                     <b> Solid Caption 1: </b>
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 108);
-                        setSolidcaption1(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidcaption1', canvaslist[currentPage]?.pageName);
+                        setSolidcaption1(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_solidCaption1', canvasList[currentPage]?.pageName);
                     }
                     }><FaPlay /></button>  <button onClick={() => updateGraphics(window.editor.canvas, 108)}>Update</button>
 
                     <button onClick={() => {
                         stopGraphics(108);
                         setSolidcaption1('');
-                        localStorage.setItem('RCC_solidcaption1', '');
+                        localStorage.setItem('RCC_solidCaption1', '');
 
 
                     }} ><FaStop /></button>
@@ -1572,15 +1545,15 @@ const DrawingController = () => {
                     <b> Solid Caption 2: </b>
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 109);
-                        setSolidcaption2(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidcaption2', canvaslist[currentPage]?.pageName);
+                        setSolidcaption2(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_solidCaption2', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>  <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(109);
                         setSolidcaption2('');
-                        localStorage.setItem('RCC_solidcaption2', '');
+                        localStorage.setItem('RCC_solidCaption2', '');
 
                     }} ><FaStop /></button>
                     <span> {solidcaption2} </span>
@@ -1589,15 +1562,15 @@ const DrawingController = () => {
                     <b> Solid Caption 3: </b>
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 110);
-                        setSolidcaption3(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidcaption3', canvaslist[currentPage]?.pageName);
+                        setSolidcaption3(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_solidCaption3', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>  <button onClick={() => updateGraphics(window.editor.canvas, 110)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(110);
                         setSolidcaption3('');
-                        localStorage.setItem('RCC_solidcaption3', '');
+                        localStorage.setItem('RCC_solidCaption3', '');
 
                     }} ><FaStop /></button>
                     <span> {solidcaption3} </span>
@@ -1608,8 +1581,8 @@ const DrawingController = () => {
 
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 215);
-                        setLogo(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_logo', canvaslist[currentPage]?.pageName);
+                        setLogo(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_logo', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
@@ -1627,8 +1600,8 @@ const DrawingController = () => {
                     <b> Location Band: </b>
                     <button onClick={() => {
                         startGraphics(window.editor.canvas, 210);
-                        setLocationBand(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_locationBand', canvaslist[currentPage]?.pageName);
+                        setLocationBand(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_locationBand', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
@@ -1645,8 +1618,8 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> V Scroll: </b>  <button onClick={() => {
                         startVerticalScroll(window.editor?.canvas);
-                        setVerticalScroll(canvaslist[currentPage]?.pageName)
-                        localStorage.setItem('RCC_verticalScroll', canvaslist[currentPage]?.pageName);
+                        setVerticalScroll(canvasList[currentPage]?.pageName)
+                        localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /> </button>
                     <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}><FaPause /></button>
@@ -1666,8 +1639,8 @@ const DrawingController = () => {
                     <b> H Scroll: </b>
                     <button onClick={() => {
                         startHorizontalScroll(window.editor?.canvas);
-                        setHorizontalScroll(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_horizontalScroll', canvaslist[currentPage]?.pageName);
+                        setHorizontalScroll(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_horizontalScroll', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /></button>
                     <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}> <FaPause /></button>
@@ -1688,8 +1661,8 @@ const DrawingController = () => {
                     <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
                     <button onClick={() => {
                         startClock(window.editor.canvas);
-                        setClock(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_clock', canvaslist[currentPage]?.pageName);
+                        setClock(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /></button>
                     <button onClick={() => {
@@ -1706,8 +1679,8 @@ const DrawingController = () => {
                     <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
                     <button onClick={() => {
                         startUpTimer(window.editor.canvas);
-                        setUpTimer(canvaslist[currentPage]?.pageName);
-                        localStorage.setItem('RCC_upTimer', canvaslist[currentPage]?.pageName);
+                        setUpTimer(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /></button>
                     <button onClick={() => {

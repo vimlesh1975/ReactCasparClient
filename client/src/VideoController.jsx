@@ -2,22 +2,22 @@ import React, { useState } from 'react'
 import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux'
 
 const VideoController = ({ layerNumber }) => {
+    const dispatch = useDispatch()
+    const media = useSelector(state => state.mediaReducer.media)
     const [filename, setfilename] = useState('amb');
-    const [media, setMedia] = useState([]);
     const [searchText, setSearchText] = useState('');
-
     const refreshMedia = () => {
         axios.post(address1 + '/getmedia').then((aa) => {
-            setMedia(aa.data)
+            dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
         }).catch((aa) => { console.log('Error', aa) });
     }
     const searchedMedia =
-        media.filter((value) => {
+        media?.filter((value) => {
             return (value.toLowerCase().search(searchText.toLowerCase()) > -1)
         })
-
     return (
         <div style={{ border: '1px solid black' }}>
             <b>Layer: {layerNumber}</b><br />

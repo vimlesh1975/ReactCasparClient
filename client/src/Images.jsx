@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { addRoundedCornerImage, Upload } from './DrawingController'
 import axios from 'axios'
 import { address1 } from './common'
-
+import { useDispatch, useSelector } from 'react-redux'
 
 const Images = () => {
-    const [media, setMedia] = useState([]);
-    // const [mediaPath, setmediaPath] = useState();
+    const dispatch = useDispatch();
+    const media = useSelector(state => state.mediaReducer.media)
     const [searchText2, setSearchText2] = useState('');
     const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
     const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
@@ -16,7 +16,7 @@ const Images = () => {
     })
     const refreshMedia = () => {
         axios.post(address1 + '/getmedia').then((aa) => {
-            setMedia(aa.data)
+            dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
         }).catch((aa) => { console.log('Error', aa) });
     }
     useEffect(() => {

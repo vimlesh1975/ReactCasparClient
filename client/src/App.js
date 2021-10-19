@@ -17,61 +17,16 @@ import ColorGradient from './ColorGradient';
 import Layers from './Layers';
 import VideoController from './VideoController';
 import Help from './Help';
+import { useDispatch } from 'react-redux'
+import {animationMethods, chNumbers} from './common'
 
 const buildDate = '171021'
 
-const App = (props) => {
+const App = () => {
   const [mediaPath, setmediaPath] = useState();
   const refPreviewContainer = useRef();
-  const [media, setMedia] = useState([]);
-  const chNumbers = [1, 2, 3, 4, 5, 6];
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
-
-  const animationMethods = [
-    'linear',
-    'easenone',
-    'easeinquad',
-    'easeoutquad',
-    'easeinoutquad',
-    'easeoutinquad',
-    'easeincubic',
-    'easeoutcubic',
-    'easeinoutcubic',
-    'easeoutincubic',
-    'easeinquart',
-    'easeoutquart',
-    'easeinoutquart',
-    'easeoutinquart',
-    'easeinquint',
-    'easeoutquint',
-    'easeinoutquint',
-    'easeoutinquint',
-    'easeinsine',
-    'easeoutsine',
-    'easeinoutsine',
-    'easeoutinsine',
-    'easeinexpo',
-    'easeoutexpo',
-    'easeinoutexpo',
-    'easeoutinexpo',
-    'easeincirc',
-    'easeoutcirc',
-    'easeinoutcirc',
-    'easeoutincirc',
-    "easeinelastic",
-    "easeoutelastic",
-    "easeinoutelastic",
-    "easeoutinelastic",
-    "easeinback",
-    "easeoutback",
-    "easeinoutback",
-    "easeoutintback",
-    "easeoutbounce",
-    "easeinbounce",
-    "easeinoutbounce",
-    "easeoutinbounce",
-  ]
 
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
 
@@ -104,12 +59,12 @@ const App = (props) => {
     }
 
   }
-
+  const dispatch = useDispatch()
   const connectbutton = useRef();
 
   const refreshMedia = () => {
     axios.post(address1 + '/getmedia').then((aa) => {
-      setMedia(aa.data)
+      dispatch({type:'CHANGE_MEDIA',payload:aa.data})
     }).catch((aa) => { console.log('Error', aa) });
   }
 
@@ -132,6 +87,7 @@ const App = (props) => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line
     refreshMedia()
     return () => {
       // cleanup

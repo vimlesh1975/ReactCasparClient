@@ -4,95 +4,46 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
-
-const initialState = {
-    element1: []
-}
-const reducer1 = (state = initialState, action) => {
+var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+const initialStateCanvasList ={ canvasList:[{ 'pageName': ss + '_pageName', 'pageValue': '' }]};
+const canvasListReducer = (state = initialStateCanvasList, action) => {
     switch (action.type) {
-        case 'ADD_ELEMENT': return {
-            ...state,
-            element1: [...state.element1, action.payload]
-        }
-
-        default: return state
-    }
-}
-
-const initialStateOneLiner = {
-    onelinerData: [{ id: 1, name: 'Vimlesh Kumar Tanti 1' }, { id: 2, name: 'Vimlesh Kumar Tanti 2' }, { id: 3, name: 'Vimlesh Kumar Tanti 3' }]
-}
-const oneLinerReducer = (state = initialStateOneLiner, action) => {
-    switch (action.type) {
-        case 'UPDATE_ONELINER':
-            const updatedOneLinerData = state.onelinerData.map((val) => {
-                return val.id === parseInt(action.payload.id) ? { ...val, name: action.payload.name } : val;
-            });
+        case 'CHANGE_CANVAS_LIST':
             return {
                 ...state,
-
-                onelinerData: [...updatedOneLinerData]
-
+                canvasList: action.payload
             }
         default: return state
     }
 }
 
-
-const initialStateStyle1 = {
-    style1: {
-        color: 'rgb(255, 255, 255)',
-        backgroundColor: 'rgb(80, 3, 124)'
-    }
-}
-const style1Reducer = (state = initialStateStyle1, action) => {
+const initialCurrentPage ={currentPage:0};
+const currentPageReducer = (state = initialCurrentPage, action) => {
     switch (action.type) {
-        case 'CHANGE_STYLE1':
+        case 'CHANGE_CURRENT_PAGE':
             return {
                 ...state,
-
-                style1: { ...state.style1, ...action.payload }
-
+                currentPage: action.payload
             }
         default: return state
     }
 }
-
-const initialStateCanvas1 = { aa:''}
-
-
-const canvas1Reducer = (state = initialStateCanvas1, action) => {
+const initialMedia ={media:[]};
+const mediaReducer = (state = initialMedia, action) => {
     switch (action.type) {
-        case 'CHANGE_CANVAS1':
+        case 'CHANGE_MEDIA':
             return {
                 ...state,
-                aa: action.payload
-            }
-        default: return state
-    }
-}
-
-
-const initialStatetextEditor1 = { aa: 'Vimlesh Kumar' }
-
-const textEditor1Reducer = (state = initialStatetextEditor1, action) => {
-    switch (action.type) {
-        case 'CHANGE_TEXT1':
-            return {
-                ...state,
-                aa: action.payload
+                media: action.payload
             }
         default: return state
     }
 }
 
 const rootReducer = combineReducers({
-    reducer1,
-    oneLinerReducer,
-    style1Reducer,
-    canvas1Reducer,
-    textEditor1Reducer
-
+    canvasListReducer,
+    currentPageReducer,
+    mediaReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store
