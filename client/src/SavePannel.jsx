@@ -5,44 +5,36 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 
-
-
 var currentFile = 'new';
 let fileReader;
 
-
-// var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-
 const SavePannel = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const dispatch = useDispatch();
-
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+    const dispatch = useDispatch();
 
     const [currentFileName, setCurrentFileName] = useState('')
 
-
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {
-
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage - 1 })
-
         }
         else if (currentPage === parseInt(e.target.getAttribute('key1'))) {
-
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: null })
         }
         const updatedcanvasList = canvasList.filter((_, i) => {
             return (parseInt(e.target.getAttribute('key1')) !== i)
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-
     }
     const updatePageName = e => {
+        // if (e.code === 'Enter') {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.innerText, 'pageValue': val.pageValue } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        // }
 
     }
     const onDoubleClickPageName = (event) => {
@@ -54,9 +46,7 @@ const SavePannel = () => {
         sel.addRange(range);
     }
     const recallPage = (json, canvas, i) => {
-
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i })
-
         canvas.loadFromJSON(json, function () {
             const aa = canvas.getObjects();
             aa.forEach(element => {
@@ -69,7 +59,6 @@ const SavePannel = () => {
             });
             canvas.renderAll();
         });
-
     }
     const deleteAll = canvas => {
         const aa = canvas.getObjects()
@@ -88,13 +77,10 @@ const SavePannel = () => {
             updatedcanvasList.push(cc)
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-
     };
     const handleFileChosen2 = (file) => {
         if (file) {
-
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead2;
             fileReader.readAsText(file);
@@ -110,23 +96,19 @@ const SavePannel = () => {
             updatedcanvasList.push(cc)
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-
     };
     const drawingFileNew = () => {
         var updatedcanvasList = [];
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
         setCurrentFileName('')
-
     }
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': window.editor.canvas.toJSON(['id']) } : val;
+            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id']) } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-
     }
     const drawingFileSaveAs = () => {
-      
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
@@ -141,7 +123,7 @@ const SavePannel = () => {
             ss = currentFile;
         }
 
-        var retVal = prompt("Enter  file name to save : ", ss );
+        var retVal = prompt("Enter  file name to save : ", ss);
         if (retVal !== null) {
             element.download = retVal;
             document.body.appendChild(element); // Required for this to work in FireFox
@@ -150,7 +132,7 @@ const SavePannel = () => {
         }
     }
     const drawingFileSave = () => {
-        updatePage(window.editor.canvas);
+        updatePage(canvas);
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
@@ -162,14 +144,11 @@ const SavePannel = () => {
         element.download = currentFileName;
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
-
     }
     const handleFileChosen = (file) => {
         if (file) {
             currentFile = file.name
-
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-
             fileReader = new FileReader();
             fileReader.onloadend = handleFileRead;
             fileReader.readAsText(file);
@@ -179,21 +158,15 @@ const SavePannel = () => {
         const aa = [...canvasList]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
-
             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: aa })
-
             if (currentPage === result.source?.index) {
                 dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: result.destination?.index })
-
             }
             else if ((currentPage >= result.destination?.index) && (currentPage < result.source?.index)) {
                 dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage + 1 })
-
-
             }
             else if ((currentPage <= result.destination?.index) && (currentPage > result.source?.index)) {
                 dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage - 1 })
-
             }
         }
     }
@@ -202,9 +175,9 @@ const SavePannel = () => {
             <div>
                 <div className='drawingToolsRow' >
                     <b> Save: </b>
-                    <button onClick={() => drawingFileNew(window.editor.canvas)}>File New <FiFile /></button>
-                    <button onClick={() => drawingFileSaveAs(window.editor.canvas)}>File Save As<FaSave /></button>
-                    <button onClick={() => drawingFileSave(window.editor.canvas)}>File Save<FaSave /></button><br />
+                    <button onClick={drawingFileNew}>File New <FiFile /></button>
+                    <button onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
+                    <button onClick={drawingFileSave}>File Save<FaSave /></button><br />
 
                 </div>
                 <div className='drawingToolsRow' >
@@ -239,25 +212,21 @@ const SavePannel = () => {
                             deleteAll(window.editor?.canvas);
                             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
-
                         }
                     }}
                     > Add Blank Page</button>
-
                     <button onClick={() => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
-
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
-
                         }
                     }}
 
                     ><FaSave /> in New Page</button>
 
-                    <button onClick={() => updatePage(window.editor?.canvas)}>Update Page</button>
+                    <button onClick={() => updatePage()}>Update Page</button>
                 </div>
             </div>
             <div style={{ height: 780, width: 380, overflow: 'scroll', border: '1px solid black' }}>
@@ -286,9 +255,13 @@ const SavePannel = () => {
                                                                 // margin: '10px'
                                                             }}
                                                         >
-                                                            <td>{i + 1}</td><td {...provided.dragHandleProps}><VscMove /></td><td style={{ minWidth: 270, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                            <td>{i + 1}</td><td {...provided.dragHandleProps}><VscMove /></td>
+                                                            <td style={{ minWidth: 270, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                 recallPage(val.pageValue, window.editor.canvas, i);
-                                                            }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName}>{val.pageName}</td><td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button ></td>
+                                                            }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName} >{val.pageName}
+                                                            </td>
+                                                            <td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button></td>
+
                                                         </tr>
                                                     )
                                                     }

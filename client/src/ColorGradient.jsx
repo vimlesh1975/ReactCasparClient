@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
+import { useSelector } from 'react-redux'
+
 const ColorGradient = () => {
     const [color1, setColor1] = useState('red')
     const [color2, setColor2] = useState('green')
     const [direction, setDirection] = useState('to right')
     const directions = ['to right', 'to bottom', 'to bottom right'];
     const [coords1, setCoords1] = useState({ x1: 0, y1: 0, x2: 1, y2: 0 })
+    const canvas = useSelector(state => state.canvasReducer.canvas);
 
     function setCoords(direction1) {
         switch (direction1) {
@@ -91,9 +94,9 @@ const ColorGradient = () => {
             )
         })}
         <div style={{ margin: 5 }} >
-            <button onClick={() => setGradient2Fill(window.editor.canvas)}>Set Gradient Fill</button>
-            <button onClick={() => setGradient2Stroke(window.editor.canvas)}>Set Gradient Stroke</button>
-            <button onClick={() => setGradient3Fill(window.editor.canvas)}>Set Radial Gradient Fill</button>
+            <button onClick={() => setGradient2Fill(canvas)}>Set Gradient Fill</button>
+            <button onClick={() => setGradient2Stroke(canvas)}>Set Gradient Stroke</button>
+            <button onClick={() => setGradient3Fill(canvas)}>Set Radial Gradient Fill</button>
         </div>
     </>)
 }

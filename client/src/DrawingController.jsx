@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
 import { endpoint, fontLists } from './common'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
 import { FaAlignLeft, FaAlignRight, FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -17,6 +17,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
 import Images from './Images';
+
 
 
 
@@ -649,126 +650,58 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     },
 });
 
-const changeCurrentColor = (e) => {
-    options.currentColor = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
-    window.editor.canvas.requestRenderAll();
-};
 
-const changeBackGroundColor = (e) => {
-    options.backgroundColor = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
-    window.editor.canvas.requestRenderAll();
-}
-
-const changeStrokeCurrentColor = e => {
-    options.stroke = e.target.value;
-    window.editor.canvas.freeDrawingBrush.color = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
-    window.editor.canvas.requestRenderAll();
-}
-
-const changeShadowCurrentColor = e => {
-    shadowOptions.color = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
-    window.editor.canvas.requestRenderAll();
-}
-const onBlurSizeChange = e => {
-    shadowOptions.blur = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
-    window.editor.canvas.requestRenderAll();
-}
-const onoffsetXChange = e => {
-    shadowOptions.offsetX = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetX = e.target.value } })
-    window.editor.canvas.requestRenderAll();
-}
-
-const onoffsetYChange = e => {
-    shadowOptions.offsetY = e.target.value;
-    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetY = e.target.value } })
-    window.editor.canvas.requestRenderAll();
-}
-const affectStroke = e => {
-    shadowOptions.affectStroke = e.target.checked;
-    window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.affectStroke = e.target.checked } })
-    window.editor.canvas.requestRenderAll();
-}
-const onstrokeSizeChange = e => {
-    options.strokeWidth = parseInt(e.target.value);
-    window.editor.canvas.freeDrawingBrush.width = parseInt(e.target.value);
-    window.editor.canvas.getActiveObjects().forEach(item => item.strokeWidth = parseInt(e.target.value))
-    window.editor.canvas.requestRenderAll();
-}
-const onSkewXSizeChange = e => {
-    window.editor.canvas.getActiveObjects().forEach(item => item.skewX = parseInt(e.target.value))
-    window.editor.canvas.requestRenderAll();
-}
-const onSkewYSizeChange = e => {
-    window.editor.canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
-    window.editor.canvas.requestRenderAll();
-}
-const onRxSizeChange = e => {
-    window.editor.canvas.getActiveObjects().forEach(item => {
-        item.rx = parseInt(e.target.value)
-    })
-    window.editor.canvas.requestRenderAll();
-}
-const onRySizeChange = e => {
-    window.editor.canvas.getActiveObjects().forEach(item => item.ry = parseInt(e.target.value))
-    window.editor.canvas.requestRenderAll();
-}
 const putat00 = (canvas) => {
     // canvas.setZoom(1)
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     canvas.getActiveObject()?.set({ left: 0, top: 0 });
 }
-const alignAllLeft = () => {
+const alignAllLeft = (canvas) => {
     const arr = [];
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         arr.push(item.left)
     })
     const min = Math.min(...arr);
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         item.left = min;
     })
-    window.editor.canvas.requestRenderAll();
+    canvas.requestRenderAll();
 }
 
-const alignAllTop = () => {
+const alignAllTop = (canvas) => {
     const arr = [];
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         arr.push(item.top)
     })
     const min = Math.min(...arr);
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         item.top = min;
     })
-    window.editor.canvas.requestRenderAll();
+    canvas.requestRenderAll();
 }
 
-const alignAllRight = () => {
+const alignAllRight = (canvas) => {
     const arr = [];
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         arr.push(item.left + (item.width * item.scaleX))
     })
     const max = Math.max(...arr);
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         item.left = max - (item.width * item.scaleX);
     })
-    window.editor.canvas.requestRenderAll();
+    canvas.requestRenderAll();
 }
-const alignAllButtom = () => {
+const alignAllButtom = (canvas) => {
     const arr = [];
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         arr.push(item.top + (item.height * item.scaleY))
     })
     const max = Math.max(...arr);
-    window.editor.canvas.getActiveObjects().forEach(item => {
+    canvas.getActiveObjects().forEach(item => {
         item.top = max - (item.height * item.scaleY);
     })
-    window.editor.canvas.requestRenderAll();
+    canvas.requestRenderAll();
 }
 const onSizeChange = (e) => {
     options.currentFontSize = e.target.value
@@ -836,18 +769,15 @@ export const savetoCasparcgStoreClock = () => {
 }
 
 
-export const updatetoCasparcgStore = (layerNumber) => {
-    var dd = window.editor.canvas.toJSON(['id'])
-    const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
-    endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
+// export const updatetoCasparcgStore = (layerNumber) => {
+//     var dd = canvas.toJSON(['id'])
+//     const data = (JSON.stringify(dd)).replaceAll('"', String.fromCharCode(2)).replaceAll(' ', String.fromCharCode(3)).replaceAll('/', String.fromCharCode(4)).replaceAll('%', String.fromCharCode(5))
+//     endpoint(`call ${window.chNumber}-${layerNumber} store.dispatch({type:'CHANGE_CANVAS1',payload:'${data}'})`)
 
-    setTimeout(() => {
-        endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
-    }, 200);
+//     setTimeout(() => {
+//         endpoint(`call ${window.chNumber}-${layerNumber} ReadToCasparcgfromStore()`)
+//     }, 200);
 
-}
-// const removeFromCaspar = (layerNumber) => {
-//     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
 // }
 
 const changeText = (key, val) => {
@@ -874,18 +804,18 @@ export const deSelectAll = (canvas) => {
 }
 
 var _clipboard;
-export const copy = () => {
-    window.editor.canvas.getActiveObject()?.clone(cloned => {
+export const copy = (canvas) => {
+    canvas.getActiveObject()?.clone(cloned => {
         _clipboard = cloned;
     }, ['id']);
 }
 
-export const paste = () => {
+export const paste = (canvas) => {
     try {
 
 
         _clipboard?.clone(clonedObj => {
-            window.editor.canvas.discardActiveObject();
+            canvas.discardActiveObject();
             clonedObj.set({
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
@@ -894,19 +824,19 @@ export const paste = () => {
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
-                clonedObj.canvas = window.editor.canvas;
+                clonedObj.canvas = canvas;
                 clonedObj.forEachObject(obj => {
-                    window.editor.canvas.add(obj);
+                    canvas.add(obj);
                 });
                 // this should solve the unselectability
                 clonedObj.setCoords();
             } else {
-                window.editor.canvas.add(clonedObj);
+                canvas.add(clonedObj);
             }
             _clipboard.top += 10;
             _clipboard.left += 10;
-            window.editor.canvas.setActiveObject(clonedObj);
-            window.editor.canvas.requestRenderAll();
+            canvas.setActiveObject(clonedObj);
+            canvas.requestRenderAll();
         }, ['id']);
     } catch (error) {
         alert(error)
@@ -916,12 +846,11 @@ export const paste = () => {
 const DrawingController = () => {
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
-    // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+    const canvas = useSelector(state => state.canvasReducer.canvas);
 
-    // const canvasList = [{ 'pageName': ss + '_pageName', 'pageValue': '' }];
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
 
-    const currentPage =  useSelector(state => state.currentPageReducer.currentPage);
+    const currentPage = useSelector(state => state.currentPageReducer.currentPage);
 
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
     const [f0, setF0] = useState('Ganesh Tiwari');
@@ -990,11 +919,11 @@ const DrawingController = () => {
     const onFontChange = (e) => {
         options.currentFont = e.target.value;
         setCurrentFont(e.target.value);
-        window.editor.canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
-        window.editor.canvas.requestRenderAll();
+        canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
+        canvas.requestRenderAll();
     }
     const onstrokeLineCapChange = e => {
-        window.editor.canvas.freeDrawingBrush.strokeLineCap = e.target.value;
+        canvas.freeDrawingBrush.strokeLineCap = e.target.value;
         setCurrentstrokeLineCap(e.target.value);
     }
 
@@ -1017,7 +946,75 @@ const DrawingController = () => {
     };
 
 
+    const changeCurrentColor = (e) => {
+        options.currentColor = e.target.value;
+        window.editor.canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
+        window.editor.canvas.requestRenderAll();
+    };
 
+    const changeBackGroundColor = (e) => {
+        options.backgroundColor = e.target.value;
+        window.editor.canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
+        window.editor.canvas.requestRenderAll();
+    }
+
+    const changeStrokeCurrentColor = e => {
+        options.stroke = e.target.value;
+        window.editor.canvas.freeDrawingBrush.color = e.target.value;
+        window.editor.canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
+        window.editor.canvas.requestRenderAll();
+    }
+
+    const changeShadowCurrentColor = e => {
+        shadowOptions.color = e.target.value;
+        window.editor.canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
+        window.editor.canvas.requestRenderAll();
+    }
+    const onBlurSizeChange = e => {
+        shadowOptions.blur = e.target.value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
+        canvas.requestRenderAll();
+    }
+    const onoffsetXChange = e => {
+        shadowOptions.offsetX = e.target.value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetX = e.target.value } })
+        canvas.requestRenderAll();
+    }
+
+    const onoffsetYChange = e => {
+        shadowOptions.offsetY = e.target.value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetY = e.target.value } })
+        canvas.requestRenderAll();
+    }
+    const affectStroke = e => {
+        shadowOptions.affectStroke = e.target.checked;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.affectStroke = e.target.checked } })
+        canvas.requestRenderAll();
+    }
+    const onstrokeSizeChange = e => {
+        options.strokeWidth = parseInt(e.target.value);
+        canvas.freeDrawingBrush.width = parseInt(e.target.value);
+        canvas.getActiveObjects().forEach(item => item.strokeWidth = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+    const onSkewXSizeChange = e => {
+        canvas.getActiveObjects().forEach(item => item.skewX = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+    const onSkewYSizeChange = e => {
+        canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+    const onRxSizeChange = e => {
+        canvas.getActiveObjects().forEach(item => {
+            item.rx = parseInt(e.target.value)
+        })
+        canvas.requestRenderAll();
+    }
+    const onRySizeChange = e => {
+        canvas.getActiveObjects().forEach(item => item.ry = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
 
     const onVerticalSpeedChange = (e) => {
         setVerticalSpeed(e.target.value)
@@ -1064,12 +1061,12 @@ const DrawingController = () => {
             var site_url = URL.createObjectURL(file);
             fabric.loadSVGFromURL(site_url, function (objects) {
                 objects?.forEach(element => {
-                    window.editor.canvas.add(element);
+                    canvas.add(element);
                     element.objectCaching = false;
                     element.shadow = shadowOptions;
                 });
             });
-            window.editor.canvas.renderAll();
+            canvas.renderAll();
         }
     }
 
@@ -1457,7 +1454,7 @@ const DrawingController = () => {
 
     }
 
-   
+
 
     useEffect(() => {
         setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
@@ -1496,11 +1493,11 @@ const DrawingController = () => {
             }
             if (e.ctrlKey && e.key === 'c') {
                 const item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { copy() }
+                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
             }
             if (e.ctrlKey && e.key === 'v') {
                 const item = window.editor.canvas.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { paste() }
+                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
             }
             if (e.ctrlKey && e.key === 'z') {
                 window.editor.canvas.undo();
@@ -1526,11 +1523,11 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 1: </b>
                     <button onClick={() => {
-                        startGraphics(window.editor.canvas, 108);
+                        startGraphics(canvas, 108);
                         setSolidcaption1(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption1', canvasList[currentPage]?.pageName);
                     }
-                    }><FaPlay /></button>  <button onClick={() => updateGraphics(window.editor.canvas, 108)}>Update</button>
+                    }><FaPlay /></button>  <button onClick={() => updateGraphics(canvas, 108)}>Update</button>
 
                     <button onClick={() => {
                         stopGraphics(108);
@@ -1544,12 +1541,12 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 2: </b>
                     <button onClick={() => {
-                        startGraphics(window.editor.canvas, 109);
+                        startGraphics(canvas, 109);
                         setSolidcaption2(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption2', canvasList[currentPage]?.pageName);
 
                     }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(window.editor.canvas, 109)}>Update</button>
+                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, 109)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(109);
                         setSolidcaption2('');
@@ -1561,12 +1558,12 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 3: </b>
                     <button onClick={() => {
-                        startGraphics(window.editor.canvas, 110);
+                        startGraphics(canvas, 110);
                         setSolidcaption3(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption3', canvasList[currentPage]?.pageName);
 
                     }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(window.editor.canvas, 110)}>Update</button>
+                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, 110)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(110);
                         setSolidcaption3('');
@@ -1580,13 +1577,13 @@ const DrawingController = () => {
                     <b> Logo: </b>
 
                     <button onClick={() => {
-                        startGraphics(window.editor.canvas, 215);
+                        startGraphics(canvas, 215);
                         setLogo(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_logo', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(window.editor.canvas, 215)}>Update</button>
+                    <button onClick={() => updateGraphics(canvas, 215)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(215);
                         setLogo('');
@@ -1599,13 +1596,13 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Location Band: </b>
                     <button onClick={() => {
-                        startGraphics(window.editor.canvas, 210);
+                        startGraphics(canvas, 210);
                         setLocationBand(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_locationBand', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(window.editor.canvas, 210)}>Update</button>
+                    <button onClick={() => updateGraphics(canvas, 210)}>Update</button>
                     <button onClick={() => {
                         stopGraphics(210);
                         setLocationBand('');
@@ -1632,7 +1629,7 @@ const DrawingController = () => {
                     }} ><FaStop /></button>
                     Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={verticalSpeed} />
 
-                    <button onClick={() => exportVerticalScrollAsHTML(window.editor.canvas)}>To HTML</button>
+                    <button onClick={() => exportVerticalScrollAsHTML(canvas)}>To HTML</button>
                     <span> {verticalScroll} </span>
                 </div>
                 <div className='drawingToolsRow' >
@@ -1652,15 +1649,15 @@ const DrawingController = () => {
 
                     }} ><FaStop /></button>
                     Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
-                    <button onClick={() => exportHorizontalScrollAsHTML(window.editor.canvas)}>To HTML</button>
+                    <button onClick={() => exportHorizontalScrollAsHTML(canvas)}>To HTML</button>
                     <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                     <span> {horizontalScroll} </span>
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Clock: </b>
-                    <button onClick={() => addClock(window.editor.canvas)}>Add to Preview</button>
+                    <button onClick={() => addClock(canvas)}>Add to Preview</button>
                     <button onClick={() => {
-                        startClock(window.editor.canvas);
+                        startClock(canvas);
                         setClock(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
 
@@ -1671,14 +1668,14 @@ const DrawingController = () => {
                         localStorage.setItem('RCC_clock', '');
 
                     }} ><FaStop /></button>
-                    <button onClick={() => exportClockAsHTML(window.editor.canvas)}>To HTML</button>
+                    <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
                     <span> {clock} </span>
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Count Up Timer: </b>
-                    <button onClick={() => addUpTimer(window.editor.canvas)}>Add to Preview</button>
+                    <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
                     <button onClick={() => {
-                        startUpTimer(window.editor.canvas);
+                        startUpTimer(canvas);
                         setUpTimer(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
 
@@ -1689,24 +1686,24 @@ const DrawingController = () => {
                         localStorage.setItem('RCC_upTimer', '');
 
                     }} ><FaStop /></button>
-                    <button onClick={() => exportUpTimerAsHTML(window.editor.canvas)}>To HTML</button>
+                    <button onClick={() => exportUpTimerAsHTML(canvas)}>To HTML</button>
                     <span> {upTimer} </span>
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Drawing Elements: </b>
-                    <button onClick={() => createRect(window.editor.canvas)}> <VscPrimitiveSquare /></button>
-                    <Tooltip title="MutliLine Text Box"><button onClick={() => createTextBox(window.editor.canvas)}>TB</button></Tooltip>
-                    <Tooltip title="Single Line Text Box"><button onClick={() => createIText(window.editor.canvas)}>IT</button></Tooltip>
-                    <Tooltip title="Single Line Text Box Not Editable"><button onClick={() => createText(window.editor.canvas)}>T</button></Tooltip>
+                    <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
+                    <Tooltip title="MutliLine Text Box"><button onClick={() => createTextBox(canvas)}>TB</button></Tooltip>
+                    <Tooltip title="Single Line Text Box"><button onClick={() => createIText(canvas)}>IT</button></Tooltip>
+                    <Tooltip title="Single Line Text Box Not Editable"><button onClick={() => createText(canvas)}>T</button></Tooltip>
                     <button onClick={() => createCircle(window.editor?.canvas)}>  <VscCircleFilled /></button>
-                    <button onClick={() => createTriangle(window.editor.canvas)}><VscTriangleUp /></button>
-                    <button onClick={() => createEllipse(window.editor.canvas)}>Ellipse</button>
-                    <button onClick={() => createLine(window.editor.canvas)}>Line</button>
+                    <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
+                    <button onClick={() => createEllipse(canvas)}>Ellipse</button>
+                    <button onClick={() => createLine(canvas)}>Line</button>
 
 
                 </div>
                 <div className='drawingToolsRow' >
-                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(window.editor.canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
+                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
@@ -1716,7 +1713,7 @@ const DrawingController = () => {
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
-                    Type:  <select onChange={e => onDrawingModeChange(e.target.value, window.editor.canvas)} value={currentMode}>
+                    Type:  <select onChange={e => onDrawingModeChange(e.target.value, canvas)} value={currentMode}>
                         {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
 
@@ -1730,7 +1727,7 @@ const DrawingController = () => {
                     Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e)} />
                     BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e)} />
                     Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
-                    <button onClick={() => swapFaceandStrokeColors(window.editor.canvas)}>Swap Face/Stroke Color</button>
+                    <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
                     <input className='inputRange' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
                 </div>
@@ -1765,45 +1762,45 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b>Zoom and Pan: </b>
-                    <button onClick={() => window.editor.canvas.setZoom(1)}>Reset Zoom</button>
-                    <button onClick={() => window.editor.canvas.setViewportTransform([window.editor.canvas.getZoom(), 0, 0, window.editor.canvas.getZoom(), 0, 0])}>Reset Pan</button>
-                    <button onClick={() => putat00(window.editor.canvas)}>Select All and Put at 0 0</button>
+                    <button onClick={() => canvas.setZoom(1)}>Reset Zoom</button>
+                    <button onClick={() => canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])}>Reset Pan</button>
+                    <button onClick={() => putat00(canvas)}>Select All and Put at 0 0</button>
 
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Tools: </b>
-                    <button onClick={() => alignAllLeft()}><FaAlignLeft /></button>
-                    <button onClick={() => alignAllRight()}><FaAlignRight /></button>
-                    <button onClick={() => alignAllTop()}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                    <button onClick={() => alignAllButtom()}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-                    <button onClick={() => deleteSelectedItem(window.editor.canvas)}><VscTrash /> Selected</button>
-                    <button onClick={() => deleteAll(window.editor.canvas)}><VscTrash /> All</button>
-                    <button onClick={() => lock(window.editor.canvas)}><VscLock /></button>
-                    <button onClick={() => unlockAll(window.editor.canvas)}><VscUnlock /> All</button>
-                    <button onClick={() => undo(window.editor.canvas)}><AiOutlineUndo /> Undo</button>
-                    <button onClick={() => redo(window.editor.canvas)}><AiOutlineRedo /> Redo</button>
-                    <button onClick={() => copy(window.editor.canvas)}> Copy</button>
-                    <button onClick={() => paste(window.editor.canvas)}> Paste</button>
-                    <button onClick={() => selectAll(window.editor.canvas)}> Select All</button>
-                    <button onClick={() => deSelectAll(window.editor.canvas)}> Deselect All</button>
-                    <button onClick={() => sendToBack(window.editor.canvas)}> Send To Back</button>
-                    <button onClick={() => bringToFront(window.editor.canvas)}> Bring To Front</button>
+                    <button onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
+                    <button onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
+                    <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                    <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                    <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
+                    <button onClick={() => deleteAll(canvas)}><VscTrash /> All</button>
+                    <button onClick={() => lock(canvas)}><VscLock /></button>
+                    <button onClick={() => unlockAll(canvas)}><VscUnlock /> All</button>
+                    <button onClick={() => undo(canvas)}><AiOutlineUndo /> Undo</button>
+                    <button onClick={() => redo(canvas)}><AiOutlineRedo /> Redo</button>
+                    <button onClick={() => copy(canvas)}> Copy</button>
+                    <button onClick={() => paste(canvas)}> Paste</button>
+                    <button onClick={() => selectAll(canvas)}> Select All</button>
+                    <button onClick={() => deSelectAll(canvas)}> Deselect All</button>
+                    <button onClick={() => sendToBack(canvas)}> Send To Back</button>
+                    <button onClick={() => bringToFront(canvas)}> Bring To Front</button>
                 </div>
 
                 <div className='drawingToolsRow' >
                     <b> Export Import: </b>
-                    <button onClick={() => exportHTML1(window.editor.canvas)}>To HTML</button>
-                    <button onClick={() => exportPng(window.editor.canvas)}>To PNG</button>
-                    <button onClick={() => exportSVG(window.editor.canvas)}>To SVG</button>
-                    <button onClick={() => exportJSON(window.editor.canvas)}>To JSON</button>
+                    <button onClick={() => exportHTML1(canvas)}>To HTML</button>
+                    <button onClick={() => exportPng(canvas)}>To PNG</button>
+                    <button onClick={() => exportSVG(canvas)}>To SVG</button>
+                    <button onClick={() => exportJSON(canvas)}>To JSON</button>
 
                     <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                    <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], window.editor.canvas)} />
+                    <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
 
                 </div>
                 <div className='drawingToolsRow' >
-                    <button onClick={() => setasClipPath(window.editor.canvas)}>Set as CipPath</button>
-                    <button onClick={() => cliptoPath(window.editor.canvas)}>Clip to Path</button>
+                    <button onClick={() => setasClipPath(canvas)}>Set as CipPath</button>
+                    <button onClick={() => cliptoPath(canvas)}>Clip to Path</button>
                 </div>
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />

@@ -1,9 +1,13 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from './ContextMenu'
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux'
+
+
 const Drawing = ({ canvasOutput }) => {
     const { editor, onReady } = useFabricJSEditor();
-   
+    const dispatch = useDispatch();
+
     window.editor = editor;
     function cancesetZoomAndPan(canvas) {
         canvas.on('mouse:wheel', null);
@@ -53,7 +57,6 @@ const Drawing = ({ canvasOutput }) => {
             this.selection = true;
         });
     }
-   
     useEffect(() => {
         setTimeout(() => {
             setZoomAndPan(window.editor.canvas);
@@ -63,9 +66,13 @@ const Drawing = ({ canvasOutput }) => {
         }
     }, [])
 
+    useEffect(() => {
+        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
+    }, [editor])
+
     return (<div>
         <FabricJSCanvas className={canvasOutput ? 'canvasOutput' : 'canvas'} onReady={onReady} />
-        <ContextMenu editor={editor} />
+        <ContextMenu canvas={editor?.canvas} />
     </div>);
 };
 export default Drawing;

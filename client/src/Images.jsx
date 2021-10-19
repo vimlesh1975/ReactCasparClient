@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { addRoundedCornerImage, Upload } from './DrawingController'
 import axios from 'axios'
 import { address1 } from './common'
@@ -8,8 +8,9 @@ const Images = () => {
     const dispatch = useDispatch();
     const media = useSelector(state => state.mediaReducer.media)
     const [searchText2, setSearchText2] = useState('');
-    const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
-    const [imageName, setImageName] = useState(`http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`)
+    const onlineImageUrl = useSelector(state => state.onlineImageUrleReducer.onlineImageUrl);
+    // const [onlineImageUrl, setOnlineImageUrl] = useState('https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg')
+    const imageName = useSelector(state => state.imageNameReducer.imageName)
 
     const searchedMedia2 = media.filter((value) => {
         return (value.toLowerCase().search(searchText2.toLowerCase()) > -1)
@@ -19,17 +20,11 @@ const Images = () => {
             dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
         }).catch((aa) => { console.log('Error', aa) });
     }
-    useEffect(() => {
-        window.imageName = imageName;
-        return () => {
-            // cleanup
-        }
-    }, [imageName])
 
     return (<div>
         <div>
             <b> Image from URL: </b>
-            <input onChange={(e) => setOnlineImageUrl(e.target.value)} size="55" type='text' defaultValue={onlineImageUrl}></input>
+            <input onChange={(e) => dispatch({ type: 'CHANGE_ONLINEIMAGE_URL', payload: e.target.value })} size="55" type='text' defaultValue={onlineImageUrl}></input>
             <button onClick={() => addRoundedCornerImage(window.editor.canvas, onlineImageUrl)}>Add Rounded Rectange Image</button>
         </div>
         <div className='drawingToolsRow' >
@@ -46,7 +41,8 @@ const Images = () => {
                         <tbody>
                             {searchedMedia2.map((val, i) => {
                                 return <tr key={i}><td onClick={(e) => {
-                                    setImageName((address1 + `/media/` + e.target.innerText));
+                                    // setImageName(address1 + `/media/` + e.target.innerText);
+                                    dispatch({ type: 'CHANGE_IMAGENAME', payload: address1 + `/media/` + e.target.innerText })
                                 }}>{val}</td></tr>
                             })}
                         </tbody>
@@ -58,7 +54,7 @@ const Images = () => {
                     </div>
                     <div>
                         Selected Image<br />
-                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, window.imageName)}>Add Image</button>
+                        <button onClick={() => addRoundedCornerImage(window.editor.canvas, imageName)}>Add Image</button>
                     </div>
                 </div>
             </div>

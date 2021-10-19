@@ -18,9 +18,9 @@ import Layers from './Layers';
 import VideoController from './VideoController';
 import Help from './Help';
 import { useDispatch } from 'react-redux'
-import {animationMethods, chNumbers} from './common'
+import { animationMethods, chNumbers } from './common'
 
-const buildDate = '171021'
+const buildDate = '191021'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -64,7 +64,7 @@ const App = () => {
 
   const refreshMedia = () => {
     axios.post(address1 + '/getmedia').then((aa) => {
-      dispatch({type:'CHANGE_MEDIA',payload:aa.data})
+      dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
     }).catch((aa) => { console.log('Error', aa) });
   }
 
