@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { fabric } from "fabric";
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 
 
 // var filters = ['grayscale', 'invert', 'remove-color', 'sepia', 'brownie',

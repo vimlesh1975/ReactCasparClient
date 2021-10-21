@@ -17,6 +17,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
 import Images from './Images';
+import Layers from './Layers';
 
 
 fabric.Object.prototype.noScaleCache = false;
@@ -44,6 +45,7 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         moveSelected(Direction.DOWN);
     }
 });
+
 function moveSelected(direction) {
     var activeObject = window.editor.canvas.getActiveObject();
     if (activeObject) {
@@ -757,17 +759,15 @@ export const deSelectAll = (canvas) => {
 
 var _clipboard;
 export const copy = (canvas) => {
-    canvas.getActiveObject()?.clone(cloned => {
+    canvas?.getActiveObject()?.clone(cloned => {
         _clipboard = cloned;
     }, ['id']);
 }
 
 export const paste = (canvas) => {
     try {
-
-
         _clipboard?.clone(clonedObj => {
-            canvas.discardActiveObject();
+            canvas?.discardActiveObject();
             clonedObj.set({
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
@@ -778,20 +778,20 @@ export const paste = (canvas) => {
                 // active selection needs a reference to the canvas.
                 clonedObj.canvas = canvas;
                 clonedObj.forEachObject(obj => {
-                    canvas.add(obj);
+                    canvas?.add(obj);
                 });
                 // this should solve the unselectability
                 clonedObj.setCoords();
             } else {
-                canvas.add(clonedObj);
+                canvas?.add(clonedObj);
             }
             _clipboard.top += 10;
             _clipboard.left += 10;
-            canvas.setActiveObject(clonedObj);
-            canvas.requestRenderAll();
+            canvas?.setActiveObject(clonedObj);
+            canvas?.requestRenderAll();
         }, ['id']);
     } catch (error) {
-        alert(error)
+        // alert(error)
     }
 }
 
@@ -830,6 +830,25 @@ const DrawingController = () => {
     const [currentMode, setCurrentMode] = useState('none');
     // window.currentMode = currentMode;
 
+    const makeFullScreen = () => {
+        canvas?.getActiveObjects().forEach(element => {
+                element.set({ scaleX:(1024/element.width),scaleY:(576/element.height),  left: 0, top: 0 })
+        });
+        canvas?.requestRenderAll();
+    }
+    const removeBorder = () => {
+        canvas?.getActiveObjects().forEach(element => {
+                element.set({ strokeWidth:0 })
+        });
+        canvas?.requestRenderAll();
+    }
+    const removeCornerCurve = () => {
+        canvas?.getActiveObjects().forEach(element => {
+                element.set({ rx:0, ry:0 })
+        });
+        canvas?.requestRenderAll();
+    }
+    
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
         if (mode === 'none') {
@@ -920,8 +939,8 @@ const DrawingController = () => {
 
     const changeShadowCurrentColor = e => {
         shadowOptions.color = e.target.value;
-      canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
-       canvas.requestRenderAll();
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
+        canvas.requestRenderAll();
     }
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
@@ -1022,6 +1041,8 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
+
+  
 
     const exportHTML1 = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1432,28 +1453,28 @@ const DrawingController = () => {
 
 
     useEffect(() => {
-      window.addEventListener('keydown', e => {
+        window.addEventListener('keydown', e => {
             // console.log(e.key);
             if (e.repeat) {
                 return;
             }
 
             if (e.key === 'Delete') {
-               canvas?.getActiveObjects().forEach(item => {
+                canvas?.getActiveObjects().forEach(item => {
                     //  alert(item.type);
                     if (!((item.type === 'textbox') && item.isEditing)) { canvas?.remove(item); }
                 });
             }
             if (e.ctrlKey && e.key === 'c') {
-                const item = canvas.getActiveObjects()[0];
+                const item = canvas?.getActiveObjects()[0];
                 if (!((item?.type === 'textbox') && item?.isEditing)) { copy(canvas) }
             }
             if (e.ctrlKey && e.key === 'v') {
-                const item = canvas.getActiveObjects()[0];
+                const item = canvas?.getActiveObjects()[0];
                 if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
             }
             if (e.ctrlKey && e.key === 'z') {
-               canvas.undo();
+                canvas?.undo();
             }
 
         });
@@ -1755,6 +1776,15 @@ const DrawingController = () => {
                     <button onClick={() => setasClipPath(canvas)}>Set as CipPath</button>
                     <button onClick={() => cliptoPath(canvas)}>Clip to Path</button>
                 </div>
+                <div className='drawingToolsRow' >
+                <button onClick={makeFullScreen}>Make full Screen</button>
+                <button onClick={removeBorder}>Remove Border</button>
+                <button onClick={removeCornerCurve}>Remove Border Curve</button>
+
+
+                
+                </div>
+
                 <div style={{ display: 'none' }}>
                     <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
                     <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
@@ -1765,9 +1795,10 @@ const DrawingController = () => {
                 <Tabs forceRenderTabPanel={true}>
                     <TabList>
                         <Tab>Save</Tab>
-                        <Tab>IMG Filter</Tab>
-                        <Tab>Casparcg Tools</Tab>
+                        <Tab>Filter</Tab>
+                        <Tab>CCG Tools</Tab>
                         <Tab>Images</Tab>
+                        <Tab>Layers</Tab>
                     </TabList>
                     <TabPanel>
                         <SavePannel />
@@ -1779,8 +1810,10 @@ const DrawingController = () => {
                         <CasparcgTools />
                     </TabPanel>
                     <TabPanel>
-
                         <Images />
+                    </TabPanel>
+                    <TabPanel>
+                        <Layers />
                     </TabPanel>
                 </Tabs>
 

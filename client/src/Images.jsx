@@ -21,6 +21,7 @@ const Images = () => {
             dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
         }).catch((aa) => { console.log('Error', aa) });
     }
+  
 
     return (<div>
         <div>
@@ -56,6 +57,7 @@ const Images = () => {
                     <div>
                         Selected Image<br />
                         <button onClick={() => addRoundedCornerImage(canvas, imageName)}>Add Image</button>
+
                     </div>
                 </div>
             </div>

@@ -14,7 +14,6 @@ import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
 import ColorGradient from './ColorGradient';
-import Layers from './Layers';
 import VideoController from './VideoController';
 import Help from './Help';
 import { useDispatch } from 'react-redux'
@@ -181,14 +180,12 @@ const App = () => {
                 <Tabs forceRenderTabPanel={true}>
                   <TabList >
                     <Tab >ColorGradient</Tab>
-                    <Tab >Layers</Tab>
+                  
                   </TabList>
                   <TabPanel >
                     <ColorGradient />
                   </TabPanel>
-                  <TabPanel >
-                    <Layers />
-                  </TabPanel>
+                
                 </Tabs>
 
 
