@@ -7,6 +7,46 @@ export const endpoint = (string) => {
     //    console.log(aa)
     }).catch((aa) => { console.log('Error', aa) });
 }
+
+export const options = {
+    currentMode: "",
+    currentColor: "#ffffff",
+    currentFont: 'Arial',
+    currentFontSize: 25,
+    backgroundColor: "#50037c",
+    // currentWidth: 5,
+    group: {},
+    stroke: '#ffffff',
+    strokeWidth: 3,
+};
+export const shadowOptions = {
+    color: 'black',
+    blur: 30,
+    offsetX: 0,
+    offsetY: 0,
+    affectStroke: false
+};
+export const changeShadowCurrentColor = (e, canvas) => {
+    shadowOptions.color = e.target.value;
+    canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
+    canvas.requestRenderAll();
+}
+export const changeStrokeCurrentColor = (e, canvas) => {
+    options.stroke = e.target.value;
+    canvas.freeDrawingBrush.color = e.target.value;
+    canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
+    canvas.requestRenderAll();
+}
+export const changeCurrentColor = (e, canvas) => {
+    options.currentColor = e.target.value;
+    canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
+    canvas.requestRenderAll();
+};
+export const changeBackGroundColor = (e, canvas) => {
+    options.backgroundColor = e.target.value;
+    canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
+    canvas.requestRenderAll();
+}
 export const fontLists=[
     "AADevAksharReg",
     "AADevApsBil",

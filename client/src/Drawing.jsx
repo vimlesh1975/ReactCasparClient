@@ -57,9 +57,17 @@ const Drawing = ({ canvasOutput }) => {
             this.selection = true;
         });
     }
+
+    // const xyz = canvas => {
+    //     canvas.on('object:selected', ()=>{
+    //         alert('hkhkhk')
+    //         console.log('hi');
+    //     });
+    // }
     useEffect(() => {
         setTimeout(() => {
             setZoomAndPan(window.editor.canvas);
+            // xyz(window.editor.canvas);
         }, 2000);
         return () => {
             cancesetZoomAndPan(window.editor.canvas)

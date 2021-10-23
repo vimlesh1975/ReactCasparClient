@@ -19,6 +19,9 @@ import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 import Layers from './Layers';
 
+import {options,shadowOptions ,changeCurrentColor,changeBackGroundColor,changeStrokeCurrentColor, changeShadowCurrentColor} from './common'
+
+
 
 fabric.Object.prototype.noScaleCache = false;
 const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
@@ -46,6 +49,9 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
     }
 });
 
+
+
+
 function moveSelected(direction) {
     var activeObject = window.editor.canvas.getActiveObject();
     if (activeObject) {
@@ -71,25 +77,9 @@ function moveSelected(direction) {
     }
 }
 
-const options = {
-    currentMode: "",
-    currentColor: "#ffffff",
-    currentFont: 'Arial',
-    currentFontSize: 25,
-    backgroundColor: "#50037c",
-    // currentWidth: 5,
-    group: {},
-    stroke: '#ffffff',
-    strokeWidth: 3,
-};
 
-export const shadowOptions = {
-    color: 'black',
-    blur: 30,
-    offsetX: 0,
-    offsetY: 0,
-    affectStroke: false
-};
+
+
 
 export var gradient = new fabric.Gradient({
     type: 'linear',
@@ -918,30 +908,13 @@ const DrawingController = () => {
 
 
 
-    const changeCurrentColor = (e) => {
-        options.currentColor = e.target.value;
-        canvas.getActiveObjects().forEach(item => item.fill = e.target.value)
-        canvas.requestRenderAll();
-    };
+   
 
-    const changeBackGroundColor = (e) => {
-        options.backgroundColor = e.target.value;
-        canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
-        canvas.requestRenderAll();
-    }
+ 
 
-    const changeStrokeCurrentColor = e => {
-        options.stroke = e.target.value;
-        canvas.freeDrawingBrush.color = e.target.value;
-        canvas.getActiveObjects().forEach(item => item.stroke = e.target.value)
-        canvas.requestRenderAll();
-    }
+    
 
-    const changeShadowCurrentColor = e => {
-        shadowOptions.color = e.target.value;
-        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.color = e.target.value } })
-        canvas.requestRenderAll();
-    }
+  
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
         canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
@@ -1699,8 +1672,8 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Colors: </b>
                     Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
-                    BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e)} />
-                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e)} />
+                    BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e,canvas)} />
+                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e,canvas)} />
                     <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
                     <input className='inputRange' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
@@ -1709,7 +1682,7 @@ const DrawingController = () => {
                     <div  >
                         <table border='1'>
                             <tbody>
-                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e)} />   </td></tr>
+                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={(e,canvas) => changeShadowCurrentColor(e)} />   </td></tr>
                                 <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
                                 <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
                                 <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>

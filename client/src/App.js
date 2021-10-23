@@ -18,6 +18,7 @@ import VideoController from './VideoController';
 import Help from './Help';
 import { useDispatch } from 'react-redux'
 import { animationMethods, chNumbers } from './common'
+import Layers from './Layers'
 
 const buildDate = '201021'
 
@@ -200,6 +201,7 @@ const App = () => {
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>Video</Tab>
+            <Tab>Layers</Tab>
             <Tab>Help</Tab>
 
           </TabList>
@@ -219,8 +221,10 @@ const App = () => {
             </div>
           </TabPanel>
           <TabPanel>
+            <Layers />
+          </TabPanel>
+          <TabPanel>
             <Help />
-
           </TabPanel>
 
         </Tabs >
