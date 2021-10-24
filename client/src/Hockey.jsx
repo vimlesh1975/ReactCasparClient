@@ -13,7 +13,7 @@ const Hockey = () => {
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const [currentPlayer1, setCurrentPlayer1] = useState('Vimlesh Kumar')
 
-    const recallPage = (pageName) => {
+    const recallPage = (pageName, key, val) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
@@ -22,6 +22,9 @@ const Hockey = () => {
                 aa.forEach(element => {
                     try {
                         element.set({ objectCaching: false })
+                        if (element.id === key) {
+                            element.set({ text: val.toString() })
+                        }
                     } catch (error) {
                         alert(error);
                         return;
@@ -29,6 +32,9 @@ const Hockey = () => {
                 });
                 canvas.requestRenderAll();
             });
+
+            // changeText(key, val)
+
             const layerNumber = 500;
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
             setTimeout(() => {
@@ -42,7 +48,6 @@ const Hockey = () => {
                 document.body.appendChild(aa);
                 document.body.style.margin='0';
                 document.body.style.padding='0';
-                document.getElementsByTagName('tspan')[0].innerHTML='${currentPlayer1}' ;
                 aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
                 document.body.style.overflow='hidden';
                 "`)
@@ -51,10 +56,19 @@ const Hockey = () => {
             setTimeout(() => {
                 endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
             }, 800);
+
+            setTimeout(() => {
+                updateGraphics(layerNumber);
+            }, 1100);
         }
+        else { alert(`${pageName} page not found in canvas list. Make a page with this name, add a text and set id of text as f0 then update the page`) }
 
     }
-
+    const updateGraphics = (layerNumber) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            "`)
+    }
     const stopGraphics = layerNumber => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
         setTimeout(() => {
@@ -74,7 +88,7 @@ const Hockey = () => {
                                     onClick={() => setCurrentPlayer1(val)}
                                     onDoubleClick={() => {
                                         setCurrentPlayer1(val);
-                                        recallPage('PlayerId1')
+                                        recallPage('PlayerId1', 'f0', val)
                                     }}>{val}</td></tr>)
                             })}
                         </tbody>
@@ -88,7 +102,7 @@ const Hockey = () => {
                             {playerList2.map((val, i) => {
                                 return (<tr key={uuidv4()}><td onClick={() => setCurrentPlayer1(val)} onDoubleClick={() => {
                                     setCurrentPlayer1(val);
-                                    recallPage('PlayerId2')
+                                    recallPage('PlayerId2', 'f0', val)
                                 }}>{val}</td></tr>)
                             })}
                         </tbody>
@@ -98,11 +112,11 @@ const Hockey = () => {
             </div>
 
             <div >
-                <button onClick={() => recallPage('PlayerId1')}>Template PlayerId1 <FaPlay /></button>
+                <button onClick={() => recallPage('PlayerId1', 'f0', currentPlayer1)}>Template PlayerId1 <FaPlay /></button>
                 <button onClick={() => {
                     stopGraphics(500);
                 }} ><FaStop /></button>
-                <button onClick={() => recallPage('PlayerId2')}>Template PlayerId2<FaPlay /></button>
+                <button onClick={() => recallPage('PlayerId2', 'f0', currentPlayer1)}>Template PlayerId2<FaPlay /></button>
                 <button onClick={() => {
                     stopGraphics(500);
                 }} ><FaStop /></button>

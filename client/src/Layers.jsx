@@ -11,6 +11,25 @@ const Layers = () => {
 
 
     const [textofActiveObject, setTextofActiveObject] = useState('');
+    const [idofActiveObject, setIdofActiveObject] = useState('');
+
+    const setText = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.text = textofActiveObject;
+            canvas.requestRenderAll();
+            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+
+        });
+    }
+
+    const setId = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.id = idofActiveObject;
+            canvas.requestRenderAll();
+            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+
+        });
+    }
 
     const dispatch = useDispatch();
     const onDragEnd = (result) => {
@@ -29,31 +48,19 @@ const Layers = () => {
     const selectObject = (e, canvas) => {
         try {
             canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')));
-            if (canvas.item(e.target.getAttribute('key1')).text) {
-                setTextofActiveObject(canvas.item(e.target.getAttribute('key1')).text);
-            }
-            else {
-                setTextofActiveObject('');
-            }
-            console.log(canvas.item(e.target.getAttribute('key1')))
+            setTextofActiveObject(canvas.item(e.target.getAttribute('key1')).text ? canvas.item(e.target.getAttribute('key1')).text : '');
+            setIdofActiveObject(canvas.item(e.target.getAttribute('key1')).id ? canvas.item(e.target.getAttribute('key1')).id : '');
+            // console.log(canvas.item(e.target.getAttribute('key1')))
             canvas.requestRenderAll();
         } catch (error) {
-
+            //dummy
         }
-
     }
 
-    const setText = () => {
-        canvas.getActiveObjects().forEach(element => {
-            element.text = textofActiveObject;
-            canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-        });
-    }
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
-        <div style={{ height: 280, width: 830, overflow: 'scroll', border: '1px solid black' }}>
+        <div style={{ height: 580, width: 830, overflow: 'scroll', border: '1px solid black' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -64,7 +71,7 @@ const Layers = () => {
                         >
                             <table border='1'>
                                 <tbody>
-                                    <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
+                                    <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
                                     {layers?.map((val, i) => {
                                         return (
                                             <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
@@ -79,11 +86,10 @@ const Layers = () => {
                                                             // margin: '10px'
                                                         }}
                                                     ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
-                                                        <td style={{backgroundColor:(activeLayers.includes(val))?'green':''}} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
+                                                        <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
                                                         <td><button key1={i} onClick={(e) => deleteLayer(e, window.editor?.canvas)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
-                                                        {/* <td key1={i} onClick={(e) => selectObject(e, canvas)}>{(val.text)?.slice(0, 40)}</td> */}
+                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
-
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontFamily}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontStyle}</td>
@@ -108,8 +114,8 @@ const Layers = () => {
         </div>
 
         <div>
-            <br /> <button onClick={setText}>Set Text</button>
-            <br />  <textarea cols='40' rows='30' value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)}></textarea>
+            <br /> <button onClick={setText}>Set Text</button> <button onClick={setId}>Set Id</button><input type='text' value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
+            <br />  <textarea cols='110' rows='10' value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)}></textarea>
         </div>
     </div>)
 }
