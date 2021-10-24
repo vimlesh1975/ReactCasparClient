@@ -19,8 +19,9 @@ import Help from './Help';
 import { useDispatch } from 'react-redux'
 import { animationMethods, chNumbers } from './common'
 import Layers from './Layers'
+import Hockey from './Hockey'
 
-const buildDate = '201021'
+const buildDate = '241021'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -181,12 +182,12 @@ const App = () => {
                 <Tabs forceRenderTabPanel={true}>
                   <TabList >
                     <Tab >ColorGradient</Tab>
-                  
+
                   </TabList>
                   <TabPanel >
                     <ColorGradient />
                   </TabPanel>
-                
+
                 </Tabs>
 
 
@@ -202,8 +203,8 @@ const App = () => {
             <Tab>Graphics</Tab>
             <Tab>Video</Tab>
             <Tab>Layers</Tab>
+            <Tab>Hockey</Tab>
             <Tab>Help</Tab>
-
           </TabList>
           <TabPanel>
             <div style={{ border: '1px dashed blue', width: 900 }}>
@@ -222,6 +223,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <Layers />
+          </TabPanel>
+          <TabPanel>
+            <Hockey />
           </TabPanel>
           <TabPanel>
             <Help />

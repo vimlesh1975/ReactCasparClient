@@ -19,7 +19,7 @@ import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 import Layers from './Layers';
 
-import {options,shadowOptions ,changeCurrentColor,changeBackGroundColor,changeStrokeCurrentColor, changeShadowCurrentColor} from './common'
+import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
 
 
@@ -724,16 +724,7 @@ export const groupObjects = (canvas, shouldGroup) => {
     }
 };
 
-const changeText = (key, val) => {
-    window.editor.canvas.getObjects().forEach((element) => {
-        if (element.id === key) {
-            element.set({ text: val.toString() })
-            window.editor.canvas.requestRenderAll();
-        }
-    })
-    endpoint(`call ${window.chNumber}-109 "window.editor.canvas.getObjects().forEach((element)=>{if(element.id==='${key}'){element.set({text:'${val}'});window.editor.canvas.requestRenderAll();}})"`)
 
-}
 export const selectAll = (canvas) => {
     canvas.discardActiveObject();
     var sel = new fabric.ActiveSelection(canvas.getObjects(), {
@@ -795,9 +786,7 @@ const DrawingController = () => {
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
 
     const [currentscreenSize, setCurrentscreenSize] = useState(1024)
-    const [f0, setF0] = useState('Ganesh Tiwari');
-    const [f1, setF1] = useState('Suresh Malhotra');
-    const [f2, setF2] = useState('Mahesh prasad');
+
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
     const [ltr, setLtr] = useState(false);
@@ -820,25 +809,26 @@ const DrawingController = () => {
     const [currentMode, setCurrentMode] = useState('none');
     // window.currentMode = currentMode;
 
+
     const makeFullScreen = () => {
         canvas?.getActiveObjects().forEach(element => {
-                element.set({ scaleX:(1024/element.width),scaleY:(576/element.height),  left: 0, top: 0 })
+            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
         });
         canvas?.requestRenderAll();
     }
     const removeBorder = () => {
         canvas?.getActiveObjects().forEach(element => {
-                element.set({ strokeWidth:0 })
+            element.set({ strokeWidth: 0 })
         });
         canvas?.requestRenderAll();
     }
     const removeCornerCurve = () => {
         canvas?.getActiveObjects().forEach(element => {
-                element.set({ rx:0, ry:0 })
+            element.set({ rx: 0, ry: 0 })
         });
         canvas?.requestRenderAll();
     }
-    
+
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
         if (mode === 'none') {
@@ -875,8 +865,6 @@ const DrawingController = () => {
     }
     window.toggleModeDrawing = toggleModeDrawing;
 
-    const id = 'f0';
-
     const onFontChange = (e) => {
         options.currentFont = e.target.value;
         setCurrentFont(e.target.value);
@@ -907,14 +895,6 @@ const DrawingController = () => {
     };
 
 
-
-   
-
- 
-
-    
-
-  
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
         canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
@@ -1015,7 +995,7 @@ const DrawingController = () => {
         }
     }
 
-  
+
 
     const exportHTML1 = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1388,6 +1368,7 @@ const DrawingController = () => {
             updateGraphics(canvas, layerNumber);
         }, 1100);
     }
+
     const updateGraphics = (canvas, layerNumber) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -1672,8 +1653,8 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Colors: </b>
                     Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
-                    BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e,canvas)} />
-                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e,canvas)} />
+                    BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
+                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
                     <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
                     <input className='inputRange' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
@@ -1682,7 +1663,7 @@ const DrawingController = () => {
                     <div  >
                         <table border='1'>
                             <tbody>
-                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={(e,canvas) => changeShadowCurrentColor(e)} />   </td></tr>
+                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={(e, canvas) => changeShadowCurrentColor(e)} />   </td></tr>
                                 <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
                                 <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
                                 <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
@@ -1750,18 +1731,9 @@ const DrawingController = () => {
                     <button onClick={() => cliptoPath(canvas)}>Clip to Path</button>
                 </div>
                 <div className='drawingToolsRow' >
-                <button onClick={makeFullScreen}>Make full Screen</button>
-                <button onClick={removeBorder}>Remove Border</button>
-                <button onClick={removeCornerCurve}>Remove Border Curve</button>
-
-
-                
-                </div>
-
-                <div style={{ display: 'none' }}>
-                    <input type='text' size="10" onChange={(e) => setF0(e.target.value)} value={f0}></input>   <button onClick={() => changeText(id, f0)}>Update {id} value</button> <br />
-                    <input type='text' size="10" onChange={(e) => setF1(e.target.value)} value={f1}></input>   <button onClick={() => changeText(id, f1)}>Update {id} value</button><br />
-                    <input type='text' size="10" onChange={(e) => setF2(e.target.value)} value={f2}></input>   <button onClick={() => changeText(id, f2)}>Update {id} value</button><br />
+                    <button onClick={makeFullScreen}>Make full Screen</button>
+                    <button onClick={removeBorder}>Remove Border</button>
+                    <button onClick={removeCornerCurve}>Remove Border Curve</button>
                 </div>
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
@@ -1789,9 +1761,6 @@ const DrawingController = () => {
                         <Layers />
                     </TabPanel>
                 </Tabs>
-
-
-
             </div>
         </div >
     )
