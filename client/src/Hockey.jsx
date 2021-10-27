@@ -56,7 +56,7 @@ const Hockey = () => {
                 setTimeout(() => {
                     updateGraphics(layerNumber);
                 }, 1100);
-                // canvas.requestRenderAll();
+                canvas.requestRenderAll();
             });
         }
         else { alert(`${pageName} page not found in canvas list. Make a page with this name, add a text and set id of text as f0 then update the page`) }
