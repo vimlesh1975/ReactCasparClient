@@ -1,10 +1,10 @@
 import axios from 'axios'
-export var address1='http://' + (window.location.host).split(':')[0] +':8080' ;
+export var address1 = 'http://' + (window.location.host).split(':')[0] + ':8080';
 
 export const endpoint = (string) => {
     const data = { string: string }
     axios.post(address1 + '/endpoint', data).then((aa) => {
-    //    console.log(aa)
+        //    console.log(aa)
     }).catch((aa) => { console.log('Error', aa) });
 }
 
@@ -47,7 +47,7 @@ export const changeBackGroundColor = (e, canvas) => {
     canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
     canvas.requestRenderAll();
 }
-export const fontLists=[
+export const fontLists = [
     "AADevAksharReg",
     "AADevApsBil",
     "AADevApsReg",
@@ -547,7 +547,6 @@ export const animationMethods = [
     "easeinbounce",
     "easeinoutbounce",
     "easeoutinbounce",
-  ]
+]
 
 
-  

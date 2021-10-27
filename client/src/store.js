@@ -17,6 +17,29 @@ const canvasListReducer = (state = initialStateCanvasList, action) => {
     }
 }
 
+const initialPlaylist = { playlist: [{ fileName: 'amb.mp4' }, { fileName: 'go1080p25.mp4' }, { fileName: 'anchor.png' }] };
+const playlistReducer = (state = initialPlaylist, action) => {
+    switch (action.type) {
+        case 'CHANGE_PLAYLIST':
+            return {
+                ...state,
+                playlist: action.payload
+            }
+        default: return state
+    }
+}
+const initialCurrentFile = { currentFile: 0 };
+const currentFileReducer = (state = initialCurrentFile, action) => {
+    switch (action.type) {
+        case 'CHANGE_CURRENT_FILE':
+            return {
+                ...state,
+                currentFile: action.payload
+            }
+        default: return state
+    }
+}
+
 const initialCurrentPage = { currentPage: 0 };
 const currentPageReducer = (state = initialCurrentPage, action) => {
     switch (action.type) {
@@ -84,7 +107,9 @@ const rootReducer = combineReducers({
     mediaReducer,
     imageNameReducer,
     onlineImageUrleReducer,
-    canvasReducer
+    canvasReducer,
+    playlistReducer,
+    currentFileReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

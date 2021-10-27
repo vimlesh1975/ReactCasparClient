@@ -1307,7 +1307,7 @@ const DrawingController = () => {
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
 
-        var cc=document.getElementsByTagName('tspan')[0];
+        var cc=document.getElementById('clock1').getElementsByTagName('tspan')[0];
         cc.textContent='';
         setInterval(function() {
             var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
@@ -1328,7 +1328,7 @@ const DrawingController = () => {
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
         document.body.style.overflow='hidden';
-        var cc=document.getElementsByTagName('tspan')[0];
+        var cc=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
         cc.textContent='';
         var startTime = new Date();
         setInterval(function() {
@@ -1663,8 +1663,8 @@ const DrawingController = () => {
                     <div  >
                         <table border='1'>
                             <tbody>
-                                <tr><td> <b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={(e, canvas) => changeShadowCurrentColor(e)} />   </td></tr>
-                                <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} /></td></tr>
+                                <tr><td><b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
+                                <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
                                 <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
                                 <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
                                 <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>

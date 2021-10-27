@@ -3,8 +3,8 @@ import { endpoint } from './common';
 import { Rnd } from 'react-rnd';
 
 const Video = ({ video, layerNumber }) => {
-    const [videoWidth, setVideoWidth] = useState(1024 / 2);
-    const [videoHeight, setVideoHeight] = useState(576 / 2);
+    const [videoWidth, setVideoWidth] = useState(450);
+    const [videoHeight, setVideoHeight] = useState(15);
     const [videoX, setVideoX] = useState(0);
     const [videoY, setVideoY] = useState(0);
     const [operateOnline, setOperateOnline] = useState(false);
@@ -45,6 +45,16 @@ const Video = ({ video, layerNumber }) => {
                             };
 
                         }}>Make Full Screen</button>
+                        <button onClick={() => {
+                            setVideoWidth(450);
+                            setVideoHeight(15);
+                            setVideoX(0);
+                            setVideoY(0);
+                            if (operateOnline) {
+                                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1`);
+                            };
+
+                        }}>Make Very Samall</button>
                     </div>
                 </div>
             </div>

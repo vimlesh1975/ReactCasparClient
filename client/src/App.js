@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux'
 import { animationMethods, chNumbers } from './common'
 import Layers from './Layers'
 import Hockey from './Hockey'
+import VideoPlaylist from './VideoPlaylist'
 
 const buildDate = '271021'
 
@@ -98,11 +99,17 @@ const App = () => {
   const onTabChange = (index, prevIndex) => {
     switch (index) {
       case 0:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
         setCurrentTab('Drawing')
         break;
       case 1:
+      case 2:
         setCurrentTab('Video')
         break;
+
       default:
       //nothing
     }
@@ -156,6 +163,8 @@ const App = () => {
                 <Video video={address1 + '/media/CG1080i50.mp4'} layerNumber={2} />
                 <Video video={address1 + '/media/go1080p25.mp4'} layerNumber={3} />
                 <Video video={address1 + '/media/CG1080i50_A.mp4'} layerNumber={4} />
+                <Video video={address1 + '/media/Anchor.png'} layerNumber={5} />
+
 
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
@@ -179,16 +188,14 @@ const App = () => {
                 </h5>
               </div>
               <div >
-                <Tabs forceRenderTabPanel={true}>
+                {/* <Tabs forceRenderTabPanel={true}>
                   <TabList >
                     <Tab >ColorGradient</Tab>
-
                   </TabList>
                   <TabPanel >
                     <ColorGradient />
                   </TabPanel>
-
-                </Tabs>
+                </Tabs> */}
 
 
               </div>
@@ -202,8 +209,10 @@ const App = () => {
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>Video</Tab>
+            <Tab>Video playlist</Tab>
             <Tab>Layers</Tab>
             <Tab>Hockey</Tab>
+            <Tab >ColorGradient</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -222,10 +231,16 @@ const App = () => {
             </div>
           </TabPanel>
           <TabPanel>
+            <VideoPlaylist />
+          </TabPanel>
+          <TabPanel>
             <Layers />
           </TabPanel>
           <TabPanel>
             <Hockey />
+          </TabPanel>
+          <TabPanel >
+            <ColorGradient />
           </TabPanel>
           <TabPanel>
             <Help />

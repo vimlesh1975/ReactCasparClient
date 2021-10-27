@@ -104,7 +104,7 @@ const SavePannel = () => {
     }
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id']) } : val;
+            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
@@ -276,6 +276,8 @@ const SavePannel = () => {
                     </Droppable>
                 </DragDropContext>
             </div>
+
+
         </div>
     )
 }
