@@ -8,7 +8,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 
-const layerNumberList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const layerNumberList = [1, 2, 3, 4, 5]
 
 const VideoPlaylist = () => {
     const [layerNumber, setLayerNumber] = useState(5);
@@ -19,6 +19,8 @@ const VideoPlaylist = () => {
 
     const playlist = useSelector(state => state.playlistReducer.playlist)
     const currentFile = useSelector(state => state.currentFileReducer.currentFile);
+    const [currentFileinlist, setCurrentFileinlist] = useState();
+
 
     const [filename, setfilename] = useState('amb');
     const [searchText, setSearchText] = useState('');
@@ -103,9 +105,11 @@ const VideoPlaylist = () => {
                     <tbody>
                         {searchedMedia.map((val, i) => {
                             return <tr key={uuidv4()}><td
+                                style={{ backgroundColor: currentFileinlist === i ? 'green' : 'white', color: currentFileinlist === i ? 'white' : 'black' }}
                                 onDoubleClick={e => onDoubleClickMediafile(e)}
                                 onClick={(e) => {
                                     setfilenameAndCueonPreview(e)
+                                    setCurrentFileinlist(i)
                                 }
                                 }>{val}</td></tr>
                         })}
@@ -143,7 +147,7 @@ const VideoPlaylist = () => {
                                                             }}
                                                         >
                                                             <td>{i + 1}</td><td {...provided.dragHandleProps}><VscMove /></td>
-                                                            <td style={{ minWidth: 250, backgroundColor: currentFile === i ? 'green' : 'white', color: currentFile === i ? 'white' : 'black' }}
+                                                            <td style={{ minWidth: 250, maxWidth: 250, backgroundColor: currentFile === i ? 'green' : 'white', color: currentFile === i ? 'white' : 'black' }}
                                                                 onClick={(e) => {
                                                                     dispatch({ type: 'CHANGE_CURRENT_FILE', payload: i });
                                                                     setfilenameAndCueonPreview(e)
@@ -151,7 +155,7 @@ const VideoPlaylist = () => {
                                                                 }} key1={i} key2={'vimlesh'}  >{val.fileName}
                                                             </td>
                                                             <td><button key1={i} onClick={() => endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`)} >Cue</button></td>
-                                                            <td><button key1={i} onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${val.fileName}"`)} ><FaPlay /></button></td>
+                                                            <td><button key1={i} onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`)} ><FaPlay /></button></td>
                                                             <td><button key1={i} onClick={() => endpoint(`Stop ${window.chNumber}-${layerNumber}`)} ><FaStop /></button></td>
                                                             <td><button key1={i} onClick={(e) => deletePage(e)} ><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
 

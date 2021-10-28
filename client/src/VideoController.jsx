@@ -10,6 +10,7 @@ const VideoController = ({ layerNumber }) => {
     const media = useSelector(state => state.mediaReducer.media)
     const [filename, setfilename] = useState('amb');
     const [searchText, setSearchText] = useState('');
+    const [currentFileinlist, setCurrentFileinlist] = useState();
     const refreshMedia = () => {
         axios.post(address1 + '/getmedia').then((aa) => {
             dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
@@ -38,21 +39,24 @@ const VideoController = ({ layerNumber }) => {
                 <table border='1' >
                     <tbody>
                         {searchedMedia.map((val, i) => {
-                            return <tr key={uuidv4()}><td onClick={(e) => {
-                                setfilename(((e.target.innerText).replaceAll('\\', '/')).split('.')[0]);
-                                var video = document.getElementById(`video${layerNumber}`);
-                                var source = document.getElementsByTagName('source')[layerNumber - 1];
+                            return <tr key={uuidv4()}><td
+                                style={{ backgroundColor: currentFileinlist === i ? 'green' : 'white', color: currentFileinlist === i ? 'white' : 'black' }}
+                                onClick={(e) => {
+                                    setfilename(((e.target.innerText).replaceAll('\\', '/')).split('.')[0]);
+                                    var video = document.getElementById(`video${layerNumber}`);
+                                    var source = document.getElementsByTagName('source')[layerNumber - 1];
+                                    setCurrentFileinlist(i)
 
-                                if ((`${address1}/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
-                                    video.setAttribute("poster", `${address1}/media/${e.target.innerText}`);
+                                    if ((`${address1}/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {
+                                        video.setAttribute("poster", `${address1}/media/${e.target.innerText}`);
+                                    }
+                                    else {
+                                        video.setAttribute("poster", ``);
+                                        source.setAttribute("src", `${address1}/media/${e.target.innerText}`);
+                                        video.load();
+                                    }
                                 }
-                                else {
-                                    video.setAttribute("poster", ``);
-                                    source.setAttribute("src", `${address1}/media/${e.target.innerText}`);
-                                    video.load();
-                                }
-                            }
-                            }>{val}</td></tr>
+                                }>{val}</td></tr>
                         })}
                     </tbody>
                 </table>
