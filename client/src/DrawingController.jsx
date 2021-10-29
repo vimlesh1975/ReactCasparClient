@@ -266,7 +266,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
                 top: 10,
                 stroke: 'red',
                 strokeWidth: 3,
-                id: 'rectwithimg',
+                id: 'img1',
                 rx: 30,
                 objectCaching: false,
                 shadow: shadowOptions,
@@ -277,7 +277,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
             rect.set({
                 width: myImg.width, height: myImg.height, fill: new fabric.Pattern({ source: myImg, repeat: 'no-repeat' })
             });
-            rect.set({ scaleX: 0.5, scaleY: 0.5 })
+            // rect.set({ scaleX: 0.5, scaleY: 0.5 })
             canvas.renderAll();
         }
     });
@@ -302,8 +302,9 @@ export const Upload = (e, canvas) => {
                         strokeWidth: 3,
                         strokeUniform: true,
                         objectCaching: false,
+                        id: 'img1'
                     })
-                    .scale(0.5);
+                // .scale(0.5);
                 canvas.add(image).setActiveObject(image);
             };
         };

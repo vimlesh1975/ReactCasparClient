@@ -50,7 +50,7 @@ const Layers = () => {
             canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')));
             setTextofActiveObject(canvas.item(e.target.getAttribute('key1')).text ? canvas.item(e.target.getAttribute('key1')).text : '');
             setIdofActiveObject(canvas.item(e.target.getAttribute('key1')).id ? canvas.item(e.target.getAttribute('key1')).id : '');
-            // console.log(canvas.item(e.target.getAttribute('key1')))
+            console.log(canvas.item(e.target.getAttribute('key1'))._originalElement.currentSrc)
             canvas.requestRenderAll();
         } catch (error) {
             //dummy
