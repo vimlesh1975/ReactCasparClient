@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { endpoint } from './common'
-import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
-
+import { VscMove } from "react-icons/vsc";
 
 const generalayer = 500;
 const scoreLayer = 501;
@@ -18,7 +16,11 @@ const clockLayer = 502;
 const Hockey = () => {
     const [playerList1, setPlayerList1] = useState(iniplayerList1)
     const [playerList2, setPlayerList2] = useState(iniplayerList2)
+    var newplayerList1 = [];
+    var newplayerList2 = [];
 
+    const [inPlayer, setInPlayer] = useState('45 Narsimha Chavhan')
+    const [outPlayer, setOutPlayer] = useState('48 Vijay Ingle')
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -50,7 +52,7 @@ const Hockey = () => {
         const aa = [...playerList2]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
-            setPlayerList1(aa);
+            setPlayerList2(aa);
         }
     }
 
@@ -186,20 +188,19 @@ const Hockey = () => {
         <div>
             <div style={{ display: 'flex', width: 830, }}>
                 <div>
+
                     <DragDropContext onDragEnd={onDragEnd1}>
-                        <Droppable droppableId="droppable-1" type="PERSON">
+                        <Droppable droppableId="droppable-1" type="PERSON1">
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
                                     style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                                     {...provided.droppableProps}
                                 >
-                                    <table border='1'>
+                                    <table >
                                         <tbody>
                                             {playerList1.map((val, i) => {
-
                                                 return (
-
                                                     <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                         {(provided, snapshot) => (
                                                             <tr
@@ -212,12 +213,17 @@ const Hockey = () => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
+                                                                <td {...provided.dragHandleProps}><VscMove /></td>
+                                                                <td><input type='text' defaultValue={val} onClick={() => setCurrentPlayer1(val)}
 
-                                                                <td {...provided.dragHandleProps} onClick={() => setCurrentPlayer1(val)}
-                                                                    onDoubleClick={() => {
-                                                                        setCurrentPlayer1(val);
-                                                                        recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: val, type: 'text' }])
-                                                                    }}>{val}</td>
+                                                                    onMouseLeave={e => {
+                                                                        newplayerList1 = [...playerList1];
+                                                                        newplayerList1[i] = e.target.value;
+                                                                        setPlayerList1([...newplayerList1])
+
+                                                                    }}
+                                                                />
+                                                                </td>
                                                             </tr>
                                                         )
                                                         }
@@ -255,14 +261,14 @@ const Hockey = () => {
                 <div>
 
                     <DragDropContext onDragEnd={onDragEnd2}>
-                        <Droppable droppableId="droppable-1" type="PERSON">
+                        <Droppable droppableId="droppable-1" type="PERSON1">
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
                                     style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                                     {...provided.droppableProps}
                                 >
-                                    <table border='1'>
+                                    <table >
                                         <tbody>
                                             {playerList2.map((val, i) => {
                                                 return (
@@ -278,11 +284,17 @@ const Hockey = () => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
-                                                                <td {...provided.dragHandleProps} onClick={() => setCurrentPlayer2(val)}
-                                                                    onDoubleClick={() => {
-                                                                        setCurrentPlayer2(val);
-                                                                        recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: val, type: 'text' }])
-                                                                    }}>{val}</td>
+                                                                <td {...provided.dragHandleProps}><VscMove /></td>
+                                                                <td><input type='text' defaultValue={val} onClick={() => setCurrentPlayer2(val)}
+
+                                                                    onMouseLeave={e => {
+                                                                        newplayerList2 = [...playerList2];
+                                                                        newplayerList2[i] = e.target.value;
+                                                                        setPlayerList2([...newplayerList2])
+
+                                                                    }}
+                                                                />
+                                                                </td>
                                                             </tr>
                                                         )
                                                         }
@@ -315,14 +327,13 @@ const Hockey = () => {
                         { key: 'f12', value: playerList2[11], type: 'text' },
 
                     ])}>TeamList 2 <FaPlay /></button>
-                    <br /> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: currentPlayer1, type: 'text' }, { key: 'f1', value: currentPlayer2, type: 'text' }])}>IN OUT <FaPlay /></button>
 
                 </div>
 
                 <br /> <button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
 
                 <div>
-                    <div style={{ display: 'flex', border: '1px solid blue' }}>
+                    <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                         <div>
                             Team1 <br />
                             <label>
@@ -351,30 +362,28 @@ const Hockey = () => {
                         </div>
                         <button onClick={() => recallPage(generalayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }])}>Versus</button>
                     </div>
-                    <div style={{ display: 'flex', border: '1px solid blue' }}>
+                    <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                         <div>
                             <input type='text' size="8" value={team1} onChange={e => setTeam1(e.target.value)} /><input type='text' size="1" value={team1Goal} onChange={e => setTeam1Goal(e.target.value)} />
                             <br /><input type='text' size="8" value={team2} onChange={e => setTeam2(e.target.value)} /><input type='text' size="1" value={team2Goal} onChange={e => setTeam2Goal(e.target.value)} />
                         </div>
                         <div>
                             <button onClick={() => recallPage(scoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }])}>Score <FaPlay /></button>
-                            <button onClick={() => updateGraphics(scoreLayer)} >Update</button>
                             <button onClick={() => stopGraphics(scoreLayer)} > <FaStop /></button>
-
-
                         </div>
                     </div>
                     <div>
-                        <div style={{ display: 'flex', border: '1px solid blue' }}>
-
-                            <span>Ini. Min</span> <input type='text' size="1" value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
-                            <span>Ini. Sec</span> <input type='text' size="1" value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
+                        <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
+                            <span>Ini. Min </span> <input type='text' size="1" value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
+                            <span>Ini. Sec </span> <input type='text' size="1" value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                             <span>countUp</span> <input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
                             <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>
                             <button onClick={() => stopGraphics(clockLayer)} ><FaStop /></button>
-
                         </div>
-
+                        <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
+                            <div>  <div> <span>IN . .</span><input type='text' value={inPlayer} onChange={e => setInPlayer(e.target.value)} /></div>  <div> <span>OUT</span><input type='text' value={outPlayer} onChange={e => setOutPlayer(e.target.value)} /></div></div>
+                            <div> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: inPlayer, type: 'text' }, { key: 'f1', value: outPlayer, type: 'text' }])}>IN OUT <FaPlay /></button></div>
+                        </div>
                     </div>
                 </div>
             </div>

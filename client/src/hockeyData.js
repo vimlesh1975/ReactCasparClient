@@ -20,8 +20,6 @@ export const iniplayerList1 = [
     '15 A S Yosuf Sifat',
     '17 Jewal Rana',
     '19 Aminur R Sojib',
-    'Test1',
-    'Test2',
     'Coach- G S Moreno'
 ]
 export const iniplayerList2 = [
@@ -37,8 +35,6 @@ export const iniplayerList2 = [
     '45 Narsimha Chavhan',
     '46 Prithviraj Phadnis',
     '47 Sagar Sawant',
-    '48 Vijay Ingle',
-    '06 Vimesh Kumar',
     '49 Vinayak Auti',
     '50 B Tulshidas Sharma',
     '51 Ch Meiraba Meitei',

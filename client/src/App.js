@@ -22,7 +22,7 @@ import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
 
-const buildDate = '281021'
+const buildDate = '301021'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -145,7 +145,7 @@ const App = () => {
       height: '100vh',
       flexWrap: 'nowrap'
     }}>
-      <div style={{ width: '1035px' }} >
+      <div  >
         <div style={{
           display: 'flex',
           flexDirection: 'row',
@@ -201,7 +201,7 @@ const App = () => {
 
         </div>
       </div>
-      <div style={{ width: '38vw', minWidth: '400px' }}>
+      <div >
         <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Graphics</Tab>
