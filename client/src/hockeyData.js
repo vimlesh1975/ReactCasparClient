@@ -1,5 +1,5 @@
 
-export const playerList1 = [
+export const iniplayerList1 = [
     '1 Rashel Mahmud (GK)',
     '2 MD R Hasan',
     '3 Topu Berman',
@@ -24,7 +24,7 @@ export const playerList1 = [
     'Test2',
     'Coach- G S Moreno'
 ]
-export const playerList2 = [
+export const iniplayerList2 = [
     '36 Abhishek Chatterjee',
     '37 Ashutosh Verma',
     '38 Bharat Batham',

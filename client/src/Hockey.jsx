@@ -2,13 +2,24 @@ import React, { useState } from 'react'
 import { endpoint } from './common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
-import { playerList1, playerList2 } from './hockeyData'
+import { iniplayerList1, iniplayerList2 } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+
+
+const generalayer = 500;
+const scoreLayer = 501;
+const clockLayer = 502;
 
 // import moment from 'moment'
 
 const Hockey = () => {
+    const [playerList1, setPlayerList1] = useState(iniplayerList1)
+    const [playerList2, setPlayerList2] = useState(iniplayerList2)
+
+
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
@@ -28,7 +39,22 @@ const Hockey = () => {
 
     const [countUp, setCountUp] = useState(false)
 
-    const recallPage = (pageName, data) => {
+    const onDragEnd1 = (result) => {
+        const aa = [...playerList1]
+        if (result.destination != null) {
+            aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
+            setPlayerList1(aa);
+        }
+    }
+    const onDragEnd2 = (result) => {
+        const aa = [...playerList2]
+        if (result.destination != null) {
+            aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
+            setPlayerList1(aa);
+        }
+    }
+
+    const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
@@ -40,6 +66,7 @@ const Hockey = () => {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
                                     element.set({ objectCaching: false, text: data2.value.toString() })
+                                    canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -53,21 +80,20 @@ const Hockey = () => {
                                         else if (element.type === 'rect') {
                                             element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                         }
+                                        canvas.requestRenderAll();
                                     };
                                     i.src = data2.value;
                                 }
                             }
+                            canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
                 });
-                sendToCasparcg(500)
+                sendToCasparcg(layerNumber)
             });
         }
         else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
-        setTimeout(() => {
-            canvas.requestRenderAll();
-        }, 3000);
     }
 
     const sendToCasparcg = (layerNumber) => {
@@ -103,7 +129,7 @@ const Hockey = () => {
                 canvas.requestRenderAll();
             });
 
-            const layerNumber = 501;
+            const layerNumber = clockLayer;
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
             setTimeout(() => {
                 endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -143,7 +169,7 @@ const Hockey = () => {
 
     }
 
-    const updateGraphics = (layerNumber) => {
+    const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
@@ -158,140 +184,200 @@ const Hockey = () => {
 
     return (
         <div>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', width: 830, }}>
                 <div>
+                    <DragDropContext onDragEnd={onDragEnd1}>
+                        <Droppable droppableId="droppable-1" type="PERSON">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                    {...provided.droppableProps}
+                                >
+                                    <table border='1'>
+                                        <tbody>
+                                            {playerList1.map((val, i) => {
+
+                                                return (
+
+                                                    <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
+                                                        {(provided, snapshot) => (
+                                                            <tr
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                style={{
+                                                                    ...provided.draggableProps.style,
+                                                                    backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                                    boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                                    // margin: '10px'
+                                                                }}
+                                                            >
+
+                                                                <td {...provided.dragHandleProps} onClick={() => setCurrentPlayer1(val)}
+                                                                    onDoubleClick={() => {
+                                                                        setCurrentPlayer1(val);
+                                                                        recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: val, type: 'text' }])
+                                                                    }}>{val}</td>
+                                                            </tr>
+                                                        )
+                                                        }
+                                                    </Draggable>
+                                                )
+                                            })}
+                                            {provided.placeholder}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                     {currentPlayer1}
+                    <br /><button onClick={() => recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }])}>PlayerId1 <FaPlay /></button>
+                    <br />    <button onClick={() => recallPage(500, 'TeamList', [
 
-                    <table border='1'>
-                        <tbody>
-                            {playerList1.map((val, i) => {
-                                return (<tr key={uuidv4()}><td
-                                    onClick={() => setCurrentPlayer1(val)}
-                                    onDoubleClick={() => {
-                                        setCurrentPlayer1(val);
-                                        recallPage('PlayerId1', [{ key: 'f0', value: val }])
-                                    }}>{val}</td></tr>)
-                            })}
-                        </tbody>
-                    </table>
-                    <button onClick={() => recallPage('PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }])}>PlayerId1 <FaPlay /></button>
-                    <br />    <button onClick={() => recallPage('TeamList', [
-
-                        { key: 'f0', value: playerList1[0], type: 'text' },
-                        { key: 'f1', value: playerList1[1], type: 'text' },
-                        { key: 'f2', value: playerList1[2], type: 'text' },
-                        { key: 'f3', value: playerList1[3], type: 'text' },
-                        { key: 'f4', value: playerList1[4], type: 'text' },
-                        { key: 'f5', value: playerList1[5], type: 'text' },
-                        { key: 'f6', value: playerList1[6], type: 'text' },
-                        { key: 'f7', value: playerList1[7], type: 'text' },
-                        { key: 'f8', value: playerList1[8], type: 'text' },
-                        { key: 'f9', value: playerList1[9], type: 'text' },
-                        { key: 'f10', value: playerList1[10], type: 'text' },
-                        { key: 'f11', value: playerList1[11], type: 'text' },
-                        { key: 'f12', value: playerList1[12], type: 'text' },
+                        { key: 'f0', value: team1, type: 'text' },
+                        { key: 'f1', value: playerList1[0], type: 'text' },
+                        { key: 'f2', value: playerList1[1], type: 'text' },
+                        { key: 'f3', value: playerList1[2], type: 'text' },
+                        { key: 'f4', value: playerList1[3], type: 'text' },
+                        { key: 'f5', value: playerList1[4], type: 'text' },
+                        { key: 'f6', value: playerList1[5], type: 'text' },
+                        { key: 'f7', value: playerList1[6], type: 'text' },
+                        { key: 'f8', value: playerList1[7], type: 'text' },
+                        { key: 'f9', value: playerList1[8], type: 'text' },
+                        { key: 'f10', value: playerList1[9], type: 'text' },
+                        { key: 'f11', value: playerList1[10], type: 'text' },
+                        { key: 'f12', value: playerList1[11], type: 'text' },
 
                     ])}>TeamList 1 <FaPlay /></button>
 
                 </div>
                 <div>
+
+                    <DragDropContext onDragEnd={onDragEnd2}>
+                        <Droppable droppableId="droppable-1" type="PERSON">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                    {...provided.droppableProps}
+                                >
+                                    <table border='1'>
+                                        <tbody>
+                                            {playerList2.map((val, i) => {
+                                                return (
+                                                    <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
+                                                        {(provided, snapshot) => (
+                                                            <tr
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                style={{
+                                                                    ...provided.draggableProps.style,
+                                                                    backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                                    boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                                    // margin: '10px'
+                                                                }}
+                                                            >
+                                                                <td {...provided.dragHandleProps} onClick={() => setCurrentPlayer2(val)}
+                                                                    onDoubleClick={() => {
+                                                                        setCurrentPlayer2(val);
+                                                                        recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: val, type: 'text' }])
+                                                                    }}>{val}</td>
+                                                            </tr>
+                                                        )
+                                                        }
+                                                    </Draggable>
+                                                )
+                                            })}
+                                            {provided.placeholder}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                     {currentPlayer2}
+                    <br /> <button onClick={() => recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }])}>PlayerId2<FaPlay /></button>
+                    <br />  <button onClick={() => recallPage(generalayer, 'TeamList', [
 
-                    <table border='1'>
-                        <tbody>
-                            {playerList2.map((val, i) => {
-                                return (<tr key={uuidv4()}><td onClick={() => setCurrentPlayer2(val)} onDoubleClick={() => {
-                                    setCurrentPlayer2(val);
-                                    recallPage('PlayerId2', [{ key: 'f0', value: val }])
-                                }}>{val}</td></tr>)
-                            })}
-                        </tbody>
-                    </table>
-                    <button onClick={() => recallPage('PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }])}>PlayerId2<FaPlay /></button>
-                    <br />  <button onClick={() => recallPage('TeamList', [
-
-                        { key: 'f0', value: playerList2[0], type: 'text' },
-                        { key: 'f1', value: playerList2[1], type: 'text' },
-                        { key: 'f2', value: playerList2[2], type: 'text' },
-                        { key: 'f3', value: playerList2[3], type: 'text' },
-                        { key: 'f4', value: playerList2[4], type: 'text' },
-                        { key: 'f5', value: playerList2[5], type: 'text' },
-                        { key: 'f6', value: playerList2[6], type: 'text' },
-                        { key: 'f7', value: playerList2[7], type: 'text' },
-                        { key: 'f8', value: playerList2[8], type: 'text' },
-                        { key: 'f9', value: playerList2[9], type: 'text' },
-                        { key: 'f10', value: playerList2[10], type: 'text' },
-                        { key: 'f11', value: playerList2[11], type: 'text' },
-                        { key: 'f12', value: playerList2[12], type: 'text' },
+                        { key: 'f0', value: team2, type: 'text' },
+                        { key: 'f1', value: playerList2[0], type: 'text' },
+                        { key: 'f2', value: playerList2[1], type: 'text' },
+                        { key: 'f3', value: playerList2[2], type: 'text' },
+                        { key: 'f4', value: playerList2[3], type: 'text' },
+                        { key: 'f5', value: playerList2[4], type: 'text' },
+                        { key: 'f6', value: playerList2[5], type: 'text' },
+                        { key: 'f7', value: playerList2[6], type: 'text' },
+                        { key: 'f8', value: playerList2[7], type: 'text' },
+                        { key: 'f9', value: playerList2[8], type: 'text' },
+                        { key: 'f10', value: playerList2[9], type: 'text' },
+                        { key: 'f11', value: playerList2[10], type: 'text' },
+                        { key: 'f12', value: playerList2[11], type: 'text' },
 
                     ])}>TeamList 2 <FaPlay /></button>
-                    <button onClick={() => recallPage('InOut', [{ key: 'f0', value: currentPlayer1, type: 'text' }, { key: 'f1', value: currentPlayer2, type: 'text' }])}>IN OUT <FaPlay /></button>
+                    <br /> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: currentPlayer1, type: 'text' }, { key: 'f1', value: currentPlayer2, type: 'text' }])}>IN OUT <FaPlay /></button>
 
                 </div>
 
-                <br /> <button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(500); }} ><FaStop /></button>
+                <br /> <button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
 
                 <div>
-
                     <div style={{ display: 'flex', border: '1px solid blue' }}>
                         <div>
-                            Team 1: <input type='text' size="8" value={team1} onChange={e => setTeam1(e.target.value)} /><input type='text' size="1" value={team1Goal} onChange={e => setTeam1Goal(e.target.value)} />
-                            <br />Team 2: <input type='text' size="8" value={team2} onChange={e => setTeam2(e.target.value)} /><input type='text' size="1" value={team2Goal} onChange={e => setTeam2Goal(e.target.value)} />
+                            Team1 <br />
+                            <label>
+                                <img src={team1Logo} alt='' width='80' height='80' style={{ border: '3px solid red' }} />
+                                <input type="file" onChange={e => {
+                                    var reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        setTeam1Logo(reader.result)
+                                    }
+                                    reader.readAsDataURL(e.target.files[0]);
+                                }} style={{ display: 'none' }} />
+                            </label>
                         </div>
                         <div>
-                            <button onClick={() => recallPage('Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }])}>Score<FaPlay /></button>
+                            Team2 <br />
+                            <label>
+                                <img src={team2Logo} alt='' width='80' height='80' style={{ border: '3px solid red' }} />
+                                <input type="file" onChange={e => {
+                                    var reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        setTeam2Logo(reader.result)
+                                    }
+                                    reader.readAsDataURL(e.target.files[0]);
+                                }} style={{ display: 'none' }} />
+                            </label>
+                        </div>
+                        <button onClick={() => recallPage(generalayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }])}>Versus</button>
+                    </div>
+                    <div style={{ display: 'flex', border: '1px solid blue' }}>
+                        <div>
+                            <input type='text' size="8" value={team1} onChange={e => setTeam1(e.target.value)} /><input type='text' size="1" value={team1Goal} onChange={e => setTeam1Goal(e.target.value)} />
+                            <br /><input type='text' size="8" value={team2} onChange={e => setTeam2(e.target.value)} /><input type='text' size="1" value={team2Goal} onChange={e => setTeam2Goal(e.target.value)} />
+                        </div>
+                        <div>
+                            <button onClick={() => recallPage(scoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }])}>Score <FaPlay /></button>
+                            <button onClick={() => updateGraphics(scoreLayer)} >Update</button>
+                            <button onClick={() => stopGraphics(scoreLayer)} > <FaStop /></button>
+
+
                         </div>
                     </div>
-
-
                     <div>
                         <div style={{ display: 'flex', border: '1px solid blue' }}>
 
                             <span>Ini. Min</span> <input type='text' size="1" value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
                             <span>Ini. Sec</span> <input type='text' size="1" value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                             <span>countUp</span> <input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
-                            <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>  <button onClick={() => {
-                                stopGraphics(501);
-                            }} ><FaStop /></button>
+                            <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>
+                            <button onClick={() => stopGraphics(clockLayer)} ><FaStop /></button>
 
                         </div>
 
-
-                        <div style={{ display: 'flex', border: '1px solid blue' }}>
-                            <div>
-                                Team1 Logo: <br />
-                                <label>
-                                    <img src={team1Logo} alt='' width='80' height='80' />
-                                    <input type="file" onChange={e => {
-                                        var reader = new FileReader();
-                                        reader.onloadend = () => {
-                                            setTeam1Logo(reader.result)
-                                        }
-                                        reader.readAsDataURL(e.target.files[0]);
-                                    }} style={{ display: 'none' }} />
-                                </label>
-                            </div>
-                            <div>
-                                Team2 Logo: <br />
-                                <label>
-                                    <img src={team2Logo} alt='' width='80' height='80' />
-                                    <input type="file" onChange={e => {
-                                        var reader = new FileReader();
-                                        reader.onloadend = () => {
-                                            setTeam2Logo(reader.result)
-                                        }
-                                        reader.readAsDataURL(e.target.files[0]);
-                                    }} style={{ display: 'none' }} />
-                                </label>
-                            </div>
-                            <button onClick={() => recallPage('Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }])}>Versus</button>
-                            <div></div>
-                        </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     )
 }

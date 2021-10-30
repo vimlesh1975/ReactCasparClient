@@ -89,11 +89,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line
     refreshMedia()
-    return () => {
-      // cleanup
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
 
   const onTabChange = (index, prevIndex) => {

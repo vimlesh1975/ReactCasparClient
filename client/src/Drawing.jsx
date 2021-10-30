@@ -76,6 +76,7 @@ const Drawing = ({ canvasOutput }) => {
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
     return (<div>
