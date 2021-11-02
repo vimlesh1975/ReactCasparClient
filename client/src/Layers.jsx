@@ -9,9 +9,18 @@ const Layers = () => {
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
+    const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+    const currentPage = useSelector(state => state.currentPageReducer.currentPage);
 
     const [textofActiveObject, setTextofActiveObject] = useState('');
     const [idofActiveObject, setIdofActiveObject] = useState('');
+
+    const updatePage = () => {
+        const updatedcanvasList = canvasList.map((val, i) => {
+            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
+        });
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+    }
 
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
@@ -60,6 +69,9 @@ const Layers = () => {
 
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
+        <button onClick={updatePage}>Update Page</button>
+
+
         <div style={{ height: 580, width: 830, overflow: 'scroll', border: '1px solid black' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">

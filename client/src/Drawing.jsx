@@ -66,6 +66,7 @@ const Drawing = ({ canvasOutput }) => {
     // }
     useEffect(() => {
         setTimeout(() => {
+            window.editor.canvas.extraProps = ['id', 'selectable']
             setZoomAndPan(window.editor.canvas);
             // xyz(window.editor.canvas);
         }, 2000);

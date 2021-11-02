@@ -102,12 +102,14 @@ const SavePannel = () => {
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
         setCurrentFileName('')
     }
+
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
+
     const drawingFileSaveAs = () => {
         const element = document.createElement("a");
         var aa = ''

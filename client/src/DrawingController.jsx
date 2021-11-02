@@ -522,7 +522,10 @@ export const sendToBack = canvas => {
 }
 
 
-export const undo = canvas => canvas.undo()
+export const undo = canvas => {
+    // canvas.extraProps = ['id', 'selectable']
+    canvas.undo()
+}
 export const redo = canvas => canvas.redo()
 
 export const setOpacity = (canvas, val = 0.5) => {
