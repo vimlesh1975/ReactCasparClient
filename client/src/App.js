@@ -21,6 +21,7 @@ import { animationMethods, chNumbers } from './common'
 import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
+import Test from './Test';
 
 const buildDate = '021121'
 
@@ -211,6 +212,8 @@ const App = () => {
             <Tab>Hockey</Tab>
             <Tab >ColorGradient</Tab>
             <Tab>Help</Tab>
+            <Tab>Test</Tab>
+
           </TabList>
           <TabPanel>
             <div style={{ border: '1px dashed blue', width: 900 }}>
@@ -242,7 +245,9 @@ const App = () => {
           <TabPanel>
             <Help />
           </TabPanel>
-
+          <TabPanel>
+            <Test />
+          </TabPanel>
         </Tabs >
       </div >
 

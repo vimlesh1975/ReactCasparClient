@@ -67,7 +67,9 @@ const Hockey = () => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
+                                    const aa = (element.width) * (element.scaleX);
                                     element.set({ objectCaching: false, text: data2.value.toString() })
+                                    if (element.width > aa) { element.scaleToWidth(aa) }
                                     canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
@@ -123,9 +125,41 @@ const Hockey = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
+
+    const pauseClock = (layerNumber) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        clearInterval(xxx);
+        "`)
+    }
+    const resumeClock = (layerNumber) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        xxx=setInterval(()=>{
+            startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+             var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+             cc.textContent  =ss1;
+           }, 1000);
+        "`)
+    }
+
     const showClock = (pageName) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
+
+            //for form
+            var startTime = new Date();
+            startTime.setMinutes(initialMinute);
+            startTime.setSeconds(initialSecond);
+            var xxx = setInterval(() => {
+                startTime.setSeconds(startTime.getSeconds() - 1);
+                // var ss1 = ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+                // cc.textContent = ss1;
+                setInitilaMinute(startTime.getMinutes())
+                setInitialSecond(startTime.getSeconds())
+
+            }, 1000);
+
+            //for form
+
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 canvas.requestRenderAll();
@@ -151,7 +185,7 @@ const Hockey = () => {
                 var startTime = new Date();
                 startTime.setMinutes(${initialMinute});
                 startTime.setSeconds(${initialSecond});
-                setInterval(()=>{
+                var xxx=setInterval(()=>{
                    startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
                     var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
                     cc.textContent  =ss1;
@@ -378,6 +412,9 @@ const Hockey = () => {
                             <span>Ini. Sec </span> <input type='text' size="1" value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                             <span>countUp</span> <input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
                             <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>
+                            <button onClick={() => pauseClock(clockLayer)}> Pause </button>
+                            <button onClick={() => resumeClock(clockLayer)}> Resume </button>
+
                             <button onClick={() => stopGraphics(clockLayer)} ><FaStop /></button>
                         </div>
                         <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
