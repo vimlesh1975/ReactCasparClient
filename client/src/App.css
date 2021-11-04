@@ -154,6 +154,11 @@ display: inline;
 }
 
 .inputRange{
-  width: 150px;
+  width: 120px;
+  height: 3px;
+}
+
+.inputRangeFontSize{
+  width: 120px;
   height: 3px;
 }

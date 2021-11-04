@@ -10,6 +10,7 @@ import { VscMove } from "react-icons/vsc";
 const generalayer = 500;
 const scoreLayer = 501;
 const clockLayer = 502;
+var xxx;
 
 // import moment from 'moment'
 
@@ -126,12 +127,32 @@ const Hockey = () => {
         }, 1100);
     }
 
+
     const pauseClock = (layerNumber) => {
+        clearInterval(xxx)
         endpoint(`call ${window.chNumber}-${layerNumber} "
         clearInterval(xxx);
         "`)
     }
     const resumeClock = (layerNumber) => {
+
+        //for form
+        var startTime = new Date();
+        startTime.setMinutes(initialMinute);
+        startTime.setSeconds(initialSecond);
+        xxx = setInterval(() => {
+            if (countUp) {
+                startTime.setSeconds(startTime.getSeconds() + 1);
+            }
+            else {
+                startTime.setSeconds(startTime.getSeconds() - 1);
+            }
+            setInitilaMinute(startTime.getMinutes())
+            setInitialSecond(startTime.getSeconds())
+
+        }, 1000);
+        //for form
+
         endpoint(`call ${window.chNumber}-${layerNumber} "
         xxx=setInterval(()=>{
             startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
@@ -140,7 +161,14 @@ const Hockey = () => {
            }, 1000);
         "`)
     }
+    const stopClock = layerNumber => {
+        clearInterval(xxx)
 
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        }, 1000);
+    }
     const showClock = (pageName) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
@@ -149,15 +177,17 @@ const Hockey = () => {
             var startTime = new Date();
             startTime.setMinutes(initialMinute);
             startTime.setSeconds(initialSecond);
-            var xxx = setInterval(() => {
-                startTime.setSeconds(startTime.getSeconds() - 1);
-                // var ss1 = ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-                // cc.textContent = ss1;
+            xxx = setInterval(() => {
+                if (countUp) {
+                    startTime.setSeconds(startTime.getSeconds() + 1);
+                }
+                else {
+                    startTime.setSeconds(startTime.getSeconds() - 1);
+                }
+
                 setInitilaMinute(startTime.getMinutes())
                 setInitialSecond(startTime.getSeconds())
-
             }, 1000);
-
             //for form
 
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
@@ -415,7 +445,7 @@ const Hockey = () => {
                             <button onClick={() => pauseClock(clockLayer)}> Pause </button>
                             <button onClick={() => resumeClock(clockLayer)}> Resume </button>
 
-                            <button onClick={() => stopGraphics(clockLayer)} ><FaStop /></button>
+                            <button onClick={() => stopClock(clockLayer)} ><FaStop /></button>
                         </div>
                         <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                             <div>  <div> <span>IN . .</span><input type='text' value={inPlayer} onChange={e => setInPlayer(e.target.value)} /></div>  <div> <span>OUT</span><input type='text' value={outPlayer} onChange={e => setOutPlayer(e.target.value)} /></div></div>

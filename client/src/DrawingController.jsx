@@ -532,10 +532,7 @@ export const setOpacity = (canvas, val = 0.5) => {
     canvas.getActiveObjects().forEach(element => element.set({ 'opacity': val }));
     canvas.requestRenderAll();
 }
-export const setOpacity1 = (canvas, e) => {
-    canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
-    canvas.requestRenderAll();
-}
+
 export const lock = canvas => {
     canvas.getActiveObjects().forEach(element => element.selectable = false);
     canvas.discardActiveObject();
@@ -696,11 +693,7 @@ const alignAllButtom = (canvas) => {
     })
     canvas.requestRenderAll();
 }
-const onSizeChange = (e, canvas) => {
-    options.currentFontSize = e.target.value
-    canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
-    canvas.requestRenderAll();
-}
+
 
 export const groupObjects = (canvas, shouldGroup) => {
     if (shouldGroup) {
@@ -811,9 +804,32 @@ const DrawingController = () => {
     const modes = ['Pencil', 'Spray', 'Erase', 'none'];
 
     const [currentMode, setCurrentMode] = useState('none');
-    // window.currentMode = currentMode;
+    const [fontSize, setFontSize] = useState(25);
+    const [opacity, setOpacity] = useState(1);
+
+    const [skewXSize, setSkewXSize] = useState(0);
+    const [skewYSize, setSkewYSize] = useState(0);
+
+    const [skewRX, setSkewRX] = useState(0);
+    const [skewRY, setSkewRY] = useState(0);
 
 
+
+
+
+    const setOpacity1 = (canvas, e) => {
+        setOpacity(e.target.value)
+        canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
+        canvas.requestRenderAll();
+    }
+
+
+    const onSizeChange = (e, canvas) => {
+        options.currentFontSize = e.target.value
+        setFontSize(e.target.value)
+        canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
+        canvas.requestRenderAll();
+    }
     const makeFullScreen = () => {
         canvas?.getActiveObjects().forEach(element => {
             element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
@@ -927,20 +943,24 @@ const DrawingController = () => {
         canvas.requestRenderAll();
     }
     const onSkewXSizeChange = e => {
+        setSkewXSize(parseInt(e.target.value))
         canvas.getActiveObjects().forEach(item => item.skewX = parseInt(e.target.value))
         canvas.requestRenderAll();
     }
     const onSkewYSizeChange = e => {
+        setSkewYSize(parseInt(e.target.value))
         canvas.getActiveObjects().forEach(item => item.skewY = parseInt(e.target.value))
         canvas.requestRenderAll();
     }
     const onRxSizeChange = e => {
+        setSkewRX(parseInt(e.target.value))
         canvas.getActiveObjects().forEach(item => {
             item.rx = parseInt(e.target.value)
         })
         canvas.requestRenderAll();
     }
     const onRySizeChange = e => {
+        setSkewRY(parseInt(e.target.value))
         canvas.getActiveObjects().forEach(item => item.ry = parseInt(e.target.value))
         canvas.requestRenderAll();
     }
@@ -1441,6 +1461,7 @@ const DrawingController = () => {
         }
     }, [canvas])
 
+
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
@@ -1635,13 +1656,14 @@ const DrawingController = () => {
 
                 </div>
                 <div className='drawingToolsRow' >
-                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' />
+                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    Size<input className='inputRange' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                    Size<input className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                    {fontSize}
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Free Drawing: </b>
@@ -1665,10 +1687,10 @@ const DrawingController = () => {
                 </div>
                 <div style={{ display: 'flex' }}>
                     <div  >
-                        <table border='1'>
+                        <table border='1' width='220'>
                             <tbody>
-                                <tr><td><b> Shadow: </b></td><td>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
-                                <tr><td>affectStroke</td><td><input type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
+                                <tr><td colSpan='2'><b> Shadow: </b>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
+                                <tr><td colSpan='2'>affectStroke<input type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
                                 <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
                                 <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
                                 <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
@@ -1678,13 +1700,29 @@ const DrawingController = () => {
 
                     <div  >
 
-                        <table border='1'>
+                        <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
                             <tbody>
                                 <tr><td colSpan='2'> <b> Skew: </b></td></tr>
-                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" id='skewX' min='-60' max='60' step='1' defaultValue='0' /></td></tr>
-                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" id='skewY' min='-60' max='60' step='1' defaultValue='0' /></td></tr>
-                                <tr><td>RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' defaultValue='30' />   </td></tr>
-                                <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' defaultValue='30' /></td></tr>
+                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewXSize} /><button onClick={() => {
+                                    setSkewXSize(0);
+                                    canvas.getActiveObjects().forEach(item => item.skewX = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{skewXSize}</td></tr>
+                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewYSize} /><button onClick={() => {
+                                    setSkewYSize(0);
+                                    canvas.getActiveObjects().forEach(item => item.skewY = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{skewYSize}</td></tr>
+                                <tr><td >RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' value={skewRX} /><button onClick={() => {
+                                    setSkewRX(0);
+                                    canvas.getActiveObjects().forEach(item => item.rx = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{skewRX}</td></tr>
+                                <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' value={skewRY} /><button onClick={() => {
+                                    setSkewRY(0);
+                                    canvas.getActiveObjects().forEach(item => item.ry = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{skewRY}</td></tr>
                             </tbody>
                         </table>
                     </div>
