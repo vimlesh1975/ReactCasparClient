@@ -15,6 +15,8 @@ const Layers = () => {
     const [textofActiveObject, setTextofActiveObject] = useState('');
     const [idofActiveObject, setIdofActiveObject] = useState('');
 
+    const [fontofInputBox, setFontofInputBox] = useState('Arial')
+
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
@@ -56,10 +58,12 @@ const Layers = () => {
     }
     const selectObject = (e, canvas) => {
         try {
-            canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')));
-            setTextofActiveObject(canvas.item(e.target.getAttribute('key1')).text ? canvas.item(e.target.getAttribute('key1')).text : '');
-            setIdofActiveObject(canvas.item(e.target.getAttribute('key1')).id ? canvas.item(e.target.getAttribute('key1')).id : '');
-            console.log(canvas.item(e.target.getAttribute('key1'))._originalElement.currentSrc)
+            var aa = canvas.item(e.target.getAttribute('key1'));
+            canvas.setActiveObject(aa);
+            setTextofActiveObject(aa.text ? aa.text : '');
+            setIdofActiveObject(aa.id ? aa.id : '');
+            setFontofInputBox(aa.fontFamily)
+            // console.log(aa._originalElement.currentSrc)
             canvas.requestRenderAll();
         } catch (error) {
             //dummy
@@ -127,7 +131,7 @@ const Layers = () => {
 
         <div>
             <br /> <button onClick={setText}>Set Text</button> <button onClick={setId}>Set Id</button><input type='text' value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
-            <br />  <textarea cols='110' rows='10' value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)}></textarea>
+            <br />  <textarea cols={110} rows={10} value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ fontFamily: fontofInputBox }} ></textarea>
         </div>
     </div>)
 }
