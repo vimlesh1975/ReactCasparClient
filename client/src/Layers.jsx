@@ -16,6 +16,7 @@ const Layers = () => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
 
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
+    const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
 
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
@@ -62,14 +63,22 @@ const Layers = () => {
             canvas.setActiveObject(aa);
             setTextofActiveObject(aa.text ? aa.text : '');
             setIdofActiveObject(aa.id ? aa.id : '');
-            setFontofInputBox(aa.fontFamily)
+            setFontofInputBox(aa.fontFamily ? aa.fontFamily : '')
             // console.log(aa._originalElement.currentSrc)
             canvas.requestRenderAll();
         } catch (error) {
             //dummy
         }
     }
-
+    const selectObject1 = (e, canvas) => {
+        try {
+            var aa = canvas.item(e.target.getAttribute('key1'));
+            canvas.setActiveObject(aa);
+            canvas.requestRenderAll();
+        } catch (error) {
+            //dummy
+        }
+    }
 
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
@@ -110,10 +119,10 @@ const Layers = () => {
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontStyle}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontWeight}</td>
-                                                        <td><input key1={i} onClick={(e) => selectObject(e, canvas)} type="color" defaultValue={val.fill} onChange={e => changeCurrentColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject(e, canvas)} type="color" defaultValue={val.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject(e, canvas)} type="color" defaultValue={val.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject(e, canvas)} type="color" defaultValue={val.shadow.color} onChange={e => changeShadowCurrentColor(e, canvas)} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.fill} onChange={e => changeCurrentColor(e, canvas)} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.shadow.color} onChange={e => changeShadowCurrentColor(e, canvas)} /></td>
                                                     </tr>
                                                 )
                                                 }
@@ -131,7 +140,8 @@ const Layers = () => {
 
         <div>
             <br /> <button onClick={setText}>Set Text</button> <button onClick={setId}>Set Id</button><input type='text' value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
-            <br />  <textarea cols={110} rows={10} value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ fontFamily: fontofInputBox }} ></textarea>
+            Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea}
+            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 220, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
         </div>
     </div>)
 }
