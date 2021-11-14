@@ -21,8 +21,9 @@ import { animationMethods, chNumbers } from './common'
 import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
+import Oneliner from './Oneliner'
 
-const buildDate = '061121'
+const buildDate = '141121'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -210,6 +211,8 @@ const App = () => {
             <Tab>Layers</Tab>
             <Tab>Hockey</Tab>
             <Tab >ColorGradient</Tab>
+            <Tab >Oneliner</Tab>
+
             <Tab>Help</Tab>
 
           </TabList>
@@ -239,6 +242,9 @@ const App = () => {
           </TabPanel>
           <TabPanel >
             <ColorGradient />
+          </TabPanel>
+          <TabPanel>
+            <Oneliner />
           </TabPanel>
           <TabPanel>
             <Help />
