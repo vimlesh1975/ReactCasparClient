@@ -23,8 +23,10 @@ import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
 import Oneliner from './Oneliner'
 import Twoliner from './Twoliner'
+import BreakingNews from './BreakingNews'
 
-const buildDate = '141121'
+
+const buildDate = '151121'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -214,6 +216,7 @@ const App = () => {
             <Tab >ColorGradient</Tab>
             <Tab >Oneliner</Tab>
             <Tab >Twoliner</Tab>
+            <Tab >BreakingNews</Tab>
 
             <Tab>Help</Tab>
 
@@ -250,6 +253,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <Twoliner />
+          </TabPanel>
+          <TabPanel>
+            <BreakingNews />
           </TabPanel>
           <TabPanel>
             <Help />
