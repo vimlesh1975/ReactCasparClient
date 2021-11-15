@@ -22,6 +22,7 @@ import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
 import Oneliner from './Oneliner'
+import Twoliner from './Twoliner'
 
 const buildDate = '141121'
 
@@ -212,6 +213,7 @@ const App = () => {
             <Tab>Hockey</Tab>
             <Tab >ColorGradient</Tab>
             <Tab >Oneliner</Tab>
+            <Tab >Twoliner</Tab>
 
             <Tab>Help</Tab>
 
@@ -245,6 +247,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <Oneliner />
+          </TabPanel>
+          <TabPanel>
+            <Twoliner />
           </TabPanel>
           <TabPanel>
             <Help />
