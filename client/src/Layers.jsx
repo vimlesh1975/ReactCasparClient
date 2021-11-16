@@ -122,7 +122,7 @@ const Layers = () => {
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.fill} onChange={e => changeCurrentColor(e, canvas)} /></td>
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} /></td>
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.shadow.color} onChange={e => changeShadowCurrentColor(e, canvas)} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.shadow?.color} onChange={e => changeShadowCurrentColor(e, canvas)} /></td>
                                                     </tr>
                                                 )
                                                 }
