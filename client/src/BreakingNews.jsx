@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { endpoint } from './common'
 import {  FaStop } from "react-icons/fa";
-import { iniplayerList1 } from './hockeyData'
+import { iniBreakingNews } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -10,7 +10,7 @@ import { VscMove } from "react-icons/vsc";
 const generalayer = 550;
 
 const BreakingNews = () => {
-    const [playerList1, setPlayerList1] = useState(iniplayerList1);
+    const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
 
     var newplayerList1 = [];
@@ -28,7 +28,7 @@ const BreakingNews = () => {
             else{
                 iii=0; 
             }
-        }, 3000));
+        }, 4000));
     }
 
     const onDragEnd1 = (result) => {
@@ -126,7 +126,7 @@ const BreakingNews = () => {
             <p>PageName: BreakingNews</p>
             <p>id: f0</p>
 
-            <div style={{ display: 'flex', width: 830, margin: 20 }}>
+            <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div>
                     <DragDropContext onDragEnd={onDragEnd1}>
                         <Droppable droppableId="droppable-1" type="PERSON1">
@@ -153,7 +153,7 @@ const BreakingNews = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ minWidth: 300 }} type='text' defaultValue={val}
+                                                                <td style={{ minWidth: 300 }}><input style={{ minWidth: 650 }} type='text' defaultValue={val}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
