@@ -150,12 +150,50 @@ const BreakingNews = () => {
         setPlayerList1(aa);
     }
 
+    const drawingFileSaveAs = () => {
+        const element = document.createElement("a");
+        var aa = ''
+        playerList1.forEach(val => {
+            aa += JSON.stringify({ 'data': val}) + '\r\n'
+        });
+        const file = new Blob([aa], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        var ss= new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+      
+       
+
+        var retVal = prompt("Enter  file name to save : ", ss);
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+    let fileReader;
+
+    const handleFileChosen = (file) => {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead;
+            fileReader.readAsText(file);
+        }
+    }
+    const handleFileRead = (e) => {
+        const content = fileReader.result;
+        var aa = content.split('\r\n')
+        aa.splice(-1)
+        var updatedcanvasList = []
+        aa.forEach(element => {
+            var cc = JSON.parse(element)
+            updatedcanvasList.push(cc.data)
+        });
+       setPlayerList1(updatedcanvasList)
+    };
+
     return (
         <div>
                 <h3>This page should be operated in a separate single tab</h3>
-
             <div style={{ display: 'flex' }}>
-
                 <div>
                     <table border='1'>
                         <tbody >
@@ -168,7 +206,6 @@ const BreakingNews = () => {
                 </div>
                 <div>
                     <div>
-                      
                         <button style={{ backgroundColor: 'red', width: 50, height: 100 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
                         <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                             if (e.target.checked === true) {
@@ -181,7 +218,22 @@ const BreakingNews = () => {
                         }
                         } /></label>
                     </div>
+              
                 </div>
+                <div>
+                   <button onClick={drawingFileSaveAs}>Save</button>    <span>Open File:</span>  <input
+                        type='file'
+                        id='file'
+                        className='input-file'
+                        accept='.txt'
+                        onChange={e => {
+                            handleFileChosen(e.target.files[0]);
+                        }}
+
+                    />
+                 
+
+               </div>
             </div>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 770, overflow: 'auto' }}>
