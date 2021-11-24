@@ -1,34 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { endpoint } from './common'
-import {  FaStop } from "react-icons/fa";
+import { FaStop } from "react-icons/fa";
 import { iniBreakingNews } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 
-const generalayer = 550;
+
 
 const BreakingNews = () => {
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
+
+    const [generalayer, setGeneralayer] = useState(550);
+    const [variableName, setVariableName] = useState('f0');
+    const [pageName, setPageName] = useState('BreakingNews');
+    const [timeInterval, setTimeInterval] = useState(4000);
 
     var newplayerList1 = [];
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
-    var iii=0;
+    var iii = 0;
     const startBreakingNews = () => {
-        setAaa( setInterval(() => {
-            recallPage(generalayer, 'BreakingNews', [{ key: 'f0', value: playerList1[iii], type: 'text' }]);
-            if (iii<playerList1.length-1){
-                iii +=1;
+        setAaa(setInterval(() => {
+            recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii], type: 'text' }]);
+            if (iii < playerList1.length - 1) {
+                iii += 1;
             }
-            else{
-                iii=0; 
+            else {
+                iii = 0;
             }
-        }, 4000));
+        }, timeInterval));
     }
 
     const onDragEnd1 = (result) => {
@@ -39,6 +44,15 @@ const BreakingNews = () => {
         }
     }
 
+    // useEffect(() => {
+    //     // clearInterval(aaa);
+    //     // setAaa(0);
+    //     return () => {
+    //         //cleanup
+    //     }
+    // }, [])
+
+    
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
@@ -120,14 +134,48 @@ const BreakingNews = () => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
     }
+    const deletePage = e => {
+        const aa = [...playerList1]
+        aa.splice(parseInt(e.target.getAttribute('key1')), 1);
+        setPlayerList1(aa);
+    }
+    const addPage = e => {
+        const aa = [...playerList1]
+        aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, '');
+        setPlayerList1(aa);
+    }
 
     return (
         <div>
-            <p>PageName: BreakingNews</p>
-            <p>id: f0</p>
-
-            <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
+            <div style={{ display: 'flex' }}>
                 <div>
+                    <table border='1'>
+                        <tbody >
+                            <tr><td>Page Name</td><td><input type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td></tr>
+                            <tr><td>Variable Name</td><td> <input type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td></tr>
+                            <tr><td> Layer Numbaer</td><td> <input type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td></tr>
+                            <tr><td> Time Interval</td><td> <input type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div>
+                        <button style={{ backgroundColor: 'red', width: 50, height: 100 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
+                        <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
+                            if (e.target.checked === true) {
+                                startBreakingNews();
+                            }
+                            else {
+                                clearInterval(aaa);
+                                setAaa(0);
+                            }
+                        }
+                        } /></label>
+                    </div>
+                </div>
+            </div>
+            <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
+                <div style={{ backgroundColor: 'grey', height: 650, width: 770, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
                         <Droppable droppableId="droppable-1" type="PERSON1">
                             {(provided, snapshot) => (
@@ -163,6 +211,8 @@ const BreakingNews = () => {
                                                                     }}
                                                                 />
                                                                 </td>
+                                                                <td><button key1={i} onClick={(e) => deletePage(e)}>-</button></td>
+                                                                <td><button key1={i} onClick={(e) => addPage(e)}>+</button></td>
                                                             </tr>
                                                         )
                                                         }
@@ -177,19 +227,7 @@ const BreakingNews = () => {
                         </Droppable>
                     </DragDropContext>
                 </div>
-                <div>
-                    <button style={{ backgroundColor: 'red', width: 200, height: 100 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
-                    <label>Start Breaking News: <input type='checkbox'  onChange={(e) => {
-                        if (e.target.checked===true) {
-                            startBreakingNews();
-                        }
-                        else{
-                            clearInterval(aaa);
-                            setAaa(0);
-                        }
-                    }
-                    } /></label>
-                </div>
+
             </div>
 
         </div>
