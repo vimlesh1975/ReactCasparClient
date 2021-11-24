@@ -26,7 +26,8 @@ import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 
 
-const buildDate = '161121'
+
+const buildDate = '241121'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();

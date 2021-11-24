@@ -7,8 +7,7 @@ import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 
-
-
+var iii = 0;
 const BreakingNews = () => {
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
@@ -23,7 +22,7 @@ const BreakingNews = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
-    var iii = 0;
+    
     const startBreakingNews = () => {
         setAaa(setInterval(() => {
             recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii], type: 'text' }]);
@@ -36,6 +35,18 @@ const BreakingNews = () => {
         }, timeInterval));
     }
 
+    useEffect(() => {
+        if (aaa !== 0) {
+            clearInterval(aaa);
+            setAaa(0);
+            startBreakingNews();
+        }
+        return () => {
+            clearInterval(aaa); //cleanup
+            setAaa(0);
+        }
+    }, [generalayer, pageName, variableName, playerList1, timeInterval])
+
     const onDragEnd1 = (result) => {
         const aa = [...playerList1]
         if (result.destination != null) {
@@ -44,15 +55,9 @@ const BreakingNews = () => {
         }
     }
 
-    // useEffect(() => {
-    //     // clearInterval(aaa);
-    //     // setAaa(0);
-    //     return () => {
-    //         //cleanup
-    //     }
-    // }, [])
 
-    
+
+
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
@@ -147,7 +152,10 @@ const BreakingNews = () => {
 
     return (
         <div>
+                <h3>This page should be operated in a separate single tab</h3>
+
             <div style={{ display: 'flex' }}>
+
                 <div>
                     <table border='1'>
                         <tbody >
@@ -160,6 +168,7 @@ const BreakingNews = () => {
                 </div>
                 <div>
                     <div>
+                      
                         <button style={{ backgroundColor: 'red', width: 50, height: 100 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
                         <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                             if (e.target.checked === true) {
@@ -213,6 +222,7 @@ const BreakingNews = () => {
                                                                 </td>
                                                                 <td><button key1={i} onClick={(e) => deletePage(e)}>-</button></td>
                                                                 <td><button key1={i} onClick={(e) => addPage(e)}>+</button></td>
+                                                               
                                                             </tr>
                                                         )
                                                         }

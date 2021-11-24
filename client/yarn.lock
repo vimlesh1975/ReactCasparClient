@@ -6109,6 +6109,11 @@
     "duplexer" "^0.1.1"
     "pify" "^4.0.1"
 
+"hacktimer@^1.1.3":
+  "integrity" "sha1-QBEW2H+Y7LeXLtWN/oIWgVGpufg="
+  "resolved" "https://registry.npmjs.org/hacktimer/-/hacktimer-1.1.3.tgz"
+  "version" "1.1.3"
+
 "handle-thing@^2.0.0":
   "integrity" "sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg=="
   "resolved" "https://registry.npmjs.org/handle-thing/-/handle-thing-2.0.1.tgz"
