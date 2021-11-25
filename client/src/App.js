@@ -27,7 +27,7 @@ import BreakingNews from './BreakingNews'
 
 
 
-const buildDate = '241121'
+const buildDate = '251121'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();

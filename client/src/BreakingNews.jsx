@@ -189,25 +189,33 @@ const BreakingNews = () => {
         });
        setPlayerList1(updatedcanvasList)
     };
+const setAsScrollText=()=>{
 
+    canvas.getObjects().forEach((element) => {
+        var aa='';
+        playerList1.forEach(element => {
+            aa +=element + '  ';
+        });
+        if (element.id === variableName) {
+        element.set({objectCaching: false,text:aa})
+     } })
+
+}
     return (
         <div>
                 <h3>This page should be operated in a separate single tab</h3>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex1' }}>
                 <div>
                     <table border='1'>
                         <tbody >
-                            <tr><td>Page Name</td><td><input type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td></tr>
-                            <tr><td>Variable Name</td><td> <input type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td></tr>
-                            <tr><td> Layer Numbaer</td><td> <input type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td></tr>
-                            <tr><td> Time Interval</td><td> <input type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
+                            <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td> <td>Variable Name</td><td> <input size="2"  type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                            <td> Layer Numbaer</td><td> <input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td> <td> Time Interval</td><td> <input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
                         </tbody>
                     </table>
-                </div>
-                <div>
-                    <div>
-                        <button style={{ backgroundColor: 'red', width: 50, height: 100 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
-                        <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
+                    <table border='1'>
+                        <tbody >
+                            <tr>
+                            <td> <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                             if (e.target.checked === true) {
                                 startBreakingNews();
                             }
@@ -216,12 +224,11 @@ const BreakingNews = () => {
                                 setAaa(0);
                             }
                         }
-                        } /></label>
-                    </div>
-              
-                </div>
-                <div>
-                   <button onClick={drawingFileSaveAs}>Save</button>    <span>Open File:</span>  <input
+                        } /></label></td>
+                        <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td>
+                        <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
+                        <td><button onClick={drawingFileSaveAs}>Save</button></td>
+                        <td> <span>Open File:</span>  <input
                         type='file'
                         id='file'
                         className='input-file'
@@ -230,10 +237,15 @@ const BreakingNews = () => {
                             handleFileChosen(e.target.files[0]);
                         }}
 
-                    />
-                 
+                    /></td>
 
-               </div>
+                       </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+              
+               
             </div>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 770, overflow: 'auto' }}>
