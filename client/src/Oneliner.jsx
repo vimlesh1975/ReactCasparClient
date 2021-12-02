@@ -7,6 +7,7 @@ import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 
+
 const generalayer = 500;
 
 const Oneliner = () => {
@@ -24,7 +25,7 @@ const Oneliner = () => {
             setPlayerList1(aa);
         }
     }
- 
+   
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -69,7 +70,7 @@ const Oneliner = () => {
         }
         else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
     }
-
+   
     const sendToCasparcg = (layerNumber) => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {

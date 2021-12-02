@@ -24,10 +24,11 @@ import VideoPlaylist from './VideoPlaylist'
 import Oneliner from './Oneliner'
 import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
+import Automation from './Automation';
 
 
 
-const buildDate = '251121'
+const buildDate = '021221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -77,6 +78,7 @@ const App = () => {
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
+    
     socket.on("Fromccgsocket", data => {
       setmediaPath(data);
     });
@@ -218,6 +220,7 @@ const App = () => {
             <Tab >Oneliner</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
+            <Tab >Automation</Tab>
 
             <Tab>Help</Tab>
 
@@ -257,6 +260,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <BreakingNews />
+          </TabPanel>
+          <TabPanel>
+            <Automation />
           </TabPanel>
           <TabPanel>
             <Help />

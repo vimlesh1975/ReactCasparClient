@@ -130,7 +130,12 @@ app.post('/getPaths', (req, res) => {
     res.send(mediaPath);
 })
 
-
+app.post('/recallPage', (req, res) => {
+   const data=req.body;
+    console.log(data)
+    io.emit('recallPage', req.body)
+    res.end('Sent The Commands')
+})
 
 
 
