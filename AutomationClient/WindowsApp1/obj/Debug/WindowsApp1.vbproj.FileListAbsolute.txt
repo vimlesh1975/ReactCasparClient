@@ -1,0 +1,16 @@
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe.config
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.pdb
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.xml
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\Newtonsoft.Json.dll
+D:\vimlesh\WindowsApp1\WindowsApp1\bin\Debug\Newtonsoft.Json.xml
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.AssemblyReference.cache
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.SuggestedBindingRedirects.cache
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Employee.resources
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Resources.resources
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.GenerateResource.cache
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.CoreCompileInputs.cache
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.CopyComplete
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.exe
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.xml
+D:\vimlesh\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.pdb
