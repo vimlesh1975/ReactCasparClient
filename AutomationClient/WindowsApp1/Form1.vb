@@ -9,8 +9,10 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
         Dim list1 = New Employee With {.key = "f0", .value = TextBox1.Text, .type = "text"}
+        Dim list2 = New Employee With {.key = "f1", .value = TextBox2.Text, .type = "text"}
 
-        Dim postData As String = "layerNumber=" & 1 & "&pageName=" & "Oneliner" & "&data=" & JsonConvert.SerializeObject(list1)
+        Dim aa = {list1, list2}
+        Dim postData As String = "layerNumber=" & 1 & "&pageName=" & "Twoliner" & "&data=" & JsonConvert.SerializeObject(aa)
         Dim url As String = "http://localhost:8080/recallPage"
         Dim client As New WebClient()
         Dim data As Byte() = System.Text.Encoding.ASCII.GetBytes(postData)

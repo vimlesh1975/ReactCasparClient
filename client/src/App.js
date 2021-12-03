@@ -28,7 +28,7 @@ import Automation from './Automation';
 
 
 
-const buildDate = '021221'
+const buildDate = '031221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -78,7 +78,7 @@ const App = () => {
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
-    
+
     socket.on("Fromccgsocket", data => {
       setmediaPath(data);
     });

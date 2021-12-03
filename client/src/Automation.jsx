@@ -17,7 +17,7 @@ const Automation = () => {
             socket.on("recallPage", data => {
                 console.log(canvasList)
                 // console.log(data.layerNumber, data.pageName, [JSON.parse(data.data)])
-                recallPage(data.layerNumber, data.pageName, [JSON.parse(data.data)]);
+                recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
                 //   recallPage(data.layerNumber, data.pageName, [{ key: 'f0', value: 'vimlesh', type: 'text' }]);
             });
         }
