@@ -1,0 +1,16 @@
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\RCCAutomation.exe.config
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\RCCAutomation.exe
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\RCCAutomation.pdb
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\RCCAutomation.xml
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.vbproj.AssemblyReference.cache
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.vbproj.SuggestedBindingRedirects.cache
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.Form1.resources
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.Resources.resources
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.vbproj.GenerateResource.cache
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.vbproj.CoreCompileInputs.cache
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.exe
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.xml
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.pdb
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\Newtonsoft.Json.dll
+D:\RCCAutomation\RCCAutomation\bin\x64\Debug\Newtonsoft.Json.xml
+D:\RCCAutomation\RCCAutomation\obj\x64\Debug\RCCAutomation.vbproj.CopyComplete

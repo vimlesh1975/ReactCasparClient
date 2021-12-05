@@ -15,11 +15,16 @@ const Automation = () => {
         const socket = socketIOClient(':8080');
         if (allowAutomation.toString() === 'true') {
             socket.on("recallPage", data => {
-                console.log(canvasList)
-                // console.log(data.layerNumber, data.pageName, [JSON.parse(data.data)])
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
-                //   recallPage(data.layerNumber, data.pageName, [{ key: 'f0', value: 'vimlesh', type: 'text' }]);
             });
+
+            socket.on("updateData", data => {
+                updateData(data.layerNumber, JSON.parse(data.data));
+            });
+            socket.on("stopGraphics", data => {
+                stopGraphics(data.layerNumber);
+            });
+
         }
         else {
             socket?.removeListener('recallPage');
@@ -53,6 +58,7 @@ const Automation = () => {
                                 else if (data2.type === 'image') {
                                     var i = new Image();
                                     i.onload = function () {
+                                        console.log('img loaded')
                                         const originalWidth = (element.width) * (element.scaleX);
                                         const originalHeight = (element.height) * (element.scaleY);
                                         element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
@@ -109,6 +115,49 @@ const Automation = () => {
         }, 1100);
     }
 
+    const updateData = (layerNumber, data) => {
+        const data1 = data;
+        data1.forEach(data2 => {
+            canvas.getObjects().forEach((element) => {
+                try {
+                    if (element.id === data2.key) {
+                        if (data2.type === 'text') {
+                            const aa = (element.width) * (element.scaleX);
+                            element.set({ objectCaching: false, text: data2.value.toString() })
+                            if (element.width > aa) { element.scaleToWidth(aa) }
+                            canvas.requestRenderAll();
+                        }
+                        else if (data2.type === 'image') {
+                            var i = new Image();
+                            i.onload = function () {
+                                const originalWidth = (element.width) * (element.scaleX);
+                                const originalHeight = (element.height) * (element.scaleY);
+                                element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+                                if (element.type === 'image') {
+                                    element.setSrc(data2.value)
+                                }
+                                else if (element.type === 'rect') {
+                                    element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
+                                }
+                                canvas.requestRenderAll();
+                            };
+                            i.src = data2.value;
+                        }
+                    }
+                    canvas.requestRenderAll();
+                } catch (error) {
+                }
+            });
+        });
+        // sendToCasparcg(layerNumber)
+        updateGraphics(layerNumber)
+    }
+    const stopGraphics = layerNumber => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        }, 1000);
+    }
     return (
         <div>
             Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />

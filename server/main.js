@@ -32,8 +32,8 @@ fontList.getFonts({ disableQuoting: true })
 // app.use(bodyParser({limit: '50mb'}));
 // const jsonParser = bodyParser.json();
 
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 // app.use(jsonParser);
 
@@ -130,12 +130,6 @@ app.post('/getPaths', (req, res) => {
     res.send(mediaPath);
 })
 
-app.post('/recallPage', (req, res) => {
-   const data=req.body;
-    console.log(data)
-    io.emit('recallPage', req.body)
-    res.end('Sent The Commands')
-})
 
 
 
@@ -176,3 +170,23 @@ app.use(express.static(path.join(__dirname, '..', 'client/build'))); //client fo
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client/build', 'index.html'));
 });
+
+app.post('/recallPage', (req, res) => {
+    const data = req.body;
+    console.log(data)
+    io.emit('recallPage', req.body)
+    res.end('Sent The Commands')
+})
+
+app.post('/updateData', (req, res) => {
+    const data = req.body;
+    console.log(data)
+    io.emit('updateData', req.body)
+    res.end('Sent The Commands')
+})
+app.post('/stopGraphics', (req, res) => {
+    const data = req.body;
+    console.log(data)
+    io.emit('stopGraphics', req.body)
+    res.end('Sent The Commands')
+})
