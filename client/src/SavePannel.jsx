@@ -231,7 +231,7 @@ const SavePannel = () => {
                     <button onClick={() => updatePage()}>Update Page</button>
                 </div>
             </div>
-            <div style={{ height: 750, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+            <div style={{ height: 710, width: 380, overflow: 'scroll', border: '1px solid black' }}>
 
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">

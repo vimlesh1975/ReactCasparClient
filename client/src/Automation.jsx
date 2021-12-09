@@ -78,6 +78,7 @@ const Automation = () => {
                         }
                     });
                 });
+        canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
         }
@@ -141,7 +142,7 @@ const Automation = () => {
                                 }
                                 canvas.requestRenderAll();
                             };
-                            i.src = data2.value;
+                            i.src =data2.value;
                         }
                     }
                     canvas.requestRenderAll();
@@ -149,8 +150,11 @@ const Automation = () => {
                 }
             });
         });
-        // sendToCasparcg(layerNumber)
-        updateGraphics(layerNumber)
+        canvas.requestRenderAll();
+        setTimeout(() => {
+            updateGraphics(layerNumber)
+        }, 300);
+        
     }
     const stopGraphics = layerNumber => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)

@@ -21,7 +21,6 @@ import { animationMethods, chNumbers } from './common'
 import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
-import Oneliner from './Oneliner'
 import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
@@ -217,7 +216,6 @@ const App = () => {
             <Tab>Layers</Tab>
             <Tab>Hockey</Tab>
             <Tab >ColorGradient</Tab>
-            <Tab >Oneliner</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
             <Tab >Automation</Tab>
@@ -251,9 +249,6 @@ const App = () => {
           </TabPanel>
           <TabPanel >
             <ColorGradient />
-          </TabPanel>
-          <TabPanel>
-            <Oneliner />
           </TabPanel>
           <TabPanel>
             <Twoliner />

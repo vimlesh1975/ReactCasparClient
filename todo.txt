@@ -4,3 +4,9 @@ max size for playlist 👍
 
 selected color in video saerch. 👍
 remove extar layer from layer list 👍
+
+09.12.21
+1. Save pannel one row was hiding=> now ok.
+2. Added play button in Breaking news.
+3. Removed oneliner.
+4. Added update button in Breaking news.
