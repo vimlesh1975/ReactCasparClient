@@ -173,20 +173,20 @@ app.get('/', function (req, res) {
 
 app.post('/recallPage', (req, res) => {
     const data = req.body;
-    console.log(data)
+    // console.log(data)
     io.emit('recallPage', req.body)
     res.end('Sent The Commands')
 })
 
 app.post('/updateData', (req, res) => {
     const data = req.body;
-    console.log(data)
+    // console.log(data)
     io.emit('updateData', req.body)
     res.end('Sent The Commands')
 })
 app.post('/stopGraphics', (req, res) => {
     const data = req.body;
-    console.log(data)
+    // console.log(data)
     io.emit('stopGraphics', req.body)
     res.end('Sent The Commands')
 })

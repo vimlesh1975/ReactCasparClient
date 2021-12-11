@@ -53,7 +53,7 @@ const Automation = () => {
                                     const aa = (element.width) * (element.scaleX);
                                     element.set({ objectCaching: false, text: data2.value.toString() })
                                     if (element.width > aa) { element.scaleToWidth(aa) }
-                                    canvas.requestRenderAll();
+                                    // canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -68,17 +68,17 @@ const Automation = () => {
                                         else if (element.type === 'rect') {
                                             element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                         }
-                                        canvas.requestRenderAll();
+                                        // canvas.requestRenderAll();
                                     };
                                     i.src = data2.value;
                                 }
                             }
-                            canvas.requestRenderAll();
+                            // canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
                 });
-        canvas.requestRenderAll();
+                // canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
         }
@@ -86,7 +86,7 @@ const Automation = () => {
     }
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
 
@@ -126,7 +126,7 @@ const Automation = () => {
                             const aa = (element.width) * (element.scaleX);
                             element.set({ objectCaching: false, text: data2.value.toString() })
                             if (element.width > aa) { element.scaleToWidth(aa) }
-                            canvas.requestRenderAll();
+                            // canvas.requestRenderAll();
                         }
                         else if (data2.type === 'image') {
                             var i = new Image();
@@ -140,21 +140,21 @@ const Automation = () => {
                                 else if (element.type === 'rect') {
                                     element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                 }
-                                canvas.requestRenderAll();
+                                // canvas.requestRenderAll();
                             };
-                            i.src =data2.value;
+                            i.src = data2.value;
                         }
                     }
-                    canvas.requestRenderAll();
+                    // canvas.requestRenderAll();
                 } catch (error) {
                 }
             });
         });
-        canvas.requestRenderAll();
+        // canvas.requestRenderAll();
         setTimeout(() => {
             updateGraphics(layerNumber)
         }, 300);
-        
+
     }
     const stopGraphics = layerNumber => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
@@ -164,9 +164,7 @@ const Automation = () => {
     }
     return (
         <div>
-            Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
-            {allowAutomation.toString()}
-
+          Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
         </div>
     )
 }

@@ -26,13 +26,18 @@ const BreakingNews = () => {
 
     const startBreakingNews = () => {
         setAaa(setInterval(() => {
-            if (playerList1[iii].use1 === false) {
-                iii += 1;
-                return;
+
+            while (playerList1[iii].use1 === false) {
+                if (iii < playerList1.length - 1) {
+
+                    iii += 1;
+                }
+                else {
+                    iii = 0;
+                }
+                continue;
             }
-            else {
-                recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii].data1, type: 'text' }]);
-            }
+            recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii].data1, type: 'text' }]);
             if (iii < playerList1.length - 1) {
 
                 iii += 1;
@@ -80,7 +85,7 @@ const BreakingNews = () => {
                                     const aa = (element.width) * (element.scaleX);
                                     element.set({ objectCaching: false, text: data2.value.toString() })
                                     if (element.width > aa) { element.scaleToWidth(aa) }
-                                    canvas.requestRenderAll();
+                                    // canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -94,12 +99,12 @@ const BreakingNews = () => {
                                         else if (element.type === 'rect') {
                                             element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                         }
-                                        canvas.requestRenderAll();
+                                        // canvas.requestRenderAll();
                                     };
                                     i.src = data2.value;
                                 }
                             }
-                            canvas.requestRenderAll();
+                            // canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
@@ -135,10 +140,10 @@ const BreakingNews = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
-
+    //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
     const stopGraphics = layerNumber => {
