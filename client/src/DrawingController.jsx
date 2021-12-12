@@ -8,7 +8,7 @@ import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
 import { FaAlignLeft, FaAlignRight, FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { GrResume } from 'react-icons/gr';
-import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom, AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
 import Tooltip from '@mui/material/Tooltip';
@@ -813,7 +813,8 @@ const DrawingController = () => {
     const [skewRX, setSkewRX] = useState(0);
     const [skewRY, setSkewRY] = useState(0);
 
-
+    const [cropX, setCropX] = useState(0);
+    const [cropY, setCropY] = useState(0);
 
 
 
@@ -962,6 +963,17 @@ const DrawingController = () => {
     const onRySizeChange = e => {
         setSkewRY(parseInt(e.target.value))
         canvas.getActiveObjects().forEach(item => item.ry = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+
+    const onCropX = e => {
+        setCropX(parseInt(e.target.value))
+        canvas.getActiveObjects().forEach(item => item.cropX = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+    const onCropY = e => {
+        setCropY(parseInt(e.target.value))
+        canvas.getActiveObjects().forEach(item => item.cropY = parseInt(e.target.value))
         canvas.requestRenderAll();
     }
 
@@ -1694,6 +1706,10 @@ const DrawingController = () => {
                                 <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
                                 <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
                                 <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                                <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
+
+
+
                             </tbody>
                         </table>
                     </div>
@@ -1702,7 +1718,7 @@ const DrawingController = () => {
 
                         <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
                             <tbody>
-                                <tr><td colSpan='2'> <b> Skew: </b></td></tr>
+
                                 <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewXSize} /><button onClick={() => {
                                     setSkewXSize(0);
                                     canvas.getActiveObjects().forEach(item => item.skewX = 0)
@@ -1723,6 +1739,20 @@ const DrawingController = () => {
                                     canvas.getActiveObjects().forEach(item => item.ry = 0)
                                     canvas.requestRenderAll();
                                 }}>R</button>{skewRY}</td></tr>
+
+                                <tr><td> cropX:</td><td><input className='inputRange' onChange={e => onCropX(e)} type="range" id='cropX' min='0' max='2360' step='1' value={cropX} /><button onClick={() => {
+                                    setCropX(0);
+                                    canvas.getActiveObjects().forEach(item => item.cropX = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{cropX}</td></tr>
+
+
+                                <tr><td> cropY:</td><td><input className='inputRange' onChange={e => onCropY(e)} type="range" id='cropY' min='0' max='2360' step='1' value={cropY} /><button onClick={() => {
+                                    setCropY(0);
+                                    canvas.getActiveObjects().forEach(item => item.cropY = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{cropY}</td></tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -1744,17 +1774,17 @@ const DrawingController = () => {
                     <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                     <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
                     <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
-                    <button onClick={() => deleteAll(canvas)}><VscTrash /> All</button>
+                    <button onClick={() => deleteAll(canvas)}><VscTrash />All</button>
                     <button onClick={() => lock(canvas)}><VscLock /></button>
-                    <button onClick={() => unlockAll(canvas)}><VscUnlock /> All</button>
-                    <button onClick={() => undo(canvas)}><AiOutlineUndo /> Undo</button>
-                    <button onClick={() => redo(canvas)}><AiOutlineRedo /> Redo</button>
-                    <button onClick={() => copy(canvas)}> Copy</button>
-                    <button onClick={() => paste(canvas)}> Paste</button>
-                    <button onClick={() => selectAll(canvas)}> Select All</button>
-                    <button onClick={() => deSelectAll(canvas)}> Deselect All</button>
-                    <button onClick={() => sendToBack(canvas)}> Send To Back</button>
-                    <button onClick={() => bringToFront(canvas)}> Bring To Front</button>
+                    <button onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
+                    <button onClick={() => undo(canvas)}>Undo</button>
+                    <button onClick={() => redo(canvas)}>Redo</button>
+                    <button onClick={() => copy(canvas)}>Copy</button>
+                    <button onClick={() => paste(canvas)}>Paste</button>
+                    <button onClick={() => selectAll(canvas)}>Select All</button>
+                    <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
+                    <button onClick={() => sendToBack(canvas)}>Send To BK</button>
+                    <button onClick={() => bringToFront(canvas)}>Bring to F</button>
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1768,10 +1798,7 @@ const DrawingController = () => {
                     <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
 
                 </div>
-                <div className='drawingToolsRow' >
-                    <button onClick={() => setasClipPath(canvas)}>Set as CipPath</button>
-                    <button onClick={() => cliptoPath(canvas)}>Clip to Path</button>
-                </div>
+
                 <div className='drawingToolsRow' >
                     <button onClick={makeFullScreen}>Make full Screen</button>
                     <button onClick={removeBorder}>Remove Border</button>

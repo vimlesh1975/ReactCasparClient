@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCCAutomationHtml</title>
+</head>
+
+<body>
+    <h1>RCCAutomationHtml</h1>
+    <button onclick="aaa()">Call page</button>
+    <label id='demo'></label>
+</body>
+<script type="text/javascript">
+    function aaa() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "http://localhost:8080/recallPage", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var bb = Math.floor(Math.random() * 100)
+        const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }]
+        var params = `layerNumber=96&pageName=Imageandname&data=${JSON.stringify(aa)}`
+        xhttp.send(params);
+    };
+</script>
+
+</html>

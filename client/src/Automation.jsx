@@ -40,49 +40,55 @@ const Automation = () => {
     }, [allowAutomation, canvasList])
 
     const recallPage = (layerNumber, pageName, data) => {
-        const index = canvasList.findIndex(val => val.pageName === pageName);
-        if (index !== -1) {
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
-            const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
-                data1.forEach(data2 => {
-                    canvas.getObjects().forEach((element) => {
-                        try {
-                            if (element.id === data2.key) {
-                                if (data2.type === 'text') {
-                                    const aa = (element.width) * (element.scaleX);
-                                    element.set({ objectCaching: false, text: data2.value.toString() })
-                                    if (element.width > aa) { element.scaleToWidth(aa) }
-                                    // canvas.requestRenderAll();
-                                }
-                                else if (data2.type === 'image') {
-                                    var i = new Image();
-                                    i.onload = function () {
-                                        console.log('img loaded')
-                                        const originalWidth = (element.width) * (element.scaleX);
-                                        const originalHeight = (element.height) * (element.scaleY);
-                                        element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
-                                        if (element.type === 'image') {
-                                            element.setSrc(data2.value)
-                                        }
-                                        else if (element.type === 'rect') {
-                                            element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
-                                        }
+        try {
+            const index = canvasList.findIndex(val => val.pageName === pageName);
+            if (index !== -1) {
+                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
+                const data1 = data;
+                canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                    data1.forEach(data2 => {
+                        canvas.getObjects().forEach((element) => {
+                            try {
+                                if (element.id === data2.key) {
+                                    if (data2.type === 'text') {
+                                        const aa = (element.width) * (element.scaleX);
+                                        element.set({ objectCaching: false, text: data2.value.toString() })
+                                        if (element.width > aa) { element.scaleToWidth(aa) }
                                         // canvas.requestRenderAll();
-                                    };
-                                    i.src = data2.value;
+                                    }
+                                    else if (data2.type === 'image') {
+                                        var i = new Image();
+                                        i.onload = function () {
+                                            console.log('img loaded')
+                                            const originalWidth = (element.width) * (element.scaleX);
+                                            const originalHeight = (element.height) * (element.scaleY);
+                                            element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+                                            if (element.type === 'image') {
+                                                element.setSrc(data2.value)
+                                            }
+                                            else if (element.type === 'rect') {
+                                                element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
+                                            }
+                                            // canvas.requestRenderAll();
+                                        };
+                                        i.src = data2.value;
+                                    }
                                 }
+                                // canvas.requestRenderAll();
+                            } catch (error) {
                             }
-                            // canvas.requestRenderAll();
-                        } catch (error) {
-                        }
+                        });
                     });
+                    // canvas.requestRenderAll();
+                    sendToCasparcg(layerNumber)
                 });
-                // canvas.requestRenderAll();
-                sendToCasparcg(layerNumber)
-            });
+            }
+            else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
+
+        } catch (error) {
+
         }
-        else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
+
     }
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -164,7 +170,7 @@ const Automation = () => {
     }
     return (
         <div>
-          Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
+            Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
         </div>
     )
 }
