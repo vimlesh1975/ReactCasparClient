@@ -46,7 +46,7 @@ Public Class Form1
         Dim data2 = New rccData With {.key = txtKeyImage.Text, .value = dgv1.CurrentRow.Cells(1).Value, .type = "image"}
         Dim allData = {data1, data2}
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text & "&pageName=" & txtPageName.Text & "&data=" & JsonConvert.SerializeObject(allData)
-        Dim data As Byte() = System.Text.Encoding.ASCII.GetBytes(postData)
+        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
         Dim url As String = "http://localhost:8080/recallPage"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
@@ -58,7 +58,7 @@ Public Class Form1
         Dim data2 = New rccData With {.key = txtKeyImage.Text, .value = dgv1.CurrentRow.Cells(1).Value, .type = "image"}
         Dim allData = {data1, data2}
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text & "&pageName=" & txtPageName.Text & "&data=" & JsonConvert.SerializeObject(allData)
-        Dim data As Byte() = System.Text.Encoding.ASCII.GetBytes(postData)
+        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
         Dim url As String = "http://localhost:8080/updateData"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
@@ -66,7 +66,7 @@ Public Class Form1
 
     Private Sub cmdStop_Click(sender As Object, e As EventArgs) Handles cmdStop.Click
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text
-        Dim data As Byte() = System.Text.Encoding.ASCII.GetBytes(postData)
+        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
         Dim url As String = "http://localhost:8080/stopGraphics"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
