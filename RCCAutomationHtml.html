@@ -7,14 +7,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCCAutomationHtml</title>
 </head>
+<!-- This is example file for automation of RCC
+    There are three methods for this.
+
+    recallPage
+    updateData
+    stopGraphics
+
+-->
 
 <body>
     <h1>RCCAutomationHtml</h1>
-    <button onclick="aaa()">Call page</button>
-    <label id='demo'></label>
+    <div>
+        <button onclick="recallPage()">Call page</button>
+    </div>
+
+    <div>
+        <button onclick="updateData()">updateData</button>
+    </div>
+    <div>
+        <button onclick="stopGraphics()">stopGraphics</button>
+    </div>
+
+    <div>
+        <label for="pageName">pageName:</label>
+        <input type="text" id="pageName" name="pageName" value="Imageandname">
+    </div>
+
+    <div>
+        <label for="fill">Select Fill Color:</label>
+        <input type="color" id="fill" name="fill" value="#ff0000">
+    </div>
+    <div>
+        <label for="backgroundColor">Select backgroundColor:</label>
+        <input type="color" id="backgroundColor" name="backgroundColor" value="#ffff00">
+    </div>
+
+    <div>
+        <label for="shadow">Select shadow:</label>
+        <input type="color" id="shadow" name="shadow" value="#ff00ff">
+    </div>
+
+    <div>
+        <label id='demo'></label>
+    </div>
 </body>
+<!-- type values example -->
+<!--  shadow: {
+    color: 'black',
+    blur: 30,
+    offsetX: 0,
+    offsetY: 0,
+    affectStroke: false
+},
+        left: 10,
+        top: 530,
+        width: 100,
+        fill: '#ffffff',
+        backgroundColor: options.backgroundColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'center',
+        stroke: '',
+        strokeWidth: 0, -->
 <script type="text/javascript">
-    function aaa() {
+    function recallPage() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -24,10 +84,39 @@
         xhttp.open("POST", "http://localhost:8080/recallPage", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var bb = Math.floor(Math.random() * 100)
-        const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }]
-        var params = `layerNumber=96&pageName=Imageandname&data=${JSON.stringify(aa)}`
+        const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" },{ key: "f0", value: document.querySelector("#fill").value, type: "fill" }, { key: "f0", value: document.querySelector("#backgroundColor").value, type: "backgroundColor" }, { key: "f0", value: {color:document.querySelector("#shadow").value}, type: "shadow" }]
+        var params = `layerNumber=96&pageName=${document.querySelector("#pageName").value}&data=${JSON.stringify(aa)}`
         xhttp.send(params);
     };
+
+    function updateData() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "http://localhost:8080/updateData", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var bb = Math.floor(Math.random() * 100)
+        const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" },{ key: "f0", value: document.querySelector("#fill").value, type: "fill" }, { key: "f0", value: document.querySelector("#backgroundColor").value, type: "backgroundColor" },{ key: "f0", value: {color:document.querySelector("#shadow").value}, type: "shadow" }]
+        var params = `layerNumber=96&pageName=${document.querySelector("#pageName").value}&data=${JSON.stringify(aa)}`
+        xhttp.send(params);
+    };
+    function stopGraphics() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "http://localhost:8080/stopGraphics", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        var params = `layerNumber=96`
+        xhttp.send(params);
+    };
+
+
 </script>
 
 </html>

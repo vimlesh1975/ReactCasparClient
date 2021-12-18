@@ -51,9 +51,12 @@ const Automation = () => {
                             try {
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
-                                        const aa = (element.width) * (element.scaleX);
-                                        element.set({ objectCaching: false, text: data2.value.toString() })
-                                        if (element.width > aa) { element.scaleToWidth(aa) }
+                                        //code for stf
+                                        // const aa = (element.width) * (element.scaleX);
+                                        // element.set({ objectCaching: false, text: data2.value.toString() })
+                                        // if (element.width > aa) { element.scaleToWidth(aa) }
+
+                                        element.set({ text: data2.value.toString() })
                                         // canvas.requestRenderAll();
                                     }
                                     else if (data2.type === 'image') {
@@ -72,6 +75,12 @@ const Automation = () => {
                                             // canvas.requestRenderAll();
                                         };
                                         i.src = data2.value;
+                                    }
+                                    else if (data2.type === 'shadow') {
+                                        element.set({ shadow: {...element.shadow,...data2.value}})
+                                    }
+                                    else {
+                                        element.set({ [data2.type]: data2.value })
                                     }
                                 }
                                 // canvas.requestRenderAll();
@@ -129,9 +138,9 @@ const Automation = () => {
                 try {
                     if (element.id === data2.key) {
                         if (data2.type === 'text') {
-                            const aa = (element.width) * (element.scaleX);
-                            element.set({ objectCaching: false, text: data2.value.toString() })
-                            if (element.width > aa) { element.scaleToWidth(aa) }
+                            //const aa = (element.width) * (element.scaleX);
+                            element.set({ text: data2.value.toString() })
+                            //if (element.width > aa) { element.scaleToWidth(aa) }
                             // canvas.requestRenderAll();
                         }
                         else if (data2.type === 'image') {
@@ -149,6 +158,12 @@ const Automation = () => {
                                 // canvas.requestRenderAll();
                             };
                             i.src = data2.value;
+                        }
+                        else if (data2.type === 'shadow') {
+                            element.set({ shadow: {...element.shadow,...data2.value}})
+                        }
+                        else {
+                            element.set({ [data2.type]: data2.value })
                         }
                     }
                     // canvas.requestRenderAll();

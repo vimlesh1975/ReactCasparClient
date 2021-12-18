@@ -182,11 +182,11 @@ app.post('/updateData', (req, res) => {
     const data = req.body;
     // console.log(data)
     io.emit('updateData', req.body)
-    res.end('Sent The Commands')
+    res.end('Sent The Commands:' + JSON.stringify(req.body))
 })
 app.post('/stopGraphics', (req, res) => {
     const data = req.body;
     // console.log(data)
     io.emit('stopGraphics', req.body)
-    res.end('Sent The Commands')
+    res.end('Sent The Commands'  + JSON.stringify(req.body))
 })
