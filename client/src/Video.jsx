@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { endpoint } from './common';
 import { Rnd } from 'react-rnd';
 
+
 const Video = ({ video, layerNumber }) => {
     const [videoWidth, setVideoWidth] = useState(450);
     const [videoHeight, setVideoHeight] = useState(15);

@@ -17,7 +17,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
 import Images from './Images';
-import Layers from './Layers';
+import SavedStyles from './SavedStyles';
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
@@ -849,6 +849,7 @@ const DrawingController = () => {
         });
         canvas?.requestRenderAll();
     }
+
 
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
@@ -1804,6 +1805,7 @@ const DrawingController = () => {
                     <button onClick={removeBorder}>Remove Border</button>
                     <button onClick={removeCornerCurve}>Remove Border Curve</button>
                 </div>
+
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
                 <Tabs forceRenderTabPanel={true}>
@@ -1812,7 +1814,7 @@ const DrawingController = () => {
                         <Tab>Filter</Tab>
                         <Tab>CCG Tools</Tab>
                         <Tab>Images</Tab>
-                        <Tab>Layers</Tab>
+                        <Tab>Styles</Tab>
                     </TabList>
                     <TabPanel>
                         <SavePannel />
@@ -1827,7 +1829,7 @@ const DrawingController = () => {
                         <Images />
                     </TabPanel>
                     <TabPanel>
-                        <Layers />
+                        <SavedStyles />
                     </TabPanel>
                 </Tabs>
             </div>

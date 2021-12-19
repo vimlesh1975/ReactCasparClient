@@ -54,6 +54,11 @@ width: 1024px;
 height: 576px;
   border:2px solid red;
 }
+.styleContainer{
+  background-color:rgba(14, 15, 15, 0.596);
+  background-image: url('canvasBg.svg');
+}
+
 .topleft:hover{
 cursor: pointer;
 }

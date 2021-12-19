@@ -1,6 +1,8 @@
 import axios from 'axios'
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':8080';
 
+export const videoLayers = [1, 2, 3, 10000, 5]
+
 export const endpoint = (string) => {
     const data = { string: string }
     axios.post(address1 + '/endpoint', data).then((aa) => {

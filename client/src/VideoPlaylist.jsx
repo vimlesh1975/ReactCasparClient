@@ -7,8 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
+import { videoLayers } from './common'
 
-const layerNumberList = [1, 2, 3, 4, 5]
+
+const layerNumberList = videoLayers
 
 const VideoPlaylist = () => {
     const [layerNumber, setLayerNumber] = useState(5);

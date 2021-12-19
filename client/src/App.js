@@ -24,10 +24,12 @@ import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
+import { videoLayers } from './common'
 
 
 
-const buildDate = '181221'
+
+const buildDate = '191221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -162,13 +164,11 @@ const App = () => {
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}>
-                <Video video={address1 + '/media/amb.mp4'} layerNumber={1} />
-                <Video video={address1 + '/media/CG1080i50.mp4'} layerNumber={2} />
-                <Video video={address1 + '/media/go1080p25.mp4'} layerNumber={3} />
-                <Video video={address1 + '/media/CG1080i50_A.mp4'} layerNumber={4} />
-                <Video video={address1 + '/media/Anchor.png'} layerNumber={5} />
-
-
+                <Video video={address1 + '/media/amb.mp4'} layerNumber={videoLayers[0]} />
+                <Video video={address1 + '/media/CG1080i50.mp4'} layerNumber={videoLayers[1]} />
+                <Video video={address1 + '/media/go1080p25.mp4'} layerNumber={videoLayers[2]} />
+                <Video video={address1 + '/media/CG1080i50_A.mp4'} layerNumber={videoLayers[3]} />
+                <Video video={address1 + '/media/Anchor.png'} layerNumber={videoLayers[4]} />
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <Provider store={store}>
@@ -186,21 +186,10 @@ const App = () => {
                   &lt;y&gt;680&lt;/y&gt;
                   &lt;width&gt;680&lt;/width&gt;
                   &lt;height&gt;325&lt;/height&gt;
-
                   &lt;/screen&gt;
                 </h5>
               </div>
               <div >
-                {/* <Tabs forceRenderTabPanel={true}>
-                  <TabList >
-                    <Tab >ColorGradient</Tab>
-                  </TabList>
-                  <TabPanel >
-                    <ColorGradient />
-                  </TabPanel>
-                </Tabs> */}
-
-
               </div>
             </div>
           </div>
@@ -211,15 +200,14 @@ const App = () => {
         <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Graphics</Tab>
-            <Tab>Video</Tab>
-            <Tab>Video playlist</Tab>
+            <Tab>VDO</Tab>
+            <Tab>VDO Playlist</Tab>
             <Tab>Layers</Tab>
             <Tab>Hockey</Tab>
-            <Tab >ColorGradient</Tab>
+            <Tab >ClrGradient</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
             <Tab >Automation</Tab>
-
             <Tab>Help</Tab>
 
           </TabList>
@@ -230,12 +218,12 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <div style={{ display: 'flex', justifyContent: 'space-around', width: 900, marginBottom: 50 }}>
-              <VideoController layerNumber={1} />
-              <VideoController layerNumber={2} />
+              <VideoController layerNumber={videoLayers[0]} />
+              <VideoController layerNumber={videoLayers[1]} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-around', width: 900 }}>
-              <VideoController layerNumber={3} />
-              <VideoController layerNumber={4} />
+              <VideoController layerNumber={videoLayers[2]} />
+              <VideoController layerNumber={videoLayers[3]} />
             </div>
           </TabPanel>
           <TabPanel>
