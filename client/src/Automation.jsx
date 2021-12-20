@@ -36,7 +36,7 @@ const Automation = () => {
             socket?.off('recallPage');
             socket?.disconnect();
         }
-
+        // eslint-disable-next-line
     }, [allowAutomation, canvasList])
 
     const recallPage = (layerNumber, pageName, data) => {
@@ -77,7 +77,7 @@ const Automation = () => {
                                         i.src = data2.value;
                                     }
                                     else if (data2.type === 'shadow') {
-                                        element.set({ shadow: {...element.shadow,...data2.value}})
+                                        element.set({ shadow: { ...element.shadow, ...data2.value } })
                                     }
                                     else {
                                         element.set({ [data2.type]: data2.value })
@@ -160,7 +160,7 @@ const Automation = () => {
                             i.src = data2.value;
                         }
                         else if (data2.type === 'shadow') {
-                            element.set({ shadow: {...element.shadow,...data2.value}})
+                            element.set({ shadow: { ...element.shadow, ...data2.value } })
                         }
                         else {
                             element.set({ [data2.type]: data2.value })

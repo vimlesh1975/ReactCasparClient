@@ -58,6 +58,7 @@ const BreakingNews = () => {
             clearInterval(aaa); //cleanup
             setAaa(0);
         }
+        // eslint-disable-next-line
     }, [generalayer, pageName, variableName, playerList1, timeInterval])
 
     const onDragEnd1 = (result) => {
@@ -67,9 +68,6 @@ const BreakingNews = () => {
             setPlayerList1(aa);
         }
     }
-
-
-
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -172,8 +170,6 @@ const BreakingNews = () => {
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-
-
 
         var retVal = prompt("Enter  file name to save : ", ss);
         if (retVal !== null) {
@@ -297,10 +293,7 @@ const BreakingNews = () => {
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
-
-
             </div>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
@@ -366,9 +359,7 @@ const BreakingNews = () => {
                         </Droppable>
                     </DragDropContext>
                 </div>
-
             </div>
-
         </div>
     )
 }

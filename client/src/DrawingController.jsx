@@ -817,14 +817,11 @@ const DrawingController = () => {
     const [cropX, setCropX] = useState(0);
     const [cropY, setCropY] = useState(0);
 
-
-
     const setOpacity1 = (canvas, e) => {
         setOpacity(e.target.value)
         canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
         canvas.requestRenderAll();
     }
-
 
     const onSizeChange = (e, canvas) => {
         options.currentFontSize = e.target.value
@@ -851,7 +848,6 @@ const DrawingController = () => {
         canvas?.requestRenderAll();
     }
 
-
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
         if (mode === 'none') {
@@ -860,7 +856,6 @@ const DrawingController = () => {
         } else {
             canvas.isDrawingMode = true;
         }
-
 
         if (mode === 'Pencil') {
             canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -901,7 +896,6 @@ const DrawingController = () => {
 
     let fileReader;
 
-
     const importJSON = (file, canvas) => {
         if (file) {
             fileReader = new FileReader();
@@ -916,7 +910,6 @@ const DrawingController = () => {
         })
 
     };
-
 
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
@@ -1018,8 +1011,6 @@ const DrawingController = () => {
         }
     }
 
-
-
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1033,8 +1024,6 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
-
-
 
     const exportHTML1 = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1421,8 +1410,6 @@ const DrawingController = () => {
 
     }
 
-
-
     useEffect(() => {
         setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
         setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
@@ -1711,14 +1698,10 @@ const DrawingController = () => {
                                 <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
                                 <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
 
-
-
                             </tbody>
                         </table>
                     </div>
-
                     <div  >
-
                         <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
                             <tbody>
 
@@ -1760,8 +1743,6 @@ const DrawingController = () => {
                         </table>
                     </div>
                 </div>
-
-
 
                 <div className='drawingToolsRow' >
                     <b>Zoom and Pan: </b>

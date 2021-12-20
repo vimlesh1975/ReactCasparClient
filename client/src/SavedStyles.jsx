@@ -2,11 +2,9 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
 
-
 const SavedStyles = () => {
     const [savedStyles, setSavedStyles] = useState([])
     const canvas = useSelector(state => state.canvasReducer.canvas);
-
 
     const deleteStyle = val => {
         const updatedsavedStyles = savedStyles.filter((_, i) => {
@@ -18,34 +16,28 @@ const SavedStyles = () => {
         if (canvas.getActiveObjects()[0]) {
             const updatedsavedStyles = savedStyles.map((value, i) => {
                 if ((canvas.getActiveObjects()[0].type === 'text') || (canvas.getActiveObjects()[0].type === 'i-text') || (canvas.getActiveObjects()[0].type === 'textbox')) {
-                    var aa = canvas?.getActiveObjects()[0].toObject()
-                    return ((val !== i) ? value : { element: aa })
-                
+                    return ((val !== i) ? value : { element:  canvas?.getActiveObjects()[0].toObject() })
                 }
                 else{
-                    var aa = canvas?.getActiveObjects()[0].toObject()
-                    var bb = { ...aa, textAlign: 'left', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '20', underline: false, linethrough: false, fontStyle: 'normal' }
+                    var bb = { ...canvas?.getActiveObjects()[0].toObject(), textAlign: 'left', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '20', underline: false, linethrough: false, fontStyle: 'normal' }
                     return ((val !== i) ? value : { element: bb })
                 }
-               
-
             });
             setSavedStyles(updatedsavedStyles)
         }
     }
+
     const addStyle = () => {
         if (canvas.getActiveObjects()[0]) {
             if ((canvas.getActiveObjects()[0].type === 'text') || (canvas.getActiveObjects()[0].type === 'i-text') || (canvas.getActiveObjects()[0].type === 'textbox')) {
                 setSavedStyles([...savedStyles, { element: canvas?.getActiveObjects()[0].toObject() }])
             }
             else {
-                var aa = canvas?.getActiveObjects()[0].toObject()
-                var bb = { ...aa, textAlign: 'left', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '20', underline: false, linethrough: false, fontStyle: 'normal' }
+                var bb = { ...canvas?.getActiveObjects()[0].toObject(), textAlign: 'left', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '30', underline: false, linethrough: false, fontStyle: 'normal' }
                 setSavedStyles([...savedStyles, { element: bb }])
             }
         }
     }
-
 
     const applyStyle = activeProperty => {
         if (activeProperty !== null) {
@@ -76,14 +68,12 @@ const SavedStyles = () => {
                             textAlign: activeProperty.textAlign,
                             fontFamily: activeProperty.fontFamily,
                             fontWeight: activeProperty.fontWeight,
-                            fontSize: activeProperty.fontSize,
+                            // fontSize: activeProperty.fontSize,
                             underline: activeProperty.underline,
                             linethrough: activeProperty.linethrough,
                             fontStyle: activeProperty.fontStyle,
                         })
                     }
-
-
                 });
             } catch (error) {
 
@@ -109,9 +99,6 @@ const SavedStyles = () => {
         }
     }
 
-    const openStyleFromAFile = () => {
-
-    }
     let fileReader;
     const handleFileRead = (e) => {
         const content = fileReader.result;
@@ -123,7 +110,6 @@ const SavedStyles = () => {
             updatedsavedStyles.push(cc)
         });
         setSavedStyles(updatedsavedStyles)
-        // dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     };
     const handleFileChosen = (file) => {
         if (file) {
