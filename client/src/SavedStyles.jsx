@@ -15,10 +15,14 @@ const SavedStyles = () => {
         setSavedStyles(updatedsavedStyles)
     }
     const modifyStyle = val => {
-        const updatedsavedStyles = savedStyles.map((value, i) => {
-            return ((val !== i) ? value : { element: canvas?.getActiveObject().toObject() })
-        });
-        setSavedStyles(updatedsavedStyles)
+        if (canvas.getActiveObjects()[0]) {
+            const updatedsavedStyles = savedStyles.map((value, i) => {
+                var aa = canvas?.getActiveObjects()[0].toObject()
+                var bb = { ...aa, textAlign: 'left', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '20', underline: false, linethrough: false, fontStyle: 'normal' }
+                return ((val !== i) ? value : { element: bb })
+            });
+            setSavedStyles(updatedsavedStyles)
+        }
     }
     const addStyle = () => {
         if (canvas.getActiveObjects()[0]) {
@@ -48,8 +52,8 @@ const SavedStyles = () => {
                         },
                         fill: activeProperty.fill,
                         backgroundColor: activeProperty.backgroundColor,
-                        editable: activeProperty.editable,
-                        objectCaching: activeProperty.objectCaching,
+                        editable: true,
+                        objectCaching: false,
                         stroke: activeProperty.stroke,
                         strokeWidth: activeProperty.strokeWidth,
                         opacity: activeProperty.opacity,
@@ -79,17 +83,72 @@ const SavedStyles = () => {
         }
     }
 
+    const saveStylesInAFile = () => {
+        const element = document.createElement("a");
+        var aa = ''
+        savedStyles.forEach(val => {
+            aa += JSON.stringify({ 'element': val.element }) + '\r\n'
+        });
+        const file = new Blob([aa], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        const ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + '.style');
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+
+    const openStyleFromAFile = () => {
+
+    }
+    let fileReader;
+    const handleFileRead = (e) => {
+        const content = fileReader.result;
+        var aa = content.split('\r\n')
+        aa.splice(-1)
+        var updatedsavedStyles = []
+        aa.forEach(element => {
+            var cc = JSON.parse(element)
+            updatedsavedStyles.push(cc)
+        });
+        setSavedStyles(updatedsavedStyles)
+        // dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+    };
+    const handleFileChosen = (file) => {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead;
+            fileReader.readAsText(file);
+        }
+    }
+
     return (<div>
         <div className='drawingToolsRow' >
             <button onClick={addStyle}>Add Style</button>
-            <table border='1'>
-                <tbody>
-                    <tr><th>Sr.</th><th>Style</th><th>Operation</th></tr>
-                    {savedStyles.map((val, i) => {
-                        return <tr key={uuidv4()}><td>{i}</td><td className='styleContainer' style={{ transform: `skew(${val.element.skewX}deg,${val.element.skewY}deg)`, WebkitTextStroke: `${val.element.strokeWidth}px ${val.element.stroke}`, fontSize: 60, fontFamily: val.element.fontFamily, color: val.element.fill, backgroundColor: val.element.backgroundColor, textShadow: `${val.element.shadow.offsetX / 3}px ${val.element.shadow.offsetY / 3}px ${val.element.shadow.blur}px ${val.element.shadow.color}` }}>Aaक</td><td><button onClick={() => deleteStyle(i)}>Delete</button><br /><button onClick={() => modifyStyle(i)}>Save Here</button><br /><button onClick={() => applyStyle(val.element)}>Apply to Selected</button></td></tr>
-                    })}
-                </tbody>
-            </table>
+            <button onClick={saveStylesInAFile}>Save Styles in a file</button>
+          <input
+                type='file'
+                id='file'
+                className='input-file'
+                accept='.style'
+                onChange={e => {
+                    handleFileChosen(e.target.files[0]);
+                }}
+            />
+
+            <div style={{ height: 810, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+
+                <table border='1'>
+                    <tbody>
+                        <tr><th>Sr.</th><th>Style</th><th>Operation</th></tr>
+                        {savedStyles.map((val, i) => {
+                            return <tr key={uuidv4()}><td>{i}</td><td className='styleContainer' style={{ textDecoration:`${val.element.underline?'underline':''} ${val.element.linethrough?'line-through':''}`, transform: `skew(${val.element.skewX}deg,${val.element.skewY}deg)`, WebkitTextStroke: `${(val.element.strokeWidth>2)?2:val.element.strokeWidth}px ${val.element.stroke}`, fontSize: 60, fontFamily: val.element.fontFamily, color: val.element.fill, backgroundColor: val.element.backgroundColor, textShadow: `${val.element.shadow.offsetX / 3}px ${val.element.shadow.offsetY / 3}px ${val.element.shadow.blur}px ${val.element.shadow.color}` }}>Aaक</td><td><button onClick={() => deleteStyle(i)}>Delete</button><br /><button onClick={() => modifyStyle(i)}>Save Here</button><br /><button onClick={() => applyStyle(val.element)}>Apply to Selected</button></td></tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>)
 }

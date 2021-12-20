@@ -806,6 +806,7 @@ const DrawingController = () => {
     const [currentMode, setCurrentMode] = useState('none');
     const [fontSize, setFontSize] = useState(25);
     const [opacity, setOpacity] = useState(1);
+    const [strokeWidth, setStrokeWidth] = useState(1);
 
     const [skewXSize, setSkewXSize] = useState(0);
     const [skewYSize, setSkewYSize] = useState(0);
@@ -940,6 +941,7 @@ const DrawingController = () => {
     }
     const onstrokeSizeChange = e => {
         options.strokeWidth = parseInt(e.target.value);
+        setStrokeWidth(parseInt(e.target.value))
         canvas.freeDrawingBrush.width = parseInt(e.target.value);
         canvas.getActiveObjects().forEach(item => item.strokeWidth = parseInt(e.target.value))
         canvas.requestRenderAll();
@@ -1696,7 +1698,7 @@ const DrawingController = () => {
                     Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
                     <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
-                    <input className='inputRange' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='100' step='1' defaultValue='3' />
+                    <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' /> {strokeWidth}
                 </div>
                 <div style={{ display: 'flex' }}>
                     <div  >

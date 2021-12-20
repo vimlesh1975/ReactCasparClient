@@ -180,7 +180,6 @@ const SavePannel = () => {
                     <button onClick={drawingFileNew}>File New <FiFile /></button>
                     <button onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
                     <button onClick={drawingFileSave}>File Save<FaSave /></button><br />
-
                 </div>
                 <div className='drawingToolsRow' >
                     <span>Open File:</span>  <input
@@ -192,7 +191,6 @@ const SavePannel = () => {
                             handleFileChosen(e.target.files[0]);
                             if (e.target.files[0]) { setCurrentFileName(e.target.files[0].name); };
                         }}
-
                     /><br />
                 </div>
                 <div className='drawingToolsRow' >
