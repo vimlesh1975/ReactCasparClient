@@ -58,8 +58,8 @@ const ContextMenu = ({ canvas }) => {
 
         <li onClick={() => redo(canvas)}>Redo <AiOutlineRedo /></li>
         <li onClick={() => undo(canvas)}>Undo <AiOutlineUndo /></li>
-        <li onClick={() => copy()}>Copy</li>
-        <li onClick={() => paste()}>Paste</li>
+        <li onClick={() => copy(canvas)}>Copy</li>
+        <li onClick={() => paste(canvas)}>Paste</li>
         <li>Drawing Mode<ul >
           <li onClick={() => window.toggleModeDrawing(canvas)}>Off<VscEdit /></li>
           <li onClick={() => {
