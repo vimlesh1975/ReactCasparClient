@@ -7,15 +7,15 @@ const Help = () => {
       <ol>
         <li>It works with all version of Server</li>
         <li> Put as below in casparcg.config file and drag screen consumer below Designer window
-        &lt;screen&gt;
-        &lt;always-on-top&gt;true&lt;/always-on-top&gt;
-        &lt;x&gt;0&lt;/x&gt;
-        &lt;y&gt;680&lt;/y&gt;
-        &lt;width&gt;690&lt;/width&gt;
-        &lt;height&gt;325&lt;/height&gt;
+          &lt;screen&gt;
+          &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+          &lt;x&gt;0&lt;/x&gt;
+          &lt;y&gt;680&lt;/y&gt;
+          &lt;width&gt;690&lt;/width&gt;
+          &lt;height&gt;325&lt;/height&gt;
 
-        &lt;/screen&gt;
-  </li>
+          &lt;/screen&gt;
+        </li>
 
         <li>Select Casparcg Screen Sizes from drop down</li>
         <li>Add some text or rectangle by clicking on buttons and then click Show to Casparcg</li>
@@ -44,6 +44,7 @@ const Help = () => {
 
 
       </ol>
+     
     </div>
   )
 }

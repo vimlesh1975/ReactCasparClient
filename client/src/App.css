@@ -50,10 +50,20 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   position: relative; 
   background-color:rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
-width: 1024px;
-height: 576px;
+  width: 1024px;
+  height: 576px;
   border:2px solid red;
 }
+
+.thumbnail-preview-container{
+  /* position: relative;  */
+  background-color:rgba(14, 15, 15, 0.596);
+  background-image: url('canvasBg.svg');
+  width: 103px;
+  height: 58px;
+  border:1px solid red;
+}
+
 .styleContainer{
   background-color:rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
@@ -103,6 +113,12 @@ cursor: pointer;
   width: 1024px;
   height: 576px;
 }
+
+.thumbnailcanvas {
+  width: 309px;
+  height: 172px;
+}
+
 .canvasOutput {
   position: absolute;
   width: 4096px;

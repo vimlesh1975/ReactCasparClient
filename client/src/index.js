@@ -3,30 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 import { Provider } from 'react-redux'
 import store from './store'
 import Drawing from './Drawing';
 
-
 window.store = store;
-
 ReactDOM.render(
-
   <Provider store={store}>
     <Router basename={process.env.PUBLIC_URL}>
       {/* <Router > */}
-
       <Switch>
         <Route exact path='/' render={() => (<App />)} />
-
         <Route exact path='/drawing' render={() => <Drawing canvasOutput={true} />} />
       </Switch>
     </Router>
   </Provider>,
-
   document.getElementById('root')
 );
 

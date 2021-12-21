@@ -29,14 +29,13 @@ import { videoLayers } from './common'
 
 
 
-const buildDate = '191221'
+const buildDate = '211221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
   const refPreviewContainer = useRef();
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
-
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
 
   useEffect(() => {

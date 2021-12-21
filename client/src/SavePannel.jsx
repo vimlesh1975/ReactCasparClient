@@ -4,6 +4,7 @@ import { FaSave } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
+import DrawingThumbnail from './DrawingThumbnail'
 
 var currentFile = 'new';
 let fileReader;
@@ -60,6 +61,7 @@ const SavePannel = () => {
             canvas.renderAll();
         });
     }
+
     const deleteAll = canvas => {
         const aa = canvas.getObjects()
         aa.forEach(element => { canvas.remove(element) });
@@ -230,7 +232,6 @@ const SavePannel = () => {
                 </div>
             </div>
             <div style={{ height: 710, width: 380, overflow: 'scroll', border: '1px solid black' }}>
-
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
                         {(provided, snapshot) => (
@@ -255,12 +256,29 @@ const SavePannel = () => {
                                                                 // margin: '10px'
                                                             }}
                                                         >
-                                                            <td>{i + 1}</td><td {...provided.dragHandleProps}><VscMove /></td>
-                                                            <td style={{ minWidth: 270, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                recallPage(val.pageValue, window.editor.canvas, i);
-                                                            }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName} >{val.pageName}
+                                                            <td>
+                                                                <div style={{display:'flex',   height:200, flexDirection:'column', alignItems:'center', justifyContent:'space-around', placeItems:'center'}}>
+                                                                    <div style={{backgroundColor:'white' ,border:'2px solid grey'}}>
+                                                                        {i + 1}
+                                                                    </div>
+                                                                    <div>
+                                                                        <span {...provided.dragHandleProps}><VscMove /></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                                    </div>
+                                                                </div>
                                                             </td>
-                                                            <td><button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button></td>
+                                                            <td>
+                                                                <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i) }}>
+                                                                    <DrawingThumbnail i={i} />
+
+                                                                </div>
+                                                                <span style={{ minWidth: 170, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                    recallPage(val.pageValue, window.editor.canvas, i);
+                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName} >{val.pageName}
+                                                                </span>
+                                                            </td>
 
                                                         </tr>
                                                     )
@@ -276,8 +294,6 @@ const SavePannel = () => {
                     </Droppable>
                 </DragDropContext>
             </div>
-
-
         </div>
     )
 }
