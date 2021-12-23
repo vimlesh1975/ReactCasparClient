@@ -6,6 +6,8 @@ import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 var iii = 0;
@@ -157,7 +159,7 @@ const BreakingNews = () => {
     }
     const addPage = e => {
         const aa = [...playerList1]
-        aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, '');
+        aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, {id:uuidv4(), data1:'', use1:false});
         setPlayerList1(aa);
     }
 
@@ -309,7 +311,7 @@ const BreakingNews = () => {
                                         <tbody>
                                             {playerList1.map((val, i) => {
                                                 return (
-                                                    <Draggable draggableId={"draggable" + i} key={val.data1 + i} index={i}>
+                                                    <Draggable draggableId={val.id}  key={val.id} index={i}>
                                                         {(provided, snapshot) => (
                                                             <tr
                                                                 ref={provided.innerRef}

@@ -357,6 +357,28 @@ export const createEllipse = (canvas) => {
     canvas.requestRenderAll();
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
+
+export const createPentagon = (canvas) => {
+    const rect = new fabric.Polygon([{x:207, y:120},{x:307, y:60},{x:407, y:120},{x:407, y:220},{x:307, y:280},{x:207, y:220}], {
+        shadow: shadowOptions,
+        top: -100,
+        left: 180,
+        rx: 50,
+        ry: 80,
+        opacity: 0.9,
+        fill: 'blue',
+        hasRotatingPoint: true,
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+};
+
+
 export const createLine = (canvas) => {
     const rect = new fabric.Line([500, 450, 800, 450.00001], {
         shadow: { ...shadowOptions, Blur: 10 },
@@ -1653,6 +1675,7 @@ const DrawingController = () => {
                     <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                     <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(canvas)}>Ellipse</button>
+                    <button onClick={() => createPentagon(canvas)}>Pentagon</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
 
 
