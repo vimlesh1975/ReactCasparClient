@@ -1685,17 +1685,17 @@ const DrawingController = () => {
                     <span> {upTimer} </span>
                 </div>
                 <div className='drawingToolsRow' >
-                    <b> Drawing Elements: </b>
+                    <b>Elements: </b>
                     <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
                   <button onClick={() => createTextBox(canvas)}>TB</button>
                  <button onClick={() => createIText(canvas)}>IT</button>
                     <button onClick={() => createText(canvas)}>T</button>
-                    <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
-                    <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
-                    <button onClick={() => createEllipse(canvas)}>Ellipse</button>
-                    <button onClick={() => createPentagon(canvas)}>Pentagon</button>
-                    <button onClick={() => createHexagon(canvas)}>Hexagon</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
+                    <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
+                    <button onClick={() => createEllipse(canvas)}>Ellipse</button>
+                    <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
+                    <button onClick={() => createPentagon(canvas)}>Penta</button>
+                    <button onClick={() => createHexagon(canvas)}>Hexa</button>
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}
