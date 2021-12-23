@@ -11,7 +11,6 @@ import { GrResume } from 'react-icons/gr';
 import { AiOutlineVerticalAlignTop, AiOutlineVerticalAlignBottom } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
-import Tooltip from '@mui/material/Tooltip';
 import SavePannel from './SavePannel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ImageFilterController from './ImageFilterController';
@@ -411,8 +410,6 @@ export const createLine = (canvas) => {
         stroke: 'yellow',
         strokeWidth: 3,
         strokeUniform: true,
-        objectCaching: false,
-
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
@@ -1690,9 +1687,9 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Drawing Elements: </b>
                     <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
-                    <Tooltip title="MutliLine Text Box"><button onClick={() => createTextBox(canvas)}>TB</button></Tooltip>
-                    <Tooltip title="Single Line Text Box"><button onClick={() => createIText(canvas)}>IT</button></Tooltip>
-                    <Tooltip title="Single Line Text Box Not Editable"><button onClick={() => createText(canvas)}>T</button></Tooltip>
+                  <button onClick={() => createTextBox(canvas)}>TB</button>
+                 <button onClick={() => createIText(canvas)}>IT</button>
+                    <button onClick={() => createText(canvas)}>T</button>
                     <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                     <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(canvas)}>Ellipse</button>
