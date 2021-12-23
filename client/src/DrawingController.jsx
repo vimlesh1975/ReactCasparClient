@@ -359,10 +359,10 @@ export const createEllipse = (canvas) => {
 };
 
 export const createPentagon = (canvas) => {
-    const rect = new fabric.Polygon([{x:207, y:120},{x:307, y:60},{x:407, y:120},{x:407, y:220},{x:307, y:280},{x:207, y:220}], {
+    const rect = new fabric.Polygon([{x:290, y:124},{x:390, y:190},{x:354, y:297},{x:226, y:297},{x:192, y:190}], {
         shadow: shadowOptions,
         top: -100,
-        left: 180,
+        left: 80,
         rx: 50,
         ry: 80,
         opacity: 0.9,
@@ -378,6 +378,25 @@ export const createPentagon = (canvas) => {
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
 
+export const createHexagon = (canvas) => {
+    const rect = new fabric.Polygon([{x:207, y:120},{x:307, y:60},{x:407, y:120},{x:407, y:220},{x:307, y:280},{x:207, y:220}], {
+        shadow: shadowOptions,
+        top: -100,
+        left: 300,
+        rx: 50,
+        ry: 80,
+        opacity: 0.9,
+        fill: 'green',
+        hasRotatingPoint: true,
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+};
 
 export const createLine = (canvas) => {
     const rect = new fabric.Line([500, 450, 800, 450.00001], {
@@ -392,6 +411,8 @@ export const createLine = (canvas) => {
         stroke: 'yellow',
         strokeWidth: 3,
         strokeUniform: true,
+        objectCaching: false,
+
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
@@ -1676,9 +1697,8 @@ const DrawingController = () => {
                     <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
                     <button onClick={() => createEllipse(canvas)}>Ellipse</button>
                     <button onClick={() => createPentagon(canvas)}>Pentagon</button>
+                    <button onClick={() => createHexagon(canvas)}>Hexagon</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
-
-
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}
