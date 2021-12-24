@@ -1606,15 +1606,15 @@ const DrawingController = () => {
                     if (!((item.type === 'textbox') && item.isEditing)) { canvas?.remove(item); }
                 });
             }
-            if (e.ctrlKey && e.key === 'c') {
+            if (e.ctrlKey && e.key.toLowerCase() === 'c') {
                 const item = canvas?.getActiveObjects()[0];
                 if (!((item?.type === 'textbox') && item?.isEditing)) { copy(canvas) }
             }
-            if (e.ctrlKey && e.key === 'v') {
+            if (e.ctrlKey && e.key.toLowerCase() === 'v') {
                 const item = canvas?.getActiveObjects()[0];
                 if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
             }
-            if (e.ctrlKey && e.key === 'z') {
+            if (e.ctrlKey && e.key.toLowerCase() === 'z') {
                window.editor.canvas?.undo();
             }
 
