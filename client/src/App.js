@@ -163,11 +163,11 @@ const App = () => {
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}>
-                <Video video={address1 + '/media/amb.mp4'} layerNumber={videoLayers[0]} />
-                <Video video={address1 + '/media/CG1080i50.mp4'} layerNumber={videoLayers[1]} />
-                <Video video={address1 + '/media/go1080p25.mp4'} layerNumber={videoLayers[2]} />
-                <Video video={address1 + '/media/CG1080i50_A.mp4'} layerNumber={videoLayers[3]} />
-                <Video video={address1 + '/media/Anchor.png'} layerNumber={videoLayers[4]} />
+                <Video video={''} layerNumber={videoLayers[0]} />
+                <Video video={''} layerNumber={videoLayers[1]} />
+                <Video video={''} layerNumber={videoLayers[2]} />
+                <Video video={''} layerNumber={videoLayers[3]} />
+                <Video video={''} layerNumber={videoLayers[4]} />
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <Provider store={store}>

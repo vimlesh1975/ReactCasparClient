@@ -1215,6 +1215,7 @@ const DrawingController = () => {
         var br = (canvas.getActiveObject())?.getBoundingRect();
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+
         if (retVal !== null) {
             try {
                 saveAs(canvas.toDataURL({
@@ -1223,8 +1224,13 @@ const DrawingController = () => {
                     top: br.top,
                     width: br.width,
                     height: br.height
-                }), retVal + '.png')
-
+                }),
+                 retVal + '.png')
+                // canvas.getElement().toBlob(blob=>{
+                //     saveAs(blob,
+                //     retVal + '.png')
+                // })
+               
             } catch (error) {
                 alert(error)
             }
@@ -1609,7 +1615,7 @@ const DrawingController = () => {
                 if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
             }
             if (e.ctrlKey && e.key === 'z') {
-                canvas?.undo();
+               window.editor.canvas?.undo();
             }
 
         });

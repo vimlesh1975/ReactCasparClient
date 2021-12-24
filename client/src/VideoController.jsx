@@ -44,7 +44,7 @@ const VideoController = ({ layerNumber }) => {
                                 onClick={(e) => {
                                     setfilename(((e.target.innerText).replaceAll('\\', '/')).split('.')[0]);
                                     var video = document.getElementById(`video${layerNumber}`);
-                                    var source = document.getElementsByTagName('source')[layerNumber - 1];
+                                    var source = document.getElementById(`source${layerNumber}`);
                                     setCurrentFileinlist(i)
 
                                     if ((`${address1}/media/${e.target.innerText}`).match(/\.(jpeg|jpg|bmp|gif|png)$/) != null) {

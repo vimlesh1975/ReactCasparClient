@@ -30,7 +30,7 @@ const Video = ({ video, layerNumber }) => {
             <div>
                 <div className="box" style={{ width: videoWidth, height: videoHeight, backgroundColor: 'white' }} >
                     <video id={`video${layerNumber}`} width={videoWidth} height={videoHeight} style={{ objectFit: 'fill' }} controls muted>
-                        <source src={video} type="video/mp4" />
+                        <source id={`source${layerNumber}`} src={video} type="video/mp4" />
                     </video>
                     <div style={{ backgroundColor: 'white' }}>
                         <b style={{ display: 'inline' }}>{layerNumber}</b>
