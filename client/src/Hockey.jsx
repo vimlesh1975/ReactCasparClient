@@ -140,13 +140,9 @@ const Hockey = () => {
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
         startTime.setSeconds(initialSecond);
+        clearInterval(xxx);
         xxx = setInterval(() => {
-            if (countUp) {
-                startTime.setSeconds(startTime.getSeconds() + 1);
-            }
-            else {
-                startTime.setSeconds(startTime.getSeconds() - 1);
-            }
+            countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
             setInitilaMinute(startTime.getMinutes())
             setInitialSecond(startTime.getSeconds())
 
@@ -154,6 +150,9 @@ const Hockey = () => {
         //for form
 
         endpoint(`call ${window.chNumber}-${layerNumber} "
+        startTime.setMinutes(${initialMinute});
+        startTime.setSeconds(${initialSecond});
+        clearInterval(xxx);
         xxx=setInterval(()=>{
             startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
              var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
@@ -163,7 +162,6 @@ const Hockey = () => {
     }
     const stopClock = layerNumber => {
         clearInterval(xxx)
-
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
@@ -177,14 +175,9 @@ const Hockey = () => {
             var startTime = new Date();
             startTime.setMinutes(initialMinute);
             startTime.setSeconds(initialSecond);
+            clearInterval(xxx)
             xxx = setInterval(() => {
-                if (countUp) {
-                    startTime.setSeconds(startTime.getSeconds() + 1);
-                }
-                else {
-                    startTime.setSeconds(startTime.getSeconds() - 1);
-                }
-
+                countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
                 setInitilaMinute(startTime.getMinutes())
                 setInitialSecond(startTime.getSeconds())
             }, 1000);
@@ -444,7 +437,6 @@ const Hockey = () => {
                             <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>
                             <button onClick={() => pauseClock(clockLayer)}> Pause </button>
                             <button onClick={() => resumeClock(clockLayer)}> Resume </button>
-
                             <button onClick={() => stopClock(clockLayer)} ><FaStop /></button>
                         </div>
                         <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>

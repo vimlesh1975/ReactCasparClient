@@ -20,6 +20,8 @@ import SavedStyles from './SavedStyles';
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
+const clockLayer = 502;
+var xxx;
 
 
 fabric.Object.prototype.noScaleCache = false;
@@ -141,6 +143,7 @@ export const addClock = canvas => {
         animate(canvas, sss)
     }, 1000);
 }
+
 
 export const addUpTimer = canvas => {
     const sss = new fabric.Textbox('', {
@@ -358,7 +361,7 @@ export const createEllipse = (canvas) => {
 };
 
 export const createPentagon = (canvas) => {
-    const rect = new fabric.Polygon([{x:290, y:124},{x:390, y:190},{x:354, y:297},{x:226, y:297},{x:192, y:190}], {
+    const rect = new fabric.Polygon([{ x: 290, y: 124 }, { x: 390, y: 190 }, { x: 354, y: 297 }, { x: 226, y: 297 }, { x: 192, y: 190 }], {
         shadow: shadowOptions,
         top: -100,
         left: 80,
@@ -378,7 +381,7 @@ export const createPentagon = (canvas) => {
 };
 
 export const createHexagon = (canvas) => {
-    const rect = new fabric.Polygon([{x:207, y:120},{x:307, y:60},{x:407, y:120},{x:407, y:220},{x:307, y:280},{x:207, y:220}], {
+    const rect = new fabric.Polygon([{ x: 207, y: 120 }, { x: 307, y: 60 }, { x: 407, y: 120 }, { x: 407, y: 220 }, { x: 307, y: 280 }, { x: 207, y: 220 }], {
         shadow: shadowOptions,
         top: -100,
         left: 300,
@@ -857,11 +860,123 @@ const DrawingController = () => {
     const [cropX, setCropX] = useState(0);
     const [cropY, setCropY] = useState(0);
 
+    const [initialMinute, setInitilaMinute] = useState(45)
+    const [initialSecond, setInitialSecond] = useState(0)
+    const [countUp, setCountUp] = useState(false)
+
+    const pauseClock = (layerNumber) => {
+        clearInterval(xxx)
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        clearInterval(xxx);
+        "`)
+    }
+    const showClock = () => {
+        //for form
+        var startTime = new Date();
+        startTime.setMinutes(initialMinute);
+        startTime.setSeconds(initialSecond);
+        clearInterval(xxx)
+        xxx = setInterval(() => {
+            countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
+            setInitilaMinute(startTime.getMinutes())
+            setInitialSecond(startTime.getSeconds())
+        }, 1000);
+        //for form
+
+        const layerNumber = clockLayer;
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        }, 250);
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+                var aa = document.createElement('div');
+                aa.style.position='absolute';
+                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+                document.body.appendChild(aa);
+                document.body.style.margin='0';
+                document.body.style.padding='0';
+                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                document.body.style.overflow='hidden';
+                var cc=document.getElementsByTagName('tspan')[0];
+                cc.textContent='';
+                var startTime = new Date();
+                startTime.setMinutes(${initialMinute});
+                startTime.setSeconds(${initialSecond});
+                var xxx=setInterval(()=>{
+                   startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+                    var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+                    cc.textContent  =ss1;
+                  }, 1000);
+                "`)
+        }, 300);
+
+        setTimeout(() => {
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+        }, 800);
+    }
+
+    const stopClock = layerNumber => {
+        clearInterval(xxx)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        }, 1000);
+    }
+    const resumeClock = (layerNumber) => {
+
+        //for form
+        var startTime = new Date();
+        startTime.setMinutes(initialMinute);
+        startTime.setSeconds(initialSecond);
+        clearInterval(xxx);
+        xxx = setInterval(() => {
+            countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
+            setInitilaMinute(startTime.getMinutes())
+            setInitialSecond(startTime.getSeconds())
+        }, 1000);
+        //for form
+
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        startTime.setMinutes(${initialMinute});
+        startTime.setSeconds(${initialSecond});
+        clearInterval(xxx);
+        xxx=setInterval(()=>{
+            startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+             var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+             cc.textContent  =ss1;
+           }, 1000);
+        "`)
+    }
     const setOpacity1 = (canvas, e) => {
         setOpacity(e.target.value)
         canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
         canvas.requestRenderAll();
     }
+    // startTime.getMinutes()).toString()).padStart(2, '0')
+    const addGameTimer = canvas => {
+        const sss = new fabric.Textbox(`${initialMinute.toString().padStart(2, '0')}:${initialSecond.toString().padStart(2, '0')}`, {
+            shadow: shadowOptions,
+            left: 10,
+            top: 530,
+            width: 100,
+            fill: '#ffffff',
+            backgroundColor: options.backgroundColor,
+            fontFamily: options.currentFont,
+            fontWeight: 'bold',
+            fontSize: options.currentFontSize,
+            editable: true,
+            objectCaching: false,
+            textAlign: 'center',
+            stroke: '',
+            strokeWidth: 0,
+            id: 'clock1',
+
+        });
+        canvas.add(sss).setActiveObject(sss);
+        canvas.requestRenderAll();
+    }
+
 
     const onSizeChange = (e, canvas) => {
         options.currentFontSize = e.target.value
@@ -1684,11 +1799,24 @@ const DrawingController = () => {
                     <button onClick={() => exportUpTimerAsHTML(canvas)}>To HTML</button>
                     <span> {upTimer} </span>
                 </div>
+
+                <div className='drawingToolsRow' >
+                    <b>Game Timer:</b>
+                    <button onClick={() => addGameTimer(canvas)}>Add to Preview</button>
+                    <span> M</span><input type='text' style={{width:15}} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
+                    <span> S</span><input type='text' style={{width:15}} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
+                    <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
+                    <button onClick={() => showClock('Clock')}><FaPlay /></button>
+                    <button onClick={() => pauseClock(clockLayer)}> <FaPause /></button>
+                    <button onClick={() => resumeClock(clockLayer)}> <GrResume /> </button>
+                    <button onClick={() => stopClock(clockLayer)} ><FaStop /></button>
+                </div>
+
                 <div className='drawingToolsRow' >
                     <b>Elements: </b>
                     <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
-                  <button onClick={() => createTextBox(canvas)}>TB</button>
-                 <button onClick={() => createIText(canvas)}>IT</button>
+                    <button onClick={() => createTextBox(canvas)}>TB</button>
+                    <button onClick={() => createIText(canvas)}>IT</button>
                     <button onClick={() => createText(canvas)}>T</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
                     <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
