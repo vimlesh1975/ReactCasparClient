@@ -63,7 +63,18 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   height: 58px;
   border:1px solid red;
 }
-
+.automation-preview-container{
+  /* position: relative;  */
+  background-color:rgba(14, 15, 15, 0.596);
+  background-image: url('canvasBg.svg');
+  width:309px;
+  height: 172px;
+  border:1px solid red;
+}
+.automationcanvas {
+  width: 309px;
+  height: 172px;
+}
 .styleContainer{
   background-color:rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
@@ -118,6 +129,7 @@ cursor: pointer;
   width: 309px;
   height: 172px;
 }
+
 
 .canvasOutput {
   position: absolute;

@@ -25,11 +25,9 @@ import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
+import DrawingAutomation from './DrawingAutomation';
 
-
-
-
-const buildDate = '211221'
+const buildDate = '251221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -189,6 +187,9 @@ const App = () => {
                 </h5>
               </div>
               <div >
+                <div style={{ opacity: 0 }} className='automation-preview-container' >
+                  <DrawingAutomation i={0} />
+                </div>
               </div>
             </div>
           </div>

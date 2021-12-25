@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import socketIOClient from "socket.io-client";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from './common'
 
 const Automation = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const canvas = useSelector(state => state.canvasReducer.canvas);
-    const dispatch = useDispatch();
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const [allowAutomation, setAllowAutomation] = useState(false)
 
@@ -41,13 +39,13 @@ const Automation = () => {
 
     const recallPage = (layerNumber, pageName, data) => {
         try {
-            const index = canvasList.findIndex(val => val.pageName === pageName);
+            const index = canvasList.findIndex(val => val.pageName.toLowerCase() === pageName.toLowerCase());
             if (index !== -1) {
-                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
+                // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
                 const data1 = data;
-                canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                     data1.forEach(data2 => {
-                        canvas.getObjects().forEach((element) => {
+                        window.automationeditor[0].canvas.getObjects().forEach((element) => {
                             try {
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
@@ -101,7 +99,7 @@ const Automation = () => {
     }
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
 
@@ -114,11 +112,11 @@ const Automation = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
         document.body.style.overflow='hidden';
         "`)
         }, 300);
@@ -134,7 +132,7 @@ const Automation = () => {
     const updateData = (layerNumber, data) => {
         const data1 = data;
         data1.forEach(data2 => {
-            canvas.getObjects().forEach((element) => {
+            window.automationeditor[0].canvas.getObjects().forEach((element) => {
                 try {
                     if (element.id === data2.key) {
                         if (data2.type === 'text') {

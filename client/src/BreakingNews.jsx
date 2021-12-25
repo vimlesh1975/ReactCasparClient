@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { endpoint } from './common'
 import { iniBreakingNews } from './hockeyData'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
@@ -23,7 +23,6 @@ const BreakingNews = () => {
     var newplayerList1 = [];
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const dispatch = useDispatch();
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
 
     const startBreakingNews = () => {
@@ -74,18 +73,18 @@ const BreakingNews = () => {
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
+            // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    canvas.getObjects().forEach((element) => {
+                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
                                     const aa = (element.width) * (element.scaleX);
                                     element.set({ objectCaching: false, text: data2.value.toString() })
                                     if (element.width > aa) { element.scaleToWidth(aa) }
-                                    // canvas.requestRenderAll();
+                                    // window.automationeditor[0].canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -99,12 +98,12 @@ const BreakingNews = () => {
                                         else if (element.type === 'rect') {
                                             element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                         }
-                                        // canvas.requestRenderAll();
+                                        // window.automationeditor[0].canvas.requestRenderAll();
                                     };
                                     i.src = data2.value;
                                 }
                             }
-                            // canvas.requestRenderAll();
+                            // window.automationeditor[0].canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
@@ -124,11 +123,11 @@ const BreakingNews = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
         document.body.style.overflow='hidden';
         "`)
         }, 300);
@@ -140,10 +139,10 @@ const BreakingNews = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
+    //aa.innerHTML=\\"<img src='${(window.automationeditor[0].canvas.toDataURL('png'))}' />\\" ; png method
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
     const stopGraphics = layerNumber => {
@@ -159,7 +158,7 @@ const BreakingNews = () => {
     }
     const addPage = e => {
         const aa = [...playerList1]
-        aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, {id:uuidv4(), data1:'', use1:false});
+        aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, { id: uuidv4(), data1: '', use1: false });
         setPlayerList1(aa);
     }
 
@@ -217,14 +216,14 @@ const BreakingNews = () => {
     const updateData = (layerNumber, data) => {
         const data1 = data;
         data1.forEach(data2 => {
-            canvas.getObjects().forEach((element) => {
+            window.automationeditor[0].canvas.getObjects().forEach((element) => {
                 try {
                     if (element.id === data2.key) {
                         if (data2.type === 'text') {
                             const aa = (element.width) * (element.scaleX);
                             element.set({ objectCaching: false, text: data2.value.toString() })
                             if (element.width > aa) { element.scaleToWidth(aa) }
-                            canvas.requestRenderAll();
+                            // window.automationeditor[0].canvas.requestRenderAll();
                         }
                         else if (data2.type === 'image') {
                             var i = new Image();
@@ -238,17 +237,17 @@ const BreakingNews = () => {
                                 else if (element.type === 'rect') {
                                     element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                 }
-                                canvas.requestRenderAll();
+                                // window.automationeditor[0].canvas.requestRenderAll();
                             };
                             i.src = data2.value;
                         }
                     }
-                    canvas.requestRenderAll();
+                    // window.automationeditor[0].canvas.requestRenderAll();
                 } catch (error) {
                 }
             });
         });
-        canvas.requestRenderAll();
+        // window.automationeditor[0].canvas.requestRenderAll();
         setTimeout(() => {
             updateGraphics(layerNumber)
         }, 300);
@@ -256,7 +255,6 @@ const BreakingNews = () => {
     }
     return (
         <div>
-            <h3>This page should be operated in a separate single tab if using as Breaking news in Automation Mode.</h3>
             <div style={{ display: 'flex1' }}>
                 <div>
                     <table border='1'>
@@ -311,7 +309,7 @@ const BreakingNews = () => {
                                         <tbody>
                                             {playerList1.map((val, i) => {
                                                 return (
-                                                    <Draggable draggableId={val.id}  key={val.id} index={i}>
+                                                    <Draggable draggableId={val.id} key={val.id} index={i}>
                                                         {(provided, snapshot) => (
                                                             <tr
                                                                 ref={provided.innerRef}
