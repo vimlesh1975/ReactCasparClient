@@ -3,17 +3,21 @@ import socketIOClient from "socket.io-client";
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from './common'
+import DrawingAutomation from './DrawingAutomation';
 
 const Automation = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const [allowAutomation, setAllowAutomation] = useState(false)
+    const [dataReceived, setDataReceived] = useState();
 
     useEffect(() => {
         const socket = socketIOClient(':8080');
         if (allowAutomation.toString() === 'true') {
             socket.on("recallPage", data => {
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
+                setDataReceived(JSON.stringify(data));
+                // console.log(JSON.stringify(data));
             });
 
             socket.on("updateData", data => {
@@ -22,7 +26,6 @@ const Automation = () => {
             socket.on("stopGraphics", data => {
                 stopGraphics(data.layerNumber);
             });
-
         }
         else {
             socket?.removeListener('recallPage');
@@ -53,14 +56,13 @@ const Automation = () => {
                                         // const aa = (element.width) * (element.scaleX);
                                         // element.set({ objectCaching: false, text: data2.value.toString() })
                                         // if (element.width > aa) { element.scaleToWidth(aa) }
-
                                         element.set({ text: data2.value.toString() })
                                         // canvas.requestRenderAll();
                                     }
                                     else if (data2.type === 'image') {
                                         var i = new Image();
                                         i.onload = function () {
-                                            console.log('img loaded')
+                                            // console.log('img loaded')
                                             const originalWidth = (element.width) * (element.scaleX);
                                             const originalHeight = (element.height) * (element.scaleY);
                                             element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
@@ -91,9 +93,7 @@ const Automation = () => {
                 });
             }
             else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
-
         } catch (error) {
-
         }
 
     }
@@ -184,6 +184,13 @@ const Automation = () => {
     return (
         <div>
             Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
+            <div style={{ opacity: 100 }} className='automation-preview-container' >
+                <DrawingAutomation i={0} />
+            </div>
+            <div>
+                <h4>Data Recieved</h4>
+                <textarea cols={100} rows={30} value={dataReceived} />
+            </div>
         </div>
     )
 }

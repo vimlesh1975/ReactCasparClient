@@ -172,8 +172,8 @@ app.get('/', function (req, res) {
 });
 
 app.post('/recallPage', (req, res) => {
-    const data = req.body;
-    console.log(data)
+    // const data = req.body;
+    // console.log(data)
     io.emit('recallPage', req.body)
     res.end('Sent The Commands:' + JSON.stringify(req.body))
 })
@@ -188,5 +188,5 @@ app.post('/stopGraphics', (req, res) => {
     const data = req.body;
     // console.log(data)
     io.emit('stopGraphics', req.body)
-    res.end('Sent The Commands'  + JSON.stringify(req.body))
+    res.end('Sent The Commands' + JSON.stringify(req.body))
 })

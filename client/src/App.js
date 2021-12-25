@@ -25,7 +25,6 @@ import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
-import DrawingAutomation from './DrawingAutomation';
 
 const buildDate = '251221'
 
@@ -187,9 +186,9 @@ const App = () => {
                 </h5>
               </div>
               <div >
-                <div style={{ opacity: 0 }} className='automation-preview-container' >
+                {/* <div style={{ opacity: 100 }} className='automation-preview-container' >
                   <DrawingAutomation i={0} />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
