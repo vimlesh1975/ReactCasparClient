@@ -505,6 +505,13 @@ export const fontLists = [
     "Yu Gothic UI Semilight"
 ]
 export const chNumbers = [1, 2, 3, 4];
+export const inAnimationMethods=[
+    'scaleX',
+    'scaleY',
+    'mix',
+    'rotateX',
+    'rotateY'
+]
 
 export const animationMethods = [
     'linear',

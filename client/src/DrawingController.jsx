@@ -1530,9 +1530,25 @@ const DrawingController = () => {
     }
 
     const startGraphics = (canvas, layerNumber) => {
+        var inAnimation;
+        if (window.inAnimationMethod==='scaleX'){
+            inAnimation= `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}}`
+        }
+       else if (window.inAnimationMethod==='scaleY'){
+            inAnimation= `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}}`
+        }
+        else if (window.inAnimationMethod==='rotateX'){
+            inAnimation= `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}}`
+        }
+        else if (window.inAnimationMethod==='rotateY'){
+            inAnimation= `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}}`
+        }
+        else if (window.inAnimationMethod==='mix'){
+            inAnimation= `@keyframes example {from {opacity:0} to {opacity:1}}`
+        }
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+        // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
@@ -1547,14 +1563,17 @@ const DrawingController = () => {
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
+            var style = document.createElement('style');
+            style.textContent = '${inAnimation} div {animation-name: example;  animation-duration: 0.5s; }';
+            document.head.appendChild(style);
             "`)
         }, 300);
 
         setTimeout(() => {
-            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+            // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
         }, 800);
         setTimeout(() => {
-            // updateGraphics(canvas, layerNumber);
+            updateGraphics(canvas, layerNumber);
         }, 1100);
     }
 
@@ -1566,7 +1585,8 @@ const DrawingController = () => {
     const stopGraphics = layerNumber => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
         setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+            endpoint(`stop ${window.chNumber}-${layerNumber}`);
+            endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);
         }, 1000);
 
     }

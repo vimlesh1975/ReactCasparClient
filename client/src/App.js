@@ -17,7 +17,8 @@ import ColorGradient from './ColorGradient';
 import VideoController from './VideoController';
 import Help from './Help';
 import { useDispatch } from 'react-redux'
-import { animationMethods, chNumbers } from './common'
+import {inAnimationMethods, animationMethods, chNumbers } from './common'
+
 import Layers from './Layers'
 import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
@@ -34,13 +35,15 @@ const App = () => {
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
+  const [inAnimationMethod, setInAnimationMethod] = useState('scaleX');
 
   useEffect(() => {
+    window.inAnimationMethod = inAnimationMethod;
     window.animationMethod = animationMethod;
     return () => {
       // cleanup
     }
-  }, [animationMethod])
+  }, [inAnimationMethod,animationMethod])
 
   useEffect(() => {
     window.chNumber = chNumber;
@@ -124,6 +127,10 @@ const App = () => {
   const changeAnimationMethod = e => {
     setAnimationMethod(e.target.value);
   }
+  const changeInAnimationMethod = e => {
+    setInAnimationMethod(e.target.value);
+  }
+  
   const changeChannelNumber = e => {
     setChNumber(e.target.value);
   }
@@ -136,9 +143,13 @@ const App = () => {
         endpoint(`mixer ${chNumber} clear`);
 
       }}>Stop Channel</button>
-      <b> Animation Method: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
+       <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
+        {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+      </select>
+      <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
+     
       <b>Channel Number:</b>
       <select onChange={e => changeChannelNumber(e)} value={chNumber}>
         {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
