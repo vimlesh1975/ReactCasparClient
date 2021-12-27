@@ -1554,7 +1554,7 @@ const DrawingController = () => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
         }, 800);
         setTimeout(() => {
-            updateGraphics(canvas, layerNumber);
+            // updateGraphics(canvas, layerNumber);
         }, 1100);
     }
 
@@ -1624,7 +1624,18 @@ const DrawingController = () => {
         }
     }, [canvas])
 
-
+    const onTabChange = (index, prevIndex) => {
+        switch (index) {
+          case 0:
+          case 4:
+            setTimeout(() => {
+              window.dispatchEvent(new Event('resize'))
+            }, 100);
+            break;
+          default:
+          //nothing
+        }
+      }
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
@@ -1965,7 +1976,7 @@ const DrawingController = () => {
 
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
-                <Tabs forceRenderTabPanel={true}>
+                <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex) } >
                     <TabList>
                         <Tab>Save</Tab>
                         <Tab>Filter</Tab>

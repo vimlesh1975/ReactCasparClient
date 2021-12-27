@@ -22,9 +22,12 @@ const Automation = () => {
 
             socket.on("updateData", data => {
                 updateData(data.layerNumber, JSON.parse(data.data));
+                setDataReceived(JSON.stringify(data));
+
             });
             socket.on("stopGraphics", data => {
                 stopGraphics(data.layerNumber);
+                setDataReceived(JSON.stringify(data));
             });
         }
         else {
@@ -183,13 +186,13 @@ const Automation = () => {
     }
     return (
         <div>
-            Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />
+           <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>
             <div style={{ opacity: 100 }} className='automation-preview-container' >
                 <DrawingAutomation i={0} />
             </div>
             <div>
-                <h4>Data Recieved</h4>
-                <textarea cols={100} rows={30} value={dataReceived} />
+                <span>Data Recieved</span>
+                <textarea cols={40} rows={8} value={dataReceived} />
             </div>
         </div>
     )

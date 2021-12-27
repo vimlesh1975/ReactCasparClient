@@ -58,17 +58,10 @@ const Drawing = ({ canvasOutput }) => {
         });
     }
 
-    // const xyz = canvas => {
-    //     canvas.on('object:selected', ()=>{
-    //         alert('hkhkhk')
-    //         console.log('hi');
-    //     });
-    // }
     useEffect(() => {
         setTimeout(() => {
             window.editor.canvas.extraProps = ['id', 'selectable']
             setZoomAndPan(window.editor.canvas);
-            // xyz(window.editor.canvas);
         }, 2000);
         return () => {
             cancesetZoomAndPan(window.editor.canvas)

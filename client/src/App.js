@@ -26,7 +26,7 @@ import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
 
-const buildDate = '251221'
+const buildDate = '271221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -97,6 +97,8 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
 
+
+
   const onTabChange = (index, prevIndex) => {
     switch (index) {
       case 0:
@@ -104,13 +106,16 @@ const App = () => {
       case 4:
       case 5:
       case 6:
-        setCurrentTab('Drawing')
+        setCurrentTab('Drawing');
+        setTimeout(() => {
+          console.log('hi')
+          window.dispatchEvent(new Event('resize'))
+        }, 100);
         break;
       case 1:
       case 2:
         setCurrentTab('Video')
         break;
-
       default:
       //nothing
     }
@@ -186,9 +191,7 @@ const App = () => {
                 </h5>
               </div>
               <div >
-                {/* <div style={{ opacity: 100 }} className='automation-preview-container' >
-                  <DrawingAutomation i={0} />
-                </div> */}
+              <Automation />
               </div>
             </div>
           </div>
@@ -196,7 +199,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
+        <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex) }>
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
@@ -206,7 +209,6 @@ const App = () => {
             <Tab >ClrGradient</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
-            <Tab >Automation</Tab>
             <Tab>Help</Tab>
 
           </TabList>
@@ -243,9 +245,7 @@ const App = () => {
           <TabPanel>
             <BreakingNews />
           </TabPanel>
-          <TabPanel>
-            <Automation />
-          </TabPanel>
+        
           <TabPanel>
             <Help />
           </TabPanel>
