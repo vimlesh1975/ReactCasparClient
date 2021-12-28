@@ -192,7 +192,7 @@ const Automation = () => {
             </div>
             <div>
                 <span>Data Recieved</span>
-                <textarea cols={40} rows={8} value={dataReceived} />
+              <br />  <textarea cols={40} rows={8} value={dataReceived} />
             </div>
         </div>
     )

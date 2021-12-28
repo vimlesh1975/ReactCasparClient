@@ -27,7 +27,7 @@ import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
 
-const buildDate = '271221'
+const buildDate = '281221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();

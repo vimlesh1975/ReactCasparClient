@@ -815,6 +815,25 @@ export const paste = (canvas) => {
         // alert(error)
     }
 }
+export const createShape = (canvas, shape) => {
+    const rect = new fabric.Path(shape, {
+        shadow: shadowOptions,
+        top: -100,
+        left: 80,
+        scaleX: 0.4,
+        scaleY: 0.4,
+        opacity: 0.9,
+        fill: 'blue',
+        hasRotatingPoint: true,
+        objectCaching: false,
+        stroke: options.stroke,
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+}
 
 const DrawingController = () => {
     const [fontList, setFontList] = useState(fontLists);
@@ -1003,6 +1022,9 @@ const DrawingController = () => {
         canvas?.requestRenderAll();
     }
 
+
+
+
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
         if (mode === 'none') {
@@ -1172,8 +1194,7 @@ const DrawingController = () => {
             fabric.loadSVGFromURL(site_url, function (objects) {
                 objects?.forEach(element => {
                     canvas.add(element);
-                    element.objectCaching = false;
-                    element.shadow = shadowOptions;
+                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                 });
             });
             canvas.renderAll();
@@ -1225,12 +1246,12 @@ const DrawingController = () => {
                     width: br.width,
                     height: br.height
                 }),
-                 retVal + '.png')
+                    retVal + '.png')
                 // canvas.getElement().toBlob(blob=>{
                 //     saveAs(blob,
                 //     retVal + '.png')
                 // })
-               
+
             } catch (error) {
                 alert(error)
             }
@@ -1531,20 +1552,20 @@ const DrawingController = () => {
 
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
-        if (window.inAnimationMethod==='scaleX'){
-            inAnimation= `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}}`
+        if (window.inAnimationMethod === 'scaleX') {
+            inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}}`
         }
-       else if (window.inAnimationMethod==='scaleY'){
-            inAnimation= `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}}`
+        else if (window.inAnimationMethod === 'scaleY') {
+            inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}}`
         }
-        else if (window.inAnimationMethod==='rotateX'){
-            inAnimation= `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}}`
+        else if (window.inAnimationMethod === 'rotateX') {
+            inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}}`
         }
-        else if (window.inAnimationMethod==='rotateY'){
-            inAnimation= `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}}`
+        else if (window.inAnimationMethod === 'rotateY') {
+            inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}}`
         }
-        else if (window.inAnimationMethod==='mix'){
-            inAnimation= `@keyframes example {from {opacity:0} to {opacity:1}}`
+        else if (window.inAnimationMethod === 'mix') {
+            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}}`
         }
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1635,7 +1656,7 @@ const DrawingController = () => {
                 if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
             }
             if (e.ctrlKey && e.key.toLowerCase() === 'z') {
-               window.editor.canvas?.undo();
+                window.editor.canvas?.undo();
             }
 
         });
@@ -1646,16 +1667,16 @@ const DrawingController = () => {
 
     const onTabChange = (index, prevIndex) => {
         switch (index) {
-          case 0:
-          case 4:
-            setTimeout(() => {
-              window.dispatchEvent(new Event('resize'))
-            }, 100);
-            break;
-          default:
-          //nothing
+            case 0:
+            case 4:
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'))
+                }, 100);
+                break;
+            default:
+            //nothing
         }
-      }
+    }
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
@@ -1840,8 +1861,8 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b>Game Timer:</b>
                     <button onClick={() => addGameTimer(canvas)}>Add to Preview</button>
-                    <span> M</span><input type='text' style={{width:15}} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
-                    <span> S</span><input type='text' style={{width:15}} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
+                    <span> M</span><input type='text' style={{ width: 15 }} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
+                    <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                     <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
                     <button onClick={() => showClock('Clock')}><FaPlay /></button>
                     <button onClick={() => pauseClock(clockLayer)}> <FaPause /></button>
@@ -1986,6 +2007,7 @@ const DrawingController = () => {
                     <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
 
+
                 </div>
 
                 <div className='drawingToolsRow' >
@@ -1996,7 +2018,7 @@ const DrawingController = () => {
 
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
-                <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex) } >
+                <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
                     <TabList>
                         <Tab>Save</Tab>
                         <Tab>Filter</Tab>

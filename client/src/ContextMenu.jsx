@@ -1,7 +1,11 @@
 import useContextMenu from './useContextMenu'
-import { setasClipPath, cliptoPath, gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, deleteSelectedItem, deleteAll, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
-import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscTrash, VscLock, VscUnlock } from "react-icons/vsc";
+import { createShape, gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { basic1 } from './shapelib/basic1.js'
+import { object1 } from './shapelib/object1.js'
+
+import { v4 as uuidv4 } from 'uuid';
 
 
 const ContextMenu = ({ canvas }) => {
@@ -10,16 +14,20 @@ const ContextMenu = ({ canvas }) => {
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul  >
-        <li onClick={() => deleteSelectedItem(canvas)}>Delete Selected <VscTrash />
-          <ul>
-            <li onClick={() => deleteAll(canvas)}>Delete All</li>
-          </ul>
-        </li>
+        <li>Shapes<ul>{(Object.keys(basic1.data)).map((val, i) => <li key={uuidv4()} onClick={() => createShape(canvas, (Object.values(basic1.data))[i])}>{val}</li>)}</ul></li>
+        <li>Objects<ul>{(Object.keys(object1.data)).map((val, i) => <li key={uuidv4()} onClick={() => createShape(canvas, (Object.values(object1.data))[i])}>{val}</li>)}</ul></li>
+        {/* <li>1<ul>
+          <li>2<ul>
+            <li>200000000</li>
+            <li>20000001111100</li>
+          </ul></li>
+          <li>3<ul>
+            <li>4000000000000000000</li>
+            <li>4_111111</li>
+          </ul></li>
+        </ul></li> */}
         <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(canvas)}>Send To Back</li>
-
-        <li onClick={() => setasClipPath(canvas)}>Set as ClipPath</li>
-        <li onClick={() => cliptoPath(canvas)}>Clip to Path</li>
 
         <li onClick={() => lock(canvas)}>Lock <VscLock /></li>
         <li onClick={() => unlockAll(canvas)}>Unlock All <VscUnlock /></li>
@@ -30,7 +38,6 @@ const ContextMenu = ({ canvas }) => {
           <li onClick={() => createRect(canvas)}>Rectangle <VscPrimitiveSquare /></li>
           <li onClick={() => createCircle(canvas)}>Circle <VscCircleFilled /></li>
           <li onClick={() => createTriangle(canvas)}>Triangle <VscTriangleUp /></li>
-
         </ul></li>
         <li>Text Align<ul >
           <li onClick={() => alignLeft(canvas)}>Left</li>
