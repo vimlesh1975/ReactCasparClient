@@ -1,34 +1,16 @@
 import useContextMenu from './useContextMenu'
-import { createShape, gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
+import {  gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
-import { basic1 } from './shapelib/basic1.js'
-import { object1 } from './shapelib/object1.js'
-
-import { v4 as uuidv4 } from 'uuid';
-
 
 const ContextMenu = ({ canvas }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
   window.showMenu = showMenu;
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
-      <ul  >
-        <li>Shapes<ul>{(Object.keys(basic1.data)).map((val, i) => <li key={uuidv4()} onClick={() => createShape(canvas, (Object.values(basic1.data))[i])}>{val}</li>)}</ul></li>
-        <li>Objects<ul>{(Object.keys(object1.data)).map((val, i) => <li key={uuidv4()} onClick={() => createShape(canvas, (Object.values(object1.data))[i])}>{val}</li>)}</ul></li>
-        {/* <li>1<ul>
-          <li>2<ul>
-            <li>200000000</li>
-            <li>20000001111100</li>
-          </ul></li>
-          <li>3<ul>
-            <li>4000000000000000000</li>
-            <li>4_111111</li>
-          </ul></li>
-        </ul></li> */}
+      <ul>
         <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(canvas)}>Send To Back</li>
-
         <li onClick={() => lock(canvas)}>Lock <VscLock /></li>
         <li onClick={() => unlockAll(canvas)}>Unlock All <VscUnlock /></li>
         <li onClick={() => groupObjects(canvas, true)}>Group Selected</li>

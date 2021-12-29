@@ -827,7 +827,7 @@ export const createShape = (canvas, shape) => {
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
-        strokeWidth: 3,
+        strokeWidth: 2,
         strokeUniform: true,
     });
     canvas.add(rect).setActiveObject(rect);

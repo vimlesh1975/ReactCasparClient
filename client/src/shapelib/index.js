@@ -1,4 +1,4 @@
-{
+export  const index={
     "lib": [
         "basic",
         "animal",

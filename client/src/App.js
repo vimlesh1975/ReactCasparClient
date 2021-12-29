@@ -26,8 +26,9 @@ import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
+import Shapes from './Shapes';
 
-const buildDate = '281221'
+const buildDate = '291221'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -220,6 +221,8 @@ const App = () => {
             <Tab >ClrGradient</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
+            <Tab >Shapes</Tab>
+
             <Tab>Help</Tab>
 
           </TabList>
@@ -256,7 +259,9 @@ const App = () => {
           <TabPanel>
             <BreakingNews />
           </TabPanel>
-        
+          <TabPanel>
+            <Shapes />
+          </TabPanel>
           <TabPanel>
             <Help />
           </TabPanel>
