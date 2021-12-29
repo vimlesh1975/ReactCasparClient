@@ -112,7 +112,6 @@ const App = () => {
       case 6:
         setCurrentTab('Drawing');
         setTimeout(() => {
-          console.log('hi')
           window.dispatchEvent(new Event('resize'))
         }, 100);
         break;

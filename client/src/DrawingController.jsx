@@ -35,18 +35,42 @@ var Direction = {
 };
 
 fabric.util.addListener(document.body, 'keydown', function (options) {
-    // if (options.repeat) {
-    //     return;
-    // }
-    var key = options.which || options.keyCode; // key detection
-    if (key === 37) { // handle Left key
-        moveSelected(Direction.LEFT);
-    } else if (key === 38) { // handle Up key
-        moveSelected(Direction.UP);
-    } else if (key === 39) { // handle Right key
-        moveSelected(Direction.RIGHT);
-    } else if (key === 40) { // handle Down key
-        moveSelected(Direction.DOWN);
+    if (options.target.nodeName === 'BODY') {
+        var key = options.which || options.keyCode; // key detection
+        if (key === 37) { // handle Left key
+            moveSelected(Direction.LEFT);
+        } else if (key === 38) { // handle Up key
+            moveSelected(Direction.UP);
+        } else if (key === 39) { // handle Right key
+            moveSelected(Direction.RIGHT);
+        } else if (key === 40) { // handle Down key
+            moveSelected(Direction.DOWN);
+        }
+
+        //--------------
+        if (options.repeat) {
+            return;
+        }
+
+        if (options.key === 'Delete') {
+            window.editor.canvas?.getActiveObjects().forEach(item => {
+                //  alert(item.type);
+                if (!((item.type === 'textbox') && item.isEditing)) { window.editor.canvas?.remove(item); }
+            });
+        }
+        if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+            const item = window.editor.canvas?.getActiveObjects()[0];
+            if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+        }
+        if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+            const item = window.editor.canvas?.getActiveObjects()[0];
+            if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+        }
+        if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+            window.editor.canvas?.undo();
+        }
+        //----------
+
     }
 });
 
@@ -815,7 +839,7 @@ export const paste = (canvas) => {
         // alert(error)
     }
 }
-export const createShape = (canvas, shape, size=0.4) => {
+export const createShape = (canvas, shape, size = 0.4) => {
 
     const rect = new fabric.Path(shape, {
         shadow: shadowOptions,
@@ -1633,38 +1657,6 @@ const DrawingController = () => {
         return () => {
         }
     }, [])
-
-
-    useEffect(() => {
-        window.addEventListener('keydown', e => {
-            // console.log(e.key);
-            if (e.repeat) {
-                return;
-            }
-
-            if (e.key === 'Delete') {
-                canvas?.getActiveObjects().forEach(item => {
-                    //  alert(item.type);
-                    if (!((item.type === 'textbox') && item.isEditing)) { canvas?.remove(item); }
-                });
-            }
-            if (e.ctrlKey && e.key.toLowerCase() === 'c') {
-                const item = canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(canvas) }
-            }
-            if (e.ctrlKey && e.key.toLowerCase() === 'v') {
-                const item = canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(canvas) }
-            }
-            if (e.ctrlKey && e.key.toLowerCase() === 'z') {
-                window.editor.canvas?.undo();
-            }
-
-        });
-        return () => {
-            window.removeEventListener('keydown', null)
-        }
-    }, [canvas])
 
     const onTabChange = (index, prevIndex) => {
         switch (index) {
