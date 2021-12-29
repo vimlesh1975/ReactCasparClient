@@ -26,24 +26,24 @@ const Shapes = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     return (
-        <div>
+        <div style={{width : 880, height:850 ,overflow:'scroll'}}>
 
             {index.lib.map((val, i) => <div key={uuidv4()}>
                 <span >{val}</span><br />
-                {(val === 'basic') ? (Object.keys(basic.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(basic.data))[i])}>{val} </button>) : ''}
-                {(val === 'animal') ? (Object.keys(animal.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(animal.data))[i])}>{val} </button>) : ''}
-                {(val === 'arrow') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(arrow.data))[i])}>{val} </button>) : ''}
-                {(val === 'dialog_balloon') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(dialog_balloon.data))[i])}>{val} </button>) : ''}
-                {(val === 'electronics') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(electronics.data))[i])}>{val} </button>) : ''}
-                {(val === 'flowchart') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(flowchart.data))[i])}>{val} </button>) : ''}
-                {(val === 'game') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(game.data))[i])}>{val} </button>) : ''}
-                {(val === 'math') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(math.data))[i])}>{val} </button>) : ''}
-                {(val === 'misc') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(misc.data))[i])}>{val} </button>) : ''}
-                {(val === 'music') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(music.data))[i])}>{val} </button>) : ''}
-                {(val === 'object') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(object.data))[i])}>{val} </button>) : ''}
-                {(val === 'raphael_1') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(raphael_1.data))[i])}>{val} </button>) : ''}
-                {(val === 'raphael_2') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(raphael_2.data))[i])}>{val} </button>) : ''}
-                {(val === 'symbol') ? (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(symbol.data))[i])}>{val} </button>) : ''}
+                {(val === 'basic') && (Object.keys(basic.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(basic.data))[i])}>{val} </button>) }
+                {(val === 'animal') && (Object.keys(animal.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(animal.data))[i])}>{val} </button>)}
+                {(val === 'arrow')&& (Object.keys(arrow.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(arrow.data))[i])}>{val} </button>) }
+                {(val === 'dialog_balloon') && (Object.keys(dialog_balloon.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(dialog_balloon.data))[i])}>{val} </button>) }
+                {(val === 'electronics')&& (Object.keys(electronics.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(electronics.data))[i])}>{val} </button>) }
+                {(val === 'flowchart') && (Object.keys(flowchart.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(flowchart.data))[i])}>{val} </button>) }
+                {(val === 'game') && (Object.keys(game.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(game.data))[i])}>{val} </button>) }
+                {(val === 'math') && (Object.keys(math.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(math.data))[i])}>{val} </button>) }
+                {(val === 'misc') && (Object.keys(misc.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(misc.data))[i])}>{val} </button>) }
+                {(val === 'music') && (Object.keys(music.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(music.data))[i])}>{val} </button>) }
+                {(val === 'object') && (Object.keys(object.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(object.data))[i])}>{val} </button>) }
+                {(val === 'raphael_1') && (Object.keys(raphael_1.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(raphael_1.data))[i],3)}>{val} </button>) }
+                {(val === 'raphael_2') && (Object.keys(raphael_2.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(raphael_2.data))[i],3)}>{val} </button>) }
+                {(val === 'symbol') && (Object.keys(symbol.data)).map((val, i) => <button key={uuidv4()} onClick={() => createShape(canvas, (Object.values(symbol.data))[i])}>{val} </button>) }
 
             </div>)}
 

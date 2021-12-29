@@ -815,13 +815,14 @@ export const paste = (canvas) => {
         // alert(error)
     }
 }
-export const createShape = (canvas, shape) => {
+export const createShape = (canvas, shape, size=0.4) => {
+
     const rect = new fabric.Path(shape, {
         shadow: shadowOptions,
         top: -100,
         left: 80,
-        scaleX: 0.4,
-        scaleY: 0.4,
+        scaleX: size,
+        scaleY: size,
         opacity: 0.9,
         fill: 'blue',
         hasRotatingPoint: true,
