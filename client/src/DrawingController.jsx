@@ -1578,28 +1578,33 @@ const DrawingController = () => {
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
         if (window.inAnimationMethod === 'scaleX') {
-            inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}}`
+            inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}} div {animation-name: example;  animation-duration: 0.5s; }`
         }
         else if (window.inAnimationMethod === 'scaleY') {
-            inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}}`
+            inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}} div {animation-name: example;  animation-duration: 0.5s; }`
         }
         else if (window.inAnimationMethod === 'rotateX') {
-            inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}}`
+            inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}} div {animation-name: example;  animation-duration: 0.5s; }`
         }
         else if (window.inAnimationMethod === 'rotateY') {
-            inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}}`
+            inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}} div {animation-name: example;  animation-duration: 0.5s; }`
         }
         else if (window.inAnimationMethod === 'mix') {
-            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}}`
+            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: 0.5s; }`
         }
+        else if (window.inAnimationMethod === 'Allelements') {
+            inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 0.5s; }`
+        }
+        
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        }, 250);
 
-        setTimeout(() => {
+        // setTimeout(() => {
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        // }, 250);
+
+        // setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
             aa.style.position='absolute';
@@ -1610,16 +1615,16 @@ const DrawingController = () => {
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
-            style.textContent = '${inAnimation} div {animation-name: example;  animation-duration: 0.5s; }';
+            style.textContent = '${inAnimation}';
             document.head.appendChild(style);
             "`)
-        }, 300);
+        // }, 300);
 
         setTimeout(() => {
             // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
         }, 800);
         setTimeout(() => {
-            updateGraphics(canvas, layerNumber);
+            // updateGraphics(canvas, layerNumber);
         }, 1100);
     }
 

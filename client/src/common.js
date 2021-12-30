@@ -510,7 +510,8 @@ export const inAnimationMethods=[
     'scaleY',
     'mix',
     'rotateX',
-    'rotateY'
+    'rotateY',
+    'Allelements'
 ]
 
 export const animationMethods = [
