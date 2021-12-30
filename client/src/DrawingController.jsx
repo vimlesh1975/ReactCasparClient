@@ -844,11 +844,11 @@ export const createShape = (canvas, shape, size = 0.4) => {
     const rect = new fabric.Path(shape, {
         shadow: shadowOptions,
         top: -100,
-        left: 80,
+        left: (Math.random()) * 1000,
         scaleX: size,
         scaleY: size,
         opacity: 0.9,
-        fill: 'blue',
+        fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -857,7 +857,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top',  (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
 }
 
 const DrawingController = () => {
