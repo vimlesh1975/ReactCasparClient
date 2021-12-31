@@ -139,10 +139,7 @@ const Automation = () => {
                 try {
                     if (element.id === data2.key) {
                         if (data2.type === 'text') {
-                            //const aa = (element.width) * (element.scaleX);
                             element.set({ text: data2.value.toString() })
-                            //if (element.width > aa) { element.scaleToWidth(aa) }
-                            // canvas.requestRenderAll();
                         }
                         else if (data2.type === 'image') {
                             var i = new Image();
@@ -156,7 +153,6 @@ const Automation = () => {
                                 else if (element.type === 'rect') {
                                     element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                 }
-                                // canvas.requestRenderAll();
                             };
                             i.src = data2.value;
                         }
@@ -167,12 +163,10 @@ const Automation = () => {
                             element.set({ [data2.type]: data2.value })
                         }
                     }
-                    // canvas.requestRenderAll();
                 } catch (error) {
                 }
             });
         });
-        // canvas.requestRenderAll();
         setTimeout(() => {
             updateGraphics(layerNumber)
         }, 300);

@@ -32,20 +32,20 @@ const SavePannel = () => {
     const updatePageName = e => {
         // if (e.code === 'Enter') {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.innerText, 'pageValue': val.pageValue } : val;
+            return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.value, 'pageValue': val.pageValue } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
         // }
 
     }
-    const onDoubleClickPageName = (event) => {
-        event.preventDefault();
-        var sel = window.getSelection();
-        var range = document.createRange();
-        range.selectNodeContents(event.target);
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
+    // const onDoubleClickPageName = (event) => {
+    //     event.preventDefault();
+    //     var sel = window.getSelection();
+    //     var range = document.createRange();
+    //     range.selectNodeContents(event.target);
+    //     sel.removeAllRanges();
+    //     sel.addRange(range);
+    // }
     const recallPage = (json, canvas, i) => {
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i })
         canvas.loadFromJSON(json, function () {
@@ -274,10 +274,14 @@ const SavePannel = () => {
                                                                     <DrawingThumbnail i={i} />
 
                                                                 </div>
-                                                                <span style={{ minWidth: 170, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                {/* <span style={{ minWidth: 170, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
                                                                 }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName} >{val.pageName}
-                                                                </span>
+                                                                </span> */}
+                                                                <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                    recallPage(val.pageValue, window.editor.canvas, i);
+                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e=>e.target.setSelectionRange(0, e.target.value.length)}  value={val.pageName} onChange={updatePageName}
+                                                                />
                                                             </td>
 
                                                         </tr>

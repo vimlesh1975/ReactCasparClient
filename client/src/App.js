@@ -27,6 +27,7 @@ import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
 import Shapes from './Shapes';
+import Tennis from './Tennis';
 
 const buildDate = '301221'
 
@@ -221,7 +222,8 @@ const App = () => {
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
             <Tab >Shapes</Tab>
-
+            <Tab >Tennis</Tab>
+            
             <Tab>Help</Tab>
 
           </TabList>
@@ -260,6 +262,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <Shapes />
+          </TabPanel>
+          <TabPanel>
+            <Tennis />
           </TabPanel>
           <TabPanel>
             <Help />
