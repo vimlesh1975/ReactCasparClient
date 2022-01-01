@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { endpoint } from './common'
+import { endpoint } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { iniplayerList1, iniplayerList2 } from './hockeyData'
+import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';

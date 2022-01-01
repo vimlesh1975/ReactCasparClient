@@ -857,7 +857,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top',  (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
 }
 
 const DrawingController = () => {
@@ -1595,17 +1595,17 @@ const DrawingController = () => {
         else if (window.inAnimationMethod === 'Allelements') {
             inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 0.5s; }`
         }
-        
+
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
 
         // setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         // }, 250);
 
         // setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+        endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -2016,7 +2016,7 @@ const DrawingController = () => {
 
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
-                <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
+                <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
                     <TabList>
                         <Tab>Save</Tab>
                         <Tab>Filter</Tab>

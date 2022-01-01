@@ -17,19 +17,18 @@ import ColorGradient from './ColorGradient';
 import VideoController from './VideoController';
 import Help from './Help';
 import { useDispatch } from 'react-redux'
-import {inAnimationMethods, animationMethods, chNumbers } from './common'
+import { inAnimationMethods, animationMethods, chNumbers } from './common'
 
 import Layers from './Layers'
-import Hockey from './Hockey'
 import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
 import BreakingNews from './BreakingNews'
 import Automation from './Automation';
 import { videoLayers } from './common'
 import Shapes from './Shapes';
-import Tennis from './Tennis';
+import Games from './Games/Games';
 
-const buildDate = '311221'
+const buildDate = '010122'
 
 const App = () => {
   const [mediaPath, setmediaPath] = useState();
@@ -45,7 +44,7 @@ const App = () => {
     return () => {
       // cleanup
     }
-  }, [inAnimationMethod,animationMethod])
+  }, [inAnimationMethod, animationMethod])
 
   useEffect(() => {
     window.chNumber = chNumber;
@@ -131,7 +130,7 @@ const App = () => {
   const changeInAnimationMethod = e => {
     setInAnimationMethod(e.target.value);
   }
-  
+
   const changeChannelNumber = e => {
     setChNumber(e.target.value);
   }
@@ -144,18 +143,18 @@ const App = () => {
         endpoint(`mixer ${chNumber} clear`);
 
       }}>Stop Channel</button>
-       <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
+      <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
         {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
       <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
         {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
-     
+
       <b>Channel Number:</b>
       <select onChange={e => changeChannelNumber(e)} value={chNumber}>
         {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
       </select>
-      <button onClick={() => endpoint(`swap 1 2`)}>Swap Channels</button>
+      <button onClick={() => endpoint(`swap 1 2`)}>Swap CH 1 and 2</button>
 
       <span style={{ position: 'absolute', right: '10px' }}><b >All version of casparcg server</b></span>
     </div>
@@ -203,7 +202,7 @@ const App = () => {
                 </h5>
               </div>
               <div >
-              <Automation />
+                <Automation />
               </div>
             </div>
           </div>
@@ -211,21 +210,18 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex) }>
+        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
             <Tab>VDO Playlist</Tab>
             <Tab>Layers</Tab>
-            <Tab>Hockey</Tab>
             <Tab >ClrGradient</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
             <Tab >Shapes</Tab>
-            <Tab >Tennis</Tab>
-            
+            <Tab >Games</Tab>
             <Tab>Help</Tab>
-
           </TabList>
           <TabPanel>
             <div style={{ border: '1px dashed blue', width: 900 }}>
@@ -248,9 +244,6 @@ const App = () => {
           <TabPanel>
             <Layers />
           </TabPanel>
-          <TabPanel>
-            <Hockey />
-          </TabPanel>
           <TabPanel >
             <ColorGradient />
           </TabPanel>
@@ -264,12 +257,11 @@ const App = () => {
             <Shapes />
           </TabPanel>
           <TabPanel>
-            <Tennis />
+            <Games />
           </TabPanel>
           <TabPanel>
             <Help />
           </TabPanel>
-
         </Tabs >
       </div >
 

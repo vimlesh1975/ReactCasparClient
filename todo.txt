@@ -10,3 +10,12 @@ remove extar layer from layer list 👍
 2. Added play button in Breaking news.
 3. Removed oneliner.
 4. Added update button in Breaking news.
+
+01.01.22
+1. Removed page word from save pannel.
+2. Added page count.
+3. page number aligned to center.
+4. min width of page numvber to 20.
+5. Moved tennis and hockey in new tab games.
+6. Selected tab background color.
+7. Current page number.

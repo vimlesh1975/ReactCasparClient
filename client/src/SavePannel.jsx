@@ -206,7 +206,7 @@ const SavePannel = () => {
                 </div>
                 <div className='drawingToolsRow' >
 
-                    <b> Pages: </b>
+                    {canvasList.length}  <b> Pages: </b>
                     <button onClick={() => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
@@ -216,7 +216,7 @@ const SavePannel = () => {
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
-                    > Add Blank Page</button>
+                    > Add Blank</button>
                     <button onClick={() => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
@@ -226,9 +226,9 @@ const SavePannel = () => {
                         }
                     }}
 
-                    ><FaSave /> in New Page</button>
+                    >Save in New</button>
 
-                    <button onClick={() => updatePage()}>Update Page</button>
+                    <button onClick={() => updatePage()}>Update</button>Curr Pg{currentPage + 1}
                 </div>
             </div>
             <div style={{ height: 710, width: 380, overflow: 'scroll', border: '1px solid black' }}>
@@ -257,8 +257,8 @@ const SavePannel = () => {
                                                             }}
                                                         >
                                                             <td>
-                                                                <div style={{display:'flex',   height:200, flexDirection:'column', alignItems:'center', justifyContent:'space-around', placeItems:'center'}}>
-                                                                    <div style={{backgroundColor:'white' ,border:'2px solid grey'}}>
+                                                                <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
+                                                                    <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
                                                                         {i + 1}
                                                                     </div>
                                                                     <div>
@@ -280,7 +280,7 @@ const SavePannel = () => {
                                                                 </span> */}
                                                                 <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
-                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e=>e.target.setSelectionRange(0, e.target.value.length)}  value={val.pageName} onChange={updatePageName}
+                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                 />
                                                             </td>
 

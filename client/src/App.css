@@ -227,3 +227,8 @@ display: inline;
   width: 120px;
   height: 3px;
 }
+
+.selectedTab{
+  background-color: rgb(116, 114, 117);
+  color: white;
+}

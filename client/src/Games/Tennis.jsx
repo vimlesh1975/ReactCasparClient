@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint } from './common'
+import { endpoint } from '../common'
 
 const Tennis = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -23,21 +23,21 @@ const Tennis = () => {
         if ((t1point === '40') && (t2point === '40')) {
             setT1point('AD');
         }
-      else  if (t1point === 'AD') {
+        else if (t1point === 'AD') {
             setT1point('0');
             setT2point('0');
             setT1game(val => parseInt(val) + 1)
         }
-        else   if ((t1point === '40') && (t2point !== '40') && (t2point !== 'AD')) {
+        else if ((t1point === '40') && (t2point !== '40') && (t2point !== 'AD')) {
             setT1point('0');
             setT2point('0');
             setT1game(val => parseInt(val) + 1)
 
         }
-        else   if ((t1point === '40')  && (t2point === 'AD')) {
+        else if ((t1point === '40') && (t2point === 'AD')) {
             setT2point('40');
         }
-        else  if (parseInt(t1point) === 30) {
+        else if (parseInt(t1point) === 30) {
             setT1point('40');
         }
         else {
@@ -48,21 +48,21 @@ const Tennis = () => {
         if ((t1point === '40') && (t2point === '40')) {
             setT2point('AD');
         }
-      else  if (t2point === 'AD') {
+        else if (t2point === 'AD') {
             setT2point('0');
             setT1point('0');
             setT2game(val => parseInt(val) + 1)
         }
-        else   if ((t2point === '40') && (t1point !== '40') && (t1point !== 'AD')) {
+        else if ((t2point === '40') && (t1point !== '40') && (t1point !== 'AD')) {
             setT2point('0');
             setT1point('0');
             setT2game(val => parseInt(val) + 1)
 
         }
-        else   if ((t2point === '40') &&  (t1point === 'AD')) {
+        else if ((t2point === '40') && (t1point === 'AD')) {
             setT1point('40');
         }
-        else  if (parseInt(t2point) === 30) {
+        else if (parseInt(t2point) === 30) {
             setT2point('40');
         }
         else {
@@ -70,14 +70,14 @@ const Tennis = () => {
         }
     }
     const team1pointDecrease = () => {
-       if (t1point === 'AD') {
+        if (t1point === 'AD') {
             setT1point('40');
         }
-        else   if (t1point === '40') {
+        else if (t1point === '40') {
             setT1point('30');
         }
-        else if (parseInt(t1point)!==0) {
-            setT1point(val => parseInt(val) -15);
+        else if (parseInt(t1point) !== 0) {
+            setT1point(val => parseInt(val) - 15);
         }
 
     }
@@ -86,11 +86,11 @@ const Tennis = () => {
         if (t2point === 'AD') {
             setT2point('40');
         }
-        else   if (t2point === '40') {
+        else if (t2point === '40') {
             setT2point('30');
         }
-        else if (parseInt(t2point)!==0) {
-            setT2point(val => parseInt(val) -15);
+        else if (parseInt(t2point) !== 0) {
+            setT2point(val => parseInt(val) - 15);
         }
 
     }
