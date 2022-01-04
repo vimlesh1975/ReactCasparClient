@@ -1,6 +1,44 @@
 import React from 'react'
+// import { fabric } from 'fabric'
+// import 'chart-js-fabric'
+// import { useSelector } from 'react-redux'
+
 
 const Help = () => {
+  // const canvas = useSelector(state => state.canvasReducer.canvas);
+
+
+
+  // const test = () => {
+
+  //   const aa = new fabric.Chart({
+  //     width: 400,
+  //     height: 400,
+  //     fill:'red',
+      
+  //     chart: {
+  //       type: 'bar',
+        
+  //       data: {
+  //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          
+  //         datasets: [
+  //           {
+  //             label: '# of Votes',
+  //             fill:'white',
+  //             opacity:1.0,
+  //             data: [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()],
+  //             backgroundColor: ['blue', 'red','green']
+  //           }
+  //         ]
+  //       }
+  //     }
+  //   })
+     
+  //   canvas.add(aa);
+  //   canvas.requestRenderAll();
+  // }
+
   return (
     <div>
       <h2>Help</h2>
@@ -40,12 +78,8 @@ const Help = () => {
         <li>Emoji is not supported in server2.07 and 2.1 </li>
         <li>Image from local pc method only will get filters. </li>
         <li>Dont use double space in folder or file name. </li>
-
-
-
       </ol>
-
-
+      {/* <button onClick={test}>Test</button> */}
     </div>
   )
 }

@@ -57,6 +57,16 @@ const Layers = () => {
         canvas.requestRenderAll();
 
     }
+    const toggleLock=(e, canvas)=>{
+        try {
+            var aa = canvas.item(e.target.getAttribute('key1'));
+            aa.set({selectable:!aa.selectable})
+            canvas.requestRenderAll();
+        } catch (error) {
+            
+        }
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
     const selectObject = (e, canvas) => {
         try {
             var aa = canvas.item(e.target.getAttribute('key1'));
@@ -85,7 +95,7 @@ const Layers = () => {
         <button onClick={updatePage}>Update Page</button>
 
 
-        <div style={{ height: 580, width: 830, overflow: 'scroll', border: '1px solid black' }}>
+        <div style={{ height: 580, width: 835, overflow: 'scroll', border: '1px solid black' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -96,7 +106,7 @@ const Layers = () => {
                         >
                             <table border='1'>
                                 <tbody>
-                                    <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
+                                    <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Lock</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
                                     {layers?.map((val, i) => {
                                         return (
                                             <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
@@ -114,15 +124,20 @@ const Layers = () => {
                                                         <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
                                                         <td><button key1={i} onClick={(e) => deleteLayer(e, window.editor?.canvas)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
+                                                        <td key1={i} onClick={(e) => toggleLock(e, canvas)}>{(!val.selectable).toString()}</td>
+
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
+
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontFamily}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontStyle}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontWeight}</td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.fill} onChange={e => changeCurrentColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" defaultValue={val.shadow?.color} onChange={e => changeShadowCurrentColor(e, canvas)} /></td>
+
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.fill} onChange={e => {changeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.backgroundColor} onChange={e => {changeBackGroundColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.stroke} onChange={e => {changeStrokeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.shadow?.color} onChange={e => {changeShadowCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                   
                                                     </tr>
                                                 )
                                                 }

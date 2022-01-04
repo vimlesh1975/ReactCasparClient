@@ -19,3 +19,10 @@ remove extar layer from layer list 👍
 5. Moved tennis and hockey in new tab games.
 6. Selected tab background color.
 7. Current page number.
+
+04.01.21
+1. When multiple  objects are selected copied , objecchaching is true, now made false.
+2. Layer module was not showing correct color of object. Now Ok.
+3. Added lock information in layers.
+4. Removed d3js.
+5. Tried charjs.fabric.

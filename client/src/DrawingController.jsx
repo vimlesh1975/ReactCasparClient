@@ -823,13 +823,21 @@ export const paste = (canvas) => {
                 // active selection needs a reference to the canvas.
                 clonedObj.canvas = canvas;
                 clonedObj.forEachObject(obj => {
+
                     canvas?.add(obj);
+                    obj.set({
+                        evented: true,
+                        objectCaching: false,
+                    });
                 });
                 // this should solve the unselectability
                 clonedObj.setCoords();
             } else {
                 canvas?.add(clonedObj);
             }
+
+       
+
             _clipboard.top += 10;
             _clipboard.left += 10;
             canvas?.setActiveObject(clonedObj);
