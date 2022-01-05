@@ -28,7 +28,7 @@ import { videoLayers } from './common'
 import Shapes from './Shapes';
 import Games from './Games/Games';
 
-const buildDate = '040122'
+const buildDate = '050122'
 
 
 const App = () => {
@@ -37,7 +37,7 @@ const App = () => {
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
-  const [inAnimationMethod, setInAnimationMethod] = useState('scaleX');
+  const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
 
   useEffect(() => {
     window.inAnimationMethod = inAnimationMethod;
