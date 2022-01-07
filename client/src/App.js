@@ -28,7 +28,7 @@ import { videoLayers } from './common'
 import Shapes from './Shapes';
 import Games from './Games/Games';
 
-const buildDate = '050122'
+const buildDate = '070122'
 
 
 const App = () => {
@@ -201,6 +201,10 @@ const App = () => {
                   &lt;height&gt;325&lt;/height&gt;
                   &lt;/screen&gt;
                 </h5>
+
+                <div id='d3' style={{ display: 'none' }}> </div>
+                {/* <div id='d3' > </div> */}
+
               </div>
               <div >
                 <Automation />

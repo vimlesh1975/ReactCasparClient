@@ -15,13 +15,13 @@ const Help = () => {
   //     width: 400,
   //     height: 400,
   //     fill:'red',
-      
+
   //     chart: {
   //       type: 'bar',
-        
+
   //       data: {
   //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          
+
   //         datasets: [
   //           {
   //             label: '# of Votes',
@@ -34,7 +34,7 @@ const Help = () => {
   //       }
   //     }
   //   })
-     
+
   //   canvas.add(aa);
   //   canvas.requestRenderAll();
   // }
@@ -70,7 +70,7 @@ const Help = () => {
         <li>test</li>
 
       </ol>
-      <h2>Not work</h2>
+      <h2>Doesn't work</h2>
       <ol>
         <li>Erase will not work on Images </li>
         <li>Erase will work on Images from local pc </li>

@@ -20,6 +20,9 @@ import SavedStyles from './SavedStyles';
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
+import * as d3 from 'd3';
+
+
 const clockLayer = 502;
 var xxx;
 
@@ -901,6 +904,8 @@ const DrawingController = () => {
     const [currentMode, setCurrentMode] = useState('none');
     const [fontSize, setFontSize] = useState(25);
     const [opacity, setOpacity] = useState(1);
+    const [charSpacing, setCharSpacing] = useState(1);
+
     const [strokeWidth, setStrokeWidth] = useState(1);
 
     const [skewXSize, setSkewXSize] = useState(0);
@@ -1005,6 +1010,16 @@ const DrawingController = () => {
         canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
         canvas.requestRenderAll();
     }
+
+    const setCHRSpacing = (canvas, e) => {
+        setCharSpacing(e.target.value);
+        canvas.getActiveObjects().forEach(element => {
+            element.set({ 'charSpacing': e.target.value });
+        });
+
+        canvas.requestRenderAll();
+    }
+
     // startTime.getMinutes()).toString()).padStart(2, '0')
     const addGameTimer = canvas => {
         const sss = new fabric.Textbox(`${initialMinute.toString().padStart(2, '0')}:${initialSecond.toString().padStart(2, '0')}`, {
@@ -1054,8 +1069,127 @@ const DrawingController = () => {
         });
         canvas?.requestRenderAll();
     }
+    const attachToPath = () => {
+        const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
+        if (paths[0]) {
+            canvas.getActiveObjects(0).forEach(element => {
+                paths[0].set({ fill: 'transparent', strokeWidth: 0 })
+                element.set('path', paths[0]);
+                canvas.remove(paths[0]);
+            });
+            canvas?.requestRenderAll();
+        }
+    }
+    const test = () => {
+        document.getElementById('d3').innerHTML = '';
+        var data = [{ year: 2011, value: 45 }, { year: 2012, value: 47 }, { year: 2013, value: 52 }, { year: 2014, value: 70 }, { year: 2015, value: 20 }, { year: 2016, value: 40 }];
+        var svg = d3.select("#d3").append("svg").attr("width", 1024).attr("height", 576).style('background-color', 'green');
+        var margin = 200;
+        var width = svg.attr("width") - margin;
+        var height = svg.attr("height") - margin;
+        var xScale = d3.scaleBand().range([0, width]).padding(0.4);
+        var yScale = d3.scaleLinear().range([height, 0]);
+
+        var g = svg.append("g").attr("transform", "translate(" + 100 + "," + 100 + ")");
 
 
+        xScale.domain(data.map(function (d) { return d.year; }));
+        yScale.domain([0, d3.max(data, function (d) { return d.value; })]);
+
+        g.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xScale))
+            .attr("font-size", "24px")
+            .attr("fill", 'white');
+
+        g.append("g")
+            .call(d3.axisLeft(yScale)
+                .tickFormat(function (d) {
+                    return "$" + d;
+                })
+
+                .ticks(10))
+            .attr("fill", 'white')
+            .attr("font-size", "20px")
+
+            .append("text")
+            .attr("y", -50)
+            .attr("fill", 'white')
+            .attr("font-size", "24px")
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("value");
+
+        g.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) { return xScale(d.year); })
+            .attr("y", function (d) { return yScale(d.value); })
+            .attr("fill", 'red')
+            .attr("font-size", "24px")
+            .attr("width", xScale.bandwidth())
+            .attr("height", function (d) { return height - yScale(d.value); })
+            .on("mouseover", function (e, d) {
+                d3.select(this)
+                    .attr("fill", 'white')
+
+                // Get current event info
+                console.log(e, d);
+
+                // Get x & y co-ordinates
+                console.log(d3.pointer(e));
+            })
+            .on("mouseout", function () {
+                d3.select(this)
+                    .attr("fill", 'steelblue')
+            });
+
+
+        svg.append("text")
+            .attr("transform", "translate(100,0)")
+            .attr("x", 50)
+            .attr("y", 50)
+            .attr("fill", 'white')
+            .attr("font-size", "24px")
+            .text("XYZ Foods Stock Price")
+
+        g.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xScale))
+            .append("text")
+            .attr("y", 50)
+            .attr("x", width - 100)
+            .attr("fill", 'white')
+            .attr("font-size", "24px")
+            .attr("text-anchor", "end")
+            .text("Year");
+
+        g.append("g")
+            .call(d3.axisLeft(yScale)
+                .tickFormat(function (d) {
+                    return "$" + d;
+                }).ticks(10))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 60)
+            .attr("x", -200)
+            .attr("fill", 'white')
+            .attr("font-size", "24px")
+            .attr("dy", "-5.1em")
+            .attr("text-anchor", "end")
+
+            .text("Stock Price");
+
+        var SVGstring = document.getElementById('d3').innerHTML;  //SVG取得
+        fabric.loadSVGFromString(SVGstring, (objects) => {
+            objects.forEach(element => {
+                element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+                canvas.add(element)
+            });
+        });
+        canvas.requestRenderAll();
+    }
 
 
     const onDrawingModeChange = (mode, canvas) => {
@@ -1227,12 +1361,17 @@ const DrawingController = () => {
             fabric.loadSVGFromURL(site_url, function (objects) {
                 objects?.forEach(element => {
                     canvas.add(element);
+                    if (element.type === 'text') {
+                        element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+                    }
                     element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                 });
             });
             canvas.renderAll();
         }
     }
+
+
 
     const exportHTML1 = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1280,16 +1419,29 @@ const DrawingController = () => {
                     height: br.height
                 }),
                     retVal + '.png')
-                // canvas.getElement().toBlob(blob=>{
-                //     saveAs(blob,
-                //     retVal + '.png')
-                // })
-
             } catch (error) {
                 alert(error)
             }
         }
     }
+    const exportPngFullPage = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+
+        if (retVal !== null) {
+            try {
+                canvas.getElement().toBlob(blob => {
+                    saveAs(blob,
+                        retVal + '.png')
+                })
+            } catch (error) {
+                alert(error)
+            }
+        }
+    }
+
 
     const exportVerticalScrollAsHTML = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1924,7 +2076,18 @@ const DrawingController = () => {
                     <button onClick={() => createHexagon(canvas)}>Hexa</button>
                 </div>
                 <div className='drawingToolsRow' >
-                    <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}
+                    <table border='1'>
+                        <tbody>
+                            <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
+                                setCharSpacing(0);
+                                canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
+                                canvas.requestRenderAll();
+                            }}>R</button>{charSpacing}</td></tr>
+                        </tbody>
+                    </table>
+
+
+
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
@@ -2038,14 +2201,15 @@ const DrawingController = () => {
                 </div>
 
                 <div className='drawingToolsRow' >
-                    <b> Export Import: </b>
-                    <button onClick={() => exportHTML1(canvas)}>To HTML</button>
-                    <button onClick={() => exportPng(canvas)}>To PNG</button>
-                    <button onClick={() => exportSVG(canvas)}>To SVG</button>
-                    <button onClick={() => exportJSON(canvas)}>To JSON</button>
+                    <b> Export: </b>
+                    <button onClick={() => exportHTML1(canvas)}>HTML</button>
+                    <button onClick={() => exportPng(canvas)}>PNG (Only Sahape)</button>
+                    <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
+                    <button onClick={() => exportSVG(canvas)}>SVG</button>
+                    <button onClick={() => exportJSON(canvas)}>JSON</button>
 
-                    <br /> <span>Import SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                    <br /> <span>Import JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
+                    <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
 
 
                 </div>
@@ -2054,6 +2218,8 @@ const DrawingController = () => {
                     <button onClick={makeFullScreen}>Make full Screen</button>
                     <button onClick={removeBorder}>Remove Border</button>
                     <button onClick={removeCornerCurve}>Remove Border Curve</button>
+                    <button onClick={test}>test</button>
+                    <button onClick={attachToPath}>Attach Text to first path</button>
                 </div>
 
             </div>

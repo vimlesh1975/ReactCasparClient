@@ -10,6 +10,7 @@ export const endpoint = (string) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
+
 export const options = {
     currentMode: "",
     currentColor: "#ffffff",
