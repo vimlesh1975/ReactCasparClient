@@ -27,8 +27,9 @@ import Automation from './Automation';
 import { videoLayers } from './common'
 import Shapes from './Shapes';
 import Games from './Games/Games';
+import Charts from './Charts';
 
-const buildDate = '070122'
+const buildDate = '090122'
 
 
 const App = () => {
@@ -202,7 +203,7 @@ const App = () => {
                   &lt;/screen&gt;
                 </h5>
 
-                <div id='d3' style={{ display: 'none' }}> </div>
+                {/* <div id='d3' style={{ display: 'none' }}> </div> */}
                 {/* <div id='d3' > </div> */}
 
               </div>
@@ -226,6 +227,7 @@ const App = () => {
             <Tab >BreakingNews</Tab>
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
+            <Tab >Charts</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -264,6 +266,10 @@ const App = () => {
           <TabPanel>
             <Games />
           </TabPanel>
+          <TabPanel>
+            <Charts />
+          </TabPanel>
+
           <TabPanel>
             <Help />
           </TabPanel>
