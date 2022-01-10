@@ -39,10 +39,8 @@ const Charts = () => {
 
         var color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c']);
 
-        var pie = d3.pie().value(function (d) {
-            return d.percent;
-        });
-
+        var pie = d3.pie().value(d=>d.percent)
+           
         var path = d3.arc()
             .outerRadius(radius - 10)
             .innerRadius(0);
@@ -60,17 +58,11 @@ const Charts = () => {
 
         arc.append("path")
             .attr("d", path)
-            .attr("fill", function (d) { return color(d.data.browser); });
-
+            .attr("fill", d=> color(d.data.browser));
 
         arc.append("text")
-            .attr("transform", function (d) {
-                return "translate(" + label.centroid(d) + ")";
-            })
-            .text(function (d) { return d.data.browser + ' ' + d.data.percent; })
-        // .attr('text-anchor', 'start')
-        // .attr('font-size', 15);
-
+            .attr("transform", d=>"translate(" + label.centroid(d) + ")" )
+            .text( d => d.data.browser + ' ' + d.data.percent)
 
         svg.append("g")
             .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")

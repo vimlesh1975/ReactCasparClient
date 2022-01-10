@@ -954,7 +954,7 @@ const DrawingController = () => {
                 document.body.style.padding='0';
                 aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
                 document.body.style.overflow='hidden';
-                var cc=document.getElementsByTagName('tspan')[0];
+                var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
                 cc.textContent='';
                 var startTime = new Date();
                 startTime.setMinutes(${initialMinute});
@@ -1036,7 +1036,7 @@ const DrawingController = () => {
             textAlign: 'center',
             stroke: '',
             strokeWidth: 0,
-            id: 'clock1',
+            id: 'gameTimer1',
 
         });
         canvas.add(sss).setActiveObject(sss);
