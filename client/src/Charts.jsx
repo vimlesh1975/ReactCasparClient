@@ -5,22 +5,28 @@ import { useSelector } from 'react-redux'
 import { shadowOptions } from './common'
 import { deleteAll } from './DrawingController';
 import { useState } from 'react';
+import faker from 'faker'
 
 
 const Charts = () => {
+    const refd3 = React.useRef();
+    const refTextArea=React.useRef();
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [barTitle, setBarTitle] = useState("XYZ Foods Stock Price");
     const [xAxisTitle, setxAxisTitle] = useState("Year");
     const [yAxisTitle, setyAxisTitle] = useState("Values in $");
     const [barData, setbarData] = useState([{ year: 2011, value: 45 }, { year: 2012, value: 47 }, { year: 2013, value: 52 }, { year: 2014, value: 70 }, { year: 2015, value: 75 }, { year: 2016, value: 78 }]);
 
-    const [pieTitle, setpieTitle] = useState("Browser use statistics - Jan 2017");
-    // const [xAxisTitle, setxAxisTitle] = useState("Year");
-    // const [yAxisTitle, setyAxisTitle] = useState("Values in $");
-    const [pieData, setpieData] = useState([{ browser: 'Chrome', percent: 50.70 }, { browser: 'IE/Edge', percent: 7.90 }, { browser: 'Firefox', percent: 15.40 }, { browser: 'Safari', percent: 13.60 }, { browser: 'Opera', percent: 11.00 }]);
-
+    const generatePieChartdata = () => {
+        const data = [];
+        for (let i = 0; i < 5; i++) { 
+            data.push({name:faker.name.firstName(), value:faker.datatype.number(500)}) ;
+        }
+        setbarData(data) ;
+        refTextArea.current.value=JSON.stringify(data) ;
+    }
     const createPieChart = () => {
-        document.getElementById('d3').innerHTML = '';
+        refd3.current.innerHTML = ''
         var svg = d3.select("#d3").append("svg").attr("width", 500).attr("height", 400);
 
         var width = svg.attr("width");
@@ -37,10 +43,10 @@ const Charts = () => {
             .attr('width', svg.attr("width"))
             .attr('height', svg.attr("height"));
 
-        var color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c']);
+        var color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#1daf4a','#311eb8','#ff1f00']);
 
-        var pie = d3.pie().value(d=>d.percent)
-           
+        var pie = d3.pie().value(d => d[Object.keys(d)[1]])
+
         var path = d3.arc()
             .outerRadius(radius - 10)
             .innerRadius(0);
@@ -51,28 +57,28 @@ const Charts = () => {
 
 
         var arc = g.selectAll(".arc")
-            .data(pie(pieData))
+            .data(pie(barData))
             .enter().append("g")
             .attr("class", "arc")
             .attr('stroke', 'black');
 
         arc.append("path")
             .attr("d", path)
-            .attr("fill", d=> color(d.data.browser));
+            .attr("fill", d => color(d.data[Object.keys(d.data)[0]]));
 
         arc.append("text")
-            .attr("transform", d=>"translate(" + label.centroid(d) + ")" )
-            .text( d => d.data.browser + ' ' + d.data.percent)
+            .attr("transform", d => "translate(" + label.centroid(d) + ")")
+            .text(d => d.data[Object.keys(d.data)[0]] + ' ' + d.data[Object.keys(d.data)[1]])
 
         svg.append("g")
             .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
             .append("text")
-            .text(pieTitle)
+            .text(barTitle)
             .attr("class", "title")
             .attr('font-size', 25);
 
 
-        var SVGstring = document.getElementById('d3').innerHTML;  //SVG取得
+        var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
                 element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
@@ -86,7 +92,7 @@ const Charts = () => {
     }
 
     const createBarChart = () => {
-        document.getElementById('d3').innerHTML = '';
+        refd3.current.innerHTML = ''
         var svg = d3.select("#d3").append("svg").attr("width", 600).attr("height", 500);
         var margin = 150;
         var width = svg.attr("width") - margin;
@@ -103,8 +109,8 @@ const Charts = () => {
             .attr('width', svg.attr("width"))
             .attr('height', svg.attr("height"));
 
-        xScale.domain(barData.map(function (d) { return d.year; }));
-        yScale.domain([0, d3.max(barData, function (d) { return d.value; })]);
+        xScale.domain(barData.map(d=>  d[Object.keys(d)[0]]));
+        yScale.domain([0, d3.max(barData, d=>  d[Object.keys(d)[1]])]);
 
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -115,21 +121,21 @@ const Charts = () => {
             .enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("x", function (d) { return xScale(d.year); })
-            .attr("y", function (d) { return yScale(d.value); })
+            .attr("x", d=> xScale(d[Object.keys(d)[0]]))
+            .attr("y", d=> yScale(d[Object.keys(d)[1]]))
             .attr("fill", 'red')
             .attr("font-size", "24px")
             .attr("width", xScale.bandwidth())
-            .attr("height", function (d) { return height - yScale(d.value); });
+            .attr("height", d=> height - yScale(d[Object.keys(d)[1]]));
 
         g.selectAll(".barvalue")
             .data(barData)
             .enter()
             .append("text")
             .attr("class", "barvalue")
-            .attr("x", d => xScale(d.year) + 20)
-            .attr("y", d => yScale(d.value) - 5)
-            .text(d => d.value)
+            .attr("x", d => xScale(d[Object.keys(d)[0]]) + 20)
+            .attr("y", d => yScale(d[Object.keys(d)[1]]) - 5)
+            .text(d => d[Object.keys(d)[1]])
             .style("text-anchor", "middle")
 
         svg.append("text")
@@ -172,7 +178,7 @@ const Charts = () => {
 
 
 
-        var SVGstring = document.getElementById('d3').innerHTML;  //SVG取得
+        var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
                 element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
@@ -189,7 +195,8 @@ const Charts = () => {
         <button onClick={() => deleteAll(canvas)}>Delete All</button>
         <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 10 }}>
             <div style={{ border: '1px solid red' }}>
-                <button onClick={createBarChart}>Bar Chart</button>
+                <button onClick={generatePieChartdata}>Generate Data</button>
+                <button onClick={createBarChart}>Bar Chart</button> <button onClick={createPieChart}>Pie Chart</button>
                 <table border='0'>
                     <tbody>
                         <tr><td> barTitle:</td> <td><input style={{ width: 300 }} type='text' value={barTitle} onChange={e => setBarTitle(e.target.value)} /></td></tr>
@@ -197,22 +204,12 @@ const Charts = () => {
                         <tr><td> yAxisTitle:</td> <td> <input type='text' value={yAxisTitle} onChange={e => setyAxisTitle(e.target.value)} /></td></tr>
                     </tbody>
                 </table>
-                barData:<br /><textarea type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
+                barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
             </div>
 
-            <div style={{ border: '1px solid red' }}>
-
-                <button onClick={createPieChart}>Pie Chart</button>
-                <table border='0'>
-                    <tbody>
-                        <tr><td> pieTitle:</td> <td><input style={{ width: 300 }} type='text' value={pieTitle} onChange={e => setpieTitle(e.target.value)} /></td></tr>
-                    </tbody>
-                </table>
-                pieData:<br /><textarea type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(pieData)} onMouseLeave={e => setpieData(JSON.parse(e.target.value))} />
-
-            </div>
+        
         </div>
-        <div id='d3' />
+        <div ref={refd3} id='d3' />
 
     </div>)
 }
