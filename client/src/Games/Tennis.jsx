@@ -18,8 +18,11 @@ const Tennis = () => {
 
     const [showService, setShowService] = useState(true)
     const [service, setService] = useState('t1')
+    const [badminton, setBadminton] = useState(false)
+
 
     const team1pointincrease = () => {
+        if(badminton){return setT1point(val=>parseInt(val)+1)}
         if ((t1point === '40') && (t2point === '40')) {
             setT1point('AD');
         }
@@ -45,6 +48,7 @@ const Tennis = () => {
         }
     }
     const team2pointincrease = () => {
+        if(badminton){return setT2point(val=>parseInt(val)+1)}
         if ((t1point === '40') && (t2point === '40')) {
             setT2point('AD');
         }
@@ -70,6 +74,7 @@ const Tennis = () => {
         }
     }
     const team1pointDecrease = () => {
+        if(badminton){return setT1point(val=>parseInt(val)-1)}
         if (t1point === 'AD') {
             setT1point('40');
         }
@@ -83,6 +88,7 @@ const Tennis = () => {
     }
 
     const team2pointDecrease = () => {
+        if(badminton){return setT2point(val=>parseInt(val)-1)}
         if (t2point === 'AD') {
             setT2point('40');
         }
@@ -231,7 +237,7 @@ const Tennis = () => {
         setT1point(0);
         setT2point(0);
     }
-    return (
+    return (<div>
         <div>
             <h1> Score</h1>
             <table border='1' style={{ border: '1px solid green' }}>
@@ -248,6 +254,10 @@ const Tennis = () => {
             <button onClick={resetData}>Reset Data</button>
 
         </div>
+        <div>
+        Badminton: <input type='checkbox' checked={badminton} onChange={() => setBadminton(val => !val)}></input>
+        </div> 
+    </div>
     )
 }
 
