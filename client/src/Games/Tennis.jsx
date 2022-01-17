@@ -17,12 +17,16 @@ const Tennis = () => {
     const [t2point, setT2point] = useState(30);
 
     const [showService, setShowService] = useState(true)
-    const [service, setService] = useState('t1')
+    const [service, setService] = useState(true)
     const [badminton, setBadminton] = useState(false)
 
 
     const team1pointincrease = () => {
-        if(badminton){return setT1point(val=>parseInt(val)+1)}
+        if(badminton){
+            setT1point(val=>parseInt(val)+1);
+            setService(true);
+            return
+        }
         if ((t1point === '40') && (t2point === '40')) {
             setT1point('AD');
         }
@@ -48,7 +52,12 @@ const Tennis = () => {
         }
     }
     const team2pointincrease = () => {
-        if(badminton){return setT2point(val=>parseInt(val)+1)}
+        if(badminton){
+             setT2point(val=>parseInt(val)+1);
+            setService(false);
+            return
+
+        }
         if ((t1point === '40') && (t2point === '40')) {
             setT2point('AD');
         }
@@ -243,12 +252,12 @@ const Tennis = () => {
             <table border='1' style={{ border: '1px solid green' }}>
                 <tbody>
                     <tr><th>Set</th><th>Game</th><th>Point</th><th>+</th><th>-</th><th>showService: <input type='checkbox' checked={showService} onChange={() => setShowService(val => !val)}></input></th></tr>
-                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT1Set(e.target.value)} value={t1Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1game(e.target.value)} value={t1game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1point(e.target.value)} value={t1point} /></td><td>  <button onClick={team1pointincrease}>+</button></td><td>  <button onClick={team1pointDecrease}>-</button></td><td> <input onChange={e => setService(e.target.value)} type="radio" checked value='t1' name="service" /></td></tr>
-                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT2Set(e.target.value)} value={t2Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2game(e.target.value)} value={t2game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2point(e.target.value)} value={t2point} /></td><td>  <button onClick={team2pointincrease}>+</button></td><td>  <button onClick={team2pointDecrease}>-</button></td><td> <input onChange={e => setService(e.target.value)} type="radio" value='t2' name="service" /></td></tr>
+                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT1Set(e.target.value)} value={t1Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1game(e.target.value)} value={t1game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1point(e.target.value)} value={t1point} /></td><td>  <button onClick={team1pointincrease}>+</button></td><td>  <button onClick={team1pointDecrease}>-</button></td><td> <input onChange={e => setService(!service)} type="radio" checked={service} value='t1' name="service" /></td></tr>
+                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT2Set(e.target.value)} value={t2Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2game(e.target.value)} value={t2game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2point(e.target.value)} value={t2point} /></td><td>  <button onClick={team2pointincrease}>+</button></td><td>  <button onClick={team2pointDecrease}>-</button></td><td> <input onChange={e => setService(!service)} type="radio"  checked={!service} value='t2' name="service" /></td></tr>
                 </tbody>
             </table>
-            <button onClick={() => recallPage(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service === 't1') ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && service === 't2') ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>Show</button>
-            <button onClick={() => updateData(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service === 't1') ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && service === 't2') ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>updateData</button>
+            <button onClick={() => recallPage(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>Show</button>
+            <button onClick={() => updateData(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service ) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>updateData</button>
 
             <button onClick={() => stopGraphics(96)}>Stop</button>
             <button onClick={resetData}>Reset Data</button>
