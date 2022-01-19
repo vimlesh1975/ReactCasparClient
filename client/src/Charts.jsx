@@ -10,7 +10,7 @@ import faker from 'faker'
 
 const Charts = () => {
     const refd3 = React.useRef();
-    const refTextArea=React.useRef();
+    const refTextArea = React.useRef();
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [barTitle, setBarTitle] = useState("XYZ Foods Stock Price");
     const [xAxisTitle, setxAxisTitle] = useState("Year");
@@ -19,11 +19,11 @@ const Charts = () => {
 
     const generatePieChartdata = () => {
         const data = [];
-        for (let i = 0; i < 5; i++) { 
-            data.push({name:faker.name.firstName(), value:faker.datatype.number(500)}) ;
+        for (let i = 0; i < 5; i++) {
+            data.push({ name: faker.name.firstName(), value: faker.datatype.number(500) });
         }
-        setbarData(data) ;
-        refTextArea.current.value=JSON.stringify(data) ;
+        setbarData(data);
+        refTextArea.current.value = JSON.stringify(data);
     }
     const createPieChart = () => {
         refd3.current.innerHTML = ''
@@ -43,7 +43,7 @@ const Charts = () => {
             .attr('width', svg.attr("width"))
             .attr('height', svg.attr("height"));
 
-        var color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#1daf4a','#311eb8','#ff1f00']);
+        var color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#1daf4a', '#311eb8', '#ff1f00']);
 
         var pie = d3.pie().value(d => d[Object.keys(d)[1]])
 
@@ -82,6 +82,14 @@ const Charts = () => {
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
                 element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
+                if (element.type === 'text') {
+                    element.set({ type: 'i-text' })
+                    var textobj=element.toObject();
+                    var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+                    var aa=new fabric.IText(element.text,clonedtextobj);
+                    var bb =objects.indexOf(element);
+                    objects.splice(bb,1,aa);
+                }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
@@ -109,8 +117,8 @@ const Charts = () => {
             .attr('width', svg.attr("width"))
             .attr('height', svg.attr("height"));
 
-        xScale.domain(barData.map(d=>  d[Object.keys(d)[0]]));
-        yScale.domain([0, d3.max(barData, d=>  d[Object.keys(d)[1]])]);
+        xScale.domain(barData.map(d => d[Object.keys(d)[0]]));
+        yScale.domain([0, d3.max(barData, d => d[Object.keys(d)[1]])]);
 
         g.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -121,12 +129,12 @@ const Charts = () => {
             .enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("x", d=> xScale(d[Object.keys(d)[0]]))
-            .attr("y", d=> yScale(d[Object.keys(d)[1]]))
+            .attr("x", d => xScale(d[Object.keys(d)[0]]))
+            .attr("y", d => yScale(d[Object.keys(d)[1]]))
             .attr("fill", 'red')
             .attr("font-size", "24px")
             .attr("width", xScale.bandwidth())
-            .attr("height", d=> height - yScale(d[Object.keys(d)[1]]));
+            .attr("height", d => height - yScale(d[Object.keys(d)[1]]));
 
         g.selectAll(".barvalue")
             .data(barData)
@@ -182,6 +190,14 @@ const Charts = () => {
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
                 element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
+                if (element.type === 'text') {
+                    element.set({ type: 'i-text' })
+                    var textobj=element.toObject();
+                    var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+                    var aa=new fabric.IText(element.text,clonedtextobj);
+                    var bb =objects.indexOf(element);
+                    objects.splice(bb,1,aa);
+                }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
@@ -207,7 +223,7 @@ const Charts = () => {
                 barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
             </div>
 
-        
+
         </div>
         <div ref={refd3} id='d3' />
 
