@@ -100,6 +100,18 @@ const canvasReducer = (state = initialCanvas, action) => {
     }
 }
 
+const initialcurrentscreenSize = { currentscreenSize: 1024 };
+
+const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
+    switch (action.type) {
+        case 'CHANGE_CURRENTSCREENSIZE':
+            return {
+                ...state,
+                currentscreenSize: action.payload
+            }
+        default: return state
+    }
+}
 
 const rootReducer = combineReducers({
     canvasListReducer,
@@ -109,7 +121,8 @@ const rootReducer = combineReducers({
     onlineImageUrleReducer,
     canvasReducer,
     playlistReducer,
-    currentFileReducer
+    currentFileReducer,
+    currentscreenSizeReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

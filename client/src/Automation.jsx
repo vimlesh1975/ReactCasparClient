@@ -7,7 +7,9 @@ import DrawingAutomation from './DrawingAutomation';
 
 const Automation = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
     const [allowAutomation, setAllowAutomation] = useState(false)
     const [dataReceived, setDataReceived] = useState();
 

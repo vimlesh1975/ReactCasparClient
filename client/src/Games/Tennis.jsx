@@ -5,7 +5,9 @@ import { endpoint } from '../common'
 
 const Tennis = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
 
     const [t1Set, setT1Set] = useState(1);
     const [t2Set, setT2Set] = useState(2);

@@ -26,7 +26,9 @@ const Hockey = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
-    const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
     const [currentPlayer1, setCurrentPlayer1] = useState('Vimlesh Kumar 1')
     const [currentPlayer2, setCurrentPlayer2] = useState('Vimlesh Kumar 2')
     const [team1, setTeam1] = useState('Mumbai')

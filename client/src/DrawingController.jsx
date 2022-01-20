@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
 import { endpoint, fontLists } from './common'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
 import { FaAlignLeft, FaAlignRight, FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -19,8 +19,6 @@ import Images from './Images';
 import SavedStyles from './SavedStyles';
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
-
-
 
 const clockLayer = 502;
 var xxx;
@@ -878,8 +876,7 @@ const DrawingController = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
 
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
-
-    const [currentscreenSize, setCurrentscreenSize] = useState(1024)
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
@@ -919,6 +916,8 @@ const DrawingController = () => {
     const [initialMinute, setInitilaMinute] = useState(45)
     const [initialSecond, setInitialSecond] = useState(0)
     const [countUp, setCountUp] = useState(false)
+
+    const dispatch = useDispatch();
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -1253,6 +1252,17 @@ const DrawingController = () => {
                     canvas.add(element);
                     if (element.type === 'text') {
                         element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+
+                        element.set({ type: 'i-text' })
+                        var textobj = element.toObject();
+                        var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+                        var aa = new fabric.IText(element.text, clonedtextobj);
+                        canvas.remove(element)
+                        canvas.add(aa);
+
+                        // var bb =objects.indexOf(element);
+                        // objects.splice(bb,1,aa);
+
                     }
                     element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                 });
@@ -1727,7 +1737,10 @@ const DrawingController = () => {
     }
 
     useEffect(() => {
-        setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
+
+        // setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
+      if ( localStorage.getItem('RCC_currentscreenSize'))  { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt( localStorage.getItem('RCC_currentscreenSize')) })}
+
         setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
         setSolidcaption2(localStorage.getItem('RCC_solidCaption2'));
         setSolidcaption3(localStorage.getItem('RCC_solidCaption3'));
@@ -1745,6 +1758,7 @@ const DrawingController = () => {
         }).catch((aa) => { console.log('Error', aa) });
         return () => {
         }
+        // eslint-disable-next-line
     }, [])
 
     const onTabChange = (index, prevIndex) => {
@@ -1765,8 +1779,10 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Screen Setup: </b>
                     Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
-                        setCurrentscreenSize(e.target.value);
                         localStorage.setItem('RCC_currentscreenSize', e.target.value)
+                        dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
+
+
                     }
                     }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 </div>

@@ -23,7 +23,9 @@ const BreakingNews = () => {
     var newplayerList1 = [];
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
 
     const startBreakingNews = () => {
         setAaa(setInterval(() => {
