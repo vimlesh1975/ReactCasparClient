@@ -190,3 +190,8 @@ app.post('/stopGraphics', (req, res) => {
     io.emit('stopGraphics', req.body)
     res.end('Sent The Commands' + JSON.stringify(req.body))
 })
+
+app.get('/defaultCanvasList', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
+})
+

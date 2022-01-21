@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiFile } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -16,6 +16,28 @@ const SavePannel = () => {
     const dispatch = useDispatch();
 
     const [currentFileName, setCurrentFileName] = useState('')
+
+    useEffect(() => {
+        setTimeout(() => {
+            fetch('http://localhost:8080/defaultCanvasList')
+                .then((r) => r.text())
+                .then(text => {
+                    var aa = text.split('\r\n');
+                    aa.splice(-1);
+                    var updatedcanvasList = [];
+                    aa.forEach(element => {
+                        var cc = JSON.parse(element);
+                        updatedcanvasList.push(cc);
+                    });
+                    dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
+                })
+        }, 2000);
+
+        return () => {
+            // cleanup
+        }
+        // eslint-disable-next-line
+    }, [])
 
     const deletePage = e => {
         if (currentPage > e.target.getAttribute('key1')) {

@@ -215,9 +215,9 @@ const Charts = () => {
                 <button onClick={createBarChart}>Bar Chart</button> <button onClick={createPieChart}>Pie Chart</button>
                 <table border='0'>
                     <tbody>
-                        <tr><td> barTitle:</td> <td><input style={{ width: 300 }} type='text' value={barTitle} onChange={e => setBarTitle(e.target.value)} /></td></tr>
-                        <tr><td> xAxisTitle:</td> <td><input type='text' value={xAxisTitle} onChange={e => setxAxisTitle(e.target.value)} /></td></tr>
-                        <tr><td> yAxisTitle:</td> <td> <input type='text' value={yAxisTitle} onChange={e => setyAxisTitle(e.target.value)} /></td></tr>
+                        <tr><td> barTitle:</td><td><input style={{ width: 300 }} type='text' value={barTitle} onChange={e => setBarTitle(e.target.value)} /></td></tr>
+                        <tr><td> xAxisTitle:</td><td><input type='text' value={xAxisTitle} onChange={e => setxAxisTitle(e.target.value)} /></td></tr>
+                        <tr><td> yAxisTitle:</td><td> <input type='text' value={yAxisTitle} onChange={e => setyAxisTitle(e.target.value)} /></td></tr>
                     </tbody>
                 </table>
                 barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
