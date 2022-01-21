@@ -51,6 +51,10 @@
     <div>
         <label id='demo'></label>
     </div>
+<div style="background-color: blanchedalmond;">
+    <button onclick="sendScriptToCaspar()">Show game Timer</button>
+</div>
+
 </body>
 <!-- type values example -->
 <!--  shadow: {
@@ -116,7 +120,20 @@
         xhttp.send(params);
     };
 
-
+function sendScriptToCaspar(){
+    var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", "http://localhost:8080/sendScriptToCaspar", true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        const aa = [{ key: "gameTimer1", value: `45:00`, type: "text"}]
+      
+        var params = `layerNumber=96&pageName=gametimer1&data=${JSON.stringify(aa)}&initialMinute=45&initialSecond=0`
+        xhttp.send(params);
+}
 </script>
 
 </html>

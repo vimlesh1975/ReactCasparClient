@@ -171,6 +171,12 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client/build', 'index.html'));
 });
 
+app.post('/sendScriptToCaspar', (req, res) => {
+    const data = req.body;
+    io.emit('sendScriptToCaspar', req.body)
+    res.end('Sent The Commands:' + JSON.stringify(req.body))
+})
+
 app.post('/recallPage', (req, res) => {
     // const data = req.body;
     // console.log(data)

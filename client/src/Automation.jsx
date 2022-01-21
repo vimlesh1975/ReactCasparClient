@@ -7,7 +7,6 @@ import DrawingAutomation from './DrawingAutomation';
 
 const Automation = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const [allowAutomation, setAllowAutomation] = useState(false)
@@ -19,7 +18,6 @@ const Automation = () => {
             socket.on("recallPage", data => {
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
                 setDataReceived(JSON.stringify(data));
-                // console.log(JSON.stringify(data));
             });
 
             socket.on("updateData", data => {
@@ -31,6 +29,12 @@ const Automation = () => {
                 stopGraphics(data.layerNumber);
                 setDataReceived(JSON.stringify(data));
             });
+            socket.on("sendScriptToCaspar", data => {
+                recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
+                sendScriptToCaspar(data.layerNumber, data.initialMinute, data.initialSecond, data.countUp);
+                setDataReceived(JSON.stringify(data));
+            });
+
         }
         else {
             socket?.removeListener('recallPage');
@@ -49,7 +53,6 @@ const Automation = () => {
         try {
             const index = canvasList.findIndex(val => val.pageName.toLowerCase() === pageName.toLowerCase());
             if (index !== -1) {
-                // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
                 const data1 = data;
                 window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                     data1.forEach(data2 => {
@@ -57,17 +60,12 @@ const Automation = () => {
                             try {
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
-                                        //code for stf
-                                        // const aa = (element.width) * (element.scaleX);
-                                        // element.set({ objectCaching: false, text: data2.value.toString() })
-                                        // if (element.width > aa) { element.scaleToWidth(aa) }
+
                                         element.set({ text: data2.value.toString() })
-                                        // canvas.requestRenderAll();
                                     }
                                     else if (data2.type === 'image') {
                                         var i = new Image();
                                         i.onload = function () {
-                                            // console.log('img loaded')
                                             const originalWidth = (element.width) * (element.scaleX);
                                             const originalHeight = (element.height) * (element.scaleY);
                                             element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
@@ -77,7 +75,6 @@ const Automation = () => {
                                             else if (element.type === 'rect') {
                                                 element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                             }
-                                            // canvas.requestRenderAll();
                                         };
                                         i.src = data2.value;
                                     }
@@ -88,12 +85,10 @@ const Automation = () => {
                                         element.set({ [data2.type]: data2.value })
                                     }
                                 }
-                                // canvas.requestRenderAll();
                             } catch (error) {
                             }
                         });
                     });
-                    // canvas.requestRenderAll();
                     sendToCasparcg(layerNumber)
                 });
             }
@@ -180,15 +175,32 @@ const Automation = () => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
     }
+
+    const sendScriptToCaspar = (layerNumber = 96, initialMinute = 45, initialSecond = 0, countUp = false) => {
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+            var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+            var startTime = new Date();
+            startTime.setMinutes(${initialMinute});
+            startTime.setSeconds(${initialSecond});
+            var xxx=setInterval(()=>{
+               startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+                var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+                cc.textContent  =ss1;
+              }, 1000);
+            "`)
+
+        }, 1500);
+    }
     return (
         <div>
-           <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>
+            <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>
             <div style={{ opacity: 100 }} className='automation-preview-container' >
                 <DrawingAutomation i={0} />
             </div>
             <div>
                 <span>Data Recieved</span>
-              <br />  <textarea cols={40} rows={8} value={dataReceived} />
+                <br />  <textarea cols={40} rows={8} value={dataReceived} />
             </div>
         </div>
     )
