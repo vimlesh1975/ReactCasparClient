@@ -29,12 +29,20 @@ const Automation = () => {
                 stopGraphics(data.layerNumber);
                 setDataReceived(JSON.stringify(data));
             });
-            socket.on("sendScriptToCaspar", data => {
+            socket.on("startGameTimer", data => {
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
-                sendScriptToCaspar(data.layerNumber, data.initialMinute, data.initialSecond, data.countUp);
+                startGameTimer(data.layerNumber, data.initialMinute, data.initialSecond, data.countUp);
                 setDataReceived(JSON.stringify(data));
             });
-
+            socket.on("pauseGameTimer", data => {
+                pauseGameTimer(data.layerNumber);
+                setDataReceived(JSON.stringify(data));
+            });
+            socket.on("resumeGameTimer", data => {
+                resumeGameTimer(data.layerNumber,data.countUp);
+                setDataReceived(JSON.stringify(data));
+            });
+            
         }
         else {
             socket?.removeListener('recallPage');
@@ -176,7 +184,7 @@ const Automation = () => {
         }, 1000);
     }
 
-    const sendScriptToCaspar = (layerNumber = 96, initialMinute = 45, initialSecond = 0, countUp = false) => {
+    const startGameTimer = (layerNumber = 96, initialMinute = 45, initialSecond = 0, countUp = false) => {
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
@@ -184,7 +192,7 @@ const Automation = () => {
             startTime.setMinutes(${initialMinute});
             startTime.setSeconds(${initialSecond});
             var xxx=setInterval(()=>{
-               startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+               startTime.setSeconds(startTime.getSeconds() ${(countUp==='true') ? '+' : '-'} 1);
                 var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
                 cc.textContent  =ss1;
               }, 1000);
@@ -192,6 +200,25 @@ const Automation = () => {
 
         }, 1500);
     }
+
+    const pauseGameTimer = (layerNumber) => {
+     
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+           clearInterval(xxx);
+            "`)
+    }
+    const resumeGameTimer = (layerNumber, countUp) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        clearInterval(xxx);
+         xxx=setInterval(()=>{
+            startTime.setSeconds(startTime.getSeconds() ${(countUp==='true') ? '+' : '-'} 1);
+             var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+             cc.textContent  =ss1;
+           }, 1000);
+         "`)
+}
+
+    
     return (
         <div>
             <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>

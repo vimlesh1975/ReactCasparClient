@@ -57,7 +57,6 @@ var logPath;
 
 // const PATH = require('path');
 
-
 const dirTree = require("directory-tree");
 var media = [];
 
@@ -101,7 +100,6 @@ app.post('/getfonts', (req, res) => {
     res.end()
 })
 
-
 app.post('/getmedia', (req, res) => {
     refreshMedia()
     setTimeout(() => {
@@ -110,7 +108,6 @@ app.post('/getmedia', (req, res) => {
     }, 2000);
 
 })
-
 
 app.post('/endpoint', (req, res) => {
     aa.do(new AMCP.CustomCommand(req.body.string)).then((aa1) => {
@@ -129,9 +126,6 @@ app.get('/cgupdate', (req, res) => {
 app.post('/getPaths', (req, res) => {
     res.send(mediaPath);
 })
-
-
-
 
 const io = require("socket.io")(http, options);
 const ccgsocket = new CasparCGSocket('localhost', 5250)
@@ -171,9 +165,23 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client/build', 'index.html'));
 });
 
-app.post('/sendScriptToCaspar', (req, res) => {
+app.post('/startGameTimer', (req, res) => {
     const data = req.body;
-    io.emit('sendScriptToCaspar', req.body)
+    console.log(data)
+    io.emit('startGameTimer', req.body)
+    res.end('Sent The Commands:' + JSON.stringify(req.body))
+})
+
+app.post('/pauseGameTimer', (req, res) => {
+    const data = req.body;
+    console.log(data)
+    io.emit('pauseGameTimer', req.body)
+    res.end('Sent The Commands:' + JSON.stringify(req.body))
+})
+app.post('/resumeGameTimer', (req, res) => {
+    const data = req.body;
+    console.log(data)
+    io.emit('resumeGameTimer', req.body)
     res.end('Sent The Commands:' + JSON.stringify(req.body))
 })
 
@@ -196,6 +204,7 @@ app.post('/stopGraphics', (req, res) => {
     io.emit('stopGraphics', req.body)
     res.end('Sent The Commands' + JSON.stringify(req.body))
 })
+
 
 app.get('/defaultCanvasList', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
