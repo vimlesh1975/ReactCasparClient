@@ -89,6 +89,13 @@ const Layers = () => {
             //dummy
         }
     }
+    const  getHexColor=(colorStr)=> {
+        var a = document.createElement('div');
+        a.style.color = colorStr;
+        var colors = window.getComputedStyle( document.body.appendChild(a) ).color.match(/\d+/g).map(function(a){ return parseInt(a,10); });
+        document.body.removeChild(a);
+        return (colors.length >= 3) ? '#' + (((1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2]).toString(16).substr(1)) : false;
+    }
 
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
@@ -133,10 +140,10 @@ const Layers = () => {
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontStyle}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontWeight}</td>
 
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.fill} onChange={e => {changeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.backgroundColor} onChange={e => {changeBackGroundColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.stroke} onChange={e => {changeStrokeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={val.shadow?.color} onChange={e => {changeShadowCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.fill)} onChange={e => {changeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.backgroundColor)} onChange={e => {changeBackGroundColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.stroke)} onChange={e => {changeStrokeCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
+                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.shadow?.color)} onChange={e => {changeShadowCurrentColor(e, canvas);dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}} /></td>
                                                    
                                                     </tr>
                                                 )
