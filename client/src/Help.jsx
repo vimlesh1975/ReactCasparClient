@@ -1,43 +1,36 @@
 import React from 'react'
 // import { fabric } from 'fabric'
-// import 'chart-js-fabric'
-// import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { endpoint } from './common'
 
 
 const Help = () => {
-  // const canvas = useSelector(state => state.canvasReducer.canvas);
+  const canvas = useSelector(state => state.canvasReducer.canvas);
 
 
 
-  // const test = () => {
+  const test = () => {
+    endpoint(`play 1-1 [html] http://localhost:3000/ReactCasparClient/drawing`)
+    endpoint(`call 1-1 "
 
-  //   const aa = new fabric.Chart({
-  //     width: 400,
-  //     height: 400,
-  //     fill:'red',
-
-  //     chart: {
-  //       type: 'bar',
-
-  //       data: {
-  //         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-
-  //         datasets: [
-  //           {
-  //             label: '# of Votes',
-  //             fill:'white',
-  //             opacity:1.0,
-  //             data: [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()],
-  //             backgroundColor: ['blue', 'red','green']
-  //           }
-  //         ]
-  //       }
-  //     }
-  //   })
-
-  //   canvas.add(aa);
-  //   canvas.requestRenderAll();
-  // }
+    // const circle = new fabric.Circle({
+    //   top: 200,
+    //   left: 0,
+    //   radius: 50,
+    //   fill: 'rgb(80, 3, 124)',
+    //   cornerSize: 7,
+    //   objectCaching: false,
+    //   hasRotatingPoint: true,
+    //   strokeWidth: 3,
+    //   strokeUniform: true,
+    // });
+   const circle='${canvas}';
+    window.editor.canvas.add(circle);
+    window.editor.canvas.requestRenderAll();
+    \\circle.animate('left', 150, { onChange: window.editor.canvas.renderAll.bind(window.editor.canvas) });
+    "
+    `)
+  }
 
   return (
     <div>
@@ -79,7 +72,9 @@ const Help = () => {
         <li>Image from local pc method only will get filters. </li>
         <li>Dont use double space in folder or file name. </li>
       </ol>
-      {/* <button onClick={test}>Test</button> */}
+      <button onClick={test}>Test</button>
+     
+
     </div>
   )
 }

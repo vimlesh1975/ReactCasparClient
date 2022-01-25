@@ -560,5 +560,3 @@ export const animationMethods = [
     "easeinoutbounce",
     "easeoutinbounce",
 ]
-
-
