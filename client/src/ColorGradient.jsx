@@ -4,15 +4,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
 
 const ColorGradient = () => {
-    const [color1, setColor1] = useState('red')
-    const [color2, setColor2] = useState('green')
-    const [color3, setColor3] = useState('blue')
+    const [color1, setColor1] = useState('black')
+    const [color2, setColor2] = useState('red')
+    const [color3, setColor3] = useState('black')
     const [offset,setOffset]=useState(0.5);
     // const [directionAngle,setDirectionAngle]=useState(45);
     
-    const [direction, setDirection] = useState('to right')
+    const [direction, setDirection] = useState('to bottom')
     const directions = ['to right', 'to bottom', 'to bottom right', 'to right top'];
-    const [coords1, setCoords1] = useState({ x1: 0, y1: 0, x2: 1, y2: 0 })
+    const [coords1, setCoords1] = useState({  x1: 0, y1: 0, x2: 0, y2: 1})
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     function setCoords(direction1) {
@@ -100,9 +100,9 @@ const onOffsetChange=e=>{
         {/* <input style={{width:295}} onChange={e => ondirectionAngleChange(e)} type="range" min='0' max='360' step='1' defaultValue='45' />Angle */}
        
         <div>
-            Color 1 <input type="color" defaultValue='#ff0000' onChange={e => changeColor1(e)} />
-            Color 2 <input type="color" defaultValue='#00ff00' onChange={e => changeColor2(e)} />
-            Color 3 <input type="color" defaultValue='#0000ff' onChange={e => changeColor3(e)} />
+            Color 1 <input type="color" defaultValue='#000000' onChange={e => changeColor1(e)} />
+            Color 2 <input type="color" defaultValue='#ff0000' onChange={e => changeColor2(e)} />
+            Color 3 <input type="color" defaultValue='#000000' onChange={e => changeColor3(e)} />
         </div>
         {directions.map((val, i) => {
             return (
