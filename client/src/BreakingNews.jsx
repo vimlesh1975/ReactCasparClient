@@ -342,8 +342,8 @@ const BreakingNews = () => {
                                                                     setPlayerList1([...newplayerList1])
                                                                 }
                                                                 } /></td>
-                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.data1, type: 'text' }])}> <FaPlay /></button></td>
-                                                                <td><button onClick={() => updateData(generalayer, [{ key: 'f0', value: val.data1, type: 'text' }])}> Update</button></td>
+                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: variableName, value: val.data1, type: 'text' }])}> <FaPlay /></button></td>
+                                                                <td><button onClick={() => updateData(generalayer, [{ key: variableName, value: val.data1, type: 'text' }])}> Update</button></td>
                                                                 <td><button key1={i} onClick={(e) => deletePage(e)}>-</button></td>
                                                                 <td><button key1={i} onClick={(e) => addPage(e)}>+</button></td>
 

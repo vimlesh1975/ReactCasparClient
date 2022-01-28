@@ -13,6 +13,7 @@ const SavePannel = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    const [listView, setListView] = useState(false);
     const dispatch = useDispatch();
 
     const [currentFileName, setCurrentFileName] = useState('')
@@ -252,6 +253,8 @@ const SavePannel = () => {
 
                     <button onClick={() => updatePage()}>Update</button>Curr Pg{currentPage + 1}
                 </div>
+                <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView?'ListView':'Thumbnail View'}
+
             </div>
             <div style={{ height: 710, width: 380, overflow: 'scroll', border: '1px solid black' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -278,7 +281,21 @@ const SavePannel = () => {
                                                                 // margin: '10px'
                                                             }}
                                                         >
+
+                                                            {listView ?<> <td>
+                                                                <span>  {i + 1}</span>
+                                                                        <span style={{marginLeft:10}}  {...provided.dragHandleProps}><VscMove /></span>
+                                                                        <button style={{marginLeft:10}} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                            
+                                                            </td>
                                                             <td>
+                                                                <input  type='text' style={{ minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                    recallPage(val.pageValue, window.editor.canvas, i);
+                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                />
+                                                            </td></>:
+                                                            
+                                                            <> <td>
                                                                 <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
                                                                     <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
                                                                         {i + 1}
@@ -294,17 +311,15 @@ const SavePannel = () => {
                                                             <td>
                                                                 <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i) }}>
                                                                     <DrawingThumbnail i={i} />
-
                                                                 </div>
-                                                                {/* <span style={{ minWidth: 170, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                    recallPage(val.pageValue, window.editor.canvas, i);
-                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={onDoubleClickPageName} suppressContentEditableWarning={true} contentEditable onMouseOut={updatePageName} >{val.pageName}
-                                                                </span> */}
                                                                 <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                     recallPage(val.pageValue, window.editor.canvas, i);
                                                                 }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                 />
-                                                            </td>
+                                                            </td></>}
+                                                           
+
+
 
                                                         </tr>
                                                     )

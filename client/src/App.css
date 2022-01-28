@@ -55,14 +55,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   border:2px solid red;
 }
 
-.thumbnail-preview-container{
-  /* position: relative;  */
-  background-color:rgba(14, 15, 15, 0.596);
-  background-image: url('canvasBg.svg');
-  width: 103px;
-  height: 58px;
-  border:1px solid red;
-}
+
 .automation-preview-container{
   /* position: relative;  */
   background-color:rgba(14, 15, 15, 0.596);
@@ -128,8 +121,16 @@ cursor: pointer;
 .thumbnailcanvas {
   width: 309px;
   height: 172px;
-}
 
+}
+.thumbnail-preview-container{
+  /* position: relative;  */
+  background-color:rgba(14, 15, 15, 0.596);
+  background-image: url('canvasBg.svg');
+  width: 103px;
+  height: 58px;
+  border:1px solid red;
+}
 
 .canvasOutput {
   position: absolute;
