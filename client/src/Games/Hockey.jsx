@@ -273,7 +273,7 @@ const Hockey = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td><input type='text' defaultValue={val} onClick={() => setCurrentPlayer1(val)}
+                                                                <td><input style={{border:'none', borderWidth:0}} type='text' defaultValue={val} onClick={() => setCurrentPlayer1(val)}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
@@ -344,7 +344,7 @@ const Hockey = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td><input type='text' defaultValue={val} onClick={() => setCurrentPlayer2(val)}
+                                                                <td><input style={{border:'none', borderWidth:0}} type='text' defaultValue={val} onClick={() => setCurrentPlayer2(val)}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList2 = [...playerList2];

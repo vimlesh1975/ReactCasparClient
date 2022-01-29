@@ -326,7 +326,7 @@ const BreakingNews = () => {
                                                                 <td>{i}</td>
 
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ minWidth: 620 }} type='text' defaultValue={val.data1}
+                                                                <td style={{ minWidth: 300 }}><input style={{ border:'none', borderWidth:0, minWidth: 620 }} type='text' defaultValue={val.data1}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];

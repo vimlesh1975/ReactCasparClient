@@ -12,7 +12,7 @@ const DrawingThumbnail = ({ i = 0 }) => {
       const aa = canvas.getObjects();
       aa.forEach(element => {
         try {
-          element.set({ selectable: false })
+          element.set({ selectable: false,strokeUniform: false })
         } catch (error) {
           alert(error);
           return;

@@ -140,7 +140,7 @@ const Twoliner = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{minWidth:300}}><input style={{minWidth:300}} type='text' defaultValue={val.name}
+                                                                <td style={{minWidth:300}}><input style={{border:'none', borderWidth:0,minWidth:300}} type='text' defaultValue={val.name}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
@@ -150,7 +150,7 @@ const Twoliner = () => {
                                                                     }}
                                                                 />
                                                                 </td>
-                                                                <td style={{minWidth:300}}><input style={{minWidth:300}} type='text' defaultValue={val.designation}
+                                                                <td style={{minWidth:300}}><input style={{border:'none', borderWidth:0,minWidth:300}} type='text' defaultValue={val.designation}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];

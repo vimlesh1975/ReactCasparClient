@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists } from './common'
+import { endpoint, fontLists, stopGraphics ,updateGraphics, templateLayers} from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -20,7 +20,7 @@ import SavedStyles from './SavedStyles';
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
-const clockLayer = 502;
+// const clockLayer = 502;
 var xxx;
 
 
@@ -342,7 +342,16 @@ export const setGradientColor = canvas => {
     canvas.getActiveObjects().forEach(element => element.fill = gradient);
     canvas.requestRenderAll();
 }
-
+const gradient2=()=>{return new fabric.Gradient({
+    type: 'linear',
+    gradientUnits: 'percentage',
+    coords: {  x1: 0, y1: 0, x2: 0, y2: 1},
+    colorStops: [
+        { offset: 0, color: 'black' },
+        { offset: 0.5, color: `hsl(${Math.floor(Math.random() * 360 + 1)}, 100%, 50%)` },
+        { offset: 1, color: 'black' }
+    ]
+})}
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         shadow: shadowOptions,
@@ -351,7 +360,7 @@ export const createRect = (canvas) => {
         width: 500,
         height: 80,
         opacity: 0.9,
-        fill: 'rgb(80, 3, 124)',
+        fill: gradient2(),
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -856,7 +865,8 @@ export const createShape = (canvas, shape, size = 0.4) => {
         scaleX: size,
         scaleY: size,
         opacity: 0.9,
-        fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        // fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        fill:gradient2(),
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -925,7 +935,7 @@ const DrawingController = () => {
         clearInterval(xxx);
         "`)
     }
-    const showClock = () => {
+    const showClock = (layerNumber) => {
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
@@ -938,7 +948,6 @@ const DrawingController = () => {
         }, 1000);
         //for form
 
-        const layerNumber = clockLayer;
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -1210,12 +1219,12 @@ const DrawingController = () => {
         setVerticalSpeed(e.target.value)
         localStorage.setItem('RCC_verticalSpeed', e.target.value)
 
-        endpoint(`call ${window.chNumber}-110 "speed=${e.target.value}"`);
+        endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${e.target.value}"`);
     }
     const onHorizontalSpeedChange = (e) => {
         setHorizontalSpeed(e.target.value)
         localStorage.setItem('RCC_horizontalSpeed', e.target.value)
-        endpoint(`call ${window.chNumber}-111 "speed=${e.target.value}"`);
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${e.target.value}"`);
     }
     const exportSVG = canvas => {
         const element = document.createElement("a");
@@ -1536,8 +1545,8 @@ const DrawingController = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
-        endpoint(`play ${window.chNumber}-110 [HTML] xyz.html`);
-        endpoint(`call ${window.chNumber}-110 "
+        endpoint(`play ${window.chNumber}-${templateLayers.verticalScroll} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -1558,8 +1567,8 @@ const DrawingController = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width;
-        endpoint(`play ${window.chNumber}-111 [HTML] xyz.html`);
-        endpoint(`call ${window.chNumber}-111 "
+        endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -1590,8 +1599,8 @@ const DrawingController = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
 
-        endpoint(`play ${window.chNumber}-112 [HTML] xyz.html`);
-        endpoint(`call ${window.chNumber}-112 "
+        endpoint(`play ${window.chNumber}-${templateLayers.clock} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${templateLayers.clock} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -1613,8 +1622,8 @@ const DrawingController = () => {
     const startUpTimer = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        endpoint(`play ${window.chNumber}-115 [HTML] xyz.html`);
-        endpoint(`call ${window.chNumber}-115 "
+        endpoint(`play ${window.chNumber}-${templateLayers.countUpTimer} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -1689,16 +1698,8 @@ const DrawingController = () => {
             return
         }
 
-
-
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
-
-        // setTimeout(() => {
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        // }, 250);
-
-        // setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
             aa.style.position='absolute';
@@ -1712,35 +1713,10 @@ const DrawingController = () => {
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
             "`)
-        // }, 300);
-
-        setTimeout(() => {
-            // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
-        }, 800);
-        setTimeout(() => {
-            // updateGraphics(canvas, layerNumber);
-        }, 1100);
-    }
-
-    const updateGraphics = (canvas, layerNumber) => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            "`)
-    }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`);
-            endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);
-        }, 1000);
-
     }
 
     useEffect(() => {
-
-        // setCurrentscreenSize(localStorage.getItem('RCC_currentscreenSize'));
       if ( localStorage.getItem('RCC_currentscreenSize'))  { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt( localStorage.getItem('RCC_currentscreenSize')) })}
-
         setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
         setSolidcaption2(localStorage.getItem('RCC_solidCaption2'));
         setSolidcaption3(localStorage.getItem('RCC_solidCaption3'));
@@ -1789,14 +1765,14 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 1: </b>
                     <button onClick={() => {
-                        startGraphics(canvas, 108);
+                        startGraphics(canvas, templateLayers.solidCaption1);
                         setSolidcaption1(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption1', canvasList[currentPage]?.pageName);
                     }
-                    }><FaPlay /></button>  <button onClick={() => updateGraphics(canvas, 108)}>Update</button>
+                    }><FaPlay /></button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption1)}>Update</button>
 
                     <button onClick={() => {
-                        stopGraphics(108);
+                        stopGraphics(templateLayers.solidCaption1);
                         setSolidcaption1('');
                         localStorage.setItem('RCC_solidCaption1', '');
 
@@ -1807,14 +1783,14 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 2: </b>
                     <button onClick={() => {
-                        startGraphics(canvas, 109);
+                        startGraphics(canvas, templateLayers.solidCaption2);
                         setSolidcaption2(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption2', canvasList[currentPage]?.pageName);
 
                     }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, 109)}>Update</button>
+                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption2)}>Update</button>
                     <button onClick={() => {
-                        stopGraphics(109);
+                        stopGraphics(templateLayers.solidCaption2);
                         setSolidcaption2('');
                         localStorage.setItem('RCC_solidCaption2', '');
 
@@ -1824,14 +1800,14 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 3: </b>
                     <button onClick={() => {
-                        startGraphics(canvas, 110);
+                        startGraphics(canvas, templateLayers.solidCaption3);
                         setSolidcaption3(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_solidCaption3', canvasList[currentPage]?.pageName);
 
                     }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, 110)}>Update</button>
+                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption3)}>Update</button>
                     <button onClick={() => {
-                        stopGraphics(110);
+                        stopGraphics(templateLayers.solidCaption3);
                         setSolidcaption3('');
                         localStorage.setItem('RCC_solidCaption3', '');
 
@@ -1843,15 +1819,15 @@ const DrawingController = () => {
                     <b> Logo: </b>
 
                     <button onClick={() => {
-                        startGraphics(canvas, 215);
+                        startGraphics(canvas, templateLayers.logo);
                         setLogo(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_logo', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(canvas, 215)}>Update</button>
+                    <button onClick={() => updateGraphics(canvas, templateLayers.logo)}>Update</button>
                     <button onClick={() => {
-                        stopGraphics(215);
+                        stopGraphics(templateLayers.logo);
                         setLogo('');
                         localStorage.setItem('RCC_logo', '');
 
@@ -1862,15 +1838,15 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Location Band: </b>
                     <button onClick={() => {
-                        startGraphics(canvas, 210);
+                        startGraphics(canvas, templateLayers.locationBand);
                         setLocationBand(canvasList[currentPage]?.pageName);
                         localStorage.setItem('RCC_locationBand', canvasList[currentPage]?.pageName);
 
                     }
                     }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(canvas, 210)}>Update</button>
+                    <button onClick={() => updateGraphics(canvas, templateLayers.locationBand)}>Update</button>
                     <button onClick={() => {
-                        stopGraphics(210);
+                        stopGraphics(templateLayers.locationBand);
                         setLocationBand('');
                         localStorage.setItem('RCC_locationBand', '');
 
@@ -1885,10 +1861,10 @@ const DrawingController = () => {
                         localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /> </button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=0"`)}><FaPause /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-110 "speed=${verticalSpeed}"`)}> <GrResume /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=0"`)}><FaPause /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${verticalSpeed}"`)}> <GrResume /></button>
                     <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-110`);
+                        endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
                         setVerticalScroll('')
                         localStorage.setItem('RCC_verticalScroll', '');
 
@@ -1906,10 +1882,10 @@ const DrawingController = () => {
                         localStorage.setItem('RCC_horizontalScroll', canvasList[currentPage]?.pageName);
 
                     }}><FaPlay /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=0"`)}> <FaPause /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-111 "speed=${horizontalSpeed}"`)}> <GrResume /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=0"`)}> <FaPause /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${horizontalSpeed}"`)}> <GrResume /></button>
                     <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-111`);
+                        endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll}`);
                         setHorizontalScroll('');
                         localStorage.setItem('RCC_horizontalScroll', '');
 
@@ -1929,7 +1905,7 @@ const DrawingController = () => {
 
                     }}><FaPlay /></button>
                     <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-112`);
+                        endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
                         setClock('');
                         localStorage.setItem('RCC_clock', '');
 
@@ -1947,7 +1923,7 @@ const DrawingController = () => {
 
                     }}><FaPlay /></button>
                     <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-115`);
+                        endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
                         setUpTimer('');
                         localStorage.setItem('RCC_upTimer', '');
 
@@ -1962,10 +1938,10 @@ const DrawingController = () => {
                     <span> M</span><input type='text' style={{ width: 15 }} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
                     <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                     <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
-                    <button onClick={() => showClock('Clock')}><FaPlay /></button>
-                    <button onClick={() => pauseClock(clockLayer)}> <FaPause /></button>
-                    <button onClick={() => resumeClock(clockLayer)}> <GrResume /> </button>
-                    <button onClick={() => stopClock(clockLayer)} ><FaStop /></button>
+                    <button onClick={() => showClock(templateLayers.gameTimer)}><FaPlay /></button>
+                    <button onClick={() => pauseClock(templateLayers.gameTimer)}> <FaPause /></button>
+                    <button onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
+                    <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
                 </div>
 
                 <div className='drawingToolsRow' >

@@ -5,6 +5,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
+import { FaPlay, FaStop } from "react-icons/fa";
+import { endpoint , stopGraphics, updateGraphics,templateLayers} from './common'
+
 
 var currentFile = 'new';
 let fileReader;
@@ -13,10 +16,84 @@ const SavePannel = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    
     const [listView, setListView] = useState(false);
     const dispatch = useDispatch();
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
 
     const [currentFileName, setCurrentFileName] = useState('')
+  
+    const startGraphics = (canvas, layerNumber) => {
+        var inAnimation;
+        if (window.inAnimationMethod === 'scaleX') {
+            inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'scaleY') {
+            inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'rotateX') {
+            inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'rotateY') {
+            inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'mix') {
+            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'Allelements') {
+            inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 1.5s; }`
+        }
+        else if (window.inAnimationMethod === 'lefttoright') {
+            inAnimation = ``
+            // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+
+            setTimeout(() => {
+                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+            }, 250);
+
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} "
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            document.body.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+            document.body.style.overflow='hidden';
+            var style = document.createElement('style');
+            style.textContent = '${inAnimation}';
+            document.head.appendChild(style);
+            "`)
+            }, 300);
+
+            setTimeout(() => {
+                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+            }, 800);
+            setTimeout(() => {
+                updateGraphics(canvas, layerNumber);
+            }, 1100);
+            return
+        }
+
+        // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            document.body.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+            document.body.style.overflow='hidden';
+            var style = document.createElement('style');
+            style.textContent = '${inAnimation}';
+            document.head.appendChild(style);
+            "`)
+    }
 
     useEffect(() => {
         setTimeout(() => {
@@ -253,10 +330,10 @@ const SavePannel = () => {
 
                     <button onClick={() => updatePage()}>Update</button>Curr Pg{currentPage + 1}
                 </div>
-                <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView?'ListView':'Thumbnail View'}
+                <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView ? 'ListView' : 'Thumbnail View'}
 
             </div>
-            <div style={{ height: 710, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+            <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
                         {(provided, snapshot) => (
@@ -282,45 +359,47 @@ const SavePannel = () => {
                                                             }}
                                                         >
 
-                                                            {listView ?<> <td>
+                                                            {listView ? <> <td>
                                                                 <span>  {i + 1}</span>
-                                                                        <span style={{marginLeft:10}}  {...provided.dragHandleProps}><VscMove /></span>
-                                                                        <button style={{marginLeft:10}} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
-                                                            
+                                                                <span style={{ marginLeft: 10 }}  {...provided.dragHandleProps}><VscMove /></span>
+                                                                <button style={{ marginLeft: 10 }} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+
                                                             </td>
-                                                            <td>
-                                                                <input  type='text' style={{ minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                    recallPage(val.pageValue, window.editor.canvas, i);
-                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
-                                                                />
-                                                            </td></>:
-                                                            
-                                                            <> <td>
-                                                                <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
-                                                                    <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
-                                                                        {i + 1}
-                                                                    </div>
-                                                                    <div>
-                                                                        <span {...provided.dragHandleProps}><VscMove /></span>
-                                                                    </div>
-                                                                    <div>
-                                                                        <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i) }}>
-                                                                    <DrawingThumbnail i={i} />
-                                                                </div>
-                                                                <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                    recallPage(val.pageValue, window.editor.canvas, i);
-                                                                }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
-                                                                />
-                                                            </td></>}
-                                                           
+                                                                <td>
+                                                                    <input type='text' style={{ border: 'none', borderWidth: 0, minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                        recallPage(val.pageValue, window.editor.canvas, i);
+                                                                    }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                    />
+                                                                </td></> :
 
-
-
+                                                                <> <td>
+                                                                    <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
+                                                                        <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
+                                                                            {i + 1}
+                                                                        </div>
+                                                                        <div>
+                                                                            <span {...provided.dragHandleProps}><VscMove /></span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button key1={i} onClick={() =>  startGraphics(window.thumbnaileditor[i]?.canvas, templateLayers.savePannelPlayer) }>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button key1={i} onClick={() =>stopGraphics( templateLayers.savePannelPlayer) }>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                    <td>
+                                                                        <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i) }}>
+                                                                            <DrawingThumbnail i={i} />
+                                                                        </div>
+                                                                        <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
+                                                                            recallPage(val.pageValue, window.editor.canvas, i);
+                                                                        }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                        />
+                                                                    </td></>}
                                                         </tr>
                                                     )
                                                     }

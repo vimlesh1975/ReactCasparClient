@@ -1,7 +1,8 @@
 import axios from 'axios'
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':8080';
 
-export const videoLayers = [1, 2, 3, 10000, 5]
+export const videoLayers = [1, 2, 3, 10000, 5];
+export const templateLayers={savePannelPlayer:107,solidCaption1:108,solidCaption2:109,solidCaption3:110,logo:111,locationBand:112,verticalScroll:113,horizontalScroll:114,clock:115,countUpTimer:116,gameTimer:117};
 
 export const endpoint = (string) => {
     const data = { string: string }
@@ -10,7 +11,19 @@ export const endpoint = (string) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
+export const updateGraphics = (canvas, layerNumber) => {
+    endpoint(`call ${window.chNumber}-${layerNumber} "
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        "`)
+}
 
+export const stopGraphics = layerNumber => {
+    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    setTimeout(() => {
+        endpoint(`stop ${window.chNumber}-${layerNumber}`);
+        endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);
+    }, 1000);
+}
 export const options = {
     currentMode: "",
     currentColor: "#ffffff",

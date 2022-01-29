@@ -1,4 +1,4 @@
-html, body {margin: 0; height: 100%; overflow: hidden}
+@media only screen and (min-width : 1200px) {html, body {margin: 0; height: 100%; overflow: hidden}}
 
 /* .App {
   text-align: left;

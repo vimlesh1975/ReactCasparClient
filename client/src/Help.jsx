@@ -1,7 +1,7 @@
 import React from 'react'
 // import { fabric } from 'fabric'
 import { useSelector } from 'react-redux'
-import { endpoint } from './common'
+import { endpoint, templateLayers } from './common'
 
 
 const Help = () => {
@@ -72,9 +72,12 @@ const Help = () => {
         <li>Image from local pc method only will get filters. </li>
         <li>Dont use double space in folder or file name. </li>
       </ol>
-      <button onClick={test}>Test</button>
-     
+      <table border='1'><tbody>
+        <tr><th>LayerName</th><th>Layer</th></tr>
+        {Object.keys(templateLayers).map((val, i) => <tr><td>{val}</td><td>{Object.values(templateLayers)[i]}</td></tr>)}
+      </tbody></table>
 
+      <button onClick={test}>Test</button>
     </div>
   )
 }
