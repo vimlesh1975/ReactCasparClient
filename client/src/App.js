@@ -1,11 +1,9 @@
-
 import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
 import React from "react";
 import Video from './Video';
 import Drawing from './Drawing';
-import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -16,9 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ColorGradient from './ColorGradient';
 import VideoController from './VideoController';
 import Help from './Help';
-import { useDispatch } from 'react-redux'
-import { inAnimationMethods, animationMethods, chNumbers } from './common'
-
+import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers } from './common'
 import Layers from './Layers'
 import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
@@ -28,17 +24,105 @@ import { videoLayers } from './common'
 import Shapes from './Shapes';
 import Games from './Games/Games';
 import Charts from './Charts';
+import { useSelector, useDispatch } from 'react-redux'
+import { FaPlay, FaStop } from "react-icons/fa";
 
-const buildDate = '300122'
+
+const buildDate = '300122_2'
 
 
 const App = () => {
+  const canvas = useSelector(state => state.canvasReducer.canvas);
+  const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+  const currentPage = useSelector(state => state.currentPageReducer.currentPage);
+
   const [mediaPath, setmediaPath] = useState();
   const refPreviewContainer = useRef();
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
   const [animationMethod, setAnimationMethod] = useState('easeinsine');
   const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
+  const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+  const [solidcaption1, setSolidcaption1] = useState('');
+
+  const startGraphics = (canvas, layerNumber) => {
+    var inAnimation;
+    if (window.inAnimationMethod === 'scaleX') {
+      inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'scaleY') {
+      inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'rotateX') {
+      inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'rotateY') {
+      inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'mix') {
+      inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'Allelements') {
+      inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 1.5s; }`
+    }
+    else if (window.inAnimationMethod === 'lefttoright') {
+      inAnimation = ``
+      canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+      endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+
+      setTimeout(() => {
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+      }, 250);
+
+      setTimeout(() => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.body.style.overflow='hidden';
+        var style = document.createElement('style');
+        style.textContent = '${inAnimation}';
+        document.head.appendChild(style);
+        "`)
+      }, 300);
+
+      setTimeout(() => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+      }, 800);
+      setTimeout(() => {
+        updateGraphics(canvas, layerNumber);
+      }, 1100);
+      return
+    }
+
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`call ${window.chNumber}-${layerNumber} "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.body.style.overflow='hidden';
+        var style = document.createElement('style');
+        style.textContent = '${inAnimation}';
+        document.head.appendChild(style);
+        "`)
+  }
+
+  useEffect(() => {
+    setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
+    return () => {
+      // cleanup
+    }
+  }, [])
+
 
   useEffect(() => {
     window.inAnimationMethod = inAnimationMethod;
@@ -139,27 +223,55 @@ const App = () => {
 
   return (<React.Fragment>
 
-    <div className='menu_bar'>
-      <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => {
-        endpoint(`clear ${chNumber}`);
-        endpoint(`mixer ${chNumber} clear`);
+    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
+      <div>
+        <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => {
+          endpoint(`clear ${chNumber}`);
+          endpoint(`mixer ${chNumber} clear`);
 
-      }}>Stop Channel</button>
-      <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
-        {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-      </select>
-      <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
-        {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-      </select>
+        }}>Stop Channel</button>
+      </div>
+      <div  >
+        <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
+          {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+        </select>
+        <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
+          {animationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+        </select>
+      </div>
+      <div  >
+        <b>Channel Number:</b>
+        <select onChange={e => changeChannelNumber(e)} value={chNumber}>
+          {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+        </select>
+        <button onClick={() => endpoint(`swap 1 2`)}>Swap CH 1 and 2</button>
+      </div>
+      <div style={{ minWidth: 500 }} >
+        <b> Solid Caption 1: </b>
+        <button onClick={() => {
+          startGraphics(canvas, templateLayers.solidCaption1);
+          setSolidcaption1(canvasList[currentPage]?.pageName);
+          localStorage.setItem('RCC_solidCaption1', canvasList[currentPage]?.pageName);
+        }
+        }><FaPlay /></button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption1)}>Update</button>
+        <button onClick={() => {
+          stopGraphics(templateLayers.solidCaption1);
+          setSolidcaption1('');
+          localStorage.setItem('RCC_solidCaption1', '');
+        }} ><FaStop /></button>
+        <span> {solidcaption1} </span>
+      </div>
 
-      <b>Channel Number:</b>
-      <select onChange={e => changeChannelNumber(e)} value={chNumber}>
-        {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-      </select>
-      <button onClick={() => endpoint(`swap 1 2`)}>Swap CH 1 and 2</button>
-
-      <span style={{ position: 'absolute', right: '10px' }}><b >All version of casparcg server</b></span>
+      <div  >
+        <b> Screen Setup: </b>
+        Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
+          localStorage.setItem('RCC_currentscreenSize', e.target.value)
+          dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
+        }
+        }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+      </div>
     </div>
+
     <div style={{
       display: 'flex',
       flexDirection: 'row',
@@ -222,7 +334,7 @@ const App = () => {
             <Tab>VDO</Tab>
             <Tab>VDO Playlist</Tab>
             <Tab>Layers</Tab>
-            <Tab >ClrGradient</Tab>
+            <Tab >Gradient</Tab>
             <Tab >Twoliner</Tab>
             <Tab >BreakingNews</Tab>
             <Tab >Shapes</Tab>

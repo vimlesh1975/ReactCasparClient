@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics ,updateGraphics, templateLayers} from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -25,7 +25,6 @@ var xxx;
 
 
 fabric.Object.prototype.noScaleCache = false;
-const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 const STEP = 5;
 var Direction = {
     LEFT: 0,
@@ -342,16 +341,18 @@ export const setGradientColor = canvas => {
     canvas.getActiveObjects().forEach(element => element.fill = gradient);
     canvas.requestRenderAll();
 }
-const gradient2=()=>{return new fabric.Gradient({
-    type: 'linear',
-    gradientUnits: 'percentage',
-    coords: {  x1: 0, y1: 0, x2: 0, y2: 1},
-    colorStops: [
-        { offset: 0, color: 'black' },
-        { offset: 0.5, color: `hsl(${Math.floor(Math.random() * 360 + 1)}, 100%, 50%)` },
-        { offset: 1, color: 'black' }
-    ]
-})}
+const gradient2 = () => {
+    return new fabric.Gradient({
+        type: 'linear',
+        gradientUnits: 'percentage',
+        coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        colorStops: [
+            { offset: 0, color: 'black' },
+            { offset: 0.5, color: `hsl(${Math.floor(Math.random() * 360 + 1)}, 100%, 50%)` },
+            { offset: 1, color: 'black' }
+        ]
+    })
+}
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         shadow: shadowOptions,
@@ -866,7 +867,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
         scaleY: size,
         opacity: 0.9,
         // fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
-        fill:gradient2(),
+        fill: gradient2(),
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -895,7 +896,6 @@ const DrawingController = () => {
     const strokeLineCaps = ["butt", "round", "square"];
     const [currentstrokeLineCap, setCurrentstrokeLineCap] = useState('round');
 
-    const [solidcaption1, setSolidcaption1] = useState('');
     const [solidcaption2, setSolidcaption2] = useState('');
     const [solidcaption3, setSolidcaption3] = useState('');
     const [logo, setLogo] = useState('');
@@ -1716,8 +1716,7 @@ const DrawingController = () => {
     }
 
     useEffect(() => {
-      if ( localStorage.getItem('RCC_currentscreenSize'))  { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt( localStorage.getItem('RCC_currentscreenSize')) })}
-        setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
+        if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
         setSolidcaption2(localStorage.getItem('RCC_solidCaption2'));
         setSolidcaption3(localStorage.getItem('RCC_solidCaption3'));
         setLogo(localStorage.getItem('RCC_logo'));
@@ -1752,34 +1751,8 @@ const DrawingController = () => {
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
-                <div className='drawingToolsRow' >
-                    <b> Screen Setup: </b>
-                    Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
-                        localStorage.setItem('RCC_currentscreenSize', e.target.value)
-                        dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
 
 
-                    }
-                    }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Solid Caption 1: </b>
-                    <button onClick={() => {
-                        startGraphics(canvas, templateLayers.solidCaption1);
-                        setSolidcaption1(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidCaption1', canvasList[currentPage]?.pageName);
-                    }
-                    }><FaPlay /></button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption1)}>Update</button>
-
-                    <button onClick={() => {
-                        stopGraphics(templateLayers.solidCaption1);
-                        setSolidcaption1('');
-                        localStorage.setItem('RCC_solidCaption1', '');
-
-
-                    }} ><FaStop /></button>
-                    <span> {solidcaption1} </span>
-                </div>
                 <div className='drawingToolsRow' >
                     <b> Solid Caption 2: </b>
                     <button onClick={() => {

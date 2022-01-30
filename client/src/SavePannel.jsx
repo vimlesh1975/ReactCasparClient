@@ -6,7 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint , stopGraphics, updateGraphics,templateLayers} from './common'
+import { endpoint, stopGraphics, updateGraphics, templateLayers } from './common'
 
 
 var currentFile = 'new';
@@ -16,14 +16,14 @@ const SavePannel = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    
-    const [listView, setListView] = useState(false);
+
+    const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
 
     const [currentFileName, setCurrentFileName] = useState('')
-  
+
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
         if (window.inAnimationMethod === 'scaleX') {
@@ -384,10 +384,10 @@ const SavePannel = () => {
                                                                             <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() =>  startGraphics(window.thumbnaileditor[i]?.canvas, templateLayers.savePannelPlayer) }>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button key1={i} onClick={() => startGraphics(window.thumbnaileditor[i]?.canvas, templateLayers.savePannelPlayer)}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() =>stopGraphics( templateLayers.savePannelPlayer) }>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button key1={i} onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                     </div>
                                                                 </td>

@@ -8,11 +8,11 @@ const ColorGradient = () => {
     const [color2, setColor2] = useState('red')
     const [color3, setColor3] = useState('black')
     const [offset, setOffset] = useState(0.5);
-    const [directionAngle, setDirectionAngle] = useState(180);
+    const [directionAngle, setDirectionAngle] = useState(179);
 
     const [direction, setDirection] = useState('to bottom')
     const directions = ['to right', 'to bottom', 'to bottom right', 'to right top'];
-    const [useAngle, setUseAngle] = useState(true);
+    const [useAngle, setUseAngle] = useState(false);
     const [coords1, setCoords1] = useState({ x1: 0, y1: 0, x2: 0, y2: 1 })
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -105,7 +105,7 @@ const ColorGradient = () => {
 
             <div>
                 <div style={{ margin: 5, border: '2px solid blue', width: 295, height: 100, backgroundImage: `linear-gradient(${directionAngle}deg, ${color1} 0%, ${color2} ${offset * 100}%, ${color3} 100%)` }} />
-                <br /> <input style={{ width: 295 }} onChange={e => ondirectionAngleChange(e)} type="range" min='0' max='180' step='1' defaultValue='180' />Angle
+                <br /> <input style={{ width: 295 }} onChange={e => ondirectionAngleChange(e)} type="range" min='1' max='179' step='1' defaultValue='179' />Angle {directionAngle}
             </div>
         </div>
         <div>
