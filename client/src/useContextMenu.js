@@ -10,6 +10,9 @@ const useContextMenu = () => {
       if (e.clientX > 1024) return
       if (e.clientY > 610) return
 
+      const item = window.editor.canvas?.getActiveObjects()[0];
+      if (item?.isEditing) return
+
       e.preventDefault();
 
       setXPos(`${e.clientX - 60}px`);
@@ -35,7 +38,7 @@ const useContextMenu = () => {
     document.addEventListener("click", handleClick);
     document.addEventListener("contextmenu", handleContextMenu);
     return () => {
-      document.addEventListener("click", handleClick);
+      document.removeEventListener("click", handleClick);
       document.removeEventListener("contextmenu", handleContextMenu);
     };
   });

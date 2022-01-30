@@ -62,6 +62,7 @@ const Drawing = ({ canvasOutput }) => {
         setTimeout(() => {
             window.editor.canvas.extraProps = ['id', 'selectable']
             setZoomAndPan(window.editor.canvas);
+            window.editor.canvas.preserveObjectStacking = true;
         }, 2000);
         return () => {
             cancesetZoomAndPan(window.editor.canvas)

@@ -29,7 +29,7 @@ import Shapes from './Shapes';
 import Games from './Games/Games';
 import Charts from './Charts';
 
-const buildDate = '290122'
+const buildDate = '300122'
 
 
 const App = () => {
