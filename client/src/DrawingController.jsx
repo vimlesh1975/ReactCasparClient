@@ -2030,8 +2030,10 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b>Zoom and Pan: </b>
-                    <button onClick={() => canvas.setZoom(1)}>Reset Zoom</button>
-                    <button onClick={() => canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])}>Reset Pan</button>
+                    <button onClick={() => {
+                        canvas.setZoom(1);
+                        canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
+                    }}>Reset Zoom and Pan</button>
                     <button onClick={() => putat00(canvas)}>Select All and Put at 0 0</button>
 
                 </div>
