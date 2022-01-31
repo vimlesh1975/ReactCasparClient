@@ -7,25 +7,24 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
-
-
+import { isEqual } from "lodash";
 
 var iii = 0;
 const BreakingNews = () => {
+
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
+    const [currentRow, setCurrentRow] = useState(0);
 
     const [generalayer, setGeneralayer] = useState(550);
     const [variableName, setVariableName] = useState('f0');
     const [pageName, setPageName] = useState('BreakingNews');
     const [timeInterval, setTimeInterval] = useState(4000);
 
-    var newplayerList1 = [];
+    const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
-
 
     const startBreakingNews = () => {
         setAaa(setInterval(() => {
@@ -40,6 +39,7 @@ const BreakingNews = () => {
                 }
                 continue;
             }
+            setCurrentRow(iii);
             recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii].data1, type: 'text' }]);
             if (iii < playerList1.length - 1) {
 
@@ -64,18 +64,22 @@ const BreakingNews = () => {
         // eslint-disable-next-line
     }, [generalayer, pageName, variableName, playerList1, timeInterval])
 
+    const updateplayerList1 = () => {
+        setPlayerList1([...newplayerList1])
+    }
+
     const onDragEnd1 = (result) => {
         const aa = [...playerList1]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
             setPlayerList1(aa);
+            setNewplayerList1(aa)
         }
     }
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
-            // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
             window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
@@ -86,7 +90,6 @@ const BreakingNews = () => {
                                     const aa = (element.width) * (element.scaleX);
                                     element.set({ objectCaching: false, text: data2.value.toString() })
                                     if (element.width > aa) { element.scaleToWidth(aa) }
-                                    // window.automationeditor[0].canvas.requestRenderAll();
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -100,12 +103,10 @@ const BreakingNews = () => {
                                         else if (element.type === 'rect') {
                                             element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                         }
-                                        // window.automationeditor[0].canvas.requestRenderAll();
                                     };
                                     i.src = data2.value;
                                 }
                             }
-                            // window.automationeditor[0].canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
@@ -113,7 +114,6 @@ const BreakingNews = () => {
                 sendToCasparcg(layerNumber)
             });
         }
-        // else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
     }
 
     const sendToCasparcg = (layerNumber) => {
@@ -141,7 +141,6 @@ const BreakingNews = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(window.automationeditor[0].canvas.toDataURL('png'))}' />\\" ; png method
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
@@ -157,11 +156,14 @@ const BreakingNews = () => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')), 1);
         setPlayerList1(aa);
+        setNewplayerList1(aa)
     }
     const addPage = e => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, { id: uuidv4(), data1: '', use1: false });
         setPlayerList1(aa);
+        setNewplayerList1(aa)
+
     }
 
     const drawingFileSaveAs = () => {
@@ -200,6 +202,7 @@ const BreakingNews = () => {
             updatedcanvasList.push({ data1: cc.data1, use1: cc.use1 })
         });
         setPlayerList1(updatedcanvasList)
+        setNewplayerList1(updatedcanvasList)
     };
     const setAsScrollText = () => {
 
@@ -225,7 +228,6 @@ const BreakingNews = () => {
                             const aa = (element.width) * (element.scaleX);
                             element.set({ objectCaching: false, text: data2.value.toString() })
                             if (element.width > aa) { element.scaleToWidth(aa) }
-                            // window.automationeditor[0].canvas.requestRenderAll();
                         }
                         else if (data2.type === 'image') {
                             var i = new Image();
@@ -239,17 +241,14 @@ const BreakingNews = () => {
                                 else if (element.type === 'rect') {
                                     element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
                                 }
-                                // window.automationeditor[0].canvas.requestRenderAll();
                             };
                             i.src = data2.value;
                         }
                     }
-                    // window.automationeditor[0].canvas.requestRenderAll();
                 } catch (error) {
                 }
             });
         });
-        // window.automationeditor[0].canvas.requestRenderAll();
         setTimeout(() => {
             updateGraphics(layerNumber)
         }, 300);
@@ -297,6 +296,7 @@ const BreakingNews = () => {
                     </table>
                 </div>
             </div>
+            <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor:'red' }} onClick={updateplayerList1}>Update Data</button>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
@@ -326,20 +326,17 @@ const BreakingNews = () => {
                                                                 <td>{i}</td>
 
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ border:'none', borderWidth:0, minWidth: 620 }} type='text' defaultValue={val.data1}
-
-                                                                    onMouseLeave={e => {
-                                                                        newplayerList1 = [...playerList1];
+                                                                <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
+                                                                    onChange={e => {
                                                                         newplayerList1[i] = { ...newplayerList1[i], data1: e.target.value };
-                                                                        setPlayerList1([...newplayerList1])
-
+                                                                    setNewplayerList1([...newplayerList1])
                                                                     }}
                                                                 />
                                                                 </td>
                                                                 <td><input defaultChecked={val.use1} type='checkbox' onChange={(e) => {
-                                                                    newplayerList1 = [...playerList1];
                                                                     newplayerList1[i] = { ...newplayerList1[i], use1: e.target.checked };
-                                                                    setPlayerList1([...newplayerList1])
+                                                                    setNewplayerList1([...newplayerList1]);
+                                                                    setPlayerList1([...newplayerList1]);
                                                                 }
                                                                 } /></td>
                                                                 <td><button onClick={() => recallPage(generalayer, pageName, [{ key: variableName, value: val.data1, type: 'text' }])}> <FaPlay /></button></td>

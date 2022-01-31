@@ -28,7 +28,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { FaPlay, FaStop } from "react-icons/fa";
 
 
-const buildDate = '300122_2'
+const buildDate = '310122_1'
 
 
 const App = () => {

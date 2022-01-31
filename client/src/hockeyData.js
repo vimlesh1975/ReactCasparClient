@@ -89,6 +89,6 @@ export const iniBreakingNews= [
    {id: uuidv4(),data1: 'Share Market Today : सेंसेक्स हुआ धड़ाम, 1100 से ज्यादा अंकों की गिरावट, Nifty भी लुढ़का',use1:true},
    {id: uuidv4(),data1:  'पेट्रोल-डीजल हो सकता है और भी सस्ता! कीमतों में कटौती की उम्मीद - Hindustan हिंदी',use1:true},
    {id: uuidv4(),data1: 'Bigg Boss 15, 22 Nov Written Updates: प्रतीक-करण के बीच हुई धक्का-मुक्की ',use1:true},
-   {id: uuidv4(),data1:'Malaika Arora जालीदार ड्रेस पहनने की वजह से हुईं ट्रोल, लोग बोले ‘सबकुछ दिख जाए, ऐसा भी क्या फैशन’ ',use1:true},
+   {id: uuidv4(),data1:'Malaika Arora जालीदार ड्रेस पहनने की वजह से हुईं ट्रोल, लोग बोले ‘सबकुछ दिख जाए, ऐसा भी क्या फैशन',use1:true},
    {id: uuidv4(),data1: 'अनुपमा सीरियल में Rupali Ganguly की मां का किरदार निभा चुकीं एक्ट्रेस Madhavi Gogate का निधन',use1:true},
 ]
