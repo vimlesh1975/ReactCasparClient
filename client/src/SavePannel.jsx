@@ -359,8 +359,8 @@ const SavePannel = () => {
                                                             }}
                                                         >
 
-                                                            {listView ? <> <td>
-                                                                <span>  {i + 1}</span>
+                                                            {listView ? <><td>
+                                                                <span>{i + 1}</span>
                                                                 <span style={{ marginLeft: 10 }}  {...provided.dragHandleProps}><VscMove /></span>
                                                                 <button style={{ marginLeft: 10 }} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                             </td>
@@ -371,7 +371,7 @@ const SavePannel = () => {
                                                                     />
                                                                 </td></> :
 
-                                                                <> <td>
+                                                                <><td>
                                                                     <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
                                                                         <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
                                                                             {i + 1}

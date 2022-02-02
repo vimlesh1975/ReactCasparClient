@@ -16,6 +16,7 @@ const Layers = () => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
 
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
+    
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
 
     const updatePage = () => {
@@ -134,7 +135,7 @@ const Layers = () => {
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
                                                         <td key1={i} onClick={(e) => toggleLock(e, canvas)}>{(!val.selectable).toString()}</td>
 
-                                                        <td style={{ fontFamily: fontofInputBox}} key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
+                                                        <td style={{ fontFamily: val.fontFamily}} key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
 
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontFamily}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>

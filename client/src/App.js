@@ -26,9 +26,10 @@ import Games from './Games/Games';
 import Charts from './Charts';
 import { useSelector, useDispatch } from 'react-redux'
 import { FaPlay, FaStop } from "react-icons/fa";
+import TimeLine1 from './TimeLine1';
 
 
-const buildDate = '310122_1'
+const buildDate = '310122_2'
 
 
 const App = () => {
@@ -340,6 +341,7 @@ const App = () => {
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
+            <Tab >TimeLine</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -381,7 +383,9 @@ const App = () => {
           <TabPanel>
             <Charts />
           </TabPanel>
-
+          <TabPanel>
+            <TimeLine1 />
+          </TabPanel>
           <TabPanel>
             <Help />
           </TabPanel>

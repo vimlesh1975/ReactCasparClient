@@ -2,6 +2,7 @@ import React from 'react'
 // import { fabric } from 'fabric'
 import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
+import { v4 as uuidv4 } from 'uuid';
 
 const Help = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -75,7 +76,7 @@ const Help = () => {
     <div>
       <table border='1'><tbody>
         <tr><th>LayerName</th><th>Layer</th></tr>
-        {Object.keys(templateLayers).map((val, i) => <tr><td>{val}</td><td>{Object.values(templateLayers)[i]}</td></tr>)}
+        {Object.keys(templateLayers).map((val, i) => <tr key={uuidv4()}><td>{val}</td><td>{Object.values(templateLayers)[i]}</td></tr>)}
       </tbody></table>
     </div>
     <button style={{ display: 'none' }} onClick={test}>Test</button>

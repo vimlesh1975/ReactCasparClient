@@ -260,14 +260,14 @@ const BreakingNews = () => {
                 <div>
                     <table border='1'>
                         <tbody >
-                            <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td> <input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
-                                <td> Layer Numbaer</td><td> <input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td> Time Interval</td><td> <input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
+                            <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                                <td>Layer Numbaer</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
                         </tbody>
                     </table>
                     <table border='1'>
                         <tbody >
                             <tr>
-                                <td> <label>Start Breaking News: <input type='checkbox' onChange={(e) => {
+                                <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                                     if (e.target.checked === true) {
                                         startBreakingNews();
                                     }
@@ -280,7 +280,7 @@ const BreakingNews = () => {
                                 <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td>
                                 <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
                                 <td><button onClick={drawingFileSaveAs}>Save</button></td>
-                                <td> <span>Open File:</span>  <input
+                                <td><span>Open File:</span><input
                                     type='file'
                                     id='file'
                                     className='input-file'
@@ -324,7 +324,6 @@ const BreakingNews = () => {
                                                                 }}
                                                             >
                                                                 <td>{i}</td>
-
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
                                                                 <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
                                                                     onChange={e => {
@@ -343,7 +342,6 @@ const BreakingNews = () => {
                                                                 <td><button onClick={() => updateData(generalayer, [{ key: variableName, value: val.data1, type: 'text' }])}> Update</button></td>
                                                                 <td><button key1={i} onClick={(e) => deletePage(e)}>-</button></td>
                                                                 <td><button key1={i} onClick={(e) => addPage(e)}>+</button></td>
-
                                                             </tr>
                                                         )
                                                         }
