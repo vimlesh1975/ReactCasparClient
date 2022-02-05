@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from 'react-redux'
 import store from './store'
-import Drawing from './Drawing';
+import Drawing2 from './Drawing2';
 
 window.store = store;
 ReactDOM.render(
@@ -15,7 +15,7 @@ ReactDOM.render(
       {/* <Router > */}
       <Switch>
         <Route exact path='/' render={() => (<App />)} />
-        <Route exact path='/drawing' render={() => <Drawing canvasOutput={true} />} />
+        <Route exact path='/drawing2' render={() => <Drawing2 canvasOutput={true} />} />
       </Switch>
     </Router>
   </Provider>,

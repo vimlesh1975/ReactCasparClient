@@ -49,23 +49,23 @@ const App = () => {
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
     if (window.inAnimationMethod === 'scaleX') {
-      inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
-    }
-    else if (window.inAnimationMethod === 'scaleY') {
-      inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
-    }
-    else if (window.inAnimationMethod === 'rotateX') {
-      inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
-    }
-    else if (window.inAnimationMethod === 'rotateY') {
-      inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
-    }
-    else if (window.inAnimationMethod === 'mix') {
-      inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: 1.5s; }`
-    }
-    else if (window.inAnimationMethod === 'Allelements') {
-      inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 1.5s; }`
-    }
+      inAnimation = `@keyframes example {from {transform:scaleX(0);opacity:0} to {transform:scaleX(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+  }
+  else if (window.inAnimationMethod === 'scaleY') {
+      inAnimation = `@keyframes example {from {transform:scaleY(0);opacity:0} to {transform:scaleY(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+  }
+  else if (window.inAnimationMethod === 'rotateX') {
+      inAnimation = `@keyframes example {from {transform:rotateX(180deg);opacity:0} to {transform:rotateX(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+  }
+  else if (window.inAnimationMethod === 'rotateY') {
+      inAnimation = `@keyframes example {from {transform:rotateY(180deg);opacity:0} to {transform:rotateY(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+  }
+  else if (window.inAnimationMethod === 'mix') {
+      inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+  }
+  else if (window.inAnimationMethod === 'Allelements') {
+      inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);opacity:0} to{transform:translateX(0)rotateY(0);opacity:1}} text, rect, image, circle, path {animation-name: example;  animation-duration: .5s; }`
+  }
     else if (window.inAnimationMethod === 'lefttoright') {
       inAnimation = ``
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);

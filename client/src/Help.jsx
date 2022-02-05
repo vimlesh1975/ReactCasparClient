@@ -3,28 +3,30 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 import { v4 as uuidv4 } from 'uuid';
-
+// dispatch({ type:'CHANGE_CANVAS',payload:${'canvas'}});
 const Help = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
-  const test = () => {
-    endpoint(`play 1-1 [html] http://localhost:3000/ReactCasparClient/drawing`)
-    endpoint(`call 1-1 "
+  // const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
 
-    // const circle = new fabric.Circle({
-    //   top: 200,
-    //   left: 0,
-    //   radius: 50,
-    //   fill: 'rgb(80, 3, 124)',
-    //   cornerSize: 7,
-    //   objectCaching: false,
-    //   hasRotatingPoint: true,
-    //   strokeWidth: 3,
-    //   strokeUniform: true,
-    // });
-   const circle='${canvas}';
+  const test = () => {
+ 
+    endpoint(`play 1-108 [html] http://localhost:3000/ReactCasparClient/drawing2`)
+    endpoint(`call 1-108 "
+    const circle =new fabric.Rect({
+     width: ${canvas.item(0).width},
+     height: ${canvas.item(0).height},
+     left: ${canvas.item(0).left},
+     top: ${canvas.item(0).top},
+     fill:'yellow',
+     stroke:'${canvas.item(0).stroke}',
+     strokeWidth:${canvas.item(0).strokeWidth},
+     rx:${canvas.item(0).rx},
+     ry:${canvas.item(0).ry},
+
+    });
     window.editor.canvas.add(circle);
     window.editor.canvas.requestRenderAll();
-    \\circle.animate('left', 150, { onChange: window.editor.canvas.renderAll.bind(window.editor.canvas) });
+    console.log(window.editor.canvas.item.length)
     "
     `)
   }
@@ -79,7 +81,7 @@ const Help = () => {
         {Object.keys(templateLayers).map((val, i) => <tr key={uuidv4()}><td>{val}</td><td>{Object.values(templateLayers)[i]}</td></tr>)}
       </tbody></table>
     </div>
-    <button style={{ display: 'none' }} onClick={test}>Test</button>
+    <button style={{ display: 'none1' }} onClick={test}>Test</button>
   </div>)
 }
 
