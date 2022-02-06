@@ -29,7 +29,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import TimeLine1 from './TimeLine1';
 
 
-const buildDate = '310122_2'
+const buildDate = '060222_1'
 
 
 const App = () => {
@@ -50,22 +50,22 @@ const App = () => {
     var inAnimation;
     if (window.inAnimationMethod === 'scaleX') {
       inAnimation = `@keyframes example {from {transform:scaleX(0);opacity:0} to {transform:scaleX(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-  }
-  else if (window.inAnimationMethod === 'scaleY') {
+    }
+    else if (window.inAnimationMethod === 'scaleY') {
       inAnimation = `@keyframes example {from {transform:scaleY(0);opacity:0} to {transform:scaleY(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-  }
-  else if (window.inAnimationMethod === 'rotateX') {
+    }
+    else if (window.inAnimationMethod === 'rotateX') {
       inAnimation = `@keyframes example {from {transform:rotateX(180deg);opacity:0} to {transform:rotateX(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-  }
-  else if (window.inAnimationMethod === 'rotateY') {
+    }
+    else if (window.inAnimationMethod === 'rotateY') {
       inAnimation = `@keyframes example {from {transform:rotateY(180deg);opacity:0} to {transform:rotateY(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-  }
-  else if (window.inAnimationMethod === 'mix') {
+    }
+    else if (window.inAnimationMethod === 'mix') {
       inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-  }
-  else if (window.inAnimationMethod === 'Allelements') {
+    }
+    else if (window.inAnimationMethod === 'Allelements') {
       inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);opacity:0} to{transform:translateX(0)rotateY(0);opacity:1}} text, rect, image, circle, path {animation-name: example;  animation-duration: .5s; }`
-  }
+    }
     else if (window.inAnimationMethod === 'lefttoright') {
       inAnimation = ``
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -197,6 +197,11 @@ const App = () => {
       case 4:
       case 5:
       case 6:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
         setCurrentTab('Drawing');
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'))

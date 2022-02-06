@@ -2,19 +2,13 @@ import React, { useState, useRef } from "react";
 // import { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { endpoint } from './common'
+import { endpoint } from './common';
+import { fabric } from "fabric";
 
-var interval;
-var left = 0;
 const TimeLine1 = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  // var aaa=[layers.length];
-
-  // const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-  // const [left, setLeft] = useState(0)
-
-  const [keyFrames, setkeyFrames] = useState({ keyFrame0: [{initial:0},{ final:500}], keyFrame1: [{initial:0},{ final:500}] })
+  const [keyFrames, setkeyFrames] = useState({ initial: { left: -500, fill: 'green' }, final: { left: 500, fill: 'white' } })
   const refCanvasItem = useRef([]);
   refCanvasItem.current = [];
 
@@ -24,80 +18,47 @@ const TimeLine1 = () => {
     }
   }
 
-
-  // useEffect(()=>{
-  //  console.log(aaa);  
-  // //  setkeyFrames([...layers])
-  // },[aaa])
-
   const aa = (e) => {
-    left = parseInt(e.target.value);
-    canvas?.item(e.target.getAttribute('key1')).set({ left: parseInt(e.target.value) });
-    // console.log((refCanvasItem.current[e.target.getAttribute('key1')]?.value));
+    const val = parseInt(e.target.value);
+
+    canvas?.item(e.target.getAttribute('key1')).set({ left: val });
+    // canvas?.item(e.target.getAttribute('key1')).set({ fill:val });
     canvas?.requestRenderAll();
   }
-  const setInitial = (i) => {
-    if (i === 0) {
-      setkeyFrames({ ...keyFrames, keyFrame0: [...keyFrames.keyFrame0, { initial: left }] })
-    }
-    else {
-      setkeyFrames({ ...keyFrames, keyFrame1: [...keyFrames.keyFrame1, { initial: left }] })
 
-    }
+  const setInitial = () => {
+    setkeyFrames({ ...keyFrames, initial: { ...keyFrames.initial, left: canvas?.item(0).left, fill: canvas?.item(0).fill } })
   }
 
-  const setFinal = (i) => {
-    if (i === 0) {
-      setkeyFrames({ ...keyFrames, keyFrame0: [...keyFrames.keyFrame0, { final: left }] })
+  const setFinal = () => {
+    setkeyFrames({ ...keyFrames, final: { ...keyFrames.final, left: canvas?.item(0).left, fill: canvas?.item(0).fill } })
+  }
+
+  const preView = () => {
+    canvas?.item(0).set({ left: keyFrames.initial.left, fill: keyFrames.initial.fill });
+    canvas?.item(0).animate('left', keyFrames.final.left, {
+      onChange: canvas.renderAll.bind(canvas),
+      duration: 1000,
+      easing: fabric.util.ease.linear
     }
-    else {
-      setkeyFrames({ ...keyFrames, keyFrame1: [...keyFrames.keyFrame1, { final: left }] })
-
-    }
+    );
+    canvas?.item(0).animate('fill', keyFrames.final.fill, {
+      onChange: canvas.renderAll.bind(canvas),
+      duration: 1000,
+      easing: fabric.util.ease.linear
+    });
   }
 
-
-  const playTimeline = (i) => {
-    clearInterval(interval)
-    canvas?.item(i).set({ left: keyFrames[i].initial });
-    canvas?.requestRenderAll();
-    setTimeout(() => {
-      interval = setInterval(() => {
-        if (left < keyFrames[1].final) {
-          left = left + 10;
-          canvas?.item(i).set({ left: left });
-          canvas?.requestRenderAll();
-        }
-        else {
-          clearInterval(interval)
-        }
-        refCanvasItem.current[i].value = left;
-      }, 10);
-    }, 1000);
-
-
-  }
-  const stopTimeline = (i) => {
-    clearInterval(interval)
-  }
   const playtocasparcg = () => {
 
-    canvas?.item(0).set({ left: keyFrames.keyFrame0.final });
-    canvas?.item(1).set({ left: keyFrames.keyFrame1.final });
+    canvas?.item(0).set({ left: keyFrames.final.left, fill: keyFrames.final.fill });
     canvas?.requestRenderAll();
-    // const inAnimation2 = `@keyframes slide-in-bck-center {0%{transform:translateX(-1000px) rotate(-720deg);filter:blur(50px);opacity:0}100%{transform:translateX(0) rotate(0deg);filter:blur(0);opacity:1}}text, rect, image,circle, path {animation-name:slide-in-bck-center; animation-duration:0.65s; animation-timing-function:cubic-bezier(.23,1.000,.32,1.000); animation-fill-mode:both}`
     const inAnimation1 = `@keyframes example 
     {
-    from {transform:translateX(${keyFrames.keyFrame0[0].initial}px)}
-    to {transform:translateX(0px)}
+    from {transform:translateX(${keyFrames.initial.left - keyFrames.final.left}px);opacity:0);fill:${keyFrames.initial.fill}}
+    to {transform:translateX(0px);opacity:100; fill:${keyFrames.final.fill}}
     } 
-    @keyframes example2 
-    {
-    from {transform:translateX(${keyFrames.keyFrame1[0].initial}px)}
-    to {transform:translateX(0px)}
-    } 
-  text {animation-name: example;  animation-duration: .5s;animation-timing-function:cubic-bezier(0.250, 0.460, 0.450, 0.940); }
-  rect {animation-name: example2;  animation-duration: .5s;animation-timing-function:cubic-bezier(0.250, 0.460, 0.450, 0.940); }
+  rect, text {animation-name: example;  animation-duration: 1s;animation-timing-function:linear; }
   `
     setTimeout(() => {
       endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
@@ -114,48 +75,34 @@ const TimeLine1 = () => {
   style.textContent = '${inAnimation1}';
   document.head.appendChild(style);
   "`);
-    }, 100);
+    }, 10);
 
   }
   return (<div>
 
     {layers?.map((element, i) => {
       return (<div key={uuidv4()} >
-        {element.type}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => aa(e)} type="range" min={-1024} max={2048} step={1} defaultValue={0} />
-        <div style={{ width: 500, display: 'flex', justifyContent: 'space-around' }}>
-        {keyFrames.keyFrame0.map((val) =>
-
-            <div> <button onClick={e => {
-              canvas?.item(i).set({ left: val.initial });
+        {element.type}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => aa(e)} type="range" min={keyFrames.initial.left} max={keyFrames.final.left} step={1} defaultValue={(keyFrames.initial.left + keyFrames.final.left) / 2} />
+        <div style={{ width: 800, display: 'flex', justifyContent: 'space-around' }}>
+          <div>
+            <button onClick={() => setInitial()} >set Initial</button> <button onClick={e => {
+              canvas?.item(i).set({ left: keyFrames.initial.left, fill: keyFrames.initial.fill });
               canvas?.requestRenderAll();
-              refCanvasItem.current[i].value = val.initial;
             }
-            }>{val.initial}</button>
-            <button onClick={e => {
-              canvas?.item(i).set({ left: val.final });
+            }>Go to{JSON.stringify(keyFrames.initial)}</button>  <button onClick={e => {
+              canvas?.item(i).set({ left: keyFrames.final.left, fill: keyFrames.final.fill });
               canvas?.requestRenderAll();
-              refCanvasItem.current[i].value = val.final;
             }
-            }>{val.final}</button>
-            </div>
-            
-          )}
+            }>Go to {JSON.stringify(keyFrames.final)}</button> <button onClick={() => setFinal()} >set Final</button>
+          </div>
         </div>
-        <button onClick={() => setInitial(i)} >set Initial</button>
-        <button onClick={() => setFinal(i)} >set Final</button>
-
-        <button onClick={() => playTimeline(i)}>Play</button>
-        <button onClick={() => stopTimeline(i)}>Stop</button>
       </div>)
     })
     }
-
-    <div>
-
-    </div>
     <div>
     </div>
-    <button onClick={playtocasparcg}>Play to casparcg</button>
+    <button onClick={preView}>Preview</button>
+    <br /> <button onClick={playtocasparcg}>Play to casparcg</button>
   </div>)
 
 }
