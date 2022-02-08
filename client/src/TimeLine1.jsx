@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 // import { useEffect } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { endpoint } from './common';
 import { fabric } from "fabric";
@@ -22,22 +22,51 @@ function colorMix(color_1, color_2, weight) {
 
 const TimeLine1 = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
+  const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+  const currentPage = useSelector(state => state.currentPageReducer.currentPage);
+  const dispatch = useDispatch();
+
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [keyFrames, setkeyFrames] = useState({ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } })
+  const [keyFrames, setkeyFrames] = useState([{ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } }])
+
+
   const refCanvasItem = useRef([]);
   refCanvasItem.current = [];
-
   const addtoRefs = el => {
+    const aa = [...keyFrames];
     if (el && !refCanvasItem.current.includes(el)) {
       refCanvasItem.current.push(el);
+      aa.push({ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } })
     }
+    // setkeyFrames([...aa]);
   }
 
-  const aa = (e) => {
+  const addTimeline = () => {
+    const aa = [...keyFrames];
+    aa.push({ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } })
+    setkeyFrames([...aa]);
+  }
+
+  const updateAnimation = () => {
+    layers.forEach((element, i) => {
+      canvas?.item(i).set({ left: keyFrames[i].final.left, top: keyFrames[i].final.top, fill: keyFrames[i].final.fill, scaleX: keyFrames[i].final.scaleX });
+    });
+    canvas?.requestRenderAll();
+    const updatedcanvasList = canvasList.map((val, i) => {
+      return (i === currentPage) ? { ...val, pageValue: canvas.toJSON(['id', 'selectable']), animation: keyFrames } : val;
+    });
+    dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+  }
+  const recallAnimation = () => {
+    // console.log(canvasList[currentPage].animation);
+    canvasList[currentPage].animation && setkeyFrames(canvasList[currentPage].animation);
+  }
+  const scrubTimeline = (e) => {
     try {
+      const i = e.target.getAttribute('key1')
       const val = parseInt(e.target.value);
-      const factor = (val - keyFrames.initial.left) * 100 / Math.abs(keyFrames.initial.left - keyFrames.final.left);
-      canvas?.item(e.target.getAttribute('key1')).set({ left: val, top: (keyFrames.initial.top + (keyFrames.final.top - keyFrames.initial.top) * factor / 100), fill: colorMix(keyFrames.final.fill.substring(1), keyFrames.initial.fill.substring(1), factor), scaleX: keyFrames.initial.scaleX + (keyFrames.final.scaleX - keyFrames.initial.scaleX) * factor / 100 });
+      const factor = (val - keyFrames[i].initial.left) * 100 / Math.abs(keyFrames[i].initial.left - keyFrames[i].final.left);
+      canvas?.item(i).set({ left: val, top: (keyFrames[i].initial.top + (keyFrames[i].final.top - keyFrames[i].initial.top) * factor / 100), fill: colorMix(keyFrames[i].final.fill.substring(1), keyFrames[i].initial.fill.substring(1), factor), scaleX: keyFrames[i].initial.scaleX + (keyFrames[i].final.scaleX - keyFrames[i].initial.scaleX) * factor / 100 });
       canvas?.requestRenderAll();
     } catch (error) {
       console.log(error);
@@ -46,31 +75,38 @@ const TimeLine1 = () => {
   }
 
   const setInitial = (i) => {
-    setkeyFrames({ ...keyFrames, initial: { ...keyFrames.initial, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } })
+    const updatedKeyframe = keyFrames.map((val, index) => {
+      return (i === index) ? { ...val, initial: { ...keyFrames[i].initial, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } } : val;
+    });
+    setkeyFrames(updatedKeyframe)
   }
 
   const setFinal = (i) => {
-    setkeyFrames({ ...keyFrames, final: { ...keyFrames.final, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } })
+    const updatedKeyframe = keyFrames.map((val, index) => {
+      return (i === index) ? { ...val, final: { ...keyFrames[i].final, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } } : val;
+    });
+    setkeyFrames(updatedKeyframe)
+    // setkeyFrames([{ ...keyFrames[i], final: { ...keyFrames[i].final, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } }])
   }
 
   const preView = (i) => {
-    canvas?.item(i).set({ left: keyFrames.initial.left, top: keyFrames.initial.top, fill: keyFrames.initial.fill, scaleX: keyFrames.initial.scaleX });
-    canvas?.item(i).animate('left', keyFrames.final.left, {
+    canvas?.item(i).set({ left: keyFrames[i].initial.left, top: keyFrames[i].initial.top, fill: keyFrames[i].initial.fill, scaleX: keyFrames[i].initial.scaleX });
+    canvas?.item(i).animate('left', keyFrames[i].final.left, {
       onChange: canvas.renderAll.bind(canvas),
       duration: 1000,
       easing: fabric.util.ease.linear
     });
-    canvas?.item(i).animate('top', keyFrames.final.top, {
+    canvas?.item(i).animate('top', keyFrames[i].final.top, {
       onChange: canvas.renderAll.bind(canvas),
       duration: 1000,
       easing: fabric.util.ease.linear
     });
-    canvas?.item(i).animate('fill', keyFrames.final.fill, {
+    canvas?.item(i).animate('fill', keyFrames[i].final.fill, {
       onChange: canvas.renderAll.bind(canvas),
       duration: 1000,
       easing: fabric.util.ease.linear
     });
-    canvas?.item(i).animate('scaleX', keyFrames.final.scaleX, {
+    canvas?.item(i).animate('scaleX', keyFrames[i].final.scaleX, {
       onChange: canvas.renderAll.bind(canvas),
       duration: 1000,
       easing: fabric.util.ease.linear
@@ -82,18 +118,19 @@ const TimeLine1 = () => {
       preView(i);
       preView(i)
     });
-
-
   }
 
   const playtocasparcg = () => {
+    layers.forEach((element, i) => {
+      canvas?.item(i).set({ left: keyFrames[i].final.left, top: keyFrames[i].final.top, fill: keyFrames[i].final.fill, scaleX: keyFrames[i].final.scaleX });
+    });
 
-    canvas?.item(0).set({ left: keyFrames.final.left, top: keyFrames.final.top, fill: keyFrames.final.fill, scaleX: keyFrames.final.scaleX });
     canvas?.requestRenderAll();
+    const i = 0;
     const inAnimation1 = `@keyframes example 
     {
-    from {transform:translateX(${keyFrames.initial.left - keyFrames.final.left}px) translateY(${keyFrames.initial.top - keyFrames.final.top}px);opacity:0);fill:${keyFrames.initial.fill};width:${canvas?.item(0).width * keyFrames.initial.scaleX}}
-    to {transform:translateX(0px) translateY(0px);opacity:1; fill:${keyFrames.final.fill}; width:${canvas?.item(0).width * keyFrames.final.scaleX}}
+    from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px) translateY(${keyFrames[i].initial.top - keyFrames[i].final.top}px);opacity:0);fill:${keyFrames[i].initial.fill};width:${canvas?.item(i).width * keyFrames[i].initial.scaleX}}
+    to {transform:translateX(0px) translateY(0px);opacity:1; fill:${keyFrames[i].final.fill}; width:${canvas?.item(0).width * keyFrames[i].final.scaleX}}
     } 
   rect, text {animation-name: example;  animation-duration: 1s;animation-timing-function:linear; }
   `
@@ -119,18 +156,18 @@ const TimeLine1 = () => {
 
     {layers?.map((element, i) => {
       return (<div key={uuidv4()} >
-        {element.type}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => aa(e)} type="range" min={keyFrames.initial.left} max={keyFrames.final.left} step={1} defaultValue={(keyFrames.initial.left + keyFrames.final.left) / 2} />
+        {element.type}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => scrubTimeline(e)} type="range" min={keyFrames[i]?.initial.left} max={keyFrames[i]?.final.left} step={1} defaultValue={(keyFrames[i]?.initial.left + keyFrames[i]?.final.left) / 2} />
         <div style={{ width: 800, display: 'flex', justifyContent: 'space-around' }}>
           <div>
             <button onClick={() => setInitial(i)} >set Initial</button> <button onClick={e => {
-              canvas?.item(i).set({ left: keyFrames.initial.left, top: keyFrames.initial.top, fill: keyFrames.initial.fill, scaleX: keyFrames.initial.scaleX });
+              canvas?.item(i).set({ left: keyFrames[i]?.initial.left, top: keyFrames[i]?.initial.top, fill: keyFrames[i]?.initial.fill, scaleX: keyFrames[i]?.initial.scaleX });
               canvas?.requestRenderAll();
             }
-            }>Go to{JSON.stringify(keyFrames.initial)}</button>  <button onClick={e => {
-              canvas?.item(i).set({ left: keyFrames.final.left, top: keyFrames.final.top, fill: keyFrames.final.fill, scaleX: keyFrames.final.scaleX });
+            }>Go to{JSON.stringify(keyFrames[i]?.initial)}</button>  <button onClick={e => {
+              canvas?.item(i).set({ left: keyFrames[i]?.final.left, top: keyFrames[i]?.final.top, fill: keyFrames[i]?.final.fill, scaleX: keyFrames[i]?.final.scaleX });
               canvas?.requestRenderAll();
             }
-            }>Go to {JSON.stringify(keyFrames.final)}</button> <button onClick={() => setFinal(i)} >set Final</button>
+            }>Go to {JSON.stringify(keyFrames[i]?.final)}</button> <button onClick={() => setFinal(i)} >set Final</button>
           </div>
           <button onClick={() => preView(i)}>Preview</button>
         </div>
@@ -141,6 +178,9 @@ const TimeLine1 = () => {
     </div>
     <br /> <button onClick={allPreview}>All Preview</button>
     <br /> <button onClick={playtocasparcg}>Play to casparcg</button>
+    <br /> <button onClick={updateAnimation}>Save Animation</button>
+    <br /> <button onClick={recallAnimation}>Recall Animation</button>
+    <br /> <button onClick={addTimeline}>add Timeline</button>
   </div>)
 
 }

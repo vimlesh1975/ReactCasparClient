@@ -130,22 +130,13 @@ const SavePannel = () => {
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
     const updatePageName = e => {
-        // if (e.code === 'Enter') {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === parseInt(e.target.getAttribute('key1'))) ? { 'pageName': e.target.value, 'pageValue': val.pageValue } : val;
+            return (i === parseInt(e.target.getAttribute('key1'))) ? { ...val, 'pageName': e.target.value } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-        // }
 
     }
-    // const onDoubleClickPageName = (event) => {
-    //     event.preventDefault();
-    //     var sel = window.getSelection();
-    //     var range = document.createRange();
-    //     range.selectNodeContents(event.target);
-    //     sel.removeAllRanges();
-    //     sel.addRange(range);
-    // }
+  
     const recallPage = (json, canvas, i) => {
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i })
         canvas.loadFromJSON(json, function () {
@@ -207,7 +198,7 @@ const SavePannel = () => {
 
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
+            return (i === currentPage) ? {...val, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
@@ -216,7 +207,7 @@ const SavePannel = () => {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation:val.animation }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -240,7 +231,7 @@ const SavePannel = () => {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ 'pageName': val.pageName, 'pageValue': val.pageValue }) + '\r\n'
+            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue , animation:val.animation }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -312,7 +303,7 @@ const SavePannel = () => {
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             deleteAll(window.editor?.canvas);
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}`, animation:'' }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -321,7 +312,7 @@ const SavePannel = () => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { 'pageName': retVal, 'pageValue': `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}` }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}`, animation:'' }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}

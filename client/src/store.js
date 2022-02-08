@@ -4,8 +4,7 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
-// var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-const initialStateCanvasList = { canvasList: [{ 'pageName': 'untitled_page', 'pageValue': '' }] };
+const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation:'' }] };
 const canvasListReducer = (state = initialStateCanvasList, action) => {
     switch (action.type) {
         case 'CHANGE_CANVAS_LIST':
