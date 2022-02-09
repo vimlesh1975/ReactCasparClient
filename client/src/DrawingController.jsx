@@ -18,6 +18,7 @@ import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 import SavedStyles from './SavedStyles';
 
+
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
 // const clockLayer = 502;
@@ -135,7 +136,10 @@ export const cliptoPath = canvas => {
             element.set({ shadow: { ...shadowOptions, blur: 0 } });
         });
         var group = new fabric.Group([...clipPath1]);
-        group.set({ absolutePositioned: true });
+        group.set({
+            id: 'id_' + uuidv4(),
+             absolutePositioned: true
+             });
         canvas.sendToBack(group);
         img[0].set('clipPath', group)
         clipPath1.forEach(element => {
@@ -214,8 +218,8 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Text("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
-        id: 'f0',
         left: 100,
         top: 0,
         width: 480,
@@ -263,7 +267,7 @@ export const createTextBox = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
-        id: 'f0',
+        id:'id_' + uuidv4(),
         left: 100,
         top: 0,
         width: 480,
@@ -291,11 +295,11 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
             alert("Error!");
         } else {
             var rect = new fabric.Rect({
+                id: 'id_' + uuidv4(),
                 left: 10,
                 top: 10,
                 stroke: 'red',
                 strokeWidth: 3,
-                id: 'img1',
                 rx: 30,
                 objectCaching: false,
                 shadow: shadowOptions,
@@ -324,6 +328,7 @@ export const Upload = (e, canvas) => {
                 var image = new fabric.Image(imgObj);
                 image
                     .set({
+                        id: 'id_' + uuidv4(),
                         left: 10,
                         top: 10,
                         shadow: shadowOptions,
@@ -331,7 +336,6 @@ export const Upload = (e, canvas) => {
                         strokeWidth: 3,
                         strokeUniform: true,
                         objectCaching: false,
-                        id: 'img1'
                     })
                 // .scale(0.5);
                 canvas.add(image).setActiveObject(image);
@@ -359,6 +363,7 @@ const gradient2 = () => {
 }
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: -100,
         left: 90,
@@ -380,6 +385,7 @@ export const createRect = (canvas) => {
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: -100,
         left: 180,
@@ -400,6 +406,7 @@ export const createEllipse = (canvas) => {
 
 export const createPentagon = (canvas) => {
     const rect = new fabric.Polygon([{ x: 290, y: 124 }, { x: 390, y: 190 }, { x: 354, y: 297 }, { x: 226, y: 297 }, { x: 192, y: 190 }], {
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: -100,
         left: 80,
@@ -420,6 +427,7 @@ export const createPentagon = (canvas) => {
 
 export const createHexagon = (canvas) => {
     const rect = new fabric.Polygon([{ x: 207, y: 120 }, { x: 307, y: 60 }, { x: 407, y: 120 }, { x: 407, y: 220 }, { x: 307, y: 280 }, { x: 207, y: 220 }], {
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: -100,
         left: 300,
@@ -440,6 +448,7 @@ export const createHexagon = (canvas) => {
 
 export const createLine = (canvas) => {
     const rect = new fabric.Line([500, 450, 800, 450.00001], {
+        id: 'id_' + uuidv4(),
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
@@ -459,6 +468,7 @@ export const createLine = (canvas) => {
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: 0,
         left: 0,
@@ -480,6 +490,7 @@ export const createCircle = (canvas) => {
 export const createTriangle = (canvas) => {
     canvas.isDrawingMode = false;
     const triangle = new fabric.Triangle({
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: 50,
         left: -100,
@@ -705,6 +716,7 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
             });
             fabric.Image.fromURL(newData, (fabricImage) => {
                 fabricImage.set({
+                    id: 'id_' + uuidv4(),
                     left: left,
                     top: top,
                     shadow: { ...shadowOptions, blur: 0 },
@@ -864,6 +876,7 @@ export const paste = (canvas) => {
 export const createShape = (canvas, shape, size = 0.4) => {
 
     const rect = new fabric.Path(shape, {
+        id: 'id_' + uuidv4(),
         shadow: shadowOptions,
         top: -100,
         left: (Math.random()) * 1000,

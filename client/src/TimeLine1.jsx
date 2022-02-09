@@ -27,7 +27,8 @@ const TimeLine1 = () => {
   const dispatch = useDispatch();
 
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [keyFrames, setkeyFrames] = useState([{ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } }])
+  // const [keyFrames, setkeyFrames] = useState([{ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } }])
+  const [keyFrames, setkeyFrames] = useState([]);
 
 
   const refCanvasItem = useRef([]);
@@ -68,6 +69,20 @@ const TimeLine1 = () => {
       const factor = (val - keyFrames[i].initial.left) * 100 / Math.abs(keyFrames[i].initial.left - keyFrames[i].final.left);
       canvas?.item(i).set({ left: val, top: (keyFrames[i].initial.top + (keyFrames[i].final.top - keyFrames[i].initial.top) * factor / 100), fill: colorMix(keyFrames[i].final.fill.substring(1), keyFrames[i].initial.fill.substring(1), factor), scaleX: keyFrames[i].initial.scaleX + (keyFrames[i].final.scaleX - keyFrames[i].initial.scaleX) * factor / 100 });
       canvas?.requestRenderAll();
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+  const scrubTimelineAll = (e) => {
+    try {
+      layers.forEach((element, i) => {
+        const val = parseInt(e.target.value);
+        const factor = (val - keyFrames[i].initial.left) * 100 / Math.abs(keyFrames[i].initial.left - keyFrames[i].final.left);
+        canvas?.item(i).set({ left: val, top: (keyFrames[i].initial.top + (keyFrames[i].final.top - keyFrames[i].initial.top) * factor / 100), fill: colorMix(keyFrames[i].final.fill.substring(1), keyFrames[i].initial.fill.substring(1), factor), scaleX: keyFrames[i].initial.scaleX + (keyFrames[i].final.scaleX - keyFrames[i].initial.scaleX) * factor / 100 });
+        canvas?.requestRenderAll();
+      });
     } catch (error) {
       console.log(error);
     }
@@ -126,14 +141,17 @@ const TimeLine1 = () => {
     });
 
     canvas?.requestRenderAll();
-    const i = 0;
-    const inAnimation1 = `@keyframes example 
-    {
-    from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px) translateY(${keyFrames[i].initial.top - keyFrames[i].final.top}px);opacity:0);fill:${keyFrames[i].initial.fill};width:${canvas?.item(i).width * keyFrames[i].initial.scaleX}}
-    to {transform:translateX(0px) translateY(0px);opacity:1; fill:${keyFrames[i].final.fill}; width:${canvas?.item(0).width * keyFrames[i].final.scaleX}}
-    } 
-  rect, text {animation-name: example;  animation-duration: 1s;animation-timing-function:linear; }
-  `
+    var inAnimation2 = ``;
+    layers.forEach((element, i) => {
+      var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
+      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id} 
+      {
+      from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px) translateY(${keyFrames[i].initial.top - keyFrames[i].final.top}px);opacity:0);fill:${keyFrames[i].initial.fill};width:${canvas?.item(i).width * keyFrames[i].initial.scaleX}}
+      to {transform:translateX(0px) translateY(0px);opacity:1; fill:${keyFrames[i].final.fill}; width:${canvas?.item(i).width * keyFrames[i].final.scaleX}}
+      } 
+     #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: 1s;animation-timing-function:linear; }`
+    });
+
     setTimeout(() => {
       endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
       endpoint(`call ${window.chNumber}-${108} "
@@ -146,7 +164,7 @@ const TimeLine1 = () => {
   aa.style.zoom=(${1920 * 100}/1024)+'%';
   document.body.style.overflow='hidden';
   var style = document.createElement('style');
-  style.textContent = '${inAnimation1}';
+  style.textContent = '${inAnimation2}';
   document.head.appendChild(style);
   "`);
     }, 10);
@@ -154,9 +172,9 @@ const TimeLine1 = () => {
   }
   return (<div>
 
-    {layers?.map((element, i) => {
+    {keyFrames && layers?.map((element, i) => {
       return (<div key={uuidv4()} >
-        {element.type}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => scrubTimeline(e)} type="range" min={keyFrames[i]?.initial.left} max={keyFrames[i]?.final.left} step={1} defaultValue={(keyFrames[i]?.initial.left + keyFrames[i]?.final.left) / 2} />
+        {element.type}:{element.id}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => scrubTimeline(e)} type="range" min={keyFrames[i]?.initial.left} max={keyFrames[i]?.final.left} step={1} defaultValue={(keyFrames[i]?.initial.left + keyFrames[i]?.final.left) / 2} />
         <div style={{ width: 800, display: 'flex', justifyContent: 'space-around' }}>
           <div>
             <button onClick={() => setInitial(i)} >set Initial</button> <button onClick={e => {
@@ -174,8 +192,14 @@ const TimeLine1 = () => {
       </div>)
     })
     }
+
     <div>
     </div>
+    {keyFrames ? <>Master: <input style={{ width: 500 }} onChange={
+      e => {
+        scrubTimelineAll(e);
+      }
+    } type="range" min={keyFrames[0]?.initial.left} max={keyFrames[0]?.final.left} step={1} defaultValue={(keyFrames[0]?.initial.left + keyFrames[0]?.final.left) / 2} /></> : ''}
     <br /> <button onClick={allPreview}>All Preview</button>
     <br /> <button onClick={playtocasparcg}>Play to casparcg</button>
     <br /> <button onClick={updateAnimation}>Save Animation</button>
