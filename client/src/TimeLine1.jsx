@@ -141,6 +141,10 @@ const TimeLine1 = () => {
     });
 
     canvas?.requestRenderAll();
+    var  inAnimation1 = `@keyframes roll-in-left{0%{transform:translateX(-800px) rotate(-540deg);opacity:0}100%{transform:translateX(0) rotate(0deg);opacity:1}} rect,text{animation:roll-in-left .6s ease-out both}`;
+    var  inAnimation1 = `@keyframes roll-in-left{0%{transform:translateY(-45px);animation-timing-function:ease-in;opacity:1}24%{opacity:1}40%{transform:translateY(-24px);animation-timing-function:ease-in}65%{transform:translateY(-12px);animation-timing-function:ease-in}82%{transform:translateY(-6px);animation-timing-function:ease-in}93%{transform:translateY(-4px);animation-timing-function:ease-in}25%,55%,75%,87%{transform:translateY(0);animation-timing-function:ease-out}100%{transform:translateY(0);animation-timing-function:ease-out;opacity:1}} rect,text{animation:roll-in-left .6s ease-out both}`;
+    
+    
     var inAnimation2 = ``;
     layers.forEach((element, i) => {
       var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
@@ -164,7 +168,7 @@ const TimeLine1 = () => {
   aa.style.zoom=(${1920 * 100}/1024)+'%';
   document.body.style.overflow='hidden';
   var style = document.createElement('style');
-  style.textContent = '${inAnimation2}';
+  style.textContent = '${inAnimation1}';
   document.head.appendChild(style);
   "`);
     }, 10);

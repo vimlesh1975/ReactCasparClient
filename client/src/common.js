@@ -1,4 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
+import {animation} from './animation.js'
+
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':8080';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
@@ -523,13 +525,8 @@ export const fontLists = [
 ]
 export const chNumbers = [1, 2, 3, 4];
 export const inAnimationMethods = [
+    ...animation.map(val=> val.name ),
     'lefttoright',
-    'scaleX',
-    'scaleY',
-    'mix',
-    'rotateX',
-    'rotateY',
-    'Allelements'
 ]
 
 export const animationMethods = [

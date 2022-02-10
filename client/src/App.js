@@ -27,9 +27,10 @@ import Charts from './Charts';
 import { useSelector, useDispatch } from 'react-redux'
 import { FaPlay, FaStop } from "react-icons/fa";
 import TimeLine1 from './TimeLine1';
+import { animation } from './animation.js'
 
 
-const buildDate = '090222_1'
+const buildDate = '100222_1'
 
 
 const App = () => {
@@ -63,9 +64,11 @@ const App = () => {
     else if (window.inAnimationMethod === 'mix') {
       inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
     }
-    else if (window.inAnimationMethod === 'Allelements') {
-      inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);opacity:0} to{transform:translateX(0)rotateY(0);opacity:1}} text, rect, image, circle, path {animation-name: example;  animation-duration: .5s; }`
+  
+    else if (((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))!==-1) {
+      inAnimation = animation[((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))].value;
     }
+   
     else if (window.inAnimationMethod === 'lefttoright') {
       inAnimation = ``
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
