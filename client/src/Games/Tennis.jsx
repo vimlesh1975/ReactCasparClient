@@ -5,10 +5,7 @@ import { endpoint } from '../common'
 
 const Tennis = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
-
-
     const [t1Set, setT1Set] = useState(1);
     const [t2Set, setT2Set] = useState(2);
 
@@ -260,7 +257,6 @@ const Tennis = () => {
             </table>
             <button onClick={() => recallPage(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>Show</button>
             <button onClick={() => updateData(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service ) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>updateData</button>
-
             <button onClick={() => stopGraphics(96)}>Stop</button>
             <button onClick={resetData}>Reset Data</button>
 

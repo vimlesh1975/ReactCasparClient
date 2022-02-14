@@ -17,6 +17,7 @@ import ImageFilterController from './ImageFilterController';
 import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 import SavedStyles from './SavedStyles';
+import { animation } from './animation.js'
 
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
@@ -1663,24 +1664,13 @@ const DrawingController = () => {
 
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
-        if (window.inAnimationMethod === 'scaleX') {
-            inAnimation = `@keyframes example {from {transform:scaleX(0);opacity:0} to {transform:scaleX(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-        else if (window.inAnimationMethod === 'scaleY') {
-            inAnimation = `@keyframes example {from {transform:scaleY(0);opacity:0} to {transform:scaleY(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-        else if (window.inAnimationMethod === 'rotateX') {
-            inAnimation = `@keyframes example {from {transform:rotateX(180deg);opacity:0} to {transform:rotateX(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-        else if (window.inAnimationMethod === 'rotateY') {
-            inAnimation = `@keyframes example {from {transform:rotateY(180deg);opacity:0} to {transform:rotateY(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-        else if (window.inAnimationMethod === 'mix') {
+        if (window.inAnimationMethod === 'mix') {
             inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-        else if (window.inAnimationMethod === 'Allelements') {
-            inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateZ(360deg);opacity:0} to{transform:translateX(0)rotateZ(0);opacity:1}} text, rect, image,circle, path{animation-name: example;  animation-duration: .5s; }`
-        }
+          }
+        
+          else if (((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))!==-1) {
+            inAnimation = animation[((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))].value;
+          }
         else if (window.inAnimationMethod === 'lefttoright') {
             inAnimation = ``
             canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);

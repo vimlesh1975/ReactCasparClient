@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { endpoint, stopGraphics, updateGraphics, templateLayers } from './common'
+import { animation } from './animation.js'
 
 
 var currentFile = 'new';
@@ -26,24 +27,13 @@ const SavePannel = () => {
 
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
-        if (window.inAnimationMethod === 'scaleX') {
-            inAnimation = `@keyframes example {from {transform:scaleX(0)} to {transform:scaleX(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
-        }
-        else if (window.inAnimationMethod === 'scaleY') {
-            inAnimation = `@keyframes example {from {transform:scaleY(0)} to {transform:scaleY(1)}} div {animation-name: example;  animation-duration: 1.5s; }`
-        }
-        else if (window.inAnimationMethod === 'rotateX') {
-            inAnimation = `@keyframes example {from {transform:rotateX(180deg)} to {transform:rotateX(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
-        }
-        else if (window.inAnimationMethod === 'rotateY') {
-            inAnimation = `@keyframes example {from {transform:rotateY(180deg)} to {transform:rotateY(0)}} div {animation-name: example;  animation-duration: 1.5s; }`
-        }
-        else if (window.inAnimationMethod === 'mix') {
-            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: 1.5s; }`
-        }
-        else if (window.inAnimationMethod === 'Allelements') {
-            inAnimation = `@keyframes example {from {transform:translateX(1000px)rotateY(360deg);} to{transform:translateX(0)rotateY(0);}} text, rect, image,circle{animation-name: example;  animation-duration: 1.5s; }`
-        }
+        if (window.inAnimationMethod === 'mix') {
+            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+          }
+        
+          else if (((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))!==-1) {
+            inAnimation = animation[((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))].value;
+          }
         else if (window.inAnimationMethod === 'lefttoright') {
             inAnimation = ``
             // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -55,10 +45,14 @@ const SavePannel = () => {
 
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
+                var bb = document.createElement('div');
+                bb.style.perspective='1920px';
+                bb.style.transformStyle='preserve-3d';
+                document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            document.body.appendChild(aa);
+            bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
@@ -81,10 +75,14 @@ const SavePannel = () => {
         // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${layerNumber} "
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            document.body.appendChild(aa);
+            bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/309)+'%';

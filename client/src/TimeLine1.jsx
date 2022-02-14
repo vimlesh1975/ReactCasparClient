@@ -27,30 +27,27 @@ const TimeLine1 = () => {
   const dispatch = useDispatch();
 
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  // const [keyFrames, setkeyFrames] = useState([{ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } }])
-  const [keyFrames, setkeyFrames] = useState([]);
+  const [keyFrames, setkeyFrames] = useState([{ initial: { left: 50 },final: { left: 1000 } },{ initial: { left: 150 },final: { left: 800 } }])
+  // const [keyFrames, setkeyFrames] = useState([]);
 
 
   const refCanvasItem = useRef([]);
   refCanvasItem.current = [];
   const addtoRefs = el => {
-    const aa = [...keyFrames];
     if (el && !refCanvasItem.current.includes(el)) {
       refCanvasItem.current.push(el);
-      aa.push({ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } })
     }
-    // setkeyFrames([...aa]);
   }
 
   const addTimeline = () => {
     const aa = [...keyFrames];
-    aa.push({ initial: { left: 50, top: 50, fill: '#00ff00', scaleX: .2 }, final: { left: 500, top: 500, fill: '#0000ff', scaleX: 1 } })
+    aa.push({ initial: { left: 50 } ,final: { left: 1000 }})
     setkeyFrames([...aa]);
   }
 
   const updateAnimation = () => {
     layers.forEach((element, i) => {
-      canvas?.item(i).set({ left: keyFrames[i].final.left, top: keyFrames[i].final.top, fill: keyFrames[i].final.fill, scaleX: keyFrames[i].final.scaleX });
+      canvas?.item(i).set({ left: keyFrames[i].final.left});
     });
     canvas?.requestRenderAll();
     const updatedcanvasList = canvasList.map((val, i) => {
@@ -67,7 +64,7 @@ const TimeLine1 = () => {
       const i = e.target.getAttribute('key1')
       const val = parseInt(e.target.value);
       const factor = (val - keyFrames[i].initial.left) * 100 / Math.abs(keyFrames[i].initial.left - keyFrames[i].final.left);
-      canvas?.item(i).set({ left: val, top: (keyFrames[i].initial.top + (keyFrames[i].final.top - keyFrames[i].initial.top) * factor / 100), fill: colorMix(keyFrames[i].final.fill.substring(1), keyFrames[i].initial.fill.substring(1), factor), scaleX: keyFrames[i].initial.scaleX + (keyFrames[i].final.scaleX - keyFrames[i].initial.scaleX) * factor / 100 });
+      canvas?.item(i).set({ left: val });
       canvas?.requestRenderAll();
     } catch (error) {
       console.log(error);
@@ -80,7 +77,7 @@ const TimeLine1 = () => {
       layers.forEach((element, i) => {
         const val = parseInt(e.target.value);
         const factor = (val - keyFrames[i].initial.left) * 100 / Math.abs(keyFrames[i].initial.left - keyFrames[i].final.left);
-        canvas?.item(i).set({ left: val, top: (keyFrames[i].initial.top + (keyFrames[i].final.top - keyFrames[i].initial.top) * factor / 100), fill: colorMix(keyFrames[i].final.fill.substring(1), keyFrames[i].initial.fill.substring(1), factor), scaleX: keyFrames[i].initial.scaleX + (keyFrames[i].final.scaleX - keyFrames[i].initial.scaleX) * factor / 100 });
+        canvas?.item(i).set({ left: val});
         canvas?.requestRenderAll();
       });
     } catch (error) {
@@ -91,58 +88,57 @@ const TimeLine1 = () => {
 
   const setInitial = (i) => {
     const updatedKeyframe = keyFrames.map((val, index) => {
-      return (i === index) ? { ...val, initial: { ...keyFrames[i].initial, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } } : val;
+      return (i === index) ? { ...val, initial: { ...keyFrames[i].initial, left: canvas?.item(i).left} } : val;
     });
     setkeyFrames(updatedKeyframe)
   }
 
   const setFinal = (i) => {
     const updatedKeyframe = keyFrames.map((val, index) => {
-      return (i === index) ? { ...val, final: { ...keyFrames[i].final, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } } : val;
+      return (i === index) ? { ...val, final: { ...keyFrames[i].final, left: canvas?.item(i).left} } : val;
     });
     setkeyFrames(updatedKeyframe)
     // setkeyFrames([{ ...keyFrames[i], final: { ...keyFrames[i].final, left: canvas?.item(i).left, top: canvas?.item(i).top, fill: canvas?.item(i).fill, scaleX: canvas?.item(i).scaleX } }])
   }
 
   const preView = (i) => {
-    canvas?.item(i).set({ left: keyFrames[i].initial.left, top: keyFrames[i].initial.top, fill: keyFrames[i].initial.fill, scaleX: keyFrames[i].initial.scaleX });
+    canvas?.item(i).set({ left: keyFrames[i].initial.left});
+   
     canvas?.item(i).animate('left', keyFrames[i].final.left, {
       onChange: canvas.renderAll.bind(canvas),
       duration: 1000,
       easing: fabric.util.ease.linear
     });
-    canvas?.item(i).animate('top', keyFrames[i].final.top, {
-      onChange: canvas.renderAll.bind(canvas),
-      duration: 1000,
-      easing: fabric.util.ease.linear
-    });
-    canvas?.item(i).animate('fill', keyFrames[i].final.fill, {
-      onChange: canvas.renderAll.bind(canvas),
-      duration: 1000,
-      easing: fabric.util.ease.linear
-    });
-    canvas?.item(i).animate('scaleX', keyFrames[i].final.scaleX, {
-      onChange: canvas.renderAll.bind(canvas),
-      duration: 1000,
-      easing: fabric.util.ease.linear
-    });
+    // canvas?.item(i).animate('top', keyFrames[i].final.top, {
+    //   onChange: canvas.renderAll.bind(canvas),
+    //   duration: 1000,
+    //   easing: fabric.util.ease.linear
+    // });
+    // canvas?.item(i).animate('fill', keyFrames[i].final.fill, {
+    //   onChange: canvas.renderAll.bind(canvas),
+    //   duration: 1000,
+    //   easing: fabric.util.ease.linear
+    // });
+    // canvas?.item(i).animate('scaleX', keyFrames[i].final.scaleX, {
+    //   onChange: canvas.renderAll.bind(canvas),
+    //   duration: 1000,
+    //   easing: fabric.util.ease.linear
+    // });
   }
 
   const allPreview = () => {
     layers.forEach((element, i) => {
       preView(i);
-      preView(i)
     });
   }
 
   const playtocasparcg = () => {
     layers.forEach((element, i) => {
-      canvas?.item(i).set({ left: keyFrames[i].final.left, top: keyFrames[i].final.top, fill: keyFrames[i].final.fill, scaleX: keyFrames[i].final.scaleX });
+      canvas?.item(i).set({ left: keyFrames[i].final.left });
     });
 
     canvas?.requestRenderAll();
-    var  inAnimation1 = `@keyframes roll-in-left{0%{transform:translateX(-800px) rotate(-540deg);opacity:0}100%{transform:translateX(0) rotate(0deg);opacity:1}} rect,text{animation:roll-in-left .6s ease-out both}`;
-    var  inAnimation1 = `@keyframes roll-in-left{0%{transform:translateY(-45px);animation-timing-function:ease-in;opacity:1}24%{opacity:1}40%{transform:translateY(-24px);animation-timing-function:ease-in}65%{transform:translateY(-12px);animation-timing-function:ease-in}82%{transform:translateY(-6px);animation-timing-function:ease-in}93%{transform:translateY(-4px);animation-timing-function:ease-in}25%,55%,75%,87%{transform:translateY(0);animation-timing-function:ease-out}100%{transform:translateY(0);animation-timing-function:ease-out;opacity:1}} rect,text{animation:roll-in-left .6s ease-out both}`;
+    var  inAnimation1 = `@keyframes roll-in-left{0%{transform:translateZ(+800px);opacity:0}100%{transform:translateZ(0);opacity:1}} div{animation:roll-in-left .6s ease-out both}`;
     
     
     var inAnimation2 = ``;
@@ -150,8 +146,8 @@ const TimeLine1 = () => {
       var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id} 
       {
-      from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px) translateY(${keyFrames[i].initial.top - keyFrames[i].final.top}px);opacity:0);fill:${keyFrames[i].initial.fill};width:${canvas?.item(i).width * keyFrames[i].initial.scaleX}}
-      to {transform:translateX(0px) translateY(0px);opacity:1; fill:${keyFrames[i].final.fill}; width:${canvas?.item(i).width * keyFrames[i].final.scaleX}}
+      from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px)}
+      to {transform:translateX(0px) translateY(0px);}
       } 
      #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: 1s;animation-timing-function:linear; }`
     });
@@ -159,16 +155,20 @@ const TimeLine1 = () => {
     setTimeout(() => {
       endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
       endpoint(`call ${window.chNumber}-${108} "
+      var bb = document.createElement('div');
+      bb.style.perspective='1920px';
+      bb.style.transformStyle='preserve-3d';
+      document.body.appendChild(bb);
   var aa = document.createElement('div');
   aa.style.position='absolute';
   aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-  document.body.appendChild(aa);
+  bb.appendChild(aa);
   document.body.style.margin='0';
   document.body.style.padding='0';
   aa.style.zoom=(${1920 * 100}/1024)+'%';
   document.body.style.overflow='hidden';
   var style = document.createElement('style');
-  style.textContent = '${inAnimation1}';
+  style.textContent = '${inAnimation2}';
   document.head.appendChild(style);
   "`);
     }, 10);
@@ -177,20 +177,25 @@ const TimeLine1 = () => {
   return (<div>
 
     {keyFrames && layers?.map((element, i) => {
-      return (<div key={uuidv4()} >
-        {element.type}:{element.id}<input ref={addtoRefs} key1={i} style={{ width: 500 }} onChange={e => scrubTimeline(e)} type="range" min={keyFrames[i]?.initial.left} max={keyFrames[i]?.final.left} step={1} defaultValue={(keyFrames[i]?.initial.left + keyFrames[i]?.final.left) / 2} />
+      return (<div key={uuidv4()} style={{border:'1px solid black', marginTop:10}}>
+      <input ref={addtoRefs} key1={i} style={{ width: 500,direction: (keyFrames[i].final.left>keyFrames[i].initial.left)?'':'rtl' }} onChange={e => scrubTimeline(e)} type="range" min={(keyFrames[i].final.left>keyFrames[i].initial.left)?keyFrames[i].initial.left:keyFrames[i].final.left} max={(keyFrames[i].final.left<keyFrames[i].initial.left)?keyFrames[i].initial.left:keyFrames[i].final.left} step={1} defaultValue={0} />
         <div style={{ width: 800, display: 'flex', justifyContent: 'space-around' }}>
           <div>
             <button onClick={() => setInitial(i)} >set Initial</button> <button onClick={e => {
-              canvas?.item(i).set({ left: keyFrames[i]?.initial.left, top: keyFrames[i]?.initial.top, fill: keyFrames[i]?.initial.fill, scaleX: keyFrames[i]?.initial.scaleX });
+              canvas?.item(i).set({ left: keyFrames[i]?.initial.left});
               canvas?.requestRenderAll();
             }
-            }>Go to{JSON.stringify(keyFrames[i]?.initial)}</button>  <button onClick={e => {
-              canvas?.item(i).set({ left: keyFrames[i]?.final.left, top: keyFrames[i]?.final.top, fill: keyFrames[i]?.final.fill, scaleX: keyFrames[i]?.final.scaleX });
+            }>Go to{JSON.stringify(keyFrames[i]?.initial)}</button> 
+
+          <div> 
+             <button onClick={() => setFinal(i)} >set Final</button> <button onClick={e => {
+              canvas?.item(i).set({ left: keyFrames[i]?.final.left });
               canvas?.requestRenderAll();
             }
-            }>Go to {JSON.stringify(keyFrames[i]?.final)}</button> <button onClick={() => setFinal(i)} >set Final</button>
+            }>Go to {JSON.stringify(keyFrames[i]?.final)}</button> 
           </div>
+          </div>
+
           <button onClick={() => preView(i)}>Preview</button>
         </div>
       </div>)
@@ -203,7 +208,7 @@ const TimeLine1 = () => {
       e => {
         scrubTimelineAll(e);
       }
-    } type="range" min={keyFrames[0]?.initial.left} max={keyFrames[0]?.final.left} step={1} defaultValue={(keyFrames[0]?.initial.left + keyFrames[0]?.final.left) / 2} /></> : ''}
+    } type="range" min={0} max={1024} step={1} defaultValue={0} /></> : ''}
     <br /> <button onClick={allPreview}>All Preview</button>
     <br /> <button onClick={playtocasparcg}>Play to casparcg</button>
     <br /> <button onClick={updateAnimation}>Save Animation</button>

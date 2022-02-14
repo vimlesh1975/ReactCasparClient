@@ -1,5 +1,6 @@
 import React from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import CustomClient from './CustomClient';
 
 import Hockey from './Hockey'
 import Tennis from './Tennis';
@@ -14,6 +15,7 @@ const Games = () => {
                 <TabList>
                     <Tab>Hockey</Tab>
                     <Tab>Tennis</Tab>
+                    <Tab>Custom Client</Tab>
                 </TabList>
 
                 <TabPanel>
@@ -21,6 +23,9 @@ const Games = () => {
                 </TabPanel>
                 <TabPanel>
                     <Tennis />
+                </TabPanel>
+                <TabPanel>
+                    <CustomClient />
                 </TabPanel>
             </Tabs>
         </div>

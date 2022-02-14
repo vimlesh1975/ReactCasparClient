@@ -30,7 +30,7 @@ import TimeLine1 from './TimeLine1';
 import { animation } from './animation.js'
 
 
-const buildDate = '100222_1'
+const buildDate = '140222_1'
 
 
 const App = () => {
@@ -49,19 +49,8 @@ const App = () => {
 
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
-    if (window.inAnimationMethod === 'scaleX') {
-      inAnimation = `@keyframes example {from {transform:scaleX(0);opacity:0} to {transform:scaleX(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-    }
-    else if (window.inAnimationMethod === 'scaleY') {
-      inAnimation = `@keyframes example {from {transform:scaleY(0);opacity:0} to {transform:scaleY(1);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-    }
-    else if (window.inAnimationMethod === 'rotateX') {
-      inAnimation = `@keyframes example {from {transform:rotateX(180deg);opacity:0} to {transform:rotateX(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-    }
-    else if (window.inAnimationMethod === 'rotateY') {
-      inAnimation = `@keyframes example {from {transform:rotateY(180deg);opacity:0} to {transform:rotateY(0);opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-    }
-    else if (window.inAnimationMethod === 'mix') {
+
+     if (window.inAnimationMethod === 'mix') {
       inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
     }
   
@@ -106,10 +95,14 @@ const App = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
     endpoint(`call ${window.chNumber}-${layerNumber} "
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-        document.body.appendChild(aa);
+        bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
@@ -392,7 +385,7 @@ const App = () => {
             <Charts />
           </TabPanel>
           <TabPanel>
-            <TimeLine1 />
+            {/* <TimeLine1 /> */}
           </TabPanel>
           <TabPanel>
             <Help />
