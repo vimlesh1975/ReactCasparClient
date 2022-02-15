@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from '../common'
 import { v4 as uuidv4 } from 'uuid';
@@ -9,9 +9,25 @@ import { v4 as uuidv4 } from 'uuid';
 const CustomClient = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+    // const canvas = useSelector(state => state.canvasReducer.canvas);
+    const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
+    const dispatch = useDispatch();
 
     const [pageName, setPageName] = useState('TeamList')
     const [textNodes, settextNodes] = useState([{ key: 'f0', value: 'vimlesh', type: 'text' }])
+    const [list1, setList1] = useState([]);
+    const [currentRow, setCurrentRow] = useState(0);
+
+    const saveList = () => {
+        const newlist1 = [...list1];
+        newlist1.push({ pageName: pageName, pageValue: textNodes });
+        setList1([...newlist1]);
+    }
+    const recallList1 = (i) => {
+        setPageName(list1[i].pageName)
+        settextNodes(list1[i].pageValue)
+    }
+
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -20,6 +36,7 @@ const CustomClient = () => {
             window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                        element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -100,6 +117,7 @@ const CustomClient = () => {
             window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                        element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -138,35 +156,63 @@ const CustomClient = () => {
             });
         }
     }
-    const addtextNode = () => {
-        const aa = [...textNodes]
-        const bb = textNodes.length;
-        aa.push({ key: 'f' + bb, value: 'vimlesh' + bb, type: 'text' })
+    // const addtextNode = () => {
+    //     const aa = [...textNodes]
+    //     const bb = textNodes.length;
+    //     aa.push({ key: 'f' + bb, value: 'vimlesh' + bb, type: 'text' })
+    //     settextNodes([...aa])
+    // }
+    const getAllKeyValue = () => {
+        const aa = []
+        layers.forEach((element, i) => {
+            var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
+            if (type === 'text') {
+                aa.push({ key: element.id, value: element.text, type: 'text' })
+            }
+        });
         settextNodes([...aa])
     }
+
     return (
         <div>
-            <div style={{ display: 'flex' }}>
+            <div>
                 <div>
                     PageName
-                    <select onChange={e => setPageName(e.target.value)} value={pageName}>
-                        {canvasList.map((val) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
+                    <select onChange={e => {
+                        setPageName(canvasList[e.target.selectedIndex].pageName);
+                        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: e.target.selectedIndex });
+                        window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue, () => {
+                            const aa = window.editor.canvas.getObjects();
+                            aa.forEach(element => {
+                                try {
+                                    element.set({ objectCaching: false })
+                                } catch (error) {
+                                    alert(error);
+                                    return;
+                                }
+                            });
+                            window.editor.canvas.requestRenderAll();
+                        });
+
+                    }} value={pageName}>
+                        {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
                     </select>
                     <button onClick={() => { recallPage(96, pageName, textNodes) }}>Show</button>
                     <button onClick={() => updateData(96, pageName, textNodes)}>updateData</button>
                     <button onClick={() => stopGraphics(96)}>Stop</button>
-                    <button onClick={addtextNode}>Add Text Node</button>
+                    {/* <button onClick={addtextNode}>Add Text Node</button> */}
+                    <button onClick={getAllKeyValue}>getAllKeyValue</button>
                     <table border='0'><tbody>
                         {textNodes.map((val, i) => {
                             return (<tr key={i}>
-                                <td>Key:<input type='text' style={{ width: 200 }} value={val.key}
+                                <td>Key:<input disabled type='text' style={{ width: 260 }} value={val.key}
                                     onChange={e => {
                                         const updatedKeyframe = textNodes.map((val, index) => {
                                             return (i === index) ? { ...val, key: e.target.value } : val;
                                         });
                                         settextNodes(updatedKeyframe)
                                     }}
-                                /></td><td>value:<input style={{ width: 200 }} type='text' value={val.value} onChange={e => {
+                                /></td><td>value:<input style={{ width: 400 }} type='text' value={val.value} onChange={e => {
                                     const updatedKeyframe = textNodes.map((val, index) => {
                                         return (i === index) ? { ...val, value: e.target.value } : val;
                                     });
@@ -177,8 +223,46 @@ const CustomClient = () => {
                     </tbody></table>
 
                 </div>
-
                 <div>
+                    <button onClick={saveList}>Save List</button>
+                    <table border='1'>
+                        <tbody>
+                            <tr><th>page Name</th><th>page Value</th></tr>
+                            {list1.map((val, i) => {
+                                return (
+                                    <tr onClick={() => {
+                                        recallList1(i);
+                                        setCurrentRow(i);
+
+                                        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+                                        const index = canvasList.findIndex(val1 => val1.pageName === val.pageName);
+                                        window.editor.canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                                            const aa = window.editor.canvas.getObjects();
+                                            aa.forEach(element => {
+                                                try {
+                                                    element.set({ objectCaching: false });
+                                                    var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'textbox') ? 'text' : element.type;
+                                                    if (type === 'text') {
+                                                        val.pageValue.forEach(element1 => {
+                                                            if (element.id === element1.key) {
+                                                                element.set({text:element1.value});
+                                                            }
+                                                        });
+                                                    }
+                                                } catch (error) {
+                                                    alert(error);
+                                                    return;
+                                                }
+                                            });
+                                            window.editor.canvas.requestRenderAll();
+                                        });
+                                    }} key={i} style={{ backgroundColor: currentRow === i ? 'green' : '' }}>
+                                        <td >{val.pageName}</td><td> {JSON.stringify(val.pageValue)}</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

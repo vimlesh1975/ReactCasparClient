@@ -26,11 +26,11 @@ import Games from './Games/Games';
 import Charts from './Charts';
 import { useSelector, useDispatch } from 'react-redux'
 import { FaPlay, FaStop } from "react-icons/fa";
-import TimeLine1 from './TimeLine1';
+// import TimeLine1 from './TimeLine1';
 import { animation } from './animation.js'
 
 
-const buildDate = '140222_1'
+const buildDate = '150222_1'
 
 
 const App = () => {
