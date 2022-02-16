@@ -4,6 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from '../common'
 import { v4 as uuidv4 } from 'uuid';
+import { FaPlay, FaStop } from "react-icons/fa";
+import { VscTrash } from "react-icons/vsc";
+
+
 
 
 const CustomClient = () => {
@@ -14,7 +18,7 @@ const CustomClient = () => {
     const dispatch = useDispatch();
 
     const [pageName, setPageName] = useState('TeamList')
-    const [textNodes, settextNodes] = useState([{ key: 'f0', value: 'vimlesh', type: 'text' }])
+    const [textNodes, settextNodes] = useState([])
     const [list1, setList1] = useState([]);
     const [currentRow, setCurrentRow] = useState(0);
 
@@ -23,11 +27,25 @@ const CustomClient = () => {
         newlist1.push({ pageName: pageName, pageValue: textNodes });
         setList1([...newlist1]);
     }
+    const updateList = (index) => {
+        const updatedList1 = list1.map((val, i) => {
+            return (index !== i)?val:{ pageName: pageName, pageValue: textNodes }
+        });
+
+        setList1([...updatedList1]);
+    }
+    
     const recallList1 = (i) => {
         setPageName(list1[i].pageName)
         settextNodes(list1[i].pageValue)
     }
+    const deleteData = (index) => {
+        const updatedList1 = list1.filter((_, i) => {
+            return (index !== i)
+        });
 
+        setList1([...updatedList1]);
+    }
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -167,7 +185,7 @@ const CustomClient = () => {
         layers.forEach((element, i) => {
             var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
             if (type === 'text') {
-                aa.push({ key: element.id, value: element.text, type: 'text' })
+                aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily })
             }
         });
         settextNodes([...aa])
@@ -175,8 +193,8 @@ const CustomClient = () => {
 
     return (
         <div>
-            <div>
-                <div>
+            <div >
+                <div >
                     PageName
                     <select onChange={e => {
                         setPageName(canvasList[e.target.selectedIndex].pageName);
@@ -197,37 +215,42 @@ const CustomClient = () => {
                     }} value={pageName}>
                         {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
                     </select>
-                    <button onClick={() => { recallPage(96, pageName, textNodes) }}>Show</button>
-                    <button onClick={() => updateData(96, pageName, textNodes)}>updateData</button>
-                    <button onClick={() => stopGraphics(96)}>Stop</button>
-                    {/* <button onClick={addtextNode}>Add Text Node</button> */}
                     <button onClick={getAllKeyValue}>getAllKeyValue</button>
+                    <button onClick={saveList}>Save List</button>
+                    <button onClick={()=>updateList(currentRow)}>Update List</button>
+                    {/* <button onClick={addtextNode}>Add Text Node</button> */}
+                </div>
+                <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
+
                     <table border='0'><tbody>
                         {textNodes.map((val, i) => {
                             return (<tr key={i}>
-                                <td>Key:<input disabled type='text' style={{ width: 260 }} value={val.key}
+                                <td><input disabled type='text' style={{ width: 260 }} value={val.key}
                                     onChange={e => {
                                         const updatedKeyframe = textNodes.map((val, index) => {
                                             return (i === index) ? { ...val, key: e.target.value } : val;
                                         });
                                         settextNodes(updatedKeyframe)
                                     }}
-                                /></td><td>value:<input style={{ width: 400 }} type='text' value={val.value} onChange={e => {
-                                    const updatedKeyframe = textNodes.map((val, index) => {
+                                /></td><td>=<input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
+                                    const updatednodes = textNodes.map((val, index) => {
                                         return (i === index) ? { ...val, value: e.target.value } : val;
                                     });
-                                    settextNodes(updatedKeyframe)
+                                    settextNodes(updatednodes)
                                 }} /></td>
                             </tr>)
                         })}
                     </tbody></table>
 
                 </div>
-                <div>
-                    <button onClick={saveList}>Save List</button>
+                <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>
+                    <button onClick={() => updateData(96, pageName, textNodes)}>update</button>
+                    <button onClick={() => stopGraphics(96)}><FaStop /></button>
+                    <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
+
                     <table border='1'>
                         <tbody>
-                            <tr><th>page Name</th><th>page Value</th></tr>
+                            <tr><th></th><th>page Name</th><th>page Value</th></tr>
                             {list1.map((val, i) => {
                                 return (
                                     <tr onClick={() => {
@@ -236,28 +259,30 @@ const CustomClient = () => {
 
                                         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
                                         const index = canvasList.findIndex(val1 => val1.pageName === val.pageName);
-                                        window.editor.canvas.loadFromJSON(canvasList[index].pageValue, () => {
-                                            const aa = window.editor.canvas.getObjects();
-                                            aa.forEach(element => {
-                                                try {
-                                                    element.set({ objectCaching: false });
-                                                    var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'textbox') ? 'text' : element.type;
-                                                    if (type === 'text') {
-                                                        val.pageValue.forEach(element1 => {
-                                                            if (element.id === element1.key) {
-                                                                element.set({text:element1.value});
-                                                            }
-                                                        });
+                                        if (index !== -1) {
+                                            window.editor.canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                                                const aa = window.editor.canvas.getObjects();
+                                                aa.forEach(element => {
+                                                    try {
+                                                        element.set({ objectCaching: false });
+                                                        var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'textbox') ? 'text' : element.type;
+                                                        if (type === 'text') {
+                                                            val.pageValue.forEach(element1 => {
+                                                                if (element.id === element1.key) {
+                                                                    element.set({ text: element1.value });
+                                                                }
+                                                            });
+                                                        }
+                                                    } catch (error) {
+                                                        alert(error);
+                                                        return;
                                                     }
-                                                } catch (error) {
-                                                    alert(error);
-                                                    return;
-                                                }
+                                                });
+                                                window.editor.canvas.requestRenderAll();
                                             });
-                                            window.editor.canvas.requestRenderAll();
-                                        });
+                                        }
                                     }} key={i} style={{ backgroundColor: currentRow === i ? 'green' : '' }}>
-                                        <td >{val.pageName}</td><td> {JSON.stringify(val.pageValue)}</td>
+                                        <td ><button onClick={() => deleteData(i)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>  <td >{val.pageName}</td><td style={{ display: 'none1' }}> {JSON.stringify(val.pageValue)}</td>
                                     </tr>
                                 )
                             })}
