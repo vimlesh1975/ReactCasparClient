@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from '../common'
@@ -7,7 +7,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
 
-
+function tempAlert(msg, duration) {
+    var el = document.createElement("div");
+    el.setAttribute("style", "position:absolute;top:40%;left:60%;background-color:white;font-size:40px");
+    el.innerHTML = msg;
+    setTimeout(function () {
+        el.parentNode.removeChild(el);
+    }, duration);
+    document.body.appendChild(el);
+}
 
 
 const CustomClient = () => {
@@ -21,23 +29,30 @@ const CustomClient = () => {
     const [textNodes, settextNodes] = useState([])
     const [list1, setList1] = useState([]);
     const [currentRow, setCurrentRow] = useState(0);
-
+    const refPageName = useRef();
     const saveList = () => {
         const newlist1 = [...list1];
-        newlist1.push({ pageName: pageName, pageValue: textNodes });
+        newlist1.push({ pageName: refPageName.current.value, pageValue: textNodes });
         setList1([...newlist1]);
     }
     const updateList = (index) => {
         const updatedList1 = list1.map((val, i) => {
-            return (index !== i)?val:{ pageName: pageName, pageValue: textNodes }
+            return (index !== i) ? val : { pageName: pageName, pageValue: textNodes }
         });
 
         setList1([...updatedList1]);
     }
-    
+
     const recallList1 = (i) => {
-        setPageName(list1[i].pageName)
-        settextNodes(list1[i].pageValue)
+        const index = canvasList.findIndex(val => val.pageName === list1[i].pageName);
+        if (index !== -1) {
+            setPageName(list1[i].pageName)
+            settextNodes(list1[i].pageValue)
+            setCurrentRow(i);
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+        }
+        else { tempAlert('Pagename not avalaible', 1000) }
+
     }
     const deleteData = (index) => {
         const updatedList1 = list1.filter((_, i) => {
@@ -89,6 +104,7 @@ const CustomClient = () => {
                 sendToCasparcg(layerNumber)
             });
         }
+        else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
@@ -195,8 +211,8 @@ const CustomClient = () => {
         <div>
             <div >
                 <div >
-                    PageName
-                    <select onChange={e => {
+
+                    <span>PageName</span> <select ref={refPageName} onChange={e => {
                         setPageName(canvasList[e.target.selectedIndex].pageName);
                         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: e.target.selectedIndex });
                         window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue, () => {
@@ -214,11 +230,9 @@ const CustomClient = () => {
 
                     }} value={pageName}>
                         {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
-                    </select>
-                    <button onClick={getAllKeyValue}>getAllKeyValue</button>
-                    <button onClick={saveList}>Save List</button>
-                    <button onClick={()=>updateList(currentRow)}>Update List</button>
-                    {/* <button onClick={addtextNode}>Add Text Node</button> */}
+                    </select>  <button onClick={getAllKeyValue}>getAllKeyValue</button>   <button onClick={saveList}>Save List</button> <button onClick={() => updateList(currentRow)}>Update List</button>
+
+
                 </div>
                 <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
 
@@ -243,10 +257,10 @@ const CustomClient = () => {
                     </tbody></table>
 
                 </div>
-                <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>
-                    <button onClick={() => updateData(96, pageName, textNodes)}>update</button>
-                    <button onClick={() => stopGraphics(96)}><FaStop /></button>
-                    <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
+                <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>  <button onClick={() => updateData(96, pageName, textNodes)}>update</button>   <button onClick={() => stopGraphics(96)}><FaStop /></button>
+
+
+                <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
 
                     <table border='1'>
                         <tbody>
@@ -255,9 +269,7 @@ const CustomClient = () => {
                                 return (
                                     <tr onClick={() => {
                                         recallList1(i);
-                                        setCurrentRow(i);
 
-                                        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
                                         const index = canvasList.findIndex(val1 => val1.pageName === val.pageName);
                                         if (index !== -1) {
                                             window.editor.canvas.loadFromJSON(canvasList[index].pageValue, () => {

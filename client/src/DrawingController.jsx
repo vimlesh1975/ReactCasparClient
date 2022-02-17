@@ -243,7 +243,7 @@ export const createIText = (canvas) => {
 
     const text = new fabric.IText("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
-        id: 'f0',
+        id: 'id_' + uuidv4(),
         left: 100,
         top: 0,
         width: 480,

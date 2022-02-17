@@ -12,6 +12,7 @@ const generalayer = 500;
 const Twoliner = () => {
     const [playerList1, setPlayerList1] = useState(iniTwoLiner)
     var newplayerList1 = [];
+    const [pageName, setPageName] = useState('Twoliner');
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -110,7 +111,7 @@ const Twoliner = () => {
  
     return (
         <div>
-            <p>PageName: Twoliner</p>
+            <p>PageName: <input type='text' value={pageName} onChange={e=>setPageName(e.target.value)}/></p>
             <p>id: f0 and f1</p>
 
             <div style={{ display: 'flex', width: 830, margin:20 }}>
@@ -160,7 +161,7 @@ const Twoliner = () => {
                                                                     }}
                                                                 />
                                                                 </td>
-                                                                <td><button onClick={() => recallPage(generalayer, 'Twoliner', [{ key: 'f0', value: val.name, type: 'text' },{ key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></td>
+                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.name, type: 'text' },{ key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></td>
                                                             </tr>
                                                         )
                                                         }

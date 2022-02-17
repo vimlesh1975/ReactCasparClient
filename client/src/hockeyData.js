@@ -49,23 +49,23 @@ export const iniplayerList2 = [
 
 
 export const iniTwoLiner = [
-   { name:'1 Rashel Mahmud (GK)',designation:'Enineering Assistant, DDK Mumbai 1'},
-   { name:'2 MD R Hasan', designation:'Enineering Assistant, DDK Mumbai 2'},
-   { name:'3 Topu Berman',designation:'Enineering Assistant, DDK Mumbai 3'},
-   { name: '4 Razul Karim Sr.',designation:'Enineering Assistant, DDK Mumbai 4'},
-   { name: '5 Yeasin Khan',designation:'Enineering Assistant, DDK Mumbai 5'},
-   { name: '6 Jamal Bhuyan Sr.',designation:'Enineering Assistant, DDK Mumbai 6'},
-   { name: '9 N N Ziban Sr.',designation:'Enineering Assistant, DDK Mumbai 7'},
-   { name: '16 Masuk Miah Zoni',designation:'Enineering Assistant, DDK Mumbai 8'},
-   { name:'11 Sohel Rana',designation:'Enineering Assistant, DDK Mumbai 9'},
-   { name: '14 A R Fahad',designation:'Enineering Assistant, DDK Mumbai 10'},
-   { name:'8 S A Shahed',designation:'Enineering Assistant, DDK Mumbai 11'},
-   { name: '18 Anisur Rahman (GK)',designation:'Enineering Assistant, DDK Mumbai 12'},
-   { name: '20 MD Razib (GK)',designation:'Enineering Assistant, DDK Mumbai 13'},
-   { name:'7 Rubel Miya',designation:'Enineering Assistant, DDK Mumbai 14'},
-   { name: '10 H V Biswas',designation:'Enineering Assistant, DDK Mumbai 15'},
-   { name:'12 Shakil Ahmad',designation:'Enineering Assistant, DDK Mumbai 16'},
-   { name:'13 Fazlay Rabbi',designation:'Enineering Assistant, DDK Mumbai 17'}
+   { name:'1 Rashel Mahmud (GK)',designation:'Engineering Assistant, DDK Mumbai 1'},
+   { name:'2 MD R Hasan', designation:'AAssistant Engineer, DDK Hyderabad'},
+   { name:'3 Topu Berman',designation:'Program Producer, DDK Kolkata'},
+   { name: '4 Razul Karim Sr.',designation:'Engineering Assistant, DDK Mumbai 4'},
+   { name: '5 Yeasin Khan',designation:'Engineering Assistant, DDK Mumbai 5'},
+   { name: '6 Jamal Bhuyan Sr.',designation:'Engineering Assistant, DDK Mumbai 6'},
+   { name: '9 N N Ziban Sr.',designation:'Engineering Assistant, DDK Mumbai 7'},
+   { name: '16 Masuk Miah Zoni',designation:'Engineering Assistant, DDK Mumbai 8'},
+   { name:'11 Sohel Rana',designation:'Engineering Assistant, DDK Mumbai 9'},
+   { name: '14 A R Fahad',designation:'Engineering Assistant, DDK Mumbai 10'},
+   { name:'8 S A Shahed',designation:'Engineering Assistant, DDK Mumbai 11'},
+   { name: '18 Anisur Rahman (GK)',designation:'Engineering Assistant, DDK Mumbai 12'},
+   { name: '20 MD Razib (GK)',designation:'Engineering Assistant, DDK Mumbai 13'},
+   { name:'7 Rubel Miya',designation:'Engineering Assistant, DDK Mumbai 14'},
+   { name: '10 H V Biswas',designation:'Engineering Assistant, DDK Mumbai 15'},
+   { name:'12 Shakil Ahmad',designation:'Engineering Assistant, DDK Mumbai 16'},
+   { name:'13 Fazlay Rabbi',designation:'Engineering Assistant, DDK Mumbai 17'}
   
 ]
 

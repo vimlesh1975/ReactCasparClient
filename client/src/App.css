@@ -50,6 +50,10 @@
   position: relative; 
   background-color:rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
+  /* background-position: 'center'; */
+  /* background-repeat: no-repeat; */
+  background-position:top -30px right -30px;
+  /* background-size:auto; */
   width: 1024px;
   height: 576px;
   border:2px solid red;
