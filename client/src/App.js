@@ -28,9 +28,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { FaPlay, FaStop } from "react-icons/fa";
 // import TimeLine1 from './TimeLine1';
 import { animation } from './animation.js'
+import PathModifier from './PathModifier';
 
 
-const buildDate = '150222_1'
+const buildDate = '170222_1'
 
 
 const App = () => {
@@ -343,6 +344,8 @@ const App = () => {
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
             <Tab >TimeLine</Tab>
+            <Tab >Path Modifier</Tab>
+            
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
@@ -386,6 +389,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             {/* <TimeLine1 /> */}
+          </TabPanel>
+          <TabPanel>
+            <PathModifier />
           </TabPanel>
           <TabPanel>
             <Help />
