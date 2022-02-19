@@ -31,7 +31,7 @@ import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 
 
-const buildDate = '170222_1'
+const buildDate = '190222_1'
 
 
 const App = () => {
@@ -51,14 +51,14 @@ const App = () => {
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
 
-     if (window.inAnimationMethod === 'mix') {
+    if (window.inAnimationMethod === 'mix') {
       inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
     }
-  
-    else if (((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))!==-1) {
-      inAnimation = animation[((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))].value;
+
+    else if (((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod)) !== -1) {
+      inAnimation = animation[((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod))].value;
     }
-   
+
     else if (window.inAnimationMethod === 'lefttoright') {
       inAnimation = ``
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -345,7 +345,7 @@ const App = () => {
             <Tab >Charts</Tab>
             <Tab >TimeLine</Tab>
             <Tab >Path Modifier</Tab>
-            
+
             <Tab>Help</Tab>
           </TabList>
           <TabPanel>
