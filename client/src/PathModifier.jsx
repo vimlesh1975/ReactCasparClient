@@ -1,7 +1,14 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { fabric } from "fabric";
+import { v4 as uuidv4 } from 'uuid';
+import { shadowOptions } from './common'
+
 
 var bb;
+var cc = [];
+
+
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [path1, setPath1] = useState([]);
@@ -50,9 +57,56 @@ const PathModifier = () => {
         }
     }
 
+    const startPath = () => {
+        window.editor.canvas.off('mouse:down');
+        cc = [];
+        setTimeout(() => {
+            window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
+        }, 1000);
+    }
+    const eventHandlerMouseDown = (e) => {
+        if (cc.length===0) {
+            cc.push(['M' , e.pointer.x , e.pointer.y])
+        }
+        else {
+            cc.push(['L' , e.pointer.x  , + e.pointer.y])
+        }
+    }
+
+    const closePath = () => {
+        if (cc.length!==0) {
+            cc.push(['z']) 
+            const rect = new fabric.Path( cc, {
+                id: 'id_' + uuidv4(),
+                shadow:shadowOptions,
+                opacity: 1,
+                fill: 'red',
+                hasRotatingPoint: true,
+                objectCaching: false,
+                stroke: 'yellow',
+                strokeWidth: 2,
+                strokeUniform: true,
+            });
+            canvas.add(rect).setActiveObject(rect);
+            // rect.set({ path: createdPath })
+            canvas.requestRenderAll();
+        }
+
+        window.editor.canvas.off('mouse:down');
+        cc = [];
+
+    }
+
     return (<div>
         <div style={{ paddingBottom: 10 }}>
-            <button onClick={showpaths}>showpaths</button>  <button onClick={resetPaths}>Reset path</button>
+            <div>
+            <button onClick={showpaths}>Show Paths and Remember</button>
+              <button onClick={resetPaths}>Reset path</button>
+              </div>
+            <div>
+            <button onClick={startPath}>Start Drawing Path by clicking on canvas</button>
+            <button onClick={closePath}>Finish Drawing path</button>
+            </div>
         </div>
         <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
 

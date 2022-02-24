@@ -9,7 +9,7 @@ const Drawing = ({ canvasOutput }) => {
     const dispatch = useDispatch();
 
     window.editor = editor;
-    function cancesetZoomAndPan(canvas) {
+    function cancelZoomAndPan(canvas) {
         canvas.on('mouse:wheel', null);
         canvas.on('mouse:down', null);
         canvas.on('mouse:move', null);
@@ -65,7 +65,7 @@ const Drawing = ({ canvasOutput }) => {
             window.editor.canvas.preserveObjectStacking = true;
         }, 2000);
         return () => {
-            cancesetZoomAndPan(window.editor.canvas)
+            cancelZoomAndPan(window.editor.canvas)
         }
     }, [])
 
