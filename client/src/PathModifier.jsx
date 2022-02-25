@@ -69,26 +69,19 @@ const PathModifier = () => {
             cc.push(['M', e.pointer.x, e.pointer.y])
         }
         else {
-            cc.push(['L', e.pointer.x, + e.pointer.y])
+            cc.push(['C', e.pointer.x, e.pointer.y, e.pointer.x, e.pointer.y, e.pointer.x, e.pointer.y])
         }
     }
 
     const cornerRound = (i) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const aa2 = [...path1];
-            aa2[i] = ['C', aa2[i][1] ,aa2[i][2], aa2[i][1]-20, aa2[i][2]-20,aa2[i][1]+20, aa2[i][2]+20]
+            aa2[i] = ['C', aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2]]
+            bb = JSON.stringify(aa2);
             setPath1([...aa2]);
             canvas.getActiveObjects()[0].set({ path: aa2 });
             canvas?.requestRenderAll();
         }
-
-        // if (canvas.getActiveObjects()[0]?.type === 'path') {
-        //     const aa2 = [...path1];
-        //     aa2[i] = JSON.parse(bb)[i];
-        //     setPath1([...aa2]);
-        //     canvas.getActiveObjects()[0].set({ path: aa2 });
-        //     canvas?.requestRenderAll();
-        // }
     }
 
     const closePath = () => {
@@ -131,7 +124,7 @@ const PathModifier = () => {
 
             {path1?.map((val, i) => {
                 return (<div key={i} style={{ maxWidth: 800, border: '1px solid grey', marginBottom: 10, paddingBottom: 10 }}>
-                    Point {i + 1}/{path1.length} <button onClick={() => resetValuePoint(i)} >Reset</button> <button onClick={() => cornerRound(i)} >Corner Round</button>
+                    Point {i + 1}/{path1.length} <button onClick={() => resetValuePoint(i)} >Reset</button> {(i === 0) ? <button onClick={() => cornerRound(i)} >Corner Round</button> : ''}
                     {val.map((vv, ii) => {
                         return (<div key={ii} >
                             {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
