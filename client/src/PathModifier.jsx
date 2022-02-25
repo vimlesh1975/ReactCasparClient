@@ -65,20 +65,38 @@ const PathModifier = () => {
         }, 1000);
     }
     const eventHandlerMouseDown = (e) => {
-        if (cc.length===0) {
-            cc.push(['M' , e.pointer.x , e.pointer.y])
+        if (cc.length === 0) {
+            cc.push(['M', e.pointer.x, e.pointer.y])
         }
         else {
-            cc.push(['L' , e.pointer.x  , + e.pointer.y])
+            cc.push(['L', e.pointer.x, + e.pointer.y])
         }
     }
 
+    const cornerRound = (i) => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const aa2 = [...path1];
+            aa2[i] = ['C', aa2[i][1] ,aa2[i][2], aa2[i][1]-20, aa2[i][2]-20,aa2[i][1]+20, aa2[i][2]+20]
+            setPath1([...aa2]);
+            canvas.getActiveObjects()[0].set({ path: aa2 });
+            canvas?.requestRenderAll();
+        }
+
+        // if (canvas.getActiveObjects()[0]?.type === 'path') {
+        //     const aa2 = [...path1];
+        //     aa2[i] = JSON.parse(bb)[i];
+        //     setPath1([...aa2]);
+        //     canvas.getActiveObjects()[0].set({ path: aa2 });
+        //     canvas?.requestRenderAll();
+        // }
+    }
+
     const closePath = () => {
-        if (cc.length!==0) {
-            cc.push(['z']) 
-            const rect = new fabric.Path( cc, {
+        if (cc.length !== 0) {
+            cc.push(['z'])
+            const rect = new fabric.Path(cc, {
                 id: 'id_' + uuidv4(),
-                shadow:shadowOptions,
+                shadow: shadowOptions,
                 opacity: 1,
                 fill: 'red',
                 hasRotatingPoint: true,
@@ -86,6 +104,7 @@ const PathModifier = () => {
                 stroke: 'yellow',
                 strokeWidth: 2,
                 strokeUniform: true,
+                strokeLineJoin: 'round',
             });
             canvas.add(rect).setActiveObject(rect);
             // rect.set({ path: createdPath })
@@ -100,19 +119,19 @@ const PathModifier = () => {
     return (<div>
         <div style={{ paddingBottom: 10 }}>
             <div>
-            <button onClick={showpaths}>Show Paths and Remember</button>
-              <button onClick={resetPaths}>Reset path</button>
-              </div>
+                <button onClick={showpaths}>Show Paths and Remember</button>
+                <button onClick={resetPaths}>Reset path</button>
+            </div>
             <div>
-            <button onClick={startPath}>Start Drawing Path by clicking on canvas</button>
-            <button onClick={closePath}>Finish Drawing path</button>
+                <button onClick={startPath}>Start Drawing Path by clicking on canvas</button>
+                <button onClick={closePath}>Finish Drawing path</button>
             </div>
         </div>
         <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
 
             {path1?.map((val, i) => {
                 return (<div key={i} style={{ maxWidth: 800, border: '1px solid grey', marginBottom: 10, paddingBottom: 10 }}>
-                    Point {i + 1}/{path1.length} <button onClick={() => resetValuePoint(i)} >Reset</button>
+                    Point {i + 1}/{path1.length} <button onClick={() => resetValuePoint(i)} >Reset</button> <button onClick={() => cornerRound(i)} >Corner Round</button>
                     {val.map((vv, ii) => {
                         return (<div key={ii} >
                             {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
