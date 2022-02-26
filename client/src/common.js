@@ -1,11 +1,11 @@
 import axios from 'axios';
-import {animation} from './animation.js'
+import { animation } from './animation.js'
 
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':8080';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 export const videoLayers = [1, 2, 3, 10000, 5];
-export const templateLayers = { savePannelPlayer: 107, solidCaption1: 108, solidCaption2: 109, solidCaption3: 110, logo: 111, locationBand: 112, verticalScroll: 113, horizontalScroll: 114, clock: 115, countUpTimer: 116, gameTimer: 117 };
+export const templateLayers = { savePannelPlayer: 107, solidCaption1: 108, solidCaption2: 109, solidCaption3: 110, logo: 111, locationBand: 112, verticalScroll: 113, horizontalScroll: 114, clock: 115, countUpTimer: 116, gameTimer: 117, horizontalScroll2: 118, };
 
 export const endpoint = (string) => {
     const data = { string: string }
@@ -525,7 +525,7 @@ export const fontLists = [
 ]
 export const chNumbers = [1, 2, 3, 4];
 export const inAnimationMethods = [
-    ...animation.map(val=> val.name ),
+    ...animation.map(val => val.name),
     'lefttoright',
     'mix'
 ]

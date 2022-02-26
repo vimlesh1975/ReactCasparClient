@@ -57,10 +57,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
             window.editor.canvas?.getActiveObjects().forEach(item => {
                 //  alert(item.type);
                 if (!((item.type === 'textbox') && item.isEditing)) {
-                     window.editor.canvas?.remove(item); 
-                     window.editor.canvas?.discardActiveObject();
-                     window.editor.canvas?.requestRenderAll();
-                    }
+                    window.editor.canvas?.remove(item);
+                    window.editor.canvas?.discardActiveObject();
+                    window.editor.canvas?.requestRenderAll();
+                }
             });
         }
         if (options.ctrlKey && options.key.toLowerCase() === 'c') {
@@ -139,8 +139,8 @@ export const cliptoPath = canvas => {
         var group = new fabric.Group([...clipPath1]);
         group.set({
             id: 'id_' + uuidv4(),
-             absolutePositioned: true
-             });
+            absolutePositioned: true
+        });
         canvas.sendToBack(group);
         img[0].set('clipPath', group)
         clipPath1.forEach(element => {
@@ -268,7 +268,7 @@ export const createTextBox = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
-        id:'id_' + uuidv4(),
+        id: 'id_' + uuidv4(),
         left: 100,
         top: 0,
         width: 480,
@@ -909,7 +909,9 @@ const DrawingController = () => {
 
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
+    const [horizontalSpeed2, setHorizontalSpeed2] = useState(0.3)
     const [ltr, setLtr] = useState(false);
+    const [ltr2, setLtr2] = useState(false);
 
     const strokeLineCaps = ["butt", "round", "square"];
     const [currentstrokeLineCap, setCurrentstrokeLineCap] = useState('round');
@@ -921,6 +923,7 @@ const DrawingController = () => {
 
     const [verticalScroll, setVerticalScroll] = useState('');
     const [horizontalScroll, setHorizontalScroll] = useState('');
+    const [horizontalScroll2, setHorizontalScroll2] = useState('');
     const [clock, setClock] = useState('');
     const [upTimer, setUpTimer] = useState('');
     const modes = ['Pencil', 'Spray', 'Erase', 'none'];
@@ -1244,6 +1247,11 @@ const DrawingController = () => {
         localStorage.setItem('RCC_horizontalSpeed', e.target.value)
         endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${e.target.value}"`);
     }
+    const onHorizontalSpeedChange2 = (e) => {
+        setHorizontalSpeed2(e.target.value)
+        localStorage.setItem('RCC_horizontalSpeed2', e.target.value)
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${e.target.value}"`);
+    }
     const exportSVG = canvas => {
         const element = document.createElement("a");
         var aa = canvas.toSVG()
@@ -1468,6 +1476,60 @@ const DrawingController = () => {
             element.click();
         }
     }
+    const exportHorizontalScrollAsHTML2 = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
+        const element = document.createElement("a");
+        var aa = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+        `;
+        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += `
+         <script>
+        var aa = document.getElementsByTagName('div')[0];
+        aa.style.position='absolute';
+        document.getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+       document.body.style.overflow='hidden';
+       var speed=${horizontalSpeed2};
+        if (${!ltr2}){
+          aa.style.left='100%';
+          setInterval(function(){
+              aa.style.left =(aa.getBoundingClientRect().left-speed)+'px';
+              if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+           }, 1);
+        }
+        else{
+            aa.style.left=-${hh};
+            setInterval(function(){
+                aa.style.left =(aa.getBoundingClientRect().left+speed)+'px';
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left=-${hh}};
+             }, 1);
+        }
+         </script>
+         `;
+        aa += `
+            </body>
+            </html>`
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal + '.html';
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
     const exportClockAsHTML = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         const element = document.createElement("a");
@@ -1612,7 +1674,37 @@ const DrawingController = () => {
         }
         "`)
     }
-
+    const startHorizontalScroll2 = () => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width;
+        endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll2} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        document.body.appendChild(aa);
+        document.getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.body.style.overflow='hidden';
+        var speed=${horizontalSpeed2};
+        if (${!ltr2}){
+                    aa.style.left='100%';
+                    setInterval(function() {
+                    aa.style.left =aa.getBoundingClientRect().left-speed;
+                    if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+                    }, 1);
+                    }
+        else{
+            aa.style.left=-${hh};
+            setInterval(function() {
+            aa.style.left =aa.getBoundingClientRect().left+speed;
+            if (aa.getBoundingClientRect().left > ${currentscreenSize}){aa.style.left=-${hh}};
+            }, 1);
+        }
+        "`)
+    }
     const startClock = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -1666,11 +1758,11 @@ const DrawingController = () => {
         var inAnimation;
         if (window.inAnimationMethod === 'mix') {
             inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-          }
-        
-          else if (((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))!==-1) {
-            inAnimation = animation[((animation.map(val => val.name)).findIndex(val=>val===window.inAnimationMethod))].value;
-          }
+        }
+
+        else if (((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod)) !== -1) {
+            inAnimation = animation[((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod))].value;
+        }
         else if (window.inAnimationMethod === 'lefttoright') {
             inAnimation = ``
             canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1732,6 +1824,9 @@ const DrawingController = () => {
         setVerticalScroll(localStorage.getItem('RCC_verticalScroll'));
         setHorizontalScroll(localStorage.getItem('RCC_horizontalScroll'));
         setHorizontalSpeed(localStorage.getItem('RCC_horizontalSpeed'));
+        setHorizontalScroll(localStorage.getItem('RCC_horizontalScroll2'));
+        setHorizontalSpeed(localStorage.getItem('RCC_horizontalSpeed2'));
+
         setVerticalSpeed(localStorage.getItem('RCC_verticalSpeed'));
 
         axios.post('http://localhost:8080/getfonts').then((aa) => {
@@ -1875,6 +1970,28 @@ const DrawingController = () => {
                     <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                     <span> {horizontalScroll} </span>
                 </div>
+                <div className='drawingToolsRow' >
+                    <b> H Scroll2: </b>
+                    <button onClick={() => {
+                        startHorizontalScroll2(window.editor?.canvas);
+                        setHorizontalScroll2(canvasList[currentPage]?.pageName);
+                        localStorage.setItem('RCC_horizontalScroll2', canvasList[currentPage]?.pageName);
+
+                    }}><FaPlay /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=0"`)}> <FaPause /></button>
+                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${horizontalSpeed2}"`)}> <GrResume /></button>
+                    <button onClick={() => {
+                        endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll2}`);
+                        setHorizontalScroll2('');
+                        localStorage.setItem('RCC_horizontalScroll2', '');
+
+                    }} ><FaStop /></button>
+                    Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
+                    <button onClick={() => exportHorizontalScrollAsHTML2(canvas)}>To HTML</button>
+                    <span> LTR:</span>  <input type="checkbox" value={ltr2} onChange={e => setLtr2(val => !val)} />
+                    <span> {horizontalScroll2} </span>
+                </div>
+
                 <div className='drawingToolsRow' >
                     <b>Clock: </b>
                     <button onClick={() => addClock(canvas)}>Add to Preview</button>

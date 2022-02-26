@@ -69,14 +69,21 @@ const PathModifier = () => {
             cc.push(['M', e.pointer.x, e.pointer.y])
         }
         else {
-            cc.push(['C', e.pointer.x, e.pointer.y, e.pointer.x, e.pointer.y, e.pointer.x, e.pointer.y])
+            if (cc[cc.length - 1][0] === 'M') {
+                cc.push(['Q', (cc[cc.length - 1][1] + e.pointer.x) / 2, (cc[cc.length - 1][2] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+            }
+            else {
+                cc.push(['Q', (cc[cc.length - 1][3] + e.pointer.x) / 2, (cc[cc.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+            }
         }
     }
 
     const cornerRound = (i) => {
+        // console.log(cc)
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const aa2 = [...path1];
-            aa2[i] = ['C', aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2]]
+            // aa2[i] = ['Q', aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2]];
+            aa2[i] = ['Q', (cc[cc.length - 2][3] + aa2[i][1]) / 2, (cc[cc.length - 2][4] + aa2[i][2]) / 2, aa2[i][1], aa2[i][2]];
             bb = JSON.stringify(aa2);
             setPath1([...aa2]);
             canvas.getActiveObjects()[0].set({ path: aa2 });
@@ -105,7 +112,7 @@ const PathModifier = () => {
         }
 
         window.editor.canvas.off('mouse:down');
-        cc = [];
+        // cc = [];
 
     }
 
