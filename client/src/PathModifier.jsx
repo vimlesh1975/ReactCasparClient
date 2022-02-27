@@ -4,97 +4,119 @@ import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
 import { shadowOptions } from './common'
 
-
-var bb;
-var cc = [];
-
+var currentValue = [];
 
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [path1, setPath1] = useState([]);
+    const [initialValue, setInitialValue] = useState([]);
 
     const showpaths = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const aa1 = [...canvas?.getActiveObjects()[0]?.path];
-            bb = JSON.stringify(aa1);
-            setPath1([...aa1]);
+            const aa1 = canvas?.getActiveObjects()[0]?.path;
+            setInitialValue(aa1);
+            setPath1(aa1);
         }
     }
     const resetPaths = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            setPath1(JSON.parse(bb));
-            canvas.getActiveObjects()[0].set({ path: JSON.parse(bb) });
+            setPath1(initialValue);
+            canvas.getActiveObjects()[0].set({ path: initialValue });
             canvas?.requestRenderAll();
         }
     }
 
     const resetValue = (i, ii) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const aa2 = [...path1];
-            aa2[i][ii] = JSON.parse(bb)[i][ii];
-            setPath1([...aa2]);
-            canvas.getActiveObjects()[0].set({ path: aa2 });
+            const updatedPath = path1.map((val, index1) => {
+                return (i !== index1) ? val : val.map((val1, index2) => {
+                    return (ii !== index2) ? val1 : initialValue[i][ii]
+                })
+            })
+            setPath1(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
     }
     const resetValuePoint = i => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const aa2 = [...path1];
-            aa2[i] = JSON.parse(bb)[i];
-            setPath1([...aa2]);
-            canvas.getActiveObjects()[0].set({ path: aa2 });
+
+            const updatedPath = path1.map((val, index1) => {
+                return (i !== index1) ? val : initialValue[i]
+            })
+            setPath1(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
+            canvas?.requestRenderAll();
+        }
+    }
+    const deleteValuePoint = i => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const updatedPath = path1.filter((val, index1) => {
+                return (i !== index1)
+            })
+            setPath1(updatedPath);
+            setInitialValue(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
+            canvas?.requestRenderAll();
+        }
+    }
+
+    const addValuePoint = i => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+
+            const updatedPath = [...path1];
+            if ((i === 0) && (updatedPath[0][0]) === 'M') {
+                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][1] + 20, updatedPath[i][2] + 20, updatedPath[i][1] + 40, updatedPath[i][2] + 40]);
+            }
+            else {
+                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][3] + 20, updatedPath[i][4] + 20, updatedPath[i][3] + 40, updatedPath[i][4] + 40]);
+            }
+
+            setPath1(updatedPath);
+            setInitialValue(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
     }
 
     const updatePath1 = (i, ii, e) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const aa2 = [...path1];
-            aa2[i][ii] = parseInt(e.target.value);
-            setPath1([...aa2]);
-            canvas.getActiveObjects()[0].set({ path: aa2 });
+            const updatedPath = path1.map((val, index1) => {
+                return (i !== index1) ? val : val.map((val1, index2) => {
+                    return (ii !== index2) ? val1 : parseInt(e.target.value)
+                })
+            })
+            setPath1(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
     }
 
     const startPath = () => {
         window.editor.canvas.off('mouse:down');
-        cc = [];
+        currentValue = [];
         setTimeout(() => {
             window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
         }, 1000);
     }
     const eventHandlerMouseDown = (e) => {
-        if (cc.length === 0) {
-            cc.push(['M', e.pointer.x, e.pointer.y])
+        if (currentValue.length === 0) {
+            currentValue.push(['M', e.pointer.x, e.pointer.y])
         }
         else {
-            if (cc[cc.length - 1][0] === 'M') {
-                cc.push(['Q', (cc[cc.length - 1][1] + e.pointer.x) / 2, (cc[cc.length - 1][2] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+            if (currentValue[currentValue.length - 1][0] === 'M') {
+                currentValue.push(['Q', (currentValue[currentValue.length - 1][1] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][2] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
             }
             else {
-                cc.push(['Q', (cc[cc.length - 1][3] + e.pointer.x) / 2, (cc[cc.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+                currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
             }
-        }
-    }
-
-    const cornerRound = (i) => {
-        // console.log(cc)
-        if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const aa2 = [...path1];
-            // aa2[i] = ['Q', aa2[i][1], aa2[i][2], aa2[i][1], aa2[i][2]];
-            aa2[i] = ['Q', (cc[cc.length - 2][3] + aa2[i][1]) / 2, (cc[cc.length - 2][4] + aa2[i][2]) / 2, aa2[i][1], aa2[i][2]];
-            bb = JSON.stringify(aa2);
-            setPath1([...aa2]);
-            canvas.getActiveObjects()[0].set({ path: aa2 });
-            canvas?.requestRenderAll();
         }
     }
 
     const closePath = () => {
-        if (cc.length !== 0) {
-            cc.push(['z'])
-            const rect = new fabric.Path(cc, {
+        if (currentValue.length !== 0) {
+            currentValue.push(['z'])
+            const rect = new fabric.Path(currentValue, {
                 id: 'id_' + uuidv4(),
                 shadow: shadowOptions,
                 opacity: 1,
@@ -107,15 +129,21 @@ const PathModifier = () => {
                 strokeLineJoin: 'round',
             });
             canvas.add(rect).setActiveObject(rect);
-            // rect.set({ path: createdPath })
             canvas.requestRenderAll();
         }
-
         window.editor.canvas.off('mouse:down');
-        // cc = [];
 
     }
-
+    const ChangetoQpoint = (i) => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const aa2 = [...path1];
+            aa2[i] = ['Q', (aa2[aa2.length - 2][3] + aa2[i][1]) / 2, (aa2[aa2.length - 2][4] + aa2[i][2]) / 2, aa2[i][1], aa2[i][2]];
+            setInitialValue(aa2);
+            setPath1([...aa2]);
+            canvas.getActiveObjects()[0].set({ path: aa2 });
+            canvas?.requestRenderAll();
+        }
+    }
     return (<div>
         <div style={{ paddingBottom: 10 }}>
             <div>
@@ -131,7 +159,13 @@ const PathModifier = () => {
 
             {path1?.map((val, i) => {
                 return (<div key={i} style={{ maxWidth: 800, border: '1px solid grey', marginBottom: 10, paddingBottom: 10 }}>
-                    Point {i + 1}/{path1.length} <button onClick={() => resetValuePoint(i)} >Reset</button> {(i === 0) ? <button onClick={() => cornerRound(i)} >Corner Round</button> : ''}
+                    Point {i + 1}/{path1.length}
+                    {(i !== path1.length - 1) && <>
+                        <button onClick={() => resetValuePoint(i)} >Reset</button>
+                        <button onClick={() => deleteValuePoint(i)} >Delete</button>
+                        <button onClick={() => addValuePoint(i)} >Add</button>
+                    </>}
+                    {(i === 0) && (path1[0][0] === 'M') && <button onClick={() => ChangetoQpoint(i)} >Change to Q point</button>}
                     {val.map((vv, ii) => {
                         return (<div key={ii} >
                             {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
