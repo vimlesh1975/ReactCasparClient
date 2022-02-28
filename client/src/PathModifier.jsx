@@ -154,7 +154,19 @@ const PathModifier = () => {
                     strokeWidth: 1,
                     strokeUniform: true,
                 })
+
                 canvas.add(circle);
+                circle.setControlsVisibility({
+                    mt: false,
+                    mb: false,
+                    ml: false,
+                    mr: false,
+                    bl: false,
+                    br: false,
+                    tl: false,
+                    tr: false,
+                    mtr: false,
+                });
                 circle.on('moving', (e) => {
                     const updatedPath = currentValue.map((val, index1) => {
                         return (i !== index1) ? val : val.map((val1, index2) => {
