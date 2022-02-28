@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
-import { shadowOptions,options } from './common'
+import { shadowOptions, options } from './common'
 
 var currentValue = [];
 
@@ -20,7 +20,7 @@ const PathModifier = () => {
     }
     const resetPaths = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-            currentValue=initialValue;
+            currentValue = initialValue;
             setPath1(initialValue);
             canvas.getActiveObjects()[0].set({ path: initialValue });
             canvas?.requestRenderAll();
@@ -34,7 +34,7 @@ const PathModifier = () => {
                     return (ii !== index2) ? val1 : initialValue[i][ii]
                 })
             })
-            currentValue=updatedPath;
+            currentValue = updatedPath;
             setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
@@ -46,7 +46,7 @@ const PathModifier = () => {
             const updatedPath = path1.map((val, index1) => {
                 return (i !== index1) ? val : initialValue[i]
             })
-            currentValue=updatedPath;
+            currentValue = updatedPath;
             setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
@@ -57,7 +57,7 @@ const PathModifier = () => {
             const updatedPath = path1.filter((val, index1) => {
                 return (i !== index1)
             })
-            currentValue=updatedPath;
+            currentValue = updatedPath;
             setPath1(updatedPath);
             setInitialValue(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
@@ -76,7 +76,7 @@ const PathModifier = () => {
                 updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][3] + 20, updatedPath[i][4] + 20, updatedPath[i][3] + 40, updatedPath[i][4] + 40]);
             }
 
-            currentValue=updatedPath;
+            currentValue = updatedPath;
             setPath1(updatedPath);
             setInitialValue(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
@@ -92,7 +92,7 @@ const PathModifier = () => {
                 })
             })
             setPath1(updatedPath);
-            currentValue=updatedPath;
+            currentValue = updatedPath;
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
@@ -136,32 +136,35 @@ const PathModifier = () => {
             });
             canvas.add(rect).setActiveObject(rect);
 
-            currentValue.forEach((element,i )=> {
+            currentValue.forEach((element, i) => {
                 const circle = new fabric.Circle({
                     id: 'id_' + uuidv4(),
                     shadow: shadowOptions,
-                    left:(element.length<4)? element[1]-8:element[3]-8,
-                    top: (element.length<4)? element[2]-8:element[4]-8,
+                    left: (element.length < 4) ? element[1] - 8 : element[3] - 8,
+                    top: (element.length < 4) ? element[2] - 8 : element[4] - 8,
                     radius: 8,
                     fill: 'rgb(80, 3, 124)',
                     cornerSize: 7,
-                    objectCaching: false,
-                    hasRotatingPoint: true,
+                    lockRotation: true,
+                    hasRotatingPoint: false,
+                    lockScalingX: true,
+                    lockScalingY: true,
+
                     stroke: options.stroke,
-                    strokeWidth:1,
+                    strokeWidth: 1,
                     strokeUniform: true,
                 })
                 canvas.add(circle);
-                circle.on('moving',(e)=>{
+                circle.on('moving', (e) => {
                     const updatedPath = currentValue.map((val, index1) => {
                         return (i !== index1) ? val : val.map((val1, index2) => {
-                            return (index2<3) ? val1 : ((index2===3) ?e.pointer.x:e.pointer.y)
+                            return (index2 < 3) ? val1 : ((index2 === 3) ? e.pointer.x : e.pointer.y)
                         })
                     })
                     setPath1(updatedPath);
                     rect.set({ path: updatedPath });
                     canvas?.requestRenderAll();
-                    currentValue=updatedPath;
+                    currentValue = updatedPath;
                     // console.log( e.pointer.x)
                     // console.log(currentValue[0])
                 })
@@ -179,7 +182,7 @@ const PathModifier = () => {
             aa2[i] = ['Q', (aa2[aa2.length - 2][3] + aa2[i][1]) / 2, (aa2[aa2.length - 2][4] + aa2[i][2]) / 2, aa2[i][1], aa2[i][2]];
             setInitialValue(aa2);
             setPath1([...aa2]);
-            currentValue=aa2;
+            currentValue = aa2;
             canvas.getActiveObjects()[0].set({ path: aa2 });
             canvas?.requestRenderAll();
         }
