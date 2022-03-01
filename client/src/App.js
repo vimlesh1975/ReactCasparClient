@@ -30,7 +30,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 
-const buildDate = '280222_2'
+const buildDate = '010322_2'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -130,7 +130,7 @@ const App = () => {
 
   useEffect(() => {
     window.chNumber = chNumber;
-    document.title = `CH #${chNumber} RCC_${buildDate}`;
+    document.title = `${buildDate}_CH #${chNumber}`;
     return () => {
       // cleanup
     }
