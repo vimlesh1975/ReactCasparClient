@@ -1,4 +1,4 @@
-import React, {  } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
@@ -8,7 +8,7 @@ var currentValue = [];
 
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-
+    const [path1, setPath1] = useState([]);
     const startPath = () => {
         window.editor.canvas.off('mouse:down');
         currentValue = [];
@@ -61,6 +61,8 @@ const PathModifier = () => {
                 strokeWidth: 2,
                 strokeUniform: true,
                 strokeLineJoin: 'round',
+                originX: 'center',
+                originY: 'center',
             });
             canvas.add(rect).setActiveObject(rect);
 
@@ -88,6 +90,8 @@ const PathModifier = () => {
                         })
                     })
                     currentValue = updatedPath;
+                    setPath1(updatedPath);
+
                     canvas.getActiveObjects()[0].set({ path: updatedPath });
                     canvas?.requestRenderAll();
                 }
@@ -115,20 +119,22 @@ const PathModifier = () => {
                     stroke: options.stroke,
                     strokeWidth: 1,
                     strokeUniform: true,
-                    hasControls: false
+                    hasControls: false,
+                    originX: 'center',
+                    originY: 'center',
                 })
 
                 canvas.add(circle);
 
-                circle.on('mouseover', function(e) {
+                circle.on('mouseover', function (e) {
                     e.target.set('fill', 'black');
                     canvas.renderAll();
-                  });
-                
-                  circle.on('mouseout', function(e) {
+                });
+
+                circle.on('mouseout', function (e) {
                     e.target.set('fill', 'yellow');
                     canvas.renderAll();
-                  });
+                });
 
 
                 circle.on('moving', (e) => {
@@ -149,6 +155,8 @@ const PathModifier = () => {
                     }
 
                     rect1.set({ path: updatedPath });
+                    setPath1(updatedPath);
+
                     canvas?.requestRenderAll();
                     currentValue = updatedPath;
                 })
@@ -168,21 +176,23 @@ const PathModifier = () => {
                     stroke: options.stroke,
                     strokeWidth: 1,
                     strokeUniform: true,
-                    hasControls: false
+                    hasControls: false,
+                    originX: 'center',
+                    originY: 'center',
                 })
 
                 canvas.add(circle);
 
-                circle.on('mouseover', function(e) {
+                circle.on('mouseover', function (e) {
                     e.target.set('fill', 'black');
                     console.log(e.target)
                     canvas.renderAll();
-                  });
-                
-                  circle.on('mouseout', function(e) {
+                });
+
+                circle.on('mouseout', function (e) {
                     e.target.set('fill', 'white');
                     canvas.renderAll();
-                  });
+                });
 
                 circle.on('moving', (e) => {
                     var updatedPath;
@@ -194,27 +204,114 @@ const PathModifier = () => {
                     })
 
                     rect1.set({ path: updatedPath });
+                    setPath1(updatedPath);
                     canvas?.requestRenderAll();
                     currentValue = updatedPath;
                 })
             }
         });
     }
+    const showpaths = () => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const aa1 = canvas?.getActiveObjects()[0]?.path;
+            currentValue = aa1;
+            setPath1(currentValue);
+
+        }
+    }
+    const deleteValuePoint = i => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const updatedPath = path1.filter((val, index1) => {
+                return (i !== index1)
+            })
+            currentValue = updatedPath;
+            setPath1(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
+            canvas?.requestRenderAll();
+        }
+    }
+
+    const addValuePoint = i => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+
+            const updatedPath = [...path1];
+            if ((i === 0) && (updatedPath[0][0]) === 'M') {
+                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][1] + 20, updatedPath[i][2] + 20, updatedPath[i][1] + 40, updatedPath[i][2] + 40]);
+            }
+            else {
+                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][3] + 20, updatedPath[i][4] + 20, updatedPath[i][3] + 40, updatedPath[i][4] + 40]);
+            }
+
+            currentValue = updatedPath;
+            setPath1(updatedPath);
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
+            canvas?.requestRenderAll();
+        }
+    }
+
+    const updatePath1 = (i, ii, e) => {
+        if (canvas.getActiveObjects()[0]?.type === 'path') {
+            const updatedPath = path1.map((val, index1) => {
+                return (i !== index1) ? val : val.map((val1, index2) => {
+                    return (ii !== index2) ? val1 : parseInt(e.target.value)
+                })
+            })
+
+            canvas.getObjects().forEach(element => {
+                if (element.id === (canvas.getActiveObjects()[0].id + '__')) {
+                    canvas.remove(element);
+                }
+            });
+
+            makecircles(canvas.getActiveObjects()[0], canvas.getActiveObjects()[0].id);
+
+            setPath1(updatedPath);
+            currentValue = updatedPath;
+            canvas.getActiveObjects()[0].set({ path: updatedPath });
+            canvas?.requestRenderAll();
+        }
+    }
 
     return (<div>
         <div style={{ paddingBottom: 10 }}>
-        
+
             <div>
                 <button onClick={startPath}>Start Drawing Path by clicking on canvas</button>
                 <button onClick={closePath}>Finish Drawing path</button>
-                </div>
+            </div>
             <div>
 
                 <button onClick={addCirclestoPath}>Add circles to selected path</button>
                 <button onClick={removeCirclesfromPath}>Remove circles from selected path</button>
+                <button onClick={showpaths}>Initialise path of already made path</button>
+
             </div>
+
+            <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
+
+                {path1?.map((val, i) => {
+                    return (<div key={i} style={{ maxWidth: 800, border: '1px solid grey', marginBottom: 10, paddingBottom: 10 }}>
+                        Point {i + 1}/{path1.length}
+                        {(i !== path1.length - 1) && <>
+                            <button onClick={() => deleteValuePoint(i)} >Delete</button>
+                            <button onClick={() => addValuePoint(i)} >Add</button>
+                        </>}
+                        {/* {(i === 0) && (path1[0][0] === 'M') && <button onClick={() => ChangetoQpoint(i)} >Change to Q point</button>} */}
+                        {val.map((vv, ii) => {
+                            return (<div key={ii} >
+                                {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
+                                {(ii > 0) ? <><input style={{ width: 400 }} onChange={e => updatePath1(i, ii, e)} type="range" min={-1000} max={1000} step='1' value={vv} />
+                                    <input style={{ width: 50 }} onChange={e => updatePath1(i, ii, e)} type="number" min={-1000} max={1000} step='1' value={vv.toFixed(0)} />
+                                </> : ''}
+                            </div>)
+                        })}
+                    </div>)
+                })
+                }
+            </div>
+
         </div>
-    
+
     </div>)
 }
 
