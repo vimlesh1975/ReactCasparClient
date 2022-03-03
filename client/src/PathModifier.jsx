@@ -120,6 +120,17 @@ const PathModifier = () => {
 
                 canvas.add(circle);
 
+                circle.on('mouseover', function(e) {
+                    e.target.set('fill', 'black');
+                    canvas.renderAll();
+                  });
+                
+                  circle.on('mouseout', function(e) {
+                    e.target.set('fill', 'yellow');
+                    canvas.renderAll();
+                  });
+
+
                 circle.on('moving', (e) => {
                     var updatedPath;
                     if (i === 0) {
@@ -152,7 +163,7 @@ const PathModifier = () => {
                     left: element[1] - 4,
                     top: element[2] - 4,
                     radius: 4,
-                    fill: 'blue',
+                    fill: 'white',
                     cornerSize: 7,
                     stroke: options.stroke,
                     strokeWidth: 1,
@@ -161,6 +172,17 @@ const PathModifier = () => {
                 })
 
                 canvas.add(circle);
+
+                circle.on('mouseover', function(e) {
+                    e.target.set('fill', 'black');
+                    console.log(e.target)
+                    canvas.renderAll();
+                  });
+                
+                  circle.on('mouseout', function(e) {
+                    e.target.set('fill', 'white');
+                    canvas.renderAll();
+                  });
 
                 circle.on('moving', (e) => {
                     var updatedPath;
