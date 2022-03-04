@@ -66,24 +66,41 @@ const PathModifier = () => {
             });
             canvas.add(rect).setActiveObject(rect);
 
+            makecircles(rect, id1);
+
             rect.on('mousedown', rectMouseDown);
             rect.on('mouseup', rectMouseUp);
+            // rect.on('scaled', onScaled)
+            // function onScaled() {
+            //     // console.log(this.getScaledWidth());
+            //     // const delta = this.getCenterPoint().subtract(this.origPos);
+            //     // console.log(delta);
+            //     var m = this.calcTransformMatrix();
+            //     var point = new fabric.Point({ x: this.left, y: this.top });
+            //     var canvasPoint = fabric.util.transformPoint(point, m);
+            //     console.log(point)
+
+            // }
 
             function rectMouseDown() {
+                console.log('down');
+
                 this.origPos = this.getCenterPoint();
                 const aa1 = canvas?.getActiveObjects()[0]?.path;
                 currentValue = aa1;
             }
             function rectMouseUp() {
-                const delta = this.getCenterPoint().subtract(this.origPos);
-                (canvas.getObjects()).forEach(element => {
-                    if (element.id === (canvas.getActiveObjects()[0].id + '__')) {
-                        element.left += delta.x;
-                        element.top += delta.y;
+                console.log('up');
 
-                    }
-                });
+                const delta = this.getCenterPoint().subtract(this.origPos);
                 if ((delta.x !== 0) || (delta.y !== 0)) {
+                    canvas.getObjects().forEach(element => {
+                        if (element.id === (canvas.getActiveObjects()[0].id + '__')) {
+                            element.left += delta.x;
+                            element.top += delta.y;
+                        }
+                    });
+
                     const updatedPath = currentValue.map((val, index1) => {
                         return val.map((val1, index2) => {
                             return (0 === index2) ? val1 : ((index2 === 1) || (index2 === 3)) ? val1 + delta.x : val1 + delta.y;
@@ -93,18 +110,36 @@ const PathModifier = () => {
                     setPath1(updatedPath);
 
                     canvas.getActiveObjects()[0].set({ path: updatedPath });
+                    calcDimensions(this) //to update bounding rectangle
+
                     canvas?.requestRenderAll();
                 }
 
-                console.log(this.getBoundingRect());
             }
 
-            makecircles(rect, id1)
             canvas.requestRenderAll();
         }
         window.editor.canvas.off('mouse:down');
 
     }
+    const calcDimensions = (aa) => {
+        var dims = aa._calcDimensions()
+        aa.set({
+            width: dims.width,
+            height: dims.height,
+            left: dims.left + dims.width / 2,
+            top: dims.top + dims.height / 2,
+            pathOffset: {
+                x: dims.width / 2 + dims.left,
+                y: dims.height / 2 + dims.top,
+
+            },
+            dirty: true
+        })
+        aa.setCoords()
+
+    }
+
     const makecircles = (rect1, id) => {
         currentValue.forEach((element, i) => {
             if (i < currentValue.length - 1) {
@@ -146,6 +181,7 @@ const PathModifier = () => {
                             })
                         })
                     }
+
                     else {
                         updatedPath = currentValue.map((val, index1) => {
                             return (i !== index1) ? val : val.map((val1, index2) => {
@@ -249,6 +285,16 @@ const PathModifier = () => {
         }
     }
 
+    const redrawCircles = () => {
+        canvas.getObjects().forEach(element => {
+            if (element.id === (canvas.getActiveObjects()[0].id + '__')) {
+                canvas.remove(element);
+            }
+        });
+
+        makecircles(canvas.getActiveObjects()[0], canvas.getActiveObjects()[0].id);
+    }
+
     const updatePath1 = (i, ii, e) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const updatedPath = path1.map((val, index1) => {
@@ -257,13 +303,7 @@ const PathModifier = () => {
                 })
             })
 
-            canvas.getObjects().forEach(element => {
-                if (element.id === (canvas.getActiveObjects()[0].id + '__')) {
-                    canvas.remove(element);
-                }
-            });
-
-            makecircles(canvas.getActiveObjects()[0], canvas.getActiveObjects()[0].id);
+            redrawCircles();
 
             setPath1(updatedPath);
             currentValue = updatedPath;
