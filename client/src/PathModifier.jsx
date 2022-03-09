@@ -9,13 +9,41 @@ var currentValue = [];
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [path1, setPath1] = useState([]);
+
     const startPath = () => {
         window.editor.canvas.off('mouse:down');
         currentValue = [];
         setTimeout(() => {
             window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
+            window.editor.canvas.on('mouse:move', eventHandlerMouseMove);
         }, 1000);
     }
+    var temprect;
+
+    const eventHandlerMouseMove = (e) => {
+        if (currentValue.length > 0) {
+            console.log(e.pointer.x, e.pointer.y)
+            currentValue.push(['L', e.pointer.x, e.pointer.y]);
+            canvas.remove(temprect);
+            temprect = new fabric.Path(currentValue, {
+                shadow: shadowOptions,
+                opacity: 1,
+                fill: 'red',
+                hasRotatingPoint: true,
+                objectCaching: false,
+                stroke: 'yellow',
+                strokeWidth: 2,
+                strokeUniform: true,
+                strokeLineJoin: 'round',
+                originX: 'center',
+                originY: 'center',
+            });
+            currentValue.pop();
+            canvas.add(temprect);
+            canvas.requestRenderAll();
+        }
+    }
+
     const eventHandlerMouseDown = (e) => {
         if (currentValue.length === 0) {
             currentValue.push(['M', e.pointer.x, e.pointer.y])
@@ -28,6 +56,27 @@ const PathModifier = () => {
                 currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
             }
         }
+        if (currentValue.length > 0) {
+            if (currentValue.length > 1) {
+                canvas.remove(temprect);
+            }
+            temprect = new fabric.Path(currentValue, {
+                shadow: shadowOptions,
+                opacity: 1,
+                fill: 'red',
+                hasRotatingPoint: true,
+                objectCaching: false,
+                stroke: 'yellow',
+                strokeWidth: 2,
+                strokeUniform: true,
+                strokeLineJoin: 'round',
+                originX: 'center',
+                originY: 'center',
+            });
+            canvas.add(temprect);
+            canvas.requestRenderAll();
+        }
+
     }
 
     const addCirclestoPath = () => {
@@ -47,7 +96,9 @@ const PathModifier = () => {
     }
 
     const closePath = () => {
+
         if (currentValue.length !== 0) {
+            canvas.remove(temprect);
             currentValue.push(['z'])
             const id1 = 'id_' + uuidv4();
             const rect = new fabric.Path(currentValue, {
@@ -120,6 +171,7 @@ const PathModifier = () => {
             canvas.requestRenderAll();
         }
         window.editor.canvas.off('mouse:down');
+        window.editor.canvas.off('mouse:move');
 
     }
     const calcDimensions = (aa) => {
