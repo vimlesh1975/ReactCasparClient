@@ -1,4 +1,4 @@
-import React, {  } from 'react'
+import React, { } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
@@ -15,7 +15,7 @@ export const startPath = () => {
         window.editor.canvas.on('mouse:move', eventHandlerMouseMove);
     }, 1000);
 }
-export const eventHandlerMouseMove = e => {
+const eventHandlerMouseMove = e => {
     if (currentValue.length > 0) {
         console.log(e.pointer.x, e.pointer.y)
         currentValue.push(['L', e.pointer.x, e.pointer.y]);
@@ -74,12 +74,143 @@ const eventHandlerMouseDown = (e) => {
 
 }
 
+var points = [{
+    x: 3, y: 4
+}, {
+    x: 16, y: 3
+}, {
+    x: 30, y: 5
+}, {
+    x: 25, y: 55
+}, {
+    x: 19, y: 44
+}, {
+    x: 15, y: 30
+}, {
+    x: 15, y: 55
+}, {
+    x: 9, y: 55
+}, {
+    x: 6, y: 53
+}, {
+    x: -2, y: 55
+}, {
+    x: -4, y: 40
+}, {
+    x: 0, y: 20
+}]
+var polygon = new fabric.Polygon(points, {
+    left: 100,
+    top: 50,
+    fill: '#D81B60',
+    strokeWidth: 4,
+    stroke: 'green',
+    scaleX: 4,
+    scaleY: 4,
+    objectCaching: false,
+    transparentCorners: false,
+    cornerColor: 'blue',
+});
+// window.editor.canvas.viewportTransform = [0.7, 0, 0, 0.7, -50, 50];
+// window.editor.canvas.add(polygon);
+
+
+// define a function that can locate the controls.
+// this function will be used both for drawing and for interaction.
+function polygonPositionHandler(dim, finalMatrix, fabricObject) {
+    var x = (fabricObject.path[0][1] - fabricObject.pathOffset.x),
+        y = (fabricObject.path[0][2] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+        { x: x, y: y },
+        fabric.util.multiplyTransformMatrices(
+            fabricObject.canvas.viewportTransform,
+            fabricObject.calcTransformMatrix()
+        )
+    );
+}
+
+// define a function that will define what the control does
+// this function will be called on every mouse move after a control has been
+// clicked and is being dragged.
+// The function receive as argument the mouse event, the current trasnform object
+// and the current position in canvas coordinate
+// transform.target is a reference to the current object being transformed,
+function actionHandler(eventData, transform, x, y) {
+    var polygon = transform.target,
+        currentControl = polygon.controls[polygon.__corner],
+        mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
+        polygonBaseSize = polygon._getNonTransformedDimensions(),
+        size = polygon._getTransformedDimensions(0, 0),
+        finalPointPosition = {
+            x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+            y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+        };
+    polygon.path[0] = finalPointPosition;
+    return true;
+}
+
+// define a function that can keep the polygon in the same position when we change its
+// width/height/top/left.
+function anchorWrapper(anchorIndex, fn) {
+    return function (eventData, transform, x, y) {
+        var fabricObject = transform.target,
+            absolutePoint = fabric.util.transformPoint({
+                x: (fabricObject.path[0].x - fabricObject.pathOffset.x),
+                y: (fabricObject.path[0].y - fabricObject.pathOffset.y),
+            }, fabricObject.calcTransformMatrix()),
+            actionPerformed = fn(eventData, transform, x, y),
+            newDim = fabricObject._setPositionDimensions({}),
+            polygonBaseSize = fabricObject._getNonTransformedDimensions(),
+            newX = (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) / polygonBaseSize.x,
+            newY = (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y) / polygonBaseSize.y;
+        fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        return actionPerformed;
+    }
+}
+
+
+
+
+
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const path1 = useSelector(state => state.path1Reducer.path1);
     const dispatch = useDispatch();
 
+    const xyz = () => {
+        console.log('gdfghdfghgfh')
+        // clone what are you copying since you
+        // may want copy and paste on different moment.
+        // and you do not want the changes happened
+        // later to reflect on the copy.
+        var poly = window.editor.canvas.getObjects()[0];
+        window.editor.canvas.setActiveObject(poly);
+        poly.edit = !poly.edit;
+        if (poly.edit) {
+            var lastControl = poly.path.length - 1;
+            poly.cornerStyle = 'circle';
+            poly.cornerColor = 'rgba(0,0,255,0.5)';
+            poly.controls = poly.path.reduce(function (acc, point, index) {
+                acc['p' + index] = new fabric.Control({
+                    positionHandler: polygonPositionHandler,
+                    actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
+                    actionName: 'modifyPolygon',
+                    pointIndex: index
+                });
+                return acc;
+            }, {});
+        } else {
+            poly.cornerColor = 'blue';
+            poly.cornerStyle = 'rect';
+            poly.controls = fabric.Object.prototype.controls;
+        }
+        poly.hasBorders = !poly.edit;
+        window.editor.canvas.requestRenderAll();
+    }
+
     const addCirclestoPath = () => {
+        console.log('gdfghdfghgfh')
+
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             makecircles(canvas.getActiveObjects()[0], canvas.getActiveObjects()[0].id)
         }
@@ -109,7 +240,7 @@ const PathModifier = () => {
                 hasRotatingPoint: true,
                 objectCaching: false,
                 stroke: 'yellow',
-                strokeWidth: 2,
+                strokeWidth: 4,
                 strokeUniform: true,
                 strokeLineJoin: 'round',
                 originX: 'center',
@@ -158,7 +289,7 @@ const PathModifier = () => {
                         })
                     })
                     currentValue = updatedPath;
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath })
                     // setPath1(updatedPath);
 
                     canvas.getActiveObjects()[0].set({ path: updatedPath });
@@ -176,8 +307,9 @@ const PathModifier = () => {
 
     }
 
-    window.closePath=closePath;
+    window.closePath = closePath;
     const calcDimensions = (aa) => {
+        console.log('calcDimensions')
         var dims = aa._calcDimensions()
         aa.set({
             width: dims.width,
@@ -246,7 +378,7 @@ const PathModifier = () => {
                     }
 
                     rect1.set({ path: updatedPath });
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath })
                     // setPath1(updatedPath);
 
                     canvas?.requestRenderAll();
@@ -296,7 +428,7 @@ const PathModifier = () => {
                     })
 
                     rect1.set({ path: updatedPath });
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath })
                     // setPath1(updatedPath);
                     canvas?.requestRenderAll();
                     currentValue = updatedPath;
@@ -308,8 +440,8 @@ const PathModifier = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const aa1 = canvas?.getActiveObjects()[0]?.path;
             currentValue = aa1;
-                    dispatch({ type: 'CHANGE_PATH1', payload: currentValue}) 
-                    // setPath1(currentValue);
+            dispatch({ type: 'CHANGE_PATH1', payload: currentValue })
+            // setPath1(currentValue);
 
         }
     }
@@ -319,8 +451,8 @@ const PathModifier = () => {
                 return (i !== index1)
             })
             currentValue = updatedPath;
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
-                    // setPath1(updatedPath);
+            dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
+            // setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
@@ -338,8 +470,8 @@ const PathModifier = () => {
             }
 
             currentValue = updatedPath;
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
-                    // setPath1(updatedPath);
+            dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
+            // setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
@@ -365,8 +497,8 @@ const PathModifier = () => {
 
             redrawCircles();
 
-                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
-                    // setPath1(updatedPath);
+            dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
+            // setPath1(updatedPath);
             currentValue = updatedPath;
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
@@ -385,7 +517,7 @@ const PathModifier = () => {
                 <button onClick={addCirclestoPath}>Add circles to selected path</button>
                 <button onClick={removeCirclesfromPath}>Remove circles from selected path</button>
                 <button onClick={showpaths}>Initialise path of already made path</button>
-
+                {/* <button id="edit" onClick={xyz}>Toggle editing polygon</button> */}
             </div>
 
             <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
