@@ -886,7 +886,6 @@ export const createShape = (canvas, shape, size = 0.4) => {
         opacity: 0.9,
         // fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
         fill: gradient2(),
-        hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
         strokeWidth: 2,
@@ -1254,7 +1253,7 @@ const DrawingController = () => {
     }
     const exportSVG = canvas => {
         const element = document.createElement("a");
-        var aa = canvas.toSVG()
+        var aa = canvas.toSVG(['id', 'selectable'])
         const file = new Blob([aa], { type: 'text/xml' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1267,7 +1266,7 @@ const DrawingController = () => {
     }
     const exportJSON = canvas => {
         const element = document.createElement("a");
-        var aa = JSON.stringify(canvas.toJSON());
+        var aa = JSON.stringify(canvas.toJSON(['id', 'selectable']));
         const file = new Blob([aa], { type: 'text/json' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1323,7 +1322,7 @@ const DrawingController = () => {
                     <title>Document</title>
                 </head>
                 <body>
-                <div> ${canvas.toSVG()}  </div>
+                <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
                  </body>
                  <script>
                 document.body.style.margin='0';
@@ -1362,6 +1361,7 @@ const DrawingController = () => {
     const exportPngFullPage = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
+        // deSelectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter file name to save : ", ss + "_FileName");
 
@@ -1856,7 +1856,7 @@ const DrawingController = () => {
 
 
                 <div className='drawingToolsRow' >
-                    <b> Solid Caption 2: </b>
+                    <b> Solid Cap 2: </b>
                     <button onClick={() => {
                         startGraphics(canvas, templateLayers.solidCaption2);
                         setSolidcaption2(canvasList[currentPage]?.pageName);
@@ -1873,7 +1873,7 @@ const DrawingController = () => {
                     <span> {solidcaption2} </span>
                 </div>
                 <div className='drawingToolsRow' >
-                    <b> Solid Caption 3: </b>
+                    <b> Solid Cap 3: </b>
                     <button onClick={() => {
                         startGraphics(canvas, templateLayers.solidCaption3);
                         setSolidcaption3(canvasList[currentPage]?.pageName);
@@ -2184,7 +2184,7 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
                     <button onClick={() => exportHTML1(canvas)}>HTML</button>
-                    <button onClick={() => exportPng(canvas)}>PNG (Only Sahape)</button>
+                    <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
                     <button onClick={() => exportJSON(canvas)}>JSON</button>

@@ -1,83 +1,83 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, {  } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
 import { shadowOptions, options } from './common'
 
 var currentValue = [];
+var temprect;
+
+export const startPath = () => {
+    window.editor.canvas.off('mouse:down');
+    currentValue = [];
+    setTimeout(() => {
+        window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
+        window.editor.canvas.on('mouse:move', eventHandlerMouseMove);
+    }, 1000);
+}
+export const eventHandlerMouseMove = e => {
+    if (currentValue.length > 0) {
+        console.log(e.pointer.x, e.pointer.y)
+        currentValue.push(['L', e.pointer.x, e.pointer.y]);
+        window.editor.canvas.remove(temprect);
+        temprect = new fabric.Path(currentValue, {
+            shadow: shadowOptions,
+            opacity: 1,
+            fill: 'red',
+            hasRotatingPoint: true,
+            objectCaching: false,
+            stroke: 'yellow',
+            strokeWidth: 2,
+            strokeUniform: true,
+            strokeLineJoin: 'round',
+            originX: 'center',
+            originY: 'center',
+        });
+        currentValue.pop();
+        window.editor.canvas.add(temprect);
+        window.editor.canvas.requestRenderAll();
+    }
+}
+
+const eventHandlerMouseDown = (e) => {
+    if (currentValue.length === 0) {
+        currentValue.push(['M', e.pointer.x, e.pointer.y])
+    }
+    else {
+        if (currentValue[currentValue.length - 1][0] === 'M') {
+            currentValue.push(['Q', (currentValue[currentValue.length - 1][1] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][2] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+        }
+        else {
+            currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
+        }
+    }
+    if (currentValue.length > 0) {
+        if (currentValue.length > 1) {
+            window.editor.canvas.remove(temprect);
+        }
+        temprect = new fabric.Path(currentValue, {
+            shadow: shadowOptions,
+            opacity: 1,
+            fill: 'red',
+            hasRotatingPoint: true,
+            objectCaching: false,
+            stroke: 'yellow',
+            strokeWidth: 2,
+            strokeUniform: true,
+            strokeLineJoin: 'round',
+            originX: 'center',
+            originY: 'center',
+        });
+        window.editor.canvas.add(temprect);
+        window.editor.canvas.requestRenderAll();
+    }
+
+}
 
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [path1, setPath1] = useState([]);
-
-    const startPath = () => {
-        window.editor.canvas.off('mouse:down');
-        currentValue = [];
-        setTimeout(() => {
-            window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
-            window.editor.canvas.on('mouse:move', eventHandlerMouseMove);
-        }, 1000);
-    }
-    var temprect;
-
-    const eventHandlerMouseMove = (e) => {
-        if (currentValue.length > 0) {
-            console.log(e.pointer.x, e.pointer.y)
-            currentValue.push(['L', e.pointer.x, e.pointer.y]);
-            canvas.remove(temprect);
-            temprect = new fabric.Path(currentValue, {
-                shadow: shadowOptions,
-                opacity: 1,
-                fill: 'red',
-                hasRotatingPoint: true,
-                objectCaching: false,
-                stroke: 'yellow',
-                strokeWidth: 2,
-                strokeUniform: true,
-                strokeLineJoin: 'round',
-                originX: 'center',
-                originY: 'center',
-            });
-            currentValue.pop();
-            canvas.add(temprect);
-            canvas.requestRenderAll();
-        }
-    }
-
-    const eventHandlerMouseDown = (e) => {
-        if (currentValue.length === 0) {
-            currentValue.push(['M', e.pointer.x, e.pointer.y])
-        }
-        else {
-            if (currentValue[currentValue.length - 1][0] === 'M') {
-                currentValue.push(['Q', (currentValue[currentValue.length - 1][1] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][2] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
-            }
-            else {
-                currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + e.pointer.x) / 2, (currentValue[currentValue.length - 1][4] + e.pointer.y) / 2, e.pointer.x, e.pointer.y])
-            }
-        }
-        if (currentValue.length > 0) {
-            if (currentValue.length > 1) {
-                canvas.remove(temprect);
-            }
-            temprect = new fabric.Path(currentValue, {
-                shadow: shadowOptions,
-                opacity: 1,
-                fill: 'red',
-                hasRotatingPoint: true,
-                objectCaching: false,
-                stroke: 'yellow',
-                strokeWidth: 2,
-                strokeUniform: true,
-                strokeLineJoin: 'round',
-                originX: 'center',
-                originY: 'center',
-            });
-            canvas.add(temprect);
-            canvas.requestRenderAll();
-        }
-
-    }
+    const path1 = useSelector(state => state.path1Reducer.path1);
+    const dispatch = useDispatch();
 
     const addCirclestoPath = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
@@ -158,7 +158,8 @@ const PathModifier = () => {
                         })
                     })
                     currentValue = updatedPath;
-                    setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    // setPath1(updatedPath);
 
                     canvas.getActiveObjects()[0].set({ path: updatedPath });
                     calcDimensions(this) //to update bounding rectangle
@@ -174,6 +175,8 @@ const PathModifier = () => {
         window.editor.canvas.off('mouse:move');
 
     }
+
+    window.closePath=closePath;
     const calcDimensions = (aa) => {
         var dims = aa._calcDimensions()
         aa.set({
@@ -243,7 +246,8 @@ const PathModifier = () => {
                     }
 
                     rect1.set({ path: updatedPath });
-                    setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    // setPath1(updatedPath);
 
                     canvas?.requestRenderAll();
                     currentValue = updatedPath;
@@ -292,7 +296,8 @@ const PathModifier = () => {
                     })
 
                     rect1.set({ path: updatedPath });
-                    setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) 
+                    // setPath1(updatedPath);
                     canvas?.requestRenderAll();
                     currentValue = updatedPath;
                 })
@@ -303,7 +308,8 @@ const PathModifier = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const aa1 = canvas?.getActiveObjects()[0]?.path;
             currentValue = aa1;
-            setPath1(currentValue);
+                    dispatch({ type: 'CHANGE_PATH1', payload: currentValue}) 
+                    // setPath1(currentValue);
 
         }
     }
@@ -313,7 +319,8 @@ const PathModifier = () => {
                 return (i !== index1)
             })
             currentValue = updatedPath;
-            setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
+                    // setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
@@ -331,7 +338,8 @@ const PathModifier = () => {
             }
 
             currentValue = updatedPath;
-            setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
+                    // setPath1(updatedPath);
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
@@ -357,7 +365,8 @@ const PathModifier = () => {
 
             redrawCircles();
 
-            setPath1(updatedPath);
+                    dispatch({ type: 'CHANGE_PATH1', payload: updatedPath}) ;
+                    // setPath1(updatedPath);
             currentValue = updatedPath;
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();

@@ -17,11 +17,9 @@ function tempAlert(msg, duration) {
     document.body.appendChild(el);
 }
 
-
 const CustomClient = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
-    // const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const dispatch = useDispatch();
 
@@ -49,7 +47,7 @@ const CustomClient = () => {
             setPageName(list1[i].pageName)
             settextNodes(list1[i].pageValue)
             setCurrentRow(i);
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index });
         }
         else { tempAlert('Pagename not avalaible', 1000) }
 

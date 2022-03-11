@@ -112,6 +112,19 @@ const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
     }
 }
 
+const initialPath1={path1:[]};
+
+const path1Reducer = (state = initialPath1, action) => {
+    switch (action.type) {
+        case 'CHANGE_PATH1':
+            return {
+                ...state,
+                path1: action.payload
+            }
+        default: return state
+    }
+}
+
 const rootReducer = combineReducers({
     canvasListReducer,
     currentPageReducer,
@@ -121,7 +134,8 @@ const rootReducer = combineReducers({
     canvasReducer,
     playlistReducer,
     currentFileReducer,
-    currentscreenSizeReducer
+    currentscreenSizeReducer,
+    path1Reducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

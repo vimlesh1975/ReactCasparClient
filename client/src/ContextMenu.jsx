@@ -2,13 +2,15 @@ import useContextMenu from './useContextMenu'
 import {  gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
-
+import { startPath } from './PathModifier';
 const ContextMenu = ({ canvas }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
   window.showMenu = showMenu;
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul>
+        <li onClick={startPath}>Start Path</li>
+        <li onClick={window.closePath}>Close Path</li>
         <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(canvas)}>Send To Back</li>
         <li onClick={() => lock(canvas)}>Lock <VscLock /></li>

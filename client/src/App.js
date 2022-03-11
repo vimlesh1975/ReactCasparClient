@@ -30,7 +30,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 
-const buildDate = '090322_1'
+const buildDate = '110322_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -222,6 +222,13 @@ const App = () => {
     setChNumber(e.target.value);
   }
 
+  const updatePage = () => {
+    const updatedcanvasList = canvasList.map((val, i) => {
+        return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
+    });
+    dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+}
+
   return (<React.Fragment>
 
     <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
@@ -241,14 +248,15 @@ const App = () => {
         </select>
       </div>
       <div  >
-        <b>Channel Number:</b>
+        <b>Channel:</b>
         <select onChange={e => changeChannelNumber(e)} value={chNumber}>
           {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
         </select>
         <button onClick={() => endpoint(`swap 1 2`)}>Swap CH 1 and 2</button>
+        <button onClick={updatePage}>Update Page</button>
       </div>
       <div style={{ minWidth: 500 }} >
-        <b> Solid Caption 1: </b>
+        <b> Solid Cap 1: </b>
         <button onClick={() => {
           startGraphics(canvas, templateLayers.solidCaption1);
           setSolidcaption1(canvasList[currentPage]?.pageName);
@@ -298,6 +306,7 @@ const App = () => {
                 <Video video={''} layerNumber={videoLayers[4]} />
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
+                <span style={{position:'absolute', left:506, top:250, fontSize:40}}>.</span>
                 <Provider store={store}>
                   <Drawing />
                 </Provider>

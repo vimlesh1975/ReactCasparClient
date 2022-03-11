@@ -36,3 +36,9 @@ Animation duration increased to 1.5s, default inanimation old one lettoright
 
 07.01.22
  Added text path, page png export, character spacing for text in RCC.
+
+11.03.22
+Update page brought to top so that page is updated while on any page.
+export to svg and json with id, and lock information.
+added a black dot in the center of canvas.
+corrected custom client current page selection.
