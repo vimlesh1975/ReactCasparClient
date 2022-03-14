@@ -97,6 +97,18 @@ function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
         )
     );
 }
+function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
+    var pathObj = fabricObject.path[this.pointIndex]
+    var x = (pathObj[5] - fabricObject.pathOffset.x),
+        y = (pathObj[6] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+        { x: x, y: y },
+        fabric.util.multiplyTransformMatrices(
+            fabricObject.canvas.viewportTransform,
+            fabricObject.calcTransformMatrix()
+        )
+    );
+}
 // define a function that will define what the control does
 // this function will be called on every mouse move after a control has been
 // clicked and is being dragged.
@@ -133,7 +145,21 @@ function actionHandler2(eventData, transform, x, y) {
 
     return true;
 }
+function actionHandler3(eventData, transform, x, y) {
+    var polygon = transform.target,
+        currentControl = polygon.controls[polygon.__corner],
+        mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
+        polygonBaseSize = polygon._getNonTransformedDimensions(),
+        size = polygon._getTransformedDimensions(0, 0),
+        finalPointPosition = {
+            x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+            y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+        };
+    polygon.path[currentControl.pointIndex][5] = finalPointPosition.x;
+    polygon.path[currentControl.pointIndex][6] = finalPointPosition.y;
 
+    return true;
+}
 // define a function that can keep the polygon in the same position when we change its
 // width/height/top/left.
 function anchorWrapper(anchorIndex, fn) {
@@ -145,7 +171,9 @@ function anchorWrapper(anchorIndex, fn) {
                 y: (pathObj[2] - fabricObject.pathOffset.y),
             }, fabricObject.calcTransformMatrix()),
             actionPerformed = fn(eventData, transform, x, y),
+           /* eslint-disable no-unused-vars */
             newDim = fabricObject._setPath(fabricObject.path),
+            /* eslint-disable no-unused-vars */
             polygonBaseSize = fabricObject._getNonTransformedDimensions(),
             newX = (pathObj[1] - fabricObject.pathOffset.x) / polygonBaseSize.x,
             newY = (pathObj[2] - fabricObject.pathOffset.y) / polygonBaseSize.y;
@@ -170,6 +198,43 @@ function anchorWrapper2(anchorIndex, fn) {
         return actionPerformed;
     }
 }
+function anchorWrapper3(anchorIndex, fn) {
+    return function (eventData, transform, x, y) {
+        var fabricObject = transform.target,
+            pathObj = fabricObject.path[anchorIndex],
+            absolutePoint = fabric.util.transformPoint({
+                x: (pathObj[5] - fabricObject.pathOffset.x),
+                y: (pathObj[6] - fabricObject.pathOffset.y),
+            }, fabricObject.calcTransformMatrix()),
+            actionPerformed = fn(eventData, transform, x, y),
+            newDim = fabricObject._setPath(fabricObject.path),
+            polygonBaseSize = fabricObject._getNonTransformedDimensions(),
+            newX = (pathObj[5] - fabricObject.pathOffset.x) / polygonBaseSize.x,
+            newY = (pathObj[6] - fabricObject.pathOffset.y) / polygonBaseSize.y;
+        fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        return actionPerformed;
+    }
+}
+
+// function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+//     var size = this.cornerSize;
+//     ctx.save();
+//     // ctx.translate(left, top);
+//     ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+//     ctx.fillText("1",left,top)
+//     ctx.restore();
+//   }
+
+  function renderIcon(icon) {
+    return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+      var size = this.cornerSize;
+      ctx.save();
+    //   ctx.translate(left, top);
+      ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+      ctx.fillText(icon,left,top)
+      ctx.restore();
+    }
+  }
 
 function edit() {
     // clone what are you copying since you
@@ -186,19 +251,32 @@ function edit() {
             poly.cornerColor = 'yellow';
             poly.transparentCorners = false;
             poly.controls = poly.path.reduce(function (acc, point, index) {
-                acc['p' + index] = new fabric.Control({
-                    positionHandler: polygonPositionHandler,
-                    actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
-                    actionName: 'modifyPolygon',
-                    pointIndex: index
-                });
-                if( (index > 0) ){
-                    acc['pcorner' + index] = new fabric.Control({
-                        positionHandler: polygonPositionHandler2,
-                        actionHandler: anchorWrapper2(index > 1 ? index - 1 : lastControl, actionHandler2),
+                if (index < poly.path.length - 1) {
+                    acc['p1st' + index] = new fabric.Control({
+                        positionHandler: polygonPositionHandler,
+                        actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
                         actionName: 'modifyPolygon',
-                        pointIndex: index
+                        pointIndex: index,
+                        // render:renderIcon('p1st' + index)
                     });
+                    if ((point[0] === 'Q') || (point[0] === 'C')) {
+                        acc['p2nd' + index] = new fabric.Control({
+                            positionHandler: polygonPositionHandler2,
+                            actionHandler: anchorWrapper2(index > 1 ? index - 1 : lastControl, actionHandler2),
+                            actionName: 'modifyPolygon',
+                            pointIndex: index,
+                            // render:renderIcon('p2nd' + index)
+                        });
+                    }
+                    if (point[0] === 'C') {
+                        acc['p3rd' + index] = new fabric.Control({
+                            positionHandler: polygonPositionHandler3,
+                            actionHandler: anchorWrapper3(index > 1 ? index - 1 : lastControl, actionHandler3),
+                            actionName: 'modifyPolygon',
+                            pointIndex: index,
+                            // render:renderIcon('p3rd' + index)
+                        });
+                    }
                 }
                 return acc;
             }, {});
