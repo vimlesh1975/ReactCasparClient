@@ -14,6 +14,7 @@ const BreakingNews = () => {
 
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
+    const [delemeter, setDelemeter]=useState('⏺️')
     const [currentRow, setCurrentRow] = useState(0);
 
     const [generalayer, setGeneralayer] = useState(550);
@@ -206,17 +207,16 @@ const BreakingNews = () => {
         setNewplayerList1(updatedcanvasList)
     };
     const setAsScrollText = () => {
-
         canvas.getObjects().forEach((element) => {
             var aa = '';
             playerList1.forEach(element => {
-                if (element.use1 === true) { aa += element.data1 + '  ' };
+                if (element.use1 === true) { aa += element.data1 + ` ${delemeter} ` };
             });
             if (element.id === variableName) {
                 element.set({ objectCaching: false, text: aa })
             }
         })
-
+        canvas.requestRenderAll();
     }
 
     const updateData = (layerNumber, data) => {
@@ -279,6 +279,7 @@ const BreakingNews = () => {
                                 }
                                 } /></label></td>
                                 <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td>
+                                
                                 <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
                                 <td><button onClick={drawingFileSaveAs}>Save</button></td>
                                 <td><span>Open File:</span><input
@@ -292,6 +293,11 @@ const BreakingNews = () => {
 
                                 /></td>
 
+
+                            </tr>
+                            <tr>
+                            <td>Delemeter for scroll text</td>
+                                <td><input onChange={(e)=>setDelemeter(e.target.value)} value={delemeter}/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -324,7 +330,7 @@ const BreakingNews = () => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
-                                                                <td>{i}</td>
+                                                                <td style={{textAlign:'center'}}>{i}</td>
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
                                                                 <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
                                                                     onChange={e => {

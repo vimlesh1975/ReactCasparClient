@@ -71,6 +71,16 @@ const eventHandlerMouseDown = (e) => {
 
 }
 
+
+
+
+const PathModifier = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+    const path1 = useSelector(state => state.path1Reducer.path1);
+    const dispatch = useDispatch();
+
+
+    
 // define a function that can locate the controls.
 // this function will be used both for drawing and for interaction.
 function polygonPositionHandler(dim, finalMatrix, fabricObject) {
@@ -127,6 +137,7 @@ function actionHandler(eventData, transform, x, y) {
         };
     polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
     polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
+    dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
     return true;
 }
@@ -142,6 +153,7 @@ function actionHandler2(eventData, transform, x, y) {
         };
     polygon.path[currentControl.pointIndex][3] = finalPointPosition.x;
     polygon.path[currentControl.pointIndex][4] = finalPointPosition.y;
+    dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
     return true;
 }
@@ -157,6 +169,7 @@ function actionHandler3(eventData, transform, x, y) {
         };
     polygon.path[currentControl.pointIndex][5] = finalPointPosition.x;
     polygon.path[currentControl.pointIndex][6] = finalPointPosition.y;
+    dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
     return true;
 }
@@ -178,6 +191,8 @@ function anchorWrapper(anchorIndex, fn) {
             newX = (pathObj[1] - fabricObject.pathOffset.x) / polygonBaseSize.x,
             newY = (pathObj[2] - fabricObject.pathOffset.y) / polygonBaseSize.y;
         fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
+
         return actionPerformed;
     }
 }
@@ -195,6 +210,8 @@ function anchorWrapper2(anchorIndex, fn) {
             newX = (pathObj[3] - fabricObject.pathOffset.x) / polygonBaseSize.x,
             newY = (pathObj[4] - fabricObject.pathOffset.y) / polygonBaseSize.y;
         fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
+
         return actionPerformed;
     }
 }
@@ -212,25 +229,20 @@ function anchorWrapper3(anchorIndex, fn) {
             newX = (pathObj[5] - fabricObject.pathOffset.x) / polygonBaseSize.x,
             newY = (pathObj[6] - fabricObject.pathOffset.y) / polygonBaseSize.y;
         fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+        dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
+
         return actionPerformed;
     }
 }
-
-// function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-//     var size = this.cornerSize;
-//     ctx.save();
-//     // ctx.translate(left, top);
-//     ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-//     ctx.fillText("1",left,top)
-//     ctx.restore();
-//   }
 
   function renderIcon(icon) {
     return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
       var size = this.cornerSize;
       ctx.save();
     //   ctx.translate(left, top);
-      ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+    //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+      ctx.font = "15px Georgia";
+      ctx.textAlign = "center";
       ctx.fillText(icon,left,top)
       ctx.restore();
     }
@@ -248,7 +260,7 @@ function edit() {
         if (poly.edit) {
             var lastControl = poly.path.length - 2;
             poly.cornerStyle = 'circle';
-            poly.cornerColor = 'yellow';
+            poly.cornerColor = 'black';
             poly.transparentCorners = false;
             poly.controls = poly.path.reduce(function (acc, point, index) {
                 if (index < poly.path.length - 1) {
@@ -257,7 +269,8 @@ function edit() {
                         actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
                         actionName: 'modifyPolygon',
                         pointIndex: index,
-                        // render:renderIcon('p1st' + index)
+                        render:renderIcon(`${index+1}0`)
+
                     });
                     if ((point[0] === 'Q') || (point[0] === 'C')) {
                         acc['p2nd' + index] = new fabric.Control({
@@ -265,7 +278,7 @@ function edit() {
                             actionHandler: anchorWrapper2(index > 1 ? index - 1 : lastControl, actionHandler2),
                             actionName: 'modifyPolygon',
                             pointIndex: index,
-                            // render:renderIcon('p2nd' + index)
+                            render:renderIcon(`${index+1}1`)
                         });
                     }
                     if (point[0] === 'C') {
@@ -274,7 +287,7 @@ function edit() {
                             actionHandler: anchorWrapper3(index > 1 ? index - 1 : lastControl, actionHandler3),
                             actionName: 'modifyPolygon',
                             pointIndex: index,
-                            // render:renderIcon('p3rd' + index)
+                            render:renderIcon(`${index+1}2`)
                         });
                     }
                 }
@@ -289,13 +302,6 @@ function edit() {
         window.editor.canvas.requestRenderAll();
     }
 }
-
-
-
-const PathModifier = () => {
-    const canvas = useSelector(state => state.canvasReducer.canvas);
-    const path1 = useSelector(state => state.path1Reducer.path1);
-    const dispatch = useDispatch();
 
     const closePath = () => {
 
@@ -391,7 +397,7 @@ const PathModifier = () => {
             <div>
 
                 <button onClick={showpaths}>Initialise path of already made path</button>
-                <button id="edit" onClick={edit}>Toggle editing polygon</button>
+                <button id="edit" onClick={edit}>Toggle editing Path</button>
             </div>
 
             <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
@@ -407,8 +413,16 @@ const PathModifier = () => {
                         {val.map((vv, ii) => {
                             return (<div key={ii} >
                                 {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
-                                {(ii > 0) ? <><input style={{ width: 400 }} onChange={e => updatePath1(i, ii, e)} type="range" min={-1000} max={1000} step='1' value={vv} />
-                                    <input style={{ width: 50 }} onChange={e => updatePath1(i, ii, e)} type="number" min={-1000} max={1000} step='1' value={vv.toFixed(0)} />
+                                {(ii > 0) ? <>
+                                {(ii===1)&&`${i+1}0x`}
+                                {(ii===2)&&`${i+1}0y`}
+                                {(ii===3)&&`${i+1}1x`}
+                                {(ii===4)&&`${i+1}1y`}
+                                {(ii===5)&&`${i+1}2x`}
+                                {(ii===6)&&`${i+1}2y`}
+
+                                <input style={{ width: 400 }} onChange={e => updatePath1(i, ii, e)} type="range" min={-1000} max={1000} step='1' value={vv} />
+                                  <input style={{ width: 50 }} onChange={e => updatePath1(i, ii, e)} type="number" min={-1000} max={1000} step='1' value={vv.toFixed(0)} />
                                 </> : ''}
                             </div>)
                         })}
