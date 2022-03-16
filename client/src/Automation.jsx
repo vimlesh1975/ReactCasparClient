@@ -39,10 +39,10 @@ const Automation = () => {
                 setDataReceived(JSON.stringify(data));
             });
             socket.on("resumeGameTimer", data => {
-                resumeGameTimer(data.layerNumber,data.countUp);
+                resumeGameTimer(data.layerNumber, data.countUp);
                 setDataReceived(JSON.stringify(data));
             });
-            
+
         }
         else {
             socket?.removeListener('recallPage');
@@ -66,6 +66,7 @@ const Automation = () => {
                     data1.forEach(data2 => {
                         window.automationeditor[0].canvas.getObjects().forEach((element) => {
                             try {
+                                element.set({ selectable: false, strokeUniform: false });
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
 
@@ -192,7 +193,7 @@ const Automation = () => {
             startTime.setMinutes(${initialMinute});
             startTime.setSeconds(${initialSecond});
             var xxx=setInterval(()=>{
-               startTime.setSeconds(startTime.getSeconds() ${(countUp==='true') ? '+' : '-'} 1);
+               startTime.setSeconds(startTime.getSeconds() ${(countUp === 'true') ? '+' : '-'} 1);
                 var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
                 cc.textContent  =ss1;
               }, 1000);
@@ -202,8 +203,8 @@ const Automation = () => {
     }
 
     const pauseGameTimer = (layerNumber) => {
-     
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+
+        endpoint(`call ${window.chNumber}-${layerNumber} "
            clearInterval(xxx);
             "`)
     }
@@ -211,14 +212,14 @@ const Automation = () => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         clearInterval(xxx);
          xxx=setInterval(()=>{
-            startTime.setSeconds(startTime.getSeconds() ${(countUp==='true') ? '+' : '-'} 1);
+            startTime.setSeconds(startTime.getSeconds() ${(countUp === 'true') ? '+' : '-'} 1);
              var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
              cc.textContent  =ss1;
            }, 1000);
          "`)
-}
+    }
 
-    
+
     return (
         <div>
             <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>

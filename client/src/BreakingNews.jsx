@@ -8,13 +8,14 @@ import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from "lodash";
+import { shadowOptions, options } from './common'
 
 var iii = 0;
 const BreakingNews = () => {
 
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
-    const [delemeter, setDelemeter]=useState('⏺️')
+    const [delemeter, setDelemeter] = useState('⏺️')
     const [currentRow, setCurrentRow] = useState(0);
 
     const [generalayer, setGeneralayer] = useState(550);
@@ -207,17 +208,92 @@ const BreakingNews = () => {
         setNewplayerList1(updatedcanvasList)
     };
     const setAsScrollText = () => {
-        canvas.getObjects().forEach((element) => {
-            var aa = '';
-            playerList1.forEach(element => {
-                if (element.use1 === true) { aa += element.data1 + ` ${delemeter} ` };
-            });
-            if (element.id === variableName) {
-                element.set({ objectCaching: false, text: aa })
-            }
-        })
+        var aa = '';
+        playerList1.forEach(element => {
+            if (element.use1 === true) { aa += element.data1 + ` ${delemeter} ` };
+        });
+        const text = new fabric.IText(aa, {
+            shadow: shadowOptions,
+            id: 'id_' + uuidv4(),
+            left: 10,
+            top: 0,
+            width: 480,
+            fill: '#ffffff',
+            fontFamily: options.currentFont,
+            fontWeight: 'bold',
+            fontSize: options.currentFontSize,
+            editable: true,
+            objectCaching: false,
+            textAlign: 'left',
+            padding: 5,
+
+        });
+        canvas.add(text).setActiveObject(text);
+        canvas.renderAll();
+        text.animate('top', 521, { onChange: canvas.renderAll.bind(canvas) })
+        // })
         canvas.requestRenderAll();
     }
+
+    const setAsScrollText2 = () => {
+        var width1 = 0;
+        playerList1.forEach(element => {
+            if (element.use1 === true) {
+              
+
+                fabric.util.loadImage('http://localhost:8080/media/anchor.png', myImg => {
+                    if (myImg == null) {
+                        alert("Error!");
+                    } else {
+                        // myImg.scale(0.2);
+                        var rect = new fabric.Rect({
+                            id: 'id_' + uuidv4(),
+                            left: width1,
+                            top: 521,
+                            stroke: 'red',
+                            strokeWidth: 1,
+                            rx: 30,
+                            objectCaching: false,
+                            shadow: shadowOptions,
+                            ry: 30
+                        });
+                        canvas.add(rect).setActiveObject(rect);
+                        rect.set({
+                            width: myImg.width, height: myImg.height, fill: new fabric.Pattern({ source: myImg, repeat: 'no-repeat' })
+                        });
+                        canvas.renderAll();
+                        width1 += 10 + canvas.getActiveObjects()[0].width;
+
+                        const text = new fabric.IText(element.data1, {
+                            shadow: shadowOptions,
+                            id: 'id_' + uuidv4(),
+                            left: 10 + width1,
+                            top: 521,
+                            fill: '#ffffff',
+                            fontFamily: options.currentFont,
+                            fontWeight: 'bold',
+                            fontSize: options.currentFontSize,
+                            editable: true,
+                            objectCaching: false,
+                            textAlign: 'left',
+                            padding: 5,
+        
+                        });
+                        canvas.add(text).setActiveObject(text);
+                        canvas.renderAll();
+                        width1 += 10 + canvas.getActiveObjects()[0].width;
+                        
+
+                    }
+                });
+
+                console.log(width1);
+            };
+        });
+        canvas.requestRenderAll();
+    }
+
+
 
     const updateData = (layerNumber, data) => {
         const data1 = data;
@@ -262,10 +338,10 @@ const BreakingNews = () => {
                     <table border='1'>
                         <tbody >
                             <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
-                                <td>Layer Numbaer</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
+                                <td>Layer Number</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td></tr>
                         </tbody>
                     </table>
-                    <table border='1'>
+                    <table border='0'>
                         <tbody >
                             <tr>
                                 <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
@@ -278,8 +354,8 @@ const BreakingNews = () => {
                                     }
                                 }
                                 } /></label></td>
-                                <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td>
-                                
+                                {/* <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td> */}
+
                                 <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
                                 <td><button onClick={drawingFileSaveAs}>Save</button></td>
                                 <td><span>Open File:</span><input
@@ -295,15 +371,23 @@ const BreakingNews = () => {
 
 
                             </tr>
+
+                        </tbody>
+                    </table>
+                    <table border='0'>
+                        <tbody >
+
                             <tr>
-                            <td>Delemeter for scroll text</td>
-                                <td><input onChange={(e)=>setDelemeter(e.target.value)} value={delemeter}/></td>
+                                <td><button onClick={setAsScrollText}>Set as Scroll Text</button></td>
+                                {/* <td><button onClick={setAsScrollText2}>test</button></td> */}
+                                <td>Delemeter for scroll text</td>
+                                <td><input onChange={(e) => setDelemeter(e.target.value)} value={delemeter} /></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor:'red' }} onClick={updateplayerList1}>Update Data</button>
+            <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
@@ -330,12 +414,12 @@ const BreakingNews = () => {
                                                                     // margin: '10px'
                                                                 }}
                                                             >
-                                                                <td style={{textAlign:'center'}}>{i}</td>
+                                                                <td style={{ textAlign: 'center' }}>{i}</td>
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
                                                                 <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
                                                                     onChange={e => {
                                                                         newplayerList1[i] = { ...newplayerList1[i], data1: e.target.value };
-                                                                    setNewplayerList1([...newplayerList1])
+                                                                        setNewplayerList1([...newplayerList1])
                                                                     }}
                                                                 />
                                                                 </td>

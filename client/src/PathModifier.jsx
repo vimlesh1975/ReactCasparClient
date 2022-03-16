@@ -18,7 +18,7 @@ export const startPath = () => {
 }
 const eventHandlerMouseMove = e => {
     if (currentValue.length > 0) {
-        console.log(e.pointer.x, e.pointer.y)
+        // console.log(e.pointer.x, e.pointer.y)
         currentValue.push(['L', e.pointer.x, e.pointer.y]);
         window.editor.canvas.remove(temprect);
         temprect = new fabric.Path(currentValue, {

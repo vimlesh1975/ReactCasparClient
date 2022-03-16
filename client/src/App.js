@@ -30,7 +30,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 
-const buildDate = '150322_1'
+const buildDate = '160322_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

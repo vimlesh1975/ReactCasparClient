@@ -8,15 +8,10 @@ const Layers = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
-
     const [textofActiveObject, setTextofActiveObject] = useState('');
     const [idofActiveObject, setIdofActiveObject] = useState('');
-
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
-    
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
-
-  
 
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
@@ -102,7 +97,7 @@ const Layers = () => {
                             style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                             {...provided.droppableProps}
                         >
-                            <table border='1'>
+                            <table border='1' >
                                 <tbody>
                                     <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Lock</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
                                     {layers?.map((val, i) => {
@@ -116,6 +111,7 @@ const Layers = () => {
                                                             ...provided.draggableProps.style,
                                                             backgroundColor: snapshot.isDragging ? 'red' : 'white',
                                                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                            verticalAlign:'top'
                                                             // margin: '10px'
                                                         }}
                                                     ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
