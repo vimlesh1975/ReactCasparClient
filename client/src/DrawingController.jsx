@@ -35,6 +35,11 @@ var Direction = {
     DOWN: 3
 };
 
+export const resetZommandPan=(canvas)=>{
+    canvas.setZoom(1);
+    canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
+}
+
 fabric.util.addListener(document.body, 'keydown', function (options) {
     if (options.target.nodeName === 'BODY') {
         var key = options.which || options.keyCode; // key detection
@@ -77,6 +82,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         if (options.ctrlKey && options.key.toLowerCase() === 'a') {
             options.preventDefault();
             selectAll(window.editor.canvas);
+        }
+        if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+            options.preventDefault();
+            resetZommandPan(window.editor.canvas);
         }
         //----------
 
@@ -2157,12 +2166,8 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b>Zoom and Pan: </b>
-                    <button onClick={() => {
-                        canvas.setZoom(1);
-                        canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
-                    }}>Reset Zoom and Pan</button>
+                    <button onClick={()=>resetZommandPan(canvas) }>Reset Zoom and Pan</button>
                     <button onClick={() => putat00(canvas)}>Select All and Put at 0 0</button>
-
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Tools: </b>

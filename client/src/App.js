@@ -18,7 +18,7 @@ import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint,
 import Layers from './Layers'
 import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
-import BreakingNews from './BreakingNews'
+import Scroll from './Scroll'
 import Automation from './Automation';
 import { videoLayers } from './common'
 import Shapes from './Shapes';
@@ -29,8 +29,9 @@ import { FaPlay, FaStop } from "react-icons/fa";
 // import TimeLine1 from './TimeLine1';
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
+import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 
-const buildDate = '170322_1'
+const buildDate = '170322_2'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -345,6 +346,7 @@ const App = () => {
             <Tab>VDO Playlist</Tab>
             <Tab>Layers</Tab>
             <Tab >Gradient</Tab>
+            <Tab >Oneliner/BreakingNews</Tab>
             <Tab >Twoliner</Tab>
             <Tab >Scroll</Tab>
             <Tab >Shapes</Tab>
@@ -380,10 +382,13 @@ const App = () => {
             <ColorGradient />
           </TabPanel>
           <TabPanel>
+            <OnelinerAndBreakingNews />
+          </TabPanel>
+          <TabPanel>
             <Twoliner />
           </TabPanel>
           <TabPanel>
-            <BreakingNews />
+            <Scroll />
           </TabPanel>
           <TabPanel>
             <Shapes />

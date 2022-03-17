@@ -8,18 +8,13 @@ import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from "lodash";
-import { shadowOptions, options } from './common'
 
 var iii = 0;
-const BreakingNews = () => {
+const OnelinerAndBreakingNews = () => {
 
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
-    const [delemeter, setDelemeter] = useState('⏺️')
-    const [delemeterLogo, setDelemeterLogo] = useState('https://zerocreativity0.files.wordpress.com/2016/01/doordarshan-logo.png')
-
     const [currentRow, setCurrentRow] = useState(0);
-
     const [generalayer, setGeneralayer] = useState(550);
     const [variableName, setVariableName] = useState('f0');
     const [pageName, setPageName] = useState('BreakingNews');
@@ -27,12 +22,10 @@ const BreakingNews = () => {
 
     const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const startBreakingNews = () => {
         setAaa(setInterval(() => {
-
             while (playerList1[iii].use1 === false) {
                 if (iii < playerList1.length - 1) {
 
@@ -175,13 +168,14 @@ const BreakingNews = () => {
         const element = document.createElement("a");
         var aa = ''
         playerList1.forEach(val => {
-            aa += JSON.stringify({ data1: val.data1, use1: val.use1 }) + '\r\n'
+            aa += JSON.stringify({id:val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
-        var retVal = prompt("Enter  file name to save : ", ss);
+        var retVal = prompt("Enter  file name to save : ",'Oneliner_' + ss);
+
         if (retVal !== null) {
             element.download = retVal;
             document.body.appendChild(element); // Required for this to work in FireFox
@@ -204,84 +198,11 @@ const BreakingNews = () => {
         var updatedcanvasList = []
         aa.forEach(element => {
             var cc = JSON.parse(element)
-            updatedcanvasList.push({ data1: cc.data1, use1: cc.use1 })
+            updatedcanvasList.push({id:cc.id, data1: cc.data1, use1: cc.use1 })
         });
         setPlayerList1(updatedcanvasList)
         setNewplayerList1(updatedcanvasList)
     };
-    const setAsScrollText = () => {
-        var aa = '';
-        playerList1.forEach(element => {
-            if (element.use1 === true) { aa += ` ${delemeter} ` + element.data1 };
-        });
-        const text = new fabric.IText(aa, {
-            shadow: shadowOptions,
-            id: 'id_' + uuidv4(),
-            left: 0,
-            top: 521,
-            fill: options.currentColor,
-            fontFamily: options.currentFont,
-            fontWeight: 'bold',
-            fontSize: options.currentFontSize,
-            editable: true,
-            objectCaching: false,
-            textAlign: 'left',
-            stroke: options.stroke,
-            strokeWidth: options.strokeWidth,
-
-        });
-        canvas.add(text);
-        canvas.requestRenderAll();
-    }
-
-    const setAsScrollText2 = () => {
-        var left1 = 0;
-        playerList1.forEach(element => {
-            if (element.use1 === true) {
-                // fabric.util.loadImage('http://localhost:8080/media/anchor.png', myImg => {
-                // fabric.Image.fromURL('http://localhost:8080/media/anchor.png', myImg => {
-                fabric.Image.fromURL(delemeterLogo, myImg => {
-
-
-                    if (myImg == null) {
-                        alert("Error!");
-                    } else {
-                        // myImg.scaleToWidth(25);
-                        myImg.scaleToHeight(25);
-                        canvas.add(myImg).setActiveObject(myImg);
-                        myImg.set({
-                            left: left1,
-                            top: 521,
-                        })
-                        canvas.renderAll();
-                        left1 += 10 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
-
-                        const text = new fabric.IText(element.data1, {
-                            shadow: shadowOptions,
-                            id: 'id_' + uuidv4(),
-                            left: 10 + left1,
-                            top: 521,
-                            fill: options.currentColor,
-                            fontFamily: options.currentFont,
-                            fontWeight: 'bold',
-                            fontSize: options.currentFontSize,
-                            editable: true,
-                            objectCaching: false,
-                            textAlign: 'left',
-                            stroke: options.stroke,
-                            strokeWidth: options.strokeWidth,
-                        });
-                        canvas.add(text).setActiveObject(text);
-                        canvas.renderAll();
-                        left1 += 10 + canvas.getActiveObjects()[0].width;
-                    }
-                });
-            };
-        });
-        canvas.requestRenderAll();
-    }
-
-
 
     const updateData = (layerNumber, data) => {
         const data1 = data;
@@ -321,12 +242,31 @@ const BreakingNews = () => {
     }
     return (
         <div>
+             <div style={{ border: '1px solid red' }}>
+                <table border='1'>
+                    <tbody >
+                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                            <td>Layer No.</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
+                            <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
+                                if (e.target.checked === true) {
+                                    startBreakingNews();
+                                }
+                                else {
+                                    clearInterval(aaa);
+                                    setAaa(0);
+                                }
+                            }
+                            } /></label></td>
+                            <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div style={{ display: 'flex1' }}>
-               
                 <table border='0'>
                     <tbody >
                         <tr>
-                           
+
                             <td><button onClick={drawingFileSaveAs}>Save</button></td>
                             <td><span>Open File:</span><input
                                 type='file'
@@ -340,39 +280,9 @@ const BreakingNews = () => {
                         </tr>
                     </tbody>
                 </table>
-                <div style={{ border: '1px solid red' }}>
 
-                    <table border='0'>
-                        <tbody >
-                            <tr>
-                                <td><button onClick={setAsScrollText}>Set as Scroll Text with delemeter</button></td>
-                                <td>Delemeter for scroll text</td>
-                                <td><input style={{ width: 40, textAlign: 'center' }} onChange={(e) => setDelemeter(e.target.value)} value={delemeter} /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table border='0'>
-                        <tbody >
-                            <tr>
-                                <td>
-                                    <label>
-                                        Logo <img src={delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
-                                        <input type="file" onChange={e => {
-                                            var reader = new FileReader();
-                                            reader.onloadend = () => {
-                                                setDelemeterLogo(reader.result)
-                                            }
-                                            reader.readAsDataURL(e.target.files[0]);
-                                        }} style={{ display: 'none' }} />
-                                    </label>
-                                </td>
-                                <td>  <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
+           
             <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
@@ -434,28 +344,9 @@ const BreakingNews = () => {
                     </DragDropContext>
                 </div>
             </div>
-            <div style={{ border: '1px solid red' }}>
-                    <table border='1'>
-                        <tbody >
-                            <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
-                                <td>Layer No.</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
-                                <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
-                                    if (e.target.checked === true) {
-                                        startBreakingNews();
-                                    }
-                                    else {
-                                        clearInterval(aaa);
-                                        setAaa(0);
-                                    }
-                                }
-                                } /></label></td>
-                                 <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+           
         </div>
     )
 }
 
-export default BreakingNews
+export default OnelinerAndBreakingNews
