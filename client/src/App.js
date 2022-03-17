@@ -30,7 +30,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 
-const buildDate = '160322_1'
+const buildDate = '170322_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -346,7 +346,7 @@ const App = () => {
             <Tab>Layers</Tab>
             <Tab >Gradient</Tab>
             <Tab >Twoliner</Tab>
-            <Tab >BreakingNews</Tab>
+            <Tab >Scroll</Tab>
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>

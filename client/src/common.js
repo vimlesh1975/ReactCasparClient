@@ -38,11 +38,11 @@ export const options = {
     // currentWidth: 5,
     group: {},
     stroke: '#ffffff',
-    strokeWidth: 3,
+    strokeWidth: 1,
 };
 export const shadowOptions = {
     color: 'black',
-    blur: 30,
+    blur: 0,
     offsetX: 0,
     offsetY: 0,
     affectStroke: false

@@ -74,6 +74,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
         if (options.ctrlKey && options.key.toLowerCase() === 'z') {
             window.editor.canvas?.undo();
         }
+        if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+            options.preventDefault();
+            selectAll(window.editor.canvas);
+        }
         //----------
 
     }
@@ -224,16 +228,15 @@ export const createText = (canvas) => {
         left: 100,
         top: 0,
         width: 480,
-        fill: '#ffffff',
-        // backgroundColor: options.backgroundColor,
+        fill:options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
         editable: true,
         objectCaching: false,
         textAlign: 'left',
-        padding: 5,
-
+        stroke: options.stroke,
+        strokeWidth: options.strokeWidth,
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
@@ -247,15 +250,15 @@ export const createIText = (canvas) => {
         left: 100,
         top: 0,
         width: 480,
-        fill: '#ffffff',
-        // backgroundColor: options.backgroundColor,
+        fill:options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
         editable: true,
         objectCaching: false,
         textAlign: 'left',
-        padding: 5,
+        stroke: options.stroke,
+        strokeWidth: options.strokeWidth,
 
     });
     canvas.add(text).setActiveObject(text);
