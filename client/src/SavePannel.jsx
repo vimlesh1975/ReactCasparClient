@@ -141,7 +141,10 @@ const SavePannel = () => {
             const aa = canvas.getObjects();
             aa.forEach(element => {
                 try {
-                    element.set({ objectCaching: false })
+                    element.set({ objectCaching: false });
+                     element.on('mousedblclick', () => {
+                        window.edit();
+                    })
                 } catch (error) {
                     alert(error);
                     return;
