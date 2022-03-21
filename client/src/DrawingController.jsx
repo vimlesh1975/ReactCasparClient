@@ -19,12 +19,8 @@ import Images from './Images';
 import SavedStyles from './SavedStyles';
 import { animation } from './animation.js'
 
-
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
-
-// const clockLayer = 502;
 var xxx;
-
 
 fabric.Object.prototype.noScaleCache = false;
 const STEP = 5;
@@ -896,7 +892,6 @@ export const createShape = (canvas, shape, size = 0.4) => {
         scaleX: size,
         scaleY: size,
         opacity: 0.9,
-        // fill: '#' + Math.floor(Math.random() * 16777215).toString(16),
         fill: gradient2(),
         objectCaching: false,
         stroke: options.stroke,
@@ -904,6 +899,9 @@ export const createShape = (canvas, shape, size = 0.4) => {
         strokeUniform: true,
     });
     canvas.add(rect).setActiveObject(rect);
+    rect.on('mousedblclick', () => {
+        window.edit();
+    })
     canvas.requestRenderAll();
     rect.animate('top', (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
 }

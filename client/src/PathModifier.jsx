@@ -53,17 +53,16 @@ const eventHandlerMouseDown = (e) => {
             window.editor.canvas.remove(temprect);
         }
         temprect = new fabric.Path(currentValue, {
-            shadow: shadowOptions,
-            opacity: 1,
+            shadow: { ...shadowOptions, blur: 0 },
             fill: 'red',
-            hasRotatingPoint: true,
+            // hasRotatingPoint: true,
             objectCaching: false,
             stroke: 'yellow',
             strokeWidth: 2,
-            strokeUniform: true,
-            strokeLineJoin: 'round',
-            originX: 'center',
-            originY: 'center',
+            // strokeUniform: true,
+            // strokeLineJoin: 'round',
+            // originX: 'center',
+            // originY: 'center',
         });
         window.editor.canvas.add(temprect);
         window.editor.canvas.requestRenderAll();
@@ -122,19 +121,19 @@ const PathModifier = () => {
     // transform.target is a reference to the current object being transformed,
     function actionHandler(eventData, transform, x, y) {
         var polygon = transform.target,
-            currentControl = polygon.controls[polygon.__corner],
-            mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
-            polygonBaseSize = polygon._getNonTransformedDimensions(),
-            size = polygon._getTransformedDimensions(0, 0),
-            finalPointPosition = {
-                x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-                y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-            };
-        polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
-        polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
-        dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
+        currentControl = polygon.controls[polygon.__corner],
+        mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
+        polygonBaseSize = polygon._getNonTransformedDimensions(),
+        size = polygon._getTransformedDimensions(0, 0),
+        finalPointPosition = {
+            x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+            y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+        };
+    polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
+    polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
+    dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
-        return true;
+    return true;
     }
     function actionHandler2(eventData, transform, x, y) {
         var polygon = transform.target,
@@ -191,44 +190,6 @@ const PathModifier = () => {
             return actionPerformed;
         }
     }
-    function anchorWrapper2(anchorIndex, fn) {
-        return function (eventData, transform, x, y) {
-            var fabricObject = transform.target,
-                pathObj = fabricObject.path[anchorIndex],
-                absolutePoint = fabric.util.transformPoint({
-                    x: (pathObj[3] - fabricObject.pathOffset.x),
-                    y: (pathObj[4] - fabricObject.pathOffset.y),
-                }, fabricObject.calcTransformMatrix()),
-                actionPerformed = fn(eventData, transform, x, y),
-                newDim = fabricObject._setPath(fabricObject.path),
-                polygonBaseSize = fabricObject._getNonTransformedDimensions(),
-                newX = (pathObj[3] - fabricObject.pathOffset.x) / polygonBaseSize.x,
-                newY = (pathObj[4] - fabricObject.pathOffset.y) / polygonBaseSize.y;
-            fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
-            dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
-
-            return actionPerformed;
-        }
-    }
-    function anchorWrapper3(anchorIndex, fn) {
-        return function (eventData, transform, x, y) {
-            var fabricObject = transform.target,
-                pathObj = fabricObject.path[anchorIndex],
-                absolutePoint = fabric.util.transformPoint({
-                    x: (pathObj[5] - fabricObject.pathOffset.x),
-                    y: (pathObj[6] - fabricObject.pathOffset.y),
-                }, fabricObject.calcTransformMatrix()),
-                actionPerformed = fn(eventData, transform, x, y),
-                newDim = fabricObject._setPath(fabricObject.path),
-                polygonBaseSize = fabricObject._getNonTransformedDimensions(),
-                newX = (pathObj[5] - fabricObject.pathOffset.x) / polygonBaseSize.x,
-                newY = (pathObj[6] - fabricObject.pathOffset.y) / polygonBaseSize.y;
-            fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
-            dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
-
-            return actionPerformed;
-        }
-    }
 
     function renderIcon(icon) {
         return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
@@ -270,8 +231,8 @@ const PathModifier = () => {
                         if ((point[0] === 'Q') || (point[0] === 'C')) {
                             acc['p2nd' + index] = new fabric.Control({
                                 positionHandler: polygonPositionHandler2,
-                                actionHandler: anchorWrapper2(index > 1 ? index - 1 : lastControl, actionHandler2),
-                                actionName: 'modifyPolygon',
+                                actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler2),
+                                actionName: 'modifyPolygon2',
                                 pointIndex: index,
                                 render: renderIcon(`${index + 1}1`)
                             });
@@ -279,8 +240,8 @@ const PathModifier = () => {
                         if (point[0] === 'C') {
                             acc['p3rd' + index] = new fabric.Control({
                                 positionHandler: polygonPositionHandler3,
-                                actionHandler: anchorWrapper3(index > 1 ? index - 1 : lastControl, actionHandler3),
-                                actionName: 'modifyPolygon',
+                                actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler3),
+                                actionName: 'modifyPolygon3',
                                 pointIndex: index,
                                 render: renderIcon(`${index + 1}2`)
                             });
@@ -420,8 +381,8 @@ const PathModifier = () => {
                                     {(ii === 5) && `${i + 1}2x`}
                                     {(ii === 6) && `${i + 1}2y`}
 
-                                    <input style={{ width: 400 }} onChange={e => updatePath1(i, ii, e)} type="range" min={-1000} max={1000} step='1' value={vv} />
-                                    <input style={{ width: 50 }} onChange={e => updatePath1(i, ii, e)} type="number" min={-1000} max={1000} step='1' value={vv.toFixed(0)} />
+                                    <input style={{ width: 400 }} onChange={e => updatePath1(i, ii, e)} type="range" min={-2000} max={2000} step='1' value={parseInt(vv)} />
+                                    <input style={{ width: 50 }} onChange={e => updatePath1(i, ii, e)} type="number" min={-2000} max={2000} step='1' value={parseInt(vv)?.toFixed(0)} />
                                 </> : ''}
                             </div>)
                         })}
