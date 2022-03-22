@@ -896,7 +896,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
         objectCaching: false,
         stroke: options.stroke,
         strokeWidth: 2,
-        strokeUniform: true,
+      
     });
     canvas.add(rect).setActiveObject(rect);
     rect.on('mousedblclick', () => {

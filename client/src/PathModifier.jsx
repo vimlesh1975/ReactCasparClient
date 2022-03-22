@@ -11,14 +11,11 @@ export const startPath = () => {
     window.editor.canvas.off('mouse:down');
     window.editor.canvas.off('mouse:move');
     currentValue = [];
-    // setTimeout(() => {
     window.editor.canvas.on('mouse:down', eventHandlerMouseDown);
     window.editor.canvas.on('mouse:move', eventHandlerMouseMove);
-    // }, 1000);
 }
 const eventHandlerMouseMove = e => {
     if (currentValue.length > 0) {
-        // console.log(e.pointer.x, e.pointer.y)
         currentValue.push(['L', e.pointer.x, e.pointer.y]);
         window.editor.canvas.remove(temprect);
         temprect = new fabric.Path(currentValue, {
@@ -55,14 +52,9 @@ const eventHandlerMouseDown = (e) => {
         temprect = new fabric.Path(currentValue, {
             shadow: { ...shadowOptions, blur: 0 },
             fill: 'red',
-            // hasRotatingPoint: true,
             objectCaching: false,
             stroke: 'yellow',
             strokeWidth: 2,
-            // strokeUniform: true,
-            // strokeLineJoin: 'round',
-            // originX: 'center',
-            // originY: 'center',
         });
         window.editor.canvas.add(temprect);
         window.editor.canvas.requestRenderAll();
@@ -70,12 +62,23 @@ const eventHandlerMouseDown = (e) => {
 
 }
 
-const PathModifier = () => {
-    const canvas = useSelector(state => state.canvasReducer.canvas);
-    const path1 = useSelector(state => state.path1Reducer.path1);
-    const dispatch = useDispatch();
 
-    // define a function that can locate the controls.
+
+    function renderIcon(icon) {
+        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+            // var size = this.cornerSize;
+            ctx.save();
+            //   ctx.translate(left, top);
+            //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+            ctx.font = "15px Georgia";
+            ctx.textAlign = "center";
+            ctx.fillText(icon, left, top)
+            ctx.restore();
+        }
+    }
+
+ 
+// define a function that can locate the controls.
     // this function will be used both for drawing and for interaction.
     function polygonPositionHandler(dim, finalMatrix, fabricObject) {
         var pathObj = fabricObject.path[this.pointIndex]
@@ -113,7 +116,12 @@ const PathModifier = () => {
             )
         );
     }
-    // define a function that will define what the control does
+const PathModifier = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+    const path1 = useSelector(state => state.path1Reducer.path1);
+    const dispatch = useDispatch();
+
+     // define a function that will define what the control does
     // this function will be called on every mouse move after a control has been
     // clicked and is being dragged.
     // The function receive as argument the mouse event, the current trasnform object
@@ -190,20 +198,7 @@ const PathModifier = () => {
             return actionPerformed;
         }
     }
-
-    function renderIcon(icon) {
-        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-            var size = this.cornerSize;
-            ctx.save();
-            //   ctx.translate(left, top);
-            //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-            ctx.font = "15px Georgia";
-            ctx.textAlign = "center";
-            ctx.fillText(icon, left, top)
-            ctx.restore();
-        }
-    }
-
+   
     function edit() {
         // clone what are you copying since you
         // may want copy and paste on different moment.
@@ -258,7 +253,6 @@ const PathModifier = () => {
             window.editor.canvas.requestRenderAll();
         }
     }
-
     const closePath = () => {
 
         if (currentValue.length !== 0) {
@@ -270,14 +264,10 @@ const PathModifier = () => {
                 shadow: shadowOptions,
                 opacity: 1,
                 fill: 'red',
-                hasRotatingPoint: true,
                 objectCaching: false,
                 stroke: 'yellow',
-                strokeWidth: 4,
-                strokeUniform: true,
-                strokeLineJoin: 'round',
-                originX: 'center',
-                originY: 'center',
+                strokeWidth: 2,
+        
             });
             canvas.add(rect).setActiveObject(rect);
             rect.on('mousedblclick', () => {
@@ -287,12 +277,10 @@ const PathModifier = () => {
         }
         window.editor.canvas.off('mouse:down');
         window.editor.canvas.off('mouse:move');
-
     }
 
     window.closePath = closePath;
     window.edit = edit;
-
 
     const showpaths = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
@@ -315,7 +303,6 @@ const PathModifier = () => {
 
     const addValuePoint = i => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
-
             const updatedPath = [...path1];
             if ((i === 0) && (updatedPath[0][0]) === 'M') {
                 updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][1] + 20, updatedPath[i][2] + 20, updatedPath[i][1] + 40, updatedPath[i][2] + 40]);
@@ -323,14 +310,12 @@ const PathModifier = () => {
             else {
                 updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][3] + 20, updatedPath[i][4] + 20, updatedPath[i][3] + 40, updatedPath[i][4] + 40]);
             }
-
             currentValue = updatedPath;
             dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
         }
     }
-
 
     const updatePath1 = (i, ii, e) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
@@ -349,19 +334,15 @@ const PathModifier = () => {
 
     return (<div>
         <div style={{ paddingBottom: 10 }}>
-
             <div>
                 <button onClick={startPath}>Start Drawing Path by clicking on canvas</button>
                 <button onClick={closePath}>Finish Drawing path</button>
             </div>
             <div>
-
                 <button onClick={showpaths}>Initialise path of already made path</button>
                 <button id="edit" onClick={edit}>Toggle editing Path</button>
             </div>
-
             <div style={{ maxHeight: 800, border: '1px solid grey', overflow: 'scroll' }}>
-
                 {path1?.map((val, i) => {
                     return (<div key={i} style={{ maxWidth: 800, border: '1px solid grey', marginBottom: 10, paddingBottom: 10 }}>
                         Point {i + 1}/{path1.length}
@@ -369,7 +350,6 @@ const PathModifier = () => {
                             <button onClick={() => deleteValuePoint(i)} >Delete</button>
                             <button onClick={() => addValuePoint(i)} >Add</button>
                         </>}
-                        {/* {(i === 0) && (path1[0][0] === 'M') && <button onClick={() => ChangetoQpoint(i)} >Change to Q point</button>} */}
                         {val.map((vv, ii) => {
                             return (<div key={ii} >
                                 {(ii === 0) ? <><label style={{ width: 40 }} > {vv}</label></> : ''}
@@ -390,9 +370,7 @@ const PathModifier = () => {
                 })
                 }
             </div>
-
         </div>
-
     </div>)
 }
 
