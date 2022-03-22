@@ -3,7 +3,9 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import CustomClient from './CustomClient';
 
 import Hockey from './Hockey'
+import Kabaddi from './Kabaddi';
 import Tennis from './Tennis';
+
 
 const Games = () => {
     const onTabChange = () => {
@@ -15,6 +17,7 @@ const Games = () => {
                 <TabList>
                     <Tab>Hockey</Tab>
                     <Tab>Tennis</Tab>
+                    <Tab>Kabaddi</Tab>
                     <Tab>Custom Client</Tab>
                 </TabList>
 
@@ -23,6 +26,9 @@ const Games = () => {
                 </TabPanel>
                 <TabPanel>
                     <Tennis />
+                </TabPanel>
+                <TabPanel>
+                    <Kabaddi />
                 </TabPanel>
                 <TabPanel>
                     <CustomClient />

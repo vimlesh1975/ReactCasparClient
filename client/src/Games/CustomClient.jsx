@@ -2,20 +2,12 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint } from '../common'
+import { endpoint,tempAlert  } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
 
-function tempAlert(msg, duration) {
-    var el = document.createElement("div");
-    el.setAttribute("style", "position:absolute;top:40%;left:60%;background-color:white;font-size:40px");
-    el.innerHTML = msg;
-    setTimeout(function () {
-        el.parentNode.removeChild(el);
-    }, duration);
-    document.body.appendChild(el);
-}
+
 
 const CustomClient = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
