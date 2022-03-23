@@ -30,6 +30,7 @@ import { FaPlay, FaStop } from "react-icons/fa";
 import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
+import Effects from './Effects';
 
 const buildDate = '230322_1'
 
@@ -354,6 +355,7 @@ const App = () => {
             <Tab >Charts</Tab>
             <Tab >TimeLine</Tab>
             <Tab >Path Modifier</Tab>
+            <Tab >Effects</Tab>
 
             <Tab>Help</Tab>
           </TabList>
@@ -404,6 +406,9 @@ const App = () => {
           </TabPanel>
           <TabPanel>
             <PathModifier />
+          </TabPanel>
+          <TabPanel>
+            <Effects />
           </TabPanel>
           <TabPanel>
             <Help />
