@@ -876,6 +876,9 @@ export const paste = (canvas) => {
             _clipboard.top += 10;
             _clipboard.left += 10;
             canvas?.setActiveObject(clonedObj);
+            clonedObj.on('mousedblclick', () => {
+                window.edit();
+            })
             canvas?.requestRenderAll();
         }, ['id']);
     } catch (error) {

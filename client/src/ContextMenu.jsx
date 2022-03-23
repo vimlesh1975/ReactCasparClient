@@ -11,6 +11,7 @@ const ContextMenu = ({ canvas }) => {
       <ul>
         <li onClick={startPath}>Start Path</li>
         <li onClick={window.closePath}>Close Path</li>
+        <li onClick={window.edit}>Edit Path</li>
         <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
         <li onClick={() => sendToBack(canvas)}>Send To Back</li>
         <li onClick={() => lock(canvas)}>Lock <VscLock /></li>

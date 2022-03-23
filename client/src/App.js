@@ -31,7 +31,7 @@ import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 
-const buildDate = '220322_2'
+const buildDate = '230322_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
