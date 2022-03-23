@@ -64,64 +64,64 @@ const eventHandlerMouseDown = (e) => {
 
 
 
-    function renderIcon(icon) {
-        return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-            // var size = this.cornerSize;
-            ctx.save();
-            //   ctx.translate(left, top);
-            //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-            ctx.font = "15px Georgia";
-            ctx.textAlign = "center";
-            ctx.fillText(icon, left, top)
-            ctx.restore();
-        }
+function renderIcon(icon) {
+    return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+        // var size = this.cornerSize;
+        ctx.save();
+        //   ctx.translate(left, top);
+        //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.font = "15px Georgia";
+        ctx.textAlign = "center";
+        ctx.fillText(icon, left, top)
+        ctx.restore();
     }
+}
 
- 
+
 // define a function that can locate the controls.
-    // this function will be used both for drawing and for interaction.
-    function polygonPositionHandler(dim, finalMatrix, fabricObject) {
-        var pathObj = fabricObject.path[this.pointIndex]
-        var x = (pathObj[1] - fabricObject.pathOffset.x),
-            y = (pathObj[2] - fabricObject.pathOffset.y);
-        return fabric.util.transformPoint(
-            { x: x, y: y },
-            fabric.util.multiplyTransformMatrices(
-                fabricObject.canvas.viewportTransform,
-                fabricObject.calcTransformMatrix()
-            )
-        );
-    }
-    function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
-        var pathObj = fabricObject.path[this.pointIndex]
-        var x = (pathObj[3] - fabricObject.pathOffset.x),
-            y = (pathObj[4] - fabricObject.pathOffset.y);
-        return fabric.util.transformPoint(
-            { x: x, y: y },
-            fabric.util.multiplyTransformMatrices(
-                fabricObject.canvas.viewportTransform,
-                fabricObject.calcTransformMatrix()
-            )
-        );
-    }
-    function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
-        var pathObj = fabricObject.path[this.pointIndex]
-        var x = (pathObj[5] - fabricObject.pathOffset.x),
-            y = (pathObj[6] - fabricObject.pathOffset.y);
-        return fabric.util.transformPoint(
-            { x: x, y: y },
-            fabric.util.multiplyTransformMatrices(
-                fabricObject.canvas.viewportTransform,
-                fabricObject.calcTransformMatrix()
-            )
-        );
-    }
+// this function will be used both for drawing and for interaction.
+function polygonPositionHandler(dim, finalMatrix, fabricObject) {
+    var pathObj = fabricObject.path[this.pointIndex]
+    var x = (pathObj[1] - fabricObject.pathOffset.x),
+        y = (pathObj[2] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+        { x: x, y: y },
+        fabric.util.multiplyTransformMatrices(
+            fabricObject.canvas.viewportTransform,
+            fabricObject.calcTransformMatrix()
+        )
+    );
+}
+function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
+    var pathObj = fabricObject.path[this.pointIndex]
+    var x = (pathObj[3] - fabricObject.pathOffset.x),
+        y = (pathObj[4] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+        { x: x, y: y },
+        fabric.util.multiplyTransformMatrices(
+            fabricObject.canvas.viewportTransform,
+            fabricObject.calcTransformMatrix()
+        )
+    );
+}
+function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
+    var pathObj = fabricObject.path[this.pointIndex]
+    var x = (pathObj[5] - fabricObject.pathOffset.x),
+        y = (pathObj[6] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+        { x: x, y: y },
+        fabric.util.multiplyTransformMatrices(
+            fabricObject.canvas.viewportTransform,
+            fabricObject.calcTransformMatrix()
+        )
+    );
+}
 const PathModifier = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const path1 = useSelector(state => state.path1Reducer.path1);
     const dispatch = useDispatch();
 
-     // define a function that will define what the control does
+    // define a function that will define what the control does
     // this function will be called on every mouse move after a control has been
     // clicked and is being dragged.
     // The function receive as argument the mouse event, the current trasnform object
@@ -129,19 +129,19 @@ const PathModifier = () => {
     // transform.target is a reference to the current object being transformed,
     function actionHandler(eventData, transform, x, y) {
         var polygon = transform.target,
-        currentControl = polygon.controls[polygon.__corner],
-        mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
-        polygonBaseSize = polygon._getNonTransformedDimensions(),
-        size = polygon._getTransformedDimensions(0, 0),
-        finalPointPosition = {
-            x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-            y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-        };
-    polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
-    polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
-    dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
+            currentControl = polygon.controls[polygon.__corner],
+            mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
+            polygonBaseSize = polygon._getNonTransformedDimensions(),
+            size = polygon._getTransformedDimensions(0, 0),
+            finalPointPosition = {
+                x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+                y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+            };
+        polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
+        polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
+        dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
-    return true;
+        return true;
     }
     function actionHandler2(eventData, transform, x, y) {
         var polygon = transform.target,
@@ -198,7 +198,7 @@ const PathModifier = () => {
             return actionPerformed;
         }
     }
-   
+
     function edit() {
         // clone what are you copying since you
         // may want copy and paste on different moment.
@@ -257,6 +257,7 @@ const PathModifier = () => {
 
         if (currentValue.length !== 0) {
             canvas.remove(temprect);
+            currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + currentValue[0][1])/2, (currentValue[currentValue.length - 1][4] + currentValue[0][2])/2, currentValue[0][1], currentValue[0][2]])
             currentValue.push(['z'])
             const id1 = 'id_' + uuidv4();
             const rect = new fabric.Path(currentValue, {
@@ -267,7 +268,7 @@ const PathModifier = () => {
                 objectCaching: false,
                 stroke: 'yellow',
                 strokeWidth: 2,
-        
+
             });
             canvas.add(rect).setActiveObject(rect);
             rect.on('mousedblclick', () => {
@@ -308,12 +309,14 @@ const PathModifier = () => {
                 updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][1] + 20, updatedPath[i][2] + 20, updatedPath[i][1] + 40, updatedPath[i][2] + 40]);
             }
             else {
-                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][3] + 20, updatedPath[i][4] + 20, updatedPath[i][3] + 40, updatedPath[i][4] + 40]);
+                updatedPath.splice(i + 1, 0, ['Q', updatedPath[i][1] + 20, updatedPath[i][2] + 20, updatedPath[i][1] + 40, updatedPath[i][2] + 40]);
             }
             currentValue = updatedPath;
             dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
             canvas.getActiveObjects()[0].set({ path: updatedPath });
             canvas?.requestRenderAll();
+            edit();
+            edit();
         }
     }
 
