@@ -31,7 +31,7 @@ var Direction = {
     DOWN: 3
 };
 
-export const resetZommandPan=(canvas)=>{
+export const resetZommandPan = (canvas) => {
     canvas.setZoom(1);
     canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
 }
@@ -233,7 +233,7 @@ export const createText = (canvas) => {
         left: 100,
         top: 0,
         width: 480,
-        fill:options.currentColor,
+        fill: options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
@@ -255,7 +255,7 @@ export const createIText = (canvas) => {
         left: 100,
         top: 0,
         width: 480,
-        fill:options.currentColor,
+        fill: options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
@@ -743,12 +743,42 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
 });
 
 
-const putat00 = (canvas) => {
-    // canvas.setZoom(1)
+const putatCenter = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    canvas.getActiveObject()?.set({ left: 0, top: 0 });
+    canvas.centerObject(canvas.getActiveObject());
+    canvas.requestRenderAll();
 }
+const selectedatCenter = (canvas) => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const selectedItems=canvas.getActiveObjects();
+    canvas.discardActiveObject();
+    selectedItems.forEach(item =>item.center());
+    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
+}
+const selectedatCenterH = (canvas) => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const selectedItems=canvas.getActiveObjects();
+    canvas.discardActiveObject();
+    selectedItems.forEach(item =>item.centerH());
+    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
+}
+
+const selectedatCenterV = (canvas) => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const selectedItems=canvas.getActiveObjects();
+    canvas.discardActiveObject();
+    selectedItems.forEach(item =>item.centerV());
+    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
+}
+
+
 const alignAllLeft = (canvas) => {
     const arr = [];
     canvas.getActiveObjects().forEach(item => {
@@ -899,7 +929,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
         objectCaching: false,
         stroke: options.stroke,
         strokeWidth: 2,
-      
+
     });
     canvas.add(rect).setActiveObject(rect);
     rect.on('mousedblclick', () => {
@@ -2166,9 +2196,12 @@ const DrawingController = () => {
                 </div>
 
                 <div className='drawingToolsRow' >
-                    <b>Zoom and Pan: </b>
-                    <button onClick={()=>resetZommandPan(canvas) }>Reset Zoom and Pan</button>
-                    <button onClick={() => putat00(canvas)}>Select All and Put at 0 0</button>
+                    <b>Center: </b>
+                    <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
+                    <button onClick={() => putatCenter(canvas)}>All at Center</button>
+                    <button onClick={() => selectedatCenter(canvas)}>Center</button>
+                    <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
+                    <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
                 </div>
                 <div className='drawingToolsRow' >
                     <b>Tools: </b>

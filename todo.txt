@@ -42,3 +42,6 @@ Update page brought to top so that page is updated while on any page.
 export to svg and json with id, and lock information.
 added a black dot in the center of canvas.
 corrected custom client current page selection.
+
+25.03.22
+1. centering objects
