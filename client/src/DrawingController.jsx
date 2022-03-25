@@ -1157,6 +1157,7 @@ const DrawingController = () => {
         setCurrentMode(mode);
         if (mode === 'none') {
             canvas.isDrawingMode = false;
+            canvas.getObjects().forEach((item)=>item.set({objectCaching:false}))
             return;
         } else {
             canvas.isDrawingMode = true;
