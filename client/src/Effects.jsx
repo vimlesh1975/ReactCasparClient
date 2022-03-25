@@ -19,9 +19,10 @@ const Effects = () => {
         "`)
     }
     // const sendColorEffect = (layerNumber) => {
-    //     const inAnimation = `@keyframes example {
-    //         50% {fill:blue}
-    //          text {animation:example ${blinkingDuration}s linear infinite; }`
+    //     const inAnimation = `text {
+    //        backGround-Color:#060
+    //     }
+    //  `
     //     endpoint(`call ${window.chNumber}-${layerNumber} "
     //     style.textContent = '${inAnimation}';
     //     "`)

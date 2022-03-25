@@ -643,8 +643,7 @@ export const lock = canvas => {
 
 
 export const unlockAll = canvas => {
-    const aa = canvas.getObjects()
-    aa.forEach(element => element.selectable = true);
+    canvas.forEachObject(element => element.selectable = true);
 }
 
 const ErasedGroup = fabric.util.createClass(fabric.Group, {
@@ -751,29 +750,29 @@ const putatCenter = (canvas) => {
 }
 const selectedatCenter = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const selectedItems=canvas.getActiveObjects();
+    const selectedItems = canvas.getActiveObjects();
     canvas.discardActiveObject();
-    selectedItems.forEach(item =>item.center());
-    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    selectedItems.forEach(item => item.center());
+    var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas, });
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
 }
 const selectedatCenterH = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const selectedItems=canvas.getActiveObjects();
+    const selectedItems = canvas.getActiveObjects();
     canvas.discardActiveObject();
-    selectedItems.forEach(item =>item.centerH());
-    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    selectedItems.forEach(item => item.centerH());
+    var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas, });
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
 }
 
 const selectedatCenterV = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const selectedItems=canvas.getActiveObjects();
+    const selectedItems = canvas.getActiveObjects();
     canvas.discardActiveObject();
-    selectedItems.forEach(item =>item.centerV());
-    var sel = new fabric.ActiveSelection(selectedItems, {canvas: canvas, });
+    selectedItems.forEach(item => item.centerV());
+    var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas, });
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
 }
@@ -836,8 +835,6 @@ export const groupObjects = (canvas, shouldGroup) => {
             return;
         }
         canvas.getActiveObject().toGroup().set({ shadow: shadowOptions });
-        canvas.requestRenderAll();
-
     }
     else {
         if (!canvas.getActiveObject()) {
@@ -846,11 +843,10 @@ export const groupObjects = (canvas, shouldGroup) => {
         if (canvas.getActiveObject().type !== 'group') {
             return;
         }
-        canvas.getActiveObject().toActiveSelection();
-        const aa = canvas.getObjects();
-        aa.forEach(element => element.set({ objectCaching: false, shadow: shadowOptions }));
-        canvas.requestRenderAll();
+        canvas.getActiveObject().toActiveSelection();//ungroup
+        canvas.forEachObject(element => element.set({ objectCaching: false, shadow: shadowOptions }));
     }
+    canvas.requestRenderAll();
 };
 
 
@@ -1157,7 +1153,7 @@ const DrawingController = () => {
         setCurrentMode(mode);
         if (mode === 'none') {
             canvas.isDrawingMode = false;
-            canvas.getObjects().forEach((item)=>item.set({objectCaching:false}))
+            canvas.getObjects().forEach((item) => item.set({ objectCaching: false }))
             return;
         } else {
             canvas.isDrawingMode = true;

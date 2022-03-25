@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
 import { shadowOptions } from './common'
+import { mousedownandmousemoveevent } from './Drawing'
+
 
 var currentValue = [];
 var temprect;
@@ -278,27 +280,7 @@ const PathModifier = () => {
         }
        canvas.off('mouse:down');
        canvas.off('mouse:move');
-
-        canvas.on('mouse:down', function (opt) {
-            var evt = opt.e;
-            if (evt.altKey === true) {
-                this.isDragging = true;
-                this.selection = false;
-                this.lastPosX = evt.clientX;
-                this.lastPosY = evt.clientY;
-            }
-        });
-        canvas.on('mouse:move', function (opt) {
-            if (this.isDragging) {
-                var e = opt.e;
-                var vpt = this.viewportTransform;
-                vpt[4] += e.clientX - this.lastPosX;
-                vpt[5] += e.clientY - this.lastPosY;
-                this.requestRenderAll();
-                this.lastPosX = e.clientX;
-                this.lastPosY = e.clientY;
-            }
-        });
+       mousedownandmousemoveevent(canvas);
     }
 
     window.closePath = closePath;
