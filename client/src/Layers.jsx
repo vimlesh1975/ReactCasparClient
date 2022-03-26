@@ -88,7 +88,7 @@ const Layers = () => {
 
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
-        <div style={{ height: 580, width: 835, overflow: 'scroll', border: '1px solid black' }}>
+        <div style={{ border: '1px solid black', height: 580, width: 835, overflow: 'scroll' }} >
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -97,9 +97,11 @@ const Layers = () => {
                             style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                             {...provided.droppableProps}
                         >
-                            <table border='1' >
-                                <tbody>
-                                    <tr><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Lock</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
+                            <table border='1'>
+                                <thead style={{ position: 'sticky', top:0, backgroundColor:'grey' }}>
+                                    <tr ><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Lock</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
+                                </thead>
+                                <tbody >
                                     {layers?.map((val, i) => {
                                         return (
                                             <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
@@ -111,8 +113,8 @@ const Layers = () => {
                                                             ...provided.draggableProps.style,
                                                             backgroundColor: snapshot.isDragging ? 'red' : 'white',
                                                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
-                                                            verticalAlign:'top'
-                                                            // margin: '10px'
+                                                            verticalAlign: 'top',
+                                                            //  marginTop: 100
                                                         }}
                                                     ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
                                                         <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
@@ -120,7 +122,7 @@ const Layers = () => {
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
                                                         <td key1={i} onClick={(e) => toggleLock(e, canvas)}>{(!val.selectable).toString()}</td>
 
-                                                        <td style={{ fontFamily: val.fontFamily}} key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
+                                                        <td style={{ fontFamily: val.fontFamily }} key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
 
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontFamily}</td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>
@@ -148,7 +150,7 @@ const Layers = () => {
         </div>
 
         <div>
-            <br /> <button onClick={setText}>Set Text</button> <button onClick={setId}>Set Id</button><input type='text' style={{width:300}} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
+            <br /> <button onClick={setText}>Set Text</button> <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
             Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea}
             <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 190, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
         </div>
