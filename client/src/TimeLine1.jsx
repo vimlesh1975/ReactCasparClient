@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
@@ -7,16 +7,25 @@ import { fabric } from "fabric";
 var cf = 250;
 var aa;
 const TimeLine1 = () => {
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   // const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
-  const [kf, setKf] = useState([[50, 100, 300, 350], [100, 250, 650, 750]]);
+  const [kf, setKf] = useState([[50, 100, 300, 350], [50, 100, 200, 250]]);
+  // const [kf, setKf] = useState(layers?.map((val,i)=>[50, 100, 300, 350]));
+
+  const position = { delay: kf[0][0] * 10, initialx: 300, finalx: 100, outx: 300, initialToFinalDuration: (kf[0][1] - kf[0][0]) * 10, stayDuration: (kf[0][2] - kf[0][1]) * 10, outDuration: (kf[0][3] - kf[0][2]) * 10 };
+
   const addKF = i => {
     const updatedkf = [...kf];
     updatedkf[i].push(currentFrame);
     setKf(updatedkf);
   }
+
+  // useEffect(() => {
+  //   const bb = layers?.map((val, i) => [50, 100, 300, 350])
+  //   setKf(bb)
+  // }, [])
 
   const modifyKf = (e, d, i, kfi) => {
     const updatedkf = [...kf];
@@ -60,7 +69,6 @@ const TimeLine1 = () => {
     clearInterval(aa);
   }
 
-  const position = { delay: kf[0][0] * 10, initialx: -100, finalx: 100, initialToFinalDuration: (kf[0][1] - kf[0][0]) * 10, stayDuration: (kf[0][2] - kf[0][1]) * 10, outx: 300, outDuration: (kf[0][3] - kf[0][2]) * 10 };
 
   const playtocasparcg = () => {
     play();
@@ -108,7 +116,7 @@ const TimeLine1 = () => {
   }
 
   const stopfromocasparcg = () => {
-    var inAnimation1 = `@keyframes roll-in-left1{0%{opacity:1;transform:translateZ(0px);}100%{opacity:0;transform:translateX(${position.outx}px);}} div{animation-name:roll-in-left1; animation-duration:${position.outDuration / 1000}s; animation-timing-function:ease-out;}`;
+    var inAnimation1 = `@keyframes roll-in-left1{0%{opacity:1;transform:translateX(0px);}100%{opacity:0;transform:translateX(${position.outx}px);}} div{animation-name:roll-in-left1; animation-duration:${position.outDuration / 1000}s; animation-timing-function:ease-out;}`;
     endpoint(`call ${window.chNumber}-${108} "
         style.textContent = '${inAnimation1}';
         "`);
@@ -141,6 +149,12 @@ const TimeLine1 = () => {
     }, position.delay + position.initialToFinalDuration + position.stayDuration);
 
   }
+
+  const startPoint = () => {
+    console.log(canvas.item(0).left);
+    // position.initialx = canvas.item(0).left;
+  }
+
   return (<div>
 
     <div className="playback-and-actions-panel" >
@@ -148,7 +162,9 @@ const TimeLine1 = () => {
       <button onClick={stopfromocasparcg}>stopfromocasparcg</button>
       <button onClick={preView}>preView</button>
 
-
+      <button onClick={startPoint}>Start Point</button>
+      {/* <button onClick={finalPoint}>Final Point</button>
+      <button onClick={endPoint}>End Point</button> */}
 
       <button onClick={play}>Play</button>
       <button onClick={pause}>pause</button>
@@ -156,53 +172,65 @@ const TimeLine1 = () => {
       <button>Loop Play</button>
     </div>
 
-    <div style={{ position: 'relative' }}>
+    <div>
+      {layers?.map((_, i) => {
+        return <div key={i} style={{}}>
+          <div style={{ backgroundColor: 'grey', width: 800, height: 20, marginTop: 1, }} >
+            <div style={{ position: 'relative' }}>
+              {(i === 0) && <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                size={{ width: 5, height: 200 }}
+                position={{ x: currentFrame, y: 0 }}
+                onDrag={(e, d) => {
+                  setCurrentFrame(d.x);
+                  if ((d.x < kf[0][0]) || (d.x > kf[0][3])) {
+                    canvas.item(0).set({ opacity: 0 });
+                  }
+                  if ((d.x > kf[0][0]) && (d.x < kf[0][1])) {
+                    canvas.item(0).set({
+                      left: position.initialx + (position.finalx - position.initialx) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
+                      opacity: (d.x - kf[0][0]) / (kf[0][1] - kf[0][0])
+                    });
+                  }
 
-      <div>
-        {layers?.map((_, i) => {
-          return <div key={i} style={{ display: 'flex', }}>
-            <div> <button onClick={() => addKF(i)} style={{ marginRight: 5 }}>KF</button></div>
-            <div style={{ display: 'inline', backgroundColor: 'grey', width: 800, marginTop: 1, }} >
-              <div style={{ position: 'relative' }}>
+                  if ((d.x > kf[0][1]) && (d.x < kf[0][2])) {
+                    canvas.item(0).set({ left: position.finalx, opacity: 1 });
+                  }
+                  if ((d.x > kf[0][2]) && (d.x < kf[0][3])) {
+                    canvas.item(0).set({
+                      left: position.finalx + (position.outx - position.finalx) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
+                      opacity: 1 - (d.x - kf[0][2]) / (kf[0][3] - kf[0][2])
+                    });
+                  }
+                  canvas.requestRenderAll();
 
-                {(i === 0) && <Rnd
+                }}
+              >
+                <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
+                  {currentFrame}
+                </div>
+              </Rnd>}
+
+              {(kf[i])?.map((val, kfi) =>
+                <Rnd
+                  key={kfi}
                   dragAxis='x'
                   enableResizing={{}}
                   bounds='parent'
-                  size={{ width: 5, height: 200 }}
-                  position={{ x: currentFrame, y: 0 }}
+                  position={{ x: val, y: 0 }}
                   onDrag={(e, d) => {
-                    setCurrentFrame(d.x);
-                    canvas.item(0).set({ left:(currentFrame>kf[0][0])?currentFrame:position.initialx, opacity: (currentFrame>kf[0][0])?(currentFrame-kf[0][0])/(kf[0][1]-kf[0][0]):0 });
-                    canvas.requestRenderAll();
-
+                    modifyKf(e, d, i, kfi)
                   }}
-                >
-                  <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
-                    {currentFrame}
-                  </div>
-                </Rnd>}
-
-                {(kf[i])?.map((val, kfi) =>
-                  <Rnd
-                    key={kfi}
-                    dragAxis='x'
-                    enableResizing={{}}
-                    bounds='parent'
-                    position={{ x: val, y: 0 }}
-                    onDrag={(e, d) => {
-                      modifyKf(e, d, i, kfi)
-                    }}
-                  > <button style={{ width: 5, height: 10 }}>{kfi}</button>
-                  </Rnd>
-                )}
-              </div>
+                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
+                </Rnd>
+              )}
             </div>
           </div>
-        })}
-      </div>
+        </div>
+      })}
     </div>
-
   </div>)
 }
 
