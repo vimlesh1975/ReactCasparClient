@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
@@ -10,22 +10,33 @@ const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  // const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [kf, setKf] = useState([[50, 100, 300, 350], [50, 100, 200, 250]]);
-  // const [kf, setKf] = useState(layers?.map((val,i)=>[50, 100, 300, 350]));
+  const [xpositions, setXpositions] = useState({
+    initialx: 300,
+    finalx: 100,
+    outx: 300,
 
-  const position = { delay: kf[0][0] * 10, initialx: 300, finalx: 100, outx: 300, initialToFinalDuration: (kf[0][1] - kf[0][0]) * 10, stayDuration: (kf[0][2] - kf[0][1]) * 10, outDuration: (kf[0][3] - kf[0][2]) * 10 };
+    initialy: 300,
+    finaly: 100,
+    outy: 300,
+  })
 
-  const addKF = i => {
-    const updatedkf = [...kf];
-    updatedkf[i].push(currentFrame);
-    setKf(updatedkf);
-  }
+  const position = {
+    delay: kf[0][0] * 10,
 
-  // useEffect(() => {
-  //   const bb = layers?.map((val, i) => [50, 100, 300, 350])
-  //   setKf(bb)
-  // }, [])
+    initialx: xpositions.initialx,
+    finalx: xpositions.finalx,
+    outx: xpositions.outx,
+
+    initialy: xpositions.initialy,
+    finaly: xpositions.finaly,
+    outy: xpositions.outy,
+
+    initialToFinalDuration: (kf[0][1] - kf[0][0]) * 10,
+    stayDuration: (kf[0][2] - kf[0][1]) * 10,
+    outDuration: (kf[0][3] - kf[0][2]) * 10
+  };
+
 
   const modifyKf = (e, d, i, kfi) => {
     const updatedkf = [...kf];
@@ -65,19 +76,20 @@ const TimeLine1 = () => {
     }, 10);
   }
 
-  const pause = () => {
-    clearInterval(aa);
-  }
-
-
   const playtocasparcg = () => {
     play();
-    canvas.item(0).set({ left: position.finalx, opacity: 1 });
+    canvas.item(0).set({
+      left: position.finalx,
+      top: position.finaly,
+      opacity: 1
+    });
     canvas.requestRenderAll();
+    var i = 0
+    var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
     var inAnimation1 = `@keyframes roll-in-left{
-      0%{transform:translateX(${position.initialx}px);opacity:0}
-      100%{transform:translateX(0);opacity:1}} 
-      div {animation:roll-in-left ${position.initialToFinalDuration / 1000}s ease-out both}`;
+      0%{transform:translate(${position.initialx - position.finalx}px,${position.initialy - position.finaly}px);opacity:0}
+      100%{transform:translate(0,0);opacity:1}} 
+      #${canvas?.item(0).id} ${type} {animation:roll-in-left ${position.initialToFinalDuration / 1000}s ease-out both}`;
 
     // var inAnimation2 = ``;
     // layers.forEach((element, i) => {
@@ -116,7 +128,7 @@ const TimeLine1 = () => {
   }
 
   const stopfromocasparcg = () => {
-    var inAnimation1 = `@keyframes roll-in-left1{0%{opacity:1;transform:translateX(0px);}100%{opacity:0;transform:translateX(${position.outx}px);}} div{animation-name:roll-in-left1; animation-duration:${position.outDuration / 1000}s; animation-timing-function:ease-out;}`;
+    var inAnimation1 = `@keyframes roll-in-left1{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(${position.outx - position.finalx}px,${position.outy - position.finaly}px);}} div{animation-name:roll-in-left1; animation-duration:${position.outDuration / 1000}s; animation-timing-function:ease-out;}`;
     endpoint(`call ${window.chNumber}-${108} "
         style.textContent = '${inAnimation1}';
         "`);
@@ -128,11 +140,11 @@ const TimeLine1 = () => {
   }
   const preView = () => {
     play();
-    canvas.item(0).set({ left: position.initialx, opacity: 0 });
+    canvas.item(0).set({ left: position.initialx, top: position.initialy, opacity: 0 });
     canvas.requestRenderAll();
 
     setTimeout(() => {
-      canvas?.item(0).animate({ left: position.finalx, opacity: 1 }, {
+      canvas?.item(0).animate({ left: position.finalx, top: position.finaly, opacity: 1 }, {
         onChange: canvas.renderAll.bind(canvas),
         duration: position.initialToFinalDuration,
         easing: fabric.util.ease.linear
@@ -141,7 +153,7 @@ const TimeLine1 = () => {
 
 
     setTimeout(() => {
-      canvas?.item(0).animate({ left: position.outx, opacity: 0 }, {
+      canvas?.item(0).animate({ left: position.outx, top: position.outy, opacity: 0 }, {
         onChange: canvas.renderAll.bind(canvas),
         duration: position.outDuration,
         easing: fabric.util.ease.linear
@@ -151,31 +163,70 @@ const TimeLine1 = () => {
   }
 
   const startPoint = () => {
-    console.log(canvas.item(0).left);
-    // position.initialx = canvas.item(0).left;
+    setXpositions({ ...xpositions, initialx: canvas.item(0).left, initialy: canvas.item(0).top })
+  }
+  const finalPoint = () => {
+    setXpositions({ ...xpositions, finalx: canvas.item(0).left, finaly: canvas.item(0).top })
+  }
+
+  const endPoint = () => {
+    setXpositions({ ...xpositions, outx: canvas.item(0).left, outy: canvas.item(0).top })
+  }
+
+  const ss = (d) => {
+    setCurrentFrame(d.x);
+    if (d.x < kf[0][0]) {
+      canvas.item(0).set({
+        left: position.initialx,
+        top: position.initialy,
+        opacity: 0,
+      });
+    }
+
+    if (d.x > kf[0][3]) {
+      canvas.item(0).set({
+        left: position.outx,
+        top: position.outy,
+        opacity: 0,
+      });
+    }
+
+    if ((d.x > kf[0][0]) && (d.x < kf[0][1])) {
+      canvas.item(0).set({
+        left: position.initialx + (position.finalx - position.initialx) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
+        top: position.initialy + (position.finaly - position.initialy) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
+        opacity: (d.x - kf[0][0]) / (kf[0][1] - kf[0][0])
+      });
+    }
+
+    if ((d.x > kf[0][1]) && (d.x < kf[0][2])) {
+      canvas.item(0).set({ left: position.finalx, top: position.finaly, opacity: 1 });
+    }
+    if ((d.x > kf[0][2]) && (d.x < kf[0][3])) {
+      canvas.item(0).set({
+        left: position.finalx + (position.outx - position.finalx) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
+        top: position.finaly + (position.outy - position.finaly) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
+        opacity: 1 - (d.x - kf[0][2]) / (kf[0][3] - kf[0][2])
+      });
+    }
+    canvas.requestRenderAll();
   }
 
   return (<div>
 
-    <div className="playback-and-actions-panel" >
-      <button onClick={playtocasparcg}>playtocasparcg</button>
-      <button onClick={stopfromocasparcg}>stopfromocasparcg</button>
+    <div  >
+      <button onClick={startPoint}>Set Start Point</button>
+      <button onClick={finalPoint}>Set Final Point</button>
+      <button onClick={endPoint}>Set End Point</button>
+
       <button onClick={preView}>preView</button>
-
-      <button onClick={startPoint}>Start Point</button>
-      {/* <button onClick={finalPoint}>Final Point</button>
-      <button onClick={endPoint}>End Point</button> */}
-
-      <button onClick={play}>Play</button>
-      <button onClick={pause}>pause</button>
-      <button>Stop</button>
-      <button>Loop Play</button>
+      <button onClick={playtocasparcg}>playtocasparcg</button>
     </div>
 
     <div>
       {layers?.map((_, i) => {
         return <div key={i} style={{}}>
-          <div style={{ backgroundColor: 'grey', width: 800, height: 20, marginTop: 1, }} >
+          <div onClick={(e) => ss({ x: e.screenX - 1040 })} style={{ backgroundColor: 'grey', width: 800, height: 20, marginTop: 1, }} >
             <div style={{ position: 'relative' }}>
               {(i === 0) && <Rnd
                 dragAxis='x'
@@ -184,34 +235,58 @@ const TimeLine1 = () => {
                 size={{ width: 5, height: 200 }}
                 position={{ x: currentFrame, y: 0 }}
                 onDrag={(e, d) => {
-                  setCurrentFrame(d.x);
-                  if ((d.x < kf[0][0]) || (d.x > kf[0][3])) {
-                    canvas.item(0).set({ opacity: 0 });
-                  }
-                  if ((d.x > kf[0][0]) && (d.x < kf[0][1])) {
-                    canvas.item(0).set({
-                      left: position.initialx + (position.finalx - position.initialx) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
-                      opacity: (d.x - kf[0][0]) / (kf[0][1] - kf[0][0])
-                    });
-                  }
-
-                  if ((d.x > kf[0][1]) && (d.x < kf[0][2])) {
-                    canvas.item(0).set({ left: position.finalx, opacity: 1 });
-                  }
-                  if ((d.x > kf[0][2]) && (d.x < kf[0][3])) {
-                    canvas.item(0).set({
-                      left: position.finalx + (position.outx - position.finalx) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
-                      opacity: 1 - (d.x - kf[0][2]) / (kf[0][3] - kf[0][2])
-                    });
-                  }
-                  canvas.requestRenderAll();
-
+                  ss(d);
                 }}
               >
                 <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
                   {currentFrame}
                 </div>
-              </Rnd>}
+              </Rnd>
+              }
+
+              {(i === 0) &&
+                <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: kf[0][0], y: 0 }}
+                  onDrag={(e, d) => {
+                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
+                    setKf(updatedkf)
+                  }}
+                >
+                  <div style={{ width: kf[0][1] - kf[0][0], height: 10, backgroundColor: 'yellow' }}></div>
+                </Rnd>
+              }
+
+              {(i === 0) &&
+                <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: kf[0][1], y: 0 }}
+                  onDrag={(e, d) => {
+                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
+                    setKf(updatedkf)
+                  }}
+                >
+                  <div style={{ width: kf[0][2] - kf[0][1], height: 10, backgroundColor: 'green' }}></div>
+                </Rnd>
+              }
+              {(i === 0) &&
+                <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: kf[0][2], y: 0 }}
+                  onDrag={(e, d) => {
+                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
+                    setKf(updatedkf)
+                  }}
+                >
+                  <div style={{ width: kf[0][3] - kf[0][2], height: 10, backgroundColor: 'red' }}></div>
+                </Rnd>
+              }
 
               {(kf[i])?.map((val, kfi) =>
                 <Rnd
@@ -231,6 +306,7 @@ const TimeLine1 = () => {
         </div>
       })}
     </div>
+
   </div>)
 }
 
