@@ -6,12 +6,17 @@ import { fabric } from "fabric";
 
 var cf = 250;
 var aa;
+// const bb = Array.from(Array(10).keys());
+// const cc = bb.map((val, i) => [50, 100, 300, 350]);
+
 const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [kf, setKf] = useState([[50, 100, 300, 350], [50, 100, 200, 250]]);
-  const [xpositions, setXpositions] = useState({
+  const [kf, setKf] = useState(Array.from(Array(10).keys()).map((val, i) => [50, 100, 300, 350]));
+  const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
+
+  const [xpositions, setXpositions] = useState(Array.from(Array(10).keys()).map((val, i) => ({
     initialx: 300,
     finalx: 100,
     outx: 300,
@@ -19,23 +24,27 @@ const TimeLine1 = () => {
     initialy: 300,
     finaly: 100,
     outy: 300,
-  })
+  })))
+  // console.log(bb);
+  // console.log(cc);
+  // console.log(xpositions);
+  // console.log(activeLayers)
 
-  const position = {
-    delay: kf[0][0] * 10,
+  const position = i => ({
+    delay: kf[i][0] * 10,
 
-    initialx: xpositions.initialx,
-    finalx: xpositions.finalx,
-    outx: xpositions.outx,
+    initialx: xpositions[i].initialx,
+    finalx: xpositions[i].finalx,
+    outx: xpositions[i].outx,
 
-    initialy: xpositions.initialy,
-    finaly: xpositions.finaly,
-    outy: xpositions.outy,
+    initialy: xpositions[i].initialy,
+    finaly: xpositions[i].finaly,
+    outy: xpositions[i].outy,
 
-    initialToFinalDuration: (kf[0][1] - kf[0][0]) * 10,
-    stayDuration: (kf[0][2] - kf[0][1]) * 10,
-    outDuration: (kf[0][3] - kf[0][2]) * 10
-  };
+    initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
+    stayDuration: (kf[i][2] - kf[i][1]) * 10,
+    outDuration: (kf[i][3] - kf[i][2]) * 10
+  });
 
 
   const modifyKf = (e, d, i, kfi) => {
@@ -64,7 +73,7 @@ const TimeLine1 = () => {
     setCurrentFrame(0);
     clearInterval(aa);
     aa = setInterval(() => {
-      if (cf < kf[0][3]) {
+      if (cf < 800) {
         cf = cf + 1;
         setCurrentFrame(val => val + 1);
       }
@@ -77,19 +86,39 @@ const TimeLine1 = () => {
   }
 
   const playtocasparcg = () => {
+    console.log(position(0))
     play();
-    canvas.item(0).set({
-      left: position.finalx,
-      top: position.finaly,
+    canvas.forEachObject((element, i) => element.set({
+      left: position(i).finalx,
+      top: position(i).finaly,
       opacity: 1
-    });
+    }));
+
+    // canvas.item(0).set({
+    //   left: position.finalx,
+    //   top: position.finaly,
+    //   opacity: 1
+    // });
+
     canvas.requestRenderAll();
-    var i = 0
-    var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
-    var inAnimation1 = `@keyframes roll-in-left{
-      0%{transform:translate(${position.initialx - position.finalx}px,${position.initialy - position.finaly}px);opacity:0}
-      100%{transform:translate(0,0);opacity:1}} 
-      #${canvas?.item(0).id} ${type} {animation:roll-in-left ${position.initialToFinalDuration / 1000}s ease-out both}`;
+
+    // var i = 0
+    // var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
+    // var inAnimation1 = `@keyframes roll-in-left{
+    //   0%{transform:translate(${position.initialx - position.finalx}px,${position.initialy - position.finaly}px);opacity:0}
+    //   100%{transform:translate(0,0);opacity:1}} 
+    //   #${canvas?.item(0).id} ${type} {animation:roll-in-left ${position.initialToFinalDuration / 1000}s ease-out both}`;
+
+    var inAnimation2 = ``;
+    canvas.forEachObject((element, i) => {
+      var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
+      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id} 
+      {
+        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px);opacity:0}
+        100%{transform:translate(0,0);opacity:1}} 
+      } 
+     #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: ${position(i).initialToFinalDuration / 1000}s;animation-timing-function:linear; }`
+    });
 
     // var inAnimation2 = ``;
     // layers.forEach((element, i) => {
@@ -118,104 +147,142 @@ const TimeLine1 = () => {
         aa.style.zoom=(${1920 * 100}/1024)+'%';
         document.body.style.overflow='hidden';
         var style = document.createElement('style');
-        style.textContent = '${inAnimation1}';
+        style.textContent = '${inAnimation2}';
         document.head.appendChild(style);
         "`);
       setTimeout(() => {
         stopfromocasparcg()
-      }, position.initialToFinalDuration + position.stayDuration);
-    }, position.delay);
+      }, position(0).initialToFinalDuration + position(0).stayDuration);
+    }, position(0).delay);
   }
 
   const stopfromocasparcg = () => {
-    var inAnimation1 = `@keyframes roll-in-left1{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(${position.outx - position.finalx}px,${position.outy - position.finaly}px);}} div{animation-name:roll-in-left1; animation-duration:${position.outDuration / 1000}s; animation-timing-function:ease-out;}`;
+    var inAnimation3 = ``;
+    canvas.forEachObject((element, i) => {
+      var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
+      inAnimation3 = inAnimation3 + `@keyframes ${type}${canvas?.item(i).id} 
+      {
+        0%{transform:translate(0,0);opacity:1}} 
+        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:1}
+      } 
+     #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: ${position(i).initialToFinalDuration / 1000}s;animation-timing-function:linear; }`
+    });
+
+    // var inAnimation3 = `@keyframes roll-in-left1{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(${position[0].outx - position[0].finalx}px,${position[0].outy - position[0].finaly}px);}} div{animation-name:roll-in-left1; animation-duration:${position[0].outDuration / 1000}s; animation-timing-function:ease-out;}`;
     endpoint(`call ${window.chNumber}-${108} "
-        style.textContent = '${inAnimation1}';
+        style.textContent = '${inAnimation3}';
         "`);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${108} "
       aa.innerHTML = '';
       "`);
-    }, position.outDuration - 10);
+    }, position(0).outDuration - 10);
   }
+
   const preView = () => {
     play();
-    canvas.item(0).set({ left: position.initialx, top: position.initialy, opacity: 0 });
-    canvas.requestRenderAll();
+    canvas.forEachObject((element, i) => {
 
-    setTimeout(() => {
-      canvas?.item(0).animate({ left: position.finalx, top: position.finaly, opacity: 1 }, {
-        onChange: canvas.renderAll.bind(canvas),
-        duration: position.initialToFinalDuration,
-        easing: fabric.util.ease.linear
-      });
-    }, position.delay);
+      element.set({ left: position(i).initialx, top: position(i).initialy, opacity: 0 });
+      canvas.requestRenderAll();
+
+      setTimeout(() => {
+        element.animate({ left: position(i).finalx, top: position(i).finaly, opacity: 1 }, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: position(i).initialToFinalDuration,
+          easing: fabric.util.ease.linear
+        });
+      }, position(i).delay);
 
 
-    setTimeout(() => {
-      canvas?.item(0).animate({ left: position.outx, top: position.outy, opacity: 0 }, {
-        onChange: canvas.renderAll.bind(canvas),
-        duration: position.outDuration,
-        easing: fabric.util.ease.linear
-      });
-    }, position.delay + position.initialToFinalDuration + position.stayDuration);
+      setTimeout(() => {
+        element.animate({ left: position(i).outx, top: position(i).outy, opacity: 0 }, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: position(i).outDuration,
+          easing: fabric.util.ease.linear
+        });
+      }, position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
+    });
 
   }
 
   const startPoint = () => {
-    setXpositions({ ...xpositions, initialx: canvas.item(0).left, initialy: canvas.item(0).top })
+    var updatedxpositions = [...xpositions];
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        console.log(updatedxpositions[i]);
+        updatedxpositions[i] = {...updatedxpositions[i], initialx: element.left, initialy: element.top };
+        console.log(updatedxpositions[i]);
+      }
+    });
+    setXpositions(updatedxpositions);
   }
+
   const finalPoint = () => {
-    setXpositions({ ...xpositions, finalx: canvas.item(0).left, finaly: canvas.item(0).top })
+    var updatedxpositions = [...xpositions];
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        updatedxpositions[i] = {...updatedxpositions[i], finalx: element.left, finaly: element.top };
+      }
+    });
+    setXpositions(updatedxpositions);
   }
 
   const endPoint = () => {
-    setXpositions({ ...xpositions, outx: canvas.item(0).left, outy: canvas.item(0).top })
+    var updatedxpositions = [...xpositions];
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        updatedxpositions[i] = {...updatedxpositions[i], outx: element.left, outy: element.top };
+      }
+    });
+    setXpositions(updatedxpositions);
   }
 
   const ss = (d) => {
     setCurrentFrame(d.x);
-    if (d.x < kf[0][0]) {
-      canvas.item(0).set({
-        left: position.initialx,
-        top: position.initialy,
-        opacity: 0,
-      });
-    }
+    canvas.forEachObject((element, i) => {
+      if (d.x < kf[i][0]) {
+        element.set({
+          left: position(i).initialx,
+          top: position(i).initialy,
+          opacity: 0,
+        });
+      }
 
-    if (d.x > kf[0][3]) {
-      canvas.item(0).set({
-        left: position.outx,
-        top: position.outy,
-        opacity: 0,
-      });
-    }
+      if (d.x > kf[i][3]) {
+        element.set({
+          left: position(i).outx,
+          top: position(i).outy,
+          opacity: 0,
+        });
+      }
 
-    if ((d.x > kf[0][0]) && (d.x < kf[0][1])) {
-      canvas.item(0).set({
-        left: position.initialx + (position.finalx - position.initialx) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
-        top: position.initialy + (position.finaly - position.initialy) / (kf[0][1] - kf[0][0]) * (d.x - kf[0][0]),
-        opacity: (d.x - kf[0][0]) / (kf[0][1] - kf[0][0])
-      });
-    }
+      if ((d.x > kf[i][0]) && (d.x < kf[i][1])) {
+        element.set({
+          left: position(i).initialx + (position(i).finalx - position(i).initialx) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+          top: position(i).initialy + (position(i).finaly - position(i).initialy) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+          opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0])
+        });
+      }
 
-    if ((d.x > kf[0][1]) && (d.x < kf[0][2])) {
-      canvas.item(0).set({ left: position.finalx, top: position.finaly, opacity: 1 });
-    }
-    if ((d.x > kf[0][2]) && (d.x < kf[0][3])) {
-      canvas.item(0).set({
-        left: position.finalx + (position.outx - position.finalx) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
-        top: position.finaly + (position.outy - position.finaly) / (kf[0][3] - kf[0][2]) * (d.x - kf[0][2]),
-        opacity: 1 - (d.x - kf[0][2]) / (kf[0][3] - kf[0][2])
-      });
-    }
+      if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
+        element.set({ left: position(i).finalx, top: position(i).finaly, opacity: 1 });
+      }
+      if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
+        element.set({
+          left: position(i).finalx + (position(i).outx - position(i).finalx) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          top: position(i).finaly + (position(i).outy - position(i).finaly) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
+        });
+      }
+    })
     canvas.requestRenderAll();
   }
 
   return (<div>
 
     <div  >
-      <button onClick={startPoint}>Set Start Point</button>
+      <button onClick={() => startPoint()}>Set Start Point</button>
       <button onClick={finalPoint}>Set Final Point</button>
       <button onClick={endPoint}>Set End Point</button>
 
@@ -226,8 +293,73 @@ const TimeLine1 = () => {
     <div>
       {layers?.map((_, i) => {
         return <div key={i} style={{}}>
-          <div onClick={(e) => ss({ x: e.screenX - 1040 })} style={{ backgroundColor: 'grey', width: 800, height: 20, marginTop: 1, }} >
+          <div onClick={(e) => {
+            ss({ x: e.screenX - 1040 });
+            canvas.setActiveObject(canvas.item(i));
+          }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
             <div style={{ position: 'relative' }}>
+
+
+
+              <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                position={{ x: kf[i][0], y: 0 }}
+                onDrag={(e, d) => {
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
+                }}
+              >
+                <div style={{ marginTop: 0, width: kf[i][1] - kf[i][0], height: 20, backgroundColor: 'yellowgreen' }}></div>
+              </Rnd>
+
+
+
+              <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                position={{ x: kf[i][1], y: 0 }}
+                onDrag={(e, d) => {
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
+                }}
+              >
+                <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
+              </Rnd>
+
+
+              <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                position={{ x: kf[i][2], y: 0 }}
+                onDrag={(e, d) => {
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
+                }}
+              >
+                <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
+              </Rnd>
+
+
+              {(kf[i])?.map((val, kfi) =>
+                <Rnd
+                  key={kfi}
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: val, y: i * 3 }}
+                  onDrag={(e, d) => {
+                    modifyKf(e, d, i, kfi)
+                  }}
+                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
+                </Rnd>
+              )}
               {(i === 0) && <Rnd
                 dragAxis='x'
                 enableResizing={{}}
@@ -243,64 +375,6 @@ const TimeLine1 = () => {
                 </div>
               </Rnd>
               }
-
-              {(i === 0) &&
-                <Rnd
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  position={{ x: kf[0][0], y: 0 }}
-                  onDrag={(e, d) => {
-                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
-                    setKf(updatedkf)
-                  }}
-                >
-                  <div style={{ width: kf[0][1] - kf[0][0], height: 10, backgroundColor: 'yellow' }}></div>
-                </Rnd>
-              }
-
-              {(i === 0) &&
-                <Rnd
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  position={{ x: kf[0][1], y: 0 }}
-                  onDrag={(e, d) => {
-                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
-                    setKf(updatedkf)
-                  }}
-                >
-                  <div style={{ width: kf[0][2] - kf[0][1], height: 10, backgroundColor: 'green' }}></div>
-                </Rnd>
-              }
-              {(i === 0) &&
-                <Rnd
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  position={{ x: kf[0][2], y: 0 }}
-                  onDrag={(e, d) => {
-                    const updatedkf = [kf[0].map((val) => val + d.deltaX)]
-                    setKf(updatedkf)
-                  }}
-                >
-                  <div style={{ width: kf[0][3] - kf[0][2], height: 10, backgroundColor: 'red' }}></div>
-                </Rnd>
-              }
-
-              {(kf[i])?.map((val, kfi) =>
-                <Rnd
-                  key={kfi}
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  position={{ x: val, y: 0 }}
-                  onDrag={(e, d) => {
-                    modifyKf(e, d, i, kfi)
-                  }}
-                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
-                </Rnd>
-              )}
             </div>
           </div>
         </div>
