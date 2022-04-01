@@ -11,10 +11,10 @@ const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [kf, setKf] = useState(Array.from(Array(10).keys()).map((val, i) => [50, 100, 300, 350]));
+  const [kf, setKf] = useState(Array.from(Array(500).keys()).map((val, i) => [50, 100, 300, 350]));
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
-  const [xpositions, setXpositions] = useState(Array.from(Array(10).keys()).map((val, i) => ({
+  const [xpositions, setXpositions] = useState(Array.from(Array(500).keys()).map((val, i) => ({
     initialx: 300,
     finalx: 100,
     outx: 300,
