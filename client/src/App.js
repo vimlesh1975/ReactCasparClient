@@ -402,7 +402,7 @@ const App = () => {
             <Charts />
           </TabPanel>
           <TabPanel>
-            <TimeLine1 />
+            {/* <TimeLine1 /> */}
           </TabPanel>
           <TabPanel>
             <PathModifier />
