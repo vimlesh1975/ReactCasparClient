@@ -6,8 +6,6 @@ import { fabric } from "fabric";
 
 var cf = 250;
 var aa;
-// const bb = Array.from(Array(10).keys());
-// const cc = bb.map((val, i) => [50, 100, 300, 350]);
 
 const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(200);
@@ -25,10 +23,6 @@ const TimeLine1 = () => {
     finaly: 100,
     outy: 300,
   })))
-  // console.log(bb);
-  // console.log(cc);
-  // console.log(xpositions);
-  // console.log(activeLayers)
 
   const position = i => ({
     delay: kf[i][0] * 10,
@@ -86,54 +80,41 @@ const TimeLine1 = () => {
   }
 
   const playtocasparcg = () => {
-    console.log(position(0))
     play();
-    canvas.forEachObject((element, i) => element.set({
-      left: position(i).finalx,
-      top: position(i).finaly,
-      opacity: 1
-    }));
-
-    // canvas.item(0).set({
-    //   left: position.finalx,
-    //   top: position.finaly,
-    //   opacity: 1
-    // });
+    canvas.forEachObject((element, i) => {
+      element.set({
+        left: position(i).finalx,
+        top: position(i).finaly,
+        opacity: 1
+      })
+      console.log(position(i))
+    });
 
     canvas.requestRenderAll();
 
-    // var i = 0
-    // var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
-    // var inAnimation1 = `@keyframes roll-in-left{
-    //   0%{transform:translate(${position.initialx - position.finalx}px,${position.initialy - position.finaly}px);opacity:0}
-    //   100%{transform:translate(0,0);opacity:1}} 
-    //   #${canvas?.item(0).id} ${type} {animation:roll-in-left ${position.initialToFinalDuration / 1000}s ease-out both}`;
-
     var inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
-      var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
-      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id} 
+    var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
+    inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
         0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px);opacity:0}
-        100%{transform:translate(0,0);opacity:1}} 
+        100% {transform:translate(0px,0px);opacity:1}
       } 
-     #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: ${position(i).initialToFinalDuration / 1000}s;animation-timing-function:linear; }`
+      @keyframes ${type}${canvas?.item(i).id}out
+      {
+        0% {transform:translate(0px,0px);opacity:1}
+        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:0}
+      } 
+      #${canvas?.item(i).id} ${type} {animation:
+      ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s, 
+      ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration)/ 1000}s}`
     });
 
-    // var inAnimation2 = ``;
-    // layers.forEach((element, i) => {
-    //   var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
-    //   inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id} 
-    //   {
-    //   from {transform:translateX(${keyFrames[i].initial.left - keyFrames[i].final.left}px)}
-    //   to {transform:translateX(0px) translateY(0px);}
-    //   } 
-    //  #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: 1s;animation-timing-function:linear; }`
-    // });
-
-    setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
-      endpoint(`call ${window.chNumber}-${108} "
+    endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
+    endpoint(`call ${window.chNumber}-${108} "
+        var style = document.createElement('style');
+        style.textContent = '${inAnimation2}';
+        document.head.appendChild(style);
         var bb = document.createElement('div');
         bb.style.perspective='1920px';
         bb.style.transformStyle='preserve-3d';
@@ -146,26 +127,19 @@ const TimeLine1 = () => {
         document.body.style.padding='0';
         aa.style.zoom=(${1920 * 100}/1024)+'%';
         document.body.style.overflow='hidden';
-        var style = document.createElement('style');
-        style.textContent = '${inAnimation2}';
-        document.head.appendChild(style);
         "`);
-      setTimeout(() => {
-        stopfromocasparcg()
-      }, position(0).initialToFinalDuration + position(0).stayDuration);
-    }, position(0).delay);
   }
 
   const stopfromocasparcg = () => {
     var inAnimation3 = ``;
     canvas.forEachObject((element, i) => {
-      var type = (canvas?.item(i).type === 'i-text' || canvas?.item(i).type === 'textbox') ? 'text' : canvas?.item(i).type;
-      inAnimation3 = inAnimation3 + `@keyframes ${type}${canvas?.item(i).id} 
+    var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
+    inAnimation3 = inAnimation3 + `@keyframes ${type}${canvas?.item(i).id}out
       {
-        0%{transform:translate(0,0);opacity:1}} 
-        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:1}
+        0% {transform:translate(0px,0px);opacity:1}
+        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:0}
       } 
-     #${canvas?.item(i).id} ${type} {animation-name: ${type}${canvas?.item(i).id};  animation-duration: ${position(i).initialToFinalDuration / 1000}s;animation-timing-function:linear; }`
+      #${canvas?.item(i).id} ${type} {animation:${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear}`
     });
 
     // var inAnimation3 = `@keyframes roll-in-left1{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(${position[0].outx - position[0].finalx}px,${position[0].outy - position[0].finaly}px);}} div{animation-name:roll-in-left1; animation-duration:${position[0].outDuration / 1000}s; animation-timing-function:ease-out;}`;
@@ -211,7 +185,7 @@ const TimeLine1 = () => {
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
         console.log(updatedxpositions[i]);
-        updatedxpositions[i] = {...updatedxpositions[i], initialx: element.left, initialy: element.top };
+        updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top };
         console.log(updatedxpositions[i]);
       }
     });
@@ -222,7 +196,7 @@ const TimeLine1 = () => {
     var updatedxpositions = [...xpositions];
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
-        updatedxpositions[i] = {...updatedxpositions[i], finalx: element.left, finaly: element.top };
+        updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top };
       }
     });
     setXpositions(updatedxpositions);
@@ -232,7 +206,7 @@ const TimeLine1 = () => {
     var updatedxpositions = [...xpositions];
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
-        updatedxpositions[i] = {...updatedxpositions[i], outx: element.left, outy: element.top };
+        updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top };
       }
     });
     setXpositions(updatedxpositions);

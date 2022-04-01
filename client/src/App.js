@@ -32,7 +32,7 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 
-const buildDate = '310322_1'
+const buildDate = '010422_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

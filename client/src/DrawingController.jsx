@@ -1854,13 +1854,7 @@ const DrawingController = () => {
             "`)
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            createRect(window.editor.canvas);
-            createTextBox(window.editor.canvas);
-        }, 2000);
-     
-    }, [])
+  
 
     useEffect(() => {
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
