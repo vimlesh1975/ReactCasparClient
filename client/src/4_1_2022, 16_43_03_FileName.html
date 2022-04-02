@@ -14,7 +14,7 @@
             }
 
             100% {
-                transform: translate(0px, 0px);
+                transform: translate(0, 0);
                 opacity: 1
             }
         }
@@ -31,8 +31,8 @@
             }
         }
 
-        #id_6b80b734-819e-4181-8fcc-7e8c72cfa08f rect {
-            animation: rectid_6b80b734-819e-4181-8fcc-7e8c72cfa08f 0.74s linear 0.84s, rectid_6b80b734-819e-4181-8fcc-7e8c72cfa08fout 0.72s linear 4.88s
+        #id_6b80b734-819e-4181-8fcc-7e8c72cfa08f {
+            animation: rectid_6b80b734-819e-4181-8fcc-7e8c72cfa08f 1.74s linear 4s forwards, rectid_6b80b734-819e-4181-8fcc-7e8c72cfa08fout 0.72s linear 7.88s forwards;
         }
 
         @keyframes rectid_2cb345e6-1106-4550-8799-ca6e6fe5535c {
@@ -60,13 +60,16 @@
         }
 
         #id_2cb345e6-1106-4550-8799-ca6e6fe5535c rect {
-            animation: rectid_2cb345e6-1106-4550-8799-ca6e6fe5535c 0.72s linear 2.28s, rectid_2cb345e6-1106-4550-8799-ca6e6fe5535cout 0.7s linear 6.3s
+            animation: rectid_2cb345e6-1106-4550-8799-ca6e6fe5535c 0.72s linear 2.28s, rectid_2cb345e6-1106-4550-8799-ca6e6fe5535cout 0.7s linear 6.3s;
+            animation-fill-mode: forwards; 
+
         }
     </style>
 </head>
 
 <body>
-    <div>
+<div id="id_6b80b734-819e-4181-8fcc-7e8c72cfa08f" style="background-color: brown; width: 200px; height: 200px;"></div>
+    <!-- <div>
         <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1024"
@@ -117,7 +120,7 @@
                     vector-effect="non-scaling-stroke" x="-250" y="-40" rx="10" ry="10" width="500" height="80" />
             </g>
         </svg>
-    </div>
+    </div> -->
 </body>
 <script>
     document.body.style.margin = '0';

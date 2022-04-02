@@ -879,6 +879,7 @@ export const paste = (canvas) => {
                 top: clonedObj.top + 10,
                 evented: true,
                 objectCaching: false,
+                id: 'id_' + uuidv4(),
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
@@ -889,6 +890,7 @@ export const paste = (canvas) => {
                     obj.set({
                         evented: true,
                         objectCaching: false,
+                        id: 'id_' + uuidv4(),
                     });
                 });
                 // this should solve the unselectability
@@ -1854,7 +1856,7 @@ const DrawingController = () => {
             "`)
     }
 
-  
+
 
     useEffect(() => {
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }

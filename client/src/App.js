@@ -32,7 +32,7 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 
-const buildDate = '010422_1'
+const buildDate = '020422_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -402,7 +402,7 @@ const App = () => {
             <Charts />
           </TabPanel>
           <TabPanel>
-            {/* <TimeLine1 /> */}
+            <TimeLine1 />
           </TabPanel>
           <TabPanel>
             <PathModifier />

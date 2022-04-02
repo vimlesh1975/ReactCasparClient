@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
 import { fabric } from "fabric";
@@ -8,6 +8,10 @@ var cf = 250;
 var aa;
 
 const TimeLine1 = () => {
+  const dispatch = useDispatch();
+  const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+  const currentPage = useSelector(state => state.currentPageReducer.currentPage);
+
   const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
@@ -40,7 +44,18 @@ const TimeLine1 = () => {
     outDuration: (kf[i][3] - kf[i][2]) * 10
   });
 
+  const updatePageAndAnimation = () => {
+    const updatedcanvasList = canvasList.map((val, i) => {
+      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } } : val;
+    });
+    dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] });
+  }
 
+  const recallPageAndAnimation = () => {
+    setKf(canvasList[currentPage].animation.kf);
+    setXpositions(canvasList[currentPage].animation.xpositions)
+    // console.log(canvasList[currentPage].animation)
+  }
   const modifyKf = (e, d, i, kfi) => {
     const updatedkf = [...kf];
     var xmin
@@ -80,7 +95,9 @@ const TimeLine1 = () => {
   }
 
   const playtocasparcg = () => {
+    // setTimeout(() => {
     play();
+    // }, 2000);
     canvas.forEachObject((element, i) => {
       element.set({
         left: position(i).finalx,
@@ -94,8 +111,8 @@ const TimeLine1 = () => {
 
     var inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
-    var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
-    inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
+      var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
+      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
         0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px);opacity:0}
         100% {transform:translate(0px,0px);opacity:1}
@@ -106,8 +123,8 @@ const TimeLine1 = () => {
         100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:0}
       } 
       #${canvas?.item(i).id} ${type} {animation:
-      ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s, 
-      ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration)/ 1000}s}`
+      ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
+      ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}`
     });
 
     endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
@@ -128,29 +145,6 @@ const TimeLine1 = () => {
         aa.style.zoom=(${1920 * 100}/1024)+'%';
         document.body.style.overflow='hidden';
         "`);
-  }
-
-  const stopfromocasparcg = () => {
-    var inAnimation3 = ``;
-    canvas.forEachObject((element, i) => {
-    var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
-    inAnimation3 = inAnimation3 + `@keyframes ${type}${canvas?.item(i).id}out
-      {
-        0% {transform:translate(0px,0px);opacity:1}
-        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:0}
-      } 
-      #${canvas?.item(i).id} ${type} {animation:${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear}`
-    });
-
-    // var inAnimation3 = `@keyframes roll-in-left1{0%{opacity:1;transform:translate(0,0);}100%{opacity:0;transform:translate(${position[0].outx - position[0].finalx}px,${position[0].outy - position[0].finaly}px);}} div{animation-name:roll-in-left1; animation-duration:${position[0].outDuration / 1000}s; animation-timing-function:ease-out;}`;
-    endpoint(`call ${window.chNumber}-${108} "
-        style.textContent = '${inAnimation3}';
-        "`);
-    setTimeout(() => {
-      endpoint(`call ${window.chNumber}-${108} "
-      aa.innerHTML = '';
-      "`);
-    }, position(0).outDuration - 10);
   }
 
   const preView = () => {
@@ -262,6 +256,10 @@ const TimeLine1 = () => {
 
       <button onClick={preView}>preView</button>
       <button onClick={playtocasparcg}>playtocasparcg</button>
+      <button onClick={recallPageAndAnimation}>recall</button>
+      <button onClick={updatePageAndAnimation}>Update</button>
+
+
     </div>
 
     <div>
