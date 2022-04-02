@@ -15,17 +15,17 @@ const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(200);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [kf, setKf] = useState(Array.from(Array(500).keys()).map((val, i) => [50, 100, 300, 350]));
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [50, 100, 300, 350]));
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
-  const [xpositions, setXpositions] = useState(Array.from(Array(500).keys()).map((val, i) => ({
-    initialx: 300,
+  const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
+    initialx: -300,
     finalx: 100,
-    outx: 300,
+    outx: 1300,
 
-    initialy: 300,
-    finaly: 100,
-    outy: 300,
+    initialy: 600,
+    finaly: 250,
+    outy: 600,
   })))
 
   const position = i => ({
@@ -247,113 +247,130 @@ const TimeLine1 = () => {
     canvas.requestRenderAll();
   }
 
-  return (<div>
+  const test = () => {
+    canvas.forEachObject((element) => {
+      var activeSelection = canvas.getActiveObject();
 
-    <div  >
-      <button onClick={() => startPoint()}>Set Start Point</button>
-      <button onClick={finalPoint}>Set Final Point</button>
-      <button onClick={endPoint}>Set End Point</button>
+      var matrix = activeSelection.calcTransformMatrix();
+      var objectPosition = { x: element.left, y: element.top };
+      var finalPosition = fabric.util.transformPoint(objectPosition, matrix); 
+      if (activeSelection.length>1){
+        console.log((finalPosition.x)*2)
+      }
+      else{
+        console.log(element.left)
+      }
 
-      <button onClick={preView}>preView</button>
-      <button onClick={playtocasparcg}>playtocasparcg</button>
-      <button onClick={recallPageAndAnimation}>recall</button>
-      <button onClick={updatePageAndAnimation}>Update</button>
+    })
+  }
+
+return (<div>
+
+  <div  >
+    <button onClick={() => startPoint()}>Set Start Point</button>
+    <button onClick={finalPoint}>Set Final Point</button>
+    <button onClick={endPoint}>Set End Point</button>
+
+    <button onClick={preView}>preView</button>
+    <button onClick={playtocasparcg}>playtocasparcg</button>
+    <button onClick={recallPageAndAnimation}>recall</button>
+    <button onClick={updatePageAndAnimation}>Update</button>
+    <button onClick={test}>test</button>
+
+  </div>
+
+  <div>
+    {layers?.map((_, i) => {
+      return <div key={i} style={{}}>
+        <div onClick={(e) => {
+          ss({ x: e.screenX - 1040 });
+          canvas.setActiveObject(canvas.item(i));
+        }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
+          <div style={{ position: 'relative' }}>
 
 
-    </div>
 
-    <div>
-      {layers?.map((_, i) => {
-        return <div key={i} style={{}}>
-          <div onClick={(e) => {
-            ss({ x: e.screenX - 1040 });
-            canvas.setActiveObject(canvas.item(i));
-          }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
-            <div style={{ position: 'relative' }}>
+            <Rnd
+              dragAxis='x'
+              enableResizing={{}}
+              bounds='parent'
+              position={{ x: kf[i][0], y: 0 }}
+              onDrag={(e, d) => {
+                const updatedkf = [...kf]
+                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                setKf(updatedkf)
+              }}
+            >
+              <div style={{ marginTop: 0, width: kf[i][1] - kf[i][0], height: 20, backgroundColor: 'yellowgreen' }}></div>
+            </Rnd>
 
 
 
+            <Rnd
+              dragAxis='x'
+              enableResizing={{}}
+              bounds='parent'
+              position={{ x: kf[i][1], y: 0 }}
+              onDrag={(e, d) => {
+                const updatedkf = [...kf]
+                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                setKf(updatedkf)
+              }}
+            >
+              <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
+            </Rnd>
+
+
+            <Rnd
+              dragAxis='x'
+              enableResizing={{}}
+              bounds='parent'
+              position={{ x: kf[i][2], y: 0 }}
+              onDrag={(e, d) => {
+                const updatedkf = [...kf]
+                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                setKf(updatedkf)
+              }}
+            >
+              <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
+            </Rnd>
+
+
+            {(kf[i])?.map((val, kfi) =>
               <Rnd
+                key={kfi}
                 dragAxis='x'
                 enableResizing={{}}
                 bounds='parent'
-                position={{ x: kf[i][0], y: 0 }}
+                position={{ x: val, y: i * 3 }}
                 onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
+                  modifyKf(e, d, i, kfi)
                 }}
-              >
-                <div style={{ marginTop: 0, width: kf[i][1] - kf[i][0], height: 20, backgroundColor: 'yellowgreen' }}></div>
+              > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
               </Rnd>
-
-
-
-              <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                position={{ x: kf[i][1], y: 0 }}
-                onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
-                }}
-              >
-                <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
-              </Rnd>
-
-
-              <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                position={{ x: kf[i][2], y: 0 }}
-                onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
-                }}
-              >
-                <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
-              </Rnd>
-
-
-              {(kf[i])?.map((val, kfi) =>
-                <Rnd
-                  key={kfi}
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  position={{ x: val, y: i * 3 }}
-                  onDrag={(e, d) => {
-                    modifyKf(e, d, i, kfi)
-                  }}
-                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
-                </Rnd>
-              )}
-              {(i === 0) && <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                size={{ width: 5, height: 200 }}
-                position={{ x: currentFrame, y: 0 }}
-                onDrag={(e, d) => {
-                  ss(d);
-                }}
-              >
-                <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
-                  {currentFrame}
-                </div>
-              </Rnd>
-              }
-            </div>
+            )}
+            {(i === 0) && <Rnd
+              dragAxis='x'
+              enableResizing={{}}
+              bounds='parent'
+              size={{ width: 5, height: 200 }}
+              position={{ x: currentFrame, y: 0 }}
+              onDrag={(e, d) => {
+                ss(d);
+              }}
+            >
+              <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
+                {currentFrame}
+              </div>
+            </Rnd>
+            }
           </div>
         </div>
-      })}
-    </div>
+      </div>
+    })}
+  </div>
 
-  </div>)
+</div>)
 }
 
 export default TimeLine1
