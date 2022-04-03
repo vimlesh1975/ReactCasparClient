@@ -301,7 +301,7 @@ return (<div>
                 setKf(updatedkf)
               }}
             >
-              <div style={{ marginTop: 0, width: kf[i][1] - kf[i][0], height: 20, backgroundColor: 'yellowgreen' }}></div>
+              <div style={{ width: kf[i][1] - kf[i][0], height: 20,marginTop: 0,  backgroundColor: 'yellowgreen' }}></div>
             </Rnd>
 
 
@@ -342,11 +342,11 @@ return (<div>
                 dragAxis='x'
                 enableResizing={{}}
                 bounds='parent'
-                position={{ x: val, y: i * 3 }}
+                position={{ x: val, y:0 }}
                 onDrag={(e, d) => {
                   modifyKf(e, d, i, kfi)
                 }}
-              > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, }}>{kfi}</div>
+              > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center',marginTop:5, fontSize: 10, lineHeight:1}}>{kfi}</div>
               </Rnd>
             )}
             {(i === 0) && <Rnd

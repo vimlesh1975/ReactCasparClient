@@ -340,7 +340,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
+        <Tabs selectedTabClassName='selectedTab' onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
@@ -359,12 +359,12 @@ const App = () => {
 
             <Tab>Help</Tab>
           </TabList>
-          <TabPanel>
+          <TabPanel forceRender={true}>
             <div style={{ border: '1px dashed blue', width: 900 }}>
               <DrawingController />
             </div>
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <div style={{ display: 'flex', justifyContent: 'space-around', width: 900, marginBottom: 50 }}>
               <VideoController layerNumber={videoLayers[0]} />
               <VideoController layerNumber={videoLayers[1]} />
@@ -374,43 +374,43 @@ const App = () => {
               <VideoController layerNumber={videoLayers[3]} />
             </div>
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <VideoPlaylist />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Layers />
           </TabPanel>
           <TabPanel >
             <ColorGradient />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <OnelinerAndBreakingNews />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Twoliner />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Scroll />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Shapes />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Games />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Charts />
           </TabPanel>
-          <TabPanel>
-            {/* <TimeLine1 /> */}
+          <TabPanel forceRender={false}>
+            <TimeLine1 />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <PathModifier />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Effects />
           </TabPanel>
-          <TabPanel>
+           <TabPanel forceRender={true}>
             <Help />
           </TabPanel>
         </Tabs >
