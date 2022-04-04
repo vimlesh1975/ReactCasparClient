@@ -32,7 +32,7 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 
-const buildDate = '030422_1'
+const buildDate = '040422_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -340,7 +340,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs selectedTabClassName='selectedTab' onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
+        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
@@ -359,12 +359,12 @@ const App = () => {
 
             <Tab>Help</Tab>
           </TabList>
-          <TabPanel forceRender={true}>
+          <TabPanel >
             <div style={{ border: '1px dashed blue', width: 900 }}>
               <DrawingController />
             </div>
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <div style={{ display: 'flex', justifyContent: 'space-around', width: 900, marginBottom: 50 }}>
               <VideoController layerNumber={videoLayers[0]} />
               <VideoController layerNumber={videoLayers[1]} />
@@ -374,43 +374,43 @@ const App = () => {
               <VideoController layerNumber={videoLayers[3]} />
             </div>
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <VideoPlaylist />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Layers />
           </TabPanel>
           <TabPanel >
             <ColorGradient />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <OnelinerAndBreakingNews />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Twoliner />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Scroll />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Shapes />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Games />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Charts />
           </TabPanel>
-          <TabPanel forceRender={false}>
+          <TabPanel >
             <TimeLine1 />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <PathModifier />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Effects />
           </TabPanel>
-           <TabPanel forceRender={true}>
+           <TabPanel >
             <Help />
           </TabPanel>
         </Tabs >

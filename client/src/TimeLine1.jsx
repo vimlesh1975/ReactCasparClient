@@ -12,10 +12,10 @@ const TimeLine1 = () => {
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
 
-  const [currentFrame, setCurrentFrame] = useState(200);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [50, 100, 300, 350]));
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
@@ -26,6 +26,23 @@ const TimeLine1 = () => {
     initialy: 600,
     finaly: 250,
     outy: 600,
+
+    initialWidth: -300,
+    finalWidth: 100,
+    outWidth: 1300,
+
+    initialHeight: 600,
+    finalHeight: 250,
+    outHeight: 600,
+
+    initialScaleX: 1,
+    finalScaleX: 1,
+    outScaleX: 1,
+
+    initialScaleY: 1,
+    finalScaleY: 1,
+    outScaleY: 1,
+
   })))
 
   const position = i => ({
@@ -38,6 +55,22 @@ const TimeLine1 = () => {
     initialy: xpositions[i].initialy,
     finaly: xpositions[i].finaly,
     outy: xpositions[i].outy,
+
+    initialWidth: xpositions[i].initialWidth,
+    finalWidth: xpositions[i].finalWidth,
+    outWidth: xpositions[i].outWidth,
+
+    initialHeight: xpositions[i].initialHeight,
+    finalHeight: xpositions[i].finalHeight,
+    outHeight: xpositions[i].outHeight,
+
+    initialScaleX: xpositions[i].initialScaleX,
+    finalScaleX: xpositions[i].finalScaleX,
+    outScaleX: xpositions[i].outScaleX,
+
+    initialScaleY: xpositions[i].initialScaleY,
+    finalScaleY: xpositions[i].finalScaleY,
+    outScaleY: xpositions[i].outScaleY,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
     stayDuration: (kf[i][2] - kf[i][1]) * 10,
@@ -102,9 +135,16 @@ const TimeLine1 = () => {
       element.set({
         left: position(i).finalx,
         top: position(i).finaly,
+
+        width: position(i).finalWidth,
+        height: position(i).finalHeight,
+
+        scaleX: position(i).finalScaleX,
+        scaleY: position(i).finalScaleY,
+
         opacity: 1
       })
-      console.log(position(i))
+      // console.log(position(i))
     });
 
     canvas.requestRenderAll();
@@ -114,13 +154,13 @@ const TimeLine1 = () => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
-        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px);opacity:0}
-        100% {transform:translate(0px,0px);opacity:1}
+        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px) scale(0.2,0.2);opacity:0}
+        100% {transform:translate(0px,0px) scale(1,1);opacity:1}
       } 
       @keyframes ${type}${canvas?.item(i).id}out
       {
-        0% {transform:translate(0px,0px);opacity:1}
-        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px);opacity:0}
+        0% {transform:translate(0px,0px) scale(1,1);opacity:1}
+        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px)  scale(0.2,0.2);opacity:0}
       } 
       #${canvas?.item(i).id} ${type} {animation:
       ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
@@ -151,11 +191,11 @@ const TimeLine1 = () => {
     play();
     canvas.forEachObject((element, i) => {
 
-      element.set({ left: position(i).initialx, top: position(i).initialy, opacity: 0 });
+      element.set({ left: position(i).initialx, top: position(i).initialy, width: position(i).initialWidth, height: position(i).initialHeight, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 0 });
       canvas.requestRenderAll();
 
       setTimeout(() => {
-        element.animate({ left: position(i).finalx, top: position(i).finaly, opacity: 1 }, {
+        element.animate({ left: position(i).finalx, top: position(i).finaly, width: position(i).finalWidth, height: position(i).finalHeight, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, opacity: 1 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).initialToFinalDuration,
           easing: fabric.util.ease.linear
@@ -164,7 +204,7 @@ const TimeLine1 = () => {
 
 
       setTimeout(() => {
-        element.animate({ left: position(i).outx, top: position(i).outy, opacity: 0 }, {
+        element.animate({ left: position(i).outx, top: position(i).outy, width: position(i).outWidth, height: position(i).outHeight, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 0 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).outDuration,
           easing: fabric.util.ease.linear
@@ -176,34 +216,69 @@ const TimeLine1 = () => {
 
   const startPoint = () => {
     var updatedxpositions = [...xpositions];
-    layers.forEach((element, i) => {
-      if (activeLayers.includes(element)) {
-        console.log(updatedxpositions[i]);
-        updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top };
-        console.log(updatedxpositions[i]);
+    activeLayers.forEach((element, i) => {
+      if (activeLayers.length > 1) {
+        var activeSelection = canvas.getActiveObject();
+        var matrix = activeSelection.calcTransformMatrix();
+        var objectPosition = { x: element.left, y: element.top };
+        var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+        updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y };
       }
-    });
-    setXpositions(updatedxpositions);
+      else {
+        updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialWidth: (element.width), initialHeight: element.height, initialScaleX: element.scaleX, initialScaleY: element.scaleY };
+      }
+      setXpositions(updatedxpositions);
+    })
   }
 
   const finalPoint = () => {
+    // var updatedxpositions = [...xpositions];
+    // layers.forEach((element, i) => {
+    //   if (activeLayers.includes(element)) {
+    //     updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top };
+    //   }
+    // });
+    // setXpositions(updatedxpositions);
+
     var updatedxpositions = [...xpositions];
-    layers.forEach((element, i) => {
-      if (activeLayers.includes(element)) {
-        updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top };
+    activeLayers.forEach((element, i) => {
+      if (activeLayers.length > 1) {
+        var activeSelection = canvas.getActiveObject();
+        var matrix = activeSelection.calcTransformMatrix();
+        var objectPosition = { x: element.left, y: element.top };
+        var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+        updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y };
       }
-    });
-    setXpositions(updatedxpositions);
+      else {
+        updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalWidth: element.width, finalHeight: element.height, finalScaleX: element.scaleX, finalScaleY: element.scaleY };
+      }
+      setXpositions(updatedxpositions);
+    })
   }
 
   const endPoint = () => {
+    // var updatedxpositions = [...xpositions];
+    // layers.forEach((element, i) => {
+    //   if (activeLayers.includes(element)) {
+    //     updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top };
+    //   }
+    // });
+    // setXpositions(updatedxpositions);
+
     var updatedxpositions = [...xpositions];
-    layers.forEach((element, i) => {
-      if (activeLayers.includes(element)) {
-        updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top };
+    activeLayers.forEach((element, i) => {
+      if (activeLayers.length > 1) {
+        var activeSelection = canvas.getActiveObject();
+        var matrix = activeSelection.calcTransformMatrix();
+        var objectPosition = { x: element.left, y: element.top };
+        var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+        updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y };
       }
-    });
-    setXpositions(updatedxpositions);
+      else {
+        updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outWidth: (element.width), outHeight: (element.height), outScaleX: element.scaleX, outScaleY: element.scaleY };
+      }
+      setXpositions(updatedxpositions);
+    })
   }
 
   const ss = (d) => {
@@ -213,6 +288,13 @@ const TimeLine1 = () => {
         element.set({
           left: position(i).initialx,
           top: position(i).initialy,
+
+          width: position(i).initialWidth,
+          height: position(i).initialHeight,
+
+          scaleX: position(i).initialScaleX,
+          scaleY: position(i).initialScaleY,
+
           opacity: 0,
         });
       }
@@ -221,6 +303,13 @@ const TimeLine1 = () => {
         element.set({
           left: position(i).outx,
           top: position(i).outy,
+
+          width: position(i).outWidth,
+          height: position(i).outHeight,
+
+          scaleX: position(i).outScaleX,
+          scaleY: position(i).outScaleY,
+
           opacity: 0,
         });
       }
@@ -229,17 +318,31 @@ const TimeLine1 = () => {
         element.set({
           left: position(i).initialx + (position(i).finalx - position(i).initialx) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
           top: position(i).initialy + (position(i).finaly - position(i).initialy) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+
+          width: position(i).initialWidth + (position(i).finalWidth - position(i).initialWidth) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+          height: position(i).initialHeight + (position(i).finalHeight - position(i).initialHeight) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+
+          scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+          scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+
           opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0])
         });
       }
 
       if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
-        element.set({ left: position(i).finalx, top: position(i).finaly, opacity: 1 });
+        element.set({ left: position(i).finalx, top: position(i).finaly, width: position(i).finalWidth, height: position(i).finalHeight, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, opacity: 1 });
       }
       if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
         element.set({
           left: position(i).finalx + (position(i).outx - position(i).finalx) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           top: position(i).finaly + (position(i).outy - position(i).finaly) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+
+          width: position(i).finalWidth + (position(i).outWidth - position(i).finalWidth) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          height: position(i).finalHeight + (position(i).outHeight - position(i).finalHeight) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+
+          scaleX: position(i).finalScaleX + (position(i).outScaleX - position(i).finalScaleX) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          scaleY: position(i).finalScaleY + (position(i).outScaleY - position(i).finalScaleY) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+
           opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
         });
       }
@@ -248,129 +351,128 @@ const TimeLine1 = () => {
   }
 
   const test = () => {
-    canvas.forEachObject((element) => {
-      var activeSelection = canvas.getActiveObject();
-
-      var matrix = activeSelection.calcTransformMatrix();
-      var objectPosition = { x: element.left, y: element.top };
-      var finalPosition = fabric.util.transformPoint(objectPosition, matrix); 
-      if (activeSelection.length>1){
-        console.log((finalPosition.x)*2)
-      }
-      else{
-        console.log(element.left)
-      }
-
-    })
+    // canvas.getActiveObjects().forEach((element) => {
+    //   if (canvas.getActiveObjects().length > 1) {
+    //     var activeSelection = canvas.getActiveObject();
+    //     var matrix = activeSelection.calcTransformMatrix();
+    //     var objectPosition = { x: element.left, y: element.top };
+    //     var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+    //     console.log((finalPosition.x))
+    //   }
+    //   else {
+    //     console.log(element.left)
+    //   }
+    // })
+    console.log(canvas.item(0).width, canvas.item(0).scaleX)
   }
 
-return (<div>
+  return (<div>
 
-  <div  >
-    <button onClick={() => startPoint()}>Set Start Point</button>
-    <button onClick={finalPoint}>Set Final Point</button>
-    <button onClick={endPoint}>Set End Point</button>
+    <div  >
+      <button onClick={() => startPoint()}>Set Start Point</button>
+      <button onClick={finalPoint}>Set Final Point</button>
+      <button onClick={endPoint}>Set End Point</button>
 
-    <button onClick={preView}>preView</button>
-    <button onClick={playtocasparcg}>playtocasparcg</button>
-    <button onClick={recallPageAndAnimation}>recall</button>
-    <button onClick={updatePageAndAnimation}>Update</button>
-    <button onClick={test}>test</button>
+      <button onClick={preView}>preView</button>
+      <button onClick={playtocasparcg}>playtocasparcg</button>
+      <button onClick={recallPageAndAnimation}>recall</button>
+      <button onClick={updatePageAndAnimation}>Update</button>
+      <button onClick={test}>test</button>
 
-  </div>
+    </div>
 
-  <div>
-    {layers?.map((_, i) => {
-      return <div key={i} style={{}}>
-        <div onClick={(e) => {
-          ss({ x: e.screenX - 1040 });
-          canvas.setActiveObject(canvas.item(i));
-        }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
-          <div style={{ position: 'relative' }}>
-
-
-
-            <Rnd
-              dragAxis='x'
-              enableResizing={{}}
-              bounds='parent'
-              position={{ x: kf[i][0], y: 0 }}
-              onDrag={(e, d) => {
-                const updatedkf = [...kf]
-                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                setKf(updatedkf)
-              }}
-            >
-              <div style={{ width: kf[i][1] - kf[i][0], height: 20,marginTop: 0,  backgroundColor: 'yellowgreen' }}></div>
-            </Rnd>
+    <div>
+      {layers?.map((_, i) => {
+        return <div key={i} style={{}}>
+          <div onClick={(e) => {
+            ss({ x: e.screenX - 1040 });
+            canvas.setActiveObject(canvas.item(i));
+          }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
+            <div style={{ position: 'relative' }}>
 
 
 
-            <Rnd
-              dragAxis='x'
-              enableResizing={{}}
-              bounds='parent'
-              position={{ x: kf[i][1], y: 0 }}
-              onDrag={(e, d) => {
-                const updatedkf = [...kf]
-                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                setKf(updatedkf)
-              }}
-            >
-              <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
-            </Rnd>
-
-
-            <Rnd
-              dragAxis='x'
-              enableResizing={{}}
-              bounds='parent'
-              position={{ x: kf[i][2], y: 0 }}
-              onDrag={(e, d) => {
-                const updatedkf = [...kf]
-                updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                setKf(updatedkf)
-              }}
-            >
-              <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
-            </Rnd>
-
-
-            {(kf[i])?.map((val, kfi) =>
               <Rnd
-                key={kfi}
                 dragAxis='x'
                 enableResizing={{}}
                 bounds='parent'
-                position={{ x: val, y:0 }}
+                position={{ x: kf[i][0], y: 0 }}
                 onDrag={(e, d) => {
-                  modifyKf(e, d, i, kfi)
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
                 }}
-              > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center',marginTop:5, fontSize: 10, lineHeight:1}}>{kfi}</div>
+              >
+                <div style={{ width: kf[i][1] - kf[i][0], height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
               </Rnd>
-            )}
-            {(i === 0) && <Rnd
-              dragAxis='x'
-              enableResizing={{}}
-              bounds='parent'
-              size={{ width: 5, height: 200 }}
-              position={{ x: currentFrame, y: 0 }}
-              onDrag={(e, d) => {
-                ss(d);
-              }}
-            >
-              <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
-                {currentFrame}
-              </div>
-            </Rnd>
-            }
+
+
+
+              <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                position={{ x: kf[i][1], y: 0 }}
+                onDrag={(e, d) => {
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
+                }}
+              >
+                <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
+              </Rnd>
+
+
+              <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                position={{ x: kf[i][2], y: 0 }}
+                onDrag={(e, d) => {
+                  const updatedkf = [...kf]
+                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                  setKf(updatedkf)
+                }}
+              >
+                <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
+              </Rnd>
+
+
+              {(kf[i])?.map((val, kfi) =>
+                <Rnd
+                  key={kfi}
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: val, y: 0 }}
+                  onDrag={(e, d) => {
+                    modifyKf(e, d, i, kfi)
+                  }}
+                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
+                </Rnd>
+              )}
+              {(i === 0) && <Rnd
+                dragAxis='x'
+                enableResizing={{}}
+                bounds='parent'
+                size={{ width: 5, height: 200 }}
+                position={{ x: currentFrame, y: 0 }}
+                onDrag={(e, d) => {
+                  ss(d);
+                }}
+              >
+                <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
+                  {currentFrame}
+                </div>
+              </Rnd>
+              }
+            </div>
           </div>
         </div>
-      </div>
-    })}
-  </div>
+      })}
+    </div>
 
-</div>)
+  </div>)
 }
 
 export default TimeLine1
