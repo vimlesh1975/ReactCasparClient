@@ -20,13 +20,13 @@ const TimeLine1 = () => {
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
-    initialx: -300,
+    initialx: 0,
     finalx: 100,
-    outx: 1300,
+    outx: 700,
 
-    initialy: 600,
+    initialy: 500,
     finaly: 250,
-    outy: 600,
+    outy: 400,
 
     initialScaleX: 1,
     finalScaleX: 1,
@@ -97,7 +97,6 @@ const TimeLine1 = () => {
   }
   const play = () => {
     const ff = kf.map((val) => val[3]);
-    //  console.log(Math.max(...ff)) 
 
     cf = 0;
     setCurrentFrame(0);
@@ -119,6 +118,8 @@ const TimeLine1 = () => {
     // setTimeout(() => {
     play();
     // }, 2000);
+    canvas.discardActiveObject();
+
     canvas.forEachObject((element, i) => {
       element.set({
         left: position(i).finalx,
@@ -133,19 +134,21 @@ const TimeLine1 = () => {
     });
 
     canvas.requestRenderAll();
+    // var totb='transform-origin: left;transform-box:fill-box';
+    var totb='transform-origin: top left;transform-box: fill-box';
 
     var inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
-        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY});opacity:0;transform-origin: left top;transform-box:fill-box }
-        100% {transform:translate(0px,0px) scale(1,1);opacity:1;transform-origin: left top;transform-box:fill-box }
+        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY});opacity:1;${totb}}
+        100% {transform:translate(0px,0px) scale(1,1);opacity:1;${totb} }
       } 
       @keyframes ${type}${canvas?.item(i).id}out
       {
-        0% {transform:translate(0px,0px) scale(1,1);opacity:1;transform-origin: left top ;transform-box:fill-box }
-        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:0;transform-origin: left top ;transform-box:fill-box }
+        0% {transform:translate(0px,0px) scale(1,1);opacity:1;${totb} }
+        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:1;${totb} }
       } 
       #${canvas?.item(i).id} ${type} {animation:
       ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
@@ -158,8 +161,6 @@ const TimeLine1 = () => {
         style.textContent = '${inAnimation2}';
         document.head.appendChild(style);
         var bb = document.createElement('div');
-        bb.style.perspective='${currentscreenSize}px';
-        bb.style.transformStyle='preserve-3d';
         document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
@@ -174,9 +175,9 @@ const TimeLine1 = () => {
 
   const preView = () => {
     play();
+    canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
-
-      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 0 });
+      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 1 });
       canvas.requestRenderAll();
 
       setTimeout(() => {
@@ -189,7 +190,7 @@ const TimeLine1 = () => {
 
 
       setTimeout(() => {
-        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 0 }, {
+        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 1 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).outDuration,
           easing: fabric.util.ease.linear
@@ -216,6 +217,8 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
   }
 
   const finalPoint = () => {
@@ -235,6 +238,8 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
   }
 
   const endPoint = () => {
@@ -256,10 +261,14 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
   }
 
   const ss = (d) => {
     setCurrentFrame(d.x);
+    canvas.discardActiveObject();
+
     canvas.forEachObject((element, i) => {
       if (d.x < kf[i][0]) {
         element.set({
@@ -316,24 +325,28 @@ const TimeLine1 = () => {
   }
 
   const test = () => {
-    canvas.getActiveObjects().forEach((element) => {
-      if (canvas.getActiveObjects().length > 1) {
-        var activeSelection = canvas.getActiveObject();
-        var matrix = activeSelection.calcTransformMatrix();
-        var objectPosition = { x: element.left, y: element.top };
-        var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-        console.log(finalPosition.x, element.width, element.scaleX)
-      }
-      else {
-        console.log(element.left, element.width, element.scaleX)
-      }
-    })
+    // canvas.getActiveObjects().forEach((element) => {
+    //   if (canvas.getActiveObjects().length > 1) {
+    //     var activeSelection = canvas.getActiveObject();
+    //     var matrix = activeSelection.calcTransformMatrix();
+    //     var objectPosition = { x: element.left, y: element.top };
+    //     var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+    //     console.log(finalPosition.x, element.width, element.scaleX)
+    //   }
+    //   else {
+    //     console.log(element.left, element.width, element.scaleX)
+    //   }
+    // })
+    console.log(canvas._activeObject)
+
 
   }
 
   return (<div>
 
     <div  >
+      <button onClick={test}>test</button>
+
       <button onClick={() => startPoint()}>Set Start Point</button>
       <button onClick={finalPoint}>Set Final Point</button>
       <button onClick={endPoint}>Set End Point</button>
@@ -342,7 +355,6 @@ const TimeLine1 = () => {
       <button onClick={playtocasparcg}>playtocasparcg</button>
       <button onClick={recallPageAndAnimation}>recall</button>
       <button onClick={updatePageAndAnimation}>Update</button>
-      <button onClick={test}>test</button>
 
     </div>
 
