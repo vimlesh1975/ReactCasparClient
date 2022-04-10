@@ -4,7 +4,7 @@ import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
 import { fabric } from "fabric";
 
-var cf = 250;
+var cf = 0;
 var aa;
 
 const TimeLine1 = () => {
@@ -16,11 +16,14 @@ const TimeLine1 = () => {
   const [currentFrame, setCurrentFrame] = useState(0);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
+  const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
 
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+  // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
+    // initialx: canvas.item(0) ? canvas.item(0).left : 0,
     finalx: 100,
     outx: 700,
 
@@ -130,27 +133,25 @@ const TimeLine1 = () => {
 
         opacity: 1
       })
-      // console.log(position(i))
     });
 
     canvas.requestRenderAll();
-    // var totb='transform-origin: left;transform-box:fill-box';
-    var totb='transform-origin: top left;transform-box: fill-box';
 
     var inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
-        0%{transform:translate(${position(i).initialx - position(i).finalx}px,${position(i).initialy - position(i).finaly}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY});opacity:1;${totb}}
-        100% {transform:translate(0px,0px) scale(1,1);opacity:1;${totb} }
+        0%{transform:translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY});opacity:0;}
+        100% {transform:translate(0px,0px) scale(1,1);opacity:1; }
       } 
       @keyframes ${type}${canvas?.item(i).id}out
       {
-        0% {transform:translate(0px,0px) scale(1,1);opacity:1;${totb} }
-        100%{transform:translate(${position(i).outx - position(i).finalx}px,${position(i).outy - position(i).finaly}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:1;${totb} }
+        0% {transform:translate(0px,0px) scale(1,1);opacity:1;}
+        100%{transform:translate(${(position(i).outx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).outScaleX - position(i).finalScaleX)}px,${(position(i).outy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).outScaleY - position(i).finalScaleY)}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:0; }
       } 
-      #${canvas?.item(i).id} ${type} {animation:
+      #${canvas?.item(i).id} ${type} {
+        animation:
       ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
       ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}`
     });
@@ -177,7 +178,7 @@ const TimeLine1 = () => {
     play();
     canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
-      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 1 });
+      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 0 });
       canvas.requestRenderAll();
 
       setTimeout(() => {
@@ -190,7 +191,7 @@ const TimeLine1 = () => {
 
 
       setTimeout(() => {
-        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 1 }, {
+        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 0 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).outDuration,
           easing: fabric.util.ease.linear
@@ -278,7 +279,8 @@ const TimeLine1 = () => {
           scaleX: position(i).initialScaleX,
           scaleY: position(i).initialScaleY,
 
-          opacity: 0,
+          // opacity: 0,
+          opacity: 1,
         });
       }
 
@@ -290,7 +292,8 @@ const TimeLine1 = () => {
           scaleX: position(i).outScaleX,
           scaleY: position(i).outScaleY,
 
-          opacity: 0,
+          // opacity: 0,
+          opacity: 1,
         });
       }
 
@@ -302,7 +305,8 @@ const TimeLine1 = () => {
           scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
           scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
 
-          opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0])
+          // opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0]);
+          opacity: 1
         });
       }
 
@@ -317,44 +321,57 @@ const TimeLine1 = () => {
           scaleX: position(i).finalScaleX + (position(i).outScaleX - position(i).finalScaleX) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           scaleY: position(i).finalScaleY + (position(i).outScaleY - position(i).finalScaleY) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
 
-          opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
+          // opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
+          opacity: 1
         });
       }
     })
     canvas.requestRenderAll();
   }
 
-  const test = () => {
-    // canvas.getActiveObjects().forEach((element) => {
-    //   if (canvas.getActiveObjects().length > 1) {
-    //     var activeSelection = canvas.getActiveObject();
-    //     var matrix = activeSelection.calcTransformMatrix();
-    //     var objectPosition = { x: element.left, y: element.top };
-    //     var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-    //     console.log(finalPosition.x, element.width, element.scaleX)
-    //   }
-    //   else {
-    //     console.log(element.left, element.width, element.scaleX)
-    //   }
-    // })
-    console.log(canvas._activeObject)
+  // const test = () => {
+  //   console.log(canvas._activeObject)
+  // }
 
+  const copyAnimation = () => {
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        setTobecopiedAnimation(i)
+        return;
+      }
+    });
 
   }
+  const pasteAnimation = () => {
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        var updatedxpositions = [...xpositions];
+        updatedxpositions[i] = { ...updatedxpositions[tobecopiedAnimation] };
+        setXpositions(updatedxpositions);
+
+        const updatedkf = [...kf];
+        updatedkf[i] = [...kf[tobecopiedAnimation]];
+        setKf(updatedkf)
+      }
+    });
+  }
+
 
   return (<div>
 
     <div  >
-      <button onClick={test}>test</button>
+      {/* <button onClick={test}>test</button> */}
 
       <button onClick={() => startPoint()}>Set Start Point</button>
       <button onClick={finalPoint}>Set Final Point</button>
       <button onClick={endPoint}>Set End Point</button>
 
-      <button onClick={preView}>preView</button>
-      <button onClick={playtocasparcg}>playtocasparcg</button>
-      <button onClick={recallPageAndAnimation}>recall</button>
-      <button onClick={updatePageAndAnimation}>Update</button>
+      <button onClick={preView}>Preview</button>
+      <button onClick={playtocasparcg}>Play</button>
+      <button onClick={updatePageAndAnimation}>Save</button>
+      <button onClick={recallPageAndAnimation}>Recall</button>
+      <button onClick={copyAnimation}>Copy</button>
+      <button onClick={pasteAnimation}>Paste</button>
 
     </div>
 
@@ -445,6 +462,7 @@ const TimeLine1 = () => {
               }
             </div>
           </div>
+
         </div>
       })}
     </div>

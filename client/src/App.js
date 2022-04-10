@@ -32,7 +32,7 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 
-const buildDate = '060422_1'
+const buildDate = '100422_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -226,10 +226,10 @@ const App = () => {
 
   const updatePage = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
-        return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
+      return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-}
+  }
 
   return (<React.Fragment>
 
@@ -308,7 +308,7 @@ const App = () => {
                 <Video video={''} layerNumber={videoLayers[4]} />
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
-                <span style={{position:'absolute', left:506, top:250, fontSize:40}}>.</span>
+                <span style={{ position: 'absolute', left: 506, top: 250, fontSize: 40 }}>.</span>
                 <Provider store={store}>
                   <Drawing />
                 </Provider>
@@ -364,7 +364,7 @@ const App = () => {
               <DrawingController />
             </div>
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <div style={{ display: 'flex', justifyContent: 'space-around', width: 900, marginBottom: 50 }}>
               <VideoController layerNumber={videoLayers[0]} />
               <VideoController layerNumber={videoLayers[1]} />
@@ -374,43 +374,43 @@ const App = () => {
               <VideoController layerNumber={videoLayers[3]} />
             </div>
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <VideoPlaylist />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Layers />
           </TabPanel>
           <TabPanel >
             <ColorGradient />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <OnelinerAndBreakingNews />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Twoliner />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Scroll />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Shapes />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Games />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Charts />
           </TabPanel>
           <TabPanel >
             <TimeLine1 />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <PathModifier />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Effects />
           </TabPanel>
-           <TabPanel >
+          <TabPanel >
             <Help />
           </TabPanel>
         </Tabs >
