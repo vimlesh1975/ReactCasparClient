@@ -151,7 +151,7 @@ const TimeLine1 = () => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
-        0%{transform:translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle - position(i).finalAngle}deg); opacity:0;}
+        0%{transform: translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle / position(i).finalAngle}deg); opacity:0;}
         100% {transform:translate(0px,0px) scale(1,1) rotate(0deg); opacity:1; }
       } 
       @keyframes ${type}${canvas?.item(i).id}out
