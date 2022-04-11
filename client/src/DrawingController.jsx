@@ -1301,7 +1301,7 @@ const DrawingController = () => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal;
+            element.download = retVal+ '.svg';;
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }

@@ -23,7 +23,6 @@ const TimeLine1 = () => {
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
-    // initialx: canvas.item(0) ? canvas.item(0).left : 0,
     finalx: 100,
     outx: 700,
 
@@ -38,6 +37,11 @@ const TimeLine1 = () => {
     initialScaleY: 1,
     finalScaleY: 1,
     outScaleY: 1,
+
+    initialAngle: 0,
+    finalAngle: 0,
+    outAngle: 0,
+
 
   })))
 
@@ -59,6 +63,10 @@ const TimeLine1 = () => {
     initialScaleY: xpositions[i].initialScaleY,
     finalScaleY: xpositions[i].finalScaleY,
     outScaleY: xpositions[i].outScaleY,
+
+    initialAngle: xpositions[i].initialAngle,
+    finalAngle: xpositions[i].finalAngle,
+    outAngle: xpositions[i].outAngle,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
     stayDuration: (kf[i][2] - kf[i][1]) * 10,
@@ -130,6 +138,7 @@ const TimeLine1 = () => {
 
         scaleX: position(i).finalScaleX,
         scaleY: position(i).finalScaleY,
+        angle: position(i).finalAngle,
 
         opacity: 1
       })
@@ -142,8 +151,8 @@ const TimeLine1 = () => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
       inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
       {
-        0%{transform:translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY});opacity:0;}
-        100% {transform:translate(0px,0px) scale(1,1);opacity:1; }
+        0%{transform:translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle - position(i).finalAngle}deg); opacity:0;}
+        100% {transform:translate(0px,0px) scale(1,1) rotate(0deg); opacity:1; }
       } 
       @keyframes ${type}${canvas?.item(i).id}out
       {
@@ -178,11 +187,11 @@ const TimeLine1 = () => {
     play();
     canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
-      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, opacity: 0 });
+      element.set({ left: position(i).initialx, top: position(i).initialy, scaleX: position(i).initialScaleX, scaleY: position(i).initialScaleY, angle: position(i).initialAngle, opacity: 0 });
       canvas.requestRenderAll();
 
       setTimeout(() => {
-        element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, opacity: 1 }, {
+        element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: 1 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).initialToFinalDuration,
           easing: fabric.util.ease.linear
@@ -191,7 +200,7 @@ const TimeLine1 = () => {
 
 
       setTimeout(() => {
-        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, opacity: 0 }, {
+        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, angle: position(i).outAngle, opacity: 0 }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).outDuration,
           easing: fabric.util.ease.linear
@@ -210,10 +219,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, scaleX: element.scaleX, scaleY: element.ScaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.ScaleY, initialAngle: element.angle };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle };
         }
         setXpositions(updatedxpositions);
       }
@@ -231,10 +240,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle };
         }
         setXpositions(updatedxpositions);
       }
@@ -254,10 +263,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y, outScaleX: element.scaleX, outScaleY: element.scaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY };
+          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle };
         }
         setXpositions(updatedxpositions);
       }
@@ -278,6 +287,7 @@ const TimeLine1 = () => {
 
           scaleX: position(i).initialScaleX,
           scaleY: position(i).initialScaleY,
+          angle: position(i).initialAngle,
 
           // opacity: 0,
           opacity: 1,
@@ -292,6 +302,8 @@ const TimeLine1 = () => {
           scaleX: position(i).outScaleX,
           scaleY: position(i).outScaleY,
 
+          angle: position(i).outAngle,
+
           // opacity: 0,
           opacity: 1,
         });
@@ -305,13 +317,15 @@ const TimeLine1 = () => {
           scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
           scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
 
+          angle: position(i).initialAngle + (position(i).finalAngle - position(i).initialAngle) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+
           // opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0]);
           opacity: 1
         });
       }
 
       if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
-        element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, opacity: 1 });
+        element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: 1 });
       }
       if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
         element.set({
@@ -321,6 +335,8 @@ const TimeLine1 = () => {
           scaleX: position(i).finalScaleX + (position(i).outScaleX - position(i).finalScaleX) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           scaleY: position(i).finalScaleY + (position(i).outScaleY - position(i).finalScaleY) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
 
+          angle: position(i).finalAngle + (position(i).outAngle - position(i).finalAngle) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+
           // opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
           opacity: 1
         });
@@ -329,9 +345,6 @@ const TimeLine1 = () => {
     canvas.requestRenderAll();
   }
 
-  // const test = () => {
-  //   console.log(canvas._activeObject)
-  // }
 
   const copyAnimation = () => {
     layers.forEach((element, i) => {
@@ -355,12 +368,15 @@ const TimeLine1 = () => {
       }
     });
   }
+  const test = () => {
+    console.log(canvas.item(0))
+  }
 
 
   return (<div>
 
     <div  >
-      {/* <button onClick={test}>test</button> */}
+      <button onClick={test}>test</button>
 
       <button onClick={() => startPoint()}>Set Start Point</button>
       <button onClick={finalPoint}>Set Final Point</button>
