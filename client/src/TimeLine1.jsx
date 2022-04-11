@@ -219,7 +219,7 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.ScaleY, initialAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle };
         }
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle };
