@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
 import { fabric } from "fabric";
+import { selectAll } from './DrawingController';
+import { saveAs } from 'file-saver';
 
 var cf = 0;
 var aa;
+var inAnimation2;
 
 const TimeLine1 = () => {
   const dispatch = useDispatch();
@@ -18,6 +21,7 @@ const TimeLine1 = () => {
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
+  const [pannelEnable, setPannelEnable] = useState(false);
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -124,13 +128,29 @@ const TimeLine1 = () => {
       }
     }, 10);
   }
-
+  const setinAnimation2 = () => {
+    inAnimation2 = ``;
+    canvas.forEachObject((element, i) => {
+      var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
+      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
+    {
+      0%{transform: translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX) }px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle - position(i).finalAngle}deg); opacity:0;}
+      100% {transform:translate(0px,0px) scale(1,1) rotate(0deg); opacity:1; }
+    } 
+    @keyframes ${type}${canvas?.item(i).id}out
+    {
+      0% {transform:translate(0px,0px) scale(1,1);opacity:1;}
+      100%{transform:translate(${(position(i).outx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).outScaleX - position(i).finalScaleX)}px,${(position(i).outy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).outScaleY - position(i).finalScaleY)}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:0; }
+    } 
+    #${canvas?.item(i).id} ${type} {
+      animation:
+    ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
+    ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}`
+    });
+  }
   const playtocasparcg = () => {
-    // setTimeout(() => {
     play();
-    // }, 2000);
     canvas.discardActiveObject();
-
     canvas.forEachObject((element, i) => {
       element.set({
         left: position(i).finalx,
@@ -145,25 +165,7 @@ const TimeLine1 = () => {
     });
 
     canvas.requestRenderAll();
-
-    var inAnimation2 = ``;
-    canvas.forEachObject((element, i) => {
-      var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
-      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
-      {
-        0%{transform: translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX)}px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle / position(i).finalAngle}deg); opacity:0;}
-        100% {transform:translate(0px,0px) scale(1,1) rotate(0deg); opacity:1; }
-      } 
-      @keyframes ${type}${canvas?.item(i).id}out
-      {
-        0% {transform:translate(0px,0px) scale(1,1);opacity:1;}
-        100%{transform:translate(${(position(i).outx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).outScaleX - position(i).finalScaleX)}px,${(position(i).outy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).outScaleY - position(i).finalScaleY)}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:0; }
-      } 
-      #${canvas?.item(i).id} ${type} {
-        animation:
-      ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
-      ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}`
-    });
+    setinAnimation2();
 
     endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
     endpoint(`call ${window.chNumber}-${108} "
@@ -372,117 +374,153 @@ const TimeLine1 = () => {
     console.log(canvas.item(0))
   }
 
+  const exportHTML1 = canvas => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    setinAnimation2();
+    selectAll(canvas);
+    var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+    if (retVal !== null) {
+      var aa = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+            </head>
+            <body>
+            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+             </body>
+             <script>
+             var style = document.createElement('style');
+             style.textContent = \`${inAnimation2}\`;
+             document.head.appendChild(style);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            document.body.style.overflow='hidden';
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            </script>
+            </html>`
+      const file = new Blob([aa], { type: 'text/html' });
+      saveAs(file, retVal + '.html')
+    }
+  }
 
   return (<div>
+    <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
 
-    <div  >
-      <button onClick={test}>test</button>
+    {pannelEnable && <div>
+      <div >
+        <button onClick={test}>test</button>
+        <button onClick={() => startPoint()}>Set Start Point</button>
+        <button onClick={finalPoint}>Set Final Point</button>
+        <button onClick={endPoint}>Set End Point</button>
 
-      <button onClick={() => startPoint()}>Set Start Point</button>
-      <button onClick={finalPoint}>Set Final Point</button>
-      <button onClick={endPoint}>Set End Point</button>
+        <button onClick={preView}>Preview</button>
+        <button onClick={playtocasparcg}>Play</button>
+        <button onClick={updatePageAndAnimation}>Save</button>
+        <button onClick={recallPageAndAnimation}>Recall</button>
+        <button onClick={copyAnimation}>Copy</button>
+        <button onClick={pasteAnimation}>Paste</button>
+        <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
 
-      <button onClick={preView}>Preview</button>
-      <button onClick={playtocasparcg}>Play</button>
-      <button onClick={updatePageAndAnimation}>Save</button>
-      <button onClick={recallPageAndAnimation}>Recall</button>
-      <button onClick={copyAnimation}>Copy</button>
-      <button onClick={pasteAnimation}>Paste</button>
+      </div>
 
-    </div>
-
-    <div>
-      {layers?.map((_, i) => {
-        return <div key={i} style={{}}>
-          <div onClick={(e) => {
-            ss({ x: e.screenX - 1040 });
-            canvas.setActiveObject(canvas.item(i));
-          }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
-            <div style={{ position: 'relative' }}>
-
-
-
-              <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                position={{ x: kf[i][0], y: 0 }}
-                onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
-                }}
-              >
-                <div style={{ width: kf[i][1] - kf[i][0], height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
-              </Rnd>
+      <div>
+        {layers?.map((_, i) => {
+          return <div key={i} style={{}}>
+            <div onClick={(e) => {
+              ss({ x: e.screenX - 1040 });
+              canvas.setActiveObject(canvas.item(i));
+            }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
+              <div style={{ position: 'relative' }}>
 
 
 
-              <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                position={{ x: kf[i][1], y: 0 }}
-                onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
-                }}
-              >
-                <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
-              </Rnd>
-
-
-              <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                position={{ x: kf[i][2], y: 0 }}
-                onDrag={(e, d) => {
-                  const updatedkf = [...kf]
-                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                  setKf(updatedkf)
-                }}
-              >
-                <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
-              </Rnd>
-
-
-              {(kf[i])?.map((val, kfi) =>
                 <Rnd
-                  key={kfi}
                   dragAxis='x'
                   enableResizing={{}}
                   bounds='parent'
-                  position={{ x: val, y: 0 }}
+                  position={{ x: kf[i][0], y: 0 }}
                   onDrag={(e, d) => {
-                    modifyKf(e, d, i, kfi)
+                    const updatedkf = [...kf]
+                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                    setKf(updatedkf)
                   }}
-                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
+                >
+                  <div style={{ width: kf[i][1] - kf[i][0], height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
                 </Rnd>
-              )}
-              {(i === 0) && <Rnd
-                dragAxis='x'
-                enableResizing={{}}
-                bounds='parent'
-                size={{ width: 5, height: 200 }}
-                position={{ x: currentFrame, y: 0 }}
-                onDrag={(e, d) => {
-                  ss(d);
-                }}
-              >
-                <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
-                  {currentFrame}
-                </div>
-              </Rnd>
-              }
+
+
+
+                <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: kf[i][1], y: 0 }}
+                  onDrag={(e, d) => {
+                    const updatedkf = [...kf]
+                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                    setKf(updatedkf)
+                  }}
+                >
+                  <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
+                </Rnd>
+
+
+                <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  position={{ x: kf[i][2], y: 0 }}
+                  onDrag={(e, d) => {
+                    const updatedkf = [...kf]
+                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                    setKf(updatedkf)
+                  }}
+                >
+                  <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
+                </Rnd>
+
+
+                {(kf[i])?.map((val, kfi) =>
+                  <Rnd
+                    key={kfi}
+                    dragAxis='x'
+                    enableResizing={{}}
+                    bounds='parent'
+                    position={{ x: val, y: 0 }}
+                    onDrag={(e, d) => {
+                      modifyKf(e, d, i, kfi)
+                    }}
+                  > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
+                  </Rnd>
+                )}
+                {(i === 0) && <Rnd
+                  dragAxis='x'
+                  enableResizing={{}}
+                  bounds='parent'
+                  size={{ width: 5, height: 200 }}
+                  position={{ x: currentFrame, y: 0 }}
+                  onDrag={(e, d) => {
+                    ss(d);
+                  }}
+                >
+                  <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
+                    {currentFrame}
+                  </div>
+                </Rnd>
+                }
+              </div>
             </div>
+
           </div>
-
-        </div>
-      })}
+        })}
+      </div>
     </div>
-
+    }
   </div>)
 }
 
