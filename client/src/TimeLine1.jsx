@@ -128,26 +128,34 @@ const TimeLine1 = () => {
       }
     }, 10);
   }
+
+
+
   const setinAnimation2 = () => {
     inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
-      inAnimation2 = inAnimation2 + `@keyframes ${type}${canvas?.item(i).id}
+      inAnimation2 = inAnimation2 + `
+    @keyframes ${type}${canvas?.item(i).id}in
     {
-      0%{transform: translate(${(position(i).initialx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).initialScaleX - position(i).finalScaleX) }px,${(position(i).initialy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).initialScaleY - position(i).finalScaleY)}px) scale(${position(i).initialScaleX / position(i).finalScaleX},${position(i).initialScaleY / position(i).finalScaleY}) rotate(${position(i).initialAngle - position(i).finalAngle}deg); opacity:0;}
-      100% {transform:translate(0px,0px) scale(1,1) rotate(0deg); opacity:1; }
+      0%{transform: matrix(${position(i).initialScaleX}, 0, 0, ${position(i).initialScaleY}, ${position(i).initialx + element.width * position(i).initialScaleX / 2} , ${position(i).initialy + element.height * position(i).initialScaleY / 2});}
     } 
     @keyframes ${type}${canvas?.item(i).id}out
     {
-      0% {transform:translate(0px,0px) scale(1,1);opacity:1;}
-      100%{transform:translate(${(position(i).outx - position(i).finalx) / position(i).finalScaleX - (-(element.width / 2) / position(i).finalScaleX) * (position(i).outScaleX - position(i).finalScaleX)}px,${(position(i).outy - position(i).finaly) / position(i).finalScaleY - (-(element.height / 2) / position(i).finalScaleY) * (position(i).outScaleY - position(i).finalScaleY)}px)  scale(${position(i).outScaleX / position(i).finalScaleX},${position(i).outScaleY / position(i).finalScaleY});opacity:0; }
+      100%{transform: matrix(${position(i).outScaleX}, 0, 0, ${position(i).outScaleY}, ${position(i).outx + element.width * position(i).outScaleX / 2} , ${position(i).outy + element.height * position(i).outScaleY / 2});}
     } 
-    #${canvas?.item(i).id} ${type} {
+    #${canvas?.item(i).id} {
       animation:
-    ${type}${canvas?.item(i).id} ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
-    ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}`
+    ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
+    ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}
+     `
     });
+
   }
+
+
+
+
   const playtocasparcg = () => {
     play();
     canvas.discardActiveObject();
@@ -371,7 +379,7 @@ const TimeLine1 = () => {
     });
   }
   const test = () => {
-    console.log(canvas.item(0))
+    console.log(canvas.item(0).angle)
   }
 
   const exportHTML1 = canvas => {
