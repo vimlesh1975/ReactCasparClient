@@ -12,8 +12,6 @@ const Scroll = () => {
 
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [delemeter, setDelemeter] = useState('⏺️')
-    const [delemeterLogo, setDelemeterLogo] = useState('https://zerocreativity0.files.wordpress.com/2016/01/doordarshan-logo.png')
-
 
     const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -49,13 +47,13 @@ const Scroll = () => {
         const element = document.createElement("a");
         var aa = ''
         playerList1.forEach(val => {
-            aa += JSON.stringify({id:val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
+            aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1, delemeterLogo: val.delemeterLogo }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
-        var retVal = prompt("Enter  file name to save : ",'Scroll_' + ss);
+        var retVal = prompt("Enter  file name to save : ", 'Scroll_' + ss);
         if (retVal !== null) {
             element.download = retVal;
             document.body.appendChild(element); // Required for this to work in FireFox
@@ -78,7 +76,7 @@ const Scroll = () => {
         var updatedcanvasList = []
         aa.forEach(element => {
             var cc = JSON.parse(element)
-            updatedcanvasList.push({id:cc.id, data1: cc.data1, use1: cc.use1 })
+            updatedcanvasList.push({ id: cc.id, data1: cc.data1, use1: cc.use1, delemeterLogo: cc.delemeterLogo })
         });
         setPlayerList1(updatedcanvasList)
         setNewplayerList1(updatedcanvasList)
@@ -110,11 +108,10 @@ const Scroll = () => {
 
     const setAsScrollText2 = () => {
         var left1 = 0;
-        playerList1.forEach(element => {
+        playerList1.forEach((element, i) => {
             if (element.use1 === true) {
-                // fabric.util.loadImage('http://localhost:8080/media/anchor.png', myImg => {
-                // fabric.Image.fromURL('http://localhost:8080/media/anchor.png', myImg => {
-                fabric.Image.fromURL(delemeterLogo, myImg => {
+
+                fabric.Image.fromURL(playerList1[i].delemeterLogo, myImg => {
 
 
                     if (myImg == null) {
@@ -133,7 +130,7 @@ const Scroll = () => {
                         const text = new fabric.IText(element.data1, {
                             shadow: shadowOptions,
                             id: 'id_' + uuidv4(),
-                            left:  left1,
+                            left: left1,
                             top: 521,
                             fill: options.currentColor,
                             fontFamily: options.currentFont,
@@ -192,17 +189,26 @@ const Scroll = () => {
                             <tr>
                                 <td>
                                     <label>
-                                        Logo <img src={delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
+                                        <img src={playerList1[0].delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
                                         <input type="file" onChange={e => {
                                             var reader = new FileReader();
                                             reader.onloadend = () => {
-                                                setDelemeterLogo(reader.result)
+                                                const aa = [...playerList1];
+                                                aa[0] = { ...aa[0], delemeterLogo: reader.result };
+                                                setPlayerList1(aa);
+                                                setNewplayerList1(aa)
                                             }
                                             reader.readAsDataURL(e.target.files[0]);
                                         }} style={{ display: 'none' }} />
                                     </label>
                                 </td>
-                                <td>  <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
+                                <td> <button onClick={() => {
+                                    const updateddelemeterlogo = playerList1.map((val, i) => ({ ...val, delemeterLogo: playerList1[0].delemeterLogo }));
+                                    setPlayerList1(updateddelemeterlogo);
+                                    setNewplayerList1(updateddelemeterlogo)
+
+
+                                }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -211,7 +217,7 @@ const Scroll = () => {
             </div>
             <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
-                <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
+                <div style={{ backgroundColor: 'grey', height: 700, width: 800, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
                         <Droppable droppableId="droppable-1" type="PERSON1">
                             {(provided, snapshot) => (
@@ -238,6 +244,23 @@ const Scroll = () => {
                                                             >
                                                                 <td style={{ textAlign: 'center' }}>{i}</td>
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
+
+                                                                <td>
+                                                                    <label>
+                                                                        <img src={val.delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
+                                                                        <input type="file" onChange={e => {
+                                                                            var reader = new FileReader();
+                                                                            reader.onloadend = () => {
+                                                                                const aa = [...playerList1];
+                                                                                aa[i] = { ...aa[i], delemeterLogo: reader.result };
+                                                                                setPlayerList1(aa);
+                                                                                setNewplayerList1(aa)
+
+                                                                            }
+                                                                            reader.readAsDataURL(e.target.files[0]);
+                                                                        }} style={{ display: 'none' }} />
+                                                                    </label>
+                                                                </td>
                                                                 <td style={{ minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
                                                                     onChange={e => {
                                                                         newplayerList1[i] = { ...newplayerList1[i], data1: e.target.value };
@@ -268,7 +291,7 @@ const Scroll = () => {
                     </DragDropContext>
                 </div>
             </div>
-           
+
         </div>
     )
 }
