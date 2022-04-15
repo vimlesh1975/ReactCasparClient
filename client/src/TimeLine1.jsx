@@ -22,6 +22,7 @@ const TimeLine1 = () => {
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
   const [pannelEnable, setPannelEnable] = useState(false);
+  const [autoOut, setOutoOut] = useState(true);
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -129,32 +130,45 @@ const TimeLine1 = () => {
     }, 10);
   }
 
-
-
   const setinAnimation2 = () => {
     inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
+
       inAnimation2 = inAnimation2 + `
-    @keyframes ${type}${canvas?.item(i).id}in
-    {
-      0%{transform: matrix(${position(i).initialScaleX}, 0, 0, ${position(i).initialScaleY}, ${position(i).initialx + element.width * position(i).initialScaleX / 2} , ${position(i).initialy + element.height * position(i).initialScaleY / 2});}
-    } 
-    @keyframes ${type}${canvas?.item(i).id}out
-    {
-      100%{transform: matrix(${position(i).outScaleX}, 0, 0, ${position(i).outScaleY}, ${position(i).outx + element.width * position(i).outScaleX / 2} , ${position(i).outy + element.height * position(i).outScaleY / 2});}
-    } 
-    #${canvas?.item(i).id} {
-      animation:
-    ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
-    ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s forwards}
-     `
+        @keyframes ${type}${canvas?.item(i).id}in
+        {
+          0%{transform: matrix(${position(i).initialScaleX}, 0, 0, ${position(i).initialScaleY}, ${position(i).initialx + (element.width / 2) * position(i).initialScaleX} , ${position(i).initialy + (element.height / 2) * position(i).initialScaleY}); opacity:0}
+        } 
+        @keyframes ${type}${canvas?.item(i).id}out
+        {
+          100%{transform: matrix(${position(i).outScaleX}, 0, 0, ${position(i).outScaleY}, ${position(i).outx + (element.width / 2) * position(i).outScaleX} , ${position(i).outy + (element.height / 2) * position(i).outScaleY});opacity:0}
+        } 
+        #${canvas?.item(i).id} {
+          animation:
+        ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
+        ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s ${autoOut ? 'running' : 'paused'} forwards}
+         `
     });
 
   }
 
-
-
+  const stopFromCasprtcg = () => {
+    if (!autoOut) {
+      var Delay = [];
+      for (let i = 0; i < layers?.length; i++) {
+        Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
+      }
+      const minDeley = Math.min(...Delay);
+      canvas.forEachObject((element, i) => {
+        endpoint(`
+      call ${window.chNumber}-${108} "
+      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
+      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+      "`);
+      });
+    }
+  }
 
   const playtocasparcg = () => {
     play();
@@ -366,21 +380,26 @@ const TimeLine1 = () => {
 
   }
   const pasteAnimation = () => {
+    const updatedkf = [...kf];
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
-        var updatedxpositions = [...xpositions];
-        updatedxpositions[i] = { ...updatedxpositions[tobecopiedAnimation] };
-        setXpositions(updatedxpositions);
-
-        const updatedkf = [...kf];
         updatedkf[i] = [...kf[tobecopiedAnimation]];
-        setKf(updatedkf)
       }
     });
+    setKf(updatedkf)
   }
-  const test = () => {
-    console.log(canvas.item(0).angle)
+
+
+  const pasteAnimationtoAllLayers = () => {
+    const updatedkf = [...kf];
+    layers.forEach((element, i) => {
+      updatedkf[i] = kf[tobecopiedAnimation];
+    });
+    setKf(updatedkf)
   }
+  // const test = () => {
+  //   console.log(canvas.item(0).angle)
+  // }
 
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -418,20 +437,23 @@ const TimeLine1 = () => {
 
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
-
     {pannelEnable && <div>
       <div >
-        <button onClick={test}>test</button>
+        {/* <button onClick={test}>test</button> */}
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
         <button onClick={endPoint}>Set End Point</button>
 
         <button onClick={preView}>Preview</button>
         <button onClick={playtocasparcg}>Play</button>
+        <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={e => setOutoOut(val => !val)} /></label>
+        <button onClick={stopFromCasprtcg}>Stop</button>
+
         <button onClick={updatePageAndAnimation}>Save</button>
         <button onClick={recallPageAndAnimation}>Recall</button>
         <button onClick={copyAnimation}>Copy</button>
         <button onClick={pasteAnimation}>Paste</button>
+        <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
 
       </div>
@@ -529,6 +551,12 @@ const TimeLine1 = () => {
       </div>
     </div>
     }
+    <div style={{ width: 100, height: 500 }}>
+      {/* blank space */}
+    </div>
+    <div>
+      <h3>Animate Only position and size.  Rotation is not supported</h3>
+    </div>
   </div>)
 }
 
