@@ -255,7 +255,6 @@ const Scroll = () => {
                                                                                 aa[i] = { ...aa[i], delemeterLogo: reader.result };
                                                                                 setPlayerList1(aa);
                                                                                 setNewplayerList1(aa)
-
                                                                             }
                                                                             reader.readAsDataURL(e.target.files[0]);
                                                                         }} style={{ display: 'none' }} />
