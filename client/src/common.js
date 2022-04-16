@@ -76,6 +76,9 @@ export const changeBackGroundColor = (e, canvas) => {
     canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
     canvas.requestRenderAll();
 }
+
+
+
 export const fontLists = [
     "AADevAksharReg",
     "AADevApsBil",

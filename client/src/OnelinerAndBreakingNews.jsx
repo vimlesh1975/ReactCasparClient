@@ -168,13 +168,13 @@ const OnelinerAndBreakingNews = () => {
         const element = document.createElement("a");
         var aa = ''
         playerList1.forEach(val => {
-            aa += JSON.stringify({id:val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
+            aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
-        var retVal = prompt("Enter  file name to save : ",'Oneliner_' + ss);
+        var retVal = prompt("Enter  file name to save : ", 'Oneliner_' + ss);
 
         if (retVal !== null) {
             element.download = retVal;
@@ -198,7 +198,7 @@ const OnelinerAndBreakingNews = () => {
         var updatedcanvasList = []
         aa.forEach(element => {
             var cc = JSON.parse(element)
-            updatedcanvasList.push({id:cc.id, data1: cc.data1, use1: cc.use1 })
+            updatedcanvasList.push({ id: cc.id, data1: cc.data1, use1: cc.use1 })
         });
         setPlayerList1(updatedcanvasList)
         setNewplayerList1(updatedcanvasList)
@@ -242,7 +242,7 @@ const OnelinerAndBreakingNews = () => {
     }
     return (
         <div>
-             <div style={{ border: '1px solid red' }}>
+            <div style={{ border: '1px solid red' }}>
                 <table border='1'>
                     <tbody >
                         <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
@@ -266,7 +266,6 @@ const OnelinerAndBreakingNews = () => {
                 <table border='0'>
                     <tbody >
                         <tr>
-
                             <td><button onClick={drawingFileSaveAs}>Save</button></td>
                             <td><span>Open File:</span><input
                                 type='file'
@@ -280,9 +279,8 @@ const OnelinerAndBreakingNews = () => {
                         </tr>
                     </tbody>
                 </table>
-
             </div>
-           
+
             <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button>
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
@@ -344,7 +342,7 @@ const OnelinerAndBreakingNews = () => {
                     </DragDropContext>
                 </div>
             </div>
-           
+
         </div>
     )
 }

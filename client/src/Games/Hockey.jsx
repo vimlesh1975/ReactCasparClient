@@ -26,7 +26,6 @@ const Hockey = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
-    // const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const [currentPlayer1, setCurrentPlayer1] = useState('Vimlesh Kumar 1')
@@ -149,7 +148,7 @@ const Hockey = () => {
             setInitialSecond(startTime.getSeconds())
 
         }, 1000);
-        //for form
+        //for form end
 
         endpoint(`call ${window.chNumber}-${layerNumber} "
         startTime.setMinutes(${initialMinute});
@@ -241,10 +240,108 @@ const Hockey = () => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
     }
+    const fileSaveAs = (playerList) => {
+        const element = document.createElement("a");
+        var aa = ''
+        playerList.forEach(val => {
+            aa += val + '\r\n'
+        });
+        const file = new Blob([aa], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
+        var retVal = prompt("Enter  file name to save : ", 'playerList' + ss);
 
+        if (retVal !== null) {
+            element.download = retVal;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+    let fileReader;
+
+    const handleFileChosen1 = (file) => {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead1;
+            fileReader.readAsText(file);
+        }
+    }
+    const handleFileRead1 = (e) => {
+        const content = fileReader.result;
+        var aa = content.split('\r\n')
+        aa.splice(-1)
+        var updatedcanvasList = []
+        aa.forEach(element => {
+            var cc = element;
+            updatedcanvasList.push(cc)
+        });
+        setPlayerList1(updatedcanvasList);
+    };
+    const handleFileChosen2 = (file) => {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead2;
+            fileReader.readAsText(file);
+        }
+    }
+    const handleFileRead2 = (e) => {
+        const content = fileReader.result;
+        var aa = content.split('\r\n')
+        aa.splice(-1)
+        var updatedcanvasList = []
+        aa.forEach(element => {
+            var cc = element;
+            updatedcanvasList.push(cc)
+        });
+        setPlayerList2(updatedcanvasList);
+    };
     return (
         <div>
+            <div style={{ display: 'flex' }}>
+                <div>
+                    <table border='0'>
+                        <tbody >
+                            <tr>
+
+                                <td><button onClick={() => fileSaveAs(playerList1)}>Save</button></td>
+                            </tr>
+                            <tr>
+                                <td><span>Open File:</span><input
+                                    type='file'
+                                    id='file'
+                                    className='input-file'
+                                    accept='.txt'
+                                    onChange={e => {
+                                        handleFileChosen1(e.target.files[0]);
+                                    }}
+                                /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table border='0'>
+                        <tbody >
+                            <tr>
+
+                                <td><button onClick={() => fileSaveAs(playerList2)}>Save</button></td>
+                            </tr>
+                            <tr>
+                                <td><span>Open File:</span><input
+                                    type='file'
+                                    id='file'
+                                    className='input-file'
+                                    accept='.txt'
+                                    onChange={e => {
+                                        handleFileChosen2(e.target.files[0]);
+                                    }}
+                                /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div style={{ display: 'flex', width: 830, }}>
                 <div>
 
@@ -273,7 +370,7 @@ const Hockey = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td><input style={{border:'none', borderWidth:0}} type='text' defaultValue={val} onClick={() => setCurrentPlayer1(val)}
+                                                                <td><input style={{ border: 'none', borderWidth: 0 }} type='text' defaultValue={val} onClick={() => setCurrentPlayer1(val)}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
@@ -344,7 +441,7 @@ const Hockey = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td><input style={{border:'none', borderWidth:0}} type='text' defaultValue={val} onClick={() => setCurrentPlayer2(val)}
+                                                                <td><input style={{ border: 'none', borderWidth: 0 }} type='text' defaultValue={val} onClick={() => setCurrentPlayer2(val)}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList2 = [...playerList2];

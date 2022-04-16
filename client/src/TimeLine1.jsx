@@ -86,8 +86,11 @@ const TimeLine1 = () => {
   }
 
   const recallPageAndAnimation = () => {
-    setKf(canvasList[currentPage].animation.kf);
-    setXpositions(canvasList[currentPage].animation.xpositions)
+    if (canvasList[currentPage].animation!==''){
+      setKf(canvasList[currentPage].animation.kf);
+      setXpositions(canvasList[currentPage].animation.xpositions)
+    }
+   
     // console.log(canvasList[currentPage].animation)
   }
   const modifyKf = (e, d, i, kfi) => {
