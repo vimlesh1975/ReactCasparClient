@@ -46,6 +46,9 @@ const TimeLine1 = () => {
     initialAngle: 0,
     finalAngle: 0,
     outAngle: 0,
+    initialMatrix: 'matrix(1,0,0,1,300,200)',
+    finalMatrix: 'matrix(1,0,0,1,400,400)',
+    outMatrix: 'matrix(1,0,0,1,200,100)',
 
 
   })))
@@ -73,6 +76,11 @@ const TimeLine1 = () => {
     finalAngle: xpositions[i].finalAngle,
     outAngle: xpositions[i].outAngle,
 
+    initialMatrix: xpositions[i].initialMatrix,
+    finalMatrix: xpositions[i].finalMatrix,
+    outMatrix: xpositions[i].outMatrix,
+
+
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
     stayDuration: (kf[i][2] - kf[i][1]) * 10,
     outDuration: (kf[i][3] - kf[i][2]) * 10
@@ -86,11 +94,11 @@ const TimeLine1 = () => {
   }
 
   const recallPageAndAnimation = () => {
-    if (canvasList[currentPage].animation!==''){
+    if (canvasList[currentPage].animation !== '') {
       setKf(canvasList[currentPage].animation.kf);
       setXpositions(canvasList[currentPage].animation.xpositions)
     }
-   
+
     // console.log(canvasList[currentPage].animation)
   }
   const modifyKf = (e, d, i, kfi) => {
@@ -141,11 +149,11 @@ const TimeLine1 = () => {
       inAnimation2 = inAnimation2 + `
         @keyframes ${type}${canvas?.item(i).id}in
         {
-          0%{transform: matrix(${position(i).initialScaleX}, 0, 0, ${position(i).initialScaleY}, ${position(i).initialx + (element.width / 2) * position(i).initialScaleX} , ${position(i).initialy + (element.height / 2) * position(i).initialScaleY}); opacity:0}
+          0%{transform: ${position(i).initialMatrix}}
         } 
         @keyframes ${type}${canvas?.item(i).id}out
         {
-          100%{transform: matrix(${position(i).outScaleX}, 0, 0, ${position(i).outScaleY}, ${position(i).outx + (element.width / 2) * position(i).outScaleX} , ${position(i).outy + (element.height / 2) * position(i).outScaleY});opacity:0}
+          100%{transform: ${position(i).outMatrix}}
         } 
         #${canvas?.item(i).id} {
           animation:
@@ -236,9 +244,22 @@ const TimeLine1 = () => {
     });
 
   }
+  const getMatrix = (element, x, y) => {
+    const aa = element.calcTransformMatrix();
+    const bb = [...aa];
+    return ('matrix(' + bb.toString() + ')')
+  }
+
+  const getMatrixSingle = (element) => {
+    const aa = element.calcOwnMatrix();
+    const bb = [...aa];
+    return ('matrix(' + bb.toString() + ')')
+  }
 
   const startPoint = () => {
     var updatedxpositions = [...xpositions];
+    deselectAndSelectAgain();
+
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
         if (activeLayers.length > 1) {
@@ -246,10 +267,11 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
+
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrixSingle(element) };
         }
         setXpositions(updatedxpositions);
       }
@@ -260,6 +282,7 @@ const TimeLine1 = () => {
 
   const finalPoint = () => {
     var updatedxpositions = [...xpositions];
+    deselectAndSelectAgain();
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
         if (activeLayers.length > 1) {
@@ -267,10 +290,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrixSingle(element) };
         }
         setXpositions(updatedxpositions);
       }
@@ -280,20 +303,20 @@ const TimeLine1 = () => {
   }
 
   const endPoint = () => {
-
     var updatedxpositions = [...xpositions];
+    deselectAndSelectAgain();
+
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
-
         if (activeLayers.length > 1) {
           var activeSelection = canvas.getActiveObject();
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle };
+          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrixSingle(element) };
         }
         setXpositions(updatedxpositions);
       }
@@ -400,9 +423,27 @@ const TimeLine1 = () => {
     });
     setKf(updatedkf)
   }
-  // const test = () => {
-  //   console.log(canvas.item(0).angle)
-  // }
+  const test = () => {
+    // console.log(canvas.item(0))
+    // console.log('matrix(' + canvas.item(0).calcOwnMatrix().toString() + ')')
+    const aa = activeLayers;
+    canvas.discardActiveObject();
+        var sel = new fabric.ActiveSelection(aa, {
+          canvas: canvas,
+        });
+        canvas.setActiveObject(sel);
+        canvas.requestRenderAll();
+  }
+
+  const deselectAndSelectAgain=()=>{
+    const aa = activeLayers;
+    canvas.discardActiveObject();
+        var sel = new fabric.ActiveSelection(aa, {
+          canvas: canvas,
+        });
+        canvas.setActiveObject(sel);
+        canvas.requestRenderAll();
+  }
 
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -442,7 +483,7 @@ const TimeLine1 = () => {
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
       <div >
-        {/* <button onClick={test}>test</button> */}
+        <button onClick={test}>test</button>
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
         <button onClick={endPoint}>Set End Point</button>
