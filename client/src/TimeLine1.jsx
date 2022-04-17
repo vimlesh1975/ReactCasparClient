@@ -149,11 +149,11 @@ const TimeLine1 = () => {
       inAnimation2 = inAnimation2 + `
         @keyframes ${type}${canvas?.item(i).id}in
         {
-          0%{transform: ${position(i).initialMatrix}}
+          0%{transform: ${position(i).initialMatrix} ;opacity:0}
         } 
         @keyframes ${type}${canvas?.item(i).id}out
         {
-          100%{transform: ${position(i).outMatrix}}
+          100%{transform: ${position(i).outMatrix} ;opacity:0}
         } 
         #${canvas?.item(i).id} {
           animation:
@@ -424,25 +424,17 @@ const TimeLine1 = () => {
     setKf(updatedkf)
   }
   const test = () => {
-    // console.log(canvas.item(0))
-    // console.log('matrix(' + canvas.item(0).calcOwnMatrix().toString() + ')')
-    const aa = activeLayers;
-    canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(aa, {
-          canvas: canvas,
-        });
-        canvas.setActiveObject(sel);
-        canvas.requestRenderAll();
+    console.log(canvas.item(0))
   }
 
-  const deselectAndSelectAgain=()=>{
+  const deselectAndSelectAgain = () => {
     const aa = activeLayers;
     canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(aa, {
-          canvas: canvas,
-        });
-        canvas.setActiveObject(sel);
-        canvas.requestRenderAll();
+    var sel = new fabric.ActiveSelection(aa, {
+      canvas: canvas,
+    });
+    canvas.setActiveObject(sel);
+    canvas.requestRenderAll();
   }
 
   const exportHTML1 = canvas => {
@@ -503,16 +495,14 @@ const TimeLine1 = () => {
       </div>
 
       <div>
-        {layers?.map((_, i) => {
-          return <div key={i} style={{}}>
+        {layers?.map((element, i) => {
+          return <div
+            key={i} style={{}}>
             <div onClick={(e) => {
               ss({ x: e.screenX - 1040 });
               canvas.setActiveObject(canvas.item(i));
-            }} style={{ backgroundColor: (activeLayers.includes(_)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
+            }} style={{ backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
               <div style={{ position: 'relative' }}>
-
-
-
                 <Rnd
                   dragAxis='x'
                   enableResizing={{}}
@@ -599,7 +589,7 @@ const TimeLine1 = () => {
       {/* blank space */}
     </div>
     <div>
-      <h3>Animate Only position and size.  Rotation is not supported</h3>
+      <h3>Animate Only position size and Rotation.</h3>
     </div>
   </div>)
 }

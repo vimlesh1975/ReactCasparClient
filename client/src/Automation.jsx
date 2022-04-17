@@ -66,7 +66,7 @@ const Automation = () => {
                     data1.forEach(data2 => {
                         window.automationeditor[0].canvas.getObjects().forEach((element) => {
                             try {
-                                element.set({ selectable: false, strokeUniform: false });
+                                element.set({ selectable: false, strokeUniform: true });
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
 
