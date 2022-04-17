@@ -244,21 +244,15 @@ const TimeLine1 = () => {
     });
 
   }
-  const getMatrix = (element, x, y) => {
+  const getMatrix = (element) => {
     const aa = element.calcTransformMatrix();
-    const bb = [...aa];
-    return ('matrix(' + bb.toString() + ')')
-  }
-
-  const getMatrixSingle = (element) => {
-    const aa = element.calcOwnMatrix();
     const bb = [...aa];
     return ('matrix(' + bb.toString() + ')')
   }
 
   const startPoint = () => {
     var updatedxpositions = [...xpositions];
-    deselectAndSelectAgain();
+    if (activeLayers.length > 1) { deselectAndSelectAgain(); }
 
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
@@ -267,11 +261,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
-
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: finalPosition.x, initialy: finalPosition.y, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element) };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrixSingle(element) };
+          updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element) };
         }
         setXpositions(updatedxpositions);
       }
@@ -282,7 +275,8 @@ const TimeLine1 = () => {
 
   const finalPoint = () => {
     var updatedxpositions = [...xpositions];
-    deselectAndSelectAgain();
+    if (activeLayers.length > 1) { deselectAndSelectAgain(); }
+
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
         if (activeLayers.length > 1) {
@@ -293,7 +287,7 @@ const TimeLine1 = () => {
           updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrixSingle(element) };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element) };
         }
         setXpositions(updatedxpositions);
       }
@@ -304,8 +298,7 @@ const TimeLine1 = () => {
 
   const endPoint = () => {
     var updatedxpositions = [...xpositions];
-    deselectAndSelectAgain();
-
+    if (activeLayers.length > 1) { deselectAndSelectAgain(); }
     layers.forEach((element, i) => {
       if (activeLayers.includes(element)) {
         if (activeLayers.length > 1) {
@@ -316,7 +309,7 @@ const TimeLine1 = () => {
           updatedxpositions[i] = { ...updatedxpositions[i], outx: finalPosition.x, outy: finalPosition.y, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrixSingle(element) };
+          updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrix(element) };
         }
         setXpositions(updatedxpositions);
       }
