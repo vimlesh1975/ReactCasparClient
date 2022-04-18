@@ -269,8 +269,8 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
+    // canvas.discardActiveObject();
+    // canvas.requestRenderAll();
   }
 
   const finalPoint = () => {
@@ -292,8 +292,8 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
+    // canvas.discardActiveObject();
+    // canvas.requestRenderAll();
   }
 
   const endPoint = () => {
@@ -314,8 +314,8 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
+    // canvas.discardActiveObject();
+    // canvas.requestRenderAll();
   }
 
   const ss = (d) => {
