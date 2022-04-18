@@ -59,7 +59,8 @@ const CustomClient = () => {
             window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
-                        element.set({ selectable: false, strokeUniform: false });
+          // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
+                        element.set({ selectable: false, strokeUniform: true, strokeWidth:element.strokeWidth/3 });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {

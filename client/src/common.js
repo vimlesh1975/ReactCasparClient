@@ -26,7 +26,7 @@ export function tempAlert(msg, duration) {
 
 export const updateGraphics = (canvas, layerNumber) => {
     endpoint(`call ${window.chNumber}-${layerNumber} "
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         "`)
 }
 

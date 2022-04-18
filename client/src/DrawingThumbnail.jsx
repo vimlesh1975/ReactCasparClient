@@ -12,7 +12,8 @@ const DrawingThumbnail = ({ i = 0 }) => {
       const aa = canvas.getObjects();
       aa.forEach(element => {
         try {
-          element.set({ selectable: false,strokeUniform: true })
+          // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
+          element.set({ selectable: false, strokeUniform: true, strokeWidth:element.strokeWidth/3 })
         } catch (error) {
           alert(error);
           return;

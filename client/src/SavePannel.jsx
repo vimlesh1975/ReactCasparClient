@@ -45,14 +45,10 @@ const SavePannel = () => {
 
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
-                var bb = document.createElement('div');
-                bb.style.perspective='1920px';
-                bb.style.transformStyle='preserve-3d';
-                document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            bb.appendChild(aa);
+            document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
@@ -60,6 +56,7 @@ const SavePannel = () => {
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
+
             "`)
             }, 300);
 

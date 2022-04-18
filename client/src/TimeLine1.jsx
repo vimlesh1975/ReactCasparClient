@@ -245,8 +245,8 @@ const TimeLine1 = () => {
 
   }
   const getMatrix = (element) => {
-    const aa = element.calcTransformMatrix();
-    const bb = [...aa];
+    const aa1 = element.calcTransformMatrix();
+    const bb = [...aa1];
     return ('matrix(' + bb.toString() + ')')
   }
 
@@ -269,8 +269,6 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    // canvas.discardActiveObject();
-    // canvas.requestRenderAll();
   }
 
   const finalPoint = () => {
@@ -292,8 +290,6 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    // canvas.discardActiveObject();
-    // canvas.requestRenderAll();
   }
 
   const endPoint = () => {
@@ -314,8 +310,6 @@ const TimeLine1 = () => {
         setXpositions(updatedxpositions);
       }
     })
-    // canvas.discardActiveObject();
-    // canvas.requestRenderAll();
   }
 
   const ss = (d) => {
@@ -421,9 +415,9 @@ const TimeLine1 = () => {
   }
 
   const deselectAndSelectAgain = () => {
-    const aa = activeLayers;
+    const aa1 = activeLayers;
     canvas.discardActiveObject();
-    var sel = new fabric.ActiveSelection(aa, {
+    var sel = new fabric.ActiveSelection(aa1, {
       canvas: canvas,
     });
     canvas.setActiveObject(sel);
