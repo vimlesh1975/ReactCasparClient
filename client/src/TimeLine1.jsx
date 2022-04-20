@@ -477,7 +477,6 @@ const TimeLine1 = () => {
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
       <div >
-        <button onClick={test}>test</button>
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
         <button onClick={endPoint}>Set End Point</button>
@@ -490,9 +489,10 @@ const TimeLine1 = () => {
         <button onClick={updatePageAndAnimation}>Save</button>
         <button onClick={recallPageAndAnimation}>Recall</button>
         <button onClick={copyAnimation}>Copy</button>
-        <button onClick={pasteAnimation}>Paste</button>
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
+        <button onClick={pasteAnimation}>Paste</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
+        <button onClick={test}>Console Log</button>
 
       </div>
 
@@ -574,8 +574,8 @@ const TimeLine1 = () => {
                     ss(d);
                   }}
                 >
-                  <div style={{ width: 5, height: 200, backgroundColor: 'red' }}>
-                    {currentFrame}
+                  <div style={{ width: 5, height: 200, backgroundColor: 'red', fontWeight: 'bold' }}>
+                    {currentFrame / 25}
                   </div>
                 </Rnd>
                 }
