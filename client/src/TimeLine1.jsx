@@ -426,6 +426,21 @@ const TimeLine1 = () => {
 
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+    canvas.discardActiveObject();
+    canvas.forEachObject((element, i) => {
+      element.set({
+        left: position(i).finalx,
+        top: position(i).finaly,
+
+        scaleX: position(i).finalScaleX,
+        scaleY: position(i).finalScaleY,
+        angle: position(i).finalAngle,
+
+        opacity: 1
+      })
+    });
+
     setinAnimation2();
     selectAll(canvas);
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
