@@ -31,8 +31,9 @@ import { animation } from './animation.js'
 import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
+import JsonReader from './JsonReader';
 
-const buildDate = '200422_1'
+const buildDate = '250422_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -47,6 +48,7 @@ const App = () => {
   const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
+   
 
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
@@ -356,6 +358,7 @@ const App = () => {
             <Tab >TimeLine</Tab>
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
+            <Tab >JsonReader</Tab>
 
             <Tab>Help</Tab>
           </TabList>
@@ -409,6 +412,9 @@ const App = () => {
           </TabPanel>
           <TabPanel >
             <Effects />
+          </TabPanel>
+          <TabPanel >
+            <JsonReader />
           </TabPanel>
           <TabPanel >
             <Help />
