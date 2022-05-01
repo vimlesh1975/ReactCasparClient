@@ -1223,7 +1223,12 @@ const DrawingController = () => {
     }
     const handleFileReadHtml = (canvas) => {
         const content = fileReader.result;
-        const aa=content.split('<div>')[1].split('</div>')[0];
+        const aa=content.split('<div>')[1]?.split('</div>')[0];
+        console.log(aa?.substring(1, 6));
+        if(aa?.substring(1, 6)!=='<?xml'){
+            alert('This file is not exported from this software');
+            return;
+        }
         importHtml2(aa,canvas);
     };
     const importHtml2 = (file,canvas) => {
@@ -1233,6 +1238,7 @@ const DrawingController = () => {
             fabric.loadSVGFromString(file, function (objects) {
                 objects?.forEach(element => {
                     canvas.add(element);
+                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                     if (element.type === 'text') {
                         element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
 
@@ -1242,12 +1248,12 @@ const DrawingController = () => {
                         var aa = new fabric.IText(element.text, clonedtextobj);
                         canvas.remove(element)
                         canvas.add(aa);
+                        aa.set({objectCaching: false, shadow: { ...shadowOptions }})
 
                         // var bb =objects.indexOf(element);
                         // objects.splice(bb,1,aa);
 
                     }
-                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                 });
             });
             canvas.renderAll();
@@ -1366,21 +1372,17 @@ const DrawingController = () => {
             fabric.loadSVGFromURL(site_url, function (objects) {
                 objects?.forEach(element => {
                     canvas.add(element);
+                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                     if (element.type === 'text') {
                         element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-
                         element.set({ type: 'i-text' })
                         var textobj = element.toObject();
                         var clonedtextobj = JSON.parse(JSON.stringify(textobj));
                         var aa = new fabric.IText(element.text, clonedtextobj);
                         canvas.remove(element)
                         canvas.add(aa);
-
-                        // var bb =objects.indexOf(element);
-                        // objects.splice(bb,1,aa);
-
+                        aa.set({objectCaching: false, shadow: { ...shadowOptions }})
                     }
-                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                 });
             });
             canvas.renderAll();
