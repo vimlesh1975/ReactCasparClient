@@ -33,7 +33,7 @@ import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 import JsonReader from './JsonReader';
 
-const buildDate = '280422_1'
+const buildDate = '010522_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

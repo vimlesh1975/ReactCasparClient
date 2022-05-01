@@ -1214,6 +1214,46 @@ const DrawingController = () => {
         })
 
     };
+    const importHtml = (file, canvas) => {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = () => handleFileReadHtml(canvas);
+            fileReader.readAsText(file);
+        }
+    }
+    const handleFileReadHtml = (canvas) => {
+        const content = fileReader.result;
+        const aa=content.split('<div>')[1].split('</div>')[0];
+        importHtml2(aa,canvas);
+    };
+    const importHtml2 = (file,canvas) => {
+        if (file) {
+            // var site_url = URL.createObjectURL(file);
+            deleteAll(canvas);
+            fabric.loadSVGFromString(file, function (objects) {
+                objects?.forEach(element => {
+                    canvas.add(element);
+                    if (element.type === 'text') {
+                        element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+
+                        element.set({ type: 'i-text' })
+                        var textobj = element.toObject();
+                        var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+                        var aa = new fabric.IText(element.text, clonedtextobj);
+                        canvas.remove(element)
+                        canvas.add(aa);
+
+                        // var bb =objects.indexOf(element);
+                        // objects.splice(bb,1,aa);
+
+                    }
+                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+                });
+            });
+            canvas.renderAll();
+        }
+    }
+  
 
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
@@ -2234,6 +2274,7 @@ const DrawingController = () => {
 
                     <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
+                    <br /> <b>  Import: </b> <span> Html</span> <input type='file' className='input-file' accept='.html' onChange={e => importHtml(e.target.files[0], canvas)} />
 
 
                 </div>
