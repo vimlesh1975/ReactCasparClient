@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { fabric } from "fabric";
-import { options, shadowOptions  } from './common'
+import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import { forEach } from 'lodash';
+import CsvReader from './CsvReader';
 
 
 const JsonReader = () => {
     const [fileName, setFileName] = useState('http://localhost:3000/ReactCasparClient/swimming/heat/1_1.json')
     const [dataHeat, setdataHeat] = useState('');
     const [dataResult, setdataResult] = useState('');
-const canvas = useSelector(state => state.canvasReducer.canvas);
-
+    const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const loadJsonHeat = () => {
         fetch(fileName, {
@@ -48,9 +48,31 @@ const canvas = useSelector(state => state.canvasReducer.canvas);
                 setdataResult(myJson);
             });
     }
+
     const craeteTemplate = () => {
-        dataHeat?.entries?.forEach((val,i) => {
-            const text = new fabric.Text(val.nametext, {
+        dataHeat?.entries?.forEach((val, i) => {
+
+            const text = new fabric.Text(val.lane.toString(), {
+                id: 'id_' + uuidv4(),
+                shadow: shadowOptions,
+                left: 50,
+                top: 0,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: options.currentFontSize,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text).setActiveObject(text);
+            canvas.renderAll();
+            text.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
+
+
+          const   text1 = new fabric.Text(val.id.toString() +' '+val.nametext.toString(), {
                 id: 'id_' + uuidv4(),
                 shadow: shadowOptions,
                 left: 100,
@@ -65,9 +87,30 @@ const canvas = useSelector(state => state.canvasReducer.canvas);
                 stroke: options.stroke,
                 strokeWidth: options.strokeWidth,
             });
-            canvas.add(text).setActiveObject(text);
+            canvas.add(text1).setActiveObject(text1);
             canvas.renderAll();
-            text.animate('top',50+ i*40, { onChange: canvas.renderAll.bind(canvas) })
+            text1.animate('top',50+ i*40, { onChange: canvas.renderAll.bind(canvas) })
+
+            const   text2 = new fabric.Text(val.clubname.toString(), {
+                id: 'id_' + uuidv4(),
+                shadow: shadowOptions,
+                left: 500,
+                top: 0,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: options.currentFontSize,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text2).setActiveObject(text2);
+            canvas.renderAll();
+            text2.animate('top',50+ i*40, { onChange: canvas.renderAll.bind(canvas) })
+
+
         });
     }
 
@@ -93,7 +136,8 @@ const canvas = useSelector(state => state.canvasReducer.canvas);
                     )}
                 </tbody>
             </table>
-
+           
+            <CsvReader />
         </div>
     )
 }

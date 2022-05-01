@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, tempAlert } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1223,15 +1223,16 @@ const DrawingController = () => {
     }
     const handleFileReadHtml = (canvas) => {
         const content = fileReader.result;
-        const aa=content.split('<div>')[1]?.split('</div>')[0];
+        const aa = content.split('<div>')[1]?.split('</div>')[0];
         console.log(aa?.substring(1, 6));
-        if(aa?.substring(1, 6)!=='<?xml'){
-            alert('This file is not exported from this software');
+        if (aa?.substring(1, 6) !== '<?xml') {
+            // alert('This file is not exported from this software');
+            tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
             return;
         }
-        importHtml2(aa,canvas);
+        importHtml2(aa, canvas);
     };
-    const importHtml2 = (file,canvas) => {
+    const importHtml2 = (file, canvas) => {
         if (file) {
             // var site_url = URL.createObjectURL(file);
             deleteAll(canvas);
@@ -1248,7 +1249,7 @@ const DrawingController = () => {
                         var aa = new fabric.IText(element.text, clonedtextobj);
                         canvas.remove(element)
                         canvas.add(aa);
-                        aa.set({objectCaching: false, shadow: { ...shadowOptions }})
+                        aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
 
                         // var bb =objects.indexOf(element);
                         // objects.splice(bb,1,aa);
@@ -1259,7 +1260,7 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
-  
+
 
     const onBlurSizeChange = e => {
         shadowOptions.blur = e.target.value;
@@ -1347,7 +1348,7 @@ const DrawingController = () => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
-            element.download = retVal+ '.svg';;
+            element.download = retVal + '.svg';;
             document.body.appendChild(element); // Required for this to work in FireFox
             element.click();
         }
@@ -1381,7 +1382,7 @@ const DrawingController = () => {
                         var aa = new fabric.IText(element.text, clonedtextobj);
                         canvas.remove(element)
                         canvas.add(aa);
-                        aa.set({objectCaching: false, shadow: { ...shadowOptions }})
+                        aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
                     }
                 });
             });
@@ -1395,7 +1396,7 @@ const DrawingController = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
         if (retVal !== null) {
             var aa = `<!DOCTYPE html>
                 <html lang="en">
@@ -1417,9 +1418,27 @@ const DrawingController = () => {
                 </script>
                 </html>`
             const file = new Blob([aa], { type: 'text/html' });
-            saveAs(file, retVal + '.html')
+            // saveAs(file, retVal + '.html')
+            getNewFileHandle(file, retVal + '.html')
         }
     }
+
+    async function getNewFileHandle(content, defaultfilename) {
+        const options = {
+            suggestedName: defaultfilename,
+            types: [{
+                description: 'Html file',
+                accept: { 'text/html': ['.html'] },
+            }],
+        };
+        // return window.showSaveFilePicker(opts);
+        const handle = await window.showSaveFilePicker(options);
+        const writable = await handle.createWritable();
+
+        await writable.write(content);
+        await writable.close();
+    }
+
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);

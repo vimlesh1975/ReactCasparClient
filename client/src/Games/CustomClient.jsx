@@ -41,7 +41,7 @@ const CustomClient = () => {
             setCurrentRow(i);
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index });
         }
-        else { tempAlert('Pagename not avalaible', 1000) }
+        else { tempAlert('Pagename not avalaible', 1000, "position:absolute;top:40%;left:60%;background-color:white;font-size:40px") }
 
     }
     const deleteData = (index) => {

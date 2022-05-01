@@ -14,9 +14,9 @@ export const endpoint = (string) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
-export function tempAlert(msg, duration) {
+export function tempAlert(msg, duration, style) {
     var el = document.createElement("div");
-    el.setAttribute("style", "position:absolute;top:40%;left:60%;background-color:white;font-size:40px");
+    el.setAttribute("style", style);
     el.innerHTML = msg;
     setTimeout(function () {
         el.parentNode.removeChild(el);
