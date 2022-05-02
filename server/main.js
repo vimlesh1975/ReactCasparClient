@@ -210,3 +210,44 @@ app.get('/defaultCanvasList', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
 })
 
+app.get('/defaultCanvasList', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
+})
+var server;
+function startUdp() {
+    var udp = require("dgram");
+    server = udp.createSocket("udp4");
+    server.on("error", function (error) {
+        console.log("Error: " + error);
+        server.close();
+    });
+    server.on("message", function (msg, info) {
+        aa.do(new AMCP.CustomCommand(`call 1-96 "document.getElementById('clock').getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML='${msg.toString().substring(8)}'"`)).then((aa1) => {
+        }).catch((aa2) => console.log(aa2));
+        // console.log(msg);
+    })
+    server.on("listening", function () {
+        var address = server.address();
+        var port = address.port;
+        var family = address.family;
+        var ipaddr = address.address;
+        console.log("Server is listening at port" + port);
+        console.log("Server ip :" + ipaddr);
+        console.log("Server is IP4/IP6 : " + family);
+    });
+
+    //emits after the socket is closed using socket.close();
+    server.on("close", function () {
+        console.log("Socket is closed !");
+    });
+
+    server.bind(2222);
+}
+app.post('/stopUdpClock', (req, res) => {
+    server.close();
+})
+app.post('/showUdpClock', (req, res) => {
+    startUdp();
+    aa.do(new AMCP.CustomCommand(`play 1-96 [html] "${'file:///' + path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')}"`)).then((aa1) => {
+    }).catch((aa2) => console.log(aa2));
+})

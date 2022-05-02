@@ -32,8 +32,9 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 import JsonReader from './JsonReader';
+import UdpClock from './UdpClock';
 
-const buildDate = '010522_1'
+const buildDate = '020522_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -359,6 +360,7 @@ const App = () => {
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
+            <Tab >Udp Clock</Tab>
 
             <Tab>Help</Tab>
           </TabList>
@@ -415,6 +417,9 @@ const App = () => {
           </TabPanel>
           <TabPanel >
             <JsonReader />
+          </TabPanel>
+          <TabPanel >
+            <UdpClock />
           </TabPanel>
           <TabPanel >
             <Help />

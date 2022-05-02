@@ -986,9 +986,10 @@ const DrawingController = () => {
 
     const [initialMinute, setInitilaMinute] = useState(45)
     const [initialSecond, setInitialSecond] = useState(0)
-    const [countUp, setCountUp] = useState(false)
+    const [countUp, setCountUp] = useState(false);
 
     const dispatch = useDispatch();
+    const [htmlfileHandle, sethtmlfileHandle] = useState()
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -1214,19 +1215,19 @@ const DrawingController = () => {
         })
 
     };
-    const importHtml = (file, canvas) => {
-        if (file) {
-            fileReader = new FileReader();
-            fileReader.onloadend = () => handleFileReadHtml(canvas);
-            fileReader.readAsText(file);
+    async function importHtml(canvas) {
+        const [aa] = await window.showOpenFilePicker();
+        sethtmlfileHandle(aa);
+        if (aa) {
+            const file = await aa.getFile();
+            const contents = await file.text();
+            handleFileReadHtml(canvas, contents);
         }
     }
-    const handleFileReadHtml = (canvas) => {
-        const content = fileReader.result;
+    const handleFileReadHtml = (canvas, content) => {
         const aa = content.split('<div>')[1]?.split('</div>')[0];
         console.log(aa?.substring(1, 6));
         if (aa?.substring(1, 6) !== '<?xml') {
-            // alert('This file is not exported from this software');
             tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
             return;
         }
@@ -1431,13 +1432,51 @@ const DrawingController = () => {
                 accept: { 'text/html': ['.html'] },
             }],
         };
-        // return window.showSaveFilePicker(opts);
-        const handle = await window.showSaveFilePicker(options);
-        const writable = await handle.createWritable();
-
+        const aa = await window.showSaveFilePicker(options);
+        sethtmlfileHandle(aa)
+        const writable = await aa.createWritable();
         await writable.write(content);
         await writable.close();
     }
+
+    const OverrightHtml = canvas => {
+
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            var aa = `<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Document</title>
+                </head>
+                <body>
+                <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+                 </body>
+                 <script>
+                document.body.style.margin='0';
+                document.body.style.padding='0';
+                document.body.style.overflow='hidden';
+                var aa = document.getElementsByTagName('div')[0];
+                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                </script>
+                </html>`
+            const file = new Blob([aa], { type: 'text/html' });
+            // saveAs(file, retVal + '.html')
+            overrightgetNewFileHandle(file)
+        }
+    }
+    async function overrightgetNewFileHandle(content) {
+        const writable = await htmlfileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+    }
+
+
 
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2288,6 +2327,7 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
                     <button onClick={() => exportHTML1(canvas)}>HTML</button>
+                    {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
@@ -2295,9 +2335,7 @@ const DrawingController = () => {
 
                     <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
-                    <br /> <b>  Import: </b> <span> Html</span> <input type='file' className='input-file' accept='.html' onChange={e => importHtml(e.target.files[0], canvas)} />
-
-
+                    <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.FileSystemFileHandle?.name}
                 </div>
 
                 <div className='drawingToolsRow' >
