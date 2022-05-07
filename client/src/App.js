@@ -34,7 +34,7 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '020522_1'
+const buildDate = '070522_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -49,7 +49,7 @@ const App = () => {
   const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
-   
+
 
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;

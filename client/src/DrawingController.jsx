@@ -1393,7 +1393,7 @@ const DrawingController = () => {
 
 
 
-    const exportHTML1 = canvas => {
+    const exportHTML = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1408,15 +1408,45 @@ const DrawingController = () => {
                     <title>Document</title>
                 </head>
                 <body>
+                <script>
+                const elementToObserve = document.body;
+            const observer = new MutationObserver(() => {
+            if (screen.colorDepth === 0) {
+                var ccg = document.querySelectorAll('[id^="ccg"]');
+                var i;
+                for (i = 0; i < ccg.length; i++) {
+                    document.getElementById(ccg[i].id).style.display = "none"
+                }
+            }
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+            document.body.style.overflow = 'hidden';
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            observer.disconnect();
+        });
+        observer.observe(elementToObserve, { subtree: true, childList: true })
+
+
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function updatestring(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+            document.getElementById(str1).style.display = "block";
+        }
+        function updateimage(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+            document.getElementById(str1).style.display = "block";
+        }
+                
+                </script>
                 <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
                  </body>
-                 <script>
-                document.body.style.margin='0';
-                document.body.style.padding='0';
-                document.body.style.overflow='hidden';
-                var aa = document.getElementsByTagName('div')[0];
-                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-                </script>
+             
                 </html>`
             const file = new Blob([aa], { type: 'text/html' });
             // saveAs(file, retVal + '.html')
@@ -1455,15 +1485,44 @@ const DrawingController = () => {
                     <title>Document</title>
                 </head>
                 <body>
+                <script>
+                const elementToObserve = document.body;
+            const observer = new MutationObserver(() => {
+            if (screen.colorDepth === 0) {
+                var ccg = document.querySelectorAll('[id^="ccg"]');
+                var i;
+                for (i = 0; i < ccg.length; i++) {
+                    document.getElementById(ccg[i].id).style.display = "none"
+                }
+            }
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+            document.body.style.overflow = 'hidden';
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            observer.disconnect();
+        });
+        observer.observe(elementToObserve, { subtree: true, childList: true })
+
+
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function updatestring(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+            document.getElementById(str1).style.display = "block";
+        }
+        function updateimage(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+            document.getElementById(str1).style.display = "block";
+        }
+                
+                </script>
                 <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
                  </body>
-                 <script>
-                document.body.style.margin='0';
-                document.body.style.padding='0';
-                document.body.style.overflow='hidden';
-                var aa = document.getElementsByTagName('div')[0];
-                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-                </script>
                 </html>`
             const file = new Blob([aa], { type: 'text/html' });
             // saveAs(file, retVal + '.html')
@@ -2326,7 +2385,7 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
-                    <button onClick={() => exportHTML1(canvas)}>HTML</button>
+                    <button onClick={() => exportHTML(canvas)}>HTML</button>
                     {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>

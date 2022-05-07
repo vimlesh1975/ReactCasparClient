@@ -455,18 +455,46 @@ const TimeLine1 = () => {
                 <title>Document</title>
             </head>
             <body>
-            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
-             </body>
-             <script>
-             var style = document.createElement('style');
-             style.textContent = \`${inAnimation2}\`;
-             document.head.appendChild(style);
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            document.body.style.overflow='hidden';
+            <script>
+            var style = document.createElement('style');
+            style.textContent = \`${inAnimation2}\`;
+            document.head.appendChild(style);
+
+            const elementToObserve = document.body;
+            const observer = new MutationObserver(() => {
+            if (screen.colorDepth === 0) {
+                var ccg = document.querySelectorAll('[id^="ccg"]');
+                var i;
+                for (i = 0; i < ccg.length; i++) {
+                    document.getElementById(ccg[i].id).style.display = "none"
+                }
+            }
+            document.body.style.margin = '0';
+            document.body.style.padding = '0';
+            document.body.style.overflow = 'hidden';
             var aa = document.getElementsByTagName('div')[0];
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-            </script>
+            observer.disconnect();
+        });
+        observer.observe(elementToObserve, { subtree: true, childList: true })
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function updatestring(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+            document.getElementById(str1).style.display = "block";
+        }
+        function updateimage(str1, str2) {
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+            document.getElementById(str1).style.display = "block";
+        }
+           </script>
+            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+             </body>
+            
             </html>`
       const file = new Blob([aa], { type: 'text/html' });
       saveAs(file, retVal + '.html')
