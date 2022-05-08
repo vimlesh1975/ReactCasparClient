@@ -4,11 +4,11 @@ import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
-// import { saveAs } from 'file-saver';
 
 var cf = 0;
 var aa;
 var inAnimation2;
+var stopCommand;
 
 const TimeLine1 = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,6 @@ const TimeLine1 = () => {
   const [pannelEnable, setPannelEnable] = useState(false);
   const [autoOut, setOutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
-  const [stopCommand, setstopCommand] = useState('')
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -180,7 +179,7 @@ const TimeLine1 = () => {
         document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
         `
       });
-      setstopCommand(ss);
+      stopCommand = ss;
 
       canvas.forEachObject((element, i) => {
         endpoint(`
@@ -435,6 +434,24 @@ const TimeLine1 = () => {
     canvas.requestRenderAll();
   }
 
+
+  function setstopCommand() {
+    var Delay = [];
+    for (let i = 0; i < layers?.length; i++) {
+      Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
+    }
+    const minDeley = Math.min(...Delay);
+    var ss = '';
+    canvas.forEachObject((element, i) => {
+      ss = ss + `
+    document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
+    document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+    `
+    });
+    stopCommand = ss;
+
+  }
+
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
 
@@ -453,6 +470,8 @@ const TimeLine1 = () => {
     });
 
     setinAnimation2();
+    setstopCommand()
+
     selectAll(canvas);
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     var retVal = ss;// prompt("Enter  file name to save : ", ss + "_FileName");
