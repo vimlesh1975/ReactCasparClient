@@ -4,7 +4,7 @@ import { Rnd } from 'react-rnd';
 import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
-import { saveAs } from 'file-saver';
+// import { saveAs } from 'file-saver';
 
 var cf = 0;
 var aa;
@@ -23,6 +23,8 @@ const TimeLine1 = () => {
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
   const [pannelEnable, setPannelEnable] = useState(false);
   const [autoOut, setOutoOut] = useState(true);
+  const [htmlfileHandle, sethtmlfileHandle] = useState();
+  const [minDeleyforStop, setminDeleyforStop] = useState(0);
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -163,6 +165,21 @@ const TimeLine1 = () => {
     });
 
   }
+  // const stopfunction = () => {
+  //   var Delay = [];
+  //   for (let i = 0; i < layers?.length; i++) {
+  //     Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
+  //   }
+  //   const minDeley = Math.min(...Delay);
+  //   setminDeleyforStop(minDeley);
+  //   canvas.forEachObject((element, i) => {
+  //     endpoint(`
+  //   call ${window.chNumber}-${108} "
+  //   document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
+  //   document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+  //   "`);
+  //   });
+  // }
 
   const stopFromCasprtcg = () => {
     if (!autoOut) {
@@ -171,6 +188,7 @@ const TimeLine1 = () => {
         Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
       }
       const minDeley = Math.min(...Delay);
+      setminDeleyforStop(minDeley);
       canvas.forEachObject((element, i) => {
         endpoint(`
       call ${window.chNumber}-${108} "
@@ -444,7 +462,7 @@ const TimeLine1 = () => {
     setinAnimation2();
     selectAll(canvas);
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+    var retVal = ss;// prompt("Enter  file name to save : ", ss + "_FileName");
     if (retVal !== null) {
       var aa = `<!DOCTYPE html>
             <html lang="en">
@@ -497,9 +515,26 @@ const TimeLine1 = () => {
             
             </html>`
       const file = new Blob([aa], { type: 'text/html' });
-      saveAs(file, retVal + '.html')
+      // saveAs(file, retVal + '.html');
+      getNewFileHandle(file, retVal + '.html')
+
     }
   }
+  async function getNewFileHandle(content, defaultfilename) {
+    const options = {
+      suggestedName: defaultfilename,
+      types: [{
+        description: 'Html file',
+        accept: { 'text/html': ['.html'] },
+      }],
+    };
+    const aa = await window.showSaveFilePicker(options);
+    sethtmlfileHandle(aa)
+    const writable = await aa.createWritable();
+    await writable.write(content);
+    await writable.close();
+  }
+
 
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />

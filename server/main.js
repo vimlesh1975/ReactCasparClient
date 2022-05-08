@@ -251,3 +251,9 @@ app.post('/showUdpClock', (req, res) => {
     aa.do(new AMCP.CustomCommand(`play 1-96 [html] "${'file:///' + path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')}"`)).then((aa1) => {
     }).catch((aa2) => console.log(aa2));
 })
+
+// aa.do(new AMCP.CallCommand('loop 1', { channel: 1, layer: 1 })).then((aa1) => console.log(aa1)).catch((aa2) => console.log(aa2));
+// aa.call(1, 1, ['loop 1']).then((aa1) => {
+//     console.log('ok' + aa1)
+// }).catch((aa2) => console.log('error' + aa2));
+// aa.call(1, 1, "amb");

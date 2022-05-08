@@ -9,7 +9,6 @@ const Help = () => {
   // const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
 
   const test = () => {
- 
     endpoint(`play 1-108 [html] http://localhost:3000/ReactCasparClient/drawing2`)
     endpoint(`call 1-108 "
     const circle =new fabric.Rect({
