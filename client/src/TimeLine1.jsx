@@ -24,7 +24,7 @@ const TimeLine1 = () => {
   const [pannelEnable, setPannelEnable] = useState(false);
   const [autoOut, setOutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
-  const [minDeleyforStop, setminDeleyforStop] = useState(0);
+  const [stopCommand, setstopCommand] = useState('')
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -165,21 +165,6 @@ const TimeLine1 = () => {
     });
 
   }
-  // const stopfunction = () => {
-  //   var Delay = [];
-  //   for (let i = 0; i < layers?.length; i++) {
-  //     Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
-  //   }
-  //   const minDeley = Math.min(...Delay);
-  //   setminDeleyforStop(minDeley);
-  //   canvas.forEachObject((element, i) => {
-  //     endpoint(`
-  //   call ${window.chNumber}-${108} "
-  //   document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
-  //   document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
-  //   "`);
-  //   });
-  // }
 
   const stopFromCasprtcg = () => {
     if (!autoOut) {
@@ -188,7 +173,15 @@ const TimeLine1 = () => {
         Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
       }
       const minDeley = Math.min(...Delay);
-      setminDeleyforStop(minDeley);
+      var ss = '';
+      canvas.forEachObject((element, i) => {
+        ss = ss + `
+        document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
+        document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+        `
+      });
+      setstopCommand(ss);
+
       canvas.forEachObject((element, i) => {
         endpoint(`
       call ${window.chNumber}-${108} "
@@ -310,7 +303,7 @@ const TimeLine1 = () => {
     })
   }
 
-  const endPoint = () => {
+  const lastPoint = () => {
     var updatedxpositions = [...xpositions];
     if (activeLayers.length > 1) { deselectAndSelectAgain(); }
     layers.forEach((element, i) => {
@@ -496,6 +489,9 @@ const TimeLine1 = () => {
         });
         observer.observe(elementToObserve, { subtree: true, childList: true })
 
+        function outAnimation() {
+         ${stopCommand};
+        }
         function escapeHtml(unsafe) {
             return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
@@ -542,7 +538,7 @@ const TimeLine1 = () => {
       <div >
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
-        <button onClick={endPoint}>Set End Point</button>
+        <button onClick={lastPoint}>Set End Point</button>
 
         <button onClick={preView}>Preview</button>
         <button onClick={playtocasparcg}>Play</button>
