@@ -9,8 +9,9 @@ var cf = 0;
 var aa;
 var inAnimation2;
 var stopCommand;
-
+var html;
 const TimeLine1 = () => {
+
   const dispatch = useDispatch();
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
@@ -22,7 +23,7 @@ const TimeLine1 = () => {
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
   const [pannelEnable, setPannelEnable] = useState(false);
-  const [autoOut, setOutoOut] = useState(true);
+  const [autoOut, setAutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
@@ -143,6 +144,7 @@ const TimeLine1 = () => {
   }
 
   const setinAnimation2 = () => {
+
     inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
       var type = (element.type === 'i-text' || element.type === 'textbox') ? 'text' : element.type;
@@ -172,14 +174,6 @@ const TimeLine1 = () => {
         Delay.push(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
       }
       const minDeley = Math.min(...Delay);
-      var ss = '';
-      canvas.forEachObject((element, i) => {
-        ss = ss + `
-        document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
-        document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
-        `
-      });
-      stopCommand = ss;
 
       canvas.forEachObject((element, i) => {
         endpoint(`
@@ -424,6 +418,11 @@ const TimeLine1 = () => {
     console.log(canvas.item(0))
   }
 
+  const ResetAnimation = () => {
+    setKf(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+  }
+
+
   const deselectAndSelectAgain = () => {
     const aa1 = activeLayers;
     canvas.discardActiveObject();
@@ -452,6 +451,126 @@ const TimeLine1 = () => {
 
   }
 
+
+  const setHtmlString = () => {
+    html = `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+      </head>
+      <body>
+      <script>
+      var style = document.createElement('style');
+      style.textContent = \`${inAnimation2}\`;
+      document.head.appendChild(style);
+
+      const elementToObserve = document.body;
+      const observer = new MutationObserver(() => {
+      if (screen.colorDepth === 0) {
+          var ccg = document.querySelectorAll('[id^="ccg"]');
+          var i;
+          for (i = 0; i < ccg.length; i++) {
+              document.getElementById(ccg[i].id).style.display = "none"
+          }
+      }
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.body.style.overflow = 'hidden';
+      var aa = document.getElementsByTagName('div')[0];
+      aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+      observer.disconnect();
+    });
+    observer.observe(elementToObserve, { subtree: true, childList: true })
+
+    function outAnimation() {
+    ${stopCommand};
+    }
+
+
+    var dataCaspar = {};
+
+    function escapeHtml(unsafe) {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Parse templateData into an XML object
+    function parseCaspar(str) {
+    var xmlDoc;
+    if (window.DOMParser) {
+      parser = new DOMParser();
+      xmlDoc = parser.parseFromString(str, "text/xml");
+    }
+    dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+    }
+
+
+    // Make the XML templateData message into a more simple key:value object
+    function XML2JSON(node) {
+    var data = {}; // resulting object
+    for (k = 0; k < node.length; k++) {
+      var idCaspar = node[k].getAttribute("id");
+      var valCaspar = node[k].childNodes[0].getAttribute("value");
+      if (idCaspar != undefined && valCaspar != undefined) {
+        data[idCaspar] = valCaspar;
+      };
+    }
+    return data;
+    }
+
+    // Main function to insert data
+    function dataInsert(dataCaspar) {
+    for (var idCaspar in dataCaspar) {
+      var idTemplate = document.getElementById(idCaspar);
+      if (idTemplate != undefined) {
+        var idtext = idTemplate.getElementsByTagName('text')[0];
+        var idimage = idTemplate.getElementsByTagName('image')[0];
+        if (idtext != undefined) {
+          idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+          idTemplate.style.display = "block";
+        }
+        else if (idimage != undefined) {
+          idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+          idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+          idTemplate.style.display = "block";
+        }
+      }
+    }
+    }
+
+    // Call for a update of data from CasparCG client
+    function update(str) {
+    parseCaspar(str); // Parse templateData into an XML object
+    dataInsert(dataCaspar); // Insert data
+    }
+
+    // insert data from CasparCg client when activated
+    function play(str) {
+    parseCaspar(str); // Parse templateData into an XML object
+    dataInsert(dataCaspar); // Insert data
+    // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
+    }
+    function stop() {
+    outAnimation() ;
+    }
+    function updatestring(str1, str2) {
+      document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+      document.getElementById(str1).style.display = "block";
+    }
+    function updateimage(str1, str2) {
+      document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+      document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+      document.getElementById(str1).style.display = "block";
+    }
+    </script>
+      <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+      </body>
+      
+      </html>`;
+  }
+
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
 
@@ -468,68 +587,19 @@ const TimeLine1 = () => {
         opacity: 1
       })
     });
-
+    // alert(autoOut);
+    // return
     setinAnimation2();
-    setstopCommand()
+    setstopCommand();
+
+    setHtmlString();
 
     selectAll(canvas);
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     var retVal = ss;// prompt("Enter  file name to save : ", ss + "_FileName");
     if (retVal !== null) {
-      var aa = `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
-            </head>
-            <body>
-            <script>
-            var style = document.createElement('style');
-            style.textContent = \`${inAnimation2}\`;
-            document.head.appendChild(style);
 
-            const elementToObserve = document.body;
-            const observer = new MutationObserver(() => {
-            if (screen.colorDepth === 0) {
-                var ccg = document.querySelectorAll('[id^="ccg"]');
-                var i;
-                for (i = 0; i < ccg.length; i++) {
-                    document.getElementById(ccg[i].id).style.display = "none"
-                }
-            }
-            document.body.style.margin = '0';
-            document.body.style.padding = '0';
-            document.body.style.overflow = 'hidden';
-            var aa = document.getElementsByTagName('div')[0];
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-            observer.disconnect();
-        });
-        observer.observe(elementToObserve, { subtree: true, childList: true })
-
-        function outAnimation() {
-         ${stopCommand};
-        }
-        function escapeHtml(unsafe) {
-            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        function updatestring(str1, str2) {
-            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
-            document.getElementById(str1).style.display = "block";
-        }
-        function updateimage(str1, str2) {
-            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
-            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
-            document.getElementById(str1).style.display = "block";
-        }
-           </script>
-            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
-             </body>
-            
-            </html>`
-      const file = new Blob([aa], { type: 'text/html' });
+      const file = new Blob([html], { type: 'text/html' });
       // saveAs(file, retVal + '.html');
       getNewFileHandle(file, retVal + '.html')
 
@@ -561,7 +631,7 @@ const TimeLine1 = () => {
 
         <button onClick={preView}>Preview</button>
         <button onClick={playtocasparcg}>Play</button>
-        <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={e => setOutoOut(val => !val)} /></label>
+        <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
         <button onClick={stopFromCasprtcg}>Stop</button>
 
         <button onClick={updatePageAndAnimation}>Save</button>
@@ -570,7 +640,9 @@ const TimeLine1 = () => {
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={pasteAnimation}>Paste</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
+        <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
+
 
       </div>
 

@@ -21,6 +21,7 @@ import { animation } from './animation.js'
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 var xxx;
+var html;
 
 fabric.Object.prototype.noScaleCache = false;
 const STEP = 5;
@@ -1390,33 +1391,25 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
-
-
-
-    const exportHTML = canvas => {
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        selectAll(canvas);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
-        if (retVal !== null) {
-            var aa = `<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Document</title>
-                </head>
-                <body>
-                <script>
-                const elementToObserve = document.body;
+    const setHtmlString = () => {
+        html = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+            </head>
+            <body>
+            <script>
+            const elementToObserve = document.body;
             const observer = new MutationObserver(() => {
             if (screen.colorDepth === 0) {
-                var ccg = document.querySelectorAll('[id^="ccg"]');
-                var i;
-                for (i = 0; i < ccg.length; i++) {
-                    document.getElementById(ccg[i].id).style.display = "none"
-                }
+            var ccg = document.querySelectorAll('[id^="ccg"]');
+            var i;
+            for (i = 0; i < ccg.length; i++) {
+                document.getElementById(ccg[i].id).style.display = "none"
+            }
             }
             document.body.style.margin = '0';
             document.body.style.padding = '0';
@@ -1424,31 +1417,101 @@ const DrawingController = () => {
             var aa = document.getElementsByTagName('div')[0];
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             observer.disconnect();
-        });
-        observer.observe(elementToObserve, { subtree: true, childList: true })
+            });
+            observer.observe(elementToObserve, { subtree: true, childList: true })
 
+            var dataCaspar = {};
 
-
-        function escapeHtml(unsafe) {
+            function escapeHtml(unsafe) {
             return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
+            }
 
-        function updatestring(str1, str2) {
+            // Parse templateData into an XML object
+            function parseCaspar(str) {
+            var xmlDoc;
+            if (window.DOMParser) {
+            parser = new DOMParser();
+            xmlDoc = parser.parseFromString(str, "text/xml");
+            }
+            dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+            }
+
+
+            // Make the XML templateData message into a more simple key:value object
+            function XML2JSON(node) {
+            var data = {}; // resulting object
+            for (k = 0; k < node.length; k++) {
+            var idCaspar = node[k].getAttribute("id");
+            var valCaspar = node[k].childNodes[0].getAttribute("value");
+            if (idCaspar != undefined && valCaspar != undefined) {
+            data[idCaspar] = valCaspar;
+            };
+            }
+            return data;
+            }
+
+            // Main function to insert data
+            function dataInsert(dataCaspar) {
+            for (var idCaspar in dataCaspar) {
+            var idTemplate = document.getElementById(idCaspar);
+            if (idTemplate != undefined) {
+            var idtext = idTemplate.getElementsByTagName('text')[0];
+            var idimage = idTemplate.getElementsByTagName('image')[0];
+            if (idtext != undefined) {
+            idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+            idTemplate.style.display = "block";
+            }
+            else if (idimage != undefined) {
+            idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+            idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+            idTemplate.style.display = "block";
+            }
+            }
+            }
+            }
+
+            // Call for a update of data from CasparCG client
+            function update(str) {
+            parseCaspar(str); // Parse templateData into an XML object
+            dataInsert(dataCaspar); // Insert data
+            }
+
+            // insert data from CasparCg client when activated
+            function play(str) {
+            parseCaspar(str); // Parse templateData into an XML object
+            dataInsert(dataCaspar); // Insert data
+            // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
+            }
+            function stop() {
+            document.body.innerHTML='' ;
+            }
+            function updatestring(str1, str2) {
             document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
             document.getElementById(str1).style.display = "block";
-        }
-        function updateimage(str1, str2) {
+            }
+            function updateimage(str1, str2) {
             document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
             document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
             document.getElementById(str1).style.display = "block";
-        }
-                
-                </script>
-                <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
-                 </body>
-             
-                </html>`
-            const file = new Blob([aa], { type: 'text/html' });
+            }
+
+            </script>
+            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+            </body>
+
+            </html>`
+
+    }
+
+
+    const exportHTML = canvas => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
+        setHtmlString();
+        if (retVal !== null) {
+            const file = new Blob([html], { type: 'text/html' });
             // saveAs(file, retVal + '.html')
             getNewFileHandle(file, retVal + '.html')
         }
@@ -1475,56 +1538,11 @@ const DrawingController = () => {
         selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
+        setHtmlString();
+
         if (retVal !== null) {
-            var aa = `<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Document</title>
-                </head>
-                <body>
-                <script>
-                const elementToObserve = document.body;
-            const observer = new MutationObserver(() => {
-            if (screen.colorDepth === 0) {
-                var ccg = document.querySelectorAll('[id^="ccg"]');
-                var i;
-                for (i = 0; i < ccg.length; i++) {
-                    document.getElementById(ccg[i].id).style.display = "none"
-                }
-            }
-            document.body.style.margin = '0';
-            document.body.style.padding = '0';
-            document.body.style.overflow = 'hidden';
-            var aa = document.getElementsByTagName('div')[0];
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-            observer.disconnect();
-        });
-        observer.observe(elementToObserve, { subtree: true, childList: true })
 
-
-
-        function escapeHtml(unsafe) {
-            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        function updatestring(str1, str2) {
-            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
-            document.getElementById(str1).style.display = "block";
-        }
-        function updateimage(str1, str2) {
-            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
-            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
-            document.getElementById(str1).style.display = "block";
-        }
-                
-                </script>
-                <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
-                 </body>
-                </html>`
-            const file = new Blob([aa], { type: 'text/html' });
+            const file = new Blob([html], { type: 'text/html' });
             // saveAs(file, retVal + '.html')
             overrightgetNewFileHandle(file)
         }
