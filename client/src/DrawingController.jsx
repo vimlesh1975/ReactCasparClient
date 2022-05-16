@@ -229,7 +229,7 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Text("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
-        id: 'id_' + uuidv4(),
+        id: 'ccg_' + uuidv4(),
         shadow: shadowOptions,
         left: 100,
         top: 0,
@@ -252,7 +252,7 @@ export const createIText = (canvas) => {
 
     const text = new fabric.IText("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
-        id: 'id_' + uuidv4(),
+        id: 'ccg_' + uuidv4(),
         left: 100,
         top: 0,
         width: 480,
@@ -277,7 +277,7 @@ export const createTextBox = (canvas) => {
 
     const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
         shadow: shadowOptions,
-        id: 'id_' + uuidv4(),
+        id: 'ccg_' + uuidv4(),
         left: 100,
         top: 0,
         width: 480,
@@ -305,7 +305,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
             alert("Error!");
         } else {
             var rect = new fabric.Rect({
-                id: 'id_' + uuidv4(),
+                id: 'ccg_' + uuidv4(),
                 left: 10,
                 top: 10,
                 stroke: 'red',
@@ -338,7 +338,7 @@ export const Upload = (e, canvas) => {
                 var image = new fabric.Image(imgObj);
                 image
                     .set({
-                        id: 'id_' + uuidv4(),
+                        id: 'ccg_' + uuidv4(),
                         left: 10,
                         top: 10,
                         shadow: shadowOptions,
@@ -725,7 +725,7 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
             });
             fabric.Image.fromURL(newData, (fabricImage) => {
                 fabricImage.set({
-                    id: 'id_' + uuidv4(),
+                    id: 'ccg_' + uuidv4(),
                     left: left,
                     top: top,
                     shadow: { ...shadowOptions, blur: 0 },
