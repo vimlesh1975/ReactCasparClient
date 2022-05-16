@@ -467,21 +467,28 @@ const TimeLine1 = () => {
       style.textContent = \`${inAnimation2}\`;
       document.head.appendChild(style);
 
-      const elementToObserve = document.body;
-      const observer = new MutationObserver(() => {
       if (screen.colorDepth === 0) {
-          var ccg = document.querySelectorAll('[id^="ccg"]');
-          var i;
-          for (i = 0; i < ccg.length; i++) {
-              document.getElementById(ccg[i].id).style.display = "none"
-          }
-      }
-      document.body.style.margin = '0';
-      document.body.style.padding = '0';
-      document.body.style.overflow = 'hidden';
-      var aa = document.getElementsByTagName('div')[0];
-      aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
-      observer.disconnect();
+        var css = '[id^=ccg] {display: none; }',
+            head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+        head.appendChild(style);
+        style.type = 'text/css';
+        if (style.styleSheet) {
+            // This is required for IE8 and below.
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        }
+    }
+
+    const elementToObserve = document.body;
+    const observer = new MutationObserver(() => {
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.overflow = 'hidden';
+        var aa = document.getElementsByTagName('div')[0];
+        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        observer.disconnect();
     });
     observer.observe(elementToObserve, { subtree: true, childList: true })
 
