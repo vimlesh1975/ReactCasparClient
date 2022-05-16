@@ -1240,19 +1240,23 @@ const DrawingController = () => {
             deleteAll(canvas);
             fabric.loadSVGFromString(file, function (objects) {
                 objects?.forEach(element => {
+                    console.log(element)
+
                     canvas.add(element);
                     element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                     if (element.type === 'text') {
-                        element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
 
-                        element.set({ type: 'i-text' })
-                        var textobj = element.toObject();
+                        element.set({ type: 'textbox' })
+
+                        var textobj = element.toObject(['id']);
                         var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                        var aa = new fabric.IText(element.text, clonedtextobj);
-                        canvas.remove(element)
+                        var aa = new fabric.Textbox(element.text, clonedtextobj);
+
                         canvas.add(aa);
                         aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
+                        aa.set({ textAlign: element.textAlign, width: element.width + 100, left: (element.left - ((element.width + 100) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
 
+                        canvas.remove(element)
                         // var bb =objects.indexOf(element);
                         // objects.splice(bb,1,aa);
 
