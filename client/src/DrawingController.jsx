@@ -1395,7 +1395,7 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
-    const setHtmlString = () => {
+    const setHtmlString = (filenmae) => {
         html = `<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -1405,6 +1405,8 @@ const DrawingController = () => {
                 <title>Document</title>
             </head>
             <body>
+            <link rel="stylesheet" href="${filenmae}.css">
+            <script src="${filenmae}.js"></script>
             <script>
             if (screen.colorDepth === 0) {
                 var css = '[id^=ccg] {display: none; }',
@@ -1516,21 +1518,15 @@ const DrawingController = () => {
 
 
     const exportHTML = canvas => {
+        getNewFileHandle(canvas);
+    }
+
+    async function getNewFileHandle(canvas) {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
-        setHtmlString();
-        if (retVal !== null) {
-            const file = new Blob([html], { type: 'text/html' });
-            // saveAs(file, retVal + '.html')
-            getNewFileHandle(file, retVal + '.html')
-        }
-    }
-
-    async function getNewFileHandle(content, defaultfilename) {
         const options = {
-            suggestedName: defaultfilename,
+            suggestedName: ss + '.html',
             types: [{
                 description: 'Html file',
                 accept: { 'text/html': ['.html'] },
@@ -1539,28 +1535,27 @@ const DrawingController = () => {
         const aa = await window.showSaveFilePicker(options);
         sethtmlfileHandle(aa)
         const writable = await aa.createWritable();
-        await writable.write(content);
+
+        setHtmlString((aa.name).split('.')[0]);
+        const file = new Blob([html], { type: 'text/html' });
+
+        await writable.write(file);
         await writable.close();
     }
 
     const OverrightHtml = canvas => {
-
+        overrightgetNewFileHandle(canvas)
+    }
+    async function overrightgetNewFileHandle(canvas) {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        var retVal = ss;//prompt("Enter  file name to save : ", ss + "_FileName");
-        setHtmlString();
 
-        if (retVal !== null) {
-
-            const file = new Blob([html], { type: 'text/html' });
-            // saveAs(file, retVal + '.html')
-            overrightgetNewFileHandle(file)
-        }
-    }
-    async function overrightgetNewFileHandle(content) {
         const writable = await htmlfileHandle.createWritable();
-        await writable.write(content);
+
+        setHtmlString((htmlfileHandle.name).split('.')[0]);
+        const file = new Blob([html], { type: 'text/html' });
+
+        await writable.write(file);
         await writable.close();
     }
 

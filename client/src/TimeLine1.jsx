@@ -452,7 +452,7 @@ const TimeLine1 = () => {
   }
 
 
-  const setHtmlString = () => {
+  const setHtmlString = (filenmae) => {
     html = `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -462,6 +462,8 @@ const TimeLine1 = () => {
           <title>Document</title>
       </head>
       <body>
+      <link rel="stylesheet" href="${filenmae}.css">
+      <script src="${filenmae}.js"></script>
       <script>
       var style = document.createElement('style');
       style.textContent = \`${inAnimation2}\`;
@@ -594,27 +596,18 @@ const TimeLine1 = () => {
         opacity: 1
       })
     });
-    // alert(autoOut);
-    // return
+
     setinAnimation2();
     setstopCommand();
 
-    setHtmlString();
-
     selectAll(canvas);
-    var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-    var retVal = ss;// prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
 
-      const file = new Blob([html], { type: 'text/html' });
-      // saveAs(file, retVal + '.html');
-      getNewFileHandle(file, retVal + '.html')
-
-    }
+    getNewFileHandle(canvas)
   }
-  async function getNewFileHandle(content, defaultfilename) {
+  async function getNewFileHandle(canvas) {
+    var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
     const options = {
-      suggestedName: defaultfilename,
+      suggestedName: ss + '.html',
       types: [{
         description: 'Html file',
         accept: { 'text/html': ['.html'] },
@@ -622,8 +615,12 @@ const TimeLine1 = () => {
     };
     const aa = await window.showSaveFilePicker(options);
     sethtmlfileHandle(aa)
+
     const writable = await aa.createWritable();
-    await writable.write(content);
+    setHtmlString((aa.name).split('.')[0]);
+    const file = new Blob([html], { type: 'text/html' });
+
+    await writable.write(file);
     await writable.close();
   }
 
