@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes , Route } from "react-router-dom";
 import { Provider } from 'react-redux'
 import store from './store'
 import Drawing2 from './Drawing2';
@@ -13,10 +13,10 @@ ReactDOM.render(
   <Provider store={store}>
     <Router basename={process.env.PUBLIC_URL}>
       {/* <Router > */}
-      <Switch>
-        <Route exact path='/' render={() => (<App />)} />
-        <Route exact path='/drawing2' render={() => <Drawing2 canvasOutput={true} />} />
-      </Switch>
+      <Routes>
+        <Route exact path='/' element={<App/>} />
+        <Route exact path='/drawing2' element={<Drawing2 canvasOutput={true} />} />
+      </Routes>
     </Router>
   </Provider>,
   document.getElementById('root')
