@@ -1217,6 +1217,7 @@ const DrawingController = () => {
     async function importHtml(canvas) {
         const [aa] = await window.showOpenFilePicker();
         sethtmlfileHandle(aa);
+        console.log(aa)
         if (aa) {
             const file = await aa.getFile();
             const contents = await file.text();
@@ -1245,15 +1246,15 @@ const DrawingController = () => {
                     element.set({ objectCaching: false, shadow: { ...shadowOptions } });
                     if (element.type === 'text') {
 
-                        element.set({ type: 'textbox' })
+                        element.set({ type: 'i-text' })
 
                         var textobj = element.toObject(['id']);
                         var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                        var aa = new fabric.Textbox(element.text, clonedtextobj);
+                        var aa = new fabric.IText(element.text, clonedtextobj);
 
                         canvas.add(aa);
                         aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
-                        aa.set({ textAlign: element.textAlign, width: element.width + 100, left: (element.left - ((element.width + 100) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+                        aa.set({ textAlign: element.textAlign, width: element.width , left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
 
                         canvas.remove(element)
                         // var bb =objects.indexOf(element);
@@ -2270,8 +2271,8 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b>Elements: </b>
                     <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
-                    <button onClick={() => createTextBox(canvas)}>TB</button>
-                    <button onClick={() => createIText(canvas)}>IT</button>
+                    <button title="Don't use it for html template" onClick={() => createTextBox(canvas)}>TB</button>
+                    <button title="Use it for html template" onClick={() => createIText(canvas)}>IT</button>
                     <button onClick={() => createText(canvas)}>T</button>
                     <button onClick={() => createLine(canvas)}>Line</button>
                     <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
@@ -2422,7 +2423,7 @@ const DrawingController = () => {
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
                     <button onClick={() => exportJSON(canvas)}>JSON</button>
-                    <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.FileSystemFileHandle?.name}
+                    <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.name}
                     <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
                 </div>

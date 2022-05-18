@@ -630,8 +630,26 @@ const TimeLine1 = () => {
     overrightgetNewFileHandle(canvas)
 }
 async function overrightgetNewFileHandle(canvas) {
-    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    selectAll(canvas);
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  canvas.discardActiveObject();
+  canvas.forEachObject((element, i) => {
+    element.set({
+      left: position(i).finalx,
+      top: position(i).finaly,
+
+      scaleX: position(i).finalScaleX,
+      scaleY: position(i).finalScaleY,
+      angle: position(i).finalAngle,
+
+      opacity: 1
+    })
+  });
+
+  setinAnimation2();
+  setstopCommand();
+
+  selectAll(canvas);
 
     const writable = await htmlfileHandle.createWritable();
 
