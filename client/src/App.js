@@ -34,7 +34,7 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '180522_2'
+const buildDate = '180522_3'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

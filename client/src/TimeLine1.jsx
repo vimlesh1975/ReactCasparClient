@@ -464,8 +464,6 @@ const TimeLine1 = () => {
           <title>Document</title>
       </head>
       <body>
-      <link rel="stylesheet" href="${cssfilename}.css">
-      <script src="${jsfilename}.js"></script>
       <script>
       var style = document.createElement('style');
       style.textContent = \`${inAnimation2}\`;
@@ -578,7 +576,8 @@ const TimeLine1 = () => {
     </script>
       <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
       </body>
-      
+      <link rel="stylesheet" href="${cssfilename}.css">
+      <script src="${jsfilename}.js"></script>
       </html>`;
   }
 

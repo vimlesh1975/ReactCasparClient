@@ -1405,8 +1405,6 @@ const DrawingController = () => {
                 <title>Document</title>
             </head>
             <body>
-            <link rel="stylesheet" href="${cssfilename}.css">
-            <script src="${jsfilename}.js"></script>
             <script>
             if (screen.colorDepth === 0) {
                 var css = '[id^=ccg] {display: none; }',
@@ -1511,7 +1509,8 @@ const DrawingController = () => {
             </script>
             <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
             </body>
-
+            <link rel="stylesheet" href="${cssfilename}.css">
+            <script src="${jsfilename}.js"></script>
             </html>`
 
     }
