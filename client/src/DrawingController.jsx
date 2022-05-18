@@ -1130,18 +1130,13 @@ const DrawingController = () => {
         });
         canvas?.requestRenderAll();
     }
-    const removeBorder = () => {
+    const removeBorderandCurve = () => {
         canvas?.getActiveObjects().forEach(element => {
-            element.set({ strokeWidth: 0 })
+            element.set({ strokeWidth: 0, rx: 0, ry: 0  })
         });
         canvas?.requestRenderAll();
     }
-    const removeCornerCurve = () => {
-        canvas?.getActiveObjects().forEach(element => {
-            element.set({ rx: 0, ry: 0 })
-        });
-        canvas?.requestRenderAll();
-    }
+
     const attachToPath = () => {
         const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
         if (paths[0]) {
@@ -2414,8 +2409,7 @@ const DrawingController = () => {
                 </div>
                 <div className='drawingToolsRow' >
                     <button onClick={makeFullScreen}>Make full Screen</button>
-                    <button onClick={removeBorder}>Remove Border</button>
-                    <button onClick={removeCornerCurve}>Remove Border Curve</button>
+                    <button onClick={removeBorderandCurve}>Remove Border and curve</button>
                     <button onClick={attachToPath}>Attach Text to first path</button>
                 </div>
                 <div className='drawingToolsRow' >
@@ -2428,10 +2422,9 @@ const DrawingController = () => {
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
                     <button onClick={() => exportJSON(canvas)}>JSON</button>
-
-                    <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                    <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
                     <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.FileSystemFileHandle?.name}
+                    <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                    <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
                 </div>
 
                
