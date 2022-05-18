@@ -25,6 +25,8 @@ const TimeLine1 = () => {
   const [pannelEnable, setPannelEnable] = useState(false);
   const [autoOut, setAutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
+  const [jsfilename, setjsfilename] = useState('main');
+  const [cssfilename, setcssfilename] = useState('main');
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -452,7 +454,7 @@ const TimeLine1 = () => {
   }
 
 
-  const setHtmlString = (filenmae) => {
+  const setHtmlString = () => {
     html = `<!DOCTYPE html>
       <html lang="en">
       <head>
@@ -462,8 +464,8 @@ const TimeLine1 = () => {
           <title>Document</title>
       </head>
       <body>
-      <link rel="stylesheet" href="${filenmae}.css">
-      <script src="${filenmae}.js"></script>
+      <link rel="stylesheet" href="${cssfilename}.css">
+      <script src="${jsfilename}.js"></script>
       <script>
       var style = document.createElement('style');
       style.textContent = \`${inAnimation2}\`;
@@ -617,14 +619,28 @@ const TimeLine1 = () => {
     sethtmlfileHandle(aa)
 
     const writable = await aa.createWritable();
-    setHtmlString((aa.name).split('.')[0]);
+    setHtmlString();
     const file = new Blob([html], { type: 'text/html' });
 
     await writable.write(file);
     await writable.close();
   }
 
+  const OverrightHtml = canvas => {
+    overrightgetNewFileHandle(canvas)
+}
+async function overrightgetNewFileHandle(canvas) {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    selectAll(canvas);
 
+    const writable = await htmlfileHandle.createWritable();
+
+    setHtmlString();
+    const file = new Blob([html], { type: 'text/html' });
+
+    await writable.write(file);
+    await writable.close();
+}
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
@@ -644,6 +660,9 @@ const TimeLine1 = () => {
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={pasteAnimation}>Paste</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
+        Js file:<input type='text' size={10} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
+        css file:<input size={10} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
+        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
 

@@ -991,6 +991,9 @@ const DrawingController = () => {
 
     const dispatch = useDispatch();
     const [htmlfileHandle, sethtmlfileHandle] = useState()
+    const [jsfilename,setjsfilename]=useState('main');
+    const [cssfilename,setcssfilename]=useState('main');
+
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -1227,8 +1230,9 @@ const DrawingController = () => {
     }
     const handleFileReadHtml = (canvas, content) => {
         const aa = content.split('<div>')[1]?.split('</div>')[0];
-        console.log(aa?.substring(1, 6));
-        if (aa?.substring(1, 6) !== '<?xml') {
+        const bb = content.split('<!DOCTYPE ')[2];
+        console.log(bb?.substring(0, 3));
+        if (bb?.substring(0, 3) !== 'svg') {
             tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
             return;
         }
@@ -1395,7 +1399,7 @@ const DrawingController = () => {
             canvas.renderAll();
         }
     }
-    const setHtmlString = (filenmae) => {
+    const setHtmlString = () => {
         html = `<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -1405,8 +1409,8 @@ const DrawingController = () => {
                 <title>Document</title>
             </head>
             <body>
-            <link rel="stylesheet" href="${filenmae}.css">
-            <script src="${filenmae}.js"></script>
+            <link rel="stylesheet" href="${cssfilename}.css">
+            <script src="${jsfilename}.js"></script>
             <script>
             if (screen.colorDepth === 0) {
                 var css = '[id^=ccg] {display: none; }',
@@ -1536,7 +1540,7 @@ const DrawingController = () => {
         sethtmlfileHandle(aa)
         const writable = await aa.createWritable();
 
-        setHtmlString((aa.name).split('.')[0]);
+        setHtmlString();
         const file = new Blob([html], { type: 'text/html' });
 
         await writable.write(file);
@@ -1552,7 +1556,7 @@ const DrawingController = () => {
 
         const writable = await htmlfileHandle.createWritable();
 
-        setHtmlString((htmlfileHandle.name).split('.')[0]);
+        setHtmlString();
         const file = new Blob([html], { type: 'text/html' });
 
         await writable.write(file);
@@ -2405,11 +2409,20 @@ const DrawingController = () => {
                     <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                     <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                     <button onClick={() => bringToFront(canvas)}>Bring to F</button>
+              
+              
                 </div>
-
+                <div className='drawingToolsRow' >
+                    <button onClick={makeFullScreen}>Make full Screen</button>
+                    <button onClick={removeBorder}>Remove Border</button>
+                    <button onClick={removeCornerCurve}>Remove Border Curve</button>
+                    <button onClick={attachToPath}>Attach Text to first path</button>
+                </div>
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
                     <button onClick={() => exportHTML(canvas)}>HTML</button>
+                    Js file:<input type='text' size={10} value={jsfilename} onChange={e=>setjsfilename(e.target.value)}/>
+                    css file:<input size={10}  type='text' value={cssfilename}  onChange={e=>setcssfilename(e.target.value)}/>
                     {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
@@ -2421,12 +2434,7 @@ const DrawingController = () => {
                     <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.FileSystemFileHandle?.name}
                 </div>
 
-                <div className='drawingToolsRow' >
-                    <button onClick={makeFullScreen}>Make full Screen</button>
-                    <button onClick={removeBorder}>Remove Border</button>
-                    <button onClick={removeCornerCurve}>Remove Border Curve</button>
-                    <button onClick={attachToPath}>Attach Text to first path</button>
-                </div>
+               
 
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
