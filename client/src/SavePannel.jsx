@@ -23,7 +23,7 @@ const SavePannel = () => {
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
 
-    const [currentFileName, setCurrentFileName] = useState('')
+    const [currentFileName, setCurrentFileName] = useState()
 
     const startGraphics = (canvas, layerNumber) => {
         var inAnimation;
@@ -177,17 +177,17 @@ const SavePannel = () => {
             fileReader.readAsText(file);
         }
     };
-    const handleFileRead = (e) => {
-        const content = fileReader.result;
-        var aa = content.split('\r\n')
-        aa.splice(-1)
-        var updatedcanvasList = []
-        aa.forEach(element => {
-            var cc = JSON.parse(element)
-            updatedcanvasList.push(cc)
-        });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-    };
+    // const handleFileRead = (e) => {
+    //     const content = fileReader.result;
+    //     var aa = content.split('\r\n')
+    //     aa.splice(-1)
+    //     var updatedcanvasList = []
+    //     aa.forEach(element => {
+    //         var cc = JSON.parse(element)
+    //         updatedcanvasList.push(cc)
+    //     });
+    //     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+    // };
     const drawingFileNew = () => {
         var updatedcanvasList = [];
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
@@ -201,7 +201,7 @@ const SavePannel = () => {
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
 
-    const drawingFileSaveAs = () => {
+   async function  drawingFileSaveAs() {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
@@ -213,40 +213,37 @@ const SavePannel = () => {
         if (currentFile === 'new') {
             ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         } else {
-            ss = currentFile;
+            ss = currentFileName?.name;
         }
-
-        var retVal = prompt("Enter  file name to save : ", ss);
-        if (retVal !== null) {
-            element.download = retVal;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-            setCurrentFileName(retVal)
-        }
+        const options = {
+            suggestedName: ss,
+            types: [{
+                description: 'text file',
+                accept: { 'text/plain': ['.txt'] },
+            }],
+        };
+        const aa1 = await window.showSaveFilePicker(options);
+        const writable = await aa1.createWritable();
+        setCurrentFileName(aa1);
+        await writable.write(file);
+        await writable.close();
+   
     }
-    const drawingFileSave = () => {
+     async function drawingFileSave(){
         updatePage(canvas);
-        const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
             aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue , animation:val.animation }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
 
-        element.download = currentFileName;
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
+        const writable = await currentFileName.createWritable();
+
+        await writable.write(file);
+        await writable.close();
+
     }
-    const handleFileChosen = (file) => {
-        if (file) {
-            currentFile = file.name
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-            fileReader = new FileReader();
-            fileReader.onloadend = handleFileRead;
-            fileReader.readAsText(file);
-        }
-    }
+
     const onDragEnd = (result) => {
         const aa = [...canvasList]
         if (result.destination != null) {
@@ -263,6 +260,27 @@ const SavePannel = () => {
             }
         }
     }
+
+    async function importCanvaslist() {
+        const [aa] = await window.showOpenFilePicker();
+        setCurrentFileName(aa);
+        currentFile = aa.name
+        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
+        console.log(aa)
+        if (aa) {
+            const file = await aa.getFile();
+            const content = await file.text();
+            var aa1 = content.split('\r\n')
+            aa1.splice(-1)
+            var updatedcanvasList = []
+            aa1.forEach(element => {
+                var cc = JSON.parse(element)
+                updatedcanvasList.push(cc)
+            });
+            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        }
+    }
+
     return (
         <div >
             <div>
@@ -270,9 +288,9 @@ const SavePannel = () => {
                     <b> Save: </b>
                     <button onClick={drawingFileNew}>File New <FiFile /></button>
                     <button onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
-                    <button onClick={drawingFileSave}>File Save<FaSave /></button><br />
+                   {currentFileName &&  <button onClick={drawingFileSave}>File Save<FaSave /></button>}
                 </div>
-                <div className='drawingToolsRow' >
+                {/* <div className='drawingToolsRow' >
                     <span>Open File:</span>  <input
                         type='file'
                         id='file'
@@ -283,6 +301,9 @@ const SavePannel = () => {
                             if (e.target.files[0]) { setCurrentFileName(e.target.files[0].name); };
                         }}
                     /><br />
+                </div> */}
+                <div className='drawingToolsRow' > 
+                <button onClick={importCanvaslist}>Open File</button>{currentFileName?.name}
                 </div>
                 <div className='drawingToolsRow' >
                     <span>Add File:</span>  <input

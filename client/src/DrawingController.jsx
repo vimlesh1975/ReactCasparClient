@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, tempAlert } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -990,9 +990,10 @@ const DrawingController = () => {
     const [countUp, setCountUp] = useState(false);
 
     const dispatch = useDispatch();
-    const [htmlfileHandle, sethtmlfileHandle] = useState()
-    const [jsfilename,setjsfilename]=useState('main');
-    const [cssfilename,setcssfilename]=useState('main');
+    const [htmlfileHandle, sethtmlfileHandle] = useState();
+    const [htmlpageHandle, sethtmlpageHandle] = useState();
+    const [jsfilename, setjsfilename] = useState('main');
+    const [cssfilename, setcssfilename] = useState('main');
 
 
     const pauseClock = (layerNumber) => {
@@ -1132,7 +1133,7 @@ const DrawingController = () => {
     }
     const removeBorderandCurve = () => {
         canvas?.getActiveObjects().forEach(element => {
-            element.set({ strokeWidth: 0, rx: 0, ry: 0  })
+            element.set({ strokeWidth: 0, rx: 0, ry: 0 })
         });
         canvas?.requestRenderAll();
     }
@@ -1214,58 +1215,58 @@ const DrawingController = () => {
         })
 
     };
-    async function importHtml(canvas) {
-        const [aa] = await window.showOpenFilePicker();
-        sethtmlfileHandle(aa);
-        console.log(aa)
-        if (aa) {
-            const file = await aa.getFile();
-            const contents = await file.text();
-            handleFileReadHtml(canvas, contents);
-        }
-    }
-    const handleFileReadHtml = (canvas, content) => {
-        const aa = content.split('<div>')[1]?.split('</div>')[0];
-        const bb = content.split('<!DOCTYPE ')[2];
-        console.log(bb?.substring(0, 3));
-        if (bb?.substring(0, 3) !== 'svg') {
-            tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
-            return;
-        }
-        importHtml2(aa, canvas);
-    };
-    const importHtml2 = (file, canvas) => {
-        if (file) {
-            // var site_url = URL.createObjectURL(file);
-            deleteAll(canvas);
-            fabric.loadSVGFromString(file, function (objects) {
-                objects?.forEach(element => {
-                    console.log(element)
+    // async function importHtml(canvas) {
+    //     const [aa] = await window.showOpenFilePicker();
+    //     sethtmlfileHandle(aa);
+    //     console.log(aa)
+    //     if (aa) {
+    //         const file = await aa.getFile();
+    //         const contents = await file.text();
+    //         handleFileReadHtml(canvas, contents);
+    //     }
+    // }
+    // const handleFileReadHtml = (canvas, content) => {
+    //     const aa = content.split('<div>')[1]?.split('</div>')[0];
+    //     const bb = content.split('<!DOCTYPE ')[2];
+    //     console.log(bb?.substring(0, 3));
+    //     if (bb?.substring(0, 3) !== 'svg') {
+    //         tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
+    //         return;
+    //     }
+    //     importHtml2(aa, canvas);
+    // };
+    // const importHtml2 = (file, canvas) => {
+    //     if (file) {
+    //         // var site_url = URL.createObjectURL(file);
+    //         deleteAll(canvas);
+    //         fabric.loadSVGFromString(file, function (objects) {
+    //             objects?.forEach(element => {
+    //                 console.log(element)
 
-                    canvas.add(element);
-                    element.set({ objectCaching: false, shadow: { ...shadowOptions } });
-                    if (element.type === 'text') {
+    //                 canvas.add(element);
+    //                 element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+    //                 if (element.type === 'text') {
 
-                        element.set({ type: 'i-text' })
+    //                     element.set({ type: 'i-text' })
 
-                        var textobj = element.toObject(['id']);
-                        var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                        var aa = new fabric.IText(element.text, clonedtextobj);
+    //                     var textobj = element.toObject(['id']);
+    //                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+    //                     var aa = new fabric.IText(element.text, clonedtextobj);
 
-                        canvas.add(aa);
-                        aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
-                        aa.set({ textAlign: element.textAlign, width: element.width , left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+    //                     canvas.add(aa);
+    //                     aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
+    //                     aa.set({ textAlign: element.textAlign, width: element.width, left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
 
-                        canvas.remove(element)
-                        // var bb =objects.indexOf(element);
-                        // objects.splice(bb,1,aa);
+    //                     canvas.remove(element)
+    //                     // var bb =objects.indexOf(element);
+    //                     // objects.splice(bb,1,aa);
 
-                    }
-                });
-            });
-            canvas.renderAll();
-        }
-    }
+    //                 }
+    //             });
+    //         });
+    //         canvas.renderAll();
+    //     }
+    // }
 
 
     const onBlurSizeChange = e => {
@@ -1516,16 +1517,16 @@ const DrawingController = () => {
     }
 
 
-    const exportHTML = canvas => {
-        getNewFileHandle(canvas);
-    }
+    // const exportHTML = canvas => {
+    //     getNewFileHandle(canvas);
+    // }
 
-    async function getNewFileHandle(canvas) {
+    async function exportHTML(canvas) {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         const options = {
-            suggestedName: ss + '.html',
+            suggestedName: ss,
             types: [{
                 description: 'Html file',
                 accept: { 'text/html': ['.html'] },
@@ -1541,25 +1542,44 @@ const DrawingController = () => {
         await writable.write(file);
         await writable.close();
     }
+    async function exportPage(canvas) {
+        const options1 = {
+            suggestedName: (htmlfileHandle.name).split(".")[0],
+            types: [{
+                description: 'Text file',
+                accept: { 'text/plain': ['.txt'] },
+            }],
+        };
+        const aa1 = await window.showSaveFilePicker(options1);
+        sethtmlpageHandle(aa1)
+        const writable1 = await aa1.createWritable();
+        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
+        const file1 = new Blob([bb], { type: 'text/plain' });
 
-    const OverrightHtml = canvas => {
-        overrightgetNewFileHandle(canvas)
+        await writable1.write(file1);
+        await writable1.close();
     }
-    async function overrightgetNewFileHandle(canvas) {
+
+
+    async function OverrightHtml(canvas) {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-
         const writable = await htmlfileHandle.createWritable();
-
         setHtmlString();
         const file = new Blob([html], { type: 'text/html' });
-
         await writable.write(file);
         await writable.close();
     }
 
+    
+    async function overRightPage(canvas) {
+        const writable1 = await htmlpageHandle.createWritable();
+        const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
 
-
+        const file1 = new Blob([bb], { type: 'text/plain' });
+        await writable1.write(file1);
+        await writable1.close();
+    }
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2404,8 +2424,8 @@ const DrawingController = () => {
                     <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                     <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                     <button onClick={() => bringToFront(canvas)}>Bring to F</button>
-              
-              
+
+
                 </div>
                 <div className='drawingToolsRow' >
                     <button onClick={makeFullScreen}>Make full Screen</button>
@@ -2415,19 +2435,23 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
                     <button onClick={() => exportHTML(canvas)}>HTML</button>
-                    Js file:<input type='text' size={10} value={jsfilename} onChange={e=>setjsfilename(e.target.value)}/>
-                    css file:<input size={10}  type='text' value={cssfilename}  onChange={e=>setcssfilename(e.target.value)}/>
+                    Js file:<input type='text' size={3} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
+                    css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
+
                     {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
+                    {htmlfileHandle && <button onClick={() => exportPage(canvas)}>Page</button>}
+                    {htmlfileHandle && <button onClick={() => overRightPage(canvas)}>Overright Page</button>}
+
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
                     <button onClick={() => exportJSON(canvas)}>JSON</button>
-                    <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.name}
+                    {/* <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.name} */}
                     <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
                 </div>
 
-               
+
 
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
