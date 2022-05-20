@@ -1541,10 +1541,12 @@ const DrawingController = () => {
 
         await writable.write(file);
         await writable.close();
+
+        exportPage(canvas, aa)
     }
-    async function exportPage(canvas) {
+    async function exportPage(canvas,aa) {
         const options1 = {
-            suggestedName: (htmlfileHandle.name).split(".")[0],
+            suggestedName: (aa.name).split(".")[0],
             types: [{
                 description: 'Text file',
                 accept: { 'text/plain': ['.txt'] },
@@ -1569,17 +1571,27 @@ const DrawingController = () => {
         const file = new Blob([html], { type: 'text/html' });
         await writable.write(file);
         await writable.close();
+
+        if (htmlpageHandle) {
+            const writable1 = await htmlpageHandle.createWritable();
+            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
+
+            const file1 = new Blob([bb], { type: 'text/plain' });
+            await writable1.write(file1);
+            await writable1.close();
+        }
+
     }
 
-    
-    async function overRightPage(canvas) {
-        const writable1 = await htmlpageHandle.createWritable();
-        const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
 
-        const file1 = new Blob([bb], { type: 'text/plain' });
-        await writable1.write(file1);
-        await writable1.close();
-    }
+    // async function overRightPage(canvas) {
+    //     const writable1 = await htmlpageHandle.createWritable();
+    //     const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
+
+    //     const file1 = new Blob([bb], { type: 'text/plain' });
+    //     await writable1.write(file1);
+    //     await writable1.close();
+    // }
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2434,19 +2446,16 @@ const DrawingController = () => {
                 </div>
                 <div className='drawingToolsRow' >
                     <b> Export: </b>
-                    <button onClick={() => exportHTML(canvas)}>HTML</button>
+                    <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
                     Js file:<input type='text' size={3} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
                     css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
 
-                    {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
-                    {htmlfileHandle && <button onClick={() => exportPage(canvas)}>Page</button>}
-                    {htmlfileHandle && <button onClick={() => overRightPage(canvas)}>Overright Page</button>}
-
+                    {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML and Page</button>}
+                  
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>
                     <button onClick={() => exportJSON(canvas)}>JSON</button>
-                    {/* <br /> <b>  Import: </b> <span> Html</span> <button onClick={() => importHtml(canvas)}>Open</button>{htmlfileHandle?.name} */}
                     <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
                 </div>
