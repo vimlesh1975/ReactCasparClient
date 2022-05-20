@@ -1516,11 +1516,6 @@ const DrawingController = () => {
 
     }
 
-
-    // const exportHTML = canvas => {
-    //     getNewFileHandle(canvas);
-    // }
-
     async function exportHTML(canvas) {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -1544,7 +1539,7 @@ const DrawingController = () => {
 
         exportPage(canvas, aa)
     }
-    async function exportPage(canvas,aa) {
+    async function exportPage(canvas, aa) {
         const options1 = {
             suggestedName: (aa.name).split(".")[0],
             types: [{
@@ -1552,6 +1547,8 @@ const DrawingController = () => {
                 accept: { 'text/plain': ['.txt'] },
             }],
         };
+
+
         const aa1 = await window.showSaveFilePicker(options1);
         sethtmlpageHandle(aa1)
         const writable1 = await aa1.createWritable();
@@ -1583,15 +1580,6 @@ const DrawingController = () => {
 
     }
 
-
-    // async function overRightPage(canvas) {
-    //     const writable1 = await htmlpageHandle.createWritable();
-    //     const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
-
-    //     const file1 = new Blob([bb], { type: 'text/plain' });
-    //     await writable1.write(file1);
-    //     await writable1.close();
-    // }
     const exportPng = canvas => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2451,7 +2439,7 @@ const DrawingController = () => {
                     css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
 
                     {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML and Page</button>}
-                  
+
                     <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                     <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                     <button onClick={() => exportSVG(canvas)}>SVG</button>

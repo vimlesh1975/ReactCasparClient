@@ -25,6 +25,8 @@ const TimeLine1 = () => {
   const [pannelEnable, setPannelEnable] = useState(false);
   const [autoOut, setAutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
+  const [htmlpageHandle, sethtmlpageHandle] = useState();
+
   const [jsfilename, setjsfilename] = useState('main');
   const [cssfilename, setcssfilename] = useState('main');
 
@@ -623,41 +625,70 @@ const TimeLine1 = () => {
 
     await writable.write(file);
     await writable.close();
+
+    exportPage(canvas, aa)
   }
 
-  const OverrightHtml = canvas => {
-    overrightgetNewFileHandle(canvas)
+  async function exportPage(canvas, aa) {
+    const options1 = {
+        suggestedName: (aa.name).split(".")[0],
+        types: [{
+            description: 'Text file',
+            accept: { 'text/plain': ['.txt'] },
+        }],
+    };
+
+
+    const aa1 = await window.showSaveFilePicker(options1);
+    sethtmlpageHandle(aa1)
+    const writable1 = await aa1.createWritable();
+    const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions }  }) + '\r\n';
+    const file1 = new Blob([bb], { type: 'text/plain' });
+
+    await writable1.write(file1);
+    await writable1.close();
 }
-async function overrightgetNewFileHandle(canvas) {
-  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
 
-  canvas.discardActiveObject();
-  canvas.forEachObject((element, i) => {
-    element.set({
-      left: position(i).finalx,
-      top: position(i).finaly,
+  async function OverrightHtml(canvas) {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
 
-      scaleX: position(i).finalScaleX,
-      scaleY: position(i).finalScaleY,
-      angle: position(i).finalAngle,
+    canvas.discardActiveObject();
+    canvas.forEachObject((element, i) => {
+      element.set({
+        left: position(i).finalx,
+        top: position(i).finaly,
 
-      opacity: 1
-    })
-  });
+        scaleX: position(i).finalScaleX,
+        scaleY: position(i).finalScaleY,
+        angle: position(i).finalAngle,
 
-  setinAnimation2();
-  setstopCommand();
+        opacity: 1
+      })
+    });
 
-  selectAll(canvas);
+    setinAnimation2();
+    setstopCommand();
+
+    selectAll(canvas);
 
     const writable = await htmlfileHandle.createWritable();
-
     setHtmlString();
     const file = new Blob([html], { type: 'text/html' });
-
     await writable.write(file);
     await writable.close();
-}
+
+    if (htmlpageHandle) {
+      const writable1 = await htmlpageHandle.createWritable();
+      const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions }  }) + '\r\n';
+
+      const file1 = new Blob([bb], { type: 'text/plain' });
+      await writable1.write(file1);
+      await writable1.close();
+  }
+
+
+
+  }
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
