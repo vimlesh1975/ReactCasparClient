@@ -2359,7 +2359,7 @@ const DrawingController = () => {
                         <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
                             <tbody>
 
-                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewXSize} /><button onClick={() => {
+                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-88' max='88' step='1' value={skewXSize} /><button onClick={() => {
                                     setSkewXSize(0);
                                     canvas.getActiveObjects().forEach(item => item.skewX = 0)
                                     canvas.requestRenderAll();

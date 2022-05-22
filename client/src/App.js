@@ -34,7 +34,7 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '200522_1'
+const buildDate = '220522_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -293,7 +293,7 @@ const App = () => {
       height: '100vh',
       flexWrap: 'nowrap'
     }}>
-      <div  >
+      <div>
         <div style={{
           display: 'flex',
           flexDirection: 'row',
@@ -330,16 +330,12 @@ const App = () => {
                   &lt;/screen&gt;
                 </h5>
 
-                {/* <div id='d3' style={{ display: 'none' }}> </div> */}
-                {/* <div id='d3' > </div> */}
-
               </div>
               <div >
                 <Automation />
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <div >
