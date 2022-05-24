@@ -22,7 +22,7 @@ const TimeLine1 = () => {
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
-  const [pannelEnable, setPannelEnable] = useState(false);
+  const [pannelEnable, setPannelEnable] = useState(true);
   const [autoOut, setAutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
   const [htmlpageHandle, sethtmlpageHandle] = useState();
