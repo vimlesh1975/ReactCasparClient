@@ -74,7 +74,8 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
             if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
         }
         if (options.ctrlKey && options.key.toLowerCase() === 'z') {
-            window.editor.canvas?.undo();
+            // window.editor.canvas?.undo();
+            window.editor.canvas && undo(window.editor.canvas)
         }
         if (options.ctrlKey && options.key.toLowerCase() === 'a') {
             options.preventDefault();
@@ -623,12 +624,23 @@ export const sendToBack = canvas => {
     canvas.requestRenderAll();
 }
 
-
 export const undo = canvas => {
-    // canvas.extraProps = ['id', 'selectable']
     canvas.undo()
+    canvas.getObjects().forEach(element => {
+        element.set({ 'objectCaching': false }
+        )
+    });
+    canvas.requestRenderAll();
 }
-export const redo = canvas => canvas.redo()
+
+export const redo = canvas => {
+    canvas.redo();
+    canvas.getObjects().forEach(element => {
+        element.set({ 'objectCaching': false }
+        )
+    });
+    canvas.requestRenderAll();
+}
 
 export const setOpacity = (canvas, val = 0.5) => {
     canvas.getActiveObjects().forEach(element => element.set({ 'opacity': val }));
