@@ -37,6 +37,8 @@ import UdpClock from './UdpClock';
 const buildDate = '240522_1'
 
 const App = () => {
+  // const reftimelinetab=useRef();
+  // const [initialpage, setinitialpage]=useState(5)
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
@@ -119,6 +121,7 @@ const App = () => {
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
+  //  console.log(reftimelinetab.current) ;//reftimelinetab.current;
     return () => {
       // cleanup
     }
@@ -184,6 +187,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+  
     refreshMedia()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
@@ -339,7 +343,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}>
+        <Tabs  selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
@@ -352,7 +356,7 @@ const App = () => {
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
-            <Tab >TimeLine</Tab>
+            <Tab  onClick={e=>console.log(e.target)}>TimeLine</Tab>
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
