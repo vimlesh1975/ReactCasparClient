@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
@@ -951,6 +951,18 @@ export const createShape = (canvas, shape, size = 0.4) => {
 }
 
 const DrawingController = () => {
+    const refStrokeColor = useRef();
+    const refFillColor = useRef();
+    const refBgColor = useRef();
+
+    const refShadowColor = useRef();
+    const refAffectStroke = useRef(false);
+    const refBlur = useRef();
+    const refOffsetX = useRef();
+    const refOffsetY = useRef();
+
+    
+    
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -2108,6 +2120,35 @@ const DrawingController = () => {
             //nothing
         }
     }
+
+    const getvalues = () => {
+        if (canvas?.getActiveObjects()?.[0]) {
+            console.log(canvas?.getActiveObjects()?.[0]);
+            const element = canvas?.getActiveObjects()?.[0];
+            if (element.rx !== null) { setSkewRX(element.rx); }
+            if (element.ry !== null) { setSkewRY(element.ry); }
+            if (element.skewX !== null) { setSkewXSize(element.skewX); }
+            if (element.skewY !== null) { setSkewYSize(element.skewY); }
+            if (element.fontFamily !== null) { setCurrentFont(element.fontFamily); }
+            if (element.fontSize !== null) { setFontSize(element.fontSize); }
+            if (element.strokeWidth !== null) { setStrokeWidth(element.strokeWidth); }
+
+            if (element.stroke !== null) { (refStrokeColor.current.value = element.stroke); }
+            if (element.fill !== null) { (refFillColor.current.value = element.fill);  }
+            if (element.backgroundColor !== null) { (refFillColor.current.value = element.backgroundColor);  }
+            if (element.opacity !== null) { setOpacity(element.opacity); }
+           
+            if (element.shadow !== null) { 
+                refShadowColor.current.value = element.shadow.color; 
+                refBlur.current.value=element.shadow.blur; 
+                refOffsetX.current.value=element.shadow.offsetX; 
+                refOffsetY.current.value=element.shadow.offsetY; 
+                refAffectStroke.current.checked=element.shadow.affectStroke; 
+                console.log(element.shadow.affectStroke)
+             }
+        }
+
+    }
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
@@ -2315,7 +2356,7 @@ const DrawingController = () => {
                 <div className='drawingToolsRow' >
                     <table border='1'>
                         <tbody>
-                            <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' defaultValue='1' /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
+                            <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' value={opacity} /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
                                 setCharSpacing(0);
                                 canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
                                 canvas.requestRenderAll();
@@ -2330,7 +2371,7 @@ const DrawingController = () => {
                     <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
                         {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                     </select>
-                    Size<input className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' defaultValue='25' />
+                    Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
                     {fontSize}
                 </div>
                 <div className='drawingToolsRow' >
@@ -2346,9 +2387,9 @@ const DrawingController = () => {
 
                 <div className='drawingToolsRow' >
                     <b> Colors: </b>
-                    Fill <input type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
-                    BG <input type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
-                    Stroke<input type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
+                    Fill <input ref={refFillColor} type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
+                    BG <input ref={refBgColor}  type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
+                    Stroke<input ref={refStrokeColor} type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
                     <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                     Stroke/Brush width:
                     <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' /> {strokeWidth}
@@ -2357,11 +2398,11 @@ const DrawingController = () => {
                     <div  >
                         <table border='1' width='220'>
                             <tbody>
-                                <tr><td colSpan='2'><b> Shadow: </b>color <input type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
-                                <tr><td colSpan='2'>affectStroke<input type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
-                                <tr><td>Blur</td><td> <input className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
-                                <tr><td>offsetX</td><td> <input className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
-                                <tr><td> offsetY</td><td><input className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                                <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
+                                <tr><td colSpan='2'>affectStroke<input  ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
+                                <tr><td>Blur</td><td> <input ref={refBlur} className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
+                                <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
+                                <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
                                 <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
 
                             </tbody>
@@ -2458,6 +2499,7 @@ const DrawingController = () => {
                     <button onClick={() => exportJSON(canvas)}>JSON</button>
                     <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
                     <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
+                    <br /> <button onClick={getvalues}>Get Values</button>
                 </div>
 
 

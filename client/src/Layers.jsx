@@ -85,9 +85,27 @@ const Layers = () => {
         document.body.removeChild(a);
         return (colors.length >= 3) ? '#' + (((1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2]).toString(16).substr(1)) : false;
     }
+    const putxBeforeId = () => {
+        canvas.getObjects().forEach(element => {
+            element.set({ id: 'x' + element.id })
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+    const removexBeforeId = () => {
+        canvas.getObjects().forEach(element => {
+            if ((element.id).charAt(0) === 'x') {
+                element.set({ id: (element.id).substring(1) })
+            }
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
 
     return (<div>
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
+        <button onClick={putxBeforeId}>Put x Before All Id</button>
+        <button onClick={removexBeforeId}>Remove x Before All Id</button>
         <div style={{ border: '1px solid black', height: 580, width: 835, overflow: 'scroll' }} >
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
@@ -98,7 +116,7 @@ const Layers = () => {
                             {...provided.droppableProps}
                         >
                             <table border='1'>
-                                <thead style={{ position: 'sticky', top:0, backgroundColor:'grey' }}>
+                                <thead style={{ position: 'sticky', top: 0, backgroundColor: 'grey' }}>
                                     <tr ><th>N</th><th>M</th><th>Type</th><th>Del</th><th>Id</th><th>Lock</th><th>Text</th><th>Font</th><th>Size</th><th>Style</th><th>Wt</th><th>Color</th><th>BGCLR</th><th>Stroke</th><th>Shadow</th></tr>
                                 </thead>
                                 <tbody >
