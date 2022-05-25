@@ -37,6 +37,12 @@ const Drawing = ({ canvasOutput }) => {
         canvas.on('mouse:move', null);
         canvas.on('mouse:up', null);
     }
+    function xyz(canvas){
+        canvas.on({
+            'selection:updated': window.getvalues,
+            'selection:created': window.getvalues
+          });
+    }
 
     function setZoomAndPan(canvas) {
         canvas.on('mouse:wheel', function (opt) {
@@ -67,6 +73,7 @@ const Drawing = ({ canvasOutput }) => {
             window.editor.canvas.extraProps = ['id', 'selectable']
             setZoomAndPan(window.editor.canvas);
             window.editor.canvas.preserveObjectStacking = true;
+            xyz(window.editor.canvas);
         }, 2000);
         return () => {
             cancelZoomAndPan(window.editor.canvas)
