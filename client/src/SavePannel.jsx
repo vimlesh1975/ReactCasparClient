@@ -286,9 +286,9 @@ const SavePannel = () => {
             <div>
                 <div className='drawingToolsRow' >
                     <b> Save: </b>
-                    <button onClick={drawingFileNew}>File New <FiFile /></button>
-                    <button onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
-                   {currentFileName &&  <button onClick={drawingFileSave}>File Save<FaSave /></button>}
+                    <button  title="Will discard list" onClick={drawingFileNew}>File New <FiFile /></button>
+                    <button  title="Save as new name"  onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
+                   {currentFileName &&  <button   title="Overwrite" onClick={drawingFileSave}>File Save<FaSave /></button>}
                 </div>
                 {/* <div className='drawingToolsRow' >
                     <span>Open File:</span>  <input
@@ -303,10 +303,10 @@ const SavePannel = () => {
                     /><br />
                 </div> */}
                 <div className='drawingToolsRow' > 
-                <button onClick={importCanvaslist}>Open File</button>{currentFileName?.name}
+                <button  title="Will discard list and open list"  onClick={importCanvaslist}>Open File</button>{currentFileName?.name}
                 </div>
                 <div className='drawingToolsRow' >
-                    <span>Add File:</span>  <input
+                    <span  title="Will append list">Add File:</span>  <input
                         type='file'
                         id='file'
                         className='input-file'

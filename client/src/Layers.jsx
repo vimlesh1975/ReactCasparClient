@@ -87,7 +87,9 @@ const Layers = () => {
     }
     const putxBeforeId = () => {
         canvas.getObjects().forEach(element => {
+            if ((element.id).substring(0,3) === 'ccg') {
             element.set({ id: 'x' + element.id })
+            }
         });
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })

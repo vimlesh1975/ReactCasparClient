@@ -548,11 +548,11 @@ export const textLineThrough = canvas => {
     canvas.requestRenderAll();
 };
 export const textItalic = canvas => {
-    canvas.getActiveObjects().forEach(element => { element.set('fontStyle', 'italic') });
+    canvas.getActiveObjects().forEach(element => { element.set('fontStyle', (element.fontStyle==='italic')?'':'italic') });
     canvas.requestRenderAll();
 };
 export const txtBold = canvas => {
-    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', 'bold') });
+    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', (element.fontWeight==='normal')?'bold':'normal') });
     canvas.requestRenderAll();
 };
 
@@ -839,7 +839,6 @@ const alignAllButtom = (canvas) => {
     })
     canvas.requestRenderAll();
 }
-
 
 export const groupObjects = (canvas, shouldGroup) => {
     if (shouldGroup) {
@@ -1164,17 +1163,17 @@ const DrawingController = () => {
         canvas?.requestRenderAll();
     }
 
-    const attachToPath = () => {
-        const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
-        if (paths[0]) {
-            canvas.getActiveObjects(0).forEach(element => {
-                paths[0].set({ fill: 'transparent', strokeWidth: 0 })
-                element.set('path', paths[0]);
-                canvas.remove(paths[0]);
-            });
-            canvas?.requestRenderAll();
-        }
-    }
+    // const attachToPath = () => {
+    //     const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
+    //     if (paths[0]) {
+    //         canvas.getActiveObjects(0).forEach(element => {
+    //             paths[0].set({ fill: 'transparent', strokeWidth: 0 })
+    //             element.set('path', paths[0]);
+    //             canvas.remove(paths[0]);
+    //         });
+    //         canvas?.requestRenderAll();
+    //     }
+    // }
 
 
 
@@ -2138,6 +2137,9 @@ const DrawingController = () => {
             if (element.fill !== null) { (refFillColor.current.value = element.fill); }
             if (element.backgroundColor !== null) { (refBgColor.current.value = element.backgroundColor); }
             if (element.opacity !== null) { setOpacity(element.opacity); }
+            if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
+            
+
 
             if (element.shadow !== null) {
                 refShadowColor.current.value = element.shadow.color;
@@ -2148,362 +2150,369 @@ const DrawingController = () => {
             }
         }
     }
-    window.getvalues=getvalues;
+    window.getvalues = getvalues;
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
-
-
-                <div className='drawingToolsRow' >
-                    <b> Solid Cap 2: </b>
-                    <button onClick={() => {
-                        startGraphics(canvas, templateLayers.solidCaption2);
-                        setSolidcaption2(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidCaption2', canvasList[currentPage]?.pageName);
-
-                    }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption2)}>Update</button>
-                    <button onClick={() => {
-                        stopGraphics(templateLayers.solidCaption2);
-                        setSolidcaption2('');
-                        localStorage.setItem('RCC_solidCaption2', '');
-
-                    }} ><FaStop /></button>
-                    <span> {solidcaption2} </span>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Solid Cap 3: </b>
-                    <button onClick={() => {
-                        startGraphics(canvas, templateLayers.solidCaption3);
-                        setSolidcaption3(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_solidCaption3', canvasList[currentPage]?.pageName);
-
-                    }
-                    }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption3)}>Update</button>
-                    <button onClick={() => {
-                        stopGraphics(templateLayers.solidCaption3);
-                        setSolidcaption3('');
-                        localStorage.setItem('RCC_solidCaption3', '');
-
-                    }} ><FaStop /></button>
-                    <span> {solidcaption3} </span>
-                </div>
-
-                <div className='drawingToolsRow' >
-                    <b> Logo: </b>
-
-                    <button onClick={() => {
-                        startGraphics(canvas, templateLayers.logo);
-                        setLogo(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_logo', canvasList[currentPage]?.pageName);
-
-                    }
-                    }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(canvas, templateLayers.logo)}>Update</button>
-                    <button onClick={() => {
-                        stopGraphics(templateLayers.logo);
-                        setLogo('');
-                        localStorage.setItem('RCC_logo', '');
-
-                    }} ><FaStop /></button>
-                    <span> {logo} </span>
-
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Location Band: </b>
-                    <button onClick={() => {
-                        startGraphics(canvas, templateLayers.locationBand);
-                        setLocationBand(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_locationBand', canvasList[currentPage]?.pageName);
-
-                    }
-                    }><FaPlay />  </button>
-                    <button onClick={() => updateGraphics(canvas, templateLayers.locationBand)}>Update</button>
-                    <button onClick={() => {
-                        stopGraphics(templateLayers.locationBand);
-                        setLocationBand('');
-                        localStorage.setItem('RCC_locationBand', '');
-
-                    }} ><FaStop /></button>
-                    <span> {locationBand} </span>
-                </div>
-
-                <div className='drawingToolsRow' >
-                    <b> V Scroll: </b>  <button onClick={() => {
-                        startVerticalScroll();
-                        setVerticalScroll(canvasList[currentPage]?.pageName)
-                        localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
-
-                    }}><FaPlay /> </button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=0"`)}><FaPause /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${verticalSpeed}"`)}> <GrResume /></button>
-                    <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
-                        setVerticalScroll('')
-                        localStorage.setItem('RCC_verticalScroll', '');
-
-                    }} ><FaStop /></button>
-                    Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={verticalSpeed} />
-
-                    <button onClick={() => exportVerticalScrollAsHTML(canvas)}>To HTML</button>
-                    <span> {verticalScroll} </span>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> H Scroll: </b>
-                    <button onClick={() => {
-                        startHorizontalScroll(window.editor?.canvas);
-                        setHorizontalScroll(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_horizontalScroll', canvasList[currentPage]?.pageName);
-
-                    }}><FaPlay /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=0"`)}> <FaPause /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${horizontalSpeed}"`)}> <GrResume /></button>
-                    <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll}`);
-                        setHorizontalScroll('');
-                        localStorage.setItem('RCC_horizontalScroll', '');
-
-                    }} ><FaStop /></button>
-                    Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
-                    <button onClick={() => exportHorizontalScrollAsHTML(canvas)}>To HTML</button>
-                    <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
-                    <span> {horizontalScroll} </span>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> H Scroll2: </b>
-                    <button onClick={() => {
-                        startHorizontalScroll2(window.editor?.canvas);
-                        setHorizontalScroll2(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_horizontalScroll2', canvasList[currentPage]?.pageName);
-
-                    }}><FaPlay /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=0"`)}> <FaPause /></button>
-                    <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${horizontalSpeed2}"`)}> <GrResume /></button>
-                    <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll2}`);
-                        setHorizontalScroll2('');
-                        localStorage.setItem('RCC_horizontalScroll2', '');
-
-                    }} ><FaStop /></button>
-                    Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
-                    <button onClick={() => exportHorizontalScrollAsHTML2(canvas)}>To HTML</button>
-                    <span> LTR:</span>  <input type="checkbox" value={ltr2} onChange={e => setLtr2(val => !val)} />
-                    <span> {horizontalScroll2} </span>
-                </div>
-
-                <div className='drawingToolsRow' >
-                    <b>Clock: </b>
-                    <button onClick={() => addClock(canvas)}>Add to Preview</button>
-                    <button onClick={() => {
-                        startClock();
-                        setClock(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
-
-                    }}><FaPlay /></button>
-                    <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
-                        setClock('');
-                        localStorage.setItem('RCC_clock', '');
-
-                    }} ><FaStop /></button>
-                    <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
-                    <span> {clock} </span>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b>Count Up Timer: </b>
-                    <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
-                    <button onClick={() => {
-                        startUpTimer();
-                        setUpTimer(canvasList[currentPage]?.pageName);
-                        localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
-
-                    }}><FaPlay /></button>
-                    <button onClick={() => {
-                        endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
-                        setUpTimer('');
-                        localStorage.setItem('RCC_upTimer', '');
-
-                    }} ><FaStop /></button>
-                    <button onClick={() => exportUpTimerAsHTML(canvas)}>To HTML</button>
-                    <span> {upTimer} </span>
-                </div>
-
-                <div className='drawingToolsRow' >
-                    <b>Game Timer:</b>
-                    <button onClick={() => addGameTimer(canvas)}>Add to Preview</button>
-                    <span> M</span><input type='text' style={{ width: 15 }} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
-                    <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
-                    <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
-                    <button onClick={() => showClock(templateLayers.gameTimer)}><FaPlay /></button>
-                    <button onClick={() => pauseClock(templateLayers.gameTimer)}> <FaPause /></button>
-                    <button onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
-                    <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
-                </div>
-
                 <div className='drawingToolsRow' >
                     <b>Elements: </b>
                     <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
-                    <button title="Don't use it for html template" onClick={() => createTextBox(canvas)}>TB</button>
-                    <button title="Use it for html template" onClick={() => createIText(canvas)}>IT</button>
-                    <button onClick={() => createText(canvas)}>T</button>
-                    <button onClick={() => createLine(canvas)}>Line</button>
-                    <button onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
-                    <button onClick={() => createEllipse(canvas)}>Ellipse</button>
-                    <button onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
-                    <button onClick={() => createPentagon(canvas)}>Penta</button>
-                    <button onClick={() => createHexagon(canvas)}>Hexa</button>
+                    <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
+                    <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
+                    <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button>
+                    <button title="Line" onClick={() => createLine(canvas)}>Line</button>
+                    <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
+                    <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
+                    <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
+                    <button title="Pentagon" onClick={() => createPentagon(canvas)}>Penta</button>
+                    <button title="Hexagon" onClick={() => createHexagon(canvas)}>Hexa</button>
                 </div>
-                <div className='drawingToolsRow' >
-                    <table border='1'>
-                        <tbody>
-                            <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' value={opacity} /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
-                                setCharSpacing(0);
-                                canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
-                                canvas.requestRenderAll();
-                            }}>R</button>{charSpacing}</td></tr>
-                        </tbody>
-                    </table>
+                <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid red' }}>
+                    <div className='drawingToolsRow' >
+                        <b> Solid Cap 2: </b>
+                        <button onClick={() => {
+                            startGraphics(canvas, templateLayers.solidCaption2);
+                            setSolidcaption2(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_solidCaption2', canvasList[currentPage]?.pageName);
 
+                        }
+                        }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption2)}>Update</button>
+                        <button onClick={() => {
+                            stopGraphics(templateLayers.solidCaption2);
+                            setSolidcaption2('');
+                            localStorage.setItem('RCC_solidCaption2', '');
 
+                        }} ><FaStop /></button>
+                        <span> {solidcaption2} </span>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Solid Cap 3: </b>
+                        <button onClick={() => {
+                            startGraphics(canvas, templateLayers.solidCaption3);
+                            setSolidcaption3(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_solidCaption3', canvasList[currentPage]?.pageName);
 
+                        }
+                        }><FaPlay />  </button>  <button onClick={() => updateGraphics(canvas, templateLayers.solidCaption3)}>Update</button>
+                        <button onClick={() => {
+                            stopGraphics(templateLayers.solidCaption3);
+                            setSolidcaption3('');
+                            localStorage.setItem('RCC_solidCaption3', '');
+
+                        }} ><FaStop /></button>
+                        <span> {solidcaption3} </span>
+                    </div>
+
+                    <div className='drawingToolsRow' >
+                        <b> Logo: </b>
+
+                        <button onClick={() => {
+                            startGraphics(canvas, templateLayers.logo);
+                            setLogo(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_logo', canvasList[currentPage]?.pageName);
+
+                        }
+                        }><FaPlay />  </button>
+                        <button onClick={() => updateGraphics(canvas, templateLayers.logo)}>Update</button>
+                        <button onClick={() => {
+                            stopGraphics(templateLayers.logo);
+                            setLogo('');
+                            localStorage.setItem('RCC_logo', '');
+
+                        }} ><FaStop /></button>
+                        <span> {logo} </span>
+
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Location Band: </b>
+                        <button onClick={() => {
+                            startGraphics(canvas, templateLayers.locationBand);
+                            setLocationBand(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_locationBand', canvasList[currentPage]?.pageName);
+
+                        }
+                        }><FaPlay />  </button>
+                        <button onClick={() => updateGraphics(canvas, templateLayers.locationBand)}>Update</button>
+                        <button onClick={() => {
+                            stopGraphics(templateLayers.locationBand);
+                            setLocationBand('');
+                            localStorage.setItem('RCC_locationBand', '');
+
+                        }} ><FaStop /></button>
+                        <span> {locationBand} </span>
+                    </div>
+
+                    <div className='drawingToolsRow' >
+                        <b> V Scroll: </b>  <button onClick={() => {
+                            startVerticalScroll();
+                            setVerticalScroll(canvasList[currentPage]?.pageName)
+                            localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
+
+                        }}><FaPlay /> </button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=0"`)}><FaPause /></button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${verticalSpeed}"`)}> <GrResume /></button>
+                        <button onClick={() => {
+                            endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
+                            setVerticalScroll('')
+                            localStorage.setItem('RCC_verticalScroll', '');
+
+                        }} ><FaStop /></button>
+                        Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={verticalSpeed} />
+
+                        <button onClick={() => exportVerticalScrollAsHTML(canvas)}>To HTML</button>
+                        <span> {verticalScroll} </span>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> H Scroll: </b>
+                        <button onClick={() => {
+                            startHorizontalScroll(window.editor?.canvas);
+                            setHorizontalScroll(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_horizontalScroll', canvasList[currentPage]?.pageName);
+
+                        }}><FaPlay /></button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=0"`)}> <FaPause /></button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${horizontalSpeed}"`)}> <GrResume /></button>
+                        <button onClick={() => {
+                            endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll}`);
+                            setHorizontalScroll('');
+                            localStorage.setItem('RCC_horizontalScroll', '');
+
+                        }} ><FaStop /></button>
+                        Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
+                        <button onClick={() => exportHorizontalScrollAsHTML(canvas)}>To HTML</button>
+                        <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
+                        <span> {horizontalScroll} </span>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> H Scroll2: </b>
+                        <button onClick={() => {
+                            startHorizontalScroll2(window.editor?.canvas);
+                            setHorizontalScroll2(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_horizontalScroll2', canvasList[currentPage]?.pageName);
+
+                        }}><FaPlay /></button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=0"`)}> <FaPause /></button>
+                        <button onClick={() => endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${horizontalSpeed2}"`)}> <GrResume /></button>
+                        <button onClick={() => {
+                            endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll2}`);
+                            setHorizontalScroll2('');
+                            localStorage.setItem('RCC_horizontalScroll2', '');
+
+                        }} ><FaStop /></button>
+                        Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
+                        <button onClick={() => exportHorizontalScrollAsHTML2(canvas)}>To HTML</button>
+                        <span> LTR:</span>  <input type="checkbox" value={ltr2} onChange={e => setLtr2(val => !val)} />
+                        <span> {horizontalScroll2} </span>
+                    </div>
+
+                    <div className='drawingToolsRow' >
+                        <b>Clock: </b>
+                        <button onClick={() => addClock(canvas)}>Add to Preview</button>
+                        <button onClick={() => {
+                            startClock();
+                            setClock(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
+
+                        }}><FaPlay /></button>
+                        <button onClick={() => {
+                            endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
+                            setClock('');
+                            localStorage.setItem('RCC_clock', '');
+
+                        }} ><FaStop /></button>
+                        <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
+                        <span> {clock} </span>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b>Count Up Timer: </b>
+                        <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
+                        <button onClick={() => {
+                            startUpTimer();
+                            setUpTimer(canvasList[currentPage]?.pageName);
+                            localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
+
+                        }}><FaPlay /></button>
+                        <button onClick={() => {
+                            endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
+                            setUpTimer('');
+                            localStorage.setItem('RCC_upTimer', '');
+
+                        }} ><FaStop /></button>
+                        <button onClick={() => exportUpTimerAsHTML(canvas)}>To HTML</button>
+                        <span> {upTimer} </span>
+                    </div>
+
+                    <div className='drawingToolsRow' >
+                        <b>Game Timer:</b>
+                        <button onClick={() => addGameTimer(canvas)}>Add to Preview</button>
+                        <span> M</span><input type='text' style={{ width: 15 }} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
+                        <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
+                        <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
+                        <button onClick={() => showClock(templateLayers.gameTimer)}><FaPlay /></button>
+                        <button onClick={() => pauseClock(templateLayers.gameTimer)}> <FaPause /></button>
+                        <button onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
+                        <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
+                    </div>
                 </div>
-                <div className='drawingToolsRow' >
-                    <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
-                        {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                    </select>
-                    Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
-                    {fontSize}
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Free Drawing: </b>
-                    Type:  <select onChange={e => onDrawingModeChange(e.target.value, canvas)} value={currentMode}>
-                        {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                    </select>
+                <div style={{ backgroundColor: 'rgb(235, 232, 232)', border: '2px solid green' }}>
 
-                    End:  <select onChange={e => onstrokeLineCapChange(e)} value={currentstrokeLineCap}>
-                        {strokeLineCaps.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                    </select>
-                </div>
-
-                <div className='drawingToolsRow' >
-                    <b> Colors: </b>
-                    Fill <input ref={refFillColor} type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
-                    BG <input ref={refBgColor} type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
-                    Stroke<input ref={refStrokeColor} type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
-                    <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
-                    Stroke/Brush width:
-                    <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' /> {strokeWidth}
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <div  >
-                        <table border='1' width='220'>
+                    <div className='drawingToolsRow' >
+                        <table border='1'>
                             <tbody>
-                                <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
-                                <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
-                                <tr><td>Blur</td><td> <input ref={refBlur} className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
-                                <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
-                                <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
-                                <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
-
+                                <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' value={opacity} /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
+                                    setCharSpacing(0);
+                                    canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{charSpacing}</td></tr>
                             </tbody>
                         </table>
+
+
+
                     </div>
-                    <div  >
-                        <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
-                            <tbody>
+                    <div className='drawingToolsRow' >
+                        <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
+                            {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+                        Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
+                        {fontSize}
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Free Drawing: </b>
+                        Type:  <select onChange={e => onDrawingModeChange(e.target.value, canvas)} value={currentMode}>
+                            {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
 
-                                <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-88' max='88' step='1' value={skewXSize} /><button onClick={() => {
-                                    setSkewXSize(0);
-                                    canvas.getActiveObjects().forEach(item => item.skewX = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{skewXSize}</td></tr>
-                                <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewYSize} /><button onClick={() => {
-                                    setSkewYSize(0);
-                                    canvas.getActiveObjects().forEach(item => item.skewY = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{skewYSize}</td></tr>
-                                <tr><td >RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' value={skewRX} /><button onClick={() => {
-                                    setSkewRX(0);
-                                    canvas.getActiveObjects().forEach(item => item.rx = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{skewRX}</td></tr>
-                                <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' value={skewRY} /><button onClick={() => {
-                                    setSkewRY(0);
-                                    canvas.getActiveObjects().forEach(item => item.ry = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{skewRY}</td></tr>
+                        End:  <select onChange={e => onstrokeLineCapChange(e)} value={currentstrokeLineCap}>
+                            {strokeLineCaps.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+                    </div>
 
-                                <tr><td> cropX:</td><td><input className='inputRange' onChange={e => onCropX(e)} type="range" id='cropX' min='0' max='2360' step='1' value={cropX} /><button onClick={() => {
-                                    setCropX(0);
-                                    canvas.getActiveObjects().forEach(item => item.cropX = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{cropX}</td></tr>
+                    <div className='drawingToolsRow' >
+                        <b> Colors: </b>
+                        Fill <input ref={refFillColor} type="color" defaultValue='#ffffff' onChange={e => changeCurrentColor(e, canvas)} />
+                        BG <input ref={refBgColor} type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
+                        Stroke<input ref={refStrokeColor} type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
+                        <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
+                        Stroke/Brush width:
+                        <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' /> {strokeWidth}
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <div  >
+                            <table border='1' width='220'>
+                                <tbody>
+                                    <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
+                                    <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
+                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
+                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
+                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                                    <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div  >
+                            <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
+                                <tbody>
+
+                                    <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-88' max='88' step='1' value={skewXSize} /><button onClick={() => {
+                                        setSkewXSize(0);
+                                        canvas.getActiveObjects().forEach(item => item.skewX = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewXSize}</td></tr>
+                                    <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewYSize} /><button onClick={() => {
+                                        setSkewYSize(0);
+                                        canvas.getActiveObjects().forEach(item => item.skewY = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewYSize}</td></tr>
+                                    <tr><td >RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' value={skewRX} /><button onClick={() => {
+                                        setSkewRX(0);
+                                        canvas.getActiveObjects().forEach(item => item.rx = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewRX}</td></tr>
+                                    <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' value={skewRY} /><button onClick={() => {
+                                        setSkewRY(0);
+                                        canvas.getActiveObjects().forEach(item => item.ry = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewRY}</td></tr>
+
+                                    <tr><td> cropX:</td><td><input className='inputRange' onChange={e => onCropX(e)} type="range" id='cropX' min='0' max='2360' step='1' value={cropX} /><button onClick={() => {
+                                        setCropX(0);
+                                        canvas.getActiveObjects().forEach(item => item.cropX = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{cropX}</td></tr>
 
 
-                                <tr><td> cropY:</td><td><input className='inputRange' onChange={e => onCropY(e)} type="range" id='cropY' min='0' max='2360' step='1' value={cropY} /><button onClick={() => {
-                                    setCropY(0);
-                                    canvas.getActiveObjects().forEach(item => item.cropY = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{cropY}</td></tr>
+                                    <tr><td> cropY:</td><td><input className='inputRange' onChange={e => onCropY(e)} type="range" id='cropY' min='0' max='2360' step='1' value={cropY} /><button onClick={() => {
+                                        setCropY(0);
+                                        canvas.getActiveObjects().forEach(item => item.cropY = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{cropY}</td></tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div style={{ backgroundColor: 'rgb(235, 232, 232)', border: '2px solid blue' }}>
+                    <div className='drawingToolsRow' >
+                        <b>Center: </b>
+                        <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
+                        <button onClick={() => putatCenter(canvas)}>All at Center</button>
+                        <button onClick={() => selectedatCenter(canvas)}>Center</button>
+                        <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
+                        <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b>Tools: </b>
+                        <button onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
+                        <button onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
+                        <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                        <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                      
+                        <button onClick={() => txtBold(canvas)}>B</button>
+                        <button onClick={() => textItalic(canvas)}>I</button>
+                        <button onClick={() => textUnderline(canvas)}>U</button>
+                        <button onClick={() => textLineThrough(canvas)}>S</button>
+                       
+                       
+                        <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
+                        <button onClick={() => deleteAll(canvas)}><VscTrash />All</button>
+                        <button onClick={() => lock(canvas)}><VscLock /></button>
+                        <button onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
+                        <button onClick={() => undo(canvas)}>Undo</button>
+                        <button onClick={() => redo(canvas)}>Redo</button>
+                        <button onClick={() => copy(canvas)}>Copy</button>
+                        <button onClick={() => paste(canvas)}>Paste</button>
+                        <button onClick={() => selectAll(canvas)}>Select All</button>
+                        <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
+                        <button onClick={() => sendToBack(canvas)}>Send To BK</button>
+                        <button onClick={() => bringToFront(canvas)}>Bring to F</button>
 
-                <div className='drawingToolsRow' >
-                    <b>Center: </b>
-                    <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
-                    <button onClick={() => putatCenter(canvas)}>All at Center</button>
-                    <button onClick={() => selectedatCenter(canvas)}>Center</button>
-                    <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
-                    <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
+
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <button onClick={makeFullScreen}>Make full Screen</button>
+                        <button onClick={removeBorderandCurve}>Remove Border and curve</button>
+                        {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Export: </b>
+                        <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
+                        Js file:<input type='text' size={3} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
+                        css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
+
+                        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML and Page</button>}
+
+                        <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
+                        <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
+                        <button onClick={() => exportSVG(canvas)}>SVG</button>
+                        <button onClick={() => exportJSON(canvas)}>JSON</button>
+                        <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
+                        <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
+                        {/* <br /> <button onClick={getvalues}>Get Values</button> */}
+                    </div>
                 </div>
-                <div className='drawingToolsRow' >
-                    <b>Tools: </b>
-                    <button onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
-                    <button onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
-                    <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                    <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-                    <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
-                    <button onClick={() => deleteAll(canvas)}><VscTrash />All</button>
-                    <button onClick={() => lock(canvas)}><VscLock /></button>
-                    <button onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
-                    <button onClick={() => undo(canvas)}>Undo</button>
-                    <button onClick={() => redo(canvas)}>Redo</button>
-                    <button onClick={() => copy(canvas)}>Copy</button>
-                    <button onClick={() => paste(canvas)}>Paste</button>
-                    <button onClick={() => selectAll(canvas)}>Select All</button>
-                    <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
-                    <button onClick={() => sendToBack(canvas)}>Send To BK</button>
-                    <button onClick={() => bringToFront(canvas)}>Bring to F</button>
-
-
-                </div>
-                <div className='drawingToolsRow' >
-                    <button onClick={makeFullScreen}>Make full Screen</button>
-                    <button onClick={removeBorderandCurve}>Remove Border and curve</button>
-                    <button onClick={attachToPath}>Attach Text to first path</button>
-                </div>
-                <div className='drawingToolsRow' >
-                    <b> Export: </b>
-                    <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
-                    Js file:<input type='text' size={3} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
-                    css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
-
-                    {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML and Page</button>}
-
-                    <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
-                    <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
-                    <button onClick={() => exportSVG(canvas)}>SVG</button>
-                    <button onClick={() => exportJSON(canvas)}>JSON</button>
-                    <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                    <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
-                    {/* <br /> <button onClick={getvalues}>Get Values</button> */}
-                </div>
-
-
-
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
                 <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >

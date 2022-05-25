@@ -710,7 +710,7 @@ const TimeLine1 = () => {
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
         Js file:<input type='text' size={10} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
         css file:<input size={10} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
-        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overright HTML</button>}
+        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
 
