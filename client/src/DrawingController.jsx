@@ -548,11 +548,11 @@ export const textLineThrough = canvas => {
     canvas.requestRenderAll();
 };
 export const textItalic = canvas => {
-    canvas.getActiveObjects().forEach(element => { element.set('fontStyle', (element.fontStyle==='italic')?'':'italic') });
+    canvas.getActiveObjects().forEach(element => { element.set('fontStyle', (element.fontStyle === 'italic') ? '' : 'italic') });
     canvas.requestRenderAll();
 };
 export const txtBold = canvas => {
-    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', (element.fontWeight==='normal')?'bold':'normal') });
+    canvas.getActiveObjects().forEach(element => { element.set('fontWeight', (element.fontWeight === 'normal') ? 'bold' : 'normal') });
     canvas.requestRenderAll();
 };
 
@@ -1893,7 +1893,7 @@ const DrawingController = () => {
     const startVerticalScroll = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().height + 200;
         endpoint(`play ${window.chNumber}-${templateLayers.verticalScroll} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "
         var aa = document.createElement('div');
@@ -1915,7 +1915,7 @@ const DrawingController = () => {
     const startHorizontalScroll = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var hh = (canvas.getActiveObject())?.getBoundingRect().width;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "
         var aa = document.createElement('div');
@@ -1946,7 +1946,7 @@ const DrawingController = () => {
     const startHorizontalScroll2 = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        var hh = (canvas.getActiveObject())?.getBoundingRect().width;
+        var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll2} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "
         var aa = document.createElement('div');
@@ -2138,7 +2138,7 @@ const DrawingController = () => {
             if (element.backgroundColor !== null) { (refBgColor.current.value = element.backgroundColor); }
             if (element.opacity !== null) { setOpacity(element.opacity); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
-            
+
 
 
             if (element.shadow !== null) {
@@ -2469,13 +2469,13 @@ const DrawingController = () => {
                         <button onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
                         <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                         <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-                      
+
                         <button onClick={() => txtBold(canvas)}>B</button>
                         <button onClick={() => textItalic(canvas)}>I</button>
                         <button onClick={() => textUnderline(canvas)}>U</button>
                         <button onClick={() => textLineThrough(canvas)}>S</button>
-                       
-                       
+
+
                         <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
                         <button onClick={() => deleteAll(canvas)}><VscTrash />All</button>
                         <button onClick={() => lock(canvas)}><VscLock /></button>
@@ -2490,7 +2490,7 @@ const DrawingController = () => {
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
 
 
-                    
+
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
                         {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
