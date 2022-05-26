@@ -230,7 +230,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Text("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+    const text = new fabric.Text("प्रशिक्षण 29 मई 2022 से है| Training is from 29 May 2022.", {
         id: 'ccg_' + uuidv4(),
         shadow: shadowOptions,
         left: 100,
@@ -252,7 +252,7 @@ export const createText = (canvas) => {
 };
 export const createIText = (canvas) => {
 
-    const text = new fabric.IText("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+    const text = new fabric.IText("प्रशिक्षण 29 मई 2022 से है| Training is from 29 May 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -277,7 +277,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("दूरदर्शन से विमलेश कुमार Vimlesh Kumar From Doordarshan", {
+    const text = new fabric.Textbox("प्रशिक्षण 29 मई 2022 से है| Training is from 29 May 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
