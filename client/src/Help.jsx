@@ -35,6 +35,7 @@ const Help = () => {
     <div style={{ display: 'flex' }}>
       <div style={{ width: 600 }}>
         <ol>
+          <li>Github Client will not connect to casparcg</li>
           <li>It works with all version of Server</li>
           <li> Put as below in casparcg.config file and drag screen consumer below Designer window
             &lt;screen&gt;
