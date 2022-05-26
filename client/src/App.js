@@ -121,7 +121,7 @@ const App = () => {
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
-  //  console.log(reftimelinetab.current) ;//reftimelinetab.current;
+    //  console.log(reftimelinetab.current) ;//reftimelinetab.current;
     return () => {
       // cleanup
     }
@@ -187,7 +187,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-  
+
     refreshMedia()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
@@ -241,13 +241,15 @@ const App = () => {
   return (<React.Fragment>
 
     <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
+     { ( window.location.origin!=='https://vimlesh1975.github.io') &&
       <div>
-        <button className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button> <button className='StopChannelButton' style={{}} onClick={() => {
+        <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
           endpoint(`clear ${chNumber}`);
           endpoint(`mixer ${chNumber} clear`);
 
         }}>Stop Channel</button>
-      </div>
+      </div>}
+       
       <div  >
         <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
           {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
@@ -343,7 +345,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs  selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
+        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
@@ -356,7 +358,7 @@ const App = () => {
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
-            <Tab  onClick={e=>console.log(e.target)}>TimeLine</Tab>
+            <Tab onClick={e => console.log(e.target)}>TimeLine</Tab>
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
