@@ -437,26 +437,26 @@ export const createPentagon = (canvas) => {
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-export const createHexagon = (canvas) => {
-    const rect = new fabric.Polygon([{ x: 207, y: 120 }, { x: 307, y: 60 }, { x: 407, y: 120 }, { x: 407, y: 220 }, { x: 307, y: 280 }, { x: 207, y: 220 }], {
-        id: 'id_' + uuidv4(),
-        shadow: shadowOptions,
-        top: -100,
-        left: 300,
-        rx: 50,
-        ry: 80,
-        opacity: 0.9,
-        fill: '#00ff00',
-        hasRotatingPoint: true,
-        objectCaching: false,
-        stroke: options.stroke,
-        strokeWidth: 3,
-        strokeUniform: true,
-    });
-    canvas.add(rect).setActiveObject(rect);
-    canvas.requestRenderAll();
-    rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
-};
+// export const createHexagon = (canvas) => {
+//     const rect = new fabric.Polygon([{ x: 207, y: 120 }, { x: 307, y: 60 }, { x: 407, y: 120 }, { x: 407, y: 220 }, { x: 307, y: 280 }, { x: 207, y: 220 }], {
+//         id: 'id_' + uuidv4(),
+//         shadow: shadowOptions,
+//         top: -100,
+//         left: 300,
+//         rx: 50,
+//         ry: 80,
+//         opacity: 0.9,
+//         fill: '#00ff00',
+//         hasRotatingPoint: true,
+//         objectCaching: false,
+//         stroke: options.stroke,
+//         strokeWidth: 3,
+//         strokeUniform: true,
+//     });
+//     canvas.add(rect).setActiveObject(rect);
+//     canvas.requestRenderAll();
+//     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
+// };
 
 export const createLine = (canvas) => {
     const rect = new fabric.Line([500, 450, 800, 450.00001], {
@@ -1019,6 +1019,8 @@ const DrawingController = () => {
     const [htmlpageHandle, sethtmlpageHandle] = useState();
     const [jsfilename, setjsfilename] = useState('main');
     const [cssfilename, setcssfilename] = useState('main');
+    const [scaleX, setscaleX] = useState(1);
+    const [scaleY, setscaleY] = useState(1);
 
 
     const pauseClock = (layerNumber) => {
@@ -2138,6 +2140,8 @@ const DrawingController = () => {
             if (element.backgroundColor !== null) { (refBgColor.current.value = element.backgroundColor); }
             if (element.opacity !== null) { setOpacity(element.opacity); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
+            if (element.scaleX !== null) { setscaleX(element.scaleX); }
+            if (element.scaleY !== null) { setscaleY(element.scaleY); }
 
 
 
@@ -2154,19 +2158,34 @@ const DrawingController = () => {
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ width: 495, height: 900, backgroundColor: '#f4f0e7', overflow: 'scroll' }}>
-                <div className='drawingToolsRow' >
-                    <b>Elements: </b>
-                    <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
-                    <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
-                    <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
-                    <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button>
-                    <button title="Line" onClick={() => createLine(canvas)}>Line</button>
-                    <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
-                    <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
-                    <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
-                    <button title="Pentagon" onClick={() => createPentagon(canvas)}>Penta</button>
-                    <button title="Hexagon" onClick={() => createHexagon(canvas)}>Hexa</button>
+
+                <div style={{ backgroundColor: '#eff4f6', border: '2px solid yellow' }}>
+
+                    <div className='drawingToolsRow' >
+                        <b>Elements: </b>
+                        <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
+                        <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
+                        <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
+                        <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button>
+                        <button title="Line" onClick={() => createLine(canvas)}>Line</button>
+                        <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
+                        <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
+                        <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
+                        <button title="Pentagon" onClick={() => createPentagon(canvas)}>Penta</button>
+                        <button title="Shapes" onClick={() => window.changeTab(8)}>Shapes</button>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Free Drawing: </b>
+                        Type:  <select onChange={e => onDrawingModeChange(e.target.value, canvas)} value={currentMode}>
+                            {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+
+                        End:  <select onChange={e => onstrokeLineCapChange(e)} value={currentstrokeLineCap}>
+                            {strokeLineCaps.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+                    </div>
                 </div>
+
                 <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid red' }}>
                     <div className='drawingToolsRow' >
                         <b> Solid Cap 2: </b>
@@ -2354,7 +2373,7 @@ const DrawingController = () => {
                         <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
                     </div>
                 </div>
-                <div style={{ backgroundColor: 'rgb(235, 232, 232)', border: '2px solid green' }}>
+                <div style={{ backgroundColor: '#eff4f6', border: '2px solid green' }}>
 
                     <div className='drawingToolsRow' >
                         <table border='1'>
@@ -2377,16 +2396,7 @@ const DrawingController = () => {
                         Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
                         {fontSize}
                     </div>
-                    <div className='drawingToolsRow' >
-                        <b> Free Drawing: </b>
-                        Type:  <select onChange={e => onDrawingModeChange(e.target.value, canvas)} value={currentMode}>
-                            {modes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                        </select>
 
-                        End:  <select onChange={e => onstrokeLineCapChange(e)} value={currentstrokeLineCap}>
-                            {strokeLineCaps.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                        </select>
-                    </div>
 
                     <div className='drawingToolsRow' >
                         <b> Colors: </b>
@@ -2394,8 +2404,9 @@ const DrawingController = () => {
                         BG <input ref={refBgColor} type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
                         Stroke<input ref={refStrokeColor} type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
-                        Stroke/Brush width:
-                        <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' /> {strokeWidth}
+                        Stroke/Brush width: {strokeWidth}
+                        <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
+                        <span> ScaleX : {scaleX.toFixed(2)} ScaleY  : {scaleY.toFixed(2)}</span>
                     </div>
                     <div style={{ display: 'flex' }}>
                         <div  >

@@ -51,6 +51,7 @@ const App = () => {
   const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
+  const [tabindex, settabindex] = useState(0)
 
 
   const startGraphics = (canvas, layerNumber) => {
@@ -195,6 +196,7 @@ const App = () => {
 
 
   const onTabChange = (index, prevIndex) => {
+    settabindex(index)
     switch (index) {
       case 0:
       case 3:
@@ -237,19 +239,24 @@ const App = () => {
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
   }
-
+  const changeTab = (i) => {
+    settabindex(i)
+    // console.log(i)
+  }
+  window.changeTab=changeTab;
   return (<React.Fragment>
 
-    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
-     { ( window.location.origin!=='https://vimlesh1975.github.io') &&
-      <div>
-        <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
-          endpoint(`clear ${chNumber}`);
-          endpoint(`mixer ${chNumber} clear`);
 
-        }}>Stop Channel</button>
-      </div>}
-       
+    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
+      {(window.location.origin !== 'https://vimlesh1975.github.io') &&
+        <div>
+          <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
+            endpoint(`clear ${chNumber}`);
+            endpoint(`mixer ${chNumber} clear`);
+
+          }}>Stop Channel</button>
+        </div>}
+
       <div  >
         <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
           {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
@@ -345,7 +352,7 @@ const App = () => {
         </div>
       </div>
       <div >
-        <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
+        <Tabs selectedIndex={tabindex} selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
           <TabList>
             <Tab>Graphics</Tab>
             <Tab>VDO</Tab>
