@@ -1156,12 +1156,12 @@ const DrawingController = () => {
         });
         canvas?.requestRenderAll();
     }
-    const removeBorderandCurve = () => {
-        canvas?.getActiveObjects().forEach(element => {
-            element.set({ strokeWidth: 0, rx: 0, ry: 0 })
-        });
-        canvas?.requestRenderAll();
-    }
+    // const removeBorderandCurve = () => {
+    //     canvas?.getActiveObjects().forEach(element => {
+    //         element.set({ strokeWidth: 0, rx: 0, ry: 0 })
+    //     });
+    //     canvas?.requestRenderAll();
+    // }
 
     // const attachToPath = () => {
     //     const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
@@ -2454,7 +2454,7 @@ const DrawingController = () => {
                         </div>
                     </div>
                 </div>
-                <div style={{ backgroundColor: 'rgb(235, 232, 232)', border: '2px solid blue' }}>
+                <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid blue' }}>
                     <div className='drawingToolsRow' >
                         <b>Center: </b>
                         <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
@@ -2490,10 +2490,9 @@ const DrawingController = () => {
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
 
 
-                    </div>
-                    <div className='drawingToolsRow' >
+                    
                         <button onClick={makeFullScreen}>Make full Screen</button>
-                        <button onClick={removeBorderandCurve}>Remove Border and curve</button>
+                        {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
                         {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
                     </div>
                     <div className='drawingToolsRow' >
