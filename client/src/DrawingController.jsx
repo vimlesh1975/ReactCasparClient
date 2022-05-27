@@ -1021,7 +1021,8 @@ const DrawingController = () => {
     const [cssfilename, setcssfilename] = useState('main');
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
-
+    const [angle, setangle] = useState(0);
+    
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -2142,6 +2143,7 @@ const DrawingController = () => {
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
             if (element.scaleX !== null) { setscaleX(element.scaleX); }
             if (element.scaleY !== null) { setscaleY(element.scaleY); }
+            if (element.angle !== null) { setangle(element.angle); }
 
 
 
@@ -2406,7 +2408,7 @@ const DrawingController = () => {
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                         Stroke/Brush width: {strokeWidth}
                         <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
-                        <span> ScaleX : {scaleX.toFixed(2)} ScaleY  : {scaleY.toFixed(2)}</span>
+                        <span> ScaleX : {scaleX.toFixed(1)} ScaleY  : {scaleY.toFixed(1)} Angle  : {angle.toFixed(1)}</span>
                     </div>
                     <div style={{ display: 'flex' }}>
                         <div  >
