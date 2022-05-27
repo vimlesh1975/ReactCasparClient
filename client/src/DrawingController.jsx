@@ -1297,20 +1297,20 @@ const DrawingController = () => {
     // }
 
 
-    const onBlurSizeChange = e => {
-        shadowOptions.blur = e.target.value;
-        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = e.target.value } })
+    const onBlurSizeChange = value => {
+        shadowOptions.blur =value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = value } })
         canvas.requestRenderAll();
     }
-    const onoffsetXChange = e => {
-        shadowOptions.offsetX = e.target.value;
-        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetX = e.target.value } })
+    const onoffsetXChange = value => {
+        shadowOptions.offsetX = value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetX = value } })
         canvas.requestRenderAll();
     }
 
-    const onoffsetYChange = e => {
-        shadowOptions.offsetY = e.target.value;
-        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetY = e.target.value } })
+    const onoffsetYChange = value => {
+        shadowOptions.offsetY = value;
+        canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.offsetY = value } })
         canvas.requestRenderAll();
     }
     const affectStroke = e => {
@@ -2416,9 +2416,9 @@ const DrawingController = () => {
                                 <tbody>
                                     <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
                                     <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
-                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRange' onChange={e => onBlurSizeChange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> </td></tr>
-                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRange' onChange={e => onoffsetXChange(e)} type="range" min='-400' max='400' step='1' defaultValue='0' /></td></tr>
-                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRange' onChange={e => onoffsetYChange(e)} type="range" min='-200' max='200' step='1' defaultValue='0' /></td></tr>
+                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRangeshadow' onChange={e => onBlurSizeChange(e.target.value)} type="range" min='0' max='100' step='1' defaultValue='30' /><button onClick={()=>onBlurSizeChange(0)}>R</button></td></tr>
+                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRangeshadow' onChange={e => onoffsetXChange(e.target.value)} type="range" min='-400' max='400' step='1' defaultValue='0' /><button onClick={()=>onoffsetXChange(0)}>R</button></td></tr>
+                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRangeshadow' onChange={e => onoffsetYChange(e.target.value)} type="range" min='-200' max='200' step='1' defaultValue='0' /><button onClick={()=>onoffsetYChange(0)}>R</button></td></tr>
                                     <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
 
                                 </tbody>
@@ -2483,10 +2483,10 @@ const DrawingController = () => {
                         <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                         <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
 
-                        <button onClick={() => txtBold(canvas)}>B</button>
-                        <button onClick={() => textItalic(canvas)}>I</button>
-                        <button onClick={() => textUnderline(canvas)}>U</button>
-                        <button onClick={() => textLineThrough(canvas)}>S</button>
+                        <button style={{fontWeight:'bold'}} onClick={() => txtBold(canvas)}>B</button>
+                        <button style={{fontStyle:'italic'}} onClick={() => textItalic(canvas)}>I</button>
+                        <button style={{textDecoration:'underline'}} onClick={() => textUnderline(canvas)}>U</button>
+                        <button style={{textDecoration:'line-through'}} onClick={() => textLineThrough(canvas)}>S</button>
 
 
                         <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>

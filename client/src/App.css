@@ -224,6 +224,10 @@ display: inline;
   width: 100px;
   height: 3px;
 }
+.inputRangeshadow{
+  width: 70px;
+  height: 3px;
+}
 .inputRangeStroke{
   width: 50px;
   height: 3px;

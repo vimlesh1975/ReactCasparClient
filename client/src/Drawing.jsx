@@ -3,7 +3,7 @@ import ContextMenu from './ContextMenu'
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 
-export const mousedownandmousemoveevent=(canvas)=>{
+export const mousedownandmousemoveevent = (canvas) => {
     canvas.on('mouse:down', function (opt) {
         var evt = opt.e;
         if (evt.altKey === true) {
@@ -37,11 +37,17 @@ const Drawing = ({ canvasOutput }) => {
         canvas.on('mouse:move', null);
         canvas.on('mouse:up', null);
     }
-    function xyz(canvas){
+    function xyz(canvas) {
         canvas.on({
             'selection:updated': window.getvalues,
-            'selection:created': window.getvalues
-          });
+            'selection:created': window.getvalues,
+            'object:modified': window.getvalues,
+            // 'object:moving': window.getvalues,
+            'object:scaling': window.getvalues,
+            'object:rotating': window.getvalues,
+            // 'object:skewing': window.getvalues,
+            'object:resizing': window.getvalues
+        });
     }
 
     function setZoomAndPan(canvas) {
@@ -58,7 +64,7 @@ const Drawing = ({ canvasOutput }) => {
         })
 
         mousedownandmousemoveevent(canvas);
-        
+
         canvas.on('mouse:up', function (opt) {
             // on mouse up we want to recalculate new interaction
             // for all objects, so we call setViewportTransform
