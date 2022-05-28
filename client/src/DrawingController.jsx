@@ -2478,21 +2478,21 @@ const DrawingController = () => {
                     </div>
                     <div className='drawingToolsRow' >
                         <b>Tools: </b>
-                        <button onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
-                        <button onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
-                        <button onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                        <button onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                        <button title='Align Left'  onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
+                        <button  title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
+                        <button title='Align Top'  onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                        <button title='Align Bottom'  onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
 
-                        <button style={{fontWeight:'bold'}} onClick={() => txtBold(canvas)}>B</button>
-                        <button style={{fontStyle:'italic'}} onClick={() => textItalic(canvas)}>I</button>
-                        <button style={{textDecoration:'underline'}} onClick={() => textUnderline(canvas)}>U</button>
-                        <button style={{textDecoration:'line-through'}} onClick={() => textLineThrough(canvas)}>S</button>
+                        <button title='Bold' style={{fontWeight:'bold'}} onClick={() => txtBold(canvas)}>B</button>
+                        <button title='Ittalic'  style={{fontStyle:'italic'}} onClick={() => textItalic(canvas)}>I</button>
+                        <button  title='Underline' style={{textDecoration:'underline'}} onClick={() => textUnderline(canvas)}>U</button>
+                        <button  title='Linethrough' style={{textDecoration:'line-through'}} onClick={() => textLineThrough(canvas)}>S</button>
 
 
-                        <button onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
-                        <button onClick={() => deleteAll(canvas)}><VscTrash />All</button>
-                        <button onClick={() => lock(canvas)}><VscLock /></button>
-                        <button onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
+                        <button title='Delete Seleted'  onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
+                        <button title='Delete All'  onClick={() => deleteAll(canvas)}><VscTrash />All</button>
+                        <button  title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
+                        <button title='Unlock All'  onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
                         <button onClick={() => undo(canvas)}>Undo</button>
                         <button onClick={() => redo(canvas)}>Redo</button>
                         <button onClick={() => copy(canvas)}>Copy</button>
