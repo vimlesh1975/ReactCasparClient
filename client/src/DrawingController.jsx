@@ -33,10 +33,7 @@ var Direction = {
 };
 
 
-export const resetZommandPan = (canvas) => {
-    canvas.setZoom(1);
-    canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
-}
+
 
 fabric.util.addListener(document.body, 'keydown', function (options) {
     if (options.target.nodeName === 'BODY') {
@@ -78,18 +75,16 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
             // window.editor.canvas?.undo();
             window.editor.canvas && undo(window.editor.canvas)
         }
+        if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+            options.preventDefault();
+            window.editor.canvas && redo(window.editor.canvas)
+        }
         if (options.ctrlKey && options.key.toLowerCase() === 'a') {
             options.preventDefault();
             selectAll(window.editor.canvas);
         }
-        if (options.ctrlKey && options.key.toLowerCase() === 'r') {
-            options.preventDefault();
-            resetZommandPan(window.editor.canvas);
-        }
-        //----------
-
     }
-});
+})
 
 
 
@@ -1297,7 +1292,12 @@ const DrawingController = () => {
     //     }
     // }
 
-
+     const resetZommandPan =() => {
+        canvas.setZoom(1);
+        dispatch({ type: 'CHANGE_CANVAS_ZOOM', payload: 1 })
+    
+        canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
+    }
     const onBlurSizeChange = value => {
         shadowOptions.blur = value;
         canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = value } })

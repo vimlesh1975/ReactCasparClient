@@ -40,6 +40,8 @@ const App = () => {
   // const reftimelinetab=useRef();
   // const [initialpage, setinitialpage]=useState(5)
   const canvas = useSelector(state => state.canvasReducer.canvas);
+  const zoom = useSelector(state => state.canvaszoomReducer.zoom);
+
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
 
@@ -257,8 +259,9 @@ const App = () => {
           }}>Stop Channel</button>
         </div>}
 
-      <div  >
-        <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
+      <div >
+      
+      <b>Zoom:</b> {zoom.toFixed(1)}   <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
           {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
         </select>
         <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>

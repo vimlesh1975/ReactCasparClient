@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
+// import { configureStore} from  '@reduxjs/toolkit'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
@@ -99,8 +100,19 @@ const canvasReducer = (state = initialCanvas, action) => {
     }
 }
 
-const initialcurrentscreenSize = { currentscreenSize: 1024 };
+const initialCanvaszoom = { zoom: 1 };
+const canvaszoomReducer = (state = initialCanvaszoom, action) => {
+    switch (action.type) {
+        case 'CHANGE_CANVAS_ZOOM':
+            return {
+                ...state,
+                zoom: action.payload
+            }
+        default: return state
+    }
+}
 
+const initialcurrentscreenSize = { currentscreenSize: 1024 };
 const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
     switch (action.type) {
         case 'CHANGE_CURRENTSCREENSIZE':
@@ -132,6 +144,7 @@ const rootReducer = combineReducers({
     imageNameReducer,
     onlineImageUrleReducer,
     canvasReducer,
+    canvaszoomReducer,
     playlistReducer,
     currentFileReducer,
     currentscreenSizeReducer,

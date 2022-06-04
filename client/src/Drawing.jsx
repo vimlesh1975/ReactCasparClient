@@ -57,7 +57,9 @@ const Drawing = ({ canvasOutput }) => {
             zoom *= 0.999 ** delta;
             if (zoom > 20) zoom = 20;
             if (zoom < 0.01) zoom = 0.01;
-            // canvas.setZoom(zoom);
+
+            dispatch({ type: 'CHANGE_CANVAS_ZOOM', payload: zoom })
+
             canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
             opt.e.preventDefault();
             opt.e.stopPropagation();
@@ -84,6 +86,7 @@ const Drawing = ({ canvasOutput }) => {
         return () => {
             cancelZoomAndPan(window.editor.canvas)
         }
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
