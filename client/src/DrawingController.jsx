@@ -230,7 +230,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Text("प्रशिक्षण 30 मई 2022 से है| Training is from 30 May 2022.", {
+    const text = new fabric.Text("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
         id: 'ccg_' + uuidv4(),
         shadow: shadowOptions,
         left: 100,
@@ -252,7 +252,7 @@ export const createText = (canvas) => {
 };
 export const createIText = (canvas) => {
 
-    const text = new fabric.IText("प्रशिक्षण 30 मई 2022 से है| Training is from 30 May 2022.", {
+    const text = new fabric.IText("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -277,7 +277,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("प्रशिक्षण 30 मई 2022 से है| Training is from 30 May 2022.", {
+    const text = new fabric.Textbox("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -586,6 +586,7 @@ export const gradientFill = canvas => {
     canvas.getActiveObjects().forEach(element => { element.set('fill', gradient) });
     canvas.requestRenderAll();
 };
+
 export const gradientStroke = canvas => {
     canvas.getActiveObjects().forEach(element => { element.set('stroke', gradient) });
     canvas.requestRenderAll();
@@ -1022,7 +1023,7 @@ const DrawingController = () => {
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
     const [angle, setangle] = useState(0);
-    
+
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -1298,7 +1299,7 @@ const DrawingController = () => {
 
 
     const onBlurSizeChange = value => {
-        shadowOptions.blur =value;
+        shadowOptions.blur = value;
         canvas.getActiveObjects().forEach(item => { if (item.shadow) { item.shadow.blur = value } })
         canvas.requestRenderAll();
     }
@@ -2416,9 +2417,9 @@ const DrawingController = () => {
                                 <tbody>
                                     <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
                                     <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
-                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRangeshadow' onChange={e => onBlurSizeChange(e.target.value)} type="range" min='0' max='100' step='1' defaultValue='30' /><button onClick={()=>onBlurSizeChange(0)}>R</button></td></tr>
-                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRangeshadow' onChange={e => onoffsetXChange(e.target.value)} type="range" min='-400' max='400' step='1' defaultValue='0' /><button onClick={()=>onoffsetXChange(0)}>R</button></td></tr>
-                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRangeshadow' onChange={e => onoffsetYChange(e.target.value)} type="range" min='-200' max='200' step='1' defaultValue='0' /><button onClick={()=>onoffsetYChange(0)}>R</button></td></tr>
+                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRangeshadow' onChange={e => onBlurSizeChange(e.target.value)} type="range" min='0' max='100' step='1' defaultValue='30' /><button onClick={() => onBlurSizeChange(0)}>R</button></td></tr>
+                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRangeshadow' onChange={e => onoffsetXChange(e.target.value)} type="range" min='-400' max='400' step='1' defaultValue='0' /><button onClick={() => onoffsetXChange(0)}>R</button></td></tr>
+                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRangeshadow' onChange={e => onoffsetYChange(e.target.value)} type="range" min='-200' max='200' step='1' defaultValue='0' /><button onClick={() => onoffsetYChange(0)}>R</button></td></tr>
                                     <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
 
                                 </tbody>
@@ -2478,21 +2479,21 @@ const DrawingController = () => {
                     </div>
                     <div className='drawingToolsRow' >
                         <b>Tools: </b>
-                        <button title='Align Left'  onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
-                        <button  title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
-                        <button title='Align Top'  onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                        <button title='Align Bottom'  onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                        <button title='Align Left' onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
+                        <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
+                        <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                        <button title='Align Bottom' onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
 
-                        <button title='Bold' style={{fontWeight:'bold'}} onClick={() => txtBold(canvas)}>B</button>
-                        <button title='Ittalic'  style={{fontStyle:'italic'}} onClick={() => textItalic(canvas)}>I</button>
-                        <button  title='Underline' style={{textDecoration:'underline'}} onClick={() => textUnderline(canvas)}>U</button>
-                        <button  title='Linethrough' style={{textDecoration:'line-through'}} onClick={() => textLineThrough(canvas)}>S</button>
+                        <button title='Bold' style={{ fontWeight: 'bold' }} onClick={() => txtBold(canvas)}>B</button>
+                        <button title='Ittalic' style={{ fontStyle: 'italic' }} onClick={() => textItalic(canvas)}>I</button>
+                        <button title='Underline' style={{ textDecoration: 'underline' }} onClick={() => textUnderline(canvas)}>U</button>
+                        <button title='Linethrough' style={{ textDecoration: 'line-through' }} onClick={() => textLineThrough(canvas)}>S</button>
 
 
-                        <button title='Delete Seleted'  onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
-                        <button title='Delete All'  onClick={() => deleteAll(canvas)}><VscTrash />All</button>
-                        <button  title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
-                        <button title='Unlock All'  onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
+                        <button title='Delete Seleted' onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
+                        <button title='Delete All' onClick={() => deleteAll(canvas)}><VscTrash />All</button>
+                        <button title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
+                        <button title='Unlock All' onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
                         <button onClick={() => undo(canvas)}>Undo</button>
                         <button onClick={() => redo(canvas)}>Redo</button>
                         <button onClick={() => copy(canvas)}>Copy</button>

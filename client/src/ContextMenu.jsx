@@ -1,10 +1,32 @@
 import useContextMenu from './useContextMenu'
-import {  gradientStroke, gradientFill, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
+import {gradient,  removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, bringToFront, sendToBack, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from './PathModifier';
+import { useState } from 'react';
 const ContextMenu = ({ canvas }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
+  const [currentGradient, setcurrentGradient] = useState(gradient)
+
+  const getgradientFill = canvas => {
+    if (canvas.getActiveObjects()[0]) {
+      setcurrentGradient(canvas.getActiveObjects()[0].fill)
+    }
+  }
+  const getgradientStroke = canvas => {
+    if (canvas.getActiveObjects()[0]) {
+      setcurrentGradient(canvas.getActiveObjects()[0].stroke)
+    }
+  }
+  const gradientFill = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('fill', currentGradient) });
+    canvas.requestRenderAll();
+  }
+  const gradientStroke = canvas => {
+    canvas.getActiveObjects().forEach(element => { element.set('stroke', currentGradient) });
+    canvas.requestRenderAll();
+  }
+
   window.showMenu = showMenu;
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
@@ -42,7 +64,10 @@ const ContextMenu = ({ canvas }) => {
           <li onClick={() => removeStroke(canvas)}> Stroke</li>
           <li onClick={() => removeShadow(canvas)}> shadow</li>
         </ul></li>
-
+        <li>Get Gradient<ul >
+          <li onClick={() => getgradientFill(canvas)}> Fill</li>
+          <li onClick={() => getgradientStroke(canvas)}> Stroke</li>
+        </ul></li>
         <li>Set Gradient<ul >
           <li onClick={() => gradientFill(canvas)}> Fill</li>
           <li onClick={() => gradientStroke(canvas)}> Stroke</li>

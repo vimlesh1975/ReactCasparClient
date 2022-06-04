@@ -4,13 +4,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
 
 const ColorGradient = () => {
-    const [color1, setColor1] = useState('black')
-    const [color2, setColor2] = useState('red')
-    const [color3, setColor3] = useState('black')
+    const [color1, setColor1] = useState('#000000')
+    const [color2, setColor2] = useState('#ff0000')
+    const [color3, setColor3] = useState('#000000')
     const [offset, setOffset] = useState(0.5);
+    const [direction, setDirection] = useState('to bottom')
+
+
     const [directionAngle, setDirectionAngle] = useState(179);
 
-    const [direction, setDirection] = useState('to bottom')
     const directions = ['to right', 'to bottom', 'to bottom right', 'to right top'];
     const [useAngle, setUseAngle] = useState(false);
     const [coords1, setCoords1] = useState({ x1: 0, y1: 0, x2: 0, y2: 1 })
@@ -96,11 +98,40 @@ const ColorGradient = () => {
 
     }
 
+    const getGradient = () => {
+        if (canvas.getActiveObjects()[0]) {
+            console.log(canvas.getActiveObjects()[0].fill)
+
+            if (canvas.getActiveObjects()[0].fill.colorStops) {
+                setdirection1(canvas.getActiveObjects()[0].fill.coords)
+                setOffset(canvas.getActiveObjects()[0].fill.colorStops[1].offset)
+                setColor1(canvas.getActiveObjects()[0].fill.colorStops[0].color)
+                setColor2(canvas.getActiveObjects()[0].fill.colorStops[1].color)
+                setColor3(canvas.getActiveObjects()[0].fill.colorStops[2].color)
+            }
+            else{
+                setColor1(canvas.getActiveObjects()[0].fill)
+                setColor2(canvas.getActiveObjects()[0].fill)
+                setColor3(canvas.getActiveObjects()[0].fill)
+            }
+        }
+    }
+
+    const setdirection1=cords=>{
+        if (JSON.stringify(cords)===JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 0 })){setDirection('to right')}
+        if (JSON.stringify(cords)===JSON.stringify({ x1: 0, y1: 0, x2: 0, y2: 1 })){setDirection('to bottom')}
+        if (JSON.stringify(cords)===JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 1 })){setDirection('to bottom right')}
+        if (JSON.stringify(cords)===JSON.stringify({ x1: 0, y1: 1, x2: 1, y2: 0 })){setDirection('to right top')}
+    }
+
+
     return (<>
+            <button onClick={getGradient}>Get Gradient</button>
+
         <div style={{ display: 'flex' }}>
             <div>
                 <div style={{ margin: 5, border: '2px solid blue', width: 295, height: 100, backgroundImage: `linear-gradient(${direction}, ${color1} 0%, ${color2} ${offset * 100}%, ${color3} 100%)` }} />
-                <input style={{ width: 295 }} onChange={e => onOffsetChange(e)} type="range" min='0' max='1' step='.01' defaultValue='0.5' />
+                <input style={{ width: 295 }} onChange={e => onOffsetChange(e)} type="range" min='0' max='1' step='.01' value={offset} />
             </div>
 
             <div>
@@ -109,9 +140,9 @@ const ColorGradient = () => {
             </div>
         </div>
         <div>
-            Color 1 <input type="color" defaultValue='#000000' onChange={e => changeColor1(e)} />
-            Color 2 <input type="color" defaultValue='#ff0000' onChange={e => changeColor2(e)} />
-            Color 3 <input type="color" defaultValue='#000000' onChange={e => changeColor3(e)} />
+            Color 1 <input type="color" value={color1}   onChange={e => changeColor1(e)} />
+            Color 2 <input type="color" value={color2}  onChange={e => changeColor2(e)} />
+            Color 3 <input type="color" value={color3}   onChange={e => changeColor3(e)} />
         </div>
 
 

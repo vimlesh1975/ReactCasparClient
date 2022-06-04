@@ -19,10 +19,10 @@ const useContextMenu = () => {
 
       if (e.clientY > 145) {
 
-        setYPos(`${30}px`);
+        setYPos(`${10}px`);
       }
       else {
-        setYPos(`${e.clientY - 50}px`);
+        setYPos(`${e.clientY - 60}px`);
       }
       setShowMenu(true)
 
