@@ -34,11 +34,9 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '040622_1'
+const buildDate = '150622_1'
 
 const App = () => {
-  // const reftimelinetab=useRef();
-  // const [initialpage, setinitialpage]=useState(5)
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const zoom = useSelector(state => state.canvaszoomReducer.zoom);
 

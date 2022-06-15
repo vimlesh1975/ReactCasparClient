@@ -124,8 +124,32 @@ const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
     }
 }
 
-const initialPath1={path1:[]};
 
+const initialjsfilename = { jsfilename: 'main' };
+const jsfilenameReducer = (state = initialjsfilename, action) => {
+    switch (action.type) {
+        case 'CHANGE_JSFILENAME':
+            return {
+                ...state,
+                jsfilename: action.payload
+            }
+        default: return state
+    }
+}
+
+const initialcssfilename = { cssfilename: 'main' };
+const cssfilenameReducer = (state = initialcssfilename, action) => {
+    switch (action.type) {
+        case 'CHANGE_CSSFILENAME':
+            return {
+                ...state,
+                cssfilename: action.payload
+            }
+        default: return state
+    }
+}
+
+const initialPath1={path1:[]};
 const path1Reducer = (state = initialPath1, action) => {
     switch (action.type) {
         case 'CHANGE_PATH1':
@@ -148,7 +172,9 @@ const rootReducer = combineReducers({
     playlistReducer,
     currentFileReducer,
     currentscreenSizeReducer,
-    path1Reducer
+    path1Reducer,
+    jsfilenameReducer,
+    cssfilenameReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

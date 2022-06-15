@@ -27,8 +27,8 @@ const TimeLine1 = () => {
   const [htmlfileHandle, sethtmlfileHandle] = useState();
   const [htmlpageHandle, sethtmlpageHandle] = useState();
 
-  const [jsfilename, setjsfilename] = useState('main');
-  const [cssfilename, setcssfilename] = useState('main');
+  const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
+  const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
@@ -631,23 +631,23 @@ const TimeLine1 = () => {
 
   async function exportPage(canvas, aa) {
     const options1 = {
-        suggestedName: (aa.name).split(".")[0],
-        types: [{
-            description: 'Text file',
-            accept: { 'text/plain': ['.txt'] },
-        }],
+      suggestedName: (aa.name).split(".")[0],
+      types: [{
+        description: 'Text file',
+        accept: { 'text/plain': ['.txt'] },
+      }],
     };
 
 
     const aa1 = await window.showSaveFilePicker(options1);
     sethtmlpageHandle(aa1)
     const writable1 = await aa1.createWritable();
-    const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions }  }) + '\r\n';
+    const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
     const file1 = new Blob([bb], { type: 'text/plain' });
 
     await writable1.write(file1);
     await writable1.close();
-}
+  }
 
   async function OverrightHtml(canvas) {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -679,12 +679,12 @@ const TimeLine1 = () => {
 
     if (htmlpageHandle) {
       const writable1 = await htmlpageHandle.createWritable();
-      const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions }  }) + '\r\n';
+      const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
 
       const file1 = new Blob([bb], { type: 'text/plain' });
       await writable1.write(file1);
       await writable1.close();
-  }
+    }
 
 
 
@@ -708,8 +708,9 @@ const TimeLine1 = () => {
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={pasteAnimation}>Paste</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
-        Js file:<input type='text' size={10} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
-        css file:<input size={10} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
+        Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+        css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>

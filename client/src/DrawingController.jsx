@@ -969,6 +969,9 @@ const DrawingController = () => {
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
+    const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
+    const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
+
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
     const [horizontalSpeed2, setHorizontalSpeed2] = useState(0.3)
@@ -1013,8 +1016,6 @@ const DrawingController = () => {
     const dispatch = useDispatch();
     const [htmlfileHandle, sethtmlfileHandle] = useState();
     const [htmlpageHandle, sethtmlpageHandle] = useState();
-    const [jsfilename, setjsfilename] = useState('main');
-    const [cssfilename, setcssfilename] = useState('main');
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
     const [angle, setangle] = useState(0);
@@ -2512,9 +2513,8 @@ const DrawingController = () => {
                     <div className='drawingToolsRow' >
                         <b> Export: </b>
                         <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
-                        Js file:<input type='text' size={3} value={jsfilename} onChange={e => setjsfilename(e.target.value)} />
-                        css file:<input size={3} type='text' value={cssfilename} onChange={e => setcssfilename(e.target.value)} />
-
+                        Js file:<input type='text' size={3} value={jsfilename} onChange={e =>dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+                        css file:<input size={3} type='text' value={cssfilename} onChange={e =>dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
                         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML and Page</button>}
 
                         <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
