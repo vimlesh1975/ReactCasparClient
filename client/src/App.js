@@ -34,11 +34,14 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '150622_1'
+const buildDate = '160622_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const zoom = useSelector(state => state.canvaszoomReducer.zoom);
+  
+  const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
+  const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
@@ -235,7 +238,7 @@ const App = () => {
 
   const updatePage = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
-      return (i === currentPage) ? { 'pageName': val.pageName, 'pageValue': canvas.toJSON(['id', 'selectable']) } : val;
+      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), jsfilename:jsfilename, cssfilename:cssfilename  } : val;
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
   }

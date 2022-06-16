@@ -1,11 +1,12 @@
-import { createStore, applyMiddleware } from 'redux'
+import {  applyMiddleware } from 'redux'
+import { legacy_createStore as createStore} from 'redux'
 // import { configureStore} from  '@reduxjs/toolkit'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
-const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation:'' }] };
+const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation:'', jsfilename:'main', cssfilename:'main' }] };
 const canvasListReducer = (state = initialStateCanvasList, action) => {
     switch (action.type) {
         case 'CHANGE_CANVAS_LIST':
