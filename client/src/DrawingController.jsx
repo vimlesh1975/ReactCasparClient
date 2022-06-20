@@ -23,6 +23,19 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 var xxx;
 var html;
 
+fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+    return function () {
+        var svg = _toSVG.call(this);
+
+        if (this.textAlign) {
+            //  svg.splice(1,0,this.textAlign+'"/>');
+            svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
+        }
+        return svg;
+    }
+})(fabric.Textbox.prototype._toSVG)
+
+
 fabric.Object.prototype.noScaleCache = false;
 const STEP = 5;
 var Direction = {
@@ -289,6 +302,9 @@ export const createTextBox = (canvas) => {
         padding: 5,
 
     });
+
+
+
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
     text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
@@ -1293,10 +1309,10 @@ const DrawingController = () => {
     //     }
     // }
 
-     const resetZommandPan =() => {
+    const resetZommandPan = () => {
         canvas.setZoom(1);
         dispatch({ type: 'CHANGE_CANVAS_ZOOM', payload: 1 })
-    
+
         canvas.setViewportTransform([canvas.getZoom(), 0, 0, canvas.getZoom(), 0, 0])
     }
     const onBlurSizeChange = value => {
@@ -1500,6 +1516,20 @@ const DrawingController = () => {
             var idtext = idTemplate.getElementsByTagName('text')[0];
             var idimage = idTemplate.getElementsByTagName('image')[0];
             if (idtext != undefined) {
+                var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                if (textalign1 == 'center') {
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace="normal";
+                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                }
+                if (textalign1 == 'right') {
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace='normal';
+                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                }
             idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
             idTemplate.style.display = "block";
             }
@@ -1528,6 +1558,20 @@ const DrawingController = () => {
             document.body.innerHTML='' ;
             }
             function updatestring(str1, str2) {
+                var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+                if (textalign1 == 'center') {
+                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace="normal";
+                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                }
+                if (textalign1 == 'right') {
+                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace='normal';
+                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                }
             document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
             document.getElementById(str1).style.display = "block";
             }
@@ -2513,8 +2557,8 @@ const DrawingController = () => {
                     <div className='drawingToolsRow' >
                         <b> Export: </b>
                         <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
-                        Js file:<input type='text' size={3} value={jsfilename} onChange={e =>dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-                        css file:<input size={3} type='text' value={cssfilename} onChange={e =>dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+                        Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+                        css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
                         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML and Page</button>}
 
                         <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>

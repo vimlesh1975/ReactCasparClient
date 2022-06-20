@@ -539,6 +539,20 @@ const TimeLine1 = () => {
         var idtext = idTemplate.getElementsByTagName('text')[0];
         var idimage = idTemplate.getElementsByTagName('image')[0];
         if (idtext != undefined) {
+          var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+          var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+          if (textalign1 == 'center') {
+              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+              idTemplate.getElementsByTagName('text')[0].style.whiteSpace="normal";
+              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+          }
+          if (textalign1 == 'right') {
+              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+              idTemplate.getElementsByTagName('text')[0].style.whiteSpace='normal';
+              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+          }
           idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
           idTemplate.style.display = "block";
         }
@@ -567,6 +581,20 @@ const TimeLine1 = () => {
     outAnimation() ;
     }
     function updatestring(str1, str2) {
+      var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+      var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+      if (textalign1 == 'center') {
+          document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+          document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace="normal";
+          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+      }
+      if (textalign1 == 'right') {
+          document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+          document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace='normal';
+          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+      }
       document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
       document.getElementById(str1).style.display = "block";
     }
