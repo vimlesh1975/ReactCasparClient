@@ -532,30 +532,49 @@ const TimeLine1 = () => {
     }
 
     // Main function to insert data
+    var updatecount = 0;
+    var originalFontSize;
     function dataInsert(dataCaspar) {
+      updatecount += 1;
     for (var idCaspar in dataCaspar) {
       var idTemplate = document.getElementById(idCaspar);
       if (idTemplate != undefined) {
         var idtext = idTemplate.getElementsByTagName('text')[0];
         var idimage = idTemplate.getElementsByTagName('image')[0];
         if (idtext != undefined) {
-          var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-          var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
-          if (textalign1 == 'center') {
-              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-              idTemplate.getElementsByTagName('text')[0].style.whiteSpace="normal";
-              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
-          }
-          if (textalign1 == 'right') {
-              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-              idTemplate.getElementsByTagName('text')[0].style.whiteSpace='normal';
-              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
-          }
           idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
           idTemplate.style.display = "block";
-        }
+          if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+              updatecount += 1;
+              var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+              var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+              if (textalign1 == 'center') {
+                  idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                  idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                  idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                  idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+              }
+              if (textalign1 == 'right') {
+                  idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                  idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                  idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                  idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+              }
+
+              if (updatecount < 2) {
+                  originalFontSize = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+              }
+              else {
+                  idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+              }
+              do {
+                  var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                  idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                  var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+              } while (width2 > width1);
+          }
+
+      }
         else if (idimage != undefined) {
           idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
           idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
@@ -581,23 +600,38 @@ const TimeLine1 = () => {
     outAnimation() ;
     }
     function updatestring(str1, str2) {
-      var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-      var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
-      if (textalign1 == 'center') {
-          document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-          document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace="normal";
-          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
-      }
-      if (textalign1 == 'right') {
-          document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-          document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace='normal';
-          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-          document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
-      }
       document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
       document.getElementById(str1).style.display = "block";
-    }
+      if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
+          updatecount += 1;
+          var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+          var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+          if (textalign1 == 'center') {
+              document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+              document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
+              document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+              document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+          }
+          if (textalign1 == 'right') {
+              document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+              document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+              document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+              document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+          }
+
+          if (updatecount < 2) {
+              originalFontSize = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
+          }
+          else {
+              document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+          }
+          do {
+              var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
+              document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+              var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+          } while (width2 > width1);
+      }
+  }
     function updateimage(str1, str2) {
       document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
       document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');

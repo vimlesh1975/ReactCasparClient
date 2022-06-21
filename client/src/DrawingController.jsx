@@ -23,17 +23,17 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 var xxx;
 var html;
 
-fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-    return function () {
-        var svg = _toSVG.call(this);
+// fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+//     return function () {
+//         var svg = _toSVG.call(this);
 
-        if (this.textAlign) {
-            //  svg.splice(1,0,this.textAlign+'"/>');
-            svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
-        }
-        return svg;
-    }
-})(fabric.Textbox.prototype._toSVG)
+//         if (this.textAlign) {
+//             //  svg.splice(1,0,this.textAlign+'"/>');
+//             svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
+//         }
+//         return svg;
+//     }
+// })(fabric.Textbox.prototype._toSVG)
 
 
 fabric.Object.prototype.noScaleCache = false;
@@ -285,7 +285,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
+    const text = new fabric.Textbox("अगला प्रशिक्षण Next Training", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -307,7 +307,7 @@ export const createTextBox = (canvas) => {
 
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 443, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 455, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
@@ -1256,59 +1256,7 @@ const DrawingController = () => {
         })
 
     };
-    // async function importHtml(canvas) {
-    //     const [aa] = await window.showOpenFilePicker();
-    //     sethtmlfileHandle(aa);
-    //     console.log(aa)
-    //     if (aa) {
-    //         const file = await aa.getFile();
-    //         const contents = await file.text();
-    //         handleFileReadHtml(canvas, contents);
-    //     }
-    // }
-    // const handleFileReadHtml = (canvas, content) => {
-    //     const aa = content.split('<div>')[1]?.split('</div>')[0];
-    //     const bb = content.split('<!DOCTYPE ')[2];
-    //     console.log(bb?.substring(0, 3));
-    //     if (bb?.substring(0, 3) !== 'svg') {
-    //         tempAlert('This file is not exported from this software', 3000, "position:absolute;top:40%;left:10%;background-color:white;font-size:40px")
-    //         return;
-    //     }
-    //     importHtml2(aa, canvas);
-    // };
-    // const importHtml2 = (file, canvas) => {
-    //     if (file) {
-    //         // var site_url = URL.createObjectURL(file);
-    //         deleteAll(canvas);
-    //         fabric.loadSVGFromString(file, function (objects) {
-    //             objects?.forEach(element => {
-    //                 console.log(element)
-
-    //                 canvas.add(element);
-    //                 element.set({ objectCaching: false, shadow: { ...shadowOptions } });
-    //                 if (element.type === 'text') {
-
-    //                     element.set({ type: 'i-text' })
-
-    //                     var textobj = element.toObject(['id']);
-    //                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-    //                     var aa = new fabric.IText(element.text, clonedtextobj);
-
-    //                     canvas.add(aa);
-    //                     aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
-    //                     aa.set({ textAlign: element.textAlign, width: element.width, left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-
-    //                     canvas.remove(element)
-    //                     // var bb =objects.indexOf(element);
-    //                     // objects.splice(bb,1,aa);
-
-    //                 }
-    //             });
-    //         });
-    //         canvas.renderAll();
-    //     }
-    // }
-
+    
     const resetZommandPan = () => {
         canvas.setZoom(1);
         dispatch({ type: 'CHANGE_CANVAS_ZOOM', payload: 1 })
@@ -1509,29 +1457,48 @@ const DrawingController = () => {
             }
 
             // Main function to insert data
+            var updatecount = 0;
+            var originalFontSize;
             function dataInsert(dataCaspar) {
+            updatecount += 1;
             for (var idCaspar in dataCaspar) {
             var idTemplate = document.getElementById(idCaspar);
             if (idTemplate != undefined) {
             var idtext = idTemplate.getElementsByTagName('text')[0];
             var idimage = idTemplate.getElementsByTagName('image')[0];
             if (idtext != undefined) {
-                var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
-                if (textalign1 == 'center') {
-                    idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace="normal";
-                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                idTemplate.style.display = "block";
+                if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                    updatecount += 1;
+                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    if (textalign1 == 'center') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                    }
+                    if (textalign1 == 'right') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    }
+
+                    if (updatecount < 2) {
+                        originalFontSize = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                    }
+                    else {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    }
+                    do {
+                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
                 }
-                if (textalign1 == 'right') {
-                    idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace='normal';
-                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
-                }
-            idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
-            idTemplate.style.display = "block";
+
             }
             else if (idimage != undefined) {
             idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
@@ -1558,22 +1525,37 @@ const DrawingController = () => {
             document.body.innerHTML='' ;
             }
             function updatestring(str1, str2) {
-                var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
-                if (textalign1 == 'center') {
-                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace="normal";
-                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                document.getElementById(str1).style.display = "block";
+                if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
+                    updatecount += 1;
+                    var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    if (textalign1 == 'center') {
+                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                    }
+                    if (textalign1 == 'right') {
+                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    }
+    
+                    if (updatecount < 2) {
+                        originalFontSize = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
+                    }
+                    else {
+                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    }
+                    do {
+                        var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
+                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
                 }
-                if (textalign1 == 'right') {
-                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace='normal';
-                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
-                }
-            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
-            document.getElementById(str1).style.display = "block";
             }
             function updateimage(str1, str2) {
             document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
@@ -2132,9 +2114,44 @@ const DrawingController = () => {
             "`)
     }
 
+    useEffect(() => {
+        fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+            return function () {
+                var svg = _toSVG.call(this);
+                if (this.textAlign) {
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
+                }
+                return svg;
+            }
+        })(fabric.Textbox.prototype._toSVG)
+
+        fabric.IText.prototype._toSVG = (function (_toSVG) {
+            return function () {
+                var svg = _toSVG.call(this);
+                if (this.textAlign) {
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
+                }
+                return svg;
+            }
+        })(fabric.IText.prototype._toSVG)
+
+        fabric.Text.prototype._toSVG = (function (_toSVG) {
+            return function () {
+                var svg = _toSVG.call(this);
+                if (this.textAlign) {
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
+                }
+                return svg;
+            }
+        })(fabric.Text.prototype._toSVG)
+
+        // eslint-disable-next-line
+    }, [])
 
 
     useEffect(() => {
+
+
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
         setSolidcaption2(localStorage.getItem('RCC_solidCaption2'));
         setSolidcaption3(localStorage.getItem('RCC_solidCaption3'));
