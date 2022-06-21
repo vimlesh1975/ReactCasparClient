@@ -535,7 +535,6 @@ const TimeLine1 = () => {
     var updatecount = 0;
     var originalFontSize;
     function dataInsert(dataCaspar) {
-      updatecount += 1;
     for (var idCaspar in dataCaspar) {
       var idTemplate = document.getElementById(idCaspar);
       if (idTemplate != undefined) {

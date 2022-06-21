@@ -23,19 +23,6 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 var xxx;
 var html;
 
-// fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-//     return function () {
-//         var svg = _toSVG.call(this);
-
-//         if (this.textAlign) {
-//             //  svg.splice(1,0,this.textAlign+'"/>');
-//             svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}"/>`);
-//         }
-//         return svg;
-//     }
-// })(fabric.Textbox.prototype._toSVG)
-
-
 fabric.Object.prototype.noScaleCache = false;
 const STEP = 5;
 var Direction = {
@@ -1460,7 +1447,6 @@ const DrawingController = () => {
             var updatecount = 0;
             var originalFontSize;
             function dataInsert(dataCaspar) {
-            updatecount += 1;
             for (var idCaspar in dataCaspar) {
             var idTemplate = document.getElementById(idCaspar);
             if (idTemplate != undefined) {
