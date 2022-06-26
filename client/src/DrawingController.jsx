@@ -1022,6 +1022,9 @@ const DrawingController = () => {
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
     const [angle, setangle] = useState(0);
+    const [strokedashoffset, setstrokedashoffset] = useState(20);
+    const [strokedasharray, setstrokedasharray] = useState(20);
+
 
 
     const pauseClock = (layerNumber) => {
@@ -1229,7 +1232,7 @@ const DrawingController = () => {
 
     let fileReader;
 
-    const importJSON = (file, canvas) => {
+    const importJSON = (file) => {
         if (file) {
             fileReader = new FileReader();
             fileReader.onloadend = () => handleFileReadJSON(canvas);
@@ -1276,6 +1279,18 @@ const DrawingController = () => {
         setStrokeWidth(parseInt(e.target.value))
         canvas.freeDrawingBrush.width = parseInt(e.target.value);
         canvas.getActiveObjects().forEach(item => item.strokeWidth = parseInt(e.target.value))
+        canvas.requestRenderAll();
+    }
+    const onstrokedasharraychange = e => {
+        console.log(e.target.value)
+        setstrokedasharray(parseInt(e.target.value))
+        canvas.getActiveObjects().forEach(item => item.strokeDashArray =[ parseInt(e.target.value)])
+        canvas.requestRenderAll();
+    }
+    const onstrokedashoffsetchange = e => {
+        console.log(e.target.value)
+        setstrokedashoffset(parseInt(e.target.value))
+        canvas.getActiveObjects().forEach(item => item.strokeDashOffset =[ parseInt(e.target.value)])
         canvas.requestRenderAll();
     }
     const onSkewXSizeChange = e => {
@@ -2454,9 +2469,12 @@ const DrawingController = () => {
                         BG <input ref={refBgColor} type="color" defaultValue='#40037c' onChange={e => changeBackGroundColor(e, canvas)} />
                         Stroke<input ref={refStrokeColor} type="color" defaultValue='#ffffff' onChange={e => changeStrokeCurrentColor(e, canvas)} />
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
-                        Stroke/Brush width: {strokeWidth}
+                        Stroke/Brush W: {strokeWidth} 
                         <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
                         <span> ScaleX : {scaleX.toFixed(1)} ScaleY  : {scaleY.toFixed(1)} Angle  : {angle.toFixed(1)}</span>
+                        <br /> stroke-dasharray: <input  className='inputRangeshadow' onChange={e => onstrokedasharraychange(e)} type="range" min='0' max='100' step='1' defaultValue='30' />{strokedasharray}
+                        stroke-dash-offset: <input  className='inputRangeshadow' onChange={e => onstrokedashoffsetchange(e)} type="range" min='0' max='100' step='1' defaultValue='30' /> {strokedashoffset}
+                        
                     </div>
                     <div style={{ display: 'flex' }}>
                         <div  >
@@ -2567,9 +2585,8 @@ const DrawingController = () => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <br /> <b>  Import: </b>  <span> SVG</span> <input type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} />
-                        <br /> <b>  Import: </b> <span> JSON</span> <input type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0], canvas)} />
-                        {/* <br /> <button onClick={getvalues}>Get Values</button> */}
+                        <br /> <label for="importsvg">Import SVG <input id="importsvg" style={{display:'none'}} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label for="importjson"> Import JSON<input id="importjson" style={{display:'none'}}  type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
                     </div>
                 </div>
             </div>
