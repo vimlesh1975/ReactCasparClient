@@ -1156,12 +1156,12 @@ const DrawingController = () => {
         canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
         canvas.requestRenderAll();
     }
-    const makeFullScreen = () => {
-        canvas?.getActiveObjects().forEach(element => {
-            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
-        });
-        canvas?.requestRenderAll();
-    }
+    // const makeFullScreen = () => {
+    //     canvas?.getActiveObjects().forEach(element => {
+    //         element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
+    //     });
+    //     canvas?.requestRenderAll();
+    // }
     // const removeBorderandCurve = () => {
     //     canvas?.getActiveObjects().forEach(element => {
     //         element.set({ strokeWidth: 0, rx: 0, ry: 0 })
@@ -2099,21 +2099,13 @@ const DrawingController = () => {
             "`)
     }
 
-    // useEffect(() => {
-    //   first
-
-    //   return () => {
-    //     second
-    //   }
-    // }, [third])
-
 
     useEffect(() => {
         fabric.Textbox.prototype._toSVG = (function (_toSVG) {
             return function () {
                 var svg = _toSVG.call(this);
                 if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"/>`);
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
                 }
                 return svg;
             }
@@ -2123,7 +2115,7 @@ const DrawingController = () => {
             return function () {
                 var svg = _toSVG.call(this);
                 if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"/>`);
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
                 }
                 return svg;
             }
@@ -2133,23 +2125,47 @@ const DrawingController = () => {
             return function () {
                 var svg = _toSVG.call(this);
                 if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"/>`);
+                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
                 }
                 return svg;
             }
         })(fabric.Text.prototype._toSVG)
 
         return () => {
-            // second
-        }
+            fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+                return function () {
+                    var svg = _toSVG.call(this);
+                    if (this.textAlign) {
+                        svg.splice(1, 1);
+                    }
+                    return svg;
+                }
+            })(fabric.Textbox.prototype._toSVG)
 
+            fabric.IText.prototype._toSVG = (function (_toSVG) {
+                return function () {
+                    var svg = _toSVG.call(this);
+                    if (this.textAlign) {
+                        svg.splice(1, 1);
+                    }
+                    return svg;
+                }
+            })(fabric.IText.prototype._toSVG)
+            fabric.Text.prototype._toSVG = (function (_toSVG) {
+                return function () {
+                    var svg = _toSVG.call(this);
+                    if (this.textAlign) {
+                        svg.splice(1, 1);
+                    }
+                    return svg;
+                }
+            })(fabric.Text.prototype._toSVG)
+        }
         // eslint-disable-next-line
     }, [])
 
 
     useEffect(() => {
-
-
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
         setSolidcaption2(localStorage.getItem('RCC_solidCaption2'));
         setSolidcaption3(localStorage.getItem('RCC_solidCaption3'));
@@ -2159,8 +2175,8 @@ const DrawingController = () => {
         setVerticalScroll(localStorage.getItem('RCC_verticalScroll'));
         setHorizontalScroll(localStorage.getItem('RCC_horizontalScroll'));
         setHorizontalSpeed(localStorage.getItem('RCC_horizontalSpeed'));
-        setHorizontalScroll(localStorage.getItem('RCC_horizontalScroll2'));
-        setHorizontalSpeed(localStorage.getItem('RCC_horizontalSpeed2'));
+        setHorizontalScroll2(localStorage.getItem('RCC_horizontalScroll2'));
+        setHorizontalSpeed2(localStorage.getItem('RCC_horizontalSpeed2'));
 
         setVerticalSpeed(localStorage.getItem('RCC_verticalSpeed'));
 
@@ -2572,10 +2588,12 @@ const DrawingController = () => {
                         <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
+                        <label style={{border:'1px solid #000000',borderRadius:'3px', backgroundColor:'ButtonFace'}} for="importsvg">Import SVG <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label style={{border:'1px solid #000000',borderRadius:'3px', backgroundColor:'ButtonFace'}}for="importjson"> Import JSON<input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
 
 
 
-                        <button onClick={makeFullScreen}>Make full Screen</button>
+                        {/* <button onClick={makeFullScreen}>Make full Screen</button> */}
                         {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
                         {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
                     </div>
@@ -2584,14 +2602,12 @@ const DrawingController = () => {
                         <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
                         Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
                         css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
-                        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML and Page</button>}
+                        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
 
                         <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
                         <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <br /> <label for="importsvg">Import SVG <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
-                        <label for="importjson"> Import JSON<input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
                     </div>
                 </div>
             </div>

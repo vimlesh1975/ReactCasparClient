@@ -137,8 +137,8 @@ const SavePannel = () => {
   
     const recallPage = (json, canvas, i,jsfilename1,cssfilename1) => {
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
-        dispatch({ type: 'CHANGE_JSFILENAME', payload: jsfilename1 });;
-        dispatch({ type: 'CHANGE_CSSFILENAME', payload: cssfilename1 });
+        dispatch({ type: 'CHANGE_JSFILENAME', payload: (jsfilename1===undefined)?'main':jsfilename1 });;
+        dispatch({ type: 'CHANGE_CSSFILENAME', payload: (cssfilename1===undefined)?'main':cssfilename1  });
         canvas.loadFromJSON(json, function () {
             const aa = canvas.getObjects();
             aa.forEach(element => {
