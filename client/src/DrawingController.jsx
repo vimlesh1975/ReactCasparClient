@@ -2599,13 +2599,13 @@ const DrawingController = () => {
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Export: </b>
-                        <button onClick={() => exportHTML(canvas)}>HTML and Page</button>
-                        Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-                        css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
-                        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
+                        <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
+                        Js:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+                        css:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+                       {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
 
-                        <button onClick={() => exportPng(canvas)}>PNG (Only Shape)</button>
-                        <button onClick={() => exportPngFullPage(canvas)}>PNG (FullPage)</button>
+                        <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
+                        <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
                     </div>
