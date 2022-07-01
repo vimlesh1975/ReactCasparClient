@@ -85,9 +85,15 @@ const OnelinerAndBreakingNews = () => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
-                                    const aa = (element.width) * (element.scaleX);
+                                    const originalWidth = element.width;
                                     element.set({ objectCaching: false, text: data2.value.toString() })
-                                    if (element.width > aa) { element.scaleToWidth(aa) }
+                                    if (element.textLines.length > 1) {
+                                        do {
+                                            element.set({ width: element.width + 5 });
+                                        }
+                                        while (element.textLines.length > 1);
+                                        element.set({ scaleX: originalWidth / element.width });
+                                    }
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
