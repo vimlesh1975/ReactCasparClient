@@ -39,7 +39,7 @@ const buildDate = '010722_1'
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const zoom = useSelector(state => state.canvaszoomReducer.zoom);
-  
+
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
@@ -238,7 +238,7 @@ const App = () => {
 
   const updatePage = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
-      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), jsfilename:jsfilename, cssfilename:cssfilename  } : val;
+      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), jsfilename: jsfilename, cssfilename: cssfilename } : val;
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
   }
@@ -246,7 +246,7 @@ const App = () => {
     settabindex(i)
     // console.log(i)
   }
-  window.changeTab=changeTab;
+  window.changeTab = changeTab;
   return (<React.Fragment>
 
 
@@ -261,8 +261,8 @@ const App = () => {
         </div>}
 
       <div >
-      
-      <b>Zoom:</b> {zoom.toFixed(1)}   <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
+
+        <b>Zoom:</b> {zoom.toFixed(1)}   <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
           {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
         </select>
         <b> Out: </b><select onChange={e => changeAnimationMethod(e)} value={animationMethod}>
@@ -369,7 +369,7 @@ const App = () => {
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
-            <Tab onClick={e => console.log(e.target)}>TimeLine</Tab>
+            <Tab >TimeLine</Tab>
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>

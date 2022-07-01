@@ -20,6 +20,7 @@ import SavedStyles from './SavedStyles';
 import { animation } from './animation.js'
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
+import Layers from './Layers';
 var xxx;
 var html;
 
@@ -2588,8 +2589,8 @@ const DrawingController = () => {
                         <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
-                        <label style={{border:'1px solid #000000',borderRadius:'3px', backgroundColor:'ButtonFace'}} for="importsvg">Import SVG <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
-                        <label style={{border:'1px solid #000000',borderRadius:'3px', backgroundColor:'ButtonFace'}}for="importjson"> Import JSON<input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
+                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} for="importsvg">Import SVG <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} for="importjson"> Import JSON<input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
 
 
 
@@ -2602,7 +2603,7 @@ const DrawingController = () => {
                         <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
                         Js:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
                         css:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
-                       {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
+                        {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
 
                         <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
@@ -2615,6 +2616,7 @@ const DrawingController = () => {
                 <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
                     <TabList>
                         <Tab>Save</Tab>
+                        <Tab>Layers</Tab>
                         <Tab>Filter</Tab>
                         <Tab>CCG Tools</Tab>
                         <Tab>Images</Tab>
@@ -2622,6 +2624,9 @@ const DrawingController = () => {
                     </TabList>
                     <TabPanel>
                         <SavePannel />
+                    </TabPanel>
+                    <TabPanel>
+                        <Layers />
                     </TabPanel>
                     <TabPanel>
                         <ImageFilterController />
