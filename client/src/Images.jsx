@@ -3,6 +3,7 @@ import { addRoundedCornerImage, Upload } from './DrawingController'
 import axios from 'axios'
 import { address1 } from './common'
 import { useDispatch, useSelector } from 'react-redux'
+import ImageFilterController from './ImageFilterController'
 
 const Images = () => {
     const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const Images = () => {
                 </div>
             </div>
         </div>
-
+<ImageFilterController />
     </div>)
 }
 

@@ -13,14 +13,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { saveAs } from 'file-saver';
 import SavePannel from './SavePannel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import ImageFilterController from './ImageFilterController';
-import CasparcgTools from './CasparcgTools';
 import Images from './Images';
 import SavedStyles from './SavedStyles';
 import { animation } from './animation.js'
 
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
-import Layers from './Layers';
+import Layers2 from './Layers2';
+import CasparcgTools from './CasparcgTools';
 var xxx;
 var html;
 
@@ -1023,6 +1022,11 @@ const DrawingController = () => {
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
     const [angle, setangle] = useState(0);
+    const [itallicnormal, setitallicnormal] = useState('normal');
+    const [fontWeight1, setfontWeight1] = useState('normal');
+    const [underline1, setunderline1] = useState('');
+    const [linethrough1, setlinethrough1] = useState('');
+
     const [strokedashoffset, setstrokedashoffset] = useState(0);
     const [strokedasharray, setstrokedasharray] = useState([0, 0]);
 
@@ -2223,6 +2227,15 @@ const DrawingController = () => {
             if (element.scaleY !== null) { setscaleY(element.scaleY); }
             if (element.angle !== null) { setangle(element.angle); }
 
+            if (element.fontStyle !== null) { setitallicnormal(element.fontStyle); }
+            if (element.fontWeight !== null) { setfontWeight1(element.fontWeight); }
+            if (element.undeline !== null) {
+                setunderline1((element.underline) ? 'underline' : '')
+            }
+            if (element.undeline !== null) {
+                setlinethrough1((element.linethrough) ? 'line-through' : '')
+            }
+
             if (element.strokeDashArray !== null) {
                 setstrokedasharray(element.strokeDashArray);
             }
@@ -2571,10 +2584,23 @@ const DrawingController = () => {
                         <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                         <button title='Align Bottom' onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
 
-                        <button title='Bold' style={{ fontWeight: 'bold' }} onClick={() => txtBold(canvas)}>B</button>
-                        <button title='Ittalic' style={{ fontStyle: 'italic' }} onClick={() => textItalic(canvas)}>I</button>
-                        <button title='Underline' style={{ textDecoration: 'underline' }} onClick={() => textUnderline(canvas)}>U</button>
-                        <button title='Linethrough' style={{ textDecoration: 'line-through' }} onClick={() => textLineThrough(canvas)}>S</button>
+                        <button title='Bold' style={{ fontWeight: (fontWeight1 === 'bold') ? 'bold' : 'normal' }} onClick={() => {
+                            txtBold(canvas);
+                            setfontWeight1((fontWeight1 === 'bold') ? 'normal' : 'bold');
+                        }}>B</button>
+                        <button title='Ittalic' style={{ fontStyle: (itallicnormal === 'italic') ? 'italic' : 'normal' }} onClick={() => {
+                            textItalic(canvas);
+                            setitallicnormal((itallicnormal === 'italic') ? 'normal' : 'italic');
+                        }}>I </button>
+                        <button title='Underline' style={{ textDecoration: (underline1 === 'underline') ? 'underline' : '' }} onClick={() => {
+                            textUnderline(canvas);
+                            setunderline1((underline1 === 'underline') ? '' : 'underline');
+                        }}>U</button>
+                        <button title='Linethrough' style={{ textDecoration: (linethrough1 === 'line-through') ? 'line-through' : '' }} onClick={() => {
+                            textLineThrough(canvas);
+                            setlinethrough1((linethrough1 === 'line-through') ? '' : 'line-through');
+
+                        }}>S</button>
 
 
                         <button title='Delete Seleted' onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
@@ -2616,20 +2642,16 @@ const DrawingController = () => {
                 <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
                     <TabList>
                         <Tab>Save</Tab>
-                        <Tab>Layers</Tab>
-                        <Tab>Filter</Tab>
-                        <Tab>CCG Tools</Tab>
-                        <Tab>Images</Tab>
-                        <Tab>Styles</Tab>
+                        <Tab>Layer</Tab>
+                        <Tab>CCG Tool</Tab>
+                        <Tab>Image/Fltr</Tab>
+                        <Tab>Style</Tab>
                     </TabList>
                     <TabPanel>
                         <SavePannel />
                     </TabPanel>
                     <TabPanel>
-                        <Layers />
-                    </TabPanel>
-                    <TabPanel>
-                        <ImageFilterController />
+                        <Layers2 />
                     </TabPanel>
                     <TabPanel>
                         <CasparcgTools />

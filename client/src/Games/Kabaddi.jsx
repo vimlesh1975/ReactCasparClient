@@ -50,7 +50,15 @@ const Kabaddi = () => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
-                                    element.set({ text: data2.value.toString() })
+                                    const originalWidth = element.width;
+                                    element.set({ objectCaching: false, text: data2.value.toString() })
+                                    if (element.textLines.length > 1) {
+                                        do {
+                                            element.set({ width: element.width + 5 });
+                                        }
+                                        while (element.textLines.length > 1);
+                                        element.set({ scaleX: originalWidth / element.width });
+                                    }
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -132,7 +140,15 @@ const Kabaddi = () => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
-                                    element.set({ text: data2.value.toString() })
+                                    const originalWidth = element.width;
+                                    element.set({ objectCaching: false, text: data2.value.toString() })
+                                    if (element.textLines.length > 1) {
+                                        do {
+                                            element.set({ width: element.width + 5 });
+                                        }
+                                        while (element.textLines.length > 1);
+                                        element.set({ scaleX: originalWidth / element.width });
+                                    }
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();

@@ -25,7 +25,7 @@ const Twoliner = () => {
             setPlayerList1(aa);
         }
     }
- 
+
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -38,10 +38,15 @@ const Twoliner = () => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
-                                    const aa = (element.width) * (element.scaleX);
+                                    const originalWidth = element.width;
                                     element.set({ objectCaching: false, text: data2.value.toString() })
-                                    if (element.width > aa) { element.scaleToWidth(aa) }
-                                    canvas.requestRenderAll();
+                                    if (element.textLines.length > 1) {
+                                        do {
+                                            element.set({ width: element.width + 5 });
+                                        }
+                                        while (element.textLines.length > 1);
+                                        element.set({ scaleX: originalWidth / element.width });
+                                    }
                                 }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
@@ -108,13 +113,13 @@ const Twoliner = () => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
     }
- 
+
     return (
         <div>
-            <p>PageName: <input type='text' value={pageName} onChange={e=>setPageName(e.target.value)}/></p>
+            <p>PageName: <input type='text' value={pageName} onChange={e => setPageName(e.target.value)} /></p>
             <p>id: f0 and f1</p>
 
-            <div style={{ display: 'flex', width: 830, margin:20 }}>
+            <div style={{ display: 'flex', width: 830, margin: 20 }}>
                 <div>
                     <DragDropContext onDragEnd={onDragEnd1}>
                         <Droppable droppableId="droppable-1" type="PERSON1">
@@ -141,7 +146,7 @@ const Twoliner = () => {
                                                                 }}
                                                             >
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{minWidth:300}}><input style={{border:'none', borderWidth:0,minWidth:300}} type='text' defaultValue={val.name}
+                                                                <td style={{ minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' defaultValue={val.name}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
@@ -151,7 +156,7 @@ const Twoliner = () => {
                                                                     }}
                                                                 />
                                                                 </td>
-                                                                <td style={{minWidth:300}}><input style={{border:'none', borderWidth:0,minWidth:300}} type='text' defaultValue={val.designation}
+                                                                <td style={{ minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' defaultValue={val.designation}
 
                                                                     onMouseLeave={e => {
                                                                         newplayerList1 = [...playerList1];
@@ -161,7 +166,7 @@ const Twoliner = () => {
                                                                     }}
                                                                 />
                                                                 </td>
-                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.name, type: 'text' },{ key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></td>
+                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.name, type: 'text' }, { key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></td>
                                                             </tr>
                                                         )
                                                         }
@@ -176,10 +181,10 @@ const Twoliner = () => {
                         </Droppable>
                     </DragDropContext>
                 </div>
-           <div>
-            <button style={{ backgroundColor: 'red', width:100, height:50 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
+                <div>
+                    <button style={{ backgroundColor: 'red', width: 100, height: 50 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
 
-           </div>
+                </div>
             </div>
 
         </div>

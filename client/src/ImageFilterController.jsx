@@ -59,6 +59,8 @@ const ImageFilterController = () => {
     return (
         <div>
             <h5>Image from local pc method only will get filters. </h5>
+        <div style={{ border: '1px solid black', height: 360, overflow: 'scroll' }} >
+
             <table border='1'>
                 <tbody>
                     <tr><td>Prperty</td><td><button onClick={removeFilter} id="AllFlter" >All Remove</button></td><td>Value</td></tr>
@@ -94,6 +96,8 @@ const ImageFilterController = () => {
 
                 </tbody>
             </table>
+
+        </div>
         </div>
     )
 }
