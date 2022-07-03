@@ -120,7 +120,7 @@ const ColorGradient = ({ property1 }) => {
     const getGradient1 = () => {
         if (canvas?.getActiveObjects()[0]) {
 
-            if (property1.colorStops) {
+            if (property1?.colorStops) {
                 setdirection1(property1.coords)
                 setOffset(property1.colorStops[1].offset)
                 setColor1(property1.colorStops[0].color)
@@ -135,7 +135,8 @@ const ColorGradient = ({ property1 }) => {
         }
     }
 
-    window.getGradient1 = getGradient1;
+
+    // window.getGradient1 = getGradient1;
     const setdirection1 = cords => {
         if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 0 })) { setDirection('to right') }
         if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 0, y2: 1 })) { setDirection('to bottom') }
@@ -143,12 +144,13 @@ const ColorGradient = ({ property1 }) => {
         if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 1, x2: 1, y2: 0 })) { setDirection('to right top') }
     }
     useEffect(() => {
-        // getGradient1()
+        getGradient1()
         return () => {
             //   second
         }
         // eslint-disable-next-line 
     }, [])
+
 
     return (<>
         <button onClick={getGradient}>Get Gradient</button>

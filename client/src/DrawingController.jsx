@@ -2650,7 +2650,6 @@ const DrawingController = () => {
                         <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
                             <ColorGradient property1={property1} />
                         </Modal>
-                        {property1?.type}
                     </div>
                 </div>
             </div>
