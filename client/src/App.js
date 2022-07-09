@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef,lazy } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
 import React from "react";
@@ -11,7 +11,7 @@ import DrawingController from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
-import ColorGradient from './ColorGradient';
+
 import VideoController from './VideoController';
 import Help from './Help';
 import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers } from './common'
@@ -34,7 +34,11 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '030722_1'
+import ColorGradient  from './ColorGradient'
+
+// const ColorGradient = lazy(() => import('./ColorGradient'));
+
+const buildDate = '090722_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

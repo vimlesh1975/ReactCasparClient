@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { fabric } from "fabric";
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
+import ColorGradient2 from './ColorGradient2';
 
 const ColorGradient = ({ property1 }) => {
     const [color1, setColor1] = useState('#000000')
@@ -48,15 +49,7 @@ const ColorGradient = ({ property1 }) => {
         ]
     });
 
-    const changeColor1 = e => {
-        setColor1(e.target.value)
-    }
-    const changeColor2 = e => {
-        setColor2(e.target.value)
-    }
-    const changeColor3 = e => {
-        setColor3(e.target.value)
-    }
+   
     const setGradient2Fill = canvas => {
         canvas.getActiveObjects().forEach(element => { element.set('fill', gradient2) });
         canvas.requestRenderAll();
@@ -99,61 +92,66 @@ const ColorGradient = ({ property1 }) => {
 
     }
 
-    const getGradient = () => {
-        if (canvas?.getActiveObjects()[0]) {
-            console.log(canvas.getActiveObjects()[0].fill)
+    // const getGradient = () => {
+    //     if (canvas?.getActiveObjects()[0]) {
+    //         console.log(canvas.getActiveObjects()[0].fill)
 
-            if (canvas.getActiveObjects()[0].fill.colorStops) {
-                setdirection1(canvas.getActiveObjects()[0].fill.coords)
-                setOffset(canvas.getActiveObjects()[0].fill.colorStops[1].offset)
-                setColor1(canvas.getActiveObjects()[0].fill.colorStops[0].color)
-                setColor2(canvas.getActiveObjects()[0].fill.colorStops[1].color)
-                setColor3(canvas.getActiveObjects()[0].fill.colorStops[2].color)
-            }
-            else {
-                setColor1(canvas.getActiveObjects()[0].fill)
-                setColor2(canvas.getActiveObjects()[0].fill)
-                setColor3(canvas.getActiveObjects()[0].fill)
-            }
-        }
-    }
-    const getGradient1 = () => {
-        if (canvas?.getActiveObjects()[0]) {
+    //         if (canvas.getActiveObjects()[0].fill.colorStops) {
+    //             setdirection1(canvas.getActiveObjects()[0].fill.coords)
+    //             setOffset(canvas.getActiveObjects()[0].fill.colorStops[1].offset)
+    //             setColor1(canvas.getActiveObjects()[0].fill.colorStops[0].color)
+    //             setColor2(canvas.getActiveObjects()[0].fill.colorStops[1].color)
+    //             setColor3(canvas.getActiveObjects()[0].fill.colorStops[2].color)
+    //         }
+    //         else {
+    //             setColor1(canvas.getActiveObjects()[0].fill)
+    //             setColor2(canvas.getActiveObjects()[0].fill)
+    //             setColor3(canvas.getActiveObjects()[0].fill)
+    //         }
+    //     }
+    // }
+    // const getGradient1 = () => {
+    //     if (canvas?.getActiveObjects()[0]) {
 
-            if (property1?.colorStops) {
-                setdirection1(property1.coords)
-                setOffset(property1.colorStops[1].offset)
-                setColor1(property1.colorStops[0].color)
-                setColor2(property1.colorStops[1].color)
-                setColor3(property1.colorStops[2].color)
-            }
-            else {
-                setColor1(property1)
-                setColor2(property1)
-                setColor3(property1)
-            }
-        }
-    }
+    //         if (property1?.colorStops) {
+    //             setdirection1(property1.coords)
+    //             setOffset(property1.colorStops[1].offset)
+    //             setColor1(property1.colorStops[0].color)
+    //             setColor2(property1.colorStops[1].color)
+    //             setColor3(property1.colorStops[2].color)
+    //         }
+    //         else {
+    //             setColor1(property1)
+    //             setColor2(property1)
+    //             setColor3(property1)
+    //         }
+    //     }
+    // }
 
 
     // window.getGradient1 = getGradient1;
-    const setdirection1 = cords => {
-        if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 0 })) { setDirection('to right') }
-        if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 0, y2: 1 })) { setDirection('to bottom') }
-        if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 1 })) { setDirection('to bottom right') }
-        if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 1, x2: 1, y2: 0 })) { setDirection('to right top') }
-    }
-    useEffect(() => {
-        getGradient1()
-        return () => {
-            //   second
-        }
-        // eslint-disable-next-line 
-    }, [])
+    // const setdirection1 = cords => {
+    //     if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 0 })) { setDirection('to right') }
+    //     if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 0, y2: 1 })) { setDirection('to bottom') }
+    //     if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 0, x2: 1, y2: 1 })) { setDirection('to bottom right') }
+    //     if (JSON.stringify(cords) === JSON.stringify({ x1: 0, y1: 1, x2: 1, y2: 0 })) { setDirection('to right top') }
+    // }
+    // useEffect(() => {
+    //     getGradient1()
+    //     return () => {
+    //         //   second
+    //     }
+    //     // eslint-disable-next-line 
+    // }, [])
 
 
     return (<>
-        <button onClick={getGradient}>Get Gradient</button>
+
+        <div>
+            <ColorGradient2 />
+        </div>
+
+        {/* <button onClick={getGradient}>Get Gradient</button>
 
         <div style={{ display: 'flex' }}>
             <div>
@@ -170,10 +168,10 @@ const ColorGradient = ({ property1 }) => {
             Color 1 <input type="color" value={color1} onChange={e => changeColor1(e)} />
             Color 2 <input type="color" value={color2} onChange={e => changeColor2(e)} />
             Color 3 <input type="color" value={color3} onChange={e => changeColor3(e)} />
-        </div>
+        </div> */}
 
 
-        {directions.map((val, i) => {
+        {/* {directions.map((val, i) => {
             return (
                 <div key={uuidv4()} style={{ margin: 5 }}>
                     <input checked={(direction === val)}
@@ -186,7 +184,7 @@ const ColorGradient = ({ property1 }) => {
                     <label htmlFor={val}>{val}</label>
                 </div>
             )
-        })}
+        })} */}
         <label><input type="checkbox" checked={useAngle} onChange={e => setUseAngle(val => !val)} />: UseAngle for Direction</label>
 
         <div style={{ margin: 5 }} >
@@ -197,9 +195,7 @@ const ColorGradient = ({ property1 }) => {
 
 
         </div>
-        <div>
 
-        </div>
 
     </>)
 }
