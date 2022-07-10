@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef,lazy } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 import './App.css';
 import React from "react";
@@ -34,11 +34,10 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-import ColorGradient  from './ColorGradient'
+import ColorGradient2 from './ColorGradient2'
 
-// const ColorGradient = lazy(() => import('./ColorGradient'));
 
-const buildDate = '090722_1'
+const buildDate = '100722_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -403,7 +402,7 @@ const App = () => {
             <Layers />
           </TabPanel>
           <TabPanel >
-            <ColorGradient />
+            <ColorGradient2 />
           </TabPanel>
           <TabPanel >
             <OnelinerAndBreakingNews />

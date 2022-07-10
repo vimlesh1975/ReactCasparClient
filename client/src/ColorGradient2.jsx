@@ -1,22 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Rnd } from "react-rnd";
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
 
 const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const firstSelectedObject = canvas?.getActiveObjects()[0];
 
     const width1 = 295;
     const [colors, setColors] = useState(["#000000", "#ff0000", "#000000"]);
 
     const [directionAngle, setDirectionAngle] = useState(180);
     const [loaded, setLoaded] = useState(false);
-
-   const  refrnd = useRef();
-
-
-
 
     const changeColor = (e, i) => {
         const updatedColors = [...colors];
@@ -56,15 +50,38 @@ const ColorGradient2 = () => {
         updatedpositions1[i] = d.x;
         setpositions1(updatedpositions1);
     };
+
+    const gerCords = (angle) => {
+        if (angle === 0) {
+            return {
+                x1: 0,
+                y1: 1,
+                x2: 0,
+                y2: 0
+            }
+        }
+        if (angle !== 180) {
+            return {
+                x1: 0,
+                y1: (180 - angle) / 180,
+                x2: 1,
+                y2: angle / 180
+            }
+        }
+        if (angle === 180) {
+            return {
+                x1: 0,
+                y1: 0,
+                x2: 0,
+                y2: 1
+            }
+        }
+    }
+
     const backgroundImagetoFabricGradient = new fabric.Gradient({
         type: "linear",
         gradientUnits: "percentage",
-        coords: {
-            x1: 0,
-            y1: (180 - directionAngle) / 180,
-            x2: 1,
-            y2: directionAngle / 180
-        },
+        coords: gerCords(parseInt(directionAngle)),
         colorStops: colors.map((color, i) => {
             return { offset: positions1[i] / width1, color: color };
         })
@@ -76,24 +93,13 @@ const ColorGradient2 = () => {
         setpositions1(gradient.colorStops.map((colorStop) => (colorStop.offset) * width1));
     };
 
-    useEffect(() => {
-        // setpositions1(positions1.map((val)=>val/2));
-        return () => {
-            // setpositions1(positions1.map((val)=>val));
-            // second
-        }
-
-        // eslint-disable-next-line
-    }, [])
 
     return (
         <>
             <div onMouseOver={() => setLoaded(true)}>
-                <button onClick={() => fabricGradienttoBackgroundImage(firstSelectedObject.fill)}>getGradient</button>
-                <button onClick={() => {
-                    canvas.getActiveObjects().forEach(element => { element.set('fill', backgroundImagetoFabricGradient) });
-                    canvas.requestRenderAll();
-                }}>setGradient</button>
+                <button onClick={() => fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.fill)}>getGradient Fill</button>
+                <button onClick={() => fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke)}>getGradient Stroke</button>
+
                 <div style={{ display: "flex" }}>
                     <div style={{ border: "2px solid grey" }}>
                         <div
@@ -110,7 +116,7 @@ const ColorGradient2 = () => {
                             }}
                         />
                         <br />{" "}
-                        {loaded?  <div
+                        {loaded ? <div
                             onClick={(e) => {
                                 const aa = positions1.filter((position) => {
                                     return position < e.clientX - 1024;
@@ -140,7 +146,6 @@ const ColorGradient2 = () => {
                                                 backgroundColor: color,
                                                 color: "white",
                                                 textAlign: "center",
-
                                             }}
                                         >
                                             {i}
@@ -148,53 +153,8 @@ const ColorGradient2 = () => {
                                     </Rnd>
                                 );
                             })}
-                        </div>:''}
-                        {/* <div
-                            onClick={(e) => {
-                                const aa = positions1.filter((position) => {
-                                    return position < e.clientX - 1024;
-                                });
-                                const max = Math.max(...aa);
-                                const index = aa.indexOf(max);
-                                addColorwithlocation(index, e.clientX - 1024);
-                            }}
-                            style={{ backgroundColor: "darkgray", height: 20, width: width1 }}
-                        >
-                            {colors.map((color, i) => {
-                                return (
-                                    <Rnd
-                                        dragAxis="x"
-                                        bounds="parent"
-                                        enableResizing={false}
-                                        position={{ x: positions1[i], y: 0 }}
-                                        onDrag={(e, d) => ondrag1(e, d, i)}
-                                    >
-                                        <div
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}
-                                            style={{
-                                                width: 20,
-                                                height: 20,
-                                                backgroundColor: color,
-                                                color: "white",
-                                                textAlign: "center",
-
-                                            }}
-                                        >
-                                            {i}
-                                        </div>
-                                    </Rnd>
-                                );
-                            })}
-                        </div> */}
-                       asas
-                        <br />
-                        <div>
-                            <button>Use This</button>{" "}
-                        </div>
+                        </div> : ''}
                     </div>
-
                     <div style={{ marginLeft: 20, border: "2px solid grey" }}>
                         <div
                             style={{
@@ -220,12 +180,20 @@ const ColorGradient2 = () => {
                                 value={directionAngle}
                             />
                             {directionAngle}
-                            <div>
-                                <button>Use This</button>{" "}
-                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div>
+                <button onClick={() => {
+                    canvas.getActiveObjects().forEach(element => { element.set('fill', backgroundImagetoFabricGradient) });
+                    canvas.requestRenderAll();
+                }}>SetGradient Fill</button>
+                <br />
+                <button onClick={() => {
+                    canvas.getActiveObjects().forEach(element => { element.set('stroke', backgroundImagetoFabricGradient) });
+                    canvas.requestRenderAll();
+                }}>SetGradient Stroke</button>
             </div>
             <div style={{ marginTop: 20 }}>
                 {colors.map((color, i) => {
@@ -242,7 +210,6 @@ const ColorGradient2 = () => {
                     );
                 })}
             </div>
-            {/* {gradient2.colorStops[2].offset} */}
         </>
     );
 };

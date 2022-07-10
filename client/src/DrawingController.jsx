@@ -20,9 +20,6 @@ import { animation } from './animation.js'
 import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
-import ColorDialog from './ColorDialog';
-import Modal from "./Modal/Modal";
-import ColorGradient from './ColorGradient';
 
 var xxx;
 var html;
@@ -955,9 +952,6 @@ export const createShape = (canvas, shape, size = 0.4) => {
 }
 
 const DrawingController = () => {
-    const refStrokeColor = useRef();
-    const refFillColor = useRef();
-    const refBgColor = useRef();
 
     const refShadowColor = useRef();
     const refAffectStroke = useRef(false);
@@ -965,12 +959,9 @@ const DrawingController = () => {
     const refOffsetX = useRef();
     const refOffsetY = useRef();
 
-
-
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const firstSelectedObject = canvas?.getActiveObjects()[0];
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
 
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
@@ -1033,9 +1024,6 @@ const DrawingController = () => {
 
     const [strokedashoffset, setstrokedashoffset] = useState(0);
     const [strokedasharray, setstrokedasharray] = useState([0, 0]);
-    const [property1, setProperty1] = useState(firstSelectedObject?.fill);
-
-
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -2174,7 +2162,7 @@ const DrawingController = () => {
         // eslint-disable-next-line
     }, [])
 
-    const [show, setShow] = useState(false);
+    // const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
@@ -2214,7 +2202,6 @@ const DrawingController = () => {
     }
     const getvalues = () => {
         if (canvas?.getActiveObjects()?.[0]) {
-            // console.log(canvas?.getActiveObjects()?.[0]);
             const element = canvas?.getActiveObjects()?.[0];
             if (element.rx !== null) { setSkewRX(element.rx); }
             if (element.ry !== null) { setSkewRY(element.ry); }
@@ -2223,10 +2210,6 @@ const DrawingController = () => {
             if (element.fontFamily !== null) { setCurrentFont(element.fontFamily); }
             if (element.fontSize !== null) { setFontSize(element.fontSize); }
             if (element.strokeWidth !== null) { setStrokeWidth(element.strokeWidth); }
-
-            // if (element.fill !== null) { refFillColor && refFillColor.current && (refFillColor.current.value = element.fill); }
-            // if (element.backgroundColor !== null) { refBgColor.current.value = element.backgroundColor; }
-            // if (element.stroke !== null) { refStrokeColor && refStrokeColor.current && (refStrokeColor.current.value = element.stroke); }
 
             if (element.opacity !== null) { setOpacity(element.opacity); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
@@ -2491,9 +2474,6 @@ const DrawingController = () => {
                                 }}>R</button>{charSpacing}</td></tr>
                             </tbody>
                         </table>
-
-
-
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
@@ -2503,18 +2483,27 @@ const DrawingController = () => {
                         {fontSize}
                     </div>
 
-
                     <div className='drawingToolsRow' >
                         <b> Colors: </b>
-                        Fill<ColorDialog action1={changeCurrentColor} ref1={refFillColor} property1={firstSelectedObject?.fill} onClick1={() => {
-                            setProperty1(firstSelectedObject?.fill);
-                            setShow(true);
-                        }} />
-                        BG<input ref={refBgColor} type="color" value={firstSelectedObject?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
-                        Stroke <ColorDialog action1={changeStrokeCurrentColor} ref1={refStrokeColor} property1={firstSelectedObject?.stroke} onClick1={() => {
-                            setProperty1(firstSelectedObject?.stroke);
-                            setShow(true);
-                        }} />
+                        Fill {(canvas?.getActiveObjects()[0]?.fill?.colorStops) ? <span onClick={() => {
+                            window.changeTab(4)
+                        }} style={{
+                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.fill?.colorStops.map(
+                                (colorStop, i) => {
+                                    return `${colorStop.color} ${colorStop.offset * 100}%`;
+                                }
+                            )}`
+                        }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.fill} onChange={e => changeCurrentColor(e, canvas)} />}
+                        BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
+                        Stroke {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
+                            window.changeTab(4)
+                        }} style={{
+                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.stroke?.colorStops.map(
+                                (colorStop, i) => {
+                                    return `${colorStop.color} ${colorStop.offset * 100}%`;
+                                }
+                            )}`
+                        }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                         Stroke/Brush W: {strokeWidth}
                         <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
@@ -2647,9 +2636,9 @@ const DrawingController = () => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
+                        {/* <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
                             <ColorGradient property1={property1} />
-                        </Modal>
+                        </Modal> */}
                     </div>
                 </div>
             </div>
