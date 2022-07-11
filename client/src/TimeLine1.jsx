@@ -30,7 +30,7 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0,0,0,0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
@@ -746,10 +746,16 @@ const TimeLine1 = () => {
       await writable1.write(file1);
       await writable1.close();
     }
-
-
-
   }
+
+  // useEffect(() => {
+  //   // first
+  // setKf(kf.map((val)=>val.map((val1)=>val1/2)))
+  //   return () => {
+  //     setKf(kf.map((val)=>val.map((val1)=>val1)))
+  //   }
+  // }, [])
+  
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
@@ -858,7 +864,8 @@ const TimeLine1 = () => {
                   }}
                 >
                   <div style={{ width: 5, height: 200, backgroundColor: 'red', fontWeight: 'bold' }}>
-                    {currentFrame / 25}
+                    {currentFrame / (25*4)}
+
                   </div>
                 </Rnd>
                 }

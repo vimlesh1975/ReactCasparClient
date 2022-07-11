@@ -11,7 +11,7 @@ import DrawingController from './DrawingController';
 import { Provider } from 'react-redux'
 import store from './store'
 import { v4 as uuidv4 } from 'uuid';
-import ColorGradient from './ColorGradient';
+
 import VideoController from './VideoController';
 import Help from './Help';
 import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers } from './common'
@@ -34,7 +34,10 @@ import Effects from './Effects';
 import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
-const buildDate = '030722_1'
+import ColorGradient2 from './ColorGradient2'
+
+
+const buildDate = '110722_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -399,7 +402,7 @@ const App = () => {
             <Layers />
           </TabPanel>
           <TabPanel >
-            <ColorGradient />
+            <ColorGradient2 />
           </TabPanel>
           <TabPanel >
             <OnelinerAndBreakingNews />
