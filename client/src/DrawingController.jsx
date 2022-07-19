@@ -2254,8 +2254,8 @@ const DrawingController = () => {
                         <b>Elements: </b>
                         <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
                         <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
-                        <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
-                        <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button>
+                        {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button> */}
+                        {/* <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
                         <button title="Line" onClick={() => createLine(canvas)}>Line</button>
                         <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                         <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
