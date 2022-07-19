@@ -532,8 +532,6 @@ const TimeLine1 = () => {
     }
 
     // Main function to insert data
-    var updatecount = 0;
-    var originalFontSize;
     function dataInsert(dataCaspar) {
     for (var idCaspar in dataCaspar) {
       var idTemplate = document.getElementById(idCaspar);
@@ -544,9 +542,9 @@ const TimeLine1 = () => {
           idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
           idTemplate.style.display = "block";
           if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
-              updatecount += 1;
               var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
               var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+              var originalFontSize =  idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
               if (textalign1 == 'center') {
                   idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
                   idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
@@ -559,13 +557,7 @@ const TimeLine1 = () => {
                   idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
                   idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
               }
-
-              if (updatecount < 2) {
-                  originalFontSize = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
-              }
-              else {
-                  idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-              }
+              idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
               do {
                   var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
                   idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
@@ -602,9 +594,9 @@ const TimeLine1 = () => {
       document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
       document.getElementById(str1).style.display = "block";
       if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
-          updatecount += 1;
           var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
           var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+          var originalFontSize =  document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
           if (textalign1 == 'center') {
               document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
               document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
@@ -617,13 +609,7 @@ const TimeLine1 = () => {
               document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
               document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
           }
-
-          if (updatecount < 2) {
-              originalFontSize = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
-          }
-          else {
-              document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-          }
+          document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
           do {
               var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
               document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
