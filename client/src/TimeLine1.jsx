@@ -30,7 +30,7 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0,0,0,0]));
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
@@ -52,6 +52,9 @@ const TimeLine1 = () => {
     initialAngle: 0,
     finalAngle: 0,
     outAngle: 0,
+
+    finalOpacity: 1,
+
     initialMatrix: 'matrix(1,0,0,1,300,200)',
     finalMatrix: 'matrix(1,0,0,1,400,400)',
     outMatrix: 'matrix(1,0,0,1,200,100)',
@@ -86,6 +89,7 @@ const TimeLine1 = () => {
     finalMatrix: xpositions[i].finalMatrix,
     outMatrix: xpositions[i].outMatrix,
 
+    finalOpacity: xpositions[i].finalOpacity,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
     stayDuration: (kf[i][2] - kf[i][1]) * 10,
@@ -201,7 +205,7 @@ const TimeLine1 = () => {
         scaleY: position(i).finalScaleY,
         angle: position(i).finalAngle,
 
-        opacity: 1
+        opacity: position(i).finalOpacity,
       })
     });
 
@@ -234,7 +238,7 @@ const TimeLine1 = () => {
       canvas.requestRenderAll();
 
       setTimeout(() => {
-        element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: 1 }, {
+        element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).initialToFinalDuration,
           easing: fabric.util.ease.linear
@@ -290,10 +294,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y) };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y),finalOpacity:element.opacity };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element) };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element),finalOpacity:element.opacity };
         }
         setXpositions(updatedxpositions);
       }
@@ -370,7 +374,7 @@ const TimeLine1 = () => {
       }
 
       if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
-        element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: 1 });
+        element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity });
       }
       if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
         element.set({
@@ -741,7 +745,7 @@ const TimeLine1 = () => {
   //     setKf(kf.map((val)=>val.map((val1)=>val1)))
   //   }
   // }, [])
-  
+
   return (<div>
     <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
     {pannelEnable && <div>
@@ -850,7 +854,7 @@ const TimeLine1 = () => {
                   }}
                 >
                   <div style={{ width: 5, height: 200, backgroundColor: 'red', fontWeight: 'bold' }}>
-                    {currentFrame / (25*4)}
+                    {currentFrame / (25 * 4)}
 
                   </div>
                 </Rnd>
