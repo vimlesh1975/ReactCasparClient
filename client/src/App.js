@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 
 
-const buildDate = '210722_1'
+const buildDate = '230722_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -58,7 +58,6 @@ const App = () => {
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
   const [tabindex, settabindex] = useState(0)
-
 
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
@@ -199,10 +198,18 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
 
-
+const changepannelEnable=(i)=>{
+  if (i===11){
+    dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true})
+  }
+  else{
+    dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload:false })
+  }
+}
 
   const onTabChange = (index, prevIndex) => {
-    settabindex(index)
+    changepannelEnable(index);
+    settabindex(index);
     switch (index) {
       case 0:
       case 3:

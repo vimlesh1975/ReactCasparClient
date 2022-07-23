@@ -162,6 +162,18 @@ const path1Reducer = (state = initialPath1, action) => {
     }
 }
 
+const initialPannelEnable={pannelEnable:false};
+const pannelEnableReducer = (state = initialPannelEnable, action) => {
+    switch (action.type) {
+        case 'CHANGE_PANNEL_ENABLED':
+            return {
+                ...state,
+                pannelEnable: action.payload
+            }
+        default: return state
+    }
+}
+
 const rootReducer = combineReducers({
     canvasListReducer,
     currentPageReducer,
@@ -175,7 +187,8 @@ const rootReducer = combineReducers({
     currentscreenSizeReducer,
     path1Reducer,
     jsfilenameReducer,
-    cssfilenameReducer
+    cssfilenameReducer,
+    pannelEnableReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

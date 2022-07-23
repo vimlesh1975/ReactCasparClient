@@ -5,6 +5,7 @@ import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 
+const timelineWidth=870;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -22,7 +23,9 @@ const TimeLine1 = () => {
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
-  const [pannelEnable, setPannelEnable] = useState(true);
+  // const [pannelEnable, setPannelEnable] = useState(true);
+  const pannelEnable = useSelector(state => state.pannelEnableReducer.pannelEnable);
+
   const [autoOut, setAutoOut] = useState(true);
   const [htmlfileHandle, sethtmlfileHandle] = useState();
   const [htmlpageHandle, sethtmlpageHandle] = useState();
@@ -30,7 +33,8 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+  // const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
   // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
@@ -55,9 +59,9 @@ const TimeLine1 = () => {
 
     finalOpacity: 1,
 
-    initialMatrix: 'matrix(1,0,0,1,300,200)',
-    finalMatrix: 'matrix(1,0,0,1,400,400)',
-    outMatrix: 'matrix(1,0,0,1,200,100)',
+    initialMatrix: 'matrix(1,0,0,1,0,500)',
+    finalMatrix: 'matrix(1,0,0,1,100,250)',
+    outMatrix: 'matrix(1,0,0,1,700,400)',
 
 
   })))
@@ -121,7 +125,7 @@ const TimeLine1 = () => {
     }
     else if (kfi === 3) {
       xmin = kf[i][kfi - 1];;
-      xmax = 750;
+      xmax = timelineWidth;
     }
     else {
       xmin = kf[i][kfi - 1];
@@ -427,7 +431,7 @@ const TimeLine1 = () => {
   }
 
   const ResetAnimation = () => {
-    setKf(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
+    setKf(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
   }
 
 
@@ -747,7 +751,10 @@ const TimeLine1 = () => {
   // }, [])
 
   return (<div>
-    <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={e => setPannelEnable(val => !val)} />
+    {/* <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={() => {
+      // setPannelEnable(val => !val);
+      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: !pannelEnable })
+      }} /> */}
     {pannelEnable && <div>
       <div >
         <button onClick={() => startPoint()}>Set Start Point</button>
@@ -782,7 +789,7 @@ const TimeLine1 = () => {
             <div onClick={(e) => {
               ss({ x: e.screenX - 1040 });
               canvas.setActiveObject(canvas.item(i));
-            }} style={{ backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', width: 800, height: 20, marginTop: 1, }} >
+            }} style={{ backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', width: timelineWidth, height: 20, marginTop: 1, }} >
               <div style={{ position: 'relative' }}>
                 <Rnd
                   dragAxis='x'
@@ -867,11 +874,11 @@ const TimeLine1 = () => {
       </div>
     </div>
     }
-    <div style={{ width: 100, height: 500 }}>
+    <div style={{ width: 100, height: 650 }}>
       {/* blank space */}
     </div>
     <div>
-      <h3>Animate Only position size and Rotation.</h3>
+      <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)
 }
