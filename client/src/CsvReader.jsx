@@ -1,7 +1,9 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 import { endpoint } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
+
+var iii = 1;
 
 export default function CsvReader() {
     const csvArray = ["ccgf0; ccgf1;ccgf2;ccgf3",
@@ -14,6 +16,28 @@ export default function CsvReader() {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const dispatch = useDispatch();
+
+    const [intervalId, setIntervalId] = useState(0);
+    // const [currentRow, setCurrentRow] = useState(0);
+    const handleClick = () => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIntervalId(0);
+            return;
+        }
+
+        const newIntervalId = setInterval(() => {
+            recallPage('200', 'csv', (csvArray[iii].split(';')).map((val1, iii) => ({ key: csvArray[0].split(';')[iii], value: val1, type: 'text' })));
+            if (iii < csvArray.length - 1) {
+
+                iii += 1;
+            }
+            else {
+                iii = 1;
+            }
+        }, 4000);
+        setIntervalId(newIntervalId);
+    };
 
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -101,22 +125,23 @@ export default function CsvReader() {
     //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
     //     }, 1000);
     // }
-
     return (<div>
         <h3> CSV test</h3>
-        {csvArray.length > 0 ?
-            <>
-                <table border='1'>
-                    <tbody>
-                        {
-                            csvArray.map((item, i) => (<tr key={i}>
-                                {item?.split(';').map((val,ii) => <td>{val}</td>)}
-                                {(i !== 0) && <td><button onClick={()=>{recallPage('200','csv',[{ key: 'ccgf0', value: 'val', type: 'text' }])}}>Show</button></td>}
-                            </tr>))
-                        }
-                    </tbody>
-                </table>
-            </> : null}
-    </div>);
+        {(csvArray.length > 0) &&
+            <table border='1'>
+                <tbody>
+                    {csvArray.map((item, i) =>
+                    (<tr key={i}>
+                        {(item?.split(';')).map((val, ii) => <td>{val}</td>)}
+                        {(i !== 0) && <td><button onClick={() => { recallPage('200', 'csv', (item.split(';')).map((val1, iii) => ({ key: csvArray[0].split(';')[iii], value: val1, type: 'text' }))) }}>Show</button></td>}
+                    </tr>))
+                    }
+                </tbody>
+            </table>
+        }
+        <button onClick={
+            handleClick
+        }>{intervalId ? 'Stop' : 'Start'}</button>
 
+    </div>);
 }

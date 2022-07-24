@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 
 
-const buildDate = '230722_1'
+const buildDate = '240722_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -198,14 +198,14 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
 
-const changepannelEnable=(i)=>{
-  if (i===11){
-    dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true})
+  const changepannelEnable = (i) => {
+    if (i === 11) {
+      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
+    }
+    else {
+      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: false })
+    }
   }
-  else{
-    dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload:false })
-  }
-}
 
   const onTabChange = (index, prevIndex) => {
     changepannelEnable(index);
