@@ -3,15 +3,15 @@ import { endpoint } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 
-var iii = 1;
+var currentRow = 1;
 
 export default function CsvReader() {
-    const csvArray = ["ccgf0; ccgf1;ccgf2;ccgf3",
-        "booker12;9012;Rachel;Booker",
-        "grey07;2070;Laura;Grey",
-        "johnson81;4081;Craig;Johnson",
-        "jenkins46;9346;Mary;Jenkins",
-        "smith79;5079;Jamie;Smith"];
+    const csvArray = ["ccgf0;ccgf1;ccgf2;ccgf3",
+        "booker12;a9012a;Rachel;Booker",
+        "grey07;b2070b;Laura;Grey",
+        "johnson81;c4081c;Craig;Johnson",
+        "jenkins46;d9346d;Mary;Jenkins",
+        "smith79;e5079e;Jamie;Smith"];
     const currentscreenSize = localStorage.getItem('RCC_currentscreenSize');
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -27,13 +27,13 @@ export default function CsvReader() {
         }
 
         const newIntervalId = setInterval(() => {
-            recallPage('200', 'csv', (csvArray[iii].split(';')).map((val1, iii) => ({ key: csvArray[0].split(';')[iii], value: val1, type: 'text' })));
-            if (iii < csvArray.length - 1) {
+            recallPage('200', 'csv', (csvArray[currentRow].split(';')).map((val1, i) => ({ key: csvArray[0].split(';')[i], value: val1, type: 'text' })));
+            if (currentRow < csvArray.length - 1) {
 
-                iii += 1;
+                currentRow += 1;
             }
             else {
-                iii = 1;
+                currentRow = 1;
             }
         }, 4000);
         setIntervalId(newIntervalId);
