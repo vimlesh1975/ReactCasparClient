@@ -5,7 +5,7 @@ import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 
-const timelineWidth=870;
+const timelineWidth = 870;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -23,7 +23,6 @@ const TimeLine1 = () => {
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
   const [tobecopiedAnimation, setTobecopiedAnimation] = useState(0);
-  // const [pannelEnable, setPannelEnable] = useState(true);
   const pannelEnable = useSelector(state => state.pannelEnableReducer.pannelEnable);
 
   const [autoOut, setAutoOut] = useState(true);
@@ -33,9 +32,7 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
-  // const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [0, 0, 0, 0]));
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
-  // const [kf, setKf] = useState(layers.map((val, i) => [0, 0, 0, 0]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
     finalx: 100,
@@ -99,6 +96,26 @@ const TimeLine1 = () => {
     stayDuration: (kf[i][2] - kf[i][1]) * 10,
     outDuration: (kf[i][3] - kf[i][2]) * 10
   });
+
+  const deleteItem = () => {
+    const updatedkf=[...kf]
+    const updatedxpositions=[...xpositions];
+
+    canvas.getActiveObjects().forEach((element) => {
+      const index1=canvas.getObjects().indexOf(element)
+
+       canvas.remove(element) ;
+
+       updatedkf.splice(index1,1);
+       updatedxpositions.splice(index1,1);
+
+      });
+      setKf(updatedkf);
+      setXpositions(updatedxpositions)
+
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+  }
 
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
@@ -298,10 +315,10 @@ const TimeLine1 = () => {
           var matrix = activeSelection.calcTransformMatrix();
           var objectPosition = { x: element.left, y: element.top };
           var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y),finalOpacity:element.opacity };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: finalPosition.x, finaly: finalPosition.y, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element, finalPosition.x, finalPosition.y), finalOpacity: element.opacity };
         }
         else {
-          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element),finalOpacity:element.opacity };
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element), finalOpacity: element.opacity };
         }
         setXpositions(updatedxpositions);
       }
@@ -778,7 +795,7 @@ const TimeLine1 = () => {
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
-
+        <button title='Delete Seleted' onClick={deleteItem}>Delete Selected</button>
 
       </div>
 
