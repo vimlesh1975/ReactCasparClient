@@ -15,6 +15,19 @@ const Scroll = () => {
 
     const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    const [scrollTextProperties,setScrollTextProperties]=useState({
+        shadow: shadowOptions,
+        top: 521,
+        fill: options.currentColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'left',
+        stroke: options.stroke,
+        strokeWidth: options.strokeWidth,
+    })
 
     const updateplayerList1 = () => {
         setPlayerList1([...newplayerList1])
@@ -30,6 +43,9 @@ const Scroll = () => {
     }
 
     const deletePage = e => {
+        if (playerList1.length===1){
+            return
+        }
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')), 1);
         setPlayerList1(aa);
@@ -81,26 +97,16 @@ const Scroll = () => {
         setPlayerList1(updatedcanvasList)
         setNewplayerList1(updatedcanvasList)
     };
+
     const setAsScrollText = () => {
         var aa = '';
         playerList1.forEach(element => {
             if (element.use1 === true) { aa += ` ${delemeter} ` + element.data1 };
         });
         const text = new fabric.IText(aa, {
-            shadow: shadowOptions,
             id: 'id_' + uuidv4(),
             left: 0,
-            top: 521,
-            fill: options.currentColor,
-            fontFamily: options.currentFont,
-            fontWeight: 'bold',
-            fontSize: options.currentFontSize,
-            editable: true,
-            objectCaching: false,
-            textAlign: 'left',
-            stroke: options.stroke,
-            strokeWidth: options.strokeWidth,
-
+            ...scrollTextProperties
         });
         canvas.add(text);
         canvas.requestRenderAll();
@@ -110,10 +116,7 @@ const Scroll = () => {
         var left1 = 0;
         playerList1.forEach((element, i) => {
             if (element.use1 === true) {
-
                 fabric.Image.fromURL(playerList1[i].delemeterLogo, myImg => {
-
-
                     if (myImg == null) {
                         alert("Error!");
                     } else {
@@ -122,25 +125,15 @@ const Scroll = () => {
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
                             left: left1,
-                            top: 521,
+                            top: scrollTextProperties.top,
                         })
                         canvas.renderAll();
                         left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
-                            shadow: shadowOptions,
                             id: 'id_' + uuidv4(),
                             left: left1,
-                            top: 521,
-                            fill: options.currentColor,
-                            fontFamily: options.currentFont,
-                            fontWeight: 'bold',
-                            fontSize: options.currentFontSize,
-                            editable: true,
-                            objectCaching: false,
-                            textAlign: 'left',
-                            stroke: options.stroke,
-                            strokeWidth: options.strokeWidth,
+                            ...scrollTextProperties
                         });
                         canvas.add(text).setActiveObject(text);
                         canvas.renderAll();
@@ -178,6 +171,23 @@ const Scroll = () => {
                     <table border='0'>
                         <tbody >
                             <tr>
+                                <td><button onClick={()=>{
+                                    const selectedObject=canvas.getActiveObjects()[0];
+                                    if (selectedObject){
+                                    setScrollTextProperties({
+                                        shadow:selectedObject.shadow,
+                                        top: selectedObject.top,
+                                        fill: selectedObject.fill,
+                                        fontFamily: selectedObject.fontFamily,
+                                        fontWeight: selectedObject.fontWeight,
+                                        fontSize: selectedObject.fontSize,
+                                        editable: true,
+                                        objectCaching: false,
+                                        textAlign: 'left',
+                                        stroke: selectedObject.stroke,
+                                        strokeWidth: selectedObject.strokeWidth,
+                                    })}
+                                }}>Set text Properties as selected object</button></td>
                                 <td><button onClick={setAsScrollText}>Set as Scroll Text with delemeter</button></td>
                                 <td>Delemeter for scroll text</td>
                                 <td><input style={{ width: 40, textAlign: 'center' }} onChange={(e) => setDelemeter(e.target.value)} value={delemeter} /></td>
@@ -189,7 +199,7 @@ const Scroll = () => {
                             <tr>
                                 <td>
                                     <label>
-                                        <img src={playerList1[0].delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
+                                        <img src={playerList1[0]?.delemeterLogo} alt='' width='20' height='20' style={{ border: '1px solid red' }} />
                                         <input type="file" onChange={e => {
                                             var reader = new FileReader();
                                             reader.onloadend = () => {

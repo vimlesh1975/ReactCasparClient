@@ -157,6 +157,9 @@ const OnelinerAndBreakingNews = () => {
         }, 1000);
     }
     const deletePage = e => {
+        if (playerList1.length===1){
+            return
+        }
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')), 1);
         setPlayerList1(aa);
