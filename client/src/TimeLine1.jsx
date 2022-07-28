@@ -5,7 +5,8 @@ import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 
-const timelineWidth = 870;
+const timelineWidth = 860;
+// const timelineWidth = 2005;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -98,20 +99,20 @@ const TimeLine1 = () => {
   });
 
   const deleteItem = () => {
-    const updatedkf=[...kf]
-    const updatedxpositions=[...xpositions];
+    const updatedkf = [...kf]
+    const updatedxpositions = [...xpositions];
 
     canvas.getActiveObjects().forEach((element) => {
-      const index1=canvas.getObjects().indexOf(element)
+      const index1 = canvas.getObjects().indexOf(element)
 
-       canvas.remove(element) ;
+      canvas.remove(element);
 
-       updatedkf.splice(index1,1);
-       updatedxpositions.splice(index1,1);
+      updatedkf.splice(index1, 1);
+      updatedxpositions.splice(index1, 1);
 
-      });
-      setKf(updatedkf);
-      setXpositions(updatedxpositions)
+    });
+    setKf(updatedkf);
+    setXpositions(updatedxpositions)
 
     canvas.discardActiveObject();
     canvas.requestRenderAll();
@@ -796,10 +797,8 @@ const TimeLine1 = () => {
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
         <button title='Delete Seleted' onClick={deleteItem}>Delete Selected</button>
-
       </div>
-
-      <div>
+      <div style={{ height: 740,width:860, overflow: 'scroll' }}>
         {layers?.map((element, i) => {
           return <div
             key={i} style={{}}>
@@ -821,9 +820,6 @@ const TimeLine1 = () => {
                 >
                   <div style={{ width: kf[i][1] - kf[i][0], height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
                 </Rnd>
-
-
-
                 <Rnd
                   dragAxis='x'
                   enableResizing={{}}
@@ -837,8 +833,6 @@ const TimeLine1 = () => {
                 >
                   <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
                 </Rnd>
-
-
                 <Rnd
                   dragAxis='x'
                   enableResizing={{}}
@@ -852,8 +846,6 @@ const TimeLine1 = () => {
                 >
                   <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
                 </Rnd>
-
-
                 {(kf[i])?.map((val, kfi) =>
                   <Rnd
                     key={kfi}
@@ -867,33 +859,28 @@ const TimeLine1 = () => {
                   > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
                   </Rnd>
                 )}
-                {(i === 0) && <Rnd
-                  dragAxis='x'
-                  enableResizing={{}}
-                  bounds='parent'
-                  size={{ width: 5, height: 200 }}
-                  position={{ x: currentFrame, y: 0 }}
-                  onDrag={(e, d) => {
-                    ss(d);
-                  }}
-                >
-                  <div style={{ width: 5, height: 200, backgroundColor: 'red', fontWeight: 'bold' }}>
-                    {currentFrame / (25 * 4)}
-
-                  </div>
-                </Rnd>
-                }
               </div>
             </div>
-
           </div>
         })}
+       <Rnd
+          dragAxis='x'
+          enableResizing={{}}
+          bounds='parent'
+          size={{ width: 5, height: 200 }}
+          position={{ x: currentFrame, y: 0 }}
+          onDrag={(e, d) => {
+            ss(d);
+          }}
+        >
+          <div style={{ width: 5, height: (layers.length) * 21, backgroundColor: 'red', fontWeight: 'bold',}}>
+            {currentFrame / (25 * 4)}
+          </div>
+        </Rnd>
+
       </div>
     </div>
     }
-    <div style={{ width: 100, height: 650 }}>
-      {/* blank space */}
-    </div>
     <div>
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
