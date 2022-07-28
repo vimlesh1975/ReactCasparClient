@@ -995,6 +995,7 @@ const DrawingController = () => {
 
     const [strokedashoffset, setstrokedashoffset] = useState(0);
     const [strokedasharray, setstrokedasharray] = useState([0, 0]);
+    const [currentFillColor, setCurrentFillColor] = useState('#000000')
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -2190,12 +2191,15 @@ const DrawingController = () => {
 
             if (element.fontStyle !== null) { setitallicnormal(element.fontStyle); }
             if (element.fontWeight !== null) { setfontWeight1(element.fontWeight); }
+
             if (element.undeline !== null) {
                 setunderline1((element.underline) ? 'underline' : '')
             }
             if (element.undeline !== null) {
                 setlinethrough1((element.linethrough) ? 'line-through' : '')
             }
+
+            setCurrentFillColor(element.fill);
 
             if (element.strokeDashArray !== null) {
                 setstrokedasharray(element.strokeDashArray);
@@ -2464,7 +2468,10 @@ const DrawingController = () => {
                                     return `${colorStop.color} ${colorStop.offset * 100}%`;
                                 }
                             )}`
-                        }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.fill} onChange={e => changeCurrentColor(e, canvas)} />}
+                        }} /> : <input type="color" value={currentFillColor}  onChange={e => {
+                            changeCurrentColor(e, canvas);
+                            // setCurrentFillColor(e.target.value);
+                        }} />}
                         BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
                         Stroke {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
                             window.changeTab(4)
