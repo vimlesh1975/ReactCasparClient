@@ -58,9 +58,10 @@ fabric.util.addListener(document.body, 'keydown', function (options) {
             window.editor.canvas?.getActiveObjects().forEach(item => {
                 //  alert(item.type);
                 if (!((item.type === 'textbox') && item.isEditing)) {
-                    window.editor.canvas?.remove(item);
-                    window.editor.canvas?.discardActiveObject();
-                    window.editor.canvas?.requestRenderAll();
+                    // window.editor.canvas?.remove(item);
+                    // window.editor.canvas?.discardActiveObject();
+                    // window.editor.canvas?.requestRenderAll();
+                    window.deleteItemfromtimeline();
                 }
             });
         }
@@ -226,7 +227,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Text("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
+    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
         id: 'ccg_' + uuidv4(),
         shadow: shadowOptions,
         left: 100,
@@ -248,7 +249,7 @@ export const createText = (canvas) => {
 };
 export const createIText = (canvas) => {
 
-    const text = new fabric.IText("अगला प्रशिक्षण 06 जून 2022 से है| Next Training is from 06 Jun 2022.", {
+    const text = new fabric.IText("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -273,7 +274,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("अगला प्रशिक्षण Next Training", {
+    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -290,12 +291,9 @@ export const createTextBox = (canvas) => {
         padding: 5,
 
     });
-
-
-
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 455, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 445, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
@@ -326,8 +324,6 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
         }
     });
 }
-
-
 
 export const Upload = (e, canvas) => {
     if (e.target.files[0]) {
@@ -436,27 +432,6 @@ export const createPentagon = (canvas) => {
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-// export const createHexagon = (canvas) => {
-//     const rect = new fabric.Polygon([{ x: 207, y: 120 }, { x: 307, y: 60 }, { x: 407, y: 120 }, { x: 407, y: 220 }, { x: 307, y: 280 }, { x: 207, y: 220 }], {
-//         id: 'id_' + uuidv4(),
-//         shadow: shadowOptions,
-//         top: -100,
-//         left: 300,
-//         rx: 50,
-//         ry: 80,
-//         opacity: 0.9,
-//         fill: '#00ff00',
-//         hasRotatingPoint: true,
-//         objectCaching: false,
-//         stroke: options.stroke,
-//         strokeWidth: 3,
-//         strokeUniform: true,
-//     });
-//     canvas.add(rect).setActiveObject(rect);
-//     canvas.requestRenderAll();
-//     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
-// };
-
 export const createLine = (canvas) => {
     const rect = new fabric.Line([500, 450, 800, 450.00001], {
         id: 'id_' + uuidv4(),
@@ -494,7 +469,6 @@ export const createCircle = (canvas) => {
     });
 
     canvas.add(circle).setActiveObject(circle);
-    // circle.onSelect(e=>console.log(e))
     canvas.requestRenderAll();
     circle.animate('left', 150, { onChange: canvas.renderAll.bind(canvas) })
 };
@@ -592,9 +566,11 @@ export const gradientStroke = canvas => {
 };
 
 export const deleteSelectedItem = canvas => {
-    canvas.getActiveObjects().forEach(element => { canvas.remove(element) });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
+    // canvas.getActiveObjects().forEach(element => { canvas.remove(element) });
+    // canvas.discardActiveObject();
+    // canvas.requestRenderAll();
+    window.deleteItemfromtimeline();
+
 }
 
 export const swapFaceandStrokeColors = canvas => {
@@ -611,7 +587,6 @@ export const deleteAll = canvas => {
     aa.forEach(element => { canvas.remove(element) });
     canvas.discardActiveObject();
     canvas.requestRenderAll();
-
 }
 
 export const bringToFront = canvas => {
@@ -653,10 +628,7 @@ export const lock = canvas => {
     canvas.getActiveObjects().forEach(element => element.selectable = false);
     canvas.discardActiveObject();
     canvas.requestRenderAll();
-
 }
-
-
 export const unlockAll = canvas => {
     canvas.forEachObject(element => element.selectable = true);
 }
@@ -755,7 +727,6 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
         this._resetShadow();
     },
 });
-
 
 const putatCenter = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2604,7 +2575,7 @@ const DrawingController = () => {
                         }}>S</button>
 
 
-                        <button title='Delete Seleted' onClick={() => deleteSelectedItem(canvas)}><VscTrash /> Selected</button>
+                        <button title='Delete Selected' onClick={() => deleteSelectedItem()}><VscTrash /> Selected</button>
                         <button title='Delete All' onClick={() => deleteAll(canvas)}><VscTrash />All</button>
                         <button title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
                         <button title='Unlock All' onClick={() => unlockAll(canvas)}><VscUnlock />All</button>

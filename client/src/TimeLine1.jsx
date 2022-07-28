@@ -98,7 +98,7 @@ const TimeLine1 = () => {
     outDuration: (kf[i][3] - kf[i][2]) * 10
   });
 
-  const deleteItem = () => {
+  const deleteItemfromtimeline = () => {
     const updatedkf = [...kf]
     const updatedxpositions = [...xpositions];
 
@@ -117,6 +117,7 @@ const TimeLine1 = () => {
     canvas.discardActiveObject();
     canvas.requestRenderAll();
   }
+  window.deleteItemfromtimeline=deleteItemfromtimeline;
 
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
@@ -796,7 +797,7 @@ const TimeLine1 = () => {
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
-        <button title='Delete Seleted' onClick={deleteItem}>Delete Selected</button>
+        <button title='Delete Seleted' onClick={deleteItemfromtimeline}>Delete Selected</button>
       </div>
       <div style={{ height: 740,width:860, overflow: 'scroll' }}>
         {layers?.map((element, i) => {
