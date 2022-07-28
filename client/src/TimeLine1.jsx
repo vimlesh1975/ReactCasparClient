@@ -33,6 +33,8 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
+  const [timelineScale,settimelineScale]=useState(1);
+
   const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
   const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
     initialx: 0,
@@ -761,19 +763,7 @@ const TimeLine1 = () => {
     }
   }
 
-  // useEffect(() => {
-  //   // first
-  // setKf(kf.map((val)=>val.map((val1)=>val1/2)))
-  //   return () => {
-  //     setKf(kf.map((val)=>val.map((val1)=>val1)))
-  //   }
-  // }, [])
-
   return (<div>
-    {/* <span> Pannel Enable:</span>  <input type="checkbox" checked={pannelEnable} onChange={() => {
-      // setPannelEnable(val => !val);
-      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: !pannelEnable })
-      }} /> */}
     {pannelEnable && <div>
       <div >
         <button onClick={() => startPoint()}>Set Start Point</button>
@@ -799,7 +789,7 @@ const TimeLine1 = () => {
         <button onClick={test}>Console Log</button>
         <button title='Delete Seleted' onClick={deleteItemfromtimeline}>Delete Selected</button>
       </div>
-      <div style={{ height: 740,width:860, overflow: 'scroll' }}>
+      <div style={{ height: 740,width:860, overflowY: 'scroll' , overflowX: 'hidden'}}>
         {layers?.map((element, i) => {
           return <div
             key={i} style={{}}>
@@ -819,7 +809,7 @@ const TimeLine1 = () => {
                     setKf(updatedkf)
                   }}
                 >
-                  <div style={{ width: kf[i][1] - kf[i][0], height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
+                  <div style={{ width: (kf[i][1] - kf[i][0]), height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
                 </Rnd>
                 <Rnd
                   dragAxis='x'
@@ -832,7 +822,7 @@ const TimeLine1 = () => {
                     setKf(updatedkf)
                   }}
                 >
-                  <div style={{ marginTop: 0, width: kf[i][2] - kf[i][1], height: 20, backgroundColor: 'green' }}></div>
+                  <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green' }}></div>
                 </Rnd>
                 <Rnd
                   dragAxis='x'
@@ -845,7 +835,7 @@ const TimeLine1 = () => {
                     setKf(updatedkf)
                   }}
                 >
-                  <div style={{ marginTop: 0, width: kf[i][3] - kf[i][2], height: 20, backgroundColor: 'red' }}></div>
+                  <div style={{ marginTop: 0, width:(kf[i][3] - kf[i][2]), height: 20, backgroundColor: 'red' }}></div>
                 </Rnd>
                 {(kf[i])?.map((val, kfi) =>
                   <Rnd
@@ -883,6 +873,10 @@ const TimeLine1 = () => {
     </div>
     }
     <div>
+    Timeline Scale: <input width={200} onChange={e => {
+      settimelineScale(e.target.value);
+      // setKf(val=>val.map((val1)=>val1.map((val2)=>val2/timelineScale)));
+    }} type="range" min='1' max='10' step='0.1' value={timelineScale} />{timelineScale}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)

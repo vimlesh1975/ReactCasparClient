@@ -2186,7 +2186,7 @@ const DrawingController = () => {
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
             if (element.scaleX !== null) { setscaleX(element.scaleX); }
             if (element.scaleY !== null) { setscaleY(element.scaleY); }
-            if (element.angle !== null) { setangle(element.angle); }
+            if (element.angle !== null) { setangle(parseInt(element.angle)); }
 
             if (element.fontStyle !== null) { setitallicnormal(element.fontStyle); }
             if (element.fontWeight !== null) { setfontWeight1(element.fontWeight); }
@@ -2478,7 +2478,11 @@ const DrawingController = () => {
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
                         Stroke/Brush W: {strokeWidth}
                         <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
-                        <span> ScaleX : {scaleX.toFixed(1)} ScaleY  : {scaleY.toFixed(1)} Angle  : {angle.toFixed(1)}</span>
+                        <span> ScaleX : {scaleX.toFixed(1)} ScaleY  : {scaleY.toFixed(1)} Angle: <input style={{ width: '40px' }} onChange={e => {
+                            setangle(e.target.value);
+                            canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
+                            canvas.requestRenderAll();
+                        }} type="number" min='0' max='360' step='1' value={angle} /> </span>
                         <br /> stroke-dasharray: <input className='inputRangeshadow' onChange={e => onstrokedasharraychange(e)} type="range" min='0' max='100' step='1' value={strokedasharray[0]} />{strokedasharray[0]}
                         stroke-dash-offset: <input className='inputRangeshadow' onChange={e => onstrokedashoffsetchange(e)} type="range" min='0' max='100' step='1' value={strokedashoffset} /> {strokedashoffset}
 
