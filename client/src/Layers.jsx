@@ -135,7 +135,8 @@ const Layers = () => {
                                                             color:snapshot.isDragging ? 'white':(activeLayers.includes(val)) ? 'white' : '',
                                                             //  marginTop: 100
                                                         }}
-                                                    ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
+                                                    >
+                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
                                                         <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
                                                         <td><button key1={i} onClick={(e) => deleteLayer(e, window.editor?.canvas)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
