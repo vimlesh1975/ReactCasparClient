@@ -174,6 +174,57 @@ const pannelEnableReducer = (state = initialPannelEnable, action) => {
     }
 }
 
+const initialKf={kf:Array.from(Array(200).keys()).map(() => [20, 60, 260, 300])};
+const kfReducer = (state = initialKf, action) => {
+    switch (action.type) {
+        case 'CHANGE_KF':
+            return {
+                ...state,
+                kf: action.payload
+            }
+        default: return state
+    }
+}
+
+const initialxpositions={xpositions:Array.from(Array(200).keys()).map(() => ({
+    initialx: 0,
+    finalx: 100,
+    outx: 700,
+
+    initialy: 500,
+    finaly: 250,
+    outy: 400,
+
+    initialScaleX: 1,
+    finalScaleX: 1,
+    outScaleX: 1,
+
+    initialScaleY: 1,
+    finalScaleY: 1,
+    outScaleY: 1,
+
+    initialAngle: 0,
+    finalAngle: 0,
+    outAngle: 0,
+
+    finalOpacity: 1,
+
+    initialMatrix: 'matrix(1,0,0,1,0,500)',
+    finalMatrix: 'matrix(1,0,0,1,100,250)',
+    outMatrix: 'matrix(1,0,0,1,700,400)',
+  }))};
+
+const xpositionsReducer = (state = initialxpositions, action) => {
+    switch (action.type) {
+        case 'CHANGE_XPOSITIONS':
+            return {
+                ...state,
+                xpositions: action.payload
+            }
+        default: return state
+    }
+}
+
 const rootReducer = combineReducers({
     canvasListReducer,
     currentPageReducer,
@@ -188,7 +239,9 @@ const rootReducer = combineReducers({
     path1Reducer,
     jsfilenameReducer,
     cssfilenameReducer,
-    pannelEnableReducer
+    pannelEnableReducer,
+    kfReducer,
+    xpositionsReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

@@ -6,7 +6,6 @@ import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 
 const timelineWidth = 860;
-// const timelineWidth = 2005;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -33,41 +32,13 @@ const TimeLine1 = () => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
-  const [timelineScale,settimelineScale]=useState(1);
+  const kf = useSelector(state => state.kfReducer.kf);
+  const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
-  const [kf, setKf] = useState(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
-  const [xpositions, setXpositions] = useState(Array.from(Array(200).keys()).map((val, i) => ({
-    initialx: 0,
-    finalx: 100,
-    outx: 700,
-
-    initialy: 500,
-    finaly: 250,
-    outy: 400,
-
-    initialScaleX: 1,
-    finalScaleX: 1,
-    outScaleX: 1,
-
-    initialScaleY: 1,
-    finalScaleY: 1,
-    outScaleY: 1,
-
-    initialAngle: 0,
-    finalAngle: 0,
-    outAngle: 0,
-
-    finalOpacity: 1,
-
-    initialMatrix: 'matrix(1,0,0,1,0,500)',
-    finalMatrix: 'matrix(1,0,0,1,100,250)',
-    outMatrix: 'matrix(1,0,0,1,700,400)',
-
-
-  })))
+  const [timelineScale, settimelineScale] = useState(1);
 
   const position = i => ({
-    delay: kf[i][0] * 10,
+    delay: kf[i][0] * 10 * timelineScale,
 
     initialx: xpositions[i].initialx,
     finalx: xpositions[i].finalx,
@@ -95,31 +66,26 @@ const TimeLine1 = () => {
 
     finalOpacity: xpositions[i].finalOpacity,
 
-    initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10,
-    stayDuration: (kf[i][2] - kf[i][1]) * 10,
-    outDuration: (kf[i][3] - kf[i][2]) * 10
+    initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10 * timelineScale,
+    stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
+    outDuration: (kf[i][3] - kf[i][2]) * 10 * timelineScale
   });
 
   const deleteItemfromtimeline = () => {
     const updatedkf = [...kf]
     const updatedxpositions = [...xpositions];
-
     canvas.getActiveObjects().forEach((element) => {
       const index1 = canvas.getObjects().indexOf(element)
-
       canvas.remove(element);
-
       updatedkf.splice(index1, 1);
       updatedxpositions.splice(index1, 1);
-
     });
-    setKf(updatedkf);
-    setXpositions(updatedxpositions)
-
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
     canvas.discardActiveObject();
     canvas.requestRenderAll();
   }
-  window.deleteItemfromtimeline=deleteItemfromtimeline;
+  window.deleteItemfromtimeline = deleteItemfromtimeline;
 
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
@@ -130,11 +96,10 @@ const TimeLine1 = () => {
 
   const recallPageAndAnimation = () => {
     if (canvasList[currentPage].animation !== '') {
-      setKf(canvasList[currentPage].animation.kf);
-      setXpositions(canvasList[currentPage].animation.xpositions)
+      dispatch({ type: 'CHANGE_KF', payload: canvasList[currentPage].animation.kf });
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: canvasList[currentPage].animation.xpositions });
     }
 
-    // console.log(canvasList[currentPage].animation)
   }
   const modifyKf = (e, d, i, kfi) => {
     const updatedkf = [...kf];
@@ -154,7 +119,7 @@ const TimeLine1 = () => {
     }
     if ((xmin < d.x) && (xmax > d.x)) {
       updatedkf[i][kfi] = d.x;
-      setKf(updatedkf);
+      dispatch({ type: 'CHANGE_KF', payload: updatedkf });
     }
   }
   const play = () => {
@@ -173,7 +138,7 @@ const TimeLine1 = () => {
         setCurrentFrame(0);
         clearInterval(aa);
       }
-    }, 10);
+    }, 10 * timelineScale);
   }
 
   const setinAnimation2 = () => {
@@ -268,7 +233,7 @@ const TimeLine1 = () => {
           duration: position(i).initialToFinalDuration,
           easing: fabric.util.ease.linear
         });
-      }, position(i).delay);
+      }, (position(i).delay));
 
 
       setTimeout(() => {
@@ -277,7 +242,7 @@ const TimeLine1 = () => {
           duration: position(i).outDuration,
           easing: fabric.util.ease.linear
         });
-      }, position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration);
+      }, (position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration));
     });
 
   }
@@ -303,7 +268,8 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element) };
         }
-        setXpositions(updatedxpositions);
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+
       }
     })
   }
@@ -324,7 +290,8 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element), finalOpacity: element.opacity };
         }
-        setXpositions(updatedxpositions);
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+
       }
     })
   }
@@ -344,7 +311,7 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrix(element) };
         }
-        setXpositions(updatedxpositions);
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
       }
     })
   }
@@ -363,7 +330,6 @@ const TimeLine1 = () => {
           scaleY: position(i).initialScaleY,
           angle: position(i).initialAngle,
 
-          // opacity: 0,
           opacity: 1,
         });
       }
@@ -405,20 +371,15 @@ const TimeLine1 = () => {
         element.set({
           left: position(i).finalx + (position(i).outx - position(i).finalx) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           top: position(i).finaly + (position(i).outy - position(i).finaly) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-
           scaleX: position(i).finalScaleX + (position(i).outScaleX - position(i).finalScaleX) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           scaleY: position(i).finalScaleY + (position(i).outScaleY - position(i).finalScaleY) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-
           angle: position(i).finalAngle + (position(i).outAngle - position(i).finalAngle) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-
-          // opacity: 1 - (d.x - kf[i][2]) / (kf[i][3] - kf[i][2])
           opacity: 1
         });
       }
     })
     canvas.requestRenderAll();
   }
-
 
   const copyAnimation = () => {
     layers.forEach((element, i) => {
@@ -427,7 +388,6 @@ const TimeLine1 = () => {
         return;
       }
     });
-
   }
   const pasteAnimation = () => {
     const updatedkf = [...kf];
@@ -436,25 +396,23 @@ const TimeLine1 = () => {
         updatedkf[i] = [...kf[tobecopiedAnimation]];
       }
     });
-    setKf(updatedkf)
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
-
 
   const pasteAnimationtoAllLayers = () => {
     const updatedkf = [...kf];
     layers.forEach((element, i) => {
       updatedkf[i] = kf[tobecopiedAnimation];
     });
-    setKf(updatedkf)
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
     console.log(canvas.item(0))
   }
 
   const ResetAnimation = () => {
-    setKf(Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]));
+    dispatch({ type: 'CHANGE_KF', payload: Array.from(Array(200).keys()).map((val, i) => [20, 60, 260, 300]) });
   }
-
 
   const deselectAndSelectAgain = () => {
     const aa1 = activeLayers;
@@ -465,8 +423,6 @@ const TimeLine1 = () => {
     canvas.setActiveObject(sel);
     canvas.requestRenderAll();
   }
-
-
   function setstopCommand() {
     var Delay = [];
     for (let i = 0; i < layers?.length; i++) {
@@ -481,9 +437,7 @@ const TimeLine1 = () => {
     `
     });
     stopCommand = ss;
-
   }
-
 
   const setHtmlString = () => {
     html = `<!DOCTYPE html>
@@ -528,14 +482,11 @@ const TimeLine1 = () => {
     function outAnimation() {
     ${stopCommand};
     }
-
-
     var dataCaspar = {};
 
     function escapeHtml(unsafe) {
     return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
-
     // Parse templateData into an XML object
     function parseCaspar(str) {
     var xmlDoc;
@@ -545,7 +496,6 @@ const TimeLine1 = () => {
     }
     dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
     }
-
 
     // Make the XML templateData message into a more simple key:value object
     function XML2JSON(node) {
@@ -661,26 +611,21 @@ const TimeLine1 = () => {
 
   const exportHTML1 = canvas => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-
     canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
       element.set({
         left: position(i).finalx,
         top: position(i).finaly,
-
         scaleX: position(i).finalScaleX,
         scaleY: position(i).finalScaleY,
         angle: position(i).finalAngle,
-
         opacity: 1
       })
     });
 
     setinAnimation2();
     setstopCommand();
-
     selectAll(canvas);
-
     getNewFileHandle(canvas)
   }
   async function getNewFileHandle(canvas) {
@@ -789,7 +734,7 @@ const TimeLine1 = () => {
         <button onClick={test}>Console Log</button>
         <button title='Delete Seleted' onClick={deleteItemfromtimeline}>Delete Selected</button>
       </div>
-      <div style={{ height: 740,width:860, overflowY: 'scroll' , overflowX: 'hidden'}}>
+      <div style={{ height: 740, width: 860, overflowY: 'scroll', overflowX: 'hidden' }}>
         {layers?.map((element, i) => {
           return <div
             key={i} style={{}}>
@@ -806,7 +751,7 @@ const TimeLine1 = () => {
                   onDrag={(e, d) => {
                     const updatedkf = [...kf]
                     updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                    setKf(updatedkf)
+                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
                   }}
                 >
                   <div style={{ width: (kf[i][1] - kf[i][0]), height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
@@ -819,7 +764,7 @@ const TimeLine1 = () => {
                   onDrag={(e, d) => {
                     const updatedkf = [...kf]
                     updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                    setKf(updatedkf)
+                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
                   }}
                 >
                   <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green' }}></div>
@@ -832,10 +777,10 @@ const TimeLine1 = () => {
                   onDrag={(e, d) => {
                     const updatedkf = [...kf]
                     updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                    setKf(updatedkf)
+                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
                   }}
                 >
-                  <div style={{ marginTop: 0, width:(kf[i][3] - kf[i][2]), height: 20, backgroundColor: 'red' }}></div>
+                  <div style={{ marginTop: 0, width: (kf[i][3] - kf[i][2]), height: 20, backgroundColor: 'red' }}></div>
                 </Rnd>
                 {(kf[i])?.map((val, kfi) =>
                   <Rnd
@@ -854,7 +799,7 @@ const TimeLine1 = () => {
             </div>
           </div>
         })}
-       <Rnd
+        <Rnd
           dragAxis='x'
           enableResizing={{}}
           bounds='parent'
@@ -864,19 +809,18 @@ const TimeLine1 = () => {
             ss(d);
           }}
         >
-          <div style={{ width: 5, height: (layers.length) * 21, backgroundColor: 'red', fontWeight: 'bold',}}>
-            {currentFrame / (25 * 4)}
+          <div style={{ width: 5, minHeight: 200, height: ((layers.length) * 21)+30, backgroundColor: 'red', fontWeight: 'bold', }}>
+            {((currentFrame * timelineScale) / (25 * 4)).toFixed(1)}
           </div>
         </Rnd>
-
       </div>
     </div>
     }
     <div>
-    Timeline Scale: <input width={200} onChange={e => {
-      settimelineScale(e.target.value);
-      // setKf(val=>val.map((val1)=>val1.map((val2)=>val2/timelineScale)));
-    }} type="range" min='1' max='10' step='0.1' value={timelineScale} />{timelineScale}
+      Timeline Scale: <input width={200} onChange={e => {
+         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) =>val1 * timelineScale / e.target.value)) });
+        settimelineScale(e.target.value);
+      }} type="range" min='0.1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)
