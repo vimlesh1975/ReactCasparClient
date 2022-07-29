@@ -198,7 +198,7 @@ const ColorGradient2 = () => {
             <div style={{ marginTop: 20 }}>
                 {colors.map((color, i) => {
                     return (
-                        <div>
+                        <div key={i}>
                             {i}{" "}
                             <input
                                 type="color"

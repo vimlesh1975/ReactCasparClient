@@ -97,7 +97,7 @@ const TimeLine1 = () => {
   const recallPageAndAnimation = () => {
     if (canvasList[currentPage].animation !== '') {
       dispatch({ type: 'CHANGE_KF', payload: canvasList[currentPage].animation.kf });
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: canvasList[currentPage].animation.xpositions });
+      dispatch({ type: 'CHANGE_XPOSITIONS', payload: canvasList[currentPage].animation.xpositions });
     }
 
   }
@@ -268,7 +268,7 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], initialx: element.left, initialy: element.top, initialScaleX: element.scaleX, initialScaleY: element.scaleY, initialAngle: element.angle, initialMatrix: getMatrix(element) };
         }
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
 
       }
     })
@@ -290,7 +290,7 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], finalx: element.left, finaly: element.top, finalScaleX: element.scaleX, finalScaleY: element.scaleY, finalAngle: element.angle, finalMatrix: getMatrix(element), finalOpacity: element.opacity };
         }
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
 
       }
     })
@@ -311,7 +311,7 @@ const TimeLine1 = () => {
         else {
           updatedxpositions[i] = { ...updatedxpositions[i], outx: element.left, outy: element.top, outScaleX: element.scaleX, outScaleY: element.scaleY, outAngle: element.angle, outMatrix: getMatrix(element) };
         }
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
       }
     })
   }
@@ -735,6 +735,9 @@ const TimeLine1 = () => {
         <button title='Delete Seleted' onClick={deleteItemfromtimeline}>Delete Selected</button>
       </div>
       <div style={{ height: 740, width: 860, overflowY: 'scroll', overflowX: 'hidden' }}>
+        <div style={{ width: { timelineWidth }, backgroundColor: 'lightgrey', display: 'flex', }}>
+          {Array.from(Array(parseInt(9*parseFloat(timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{textAlign:'center', fontSize:8, fontWeight:'bold', marginRight: parseInt(90 / parseFloat(timelineScale))}}>{(i<10)?'0' +i:i}</div>) })}
+        </div>
         {layers?.map((element, i) => {
           return <div
             key={i} style={{}}>
@@ -809,8 +812,8 @@ const TimeLine1 = () => {
             ss(d);
           }}
         >
-          <div style={{ width: 5, minHeight: 200, height: ((layers.length) * 21)+30, backgroundColor: 'red', fontWeight: 'bold', }}>
-            {((currentFrame * timelineScale) / (25 * 4)).toFixed(1)}
+          <div style={{ width: 5, minHeight: 200, height: ((layers.length) * 21) + 30, backgroundColor: 'red', fontWeight: 'bold'}}>
+        {((currentFrame * timelineScale) / (25 * 4)).toFixed(1)}
           </div>
         </Rnd>
       </div>
@@ -818,7 +821,7 @@ const TimeLine1 = () => {
     }
     <div>
       Timeline Scale: <input width={200} onChange={e => {
-         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) =>val1 * timelineScale / e.target.value)) });
+        dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
       }} type="range" min='0.1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
       <h3>Animate Only position, size and Rotation.</h3>

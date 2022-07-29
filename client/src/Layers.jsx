@@ -40,10 +40,8 @@ const Layers = () => {
         }
     }
     const deleteLayer = (e, canvas) => {
-        canvas.remove(canvas.getObjects()[e.target.getAttribute('key1')]);
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-        canvas.requestRenderAll();
-
+        canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
+        window.deleteItemfromtimeline();
     }
     const toggleLock = (e, canvas) => {
         try {

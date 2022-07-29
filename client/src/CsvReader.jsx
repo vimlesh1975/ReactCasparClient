@@ -132,7 +132,7 @@ export default function CsvReader() {
                 <tbody>
                     {csvArray.map((item, i) =>
                     (<tr key={i}>
-                        {(item?.split(';')).map((val, ii) => <td>{val}</td>)}
+                        {(item?.split(';')).map((val, ii) => <td key={ii}>{val}</td>)}
                         {(i !== 0) && <td><button onClick={() => { recallPage('200', 'csv', (item.split(';')).map((val1, iii) => ({ key: csvArray[0].split(';')[iii], value: val1, type: 'text' }))) }}>Show</button></td>}
                     </tr>))
                     }
