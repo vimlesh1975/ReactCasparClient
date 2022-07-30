@@ -2488,7 +2488,8 @@ const DrawingController = () => {
                     <div className='drawingToolsRow' >
                         <b> Colors: </b>
                         Fill {(canvas?.getActiveObjects()[0]?.fill?.colorStops) ? <span onClick={() => {
-                            window.changeTab(4)
+                            window.changeTab(4);
+                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.fill);
                         }} style={{
                             display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.fill?.colorStops.map(
                                 (colorStop, i) => {
@@ -2501,7 +2502,8 @@ const DrawingController = () => {
                         }} />}
                         BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
                         Stroke {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
-                            window.changeTab(4)
+                            window.changeTab(4);
+                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke);
                         }} style={{
                             display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.stroke?.colorStops.map(
                                 (colorStop, i) => {

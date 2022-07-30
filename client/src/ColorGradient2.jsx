@@ -93,6 +93,8 @@ const ColorGradient2 = () => {
         setpositions1(gradient.colorStops.map((colorStop) => (colorStop.offset) * width1));
     };
 
+    window.fabricGradienttoBackgroundImage=fabricGradienttoBackgroundImage;
+
 
     return (
         <>
