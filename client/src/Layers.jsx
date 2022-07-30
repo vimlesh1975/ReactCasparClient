@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
-const Layers = () => {
+const Layers = ({moveElement}) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -12,10 +12,6 @@ const Layers = () => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
-
-    const kf = useSelector(state => state.kfReducer.kf);
-    const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
-
     
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
@@ -37,15 +33,15 @@ const Layers = () => {
 
     const dispatch = useDispatch();
 
-    const moveElement = (sourceIndex, destinationIndex) => {
-        const updatedkf = [...kf]
-        updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+    // const moveElement = (sourceIndex, destinationIndex) => {
+    //     const updatedkf = [...kf];
+    //     updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+    //     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
 
-        const updatedxpositions = [...xpositions];
-        updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-    }
+    //     const updatedxpositions = [...xpositions];
+    //     updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
+    //     dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+    // }
 
     const onDragEnd = (result) => {
         if (result.destination != null) {

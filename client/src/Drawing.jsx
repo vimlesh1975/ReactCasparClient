@@ -26,7 +26,7 @@ export const mousedownandmousemoveevent = (canvas) => {
     });
 }
 
-const Drawing = ({ canvasOutput }) => {
+const Drawing = ({ canvasOutput ,moveElement,  sendToBack ,bringToFront}) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
@@ -96,7 +96,7 @@ const Drawing = ({ canvasOutput }) => {
 
     return (<div>
         <FabricJSCanvas className={canvasOutput ? 'canvasOutput' : 'canvas'} onReady={onReady} />
-        <ContextMenu canvas={editor?.canvas} />
+        <ContextMenu canvas={editor?.canvas} moveElement={moveElement}  sendToBack={sendToBack} bringToFront={bringToFront}/>
     </div>);
 };
 export default Drawing;

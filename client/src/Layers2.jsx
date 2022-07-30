@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
-const Layers2 = () => {
+const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -12,10 +12,6 @@ const Layers2 = () => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
-
-    const kf = useSelector(state => state.kfReducer.kf);
-    const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
-  
     
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
@@ -37,16 +33,6 @@ const Layers2 = () => {
 
     const dispatch = useDispatch();
 
-    const moveElement = (sourceIndex, destinationIndex) => {
-        const updatedkf = [...kf]
-        updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-
-        const updatedxpositions = [...xpositions];
-        updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-    }
-
     const onDragEnd = (result) => {
         if (result.destination != null) {
             canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
@@ -54,14 +40,12 @@ const Layers2 = () => {
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
             moveElement (result.source?.index, result.destination?.index) ;
-
         }
     }
 
     const deleteLayer = (e, canvas) => {
         canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
-        window.deleteItemfromtimeline();
-
+        deleteItemfromtimeline();
     }
     const toggleLock = (e, canvas) => {
         try {

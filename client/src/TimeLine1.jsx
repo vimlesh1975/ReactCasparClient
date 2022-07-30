@@ -13,7 +13,7 @@ var aa;
 var inAnimation2;
 var stopCommand;
 var html;
-const TimeLine1 = () => {
+const TimeLine1 = ({deleteItemfromtimeline}) => {
 
   const dispatch = useDispatch();
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -72,23 +72,7 @@ const TimeLine1 = () => {
     stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
     outDuration: (kf[i][3] - kf[i][2]) * 10 * timelineScale
   });
-
-  const deleteItemfromtimeline = () => {
-    const updatedkf = [...kf]
-    const updatedxpositions = [...xpositions];
-    canvas.getActiveObjects().forEach((element) => {
-      const index1 = canvas.getObjects().indexOf(element);
-      canvas.remove(element);
-      updatedkf.splice(index1, 1);
-      updatedxpositions.splice(index1, 1);
-    });
-    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  }
-  window.deleteItemfromtimeline = deleteItemfromtimeline;
-
+ 
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
       return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } } : val;
@@ -793,7 +777,7 @@ const TimeLine1 = () => {
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
                             // color: snapshot.isDragging ? 'white' : 'black' ,
-                            //  marginTop: 100
+                             marginTop: 1
                           }}
                         >
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
@@ -848,7 +832,7 @@ const TimeLine1 = () => {
                                     enableResizing={{}}
                                     bounds='parent'
                                     position={{ x: val, y: 0 }}
-                                    onDrag={(e, d) => {
+                                    onDragStop={(e, d) => {
                                       modifyKf(e, d, i, kfi)
                                     }}
                                   > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
@@ -899,7 +883,7 @@ const TimeLine1 = () => {
       Timeline Scale: <input width={200} onChange={e => {
         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
-      }} type="range" min='0.1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
+      }} type="range" min='1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)

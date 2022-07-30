@@ -59,6 +59,57 @@ const App = () => {
   const [solidcaption1, setSolidcaption1] = useState('');
   const [tabindex, settabindex] = useState(0)
 
+  const kf = useSelector(state => state.kfReducer.kf);
+  const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
+
+  const moveElement = (sourceIndex, destinationIndex) => {
+    const updatedkf = [...kf];
+    updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+
+    const updatedxpositions = [...xpositions];
+    updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  }
+
+  const sendToBack = canvas => {
+    canvas.getActiveObjects().forEach(element => {
+      const sourceIndex = canvas.getObjects().indexOf(element);
+      const destinationIndex = 0;
+      moveElement(sourceIndex, destinationIndex);
+      canvas.sendToBack(element);
+    });
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+  }
+
+  const bringToFront = canvas => {
+    canvas.getActiveObjects().forEach(element => {
+      const sourceIndex = canvas.getObjects().indexOf(element);
+      const destinationIndex =canvas.getObjects().length-1;
+      moveElement(sourceIndex, destinationIndex);
+      canvas.bringToFront(element);
+    });
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+  }
+  const deleteItemfromtimeline = () => {
+    const updatedkf = [...kf]
+    const updatedxpositions = [...xpositions];
+    window.editor.canvas?.getActiveObjects().forEach((element) => {
+      const index1 = window.editor.canvas?.getObjects().indexOf(element);
+      window.editor.canvas?.remove(element);
+      updatedkf.splice(index1, 1);
+      updatedxpositions.splice(index1, 1);
+    });
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+    window.editor.canvas?.discardActiveObject();
+    window.editor.canvas?.requestRenderAll();
+  }
+  window.deleteItemfromtimeline = deleteItemfromtimeline;
+
+
   const startGraphics = (canvas, layerNumber) => {
     var inAnimation;
 
@@ -127,7 +178,6 @@ const App = () => {
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));
-    //  console.log(reftimelinetab.current) ;//reftimelinetab.current;
     return () => {
       // cleanup
     }
@@ -153,18 +203,15 @@ const App = () => {
   const connectHandler = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
       axios.post(address1 + '/disconnect').then((aa) => {
-        // console.log('success', aa)
       }).catch((aa) => { console.log('Error', aa) });
     }
     else {
       const data = { host: 'localhost', port: 5250 }
       axios.post(address1 + '/connect', data).then((aa) => {
-        // console.log('success', aa)
       }).catch((aa) => { console.log('Error', aa) });
     }
-
   }
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const connectbutton = useRef();
 
   const refreshMedia = () => {
@@ -175,7 +222,6 @@ const App = () => {
 
   useEffect(() => {
     const socket = socketIOClient(':8080');
-
     socket.on("Fromccgsocket", data => {
       setmediaPath(data);
     });
@@ -257,7 +303,7 @@ const App = () => {
     // console.log(i)
   }
   window.changeTab = changeTab;
-  return (<React.Fragment>
+  return (<div>
 
 
     <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
@@ -340,7 +386,7 @@ const App = () => {
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <span style={{ position: 'absolute', left: 506, top: 250, fontSize: 40 }}>.</span>
                 <Provider store={store}>
-                  <Drawing />
+                  <Drawing moveElement={moveElement}  sendToBack={sendToBack} bringToFront={bringToFront}/>
                 </Provider>
               </div>
             </div>
@@ -389,7 +435,7 @@ const App = () => {
           </TabList>
           <TabPanel >
             <div style={{ border: '1px dashed blue', width: 900 }}>
-              <DrawingController />
+              <DrawingController moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} deleteItemfromtimeline={deleteItemfromtimeline}/>
             </div>
           </TabPanel>
           <TabPanel >
@@ -406,7 +452,7 @@ const App = () => {
             <VideoPlaylist />
           </TabPanel>
           <TabPanel >
-            <Layers />
+            <Layers moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline}/>
           </TabPanel>
           <TabPanel >
             <ColorGradient2 />
@@ -430,7 +476,7 @@ const App = () => {
             <Charts />
           </TabPanel>
           <TabPanel >
-            <TimeLine1 />
+            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline}/>
           </TabPanel>
           <TabPanel >
             <PathModifier />
@@ -452,7 +498,7 @@ const App = () => {
 
     </div>
 
-  </React.Fragment >);
+  </div >);
 }
 
 export default App

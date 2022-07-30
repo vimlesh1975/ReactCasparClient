@@ -4,50 +4,10 @@ import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, V
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from './PathModifier';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
 
-const ContextMenu = ({ canvas }) => {
+const ContextMenu = ({ canvas,  sendToBack ,bringToFront}) => {
   const { xPos, yPos, showMenu } = useContextMenu();
   const [currentGradient, setcurrentGradient] = useState(gradient)
-
-  const kf = useSelector(state => state.kfReducer.kf);
-  const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
-
-  const dispatch = useDispatch();
-
-  const moveElement = (sourceIndex, destinationIndex) => {
-    const updatedkf = [...kf]
-    updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-
-    const updatedxpositions = [...xpositions];
-    updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-  }
-
-  const sendToBack = canvas => {
-    canvas.getActiveObjects().forEach(element => {
-      const sourceIndex = canvas.getObjects().indexOf(element);
-      const destinationIndex = 0;
-      moveElement(sourceIndex, destinationIndex);
-      canvas.sendToBack(element);
-    });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  }
-
-  const bringToFront = canvas => {
-    canvas.getActiveObjects().forEach(element => {
-      const sourceIndex = canvas.getObjects().indexOf(element);
-      const destinationIndex =canvas.getObjects().length-1;
-      moveElement(sourceIndex, destinationIndex);
-      canvas.bringToFront(element);
-    });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  }
-
-
 
   const getgradientFill = canvas => {
     if (canvas.getActiveObjects()[0]) {

@@ -38,57 +38,57 @@ var Direction = {
 
 
 
-fabric.util.addListener(document.body, 'keydown', function (options) {
-    if (options.target.nodeName === 'BODY') {
-        var key = options.which || options.keyCode; // key detection
-        if (key === 37) { // handle Left key
-            moveSelected(Direction.LEFT);
-        } else if (key === 38) { // handle Up key
-            moveSelected(Direction.UP);
-        } else if (key === 39) { // handle Right key
-            moveSelected(Direction.RIGHT);
-        } else if (key === 40) { // handle Down key
-            moveSelected(Direction.DOWN);
-        }
+// fabric.util.addListener(document.body, 'keydown', function (options) {
+//     if (options.target.nodeName === 'BODY') {
+//         var key = options.which || options.keyCode; // key detection
+//         if (key === 37) { // handle Left key
+//             moveSelected(Direction.LEFT);
+//         } else if (key === 38) { // handle Up key
+//             moveSelected(Direction.UP);
+//         } else if (key === 39) { // handle Right key
+//             moveSelected(Direction.RIGHT);
+//         } else if (key === 40) { // handle Down key
+//             moveSelected(Direction.DOWN);
+//         }
 
-        //--------------
-        if (options.repeat) {
-            return;
-        }
+//         //--------------
+//         if (options.repeat) {
+//             return;
+//         }
 
-        if (options.key === 'Delete') {
-            window.editor.canvas?.getActiveObjects().forEach(item => {
-                //  alert(item.type);
-                if (!((item.type === 'textbox') && item.isEditing)) {
-                    // window.editor.canvas?.remove(item);
-                    // window.editor.canvas?.discardActiveObject();
-                    // window.editor.canvas?.requestRenderAll();
-                    window.deleteItemfromtimeline();
-                }
-            });
-        }
-        if (options.ctrlKey && options.key.toLowerCase() === 'c') {
-            const item = window.editor.canvas?.getActiveObjects()[0];
-            if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
-        }
-        if (options.ctrlKey && options.key.toLowerCase() === 'v') {
-            const item = window.editor.canvas?.getActiveObjects()[0];
-            if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
-        }
-        if (options.ctrlKey && options.key.toLowerCase() === 'z') {
-            // window.editor.canvas?.undo();
-            window.editor.canvas && undo(window.editor.canvas)
-        }
-        if (options.ctrlKey && options.key.toLowerCase() === 'r') {
-            options.preventDefault();
-            window.editor.canvas && redo(window.editor.canvas)
-        }
-        if (options.ctrlKey && options.key.toLowerCase() === 'a') {
-            options.preventDefault();
-            selectAll(window.editor.canvas);
-        }
-    }
-})
+//         if (options.key === 'Delete') {
+//             window.editor.canvas?.getActiveObjects().forEach(item => {
+//                 //  alert(item.type);
+//                 if (!((item.type === 'textbox') && item.isEditing)) {
+//                     // window.editor.canvas?.remove(item);
+//                     // window.editor.canvas?.discardActiveObject();
+//                     // window.editor.canvas?.requestRenderAll();
+//                     window.deleteItemfromtimeline();
+//                 }
+//             });
+//         }
+//         if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+//             const item = window.editor.canvas?.getActiveObjects()[0];
+//             if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+//         }
+//         if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+//             const item = window.editor.canvas?.getActiveObjects()[0];
+//             if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+//         }
+//         if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+//             // window.editor.canvas?.undo();
+//             window.editor.canvas && undo(window.editor.canvas)
+//         }
+//         if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+//             options.preventDefault();
+//             window.editor.canvas && redo(window.editor.canvas)
+//         }
+//         if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+//             options.preventDefault();
+//             selectAll(window.editor.canvas);
+//         }
+//     }
+// })
 
 
 
@@ -914,7 +914,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
     rect.animate('top', (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
 }
 
-const DrawingController = () => {
+const DrawingController = ({moveElement,deleteItemfromtimeline}) => {
 
     const refShadowColor = useRef();
     const refAffectStroke = useRef(false);
@@ -989,18 +989,117 @@ const DrawingController = () => {
     const [strokedasharray, setstrokedasharray] = useState([0, 0]);
     const [currentFillColor, setCurrentFillColor] = useState('#000000')
 
-    const kf = useSelector(state => state.kfReducer.kf);
-    const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
-    const moveElement = (sourceIndex, destinationIndex) => {
-        const updatedkf = [...kf]
-        updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+    
 
-        const updatedxpositions = [...xpositions];
-        updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-    }
+useEffect(() => {
+    fabric.util.addListener(document.body, 'keydown', function (options) {
+        if (options.target.nodeName === 'BODY') {
+            var key = options.which || options.keyCode; // key detection
+            if (key === 37) { // handle Left key
+                moveSelected(Direction.LEFT);
+            } else if (key === 38) { // handle Up key
+                moveSelected(Direction.UP);
+            } else if (key === 39) { // handle Right key
+                moveSelected(Direction.RIGHT);
+            } else if (key === 40) { // handle Down key
+                moveSelected(Direction.DOWN);
+            }
+    
+            //--------------
+            if (options.repeat) {
+                return;
+            }
+    
+            if (options.key === 'Delete') {
+                window.editor.canvas?.getActiveObjects().forEach(item => {
+                    //  alert(item.type);
+                    if (!((item.type === 'textbox') && item.isEditing)) {
+                        // window.editor.canvas?.remove(item);
+                        // window.editor.canvas?.discardActiveObject();
+                        // window.editor.canvas?.requestRenderAll();
+                        deleteItemfromtimeline();
+                    }
+                });
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+                const item = window.editor.canvas?.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+                const item = window.editor.canvas?.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+                // window.editor.canvas?.undo();
+                window.editor.canvas && undo(window.editor.canvas)
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+                options.preventDefault();
+                window.editor.canvas && redo(window.editor.canvas)
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+                options.preventDefault();
+                selectAll(window.editor.canvas);
+            }
+        }
+    })
+  return () => {
+    fabric.util.removeListener(document.body, 'keydown', function (options) {
+        if (options.target.nodeName === 'BODY') {
+            var key = options.which || options.keyCode; // key detection
+            if (key === 37) { // handle Left key
+                moveSelected(Direction.LEFT);
+            } else if (key === 38) { // handle Up key
+                moveSelected(Direction.UP);
+            } else if (key === 39) { // handle Right key
+                moveSelected(Direction.RIGHT);
+            } else if (key === 40) { // handle Down key
+                moveSelected(Direction.DOWN);
+            }
+    
+            //--------------
+            if (options.repeat) {
+                return;
+            }
+    
+            if (options.key === 'Delete') {
+                window.editor.canvas?.getActiveObjects().forEach(item => {
+                    //  alert(item.type);
+                    if (!((item.type === 'textbox') && item.isEditing)) {
+                        // window.editor.canvas?.remove(item);
+                        // window.editor.canvas?.discardActiveObject();
+                        // window.editor.canvas?.requestRenderAll();
+                        deleteItemfromtimeline();
+                    }
+                });
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+                const item = window.editor.canvas?.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+                const item = window.editor.canvas?.getActiveObjects()[0];
+                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+                // window.editor.canvas?.undo();
+                window.editor.canvas && undo(window.editor.canvas)
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+                options.preventDefault();
+                window.editor.canvas && redo(window.editor.canvas)
+            }
+            if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+                options.preventDefault();
+                selectAll(window.editor.canvas);
+            }
+        }
+    })
+  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [])
+
 
     const sendToBack = canvas => {
         canvas.getActiveObjects().forEach(element => {
@@ -2666,7 +2765,7 @@ const DrawingController = () => {
                         <SavePannel />
                     </TabPanel>
                     <TabPanel>
-                        <Layers2 />
+                        <Layers2 moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline}/>
                     </TabPanel>
                     <TabPanel>
                         <CasparcgTools />
