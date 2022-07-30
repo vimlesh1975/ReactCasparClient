@@ -5,6 +5,7 @@ import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { VscTrash, VscMove } from "react-icons/vsc";
 
 const timelineWidth = 860;
 var cf = 0;
@@ -76,7 +77,7 @@ const TimeLine1 = () => {
     const updatedkf = [...kf]
     const updatedxpositions = [...xpositions];
     canvas.getActiveObjects().forEach((element) => {
-      const index1 = canvas.getObjects().indexOf(element)
+      const index1 = canvas.getObjects().indexOf(element);
       canvas.remove(element);
       updatedkf.splice(index1, 1);
       updatedxpositions.splice(index1, 1);
@@ -708,10 +709,39 @@ const TimeLine1 = () => {
       await writable1.close();
     }
   }
-  const onDragEnd = () => {
+  const onDragEnd = (result) => {
+    if (result.destination != null) {
 
+      const sourceIndex = result.source?.index;
+      const destinationIndex = result.destination?.index;
+
+      canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
+      canvas.requestRenderAll();
+      dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+
+      moveElement(sourceIndex, destinationIndex);
+    }
   }
 
+  const moveElement = (sourceIndex, destinationIndex) => {
+    const updatedkf = [...kf]
+    updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+
+    const updatedxpositions = [...xpositions];
+    updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
+    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  }
+
+  const selectObject = (e) => {
+    try {
+      var aa = canvas.item(e.target.getAttribute('key1'));
+      canvas.setActiveObject(aa);
+      canvas.requestRenderAll();
+    } catch (error) {
+      //dummy
+    }
+  }
   return (<div>
     {pannelEnable && <div>
       <div >
@@ -736,7 +766,6 @@ const TimeLine1 = () => {
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
-        <button title='Delete Seleted' onClick={deleteItemfromtimeline}>Delete Selected</button>
       </div>
       <div style={{ height: 740, width: 860, overflowY: 'scroll', overflowX: 'hidden' }}>
         <div style={{ width: { timelineWidth }, backgroundColor: 'lightgrey', display: 'flex', }}>
@@ -753,81 +782,89 @@ const TimeLine1 = () => {
 
                 {layers?.map((element, i) => {
                   return (
-                    <Draggable draggableId={"draggable" + i} key={element.id} index={i}>
+                    <Draggable draggableId={"draggable" + i} key={element + i} index={i}>
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           style={{
                             ...provided.draggableProps.style,
-                            backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'green' : 'white',
+                            backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'darkgray' : 'white',
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
-                            color: snapshot.isDragging ? 'white' : (activeLayers.includes(element)) ? 'white' : '',
+                            // color: snapshot.isDragging ? 'white' : 'black' ,
                             //  marginTop: 100
                           }}
                         >
-
-                          <div {...provided.dragHandleProps} onClick={(e) => {
-                            ss({ x: e.screenX - 1040 });
-                            canvas.setActiveObject(canvas.item(i));
-                          }} style={{ backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', width: timelineWidth, height: 20, marginTop: 1, }} >
-                            <div style={{ position: 'relative' }}>
-                              <Rnd
-                                dragAxis='x'
-                                enableResizing={{}}
-                                bounds='parent'
-                                position={{ x: kf[i][0], y: 0 }}
-                                onDrag={(e, d) => {
-                                  const updatedkf = [...kf]
-                                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                                  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-                                }}
-                              >
-                                <div style={{ width: (kf[i][1] - kf[i][0]), height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
-                              </Rnd>
-                              <Rnd
-                                dragAxis='x'
-                                enableResizing={{}}
-                                bounds='parent'
-                                position={{ x: kf[i][1], y: 0 }}
-                                onDrag={(e, d) => {
-                                  const updatedkf = [...kf]
-                                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                                  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-                                }}
-                              >
-                                <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green' }}></div>
-                              </Rnd>
-                              <Rnd
-                                dragAxis='x'
-                                enableResizing={{}}
-                                bounds='parent'
-                                position={{ x: kf[i][2], y: 0 }}
-                                onDrag={(e, d) => {
-                                  const updatedkf = [...kf]
-                                  updatedkf[i] = kf[i].map((val) => val + d.deltaX)
-                                  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-                                }}
-                              >
-                                <div style={{ marginTop: 0, width: (kf[i][3] - kf[i][2]), height: 20, backgroundColor: 'red' }}></div>
-                              </Rnd>
-                              {(kf[i])?.map((val, kfi) =>
+                          <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
+                            <div onClick={(e) => {
+                              ss({ x: e.screenX - 1040 });
+                              canvas.setActiveObject(canvas.item(i));
+                            }} style={{ width: timelineWidth - 125, height: 20, marginTop: 1, }} >
+                              <div style={{ position: 'relative' }}>
                                 <Rnd
-                                  key={kfi}
                                   dragAxis='x'
                                   enableResizing={{}}
                                   bounds='parent'
-                                  position={{ x: val, y: 0 }}
+                                  position={{ x: kf[i][0], y: 0 }}
                                   onDrag={(e, d) => {
-                                    modifyKf(e, d, i, kfi)
+                                    const updatedkf = [...kf]
+                                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
                                   }}
-                                > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
+                                >
+                                  <div style={{ width: (kf[i][1] - kf[i][0]), height: 20, marginTop: 0, backgroundColor: 'yellowgreen' }}></div>
                                 </Rnd>
-                              )}
+                                <Rnd
+                                  dragAxis='x'
+                                  enableResizing={{}}
+                                  bounds='parent'
+                                  position={{ x: kf[i][1], y: 0 }}
+                                  onDrag={(e, d) => {
+                                    const updatedkf = [...kf]
+                                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+                                  }}
+                                >
+                                  <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green' }}></div>
+                                </Rnd>
+                                <Rnd
+                                  dragAxis='x'
+                                  enableResizing={{}}
+                                  bounds='parent'
+                                  position={{ x: kf[i][2], y: 0 }}
+                                  onDrag={(e, d) => {
+                                    const updatedkf = [...kf]
+                                    updatedkf[i] = kf[i].map((val) => val + d.deltaX)
+                                    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+                                  }}
+                                >
+                                  <div style={{ marginTop: 0, width: (kf[i][3] - kf[i][2]), height: 20, backgroundColor: 'red' }}></div>
+                                </Rnd>
+                                {(kf[i])?.map((val, kfi) =>
+                                  <Rnd
+                                    key={kfi}
+                                    dragAxis='x'
+                                    enableResizing={{}}
+                                    bounds='parent'
+                                    position={{ x: val, y: 0 }}
+                                    onDrag={(e, d) => {
+                                      modifyKf(e, d, i, kfi)
+                                    }}
+                                  > <div style={{ backgroundColor: 'yellow', width: 10, height: 10, textAlign: 'center', marginTop: 5, fontSize: 10, lineHeight: 1 }}>{kfi}</div>
+                                  </Rnd>
+                                )}
+                              </div>
                             </div>
-                          </div>
+                            <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} />
+                            </div>
+                            <div> <button key1={i} onClick={(e) => {
+                              selectObject(e);
+                              deleteItemfromtimeline();
+                            }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
+                            <div>{(element.type)}</div>
 
+                          </div>
                         </div>
                       )
                       }
