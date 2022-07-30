@@ -13,6 +13,10 @@ const Layers = () => {
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
 
+    const kf = useSelector(state => state.kfReducer.kf);
+    const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
+
+    
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
             element.text = textofActiveObject;
@@ -32,13 +36,29 @@ const Layers = () => {
     }
 
     const dispatch = useDispatch();
+
+    const moveElement = (sourceIndex, destinationIndex) => {
+        const updatedkf = [...kf]
+        updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+        dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+
+        const updatedxpositions = [...xpositions];
+        updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+    }
+
     const onDragEnd = (result) => {
         if (result.destination != null) {
             canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+
+            moveElement (result.source?.index, result.destination?.index) ;
+
         }
     }
+
+
     const deleteLayer = (e, canvas) => {
         canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
         window.deleteItemfromtimeline();
@@ -135,7 +155,8 @@ const Layers = () => {
                                                             color:snapshot.isDragging ? 'white':(activeLayers.includes(val)) ? 'white' : '',
                                                             //  marginTop: 100
                                                         }}
-                                                    ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
+                                                    >
+                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
                                                         <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
                                                         <td><button key1={i} onClick={(e) => deleteLayer(e, window.editor?.canvas)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
                                                         <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>

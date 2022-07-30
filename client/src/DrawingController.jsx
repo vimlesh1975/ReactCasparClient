@@ -21,6 +21,8 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
+
+
 var xxx;
 var html;
 
@@ -589,17 +591,7 @@ export const deleteAll = canvas => {
     canvas.requestRenderAll();
 }
 
-export const bringToFront = canvas => {
-    canvas.getActiveObjects().forEach(element => canvas.bringToFront(element));
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-}
 
-export const sendToBack = canvas => {
-    canvas.getActiveObjects().forEach(element => canvas.sendToBack(element));
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-}
 
 export const undo = canvas => {
     canvas.undo()
@@ -996,6 +988,41 @@ const DrawingController = () => {
     const [strokedashoffset, setstrokedashoffset] = useState(0);
     const [strokedasharray, setstrokedasharray] = useState([0, 0]);
     const [currentFillColor, setCurrentFillColor] = useState('#000000')
+
+    const kf = useSelector(state => state.kfReducer.kf);
+    const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
+
+    const moveElement = (sourceIndex, destinationIndex) => {
+        const updatedkf = [...kf]
+        updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+        dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+
+        const updatedxpositions = [...xpositions];
+        updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+    }
+
+    const sendToBack = canvas => {
+        canvas.getActiveObjects().forEach(element => {
+            const sourceIndex = canvas.getObjects().indexOf(element);
+            const destinationIndex = 0;
+            moveElement(sourceIndex, destinationIndex);
+            canvas.sendToBack(element);
+        });
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+    }
+
+    const bringToFront = canvas => {
+        canvas.getActiveObjects().forEach(element => {
+            const sourceIndex = canvas.getObjects().indexOf(element);
+            const destinationIndex = canvas.getObjects().length - 1;
+            moveElement(sourceIndex, destinationIndex);
+            canvas.bringToFront(element);
+        });
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+    }
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -2468,7 +2495,7 @@ const DrawingController = () => {
                                     return `${colorStop.color} ${colorStop.offset * 100}%`;
                                 }
                             )}`
-                        }} /> : <input type="color" value={currentFillColor}  onChange={e => {
+                        }} /> : <input type="color" value={currentFillColor} onChange={e => {
                             changeCurrentColor(e, canvas);
                             // setCurrentFillColor(e.target.value);
                         }} />}
