@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 
 
-const buildDate = '300722_2'
+const buildDate = '010822_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

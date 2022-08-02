@@ -1252,12 +1252,12 @@ useEffect(() => {
         canvas.getActiveObjects().forEach(item => item.fontSize = e.target.value)
         canvas.requestRenderAll();
     }
-    // const makeFullScreen = () => {
-    //     canvas?.getActiveObjects().forEach(element => {
-    //         element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
-    //     });
-    //     canvas?.requestRenderAll();
-    // }
+    const makeFullScreen = () => {
+        canvas?.getActiveObjects().forEach(element => {
+            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
+        });
+        canvas?.requestRenderAll();
+    }
     // const removeBorderandCurve = () => {
     //     canvas?.getActiveObjects().forEach(element => {
     //         element.set({ strokeWidth: 0, rx: 0, ry: 0 })
@@ -2618,8 +2618,8 @@ useEffect(() => {
                             canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
                             canvas.requestRenderAll();
                         }} type="number" min='0' max='360' step='1' value={angle} /> </span>
-                        <br /> stroke-dasharray: <input className='inputRangeshadow' onChange={e => onstrokedasharraychange(e)} type="range" min='0' max='100' step='1' value={strokedasharray[0]} />{strokedasharray[0]}
-                        stroke-dash-offset: <input className='inputRangeshadow' onChange={e => onstrokedashoffsetchange(e)} type="range" min='0' max='100' step='1' value={strokedashoffset} /> {strokedashoffset}
+                        <br /> stroke-dasharray: <input style={{ width: '60px' }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
+                        stroke-dash-offset: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} /> 
 
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -2731,7 +2731,7 @@ useEffect(() => {
 
 
 
-                        {/* <button onClick={makeFullScreen}>Make full Screen</button> */}
+                        <button onClick={makeFullScreen}>Make full Screen</button>
                         {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
                         {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
                     </div>
