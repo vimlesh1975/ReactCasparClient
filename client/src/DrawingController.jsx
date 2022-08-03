@@ -434,24 +434,57 @@ export const createPentagon = (canvas) => {
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
 
-export const createLine = (canvas) => {
-    const rect = new fabric.Line([500, 450, 800, 450.00001], {
+// export const createLine = (canvas) => {
+//     const rect = new fabric.Line([500, 450, 800, 450.00001], {
+//         id: 'id_' + uuidv4(),
+//         shadow: { ...shadowOptions, Blur: 10 },
+//         top: -100,
+//         left: 90,
+//         height: 1,
+//         opacity: 0.9,
+//         fill: '#0000ff',
+//         hasRotatingPoint: true,
+//         objectCaching: false,
+//         stroke: '#0000ff',
+//         strokeWidth: 3,
+//         strokeUniform: true,
+//     });
+//     canvas.add(rect).setActiveObject(rect);
+//     canvas.requestRenderAll();
+//     rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
+// };
+
+export const createVLine = (canvas) => {
+    const rect = new fabric.Path('M 0 0 L 1 500', {
         id: 'id_' + uuidv4(),
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
-        height: 1,
-        opacity: 0.9,
         fill: '#0000ff',
-        hasRotatingPoint: true,
         objectCaching: false,
-        stroke: '#0000ff',
+        stroke: '#ffff00',
         strokeWidth: 3,
         strokeUniform: true,
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 50, { onChange: canvas.renderAll.bind(canvas) })
+};
+export const createHLine = (canvas) => {
+    const rect = new fabric.Path('M 0 0 L 500 1', {
+        id: 'id_' + uuidv4(),
+        shadow: { ...shadowOptions, Blur: 10 },
+        top: -100,
+        left: 90,
+        fill: '#0000ff',
+        objectCaching: false,
+        stroke: '#ff0000',
+        strokeWidth: 3,
+        strokeUniform: true,
+    });
+    canvas.add(rect).setActiveObject(rect);
+    canvas.requestRenderAll();
+    rect.animate('top', 550, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const createCircle = (canvas) => {
@@ -549,7 +582,7 @@ export const removeFill = canvas => {
 };
 export const removeStroke = canvas => {
 
-    canvas.getActiveObjects().forEach(element => { element.set('strokeWidth', 0) });
+    canvas.getActiveObjects().forEach(element => { element.set('stroke', '') });
     canvas.requestRenderAll();
 
 };
@@ -2357,7 +2390,8 @@ useEffect(() => {
                         <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
                         {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button> */}
                         {/* <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
-                        <button title="Line" onClick={() => createLine(canvas)}>Line</button>
+                        <button title="Line" onClick={() => createHLine(canvas)}>HLine</button>
+                        <button title="Line" onClick={() => createVLine(canvas)}>VLine</button>
                         <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                         <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
                         <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
