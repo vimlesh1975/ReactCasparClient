@@ -254,7 +254,7 @@ const OnelinerAndBreakingNews = () => {
             <div style={{ border: '1px solid red' }}>
                 <table border='1'>
                     <tbody >
-                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input  size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
                             <td>Layer No.</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
                             <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                                 if (e.target.checked === true) {

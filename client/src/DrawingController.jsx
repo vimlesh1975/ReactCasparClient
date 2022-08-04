@@ -2390,12 +2390,12 @@ useEffect(() => {
                         <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
                         {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button> */}
                         {/* <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
-                        <button title="Line" onClick={() => createHLine(canvas)}>HLine</button>
-                        <button title="Line" onClick={() => createVLine(canvas)}>VLine</button>
                         <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                         <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
                         <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
                         <button title="Pentagon" onClick={() => createPentagon(canvas)}>Penta</button>
+                        <button title="Line" onClick={() => createHLine(canvas)}>HLine</button>
+                        <button title="Line" onClick={() => createVLine(canvas)}>VLine</button>
                         <button title="Shapes" onClick={() => window.changeTab(8)}>Shapes</button>
                     </div>
                     <div className='drawingToolsRow' >

@@ -26,6 +26,7 @@
     "react-rnd": "^10.3.7",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
+    "react-speech-recognition": "^3.9.1",
     "react-tabs": "^5.1.0",
     "react-transition-group": "^4.4.2",
     "redux": "^4.2.0",
