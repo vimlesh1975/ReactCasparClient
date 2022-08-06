@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 import { v4 as uuidv4 } from 'uuid';
 
-import Dictaphone from './Dictaphone';
 // dispatch({ type:'CHANGE_CANVAS',payload:${'canvas'}});
 const Help = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -78,7 +77,6 @@ const Help = () => {
       </div>
 
     </div>
-    <Dictaphone />
 
     <div>
       <table border='1'><tbody>

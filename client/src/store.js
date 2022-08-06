@@ -225,6 +225,25 @@ const xpositionsReducer = (state = initialxpositions, action) => {
     }
 }
 
+const initialSpeechRecognition={currentLanguage:'en-US', continuous1:false};
+const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
+    switch (action.type) {
+        case 'CHANGE_CURRENTLANGUAGE':
+            return {
+                ...state,
+                currentLanguage: action.payload
+            }
+            case 'CHANGE_CONTINUOUS1':
+                return {
+                    ...state,
+                    continuous1: action.payload
+                }
+        default: return state
+    }
+}
+
+
+
 const rootReducer = combineReducers({
     canvasListReducer,
     currentPageReducer,
@@ -241,7 +260,8 @@ const rootReducer = combineReducers({
     cssfilenameReducer,
     pannelEnableReducer,
     kfReducer,
-    xpositionsReducer
+    xpositionsReducer,
+    speechRecognitionReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

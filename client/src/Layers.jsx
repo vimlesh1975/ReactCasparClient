@@ -3,8 +3,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const Layers = ({moveElement}) => {
+const Layers = ({ moveElement }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -12,13 +13,37 @@ const Layers = ({moveElement}) => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
-    
+    const [replace1, setReplace1] = useState(true);
+
+    const { transcript, listening, resetTranscript } = useSpeechRecognition();
+
+    const currentLanguage = useSelector(state => state.speechRecognitionReducer.currentLanguage);
+    const continuous1= useSelector(state => state.speechRecognitionReducer.continuous1);
+
+
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
             element.text = textofActiveObject;
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+        });
+    }
 
+    const setTextfromMic = (replace) => {
+        canvas.getActiveObjects().forEach(element => {
+            if (replace) {
+                element.text = transcript;
+            }
+            else {
+                if (element.text === "") {
+                    element.text += transcript;
+                }
+                else {
+                    element.text += " " + transcript;
+                }
+            }
+            canvas.requestRenderAll();
+            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
         });
     }
 
@@ -27,7 +52,6 @@ const Layers = ({moveElement}) => {
             element.id = idofActiveObject;
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-
         });
     }
 
@@ -49,8 +73,7 @@ const Layers = ({moveElement}) => {
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-            moveElement (result.source?.index, result.destination?.index) ;
-
+            moveElement(result.source?.index, result.destination?.index);
         }
     }
 
@@ -66,7 +89,6 @@ const Layers = ({moveElement}) => {
             canvas.discardActiveObject();
             canvas.requestRenderAll();
         } catch (error) {
-
         }
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
@@ -77,7 +99,6 @@ const Layers = ({moveElement}) => {
             setTextofActiveObject(aa.text ? aa.text : '');
             setIdofActiveObject(aa.id ? aa.id : '');
             setFontofInputBox(aa.fontFamily ? aa.fontFamily : '')
-            // console.log(aa._originalElement.currentSrc)
             canvas.requestRenderAll();
         } catch (error) {
             //dummy
@@ -101,8 +122,8 @@ const Layers = ({moveElement}) => {
     }
     const putxBeforeId = () => {
         canvas.getObjects().forEach(element => {
-            if ((element.id).substring(0,3) === 'ccg') {
-            element.set({ id: 'x' + element.id })
+            if ((element.id).substring(0, 3) === 'ccg') {
+                element.set({ id: 'x' + element.id })
             }
         });
         canvas.requestRenderAll();
@@ -148,7 +169,7 @@ const Layers = ({moveElement}) => {
                                                             backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(val)) ? 'green' : 'white',
                                                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                                                             verticalAlign: 'top',
-                                                            color:snapshot.isDragging ? 'white':(activeLayers.includes(val)) ? 'white' : '',
+                                                            color: snapshot.isDragging ? 'white' : (activeLayers.includes(val)) ? 'white' : '',
                                                             //  marginTop: 100
                                                         }}
                                                     >
@@ -169,7 +190,6 @@ const Layers = ({moveElement}) => {
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.backgroundColor)} onChange={e => { changeBackGroundColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.stroke)} onChange={e => { changeStrokeCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
                                                         <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.shadow?.color)} onChange={e => { changeShadowCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
-
                                                     </tr>
                                                 )
                                                 }
@@ -186,10 +206,50 @@ const Layers = ({moveElement}) => {
         </div>
 
         <div>
-        <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
-            Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea}
-            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 190, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
-            <button onClick={setText}>Set Text</button>
+            <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
+            
+            Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea} <button onClick={setText}>Set Text</button>
+            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 100, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
+            <div style={{ border: '1px solid red' }}>
+            <span> <b>Speech Recognition </b></span>
+            <span>Microphone: {listening ? "ON " : "OFF "}</span>
+                <button
+                    onClick={() => {
+                        SpeechRecognition.startListening({
+                            continuous: continuous1,
+                            language: currentLanguage
+                        });
+                    }}
+                >
+                    Start
+                </button>
+                {listening === false && transcript !== "" && (
+                    <button
+                        onClick={() => {
+                            SpeechRecognition.stopListening();
+                            setTextfromMic(replace1);
+                            resetTranscript();
+                        }}
+                    >
+                        Set
+                    </button>
+                )}
+                {listening && continuous1 && <button
+                    onClick={() => {
+                        SpeechRecognition.stopListening();
+                        // setTextfromMic(replace1);
+                        // resetTranscript();
+                    }}
+                >
+                    Stop
+                </button>
+                }
+               
+                <span> Replace: </span> <input type="checkbox" checked={replace1} onChange={e => setReplace1(val => !val)} />
+                <span> Continuous: </span> <input type="checkbox" checked={continuous1} onChange={e => dispatch({ type: 'CHANGE_CONTINUOUS1', payload: !continuous1})} />
+                
+                <div> {transcript}</div>
+            </div>
         </div>
     </div>)
 }

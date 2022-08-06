@@ -35,9 +35,13 @@ import JsonReader from './JsonReader';
 import UdpClock from './UdpClock';
 
 import ColorGradient2 from './ColorGradient2'
+// import SpeechRecognition from "react-speech-recognition";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 
-const buildDate = '040822_1'
+
+
+const buildDate = '060822_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -61,6 +65,79 @@ const App = () => {
 
   const kf = useSelector(state => state.kfReducer.kf);
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
+
+  const continuous1= useSelector(state => state.speechRecognitionReducer.continuous1);
+  const currentLanguage= useSelector(state => state.speechRecognitionReducer.currentLanguage);
+  const {listening } = useSpeechRecognition();
+
+
+  const languages=[
+    "en-US",
+    "hi-IN",
+    "te-IN",
+    "ta-IN",
+    "mr-IN",
+    "gu-IN",
+"	kn-IN",
+"ml-IN",
+"pa-Guru-IN",
+"ur-IN",
+    "ar-SA",
+"bn-BD",
+"bn-IN",
+"cs-CZ",
+"da-DK",
+"de-AT",
+"de-CH",
+"de-DE",
+"el-GR",
+"en-AU",
+"en-CA",
+"en-GB",
+"en-IE",
+"en-IN",
+"en-NZ",
+"en-US",
+"en-ZA",
+"es-AR",
+"es-CL",
+"es-CO",
+"es-ES",
+"es-MX",
+"es-US",
+"fi-FI",
+"fr-BE",
+"fr-CA",
+"fr-CH",
+"fr-FR",
+"he-IL",
+"hi-IN",
+"hu-HU",
+"id-ID",
+"it-CH",
+"it-IT",
+"jp-JP",
+"ko-KR",
+"nl-BE",
+"nl-NL",
+"no-NO",
+"pl-PL",
+"pt-BR",
+"pt-PT",
+"ro-RO",
+"ru-RU",
+"sk-SK",
+"sv-SE",
+"ta-IN",
+"ta-LK",
+"th-TH",
+"tr-TR",
+"ur_PK",
+"zh-CN",
+"zh-HK",
+"zh-TW",
+"bh-IN"
+];
 
   const moveElement = (sourceIndex, destinationIndex) => {
     const updatedkf = [...kf];
@@ -305,19 +382,16 @@ const App = () => {
   window.changeTab = changeTab;
   return (<div>
 
-
+{/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
     <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
-      {(window.location.origin !== 'https://vimlesh1975.github.io') &&
-        <div>
+    <div> 
           <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
             endpoint(`clear ${chNumber}`);
             endpoint(`mixer ${chNumber} clear`);
-
           }}>Stop Channel</button>
-        </div>}
+    </div>
 
       <div >
-
         <b>Zoom:</b> {zoom.toFixed(1)}   <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
           {inAnimationMethods.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
         </select>
@@ -346,12 +420,44 @@ const App = () => {
           setSolidcaption1('');
           localStorage.setItem('RCC_solidCaption1', '');
         }} ><FaStop /></button>
-        <span> {solidcaption1} </span>
-      </div>
+        <span> {solidcaption1} </span>  <b>Languages:</b> <input style={{ width:70 }} value={currentLanguage} onChange={e=>{
+          dispatch({ type: 'CHANGE_CURRENTLANGUAGE', payload: e.target.value });
+          if(continuous1 && listening)
+          {
+             SpeechRecognition.startListening({
+               continuous: continuous1,
+               language: e.target.value
+           });
+          }
+        }
 
+          }/>
+      {/* </div>
+      <div> */}
+        <select style={{width:70 }} value={currentLanguage}
+          onChange={(e) =>  {
+            dispatch({ type: 'CHANGE_CURRENTLANGUAGE', payload: e.target.value });
+
+         if(continuous1 && listening)
+         {
+            SpeechRecognition.startListening({
+              continuous: continuous1,
+              language: e.target.value
+          });
+         }
+          }
+
+          }
+        >
+          {(languages.filter((value, index, self)=>{return self.indexOf(value) === index})).map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
       <div  >
-        <b> Screen Setup: </b>
-        Casparcg Screen Sizes  <select value={currentscreenSize} onChange={e => {
+        Size: <select value={currentscreenSize} onChange={e => {
           localStorage.setItem('RCC_currentscreenSize', e.target.value)
           dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
         }
