@@ -66,78 +66,78 @@ const App = () => {
   const kf = useSelector(state => state.kfReducer.kf);
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
-  const continuous1= useSelector(state => state.speechRecognitionReducer.continuous1);
-  const currentLanguage= useSelector(state => state.speechRecognitionReducer.currentLanguage);
-  const {listening } = useSpeechRecognition();
+  const continuous1 = useSelector(state => state.speechRecognitionReducer.continuous1);
+  const currentLanguage = useSelector(state => state.speechRecognitionReducer.currentLanguage);
+  const { listening } = useSpeechRecognition();
 
 
-  const languages=[
+  const languages = [
     "en-US",
     "hi-IN",
     "te-IN",
     "ta-IN",
     "mr-IN",
     "gu-IN",
-"	kn-IN",
-"ml-IN",
-"pa-Guru-IN",
-"ur-IN",
+    "	kn-IN",
+    "ml-IN",
+    "pa-Guru-IN",
+    "ur-IN",
     "ar-SA",
-"bn-BD",
-"bn-IN",
-"cs-CZ",
-"da-DK",
-"de-AT",
-"de-CH",
-"de-DE",
-"el-GR",
-"en-AU",
-"en-CA",
-"en-GB",
-"en-IE",
-"en-IN",
-"en-NZ",
-"en-US",
-"en-ZA",
-"es-AR",
-"es-CL",
-"es-CO",
-"es-ES",
-"es-MX",
-"es-US",
-"fi-FI",
-"fr-BE",
-"fr-CA",
-"fr-CH",
-"fr-FR",
-"he-IL",
-"hi-IN",
-"hu-HU",
-"id-ID",
-"it-CH",
-"it-IT",
-"jp-JP",
-"ko-KR",
-"nl-BE",
-"nl-NL",
-"no-NO",
-"pl-PL",
-"pt-BR",
-"pt-PT",
-"ro-RO",
-"ru-RU",
-"sk-SK",
-"sv-SE",
-"ta-IN",
-"ta-LK",
-"th-TH",
-"tr-TR",
-"ur_PK",
-"zh-CN",
-"zh-HK",
-"zh-TW",
-"bh-IN"
-];
+    "bn-BD",
+    "bn-IN",
+    "cs-CZ",
+    "da-DK",
+    "de-AT",
+    "de-CH",
+    "de-DE",
+    "el-GR",
+    "en-AU",
+    "en-CA",
+    "en-GB",
+    "en-IE",
+    "en-IN",
+    "en-NZ",
+    "en-US",
+    "en-ZA",
+    "es-AR",
+    "es-CL",
+    "es-CO",
+    "es-ES",
+    "es-MX",
+    "es-US",
+    "fi-FI",
+    "fr-BE",
+    "fr-CA",
+    "fr-CH",
+    "fr-FR",
+    "he-IL",
+    "hi-IN",
+    "hu-HU",
+    "id-ID",
+    "it-CH",
+    "it-IT",
+    "jp-JP",
+    "ko-KR",
+    "nl-BE",
+    "nl-NL",
+    "no-NO",
+    "pl-PL",
+    "pt-BR",
+    "pt-PT",
+    "ro-RO",
+    "ru-RU",
+    "sk-SK",
+    "sv-SE",
+    "ta-IN",
+    "ta-LK",
+    "th-TH",
+    "tr-TR",
+    "ur_PK",
+    "zh-CN",
+    "zh-HK",
+    "zh-TW",
+    "bh-IN"
+  ];
 
   const moveElement = (sourceIndex, destinationIndex) => {
     const updatedkf = [...kf];
@@ -163,7 +163,7 @@ const App = () => {
   const bringToFront = canvas => {
     canvas.getActiveObjects().forEach(element => {
       const sourceIndex = canvas.getObjects().indexOf(element);
-      const destinationIndex =canvas.getObjects().length-1;
+      const destinationIndex = canvas.getObjects().length - 1;
       moveElement(sourceIndex, destinationIndex);
       canvas.bringToFront(element);
     });
@@ -382,14 +382,14 @@ const App = () => {
   window.changeTab = changeTab;
   return (<div>
 
-{/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
+    {/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
     <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
-    <div> 
-          <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
-            endpoint(`clear ${chNumber}`);
-            endpoint(`mixer ${chNumber} clear`);
-          }}>Stop Channel</button>
-    </div>
+      <div>
+        <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
+          endpoint(`clear ${chNumber}`);
+          endpoint(`mixer ${chNumber} clear`);
+        }}>Stop Channel</button>
+      </div>
 
       <div >
         <b>Zoom:</b> {zoom.toFixed(1)}   <b>Animation Method: IN </b><select onChange={e => changeInAnimationMethod(e)} value={inAnimationMethod}>
@@ -420,36 +420,34 @@ const App = () => {
           setSolidcaption1('');
           localStorage.setItem('RCC_solidCaption1', '');
         }} ><FaStop /></button>
-        <span> {solidcaption1} </span>  <b>Languages:</b> <input style={{ width:70 }} value={currentLanguage} onChange={e=>{
+        <span> {solidcaption1} </span>  <b>Languages:</b> <input style={{ width: 70 }} value={currentLanguage} onChange={e => {
           dispatch({ type: 'CHANGE_CURRENTLANGUAGE', payload: e.target.value });
-          if(continuous1 && listening)
-          {
-             SpeechRecognition.startListening({
-               continuous: continuous1,
-               language: e.target.value
-           });
-          }
-        }
-
-          }/>
-      {/* </div>
-      <div> */}
-        <select style={{width:70 }} value={currentLanguage}
-          onChange={(e) =>  {
-            dispatch({ type: 'CHANGE_CURRENTLANGUAGE', payload: e.target.value });
-
-         if(continuous1 && listening)
-         {
+          if (continuous1 && listening) {
             SpeechRecognition.startListening({
               continuous: continuous1,
               language: e.target.value
-          });
-         }
+            });
+          }
+        }
+
+        } />
+        {/* </div>
+      <div> */}
+        <select style={{ width: 70 }} value={currentLanguage}
+          onChange={(e) => {
+            dispatch({ type: 'CHANGE_CURRENTLANGUAGE', payload: e.target.value });
+
+            if (continuous1 && listening) {
+              SpeechRecognition.startListening({
+                continuous: continuous1,
+                language: e.target.value
+              });
+            }
           }
 
           }
         >
-          {(languages.filter((value, index, self)=>{return self.indexOf(value) === index})).map((option) => (
+          {(languages.filter((value, index, self) => { return self.indexOf(value) === index })).map((option) => (
             <option key={option} value={option}>
               {option}
             </option>
@@ -492,7 +490,7 @@ const App = () => {
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <span style={{ position: 'absolute', left: 506, top: 250, fontSize: 40 }}>.</span>
                 <Provider store={store}>
-                  <Drawing moveElement={moveElement}  sendToBack={sendToBack} bringToFront={bringToFront}/>
+                  <Drawing moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} />
                 </Provider>
               </div>
             </div>
@@ -541,7 +539,7 @@ const App = () => {
           </TabList>
           <TabPanel >
             <div style={{ border: '1px dashed blue', width: 900 }}>
-              <DrawingController moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} deleteItemfromtimeline={deleteItemfromtimeline}/>
+              <DrawingController moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} deleteItemfromtimeline={deleteItemfromtimeline} />
             </div>
           </TabPanel>
           <TabPanel >
@@ -558,7 +556,7 @@ const App = () => {
             <VideoPlaylist />
           </TabPanel>
           <TabPanel >
-            <Layers moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline}/>
+            <Layers moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline} />
           </TabPanel>
           <TabPanel >
             <ColorGradient2 />
@@ -582,7 +580,7 @@ const App = () => {
             <Charts />
           </TabPanel>
           <TabPanel >
-            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline}/>
+            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
           </TabPanel>
           <TabPanel >
             <PathModifier />

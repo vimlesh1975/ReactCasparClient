@@ -578,13 +578,13 @@ export const removeBg = canvas => {
 export const removeFill = canvas => {
     canvas.getActiveObjects().forEach(element => { element.set('fill', '') });
     canvas.requestRenderAll();
-
 };
 export const removeStroke = canvas => {
-
-    canvas.getActiveObjects().forEach(element => { element.set('stroke', '') });
+    canvas.getActiveObjects().forEach(element => { 
+        element.set('strokeWidth', 0);
+        element.set('stroke', '');
+     });
     canvas.requestRenderAll();
-
 };
 export const removeShadow = canvas => {
     canvas.getActiveObjects().forEach(element => { element.set('shadow', { ...shadowOptions, blur: 0 }) });

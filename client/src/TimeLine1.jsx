@@ -13,7 +13,7 @@ var aa;
 var inAnimation2;
 var stopCommand;
 var html;
-const TimeLine1 = ({deleteItemfromtimeline}) => {
+const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
   const dispatch = useDispatch();
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -72,7 +72,7 @@ const TimeLine1 = ({deleteItemfromtimeline}) => {
     stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
     outDuration: (kf[i][3] - kf[i][2]) * 10 * timelineScale
   });
- 
+
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
       return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } } : val;
@@ -751,9 +751,9 @@ const TimeLine1 = ({deleteItemfromtimeline}) => {
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
       </div>
-      <div style={{ height: 740, width: 860, overflowY: 'scroll', overflowX: 'hidden' }}>
-        <div style={{ width: { timelineWidth }, backgroundColor: 'lightgrey', display: 'flex', }}>
-          {Array.from(Array(parseInt(9 * parseFloat(timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ textAlign: 'center', fontSize: 8, fontWeight: 'bold', marginRight: parseInt(90 / parseFloat(timelineScale)) }}>{(i < 10) ? '0' + i : i}</div>) })}
+      <div style={{ height: 740, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
+        <div style={{  width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', }}>
+          {Array.from(Array(parseInt(9 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{backgroundColor:'',border:'none' ,boxSizing: 'border-box',  fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
@@ -777,7 +777,7 @@ const TimeLine1 = ({deleteItemfromtimeline}) => {
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
                             // color: snapshot.isDragging ? 'white' : 'black' ,
-                             marginTop: 1
+                            marginTop: 1
                           }}
                         >
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
