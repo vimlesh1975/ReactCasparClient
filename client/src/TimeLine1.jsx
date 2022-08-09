@@ -110,21 +110,22 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
   const play = () => {
     const ff = kf.map((val) => val[3]);
+    const ffmax = Math.max(...ff);
 
     cf = 0;
     setCurrentFrame(0);
     clearInterval(aa);
     aa = setInterval(() => {
-      if (cf < Math.max(...ff)) {
-        cf = cf + 1;
-        setCurrentFrame(val => val + 1);
+      if (cf < ffmax) {
+        cf = cf + 10;
+        setCurrentFrame(cf);
       }
       else {
         cf = 0;
         setCurrentFrame(0);
         clearInterval(aa);
       }
-    }, 10 * timelineScale);
+    }, 100 * timelineScale);
   }
 
   const setinAnimation2 = () => {
@@ -752,8 +753,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={test}>Console Log</button>
       </div>
       <div style={{ height: 740, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
-        <div style={{  width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', }}>
-          {Array.from(Array(parseInt(9 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{backgroundColor:'',border:'none' ,boxSizing: 'border-box',  fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
+        <div style={{ width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', }}>
+          {Array.from(Array(parseInt(9 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
@@ -872,7 +873,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
             ss(d);
           }}
         >
-          <div style={{ width: 5, minHeight: 200, height: ((layers.length) * 21) + 30, backgroundColor: 'red', fontWeight: 'bold' }}>
+          <div style={{ width: 5, minHeight: 200, maxHeight: (740 + 30), height: ((layers.length + 1) * (20 + 2 + 2)) + 30, backgroundColor: 'red', fontWeight: 'bold' }}>
             {((currentFrame * timelineScale) / (25 * 4)).toFixed(1)}
           </div>
         </Rnd>
