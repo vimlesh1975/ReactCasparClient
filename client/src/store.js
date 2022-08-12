@@ -189,28 +189,35 @@ const kfReducer = (state = initialKf, action) => {
 const initialxpositions={xpositions:Array.from(Array(200).keys()).map(() => ({
     initialx: 0,
     finalx: 100,
+    finalx2: 150,
     outx: 700,
 
     initialy: 500,
     finaly: 250,
+    finaly2: 250,
     outy: 400,
 
     initialScaleX: 1,
     finalScaleX: 1,
+    finalScaleX2: 1,
     outScaleX: 1,
 
     initialScaleY: 1,
     finalScaleY: 1,
+    finalScaleY2: 1,
     outScaleY: 1,
 
     initialAngle: 0,
     finalAngle: 0,
+    finalAngle2: 0,
     outAngle: 0,
 
     finalOpacity: 1,
+    finalOpacity2: 1,
 
     initialMatrix: 'matrix(1,0,0,1,0,500)',
     finalMatrix: 'matrix(1,0,0,1,100,250)',
+    finalMatrix2: 'matrix(1,0,0,1,150,250)',
     outMatrix: 'matrix(1,0,0,1,700,400)',
   }))};
 

@@ -13,6 +13,8 @@ var aa;
 var inAnimation2;
 var stopCommand;
 var html;
+var aborted=false;
+
 const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
   const dispatch = useDispatch();
@@ -38,35 +40,41 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
   const [timelineScale, settimelineScale] = useState(1);
-
   const position = i => ({
     delay: kf[i][0] * 10 * timelineScale,
 
     initialx: xpositions[i].initialx,
     finalx: xpositions[i].finalx,
+    finalx2: xpositions[i].finalx2,
     outx: xpositions[i].outx,
 
     initialy: xpositions[i].initialy,
     finaly: xpositions[i].finaly,
+    finaly2: xpositions[i].finaly2,
     outy: xpositions[i].outy,
 
     initialScaleX: xpositions[i].initialScaleX,
     finalScaleX: xpositions[i].finalScaleX,
+    finalScaleX2: xpositions[i].finalScaleX2,
     outScaleX: xpositions[i].outScaleX,
 
     initialScaleY: xpositions[i].initialScaleY,
     finalScaleY: xpositions[i].finalScaleY,
+    finalScaleY2: xpositions[i].finalScaleY2,
     outScaleY: xpositions[i].outScaleY,
 
     initialAngle: xpositions[i].initialAngle,
     finalAngle: xpositions[i].finalAngle,
+    finalAngle2: xpositions[i].finalAngle2,
     outAngle: xpositions[i].outAngle,
 
     initialMatrix: xpositions[i].initialMatrix,
     finalMatrix: xpositions[i].finalMatrix,
+    finalMatrix2: xpositions[i].finalMatrix2,
     outMatrix: xpositions[i].outMatrix,
 
     finalOpacity: xpositions[i].finalOpacity,
+    finalOpacity2: xpositions[i].finalOpacity2,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10 * timelineScale,
     stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
@@ -139,13 +147,19 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         {
           0%{transform: ${position(i).initialMatrix} ;opacity:0}
         } 
+        @keyframes ${type}${canvas?.item(i).id}stay
+        {
+          100%{transform: ${position(i).finalMatrix2} ;opacity: ${position(i).finalOpacity2}}
+        } 
         @keyframes ${type}${canvas?.item(i).id}out
         {
+          0%{transform: ${position(i).finalMatrix2} ;opacity:${position(i).finalOpacity2}}
           100%{transform: ${position(i).outMatrix} ;opacity:0}
         } 
         #${canvas?.item(i).id} {
           animation:
         ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
+        ${type}${canvas?.item(i).id}stay ${position(i).stayDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration) / 1000}s forwards alternate infinite, 
         ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s ${autoOut ? 'running' : 'paused'} forwards}
          `
     });
@@ -163,8 +177,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       canvas.forEachObject((element, i) => {
         endpoint(`
       call ${window.chNumber}-${108} "
-      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,running';
-      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running';
+      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
       "`);
       });
     }
@@ -207,7 +221,33 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         "`);
   }
 
+  const animate1 = (element, i, duration) => {
+    element.animate({ left: position(i).finalx2, top: position(i).finaly2, scaleX: position(i).finalScaleX2, scaleY: position(i).finalScaleY2, angle: position(i).finalAngle2, opacity: position(i).finalOpacity2 }, {
+      onChange: canvas.renderAll.bind(canvas),
+      duration: duration,
+      easing: fabric.util.ease.linear,
+      onComplete: () => animate2(element, i, duration),
+      abort: aborted
+    })
+  }
+
+  const animate2 = (element, i, duration) => {
+    element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity }, {
+      onChange: canvas.renderAll.bind(canvas),
+      duration: duration,
+      easing: fabric.util.ease.linear,
+      onComplete: () => animate1(element, i, duration),
+      abort: aborted
+    });
+  }
+  const cancelPreView = () => {
+    // setAborted(val=>!val);
+    aborted=true;
+  }
+
   const preView = () => {
+    aborted=false;
+
     play();
     canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
@@ -218,18 +258,31 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         element.animate({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity }, {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).initialToFinalDuration,
-          easing: fabric.util.ease.linear
+          easing: fabric.util.ease.linear,
+          abort: ()=> aborted
         });
       }, (position(i).delay));
 
-
       setTimeout(() => {
-        element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, angle: position(i).outAngle, opacity: 0 }, {
+        element.animate({ left: position(i).finalx2, top: position(i).finaly2, scaleX: position(i).finalScaleX2, scaleY: position(i).finalScaleY2, angle: position(i).finalAngle2, opacity: position(i).finalOpacity2 }, {
           onChange: canvas.renderAll.bind(canvas),
-          duration: position(i).outDuration,
-          easing: fabric.util.ease.linear
-        });
-      }, (position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration));
+          duration: position(i).stayDuration,
+          easing: fabric.util.ease.linear,
+          onComplete: () => animate2(element, i, position(i).stayDuration),
+          abort: ()=> aborted
+
+        })
+      }, (position(i).delay + position(i).initialToFinalDuration));
+
+
+      // setTimeout(() => {
+      //   element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, angle: position(i).outAngle, opacity: 0 }, {
+      //     onChange: canvas.renderAll.bind(canvas),
+      //     duration: position(i).outDuration,
+      //     easing: fabric.util.ease.linear,
+      //     abort:()=> aborted
+      //   });
+      // }, (position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration));
     });
 
   }
@@ -283,6 +336,30 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     })
   }
 
+  const finalPoint2 = () => {
+    var updatedxpositions = [...xpositions];
+    if (activeLayers.length > 1) { deselectAndSelectAgain(); }
+
+    layers.forEach((element, i) => {
+      if (activeLayers.includes(element)) {
+        if (activeLayers.length > 1) {
+          var activeSelection = canvas.getActiveObject();
+          var matrix = activeSelection.calcTransformMatrix();
+          var objectPosition = { x: element.left, y: element.top };
+          var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx2: finalPosition.x, finaly2: finalPosition.y, finalScaleX2: element.scaleX, finalScaleY2: element.scaleY, finalAngle2: element.angle, finalMatrix2: getMatrix(element, finalPosition.x, finalPosition.y), finalOpacity2: element.opacity };
+        }
+        else {
+          updatedxpositions[i] = { ...updatedxpositions[i], finalx2: element.left, finaly2: element.top, finalScaleX2: element.scaleX, finalScaleY2: element.scaleY, finalAngle2: element.angle, finalMatrix2: getMatrix(element), finalOpacity2: element.opacity };
+        }
+        dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+
+      }
+    })
+  }
+
+
+
   const lastPoint = () => {
     var updatedxpositions = [...xpositions];
     if (activeLayers.length > 1) { deselectAndSelectAgain(); }
@@ -304,6 +381,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
 
   const ss = (d) => {
+    aborted=true;
     setCurrentFrame(d.x);
     canvas.discardActiveObject();
 
@@ -331,7 +409,6 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
           angle: position(i).outAngle,
 
-          // opacity: 0,
           opacity: 1,
         });
       }
@@ -340,28 +417,33 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         element.set({
           left: position(i).initialx + (position(i).finalx - position(i).initialx) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
           top: position(i).initialy + (position(i).finaly - position(i).initialy) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-
           scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
           scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-
           angle: position(i).initialAngle + (position(i).finalAngle - position(i).initialAngle) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-
-          // opacity: (d.x - kf[i][0]) / (kf[i][1] - kf[i][0]);
-          opacity: 1
+          opacity: position(i).finalOpacity / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
         });
       }
 
       if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
-        element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity });
+        // element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity });
+        element.set({
+          left: position(i).finalx + (position(i).finalx2 - position(i).finalx) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          top: position(i).finaly + (position(i).finaly2 - position(i).finaly) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          scaleX: position(i).finalScaleX + (position(i).finalScaleX2 - position(i).finalScaleX) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          scaleY: position(i).finalScaleY + (position(i).finalScaleY2 - position(i).finalScaleY) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          angle: position(i).finalAngle + (position(i).finalAngle2 - position(i).finalAngle) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          opacity: 0 + position(i).finalOpacity + (position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+        });
       }
+
       if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
         element.set({
-          left: position(i).finalx + (position(i).outx - position(i).finalx) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          top: position(i).finaly + (position(i).outy - position(i).finaly) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          scaleX: position(i).finalScaleX + (position(i).outScaleX - position(i).finalScaleX) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          scaleY: position(i).finalScaleY + (position(i).outScaleY - position(i).finalScaleY) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          angle: position(i).finalAngle + (position(i).outAngle - position(i).finalAngle) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          opacity: 1
+          left: position(i).finalx2 + (position(i).outx - position(i).finalx2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          top: position(i).finaly2 + (position(i).outy - position(i).finaly2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          scaleX: position(i).finalScaleX2 + (position(i).outScaleX - position(i).finalScaleX2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          scaleY: position(i).finalScaleY2 + (position(i).outScaleY - position(i).finalScaleY2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          angle: position(i).finalAngle2 + (position(i).outAngle - position(i).finalAngle2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          opacity: position(i).finalOpacity2 + (0 - position(i).finalOpacity2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
         });
       }
     })
@@ -732,9 +814,11 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       <div >
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
+        <button onClick={finalPoint2}>Set Final2 Point</button>
         <button onClick={lastPoint}>Set End Point</button>
 
         <button onClick={preView}>Preview</button>
+        <button onClick={cancelPreView}>Cancel Preview</button>
         <button onClick={playtocasparcg}>Play</button>
         <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
         <button onClick={stopFromCasprtcg}>Stop</button>
@@ -885,6 +969,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
       }} type="range" min='1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
+      {aborted.toString()}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)
