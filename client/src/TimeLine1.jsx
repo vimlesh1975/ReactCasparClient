@@ -13,7 +13,7 @@ var aa;
 var inAnimation2;
 var stopCommand;
 var html;
-var aborted=false;
+var aborted = false;
 
 const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
@@ -75,6 +75,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
     finalOpacity: xpositions[i].finalOpacity,
     finalOpacity2: xpositions[i].finalOpacity2,
+    loop: xpositions[i].loop,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10 * timelineScale,
     stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
@@ -149,18 +150,18 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         } 
         @keyframes ${type}${canvas?.item(i).id}stay
         {
-          100%{transform: ${position(i).finalMatrix2} ;opacity: ${position(i).finalOpacity2}}
+          100%{transform:${position(i).finalMatrix2}  ;opacity:${position(i).finalOpacity2}}
         } 
         @keyframes ${type}${canvas?.item(i).id}out
         {
-          0%{transform: ${position(i).finalMatrix2} ;opacity:${position(i).finalOpacity2}}
+          0%{transform:${(position(i).loop % 2 === 0) ? position(i).finalMatrix : position(i).finalMatrix2}  ;opacity:${(position(i).loop % 2 === 0) ? position(i).finalOpacity : position(i).finalOpacity2}}
           100%{transform: ${position(i).outMatrix} ;opacity:0}
         } 
         #${canvas?.item(i).id} {
           animation:
         ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
-        ${type}${canvas?.item(i).id}stay ${position(i).stayDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration) / 1000}s forwards alternate infinite, 
-        ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration) / 1000}s ${autoOut ? 'running' : 'paused'} forwards}
+        ${type}${canvas?.item(i).id}stay ${position(i).stayDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration) / 1000}s forwards alternate ${(position(i).loop === "0") ? 'infinite' : position(i).loop}, 
+        ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration * ((position(i).loop === "0") ? 9999999999 : position(i).loop))) / 1000}s ${autoOut ? 'running' : 'paused'} forwards}
          `
     });
 
@@ -242,11 +243,11 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
   const cancelPreView = () => {
     // setAborted(val=>!val);
-    aborted=true;
+    aborted = true;
   }
 
   const preView = () => {
-    aborted=false;
+    aborted = false;
 
     play();
     canvas.discardActiveObject();
@@ -259,7 +260,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           onChange: canvas.renderAll.bind(canvas),
           duration: position(i).initialToFinalDuration,
           easing: fabric.util.ease.linear,
-          abort: ()=> aborted
+          abort: () => aborted
         });
       }, (position(i).delay));
 
@@ -269,7 +270,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           duration: position(i).stayDuration,
           easing: fabric.util.ease.linear,
           onComplete: () => animate2(element, i, position(i).stayDuration),
-          abort: ()=> aborted
+          abort: () => aborted
 
         })
       }, (position(i).delay + position(i).initialToFinalDuration));
@@ -381,7 +382,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
 
   const ss = (d) => {
-    aborted=true;
+    aborted = true;
     setCurrentFrame(d.x);
     canvas.discardActiveObject();
 
@@ -895,7 +896,13 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                                     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
                                   }}
                                 >
-                                  <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green' }}></div>
+                                  <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green', textAlign: 'center' }}>
+                                    <input title={(parseInt(xpositions[i].loop)===0)?'infinite loop':xpositions[i].loop + ' times loop'} style={{ width: 40, textAlign: 'center' }} onChange={e => {
+                                      var updatedxpositions = [...xpositions];
+                                      updatedxpositions[i] = { ...xpositions[i], loop: e.target.value };
+                                      dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+
+                                    }} type="number" min={0} max={500} step='1' value={xpositions[i].loop} onClick={e => e.stopPropagation()} /></div>
                                 </Rnd>
                                 <Rnd
                                   dragAxis='x'
@@ -969,7 +976,6 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
       }} type="range" min='1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
-      {aborted.toString()}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)

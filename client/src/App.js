@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '120822_1'
+const buildDate = '130822_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

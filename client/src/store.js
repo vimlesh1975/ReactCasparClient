@@ -219,6 +219,7 @@ const initialxpositions={xpositions:Array.from(Array(200).keys()).map(() => ({
     finalMatrix: 'matrix(1,0,0,1,100,250)',
     finalMatrix2: 'matrix(1,0,0,1,150,250)',
     outMatrix: 'matrix(1,0,0,1,700,400)',
+    loop:1
   }))};
 
 const xpositionsReducer = (state = initialxpositions, action) => {
