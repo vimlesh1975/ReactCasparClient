@@ -1051,7 +1051,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             // window.editor.canvas?.remove(item);
                             // window.editor.canvas?.discardActiveObject();
                             // window.editor.canvas?.requestRenderAll();
-                            deleteItemfromtimeline();
+                            window.deleteItemfromtimeline();
                         }
                     });
                 }
@@ -1103,7 +1103,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                 // window.editor.canvas?.remove(item);
                                 // window.editor.canvas?.discardActiveObject();
                                 // window.editor.canvas?.requestRenderAll();
-                                deleteItemfromtimeline();
+                                window.deleteItemfromtimeline();
                             }
                         });
                     }

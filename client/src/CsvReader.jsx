@@ -44,9 +44,10 @@ export default function CsvReader() {
         if (index !== -1) {
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    canvas.getObjects().forEach((element) => {
+                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                        element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -97,11 +98,11 @@ export default function CsvReader() {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var aa = document.createElement('div');
             aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
             document.body.style.overflow='hidden';
             "`)
         }, 300);
@@ -116,7 +117,7 @@ export default function CsvReader() {
 
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+                aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
                 "`)
     }
     // const stopGraphics = layerNumber => {

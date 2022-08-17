@@ -975,7 +975,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       Timeline Scale: <input width={200} onChange={e => {
         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
-      }} type="range" min='1' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
+      }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
       <h3>Animate Only position, size and Rotation.</h3>
     </div>
   </div>)
