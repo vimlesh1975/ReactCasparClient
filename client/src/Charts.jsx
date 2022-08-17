@@ -6,6 +6,7 @@ import { shadowOptions } from './common'
 import { deleteAll } from './DrawingController';
 import { useState } from 'react';
 import faker from 'faker'
+import { v4 as uuidv4 } from 'uuid';
 
 
 const Charts = () => {
@@ -81,18 +82,20 @@ const Charts = () => {
         var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
-                element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
+                element.set({id: 'id_' + uuidv4(), objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
                 if (element.type === 'text') {
                     element.set({ type: 'i-text' })
-                    var textobj=element.toObject();
+                    var textobj = element.toObject();
                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                    var aa=new fabric.IText(element.text,clonedtextobj);
-                    var bb =objects.indexOf(element);
-                    objects.splice(bb,1,aa);
+                    var aa = new fabric.IText(element.text, clonedtextobj);
+                    aa.set({ id: 'ccg_' + uuidv4() });
+                    var bb = objects.indexOf(element);
+                    objects.splice(bb, 1, aa);
                 }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
+            svgGroups.set({ id: 'id_' + uuidv4() });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
@@ -189,18 +192,20 @@ const Charts = () => {
         var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
-                element.set({ objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
+                element.set({ id: 'id_' + uuidv4(),objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
                 if (element.type === 'text') {
                     element.set({ type: 'i-text' })
-                    var textobj=element.toObject();
+                    var textobj = element.toObject();
                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                    var aa=new fabric.IText(element.text,clonedtextobj);
-                    var bb =objects.indexOf(element);
-                    objects.splice(bb,1,aa);
+                    var aa = new fabric.IText(element.text, clonedtextobj);
+                    aa.set({ id: 'ccg_' + uuidv4() });
+                    var bb = objects.indexOf(element);
+                    objects.splice(bb, 1, aa);
                 }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
+            svgGroups.set({ id: 'id_' + uuidv4() });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
