@@ -580,10 +580,10 @@ export const removeFill = canvas => {
     canvas.requestRenderAll();
 };
 export const removeStroke = canvas => {
-    canvas.getActiveObjects().forEach(element => { 
+    canvas.getActiveObjects().forEach(element => {
         element.set('strokeWidth', 0);
         element.set('stroke', '');
-     });
+    });
     canvas.requestRenderAll();
 };
 export const removeShadow = canvas => {
@@ -947,7 +947,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
     rect.animate('top', (Math.random()) * 500, { onChange: canvas.renderAll.bind(canvas) })
 }
 
-const DrawingController = ({moveElement,deleteItemfromtimeline}) => {
+const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const refShadowColor = useRef();
     const refAffectStroke = useRef(false);
@@ -989,7 +989,7 @@ const DrawingController = ({moveElement,deleteItemfromtimeline}) => {
 
     const [currentMode, setCurrentMode] = useState('none');
     const [fontSize, setFontSize] = useState(25);
-    const [opacity, setOpacity] = useState(1);
+    const [opacity, setOpacity] = useState(1.0);
     const [charSpacing, setCharSpacing] = useState(1);
 
     const [strokeWidth, setStrokeWidth] = useState(1);
@@ -1023,115 +1023,115 @@ const DrawingController = ({moveElement,deleteItemfromtimeline}) => {
     const [currentFillColor, setCurrentFillColor] = useState('#000000')
 
 
-    
 
-useEffect(() => {
-    fabric.util.addListener(document.body, 'keydown', function (options) {
-        if (options.target.nodeName === 'BODY') {
-            var key = options.which || options.keyCode; // key detection
-            if (key === 37) { // handle Left key
-                moveSelected(Direction.LEFT);
-            } else if (key === 38) { // handle Up key
-                moveSelected(Direction.UP);
-            } else if (key === 39) { // handle Right key
-                moveSelected(Direction.RIGHT);
-            } else if (key === 40) { // handle Down key
-                moveSelected(Direction.DOWN);
+
+    useEffect(() => {
+        fabric.util.addListener(document.body, 'keydown', function (options) {
+            if (options.target.nodeName === 'BODY') {
+                var key = options.which || options.keyCode; // key detection
+                if (key === 37) { // handle Left key
+                    moveSelected(Direction.LEFT);
+                } else if (key === 38) { // handle Up key
+                    moveSelected(Direction.UP);
+                } else if (key === 39) { // handle Right key
+                    moveSelected(Direction.RIGHT);
+                } else if (key === 40) { // handle Down key
+                    moveSelected(Direction.DOWN);
+                }
+
+                //--------------
+                if (options.repeat) {
+                    return;
+                }
+
+                if (options.key === 'Delete') {
+                    window.editor.canvas?.getActiveObjects().forEach(item => {
+                        //  alert(item.type);
+                        if (!((item.type === 'textbox') && item.isEditing)) {
+                            // window.editor.canvas?.remove(item);
+                            // window.editor.canvas?.discardActiveObject();
+                            // window.editor.canvas?.requestRenderAll();
+                            deleteItemfromtimeline();
+                        }
+                    });
+                }
+                if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+                    const item = window.editor.canvas?.getActiveObjects()[0];
+                    if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+                }
+                if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+                    const item = window.editor.canvas?.getActiveObjects()[0];
+                    if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+                }
+                if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+                    // window.editor.canvas?.undo();
+                    window.editor.canvas && undo(window.editor.canvas)
+                }
+                if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+                    options.preventDefault();
+                    window.editor.canvas && redo(window.editor.canvas)
+                }
+                if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+                    options.preventDefault();
+                    selectAll(window.editor.canvas);
+                }
             }
-    
-            //--------------
-            if (options.repeat) {
-                return;
-            }
-    
-            if (options.key === 'Delete') {
-                window.editor.canvas?.getActiveObjects().forEach(item => {
-                    //  alert(item.type);
-                    if (!((item.type === 'textbox') && item.isEditing)) {
-                        // window.editor.canvas?.remove(item);
-                        // window.editor.canvas?.discardActiveObject();
-                        // window.editor.canvas?.requestRenderAll();
-                        deleteItemfromtimeline();
+        })
+        return () => {
+            fabric.util.removeListener(document.body, 'keydown', function (options) {
+                if (options.target.nodeName === 'BODY') {
+                    var key = options.which || options.keyCode; // key detection
+                    if (key === 37) { // handle Left key
+                        moveSelected(Direction.LEFT);
+                    } else if (key === 38) { // handle Up key
+                        moveSelected(Direction.UP);
+                    } else if (key === 39) { // handle Right key
+                        moveSelected(Direction.RIGHT);
+                    } else if (key === 40) { // handle Down key
+                        moveSelected(Direction.DOWN);
                     }
-                });
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'c') {
-                const item = window.editor.canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'v') {
-                const item = window.editor.canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'z') {
-                // window.editor.canvas?.undo();
-                window.editor.canvas && undo(window.editor.canvas)
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'r') {
-                options.preventDefault();
-                window.editor.canvas && redo(window.editor.canvas)
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'a') {
-                options.preventDefault();
-                selectAll(window.editor.canvas);
-            }
-        }
-    })
-  return () => {
-    fabric.util.removeListener(document.body, 'keydown', function (options) {
-        if (options.target.nodeName === 'BODY') {
-            var key = options.which || options.keyCode; // key detection
-            if (key === 37) { // handle Left key
-                moveSelected(Direction.LEFT);
-            } else if (key === 38) { // handle Up key
-                moveSelected(Direction.UP);
-            } else if (key === 39) { // handle Right key
-                moveSelected(Direction.RIGHT);
-            } else if (key === 40) { // handle Down key
-                moveSelected(Direction.DOWN);
-            }
-    
-            //--------------
-            if (options.repeat) {
-                return;
-            }
-    
-            if (options.key === 'Delete') {
-                window.editor.canvas?.getActiveObjects().forEach(item => {
-                    //  alert(item.type);
-                    if (!((item.type === 'textbox') && item.isEditing)) {
-                        // window.editor.canvas?.remove(item);
-                        // window.editor.canvas?.discardActiveObject();
-                        // window.editor.canvas?.requestRenderAll();
-                        deleteItemfromtimeline();
+
+                    //--------------
+                    if (options.repeat) {
+                        return;
                     }
-                });
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'c') {
-                const item = window.editor.canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'v') {
-                const item = window.editor.canvas?.getActiveObjects()[0];
-                if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'z') {
-                // window.editor.canvas?.undo();
-                window.editor.canvas && undo(window.editor.canvas)
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'r') {
-                options.preventDefault();
-                window.editor.canvas && redo(window.editor.canvas)
-            }
-            if (options.ctrlKey && options.key.toLowerCase() === 'a') {
-                options.preventDefault();
-                selectAll(window.editor.canvas);
-            }
+
+                    if (options.key === 'Delete') {
+                        window.editor.canvas?.getActiveObjects().forEach(item => {
+                            //  alert(item.type);
+                            if (!((item.type === 'textbox') && item.isEditing)) {
+                                // window.editor.canvas?.remove(item);
+                                // window.editor.canvas?.discardActiveObject();
+                                // window.editor.canvas?.requestRenderAll();
+                                deleteItemfromtimeline();
+                            }
+                        });
+                    }
+                    if (options.ctrlKey && options.key.toLowerCase() === 'c') {
+                        const item = window.editor.canvas?.getActiveObjects()[0];
+                        if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
+                    }
+                    if (options.ctrlKey && options.key.toLowerCase() === 'v') {
+                        const item = window.editor.canvas?.getActiveObjects()[0];
+                        if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
+                    }
+                    if (options.ctrlKey && options.key.toLowerCase() === 'z') {
+                        // window.editor.canvas?.undo();
+                        window.editor.canvas && undo(window.editor.canvas)
+                    }
+                    if (options.ctrlKey && options.key.toLowerCase() === 'r') {
+                        options.preventDefault();
+                        window.editor.canvas && redo(window.editor.canvas)
+                    }
+                    if (options.ctrlKey && options.key.toLowerCase() === 'a') {
+                        options.preventDefault();
+                        selectAll(window.editor.canvas);
+                    }
+                }
+            })
         }
-    })
-  }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
 
     const sendToBack = canvas => {
@@ -2344,7 +2344,7 @@ useEffect(() => {
 
             if (element.opacity !== null) { setOpacity(element.opacity); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
-            if (element.scaleX !== null) { setscaleX(element.scaleX); }
+            if (element.scaleX !== null) { setscaleX((element.scaleX)); }
             if (element.scaleY !== null) { setscaleY(element.scaleY); }
             if (element.angle !== null) { setangle(parseInt(element.angle)); }
 
@@ -2645,15 +2645,28 @@ useEffect(() => {
                             )}`
                         }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
-                        Stroke/Brush W: {strokeWidth}
-                        <input className='inputRangeStroke' onChange={e => onstrokeSizeChange(e)} type="range" id='strokeSizeOSD' min='0' max='50' step='1' defaultValue='1' />
-                        <span> ScaleX : {scaleX.toFixed(1)} ScaleY  : {scaleY.toFixed(1)} Angle: <input style={{ width: '40px' }} onChange={e => {
-                            setangle(e.target.value);
-                            canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
-                            canvas.requestRenderAll();
-                        }} type="number" min='0' max='360' step='1' value={angle} /> </span>
+                        Stroke/Brush W:
+                        <input style={{ width: '40px' }} onChange={e => {
+                            onstrokeSizeChange((e));
+                        }} type="number" min='0' max='50' step='1' value={strokeWidth} />
+                        <span>
+                            ScaleX:<input style={{ width: '40px' }} onChange={e => {
+                                setscaleX((e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ scaleX: e.target.value }))
+                                canvas.requestRenderAll();
+                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleX} />
+                            ScaleY:<input style={{ width: '40px' }} onChange={e => {
+                                setscaleY((e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ scaleY: e.target.value }))
+                                canvas.requestRenderAll();
+                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleY} />
+                            Angle: <input style={{ width: '40px' }} onChange={e => {
+                                setangle(e.target.value);
+                                canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
+                                canvas.requestRenderAll();
+                            }} type="number" min='0' max='360' step='1' value={angle} /> </span>
                         <br /> stroke-dasharray: <input style={{ width: '60px' }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
-                        stroke-dash-offset: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} /> 
+                        stroke-dash-offset: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
 
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -2799,7 +2812,7 @@ useEffect(() => {
                         <SavePannel />
                     </TabPanel>
                     <TabPanel>
-                        <Layers2 moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline}/>
+                        <Layers2 moveElement={moveElement} deleteItemfromtimeline={deleteItemfromtimeline} />
                     </TabPanel>
                     <TabPanel>
                         <CasparcgTools />
