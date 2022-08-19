@@ -1,12 +1,12 @@
-import {  applyMiddleware } from 'redux'
-import { legacy_createStore as createStore} from 'redux'
+import { applyMiddleware } from 'redux'
+import { legacy_createStore as createStore } from 'redux'
 // import { configureStore} from  '@reduxjs/toolkit'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
-const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation:'', jsfilename:'main', cssfilename:'main' }] };
+const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation: '', jsfilename: 'main', cssfilename: 'main' }] };
 const canvasListReducer = (state = initialStateCanvasList, action) => {
     switch (action.type) {
         case 'CHANGE_CANVAS_LIST':
@@ -150,7 +150,7 @@ const cssfilenameReducer = (state = initialcssfilename, action) => {
     }
 }
 
-const initialPath1={path1:[]};
+const initialPath1 = { path1: [] };
 const path1Reducer = (state = initialPath1, action) => {
     switch (action.type) {
         case 'CHANGE_PATH1':
@@ -162,7 +162,7 @@ const path1Reducer = (state = initialPath1, action) => {
     }
 }
 
-const initialPannelEnable={pannelEnable:false};
+const initialPannelEnable = { pannelEnable: false };
 const pannelEnableReducer = (state = initialPannelEnable, action) => {
     switch (action.type) {
         case 'CHANGE_PANNEL_ENABLED':
@@ -174,7 +174,7 @@ const pannelEnableReducer = (state = initialPannelEnable, action) => {
     }
 }
 
-const initialKf={kf:Array.from(Array(200).keys()).map(() => [20, 60, 260, 300])};
+const initialKf = { kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]) };
 const kfReducer = (state = initialKf, action) => {
     switch (action.type) {
         case 'CHANGE_KF':
@@ -186,41 +186,44 @@ const kfReducer = (state = initialKf, action) => {
     }
 }
 
-const initialxpositions={xpositions:Array.from(Array(200).keys()).map(() => ({
-    initialx: 0,
-    finalx: 100,
-    finalx2: 150,
-    outx: 700,
+const initialxpositions = {
+    xpositions: Array.from(Array(200).keys()).map(() => ({
+        initialx: 0,
+        finalx: 100,
+        finalx2: 150,
+        outx: 700,
 
-    initialy: 500,
-    finaly: 250,
-    finaly2: 250,
-    outy: 400,
+        initialy: 500,
+        finaly: 250,
+        finaly2: 250,
+        outy: 400,
 
-    initialScaleX: 1,
-    finalScaleX: 1,
-    finalScaleX2: 1,
-    outScaleX: 1,
+        initialScaleX: 1,
+        finalScaleX: 1,
+        finalScaleX2: 1,
+        outScaleX: 1,
 
-    initialScaleY: 1,
-    finalScaleY: 1,
-    finalScaleY2: 1,
-    outScaleY: 1,
+        initialScaleY: 1,
+        finalScaleY: 1,
+        finalScaleY2: 1,
+        outScaleY: 1,
 
-    initialAngle: 0,
-    finalAngle: 0,
-    finalAngle2: 0,
-    outAngle: 0,
+        initialAngle: 0,
+        finalAngle: 0,
+        finalAngle2: 0,
+        outAngle: 0,
 
-    finalOpacity: 1,
-    finalOpacity2: 1,
+        finalOpacity: 1,
+        finalOpacity2: 1,
 
-    initialMatrix: 'matrix(1,0,0,1,0,500)',
-    finalMatrix: 'matrix(1,0,0,1,100,250)',
-    finalMatrix2: 'matrix(1,0,0,1,150,250)',
-    outMatrix: 'matrix(1,0,0,1,700,400)',
-    loop:1
-  }))};
+        initialMatrix: 'matrix(1,0,0,1,0,500)',
+        finalMatrix: 'matrix(1,0,0,1,100,250)',
+        finalMatrix2: 'matrix(1,0,0,1,150,250)',
+        outMatrix: 'matrix(1,0,0,1,700,400)',
+        loop: 1,
+        timelineloop: true
+    }))
+};
 
 const xpositionsReducer = (state = initialxpositions, action) => {
     switch (action.type) {
@@ -233,7 +236,7 @@ const xpositionsReducer = (state = initialxpositions, action) => {
     }
 }
 
-const initialSpeechRecognition={currentLanguage:'en-US', continuous1:false};
+const initialSpeechRecognition = { currentLanguage: 'en-US', continuous1: false };
 const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
     switch (action.type) {
         case 'CHANGE_CURRENTLANGUAGE':
@@ -241,11 +244,11 @@ const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
                 ...state,
                 currentLanguage: action.payload
             }
-            case 'CHANGE_CONTINUOUS1':
-                return {
-                    ...state,
-                    continuous1: action.payload
-                }
+        case 'CHANGE_CONTINUOUS1':
+            return {
+                ...state,
+                continuous1: action.payload
+            }
         default: return state
     }
 }

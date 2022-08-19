@@ -76,6 +76,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     finalOpacity: xpositions[i].finalOpacity,
     finalOpacity2: xpositions[i].finalOpacity2,
     loop: xpositions[i].loop,
+    timelineloop: xpositions[i].timelineloop,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10 * timelineScale,
     stayDuration: (kf[i][2] - kf[i][1]) * 10 * timelineScale,
@@ -138,6 +139,11 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
 
   const setinAnimation2 = () => {
+    var Delay = [];
+    for (let i = 0; i < layers?.length; i++) {
+      Delay.push((position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration * ((position(i).loop === "0") ? 9999999999 : position(i).loop)) + position(i).outDuration) / 1000);
+    }
+    const maxDeley = Math.max(...Delay);
 
     inAnimation2 = ``;
     canvas.forEachObject((element, i) => {
@@ -157,11 +163,21 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           0%{transform:${(position(i).loop % 2 === 0) ? position(i).finalMatrix : position(i).finalMatrix2}  ;opacity:${(position(i).loop % 2 === 0) ? position(i).finalOpacity : position(i).finalOpacity2}}
           100%{transform: ${position(i).outMatrix} ;opacity:0}
         } 
-        #${canvas?.item(i).id} {
-          animation:
+        @keyframes ${type}${canvas?.item(i).id}repeat
+        {
+          0%{transform: ${position(i).initialMatrix} ;opacity:0}
+          ${(position(i).delay) / ((position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration) + position(i).outDuration)) * 100}%{transform: ${position(i).initialMatrix} ;opacity:0}
+          ${(position(i).delay + position(i).initialToFinalDuration) / ((position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration) + position(i).outDuration)) * 100}%{transform: ${position(i).finalMatrix} ;opacity:${position(i).finalOpacity}}
+          ${(position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration)) / ((position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration) + position(i).outDuration)) * 100}%{transform: ${position(i).finalMatrix2} ;opacity:${position(i).finalOpacity2}}
+          100%{transform: ${position(i).outMatrix} ;opacity:0}
+        } 
+        #${canvas?.item(i).id}
+        {animation:
         ${type}${canvas?.item(i).id}in ${position(i).initialToFinalDuration / 1000}s linear ${position(i).delay / 1000}s backwards, 
         ${type}${canvas?.item(i).id}stay ${position(i).stayDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration) / 1000}s forwards alternate ${(position(i).loop === "0") ? 'infinite' : position(i).loop}, 
-        ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration * ((position(i).loop === "0") ? 9999999999 : position(i).loop))) / 1000}s ${autoOut ? 'running' : 'paused'} forwards}
+        ${type}${canvas?.item(i).id}out ${position(i).outDuration / 1000}s linear ${(position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration * ((position(i).loop === "0") ? 9999999999 : position(i).loop))) / 1000}s ${autoOut ? 'running' : 'paused'} forwards,
+        ${type}${canvas?.item(i).id}${(position(i).timelineloop) ? 'repeat' : 'dummy'} ${(position(i).delay + position(i).initialToFinalDuration + (position(i).stayDuration) + position(i).outDuration) / 1000}s linear ${maxDeley}s ${autoOut ? 'running' : 'paused'} forwards infinite
+      }
          `
     });
 
@@ -178,8 +194,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       canvas.forEachObject((element, i) => {
         endpoint(`
       call ${window.chNumber}-${108} "
-      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running';
-      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running,paused';
+      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s,0s';
       "`);
       });
     }
@@ -897,7 +913,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                                   }}
                                 >
                                   <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green', textAlign: 'center' }}>
-                                    <input title={(parseInt(xpositions[i].loop)===0)?'infinite loop':xpositions[i].loop + ' times loop'} style={{ width: 40, textAlign: 'center' }} onChange={e => {
+                                    <input title={(parseInt(xpositions[i].loop) === 0) ? 'infinite loop' : xpositions[i].loop + ' times loop'} style={{ width: 40, textAlign: 'center' }} onChange={e => {
                                       var updatedxpositions = [...xpositions];
                                       updatedxpositions[i] = { ...xpositions[i], loop: e.target.value };
                                       dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
