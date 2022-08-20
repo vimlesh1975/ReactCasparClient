@@ -5,6 +5,9 @@ import { endpoint, templateLayers } from './common'
 const Effects = () => {
     const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78')
     const [templateMixerMixer, setTemplateMixerMixer] = useState('-0.11 0 1.11 1.22')
+    const [templateLoadingDelay, setTemplateLoadingDelay] = useState(2500)
+
+    
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -57,7 +60,7 @@ const Effects = () => {
 
         setTimeout(() => {
             endpoint(`mixer ${window.chNumber}-${1} fill ${videoMixer} 25 linear`)
-        }, 2500);
+        }, templateLoadingDelay);
 
     }
 
@@ -98,6 +101,7 @@ const Effects = () => {
             </div>
             <div> video mixer: <input value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
             <div>   template mixer: <input value={templateMixerMixer} onChange={e => setTemplateMixerMixer(e.target.value)} /></div>
+            <div>   template loading Delay: <input value={templateLoadingDelay} onChange={e => setTemplateLoadingDelay(e.target.value)} /></div>
             <div>
                 L Band Effect= <button onClick={() => sendLBandEffect(templateLayers.solidCaption1)}> Apply</button>
                 <button onClick={() => stopLBandEffect(templateLayers.solidCaption1)}>Stop</button>
