@@ -1287,7 +1287,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
     const makeFullScreen = () => {
         canvas?.getActiveObjects().forEach(element => {
-            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0 })
+            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0,  strokeWidth: 0, rx: 0, ry: 0 })
         });
         canvas?.requestRenderAll();
     }
