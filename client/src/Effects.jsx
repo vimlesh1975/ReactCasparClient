@@ -103,7 +103,7 @@ const Effects = () => {
                 setTemplateMixerMixer(`${-((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 + canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(2 - canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
             }}>Get Video Position by selected element</button>
             </div>
-            <div> video mixer: <input value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
+            <div> video mixer: <input disabled value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
             <div>
                 L Band Effect=
                 {!cued && <button onClick={() => {
