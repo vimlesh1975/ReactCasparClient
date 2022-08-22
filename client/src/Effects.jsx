@@ -4,7 +4,7 @@ import { endpoint, templateLayers } from './common'
 
 const Effects = () => {
     const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78');
-    const [templateMixerMixer, setTemplateMixerMixer] = useState('-0.11 0 1.11 1.22');
+    const [templateMixer, setTemplateMixer] = useState('-0.11 0 1.11 1.22');
     const [cued, setCued] = useState(false);
     const [applied, setApplied] = useState(false);
 
@@ -43,7 +43,7 @@ const Effects = () => {
 
     const stopLBandEffect = () => {
         endpoint(`mixer ${window.chNumber}-${1} fill 0 0 1 1 25 linear`);
-        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill ${templateMixerMixer} 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill ${templateMixer} 25 linear`)
         endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 0 25 linear`)
         setTimeout(() => {
             endpoint(`stop ${window.chNumber}-${templateLayers.LBand}`);
@@ -51,6 +51,17 @@ const Effects = () => {
         }, 1000);
     }
 
+   
+
+    const sendLBandEffect = () => {
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 1`)
+        endpoint(`mixer ${window.chNumber}-${1} fill ${videoMixer} 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill 0 0 1 1 25 linear`)
+
+    }
+    const cueLBandEffect = () => {
+        cueGraphics(canvas, templateLayers.LBand);
+    }
     const cueGraphics = (canvas, layerNumber) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -68,30 +79,9 @@ const Effects = () => {
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
             "`);
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixerMixer} 25 linear`)
-        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixer}`)
     }
-
-    const sendLBandEffect = () => {
-        startGraphics(canvas, templateLayers.LBand);
-        endpoint(`mixer ${window.chNumber}-${1} fill ${videoMixer} 25 linear`)
-        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill 0 0 1 1 25 linear`)
-        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 1 25 linear`)
-
-    }
-    const cueLBandEffect = () => {
-        cueGraphics(canvas, templateLayers.LBand);
-    }
-    const startGraphics = (canvas, layerNumber) => {
-        var inAnimation;
-        inAnimation = `@keyframes slide-in-bck-center{0%{transform:translateZ(600px);opacity:1}100%{transform:translateZ(0);opacity:1}} div {animation:slide-in-bck-center 0.7s cubic-bezier(.25,.46,.45,.94) both}`
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-            style.textContent = '${inAnimation}';
-            document.head.appendChild(style);
-            "`)
-    }
-
 
     return (<div>
 
@@ -100,7 +90,7 @@ const Effects = () => {
 
             <div>    <button onClick={() => {
                 setVideoMixer(`${((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 - canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
-                setTemplateMixerMixer(`${-((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 + canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(2 - canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
+                setTemplateMixer(`${-((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 + canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(2 - canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
             }}>Get Video Position by selected element</button>
             </div>
             <div> video mixer: <input disabled value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
