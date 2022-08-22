@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 
 const Effects = () => {
-    const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78')
-    const [templateMixerMixer, setTemplateMixerMixer] = useState('-0.11 0 1.11 1.22')
-    const [templateLoadingDelay, setTemplateLoadingDelay] = useState(2500)
+    const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78');
+    const [templateMixerMixer, setTemplateMixerMixer] = useState('-0.11 0 1.11 1.22');
+    const [cued, setCued] = useState(false);
+    const [applied, setApplied] = useState(false);
 
-    
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -43,30 +43,15 @@ const Effects = () => {
 
     const stopLBandEffect = () => {
         endpoint(`mixer ${window.chNumber}-${1} fill 0 0 1 1 25 linear`);
-
-        // endpoint(`mixer ${window.chNumber}-${templateLayers.solidCaption1} fill -.31 0 2.4 1.35 50 linear`)
-        endpoint(`mixer ${window.chNumber}-${templateLayers.solidCaption1} fill ${templateMixerMixer} 25 linear`)
-        endpoint(`mixer ${window.chNumber}-${templateLayers.solidCaption1} opacity 0 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill ${templateMixerMixer} 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 0 25 linear`)
         setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${templateLayers.solidCaption1}`);
-            endpoint(`mixer ${window.chNumber}-${templateLayers.solidCaption1} clear`);
+            endpoint(`stop ${window.chNumber}-${templateLayers.LBand}`);
+            endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} clear`);
         }, 1000);
     }
 
-
-
-    const sendLBandEffect = () => {
-        startGraphics(canvas, templateLayers.solidCaption1);
-
-        setTimeout(() => {
-            endpoint(`mixer ${window.chNumber}-${1} fill ${videoMixer} 25 linear`)
-        }, templateLoadingDelay);
-
-    }
-
-    const startGraphics = (canvas, layerNumber) => {
-        var inAnimation;
-        inAnimation = `@keyframes slide-in-bck-center{0%{transform:translateZ(600px);opacity:1}100%{transform:translateZ(0);opacity:1}} div {animation:slide-in-bck-center 0.7s cubic-bezier(.25,.46,.45,.94) both}`
+    const cueGraphics = (canvas, layerNumber) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -82,7 +67,26 @@ const Effects = () => {
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
             document.body.style.overflow='hidden';
-            var style = document.createElement('style');
+            "`);
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixerMixer} 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0 25 linear`)
+    }
+
+    const sendLBandEffect = () => {
+        startGraphics(canvas, templateLayers.LBand);
+        endpoint(`mixer ${window.chNumber}-${1} fill ${videoMixer} 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} fill 0 0 1 1 25 linear`)
+        endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 1 25 linear`)
+
+    }
+    const cueLBandEffect = () => {
+        cueGraphics(canvas, templateLayers.LBand);
+    }
+    const startGraphics = (canvas, layerNumber) => {
+        var inAnimation;
+        inAnimation = `@keyframes slide-in-bck-center{0%{transform:translateZ(600px);opacity:1}100%{transform:translateZ(0);opacity:1}} div {animation:slide-in-bck-center 0.7s cubic-bezier(.25,.46,.45,.94) both}`
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        endpoint(`call ${window.chNumber}-${layerNumber} "
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
             "`)
@@ -100,11 +104,26 @@ const Effects = () => {
             }}>Get Video Position by selected element</button>
             </div>
             <div> video mixer: <input value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
-            <div>   template mixer: <input value={templateMixerMixer} onChange={e => setTemplateMixerMixer(e.target.value)} /></div>
-            <div>   template loading Delay: <input value={templateLoadingDelay} onChange={e => setTemplateLoadingDelay(e.target.value)} /></div>
             <div>
-                L Band Effect= <button onClick={() => sendLBandEffect(templateLayers.solidCaption1)}> Apply</button>
-                <button onClick={() => stopLBandEffect(templateLayers.solidCaption1)}>Stop</button>
+                L Band Effect=
+                {!cued && <button onClick={() => {
+                    cueLBandEffect(templateLayers.solidCaption1);
+                    setTimeout(() => {
+                        setCued(true);
+                    }, 2500);
+                }}>Cue</button>}
+                {cued && !applied && <button onClick={() => {
+                    sendLBandEffect(templateLayers.solidCaption1);
+                    setTimeout(() => {
+                        setApplied(true);
+                    }, 1000);
+
+                }}> Apply</button>}
+                {cued && applied && <button onClick={() => {
+                    stopLBandEffect(templateLayers.solidCaption1);
+                    setCued(false);
+                    setApplied(false);
+                }}>Stop</button>}
             </div>
             <div>  </div>
 
@@ -117,7 +136,7 @@ const Effects = () => {
                 Blinking Effect =  <button onClick={() => sendBlinkingEffect(templateLayers.solidCaption1)}> Apply</button>
             </div>
             <div>
-                Text Size Effect =<button onClick={() => sendSizeEffect(templateLayers.solidCaption1)}>Play L Band with Effect</button>
+                Text Size Effect =<button onClick={() => sendSizeEffect(templateLayers.solidCaption1)}>Apply</button>
             </div>
             <div>
                 Text Color Effect= <button onClick={() => sendColorEffect(templateLayers.solidCaption1)}> Apply</button>
