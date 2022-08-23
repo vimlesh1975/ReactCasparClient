@@ -2342,7 +2342,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             if (element.fontSize !== null) { setFontSize(element.fontSize); }
             if (element.strokeWidth !== null) { setStrokeWidth(element.strokeWidth); }
 
-            if (element.opacity !== null) { setOpacity(element.opacity); }
+            if (element.opacity !== null) { setOpacity(parseFloat(element.opacity).toFixed(1)); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
             if (element.scaleX !== null) { setscaleX((element.scaleX)); }
             if (element.scaleY !== null) { setscaleY(element.scaleY); }

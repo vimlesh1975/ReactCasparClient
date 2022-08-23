@@ -241,7 +241,10 @@ display: inline;
   background-color: rgb(116, 114, 117);
   color: white;
 }
-
+.selectedTab2{
+  background-color: rgb(116, 114, 117);
+  color: white;
+}
 
 .text-center{
   text-align: center;

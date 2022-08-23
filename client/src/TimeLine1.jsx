@@ -75,6 +75,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
     finalOpacity: xpositions[i].finalOpacity,
     finalOpacity2: xpositions[i].finalOpacity2,
+
     loop: xpositions[i].loop,
 
     initialToFinalDuration: (kf[i][1] - kf[i][0]) * 10 * timelineScale,
@@ -147,10 +148,12 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         @keyframes ${type}${canvas?.item(i).id}in
         {
           0%{transform: ${position(i).initialMatrix} ;opacity:0}
+          100%{transform:${position(i).finalMatrix}  ;opacity:${position(i).finalOpacity}}
+
         } 
         @keyframes ${type}${canvas?.item(i).id}stay
         {
-          100%{transform:${position(i).finalMatrix2}  ;opacity:${position(i).finalOpacity2}}
+          100%{transform:${position(i).finalMatrix2}  ;opacity:${1}}
         } 
         @keyframes ${type}${canvas?.item(i).id}out
         {
@@ -433,7 +436,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           scaleX: position(i).finalScaleX + (position(i).finalScaleX2 - position(i).finalScaleX) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
           scaleY: position(i).finalScaleY + (position(i).finalScaleY2 - position(i).finalScaleY) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
           angle: position(i).finalAngle + (position(i).finalAngle2 - position(i).finalAngle) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          opacity: 0 + position(i).finalOpacity + (position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          opacity: (position(i).finalOpacity < position(i).finalOpacity2) ? Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]) : 1 - Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
         });
       }
 
@@ -444,7 +447,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           scaleX: position(i).finalScaleX2 + (position(i).outScaleX - position(i).finalScaleX2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           scaleY: position(i).finalScaleY2 + (position(i).outScaleY - position(i).finalScaleY2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
           angle: position(i).finalAngle2 + (position(i).outAngle - position(i).finalAngle2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          opacity: position(i).finalOpacity2 + (0 - position(i).finalOpacity2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          opacity: (position(i).finalOpacity2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
         });
       }
     })
@@ -837,7 +840,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
       </div>
-      <div style={{ height: 740, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
+      <div style={{ maxHeight: 740, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
         <div style={{ width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', }}>
           {Array.from(Array(parseInt(9 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
         </div>
@@ -897,7 +900,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                                   }}
                                 >
                                   <div style={{ marginTop: 0, width: (kf[i][2] - kf[i][1]), height: 20, backgroundColor: 'green', textAlign: 'center' }}>
-                                    <input title={(parseInt(xpositions[i].loop)===0)?'infinite loop':xpositions[i].loop + ' times loop'} style={{ width: 40, textAlign: 'center' }} onChange={e => {
+                                    <input title={(parseInt(xpositions[i].loop) === 0) ? 'infinite loop' : xpositions[i].loop + ' times loop'} style={{ width: 40, textAlign: 'center' }} onChange={e => {
                                       var updatedxpositions = [...xpositions];
                                       updatedxpositions[i] = { ...xpositions[i], loop: e.target.value };
                                       dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });

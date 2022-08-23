@@ -58,6 +58,7 @@ const App = () => {
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
   const [tabindex, settabindex] = useState(0)
+  const [tabindex2, settabindex2] = useState(0)
 
   const kf = useSelector(state => state.kfReducer.kf);
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
@@ -317,17 +318,17 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
 
-  const changepannelEnable = (i) => {
-    if (i === 11) {
-      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
-    }
-    else {
-      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: false })
-    }
-  }
+  // const changepannelEnable = (i) => {
+  //   if (i === 11) {
+  //     dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
+  //   }
+  //   else {
+  //     dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: false })
+  //   }
+  // }
 
   const onTabChange = (index, prevIndex) => {
-    changepannelEnable(index);
+    // changepannelEnable(index);
     settabindex(index);
     switch (index) {
       case 0:
@@ -353,6 +354,15 @@ const App = () => {
       //nothing
     }
   }
+  const onTabChange2 = (index, prevIndex) => {
+    settabindex2(index);
+    if (index === 1) {
+      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
+    }
+    else {
+      dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: false })
+    }
+  }
 
   const changeAnimationMethod = e => {
     setAnimationMethod(e.target.value);
@@ -371,11 +381,16 @@ const App = () => {
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
   }
-  const changeTab = (i) => {
-    settabindex(i)
+  // const changeTab = (i) => {
+  //   settabindex(i)
+  //   // console.log(i)
+  // }
+  const changeTab2 = (i) => {
+    settabindex2(i)
     // console.log(i)
   }
-  window.changeTab = changeTab;
+  // window.changeTab = changeTab;
+  window.changeTab2 = changeTab2;
   return (<div>
 
     {/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
@@ -490,7 +505,13 @@ const App = () => {
                 </Provider>
               </div>
             </div>
-            <div style={{ display: 'flex' }}>
+        <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >
+              <TabList>
+                <Tab>Casparcg Window</Tab>
+                <Tab>Timeline</Tab>
+              </TabList>
+              <TabPanel >
+              <div style={{ display: 'flex' }}>
               <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
                 <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
                 <h5>
@@ -508,6 +529,13 @@ const App = () => {
                 <Automation />
               </div>
             </div>
+              </TabPanel>
+              <TabPanel >
+            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
+              </TabPanel>
+            </Tabs>
+          
+
           </div>
         </div>
       </div>
@@ -525,7 +553,7 @@ const App = () => {
             <Tab >Shapes</Tab>
             <Tab >Games</Tab>
             <Tab >Charts</Tab>
-            <Tab >TimeLine</Tab>
+            {/* <Tab >TimeLine</Tab> */}
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
@@ -575,9 +603,9 @@ const App = () => {
           <TabPanel >
             <Charts />
           </TabPanel>
-          <TabPanel >
+          {/* <TabPanel >
             <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel >
             <PathModifier />
           </TabPanel>
