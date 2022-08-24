@@ -229,7 +229,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
+    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
         id: 'ccg_' + uuidv4(),
         shadow: shadowOptions,
         left: 100,
@@ -276,7 +276,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
+    const text = new fabric.Textbox("टाइमलाइन को नीचे स्थानांतरित कर दिया गया है | Timeline has been shifted below ", {
         shadow: shadowOptions,
         id: 'ccg_' + uuidv4(),
         left: 100,
@@ -295,7 +295,7 @@ export const createTextBox = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 445, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 441, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
@@ -1530,6 +1530,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             </head>
             <body>
             <script>
+            document.body.addEventListener('keypress', function(e) {
+                if(e.key.toUpperCase() === "S") { stop(); }
+              });
             if (screen.colorDepth === 0) {
                 var css = '[id^=ccg] {display: none; }',
                     head = document.head || document.getElementsByTagName('head')[0],

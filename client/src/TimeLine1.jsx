@@ -7,8 +7,9 @@ import { selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 
-const timelineWidth = 860;
-var cf = 0;
+const timelineWidth = 1024;
+const controlWidth = 420;
+var cf = -controlWidth;
 var aa;
 var inAnimation2;
 var stopCommand;
@@ -22,7 +23,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   const currentPage = useSelector(state => state.currentPageReducer.currentPage);
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(controlWidth);
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
   const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -107,7 +108,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     }
     else if (kfi === 3) {
       xmin = kf[i][kfi - 1];;
-      xmax = timelineWidth;
+      xmax = timelineWidth - controlWidth;
     }
     else {
       xmin = kf[i][kfi - 1];
@@ -120,10 +121,10 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
   const play = () => {
     const ff = kf.map((val) => val[3]);
-    const ffmax = Math.max(...ff);
+    const ffmax = Math.max(...ff) + controlWidth;
 
-    cf = 0;
-    setCurrentFrame(0);
+    cf = controlWidth;
+    setCurrentFrame(controlWidth);
     clearInterval(aa);
     aa = setInterval(() => {
       if (cf < ffmax) {
@@ -131,8 +132,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         setCurrentFrame(cf);
       }
       else {
-        cf = 0;
-        setCurrentFrame(0);
+        cf = controlWidth;
+        setCurrentFrame(cf);
         clearInterval(aa);
       }
     }, 100 * timelineScale);
@@ -384,74 +385,77 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     })
   }
 
-  const ss = (d) => {
+  const ss = (d1) => {
     aborted = true;
-    setCurrentFrame(d.x);
-    canvas.discardActiveObject();
+    cf = d1.x;
+    setCurrentFrame(d1.x);
+    const d = { ...d1, x: d1.x - controlWidth };
+    if (d.x > 0) {
+      canvas.discardActiveObject();
 
-    canvas.forEachObject((element, i) => {
-      if (d.x < kf[i][0]) {
-        element.set({
-          left: position(i).initialx,
-          top: position(i).initialy,
+      canvas.forEachObject((element, i) => {
+        if ((d.x) < kf[i][0]) {
+          element.set({
+            left: position(i).initialx,
+            top: position(i).initialy,
 
-          scaleX: position(i).initialScaleX,
-          scaleY: position(i).initialScaleY,
-          angle: position(i).initialAngle,
+            scaleX: position(i).initialScaleX,
+            scaleY: position(i).initialScaleY,
+            angle: position(i).initialAngle,
 
-          opacity: 1,
-        });
-      }
+            opacity: 1,
+          });
+        }
 
-      if (d.x > kf[i][3]) {
-        element.set({
-          left: position(i).outx,
-          top: position(i).outy,
+        if (d.x > kf[i][3]) {
+          element.set({
+            left: position(i).outx,
+            top: position(i).outy,
 
-          scaleX: position(i).outScaleX,
-          scaleY: position(i).outScaleY,
+            scaleX: position(i).outScaleX,
+            scaleY: position(i).outScaleY,
 
-          angle: position(i).outAngle,
+            angle: position(i).outAngle,
 
-          opacity: 1,
-        });
-      }
+            opacity: 1,
+          });
+        }
 
-      if ((d.x > kf[i][0]) && (d.x < kf[i][1])) {
-        element.set({
-          left: position(i).initialx + (position(i).finalx - position(i).initialx) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-          top: position(i).initialy + (position(i).finaly - position(i).initialy) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-          scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-          scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-          angle: position(i).initialAngle + (position(i).finalAngle - position(i).initialAngle) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-          opacity: position(i).finalOpacity / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
-        });
-      }
+        if ((d.x > kf[i][0]) && (d.x < kf[i][1])) {
+          element.set({
+            left: position(i).initialx + (position(i).finalx - position(i).initialx) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+            top: position(i).initialy + (position(i).finaly - position(i).initialy) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+            scaleX: position(i).initialScaleX + (position(i).finalScaleX - position(i).initialScaleX) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+            scaleY: position(i).initialScaleY + (position(i).finalScaleY - position(i).initialScaleY) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+            angle: position(i).initialAngle + (position(i).finalAngle - position(i).initialAngle) / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+            opacity: position(i).finalOpacity / (kf[i][1] - kf[i][0]) * (d.x - kf[i][0]),
+          });
+        }
 
-      if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
-        // element.set({ left: position(i).finalx, top: position(i).finaly, scaleX: position(i).finalScaleX, scaleY: position(i).finalScaleY, angle: position(i).finalAngle, opacity: position(i).finalOpacity });
-        element.set({
-          left: position(i).finalx + (position(i).finalx2 - position(i).finalx) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          top: position(i).finaly + (position(i).finaly2 - position(i).finaly) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          scaleX: position(i).finalScaleX + (position(i).finalScaleX2 - position(i).finalScaleX) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          scaleY: position(i).finalScaleY + (position(i).finalScaleY2 - position(i).finalScaleY) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          angle: position(i).finalAngle + (position(i).finalAngle2 - position(i).finalAngle) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-          opacity: (position(i).finalOpacity < position(i).finalOpacity2) ? Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]) : 1 - Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
-        });
-      }
+        if ((d.x > kf[i][1]) && (d.x < kf[i][2])) {
+          element.set({
+            left: position(i).finalx + (position(i).finalx2 - position(i).finalx) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+            top: position(i).finaly + (position(i).finaly2 - position(i).finaly) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+            scaleX: position(i).finalScaleX + (position(i).finalScaleX2 - position(i).finalScaleX) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+            scaleY: position(i).finalScaleY + (position(i).finalScaleY2 - position(i).finalScaleY) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+            angle: position(i).finalAngle + (position(i).finalAngle2 - position(i).finalAngle) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+            opacity: (position(i).finalOpacity < position(i).finalOpacity2) ? Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]) : 1 - Math.abs(position(i).finalOpacity2 - position(i).finalOpacity) / (kf[i][2] - kf[i][1]) * (d.x - kf[i][1]),
+          });
+        }
 
-      if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
-        element.set({
-          left: position(i).finalx2 + (position(i).outx - position(i).finalx2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          top: position(i).finaly2 + (position(i).outy - position(i).finaly2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          scaleX: position(i).finalScaleX2 + (position(i).outScaleX - position(i).finalScaleX2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          scaleY: position(i).finalScaleY2 + (position(i).outScaleY - position(i).finalScaleY2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          angle: position(i).finalAngle2 + (position(i).outAngle - position(i).finalAngle2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-          opacity: (position(i).finalOpacity2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
-        });
-      }
-    })
-    canvas.requestRenderAll();
+        if ((d.x > kf[i][2]) && (d.x < kf[i][3])) {
+          element.set({
+            left: position(i).finalx2 + (position(i).outx - position(i).finalx2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+            top: position(i).finaly2 + (position(i).outy - position(i).finaly2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+            scaleX: position(i).finalScaleX2 + (position(i).outScaleX - position(i).finalScaleX2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+            scaleY: position(i).finalScaleY2 + (position(i).outScaleY - position(i).finalScaleY2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+            angle: position(i).finalAngle2 + (position(i).outAngle - position(i).finalAngle2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+            opacity: (position(i).finalOpacity2) / (kf[i][3] - kf[i][2]) * (d.x - kf[i][2]),
+          });
+        }
+      })
+      canvas.requestRenderAll();
+    }
   }
 
   const copyAnimation = () => {
@@ -523,6 +527,9 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       </head>
       <body>
       <script>
+      document.body.addEventListener('keypress', function(e) {
+        if(e.key.toUpperCase() === "S") { stop(); }
+      });
       var style = document.createElement('style');
       style.textContent = \`${inAnimation2}\`;
       document.head.appendChild(style);
@@ -813,8 +820,10 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       //dummy
     }
   }
-  return (<div>
-    {pannelEnable && <div>
+  return (<div onMouseOver={() => {
+    !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
+  }}>
+    {pannelEnable && <div >
       <div >
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
@@ -830,19 +839,27 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={updatePageAndAnimation}>Save</button>
         <button onClick={recallPageAndAnimation}>Recall</button>
         <button onClick={copyAnimation}>Copy</button>
-        <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={pasteAnimation}>Paste</button>
+        <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
         Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
         css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
 
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
-        <button onClick={test}>Console Log</button>
+        <button onClick={test}>Console Log</button>  <span><b>Animate Only position, size and Rotation.</b></span>
+        <div>
+            Timeline Scale: <input width={200} onChange={e => {
+              dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
+              settimelineScale(e.target.value);
+            }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
+          </div>
       </div>
-      <div style={{ maxHeight: 740, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
-        <div style={{ width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', }}>
-          {Array.from(Array(parseInt(9 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
+      <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
+
+        <div style={{ width: timelineWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
+         
+          {Array.from(Array(parseInt(10 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
         </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
@@ -852,7 +869,6 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                 style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                 {...provided.droppableProps}
               >
-
                 {layers?.map((element, i) => {
                   return (
                     <Draggable draggableId={"draggable" + i} key={element + i} index={i}>
@@ -865,15 +881,29 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                             backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'darkgray' : 'white',
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
-                            // color: snapshot.isDragging ? 'white' : 'black' ,
                             marginTop: 1
                           }}
                         >
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
+                            <div style={{ color: 'white', minWidth: 60 }}>{(element.type)}</div>
+                            <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
+                            <div> <button key1={i} onClick={(e) => {
+                              selectObject(e);
+                              deleteItemfromtimeline();
+                            }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
+                            <div ><input style={{ width: 300 }} onChange={e => {
+                              element.id = e.target.value;
+                              canvas.requestRenderAll();
+                              dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+                            }
+
+                            } value={(element.id)} /></div>
+
+
                             <div onClick={(e) => {
-                              ss({ x: e.screenX - 1040 });
+                              ss({ x: e.screenX });
                               canvas.setActiveObject(canvas.item(i));
-                            }} style={{ width: timelineWidth - 125, height: 20, marginTop: 1, }} >
+                            }} style={{ width: timelineWidth - controlWidth, height: 20, marginTop: 1, }} >
                               <div style={{ position: 'relative' }}>
                                 <Rnd
                                   dragAxis='x'
@@ -935,14 +965,6 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                                 )}
                               </div>
                             </div>
-                            <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} />
-                            </div>
-                            <div> <button key1={i} onClick={(e) => {
-                              selectObject(e);
-                              deleteItemfromtimeline();
-                            }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div>{(element.type)}</div>
-
                           </div>
                         </div>
                       )
@@ -951,12 +973,10 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                   )
                 })}
                 {provided.placeholder}
-
               </div>
             )}
           </Droppable>
         </DragDropContext>
-
         <Rnd
           dragAxis='x'
           enableResizing={{}}
@@ -967,8 +987,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
             ss(d);
           }}
         >
-          <div style={{ width: 5, minHeight: 200, maxHeight: (740 + 30), height: ((layers.length + 1) * (20 + 2 + 2)) + 30, backgroundColor: 'red', fontWeight: 'bold' }}>
-            {((currentFrame * timelineScale) / (25 * 4)).toFixed(1)}
+          <div style={{ width: 5, height: 240, backgroundColor: 'red', fontWeight: 'bold' }}>
+            {(((currentFrame - controlWidth) * timelineScale) / (25 * 4)).toFixed(1)}
           </div>
         </Rnd>
       </div>
@@ -979,7 +999,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
         settimelineScale(e.target.value);
       }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
-      <h3>Animate Only position, size and Rotation.</h3>
+      <span><b>Animate Only position, size and Rotation.</b></span>
     </div>
   </div>)
 }

@@ -51,7 +51,7 @@ const Layers = ({ moveElement }) => {
         canvas.getActiveObjects().forEach(element => {
             element.id = idofActiveObject;
             canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+            dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
         });
     }
 

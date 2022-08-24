@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '220822_2'
+const buildDate = '240822_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -356,7 +356,7 @@ const App = () => {
   }
   const onTabChange2 = (index, prevIndex) => {
     settabindex2(index);
-    if (index === 1) {
+    if (index === 0) {
       dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
     }
     else {
@@ -381,15 +381,15 @@ const App = () => {
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
   }
-  // const changeTab = (i) => {
-  //   settabindex(i)
-  //   // console.log(i)
-  // }
+  const changeTab = (i) => {
+    settabindex(i)
+    // console.log(i)
+  }
   const changeTab2 = (i) => {
     settabindex2(i)
     // console.log(i)
   }
-  // window.changeTab = changeTab;
+  window.changeTab = changeTab;
   window.changeTab2 = changeTab2;
   return (<div>
 
@@ -507,9 +507,12 @@ const App = () => {
             </div>
         <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >
               <TabList>
-                <Tab>Casparcg Window</Tab>
                 <Tab>Timeline</Tab>
+                <Tab>Casparcg Window</Tab>
               </TabList>
+              <TabPanel >
+            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
+              </TabPanel>
               <TabPanel >
               <div style={{ display: 'flex' }}>
               <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
@@ -530,9 +533,7 @@ const App = () => {
               </div>
             </div>
               </TabPanel>
-              <TabPanel >
-            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
-              </TabPanel>
+          
             </Tabs>
           
 
