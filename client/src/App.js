@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '250822_1'
+const buildDate = '280822_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -505,37 +505,37 @@ const App = () => {
                 </Provider>
               </div>
             </div>
-        <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >
+            <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >
               <TabList>
                 <Tab>Timeline</Tab>
                 <Tab>Casparcg Window</Tab>
               </TabList>
               <TabPanel >
-            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
+                <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
               </TabPanel>
               <TabPanel >
-              <div style={{ display: 'flex' }}>
-              <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
-                <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
-                <h5>
-                  &lt;screen&gt;
-                  &lt;always-on-top&gt;true&lt;/always-on-top&gt;
-                  &lt;x&gt;0&lt;/x&gt;
-                  &lt;y&gt;680&lt;/y&gt;
-                  &lt;width&gt;680&lt;/width&gt;
-                  &lt;height&gt;325&lt;/height&gt;
-                  &lt;/screen&gt;
-                </h5>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
+                    <h4>Put as below in casparcg.config file and drag screen consumer here</h4>
+                    <h5>
+                      &lt;screen&gt;
+                      &lt;always-on-top&gt;true&lt;/always-on-top&gt;
+                      &lt;x&gt;0&lt;/x&gt;
+                      &lt;y&gt;680&lt;/y&gt;
+                      &lt;width&gt;680&lt;/width&gt;
+                      &lt;height&gt;325&lt;/height&gt;
+                      &lt;/screen&gt;
+                    </h5>
 
-              </div>
-              <div >
-                <Automation />
-              </div>
-            </div>
+                  </div>
+                  <div >
+                    <Automation />
+                  </div>
+                </div>
               </TabPanel>
-          
+
             </Tabs>
-          
+
 
           </div>
         </div>

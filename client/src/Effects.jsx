@@ -51,7 +51,7 @@ const Effects = () => {
         }, 1000);
     }
 
-   
+
 
     const sendLBandEffect = () => {
         endpoint(`mixer ${window.chNumber}-${templateLayers.LBand} opacity 1`)
@@ -82,6 +82,27 @@ const Effects = () => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`)
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixer}`)
     }
+
+    const hh = `<filter id="demo1"  x="0" y="0" width="100%" height="100%">
+    <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
+        <fePointLight x="0" y="0" z="14" >
+             <animate attributeName="x" values="-240;240;240;-240;-240" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s" repeatCount="indefinite" />
+             <animate attributeName="y" values="-40;-40;40;40;-40" dur="5s" keyTimes="0; 0.4; 0.5; 0.9; 1" repeatCount="indefinite" />
+    </fePointLight>
+    </feSpecularLighting>
+    <feComposite in="SourceGraphic" in2="spec1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+  </filter>`
+
+    const sendFilter = (layerNumber) => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        var dd = document.getElementsByTagName('defs')[0];
+        dd.innerHTML='${hh.replaceAll('"', '\\"')}';
+        "`);
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        document.getElementsByTagName('g')[0].style.filter='url(#demo1)';
+        "`);
+    }
+
 
     return (<div>
 
@@ -131,6 +152,11 @@ const Effects = () => {
             <div>
                 Text Color Effect= <button onClick={() => sendColorEffect(templateLayers.solidCaption1)}> Apply</button>
             </div>
+
+        </div>
+        <div style={{ border: '2px solid red' }}>
+            <h3>Filter Effects on solid cap 1</h3>
+            Moving Light Effect= <button onClick={() => sendFilter(templateLayers.solidCaption1)}> Apply</button>
 
         </div>
 
