@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
+import { useRef } from 'react';
 import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
+import { animation } from './animation.js'
+
+import * as d3 from 'd3';
+import SvgFilter from 'svg-filter';
 
 const Effects = () => {
     const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78');
     const [templateMixer, setTemplateMixer] = useState('-0.11 0 1.11 1.22');
     const [cued, setCued] = useState(false);
     const [applied, setApplied] = useState(false);
-
+    const refkkk = useRef();
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -18,6 +23,15 @@ const Effects = () => {
         style.textContent = '${inAnimation}';
         "`)
     }
+
+    // useEffect(() => {
+    //         refkkk.current.innerHTML = canvas?.toSVG();
+    //     return () => {
+    //         // refkkk.current.innerHTML = ''
+    //     }
+    //     // eslint-disable-next-line
+    // }, [])
+
     const sendSizeEffect = (layerNumber) => {
         const inAnimation = `@keyframes example {
         0% { font-size: 25px; }
@@ -82,6 +96,74 @@ const Effects = () => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`)
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixer}`)
     }
+    const startGraphics = (canvas, layerNumber) => {
+        var inAnimation;
+
+        if (window.inAnimationMethod === 'mix') {
+            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
+        }
+
+        else if (((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod)) !== -1) {
+            inAnimation = animation[((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod))].value;
+        }
+
+        else if (window.inAnimationMethod === 'lefttoright') {
+            inAnimation = ``
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+
+            setTimeout(() => {
+                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+            }, 250);
+
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} "
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
+            document.body.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            document.body.style.overflow='hidden';
+            var style = document.createElement('style');
+            style.textContent = '${inAnimation}';
+            document.head.appendChild(style);
+            "`)
+            }, 300);
+
+            setTimeout(() => {
+                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+            }, 800);
+            //updateGraphics
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} "
+                aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
+                    "`)
+            }, 1100);
+            return
+        }
+
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+            var bb = document.createElement('div');
+            bb.style.perspective='1920px';
+            bb.style.transformStyle='preserve-3d';
+            document.body.appendChild(bb);
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
+            bb.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            document.body.style.overflow='hidden';
+            var style = document.createElement('style');
+            style.textContent = '${inAnimation}';
+            document.head.appendChild(style);
+            "`)
+    }
 
     const hh = `<filter id="demo1"  x="0" y="0" width="100%" height="100%">
     <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
@@ -102,7 +184,17 @@ const Effects = () => {
         document.getElementsByTagName('g')[0].style.filter='url(#demo1)';
         "`);
     }
-
+    const applyFilter = () => {
+        var filter = new SvgFilter();
+        filter
+            .append('blur')
+            .attr('stdDeviation', 20);
+        d3.selectAll('defs')
+            .append('filter')
+            .attr('id', filter.id)
+            .html((filter.filter._groups[0][0].innerHTML).trim());
+        document.getElementsByTagName('g')[0].style.filter = filter;
+    }
 
     return (<div>
 
@@ -156,8 +248,15 @@ const Effects = () => {
         </div>
         <div style={{ border: '2px solid red' }}>
             <h3>Filter Effects on solid cap 1</h3>
-            Moving Light Effect= <button onClick={() => sendFilter(templateLayers.solidCaption1)}> Apply</button>
-
+            <button onClick={() => sendFilter(templateLayers.solidCaption1)}> Apply Moving Light Effect</button>
+            <button onClick={() => {
+                refkkk.current.innerHTML = canvas.toSVG();
+            }}>load svg from canvas</button>
+            <button onClick={applyFilter}> Apply filter</button>
+            <button onClick={() => startGraphics(canvas, templateLayers.solidCaption1)}> Play on Casparcg</button>
+        </div>
+        <div id='kkk' ref={refkkk} style={{ backgroundColor: 'grey', zoom: 0.78, width: 1024, height: 576 }}>
+            {/* {canvasHtml} */}
         </div>
 
     </div>)

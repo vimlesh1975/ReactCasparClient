@@ -34,6 +34,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
     "socket.io-client": "^4.5.0",
+    "svg-filter": "^1.2.2",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
     "worker-loader": "^3.0.8"
