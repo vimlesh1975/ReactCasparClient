@@ -8,7 +8,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 
 const timelineWidth = 1024;
-const controlWidth = 400;
+const controlWidth = 250;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -837,6 +837,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={recallPageAndAnimation}>Recall</button>
         <button onClick={copyAnimation}>Copy</button>
         <button onClick={pasteAnimation}>Paste</button>
+        </div>
+        <div>
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
         Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
@@ -888,15 +890,12 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                               selectObject(e);
                               deleteItemfromtimeline();
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input style={{ width: 280 }} onChange={e => {
+                            <div ><input  key1={i} onClick={(e) => selectObject(e)} style={{ width: 130 }} onChange={e => {
                               element.id = e.target.value;
-                              canvas.requestRenderAll();
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+                              canvas.requestRenderAll();
                             }
-
                             } value={(element.id)} /></div>
-
-
                             <div onClick={(e) => {
                               ss({ x: e.screenX - controlWidth });
                               canvas.setActiveObject(canvas.item(i));

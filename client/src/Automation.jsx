@@ -222,13 +222,13 @@ const Automation = () => {
 
     return (
         <div>
-            <label> Allow Automation<input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} /></label>
+            <label><input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />Allow Automation</label>
             <div style={{ opacity: 100 }} className='automation-preview-container' >
                 <DrawingAutomation i={0} />
             </div>
             <div>
                 <span>Data Recieved</span>
-                <br />  <textarea cols={40} rows={8} value={dataReceived} />
+                <br />  <textarea cols={36} rows={5} value={dataReceived} />
             </div>
         </div>
     )

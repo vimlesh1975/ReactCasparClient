@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { fabric } from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import CsvReader from './CsvReader';
-
 
 const JsonReader = () => {
     const fileName = 'http://localhost:3000/ReactCasparClient/swimming/heat/1_1.json';
@@ -52,7 +50,7 @@ const JsonReader = () => {
         dataHeat?.entries?.forEach((val, i) => {
 
             const text = new fabric.Text(val.lane.toString(), {
-                id: 'id_' + uuidv4(),
+                id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 50,
                 top: 0,
@@ -72,7 +70,7 @@ const JsonReader = () => {
 
 
             const text1 = new fabric.Text(val.id.toString() + ' ' + val.nametext.toString(), {
-                id: 'id_' + uuidv4(),
+                id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 100,
                 top: 0,
@@ -91,7 +89,7 @@ const JsonReader = () => {
             text1.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
 
             const text2 = new fabric.Text(val.clubname.toString(), {
-                id: 'id_' + uuidv4(),
+                id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 500,
                 top: 0,

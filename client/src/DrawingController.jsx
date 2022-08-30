@@ -148,7 +148,7 @@ export const cliptoPath = canvas => {
         });
         var group = new fabric.Group([...clipPath1]);
         group.set({
-            id: 'id_' + uuidv4(),
+            id: 'id_' + fabric.Object.__uid,
             absolutePositioned: true
         });
         canvas.sendToBack(group);
@@ -231,7 +231,7 @@ function animate(canvas, sss) {
 export const createText = (canvas) => {
 
     const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
-        id: 'ccg_' + uuidv4(),
+        id: 'ccg_' + fabric.Object.__uid,
         shadow: shadowOptions,
         left: 100,
         top: 0,
@@ -254,7 +254,7 @@ export const createIText = (canvas) => {
 
     const text = new fabric.IText("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
         shadow: shadowOptions,
-        id: 'ccg_' + uuidv4(),
+        id: 'ccg_' + fabric.Object.__uid,
         left: 100,
         top: 0,
         width: 480,
@@ -279,7 +279,7 @@ export const createTextBox = (canvas) => {
 
     const text = new fabric.Textbox("टाइमलाइन को नीचे स्थानांतरित कर दिया गया है | Timeline has been shifted below ", {
         shadow: shadowOptions,
-        id: 'ccg_' + uuidv4(),
+        id: 'ccg_' + fabric.Object.__uid,
         left: 100,
         top: 0,
         width: 480,
@@ -307,7 +307,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
             alert("Error!");
         } else {
             var rect = new fabric.Rect({
-                id: 'ccg_' + uuidv4(),
+                id: 'ccg_' + fabric.Object.__uid,
                 left: 10,
                 top: 10,
                 stroke: 'red',
@@ -338,7 +338,7 @@ export const Upload = (e, canvas) => {
                 var image = new fabric.Image(imgObj);
                 image
                     .set({
-                        id: 'ccg_' + uuidv4(),
+                        id: 'ccg_' + fabric.Object.__uid,
                         left: 10,
                         top: 10,
                         shadow: shadowOptions,
@@ -370,13 +370,16 @@ const finalPosition = (element, canvas) => {
 }
 
 export const cloneAsImage = canvas => {
-
     canvas.getActiveObjects().forEach(element => {
+        const preshadow = element.shadow;
+        if (((element.type === 'i-text') || (element.type === 'textbox') || (element.type === 'text')) && (element.shadow.blur < 5)) {
+            element.shadow.blur = 5
+        }
         element.cloneAsImage(function (clone) {
             clone.set({
-                left: (finalPosition(element, canvas)).x + 200,
-                top: ( finalPosition(element, canvas)).y+50,
-                id: 'id_' + uuidv4(),
+                left: (finalPosition(element, canvas)).x + 10,
+                top: (finalPosition(element, canvas)).y + 10,
+                id: 'id_' + fabric.Object.__uid,
                 shadow: {
                     color: 'black',
                     blur: 0,
@@ -387,6 +390,7 @@ export const cloneAsImage = canvas => {
             });
             canvas.add(clone);
         });
+        element.shadow = preshadow;
     });
     canvas.requestRenderAll();
 }
@@ -409,7 +413,7 @@ const gradient2 = () => {
 }
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: 90,
@@ -431,7 +435,7 @@ export const createRect = (canvas) => {
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: 180,
@@ -452,7 +456,7 @@ export const createEllipse = (canvas) => {
 
 export const createPentagon = (canvas) => {
     const rect = new fabric.Polygon([{ x: 290, y: 124 }, { x: 390, y: 190 }, { x: 354, y: 297 }, { x: 226, y: 297 }, { x: 192, y: 190 }], {
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: 80,
@@ -473,7 +477,7 @@ export const createPentagon = (canvas) => {
 
 // export const createLine = (canvas) => {
 //     const rect = new fabric.Line([500, 450, 800, 450.00001], {
-//         id: 'id_' + uuidv4(),
+//         id: 'id_' + fabric.Object.__uid,
 //         shadow: { ...shadowOptions, Blur: 10 },
 //         top: -100,
 //         left: 90,
@@ -493,7 +497,7 @@ export const createPentagon = (canvas) => {
 
 export const createVLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 1 500', {
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
@@ -509,7 +513,7 @@ export const createVLine = (canvas) => {
 };
 export const createHLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 500 1', {
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
@@ -526,7 +530,7 @@ export const createHLine = (canvas) => {
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 0,
         left: 0,
@@ -548,7 +552,7 @@ export const createCircle = (canvas) => {
 export const createTriangle = (canvas) => {
     canvas.isDrawingMode = false;
     const triangle = new fabric.Triangle({
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 50,
         left: -100,
@@ -773,7 +777,7 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
             });
             fabric.Image.fromURL(newData, (fabricImage) => {
                 fabricImage.set({
-                    id: 'ccg_' + uuidv4(),
+                    id: 'ccg_' + fabric.Object.__uid,
                     left: left,
                     top: top,
                     shadow: { ...shadowOptions, blur: 0 },
@@ -881,7 +885,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         if (canvas.getActiveObject().type !== 'activeSelection') {
             return;
         }
-        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'id_' + uuidv4(), });
+        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'id_' + fabric.Object.__uid, });
     }
     else {
         if (!canvas.getActiveObject()) {
@@ -926,7 +930,7 @@ export const paste = (canvas) => {
                 top: clonedObj.top + 10,
                 evented: true,
                 objectCaching: false,
-                id: 'id_' + uuidv4(),
+                id: 'id_' + fabric.Object.__uid,
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
@@ -937,7 +941,7 @@ export const paste = (canvas) => {
                     obj.set({
                         evented: true,
                         objectCaching: false,
-                        id: 'id_' + uuidv4(),
+                        id: 'id_' + fabric.Object.__uid,
                     });
                 });
                 // this should solve the unselectability
@@ -945,8 +949,6 @@ export const paste = (canvas) => {
             } else {
                 canvas?.add(clonedObj);
             }
-
-
 
             _clipboard.top += 10;
             _clipboard.left += 10;
@@ -963,7 +965,7 @@ export const paste = (canvas) => {
 export const createShape = (canvas, shape, size = 0.4) => {
 
     const rect = new fabric.Path(shape, {
-        id: 'id_' + uuidv4(),
+        id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: (Math.random()) * 1000,
@@ -2770,7 +2772,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 </div>
                 <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid blue' }}>
                     <div className='drawingToolsRow' >
-                    <b>Tools: </b>
+                        <b>Tools: </b>
                         <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
                         <button onClick={() => putatCenter(canvas)}>All at Center</button>
                         <button onClick={() => selectedatCenter(canvas)}>Center</button>
@@ -2778,7 +2780,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
                     </div>
                     <div className='drawingToolsRow' >
-                       
+
                         <button title='Align Left' onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
                         <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
                         <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>

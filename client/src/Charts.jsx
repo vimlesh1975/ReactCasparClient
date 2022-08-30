@@ -82,20 +82,20 @@ const Charts = () => {
         var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
-                element.set({id: 'id_' + uuidv4(), objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
+                element.set({id: 'id_' + fabric.Object.__uid, objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
                 if (element.type === 'text') {
                     element.set({ type: 'i-text' })
                     var textobj = element.toObject();
                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
                     var aa = new fabric.IText(element.text, clonedtextobj);
-                    aa.set({ id: 'ccg_' + uuidv4() });
+                    aa.set({ id: 'ccg_' + fabric.Object.__uid });
                     var bb = objects.indexOf(element);
                     objects.splice(bb, 1, aa);
                 }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
-            svgGroups.set({ id: 'id_' + uuidv4() });
+            svgGroups.set({ id: 'id_' + fabric.Object.__uid });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
@@ -192,20 +192,20 @@ const Charts = () => {
         var SVGstring = refd3.current.innerHTML;
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
-                element.set({ id: 'id_' + uuidv4(),objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
+                element.set({ id: 'id_' + fabric.Object.__uid,objectCaching: false, shadow: { ...shadowOptions, blur: 10 } });
                 if (element.type === 'text') {
                     element.set({ type: 'i-text' })
                     var textobj = element.toObject();
                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
                     var aa = new fabric.IText(element.text, clonedtextobj);
-                    aa.set({ id: 'ccg_' + uuidv4() });
+                    aa.set({ id: 'ccg_' + fabric.Object.__uid });
                     var bb = objects.indexOf(element);
                     objects.splice(bb, 1, aa);
                 }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
-            svgGroups.set({ id: 'id_' + uuidv4() });
+            svgGroups.set({ id: 'id_' + fabric.Object.__uid });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();

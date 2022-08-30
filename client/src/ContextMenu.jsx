@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import {cloneAsImage, gradient, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
+import {cloneAsImage, gradient, removeShadow, removeFill, removeStroke, createTextBox, createRect, createCircle, createTriangle, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from './PathModifier';
@@ -42,7 +42,7 @@ const ContextMenu = ({ canvas,  sendToBack ,bringToFront}) => {
         <li onClick={() => groupObjects(canvas, true)}>Group Selected</li>
         <li onClick={() => groupObjects(canvas, false)}>UnGroup Selected</li>
         <li>Add<ul >
-          <li onClick={() => createText(canvas)}>Text T</li>
+          <li onClick={() => createTextBox(canvas)}>Text T</li>
           <li onClick={() => createRect(canvas)}>Rectangle <VscPrimitiveSquare /></li>
           <li onClick={() => createCircle(canvas)}>Circle <VscCircleFilled /></li>
           <li onClick={() => createTriangle(canvas)}>Triangle <VscTriangleUp /></li>
