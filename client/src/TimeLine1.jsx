@@ -882,7 +882,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                           }}
                         >
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                            <div style={{  minWidth: 60 }}><span style={{marginLeft:5}}>{(element.type)}</span></div>
+                            <div style={{  minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e) } style={{marginLeft:5}}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);

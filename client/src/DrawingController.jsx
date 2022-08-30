@@ -375,7 +375,7 @@ export const cloneAsImage = canvas => {
         element.cloneAsImage(function (clone) {
             clone.set({
                 left: (finalPosition(element, canvas)).x + 200,
-                top: ( finalPosition(element, canvas)).y,
+                top: ( finalPosition(element, canvas)).y+50,
                 id: 'id_' + uuidv4(),
                 shadow: {
                     color: 'black',
