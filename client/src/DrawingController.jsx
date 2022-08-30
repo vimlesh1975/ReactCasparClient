@@ -22,7 +22,6 @@ import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
 
-
 var xxx;
 var html;
 
@@ -160,6 +159,8 @@ export const cliptoPath = canvas => {
         canvas.requestRenderAll();
     }
 }
+
+
 
 export const addClock = canvas => {
     const sss = new fabric.Textbox('', {
@@ -352,6 +353,42 @@ export const Upload = (e, canvas) => {
         };
         reader.readAsDataURL(e.target.files[0]);
     }
+}
+
+const finalPosition = (element, canvas) => {
+    if (canvas.getActiveObjects().length > 1) {
+        var activeSelection = canvas.getActiveObject();
+        var matrix = activeSelection.calcTransformMatrix();
+        var objectPosition = { x: element.left, y: element.top };
+        var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+        return finalPosition;
+    }
+    else {
+        finalPosition = { x: element.left, y: element.top };
+        return finalPosition;
+    }
+}
+
+export const cloneAsImage = canvas => {
+
+    canvas.getActiveObjects().forEach(element => {
+        element.cloneAsImage(function (clone) {
+            clone.set({
+                left: (finalPosition(element, canvas)).x + 200,
+                top: ( finalPosition(element, canvas)).y,
+                id: 'id_' + uuidv4(),
+                shadow: {
+                    color: 'black',
+                    blur: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    affectStroke: false
+                },
+            });
+            canvas.add(clone);
+        });
+    });
+    canvas.requestRenderAll();
 }
 
 export const setGradientColor = canvas => {
@@ -1162,6 +1199,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         clearInterval(xxx);
         "`)
     }
+
+
     const showClock = (layerNumber) => {
         //for form
         var startTime = new Date();
@@ -1287,7 +1326,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
     const makeFullScreen = () => {
         canvas?.getActiveObjects().forEach(element => {
-            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0,  strokeWidth: 0, rx: 0, ry: 0 })
+            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0, strokeWidth: 0, rx: 0, ry: 0 })
         });
         canvas?.requestRenderAll();
     }
@@ -2731,7 +2770,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 </div>
                 <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid blue' }}>
                     <div className='drawingToolsRow' >
-                        <b>Center: </b>
+                    <b>Tools: </b>
                         <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
                         <button onClick={() => putatCenter(canvas)}>All at Center</button>
                         <button onClick={() => selectedatCenter(canvas)}>Center</button>
@@ -2739,7 +2778,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
                     </div>
                     <div className='drawingToolsRow' >
-                        <b>Tools: </b>
+                       
                         <button title='Align Left' onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
                         <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
                         <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
@@ -2772,6 +2811,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => redo(canvas)}>Redo</button>
                         <button onClick={() => copy(canvas)}>Copy</button>
                         <button onClick={() => paste(canvas)}>Paste</button>
+                        <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
                         <button onClick={() => selectAll(canvas)}>Select All</button>
                         <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>

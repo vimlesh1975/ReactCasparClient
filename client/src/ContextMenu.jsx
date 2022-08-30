@@ -1,5 +1,5 @@
 import useContextMenu from './useContextMenu'
-import { gradient, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
+import {cloneAsImage, gradient, removeShadow, removeFill, removeStroke, createText, createRect, createCircle, createTriangle, undo, redo, lock, unlockAll, groupObjects, copy, paste, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg } from './DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscEdit, VscLock, VscUnlock } from "react-icons/vsc";
 import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from './PathModifier';
@@ -78,6 +78,7 @@ const ContextMenu = ({ canvas,  sendToBack ,bringToFront}) => {
         <li onClick={() => undo(canvas)}>Undo <AiOutlineUndo /></li>
         <li onClick={() => copy(canvas)}>Copy</li>
         <li onClick={() => paste(canvas)}>Paste</li>
+        <li onClick={() => cloneAsImage(canvas)}>CloneAsImage</li>
         <li>Drawing Mode<ul >
           <li onClick={() => window.toggleModeDrawing(canvas)}>Off<VscEdit /></li>
           <li onClick={() => {

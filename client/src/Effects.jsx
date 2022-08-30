@@ -196,6 +196,8 @@ const Effects = () => {
         document.getElementsByTagName('g')[0].style.filter = filter;
     }
 
+  
+
     return (<div>
 
         <div style={{ border: '2px solid red' }}>
@@ -258,7 +260,6 @@ const Effects = () => {
         <div id='kkk' ref={refkkk} style={{ backgroundColor: 'grey', zoom: 0.78, width: 1024, height: 576 }}>
             {/* {canvasHtml} */}
         </div>
-
     </div>)
 }
 
