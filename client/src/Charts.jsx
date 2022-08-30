@@ -6,8 +6,6 @@ import { shadowOptions } from './common'
 import { deleteAll } from './DrawingController';
 import { useState } from 'react';
 import faker from 'faker'
-import { v4 as uuidv4 } from 'uuid';
-
 
 const Charts = () => {
     const refd3 = React.useRef();
