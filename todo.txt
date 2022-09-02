@@ -45,3 +45,7 @@ corrected custom client current page selection.
 
 25.03.22
 1. centering objects
+
+02.09.22
+1. Solid caption 1 layer =>96
+check screen for 1920x1080 and zoom

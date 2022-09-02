@@ -19,15 +19,44 @@ const Layers = ({ moveElement }) => {
 
     const currentLanguage = useSelector(state => state.speechRecognitionReducer.currentLanguage);
     const continuous1= useSelector(state => state.speechRecognitionReducer.continuous1);
+    const dispatch = useDispatch();
 
 
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
             element.text = textofActiveObject;
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+
+    const firstLetterCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.text = textofActiveObject[0].toUpperCase() + textofActiveObject.slice(1);;
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+
+    const wordCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            const aa = textofActiveObject.split(" ");
+            const bb = aa.map((val) => val[0].toUpperCase() + val.slice(1))
+            const cc = bb.join(" ");
+            element.text=cc
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+    const allCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.text = textofActiveObject.toUpperCase()
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+
         });
     }
+
 
     const setTextfromMic = (replace) => {
         canvas.getActiveObjects().forEach(element => {
@@ -42,20 +71,19 @@ const Layers = ({ moveElement }) => {
                     element.text += " " + transcript;
                 }
             }
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
         });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
 
     const setId = () => {
         canvas.getActiveObjects().forEach(element => {
             element.id = idofActiveObject;
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
         });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     }
 
-    const dispatch = useDispatch();
 
     // const moveElement = (sourceIndex, destinationIndex) => {
     //     const updatedkf = [...kf];
@@ -208,7 +236,12 @@ const Layers = ({ moveElement }) => {
         <div>
             <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
             
-            Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea} <button onClick={setText}>Set Text</button>
+            Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea}
+             <button onClick={setText}>Set Text</button>
+             <button onClick={firstLetterCapitalise}>1st Letter Capitalise</button>
+            <button onClick={allCapitalise}>AllCapitalise</button>
+            <button onClick={wordCapitalise}>Word Capitalise</button>
+
             <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 100, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
             <div style={{ border: '1px solid red' }}>
             <span> <b>Speech Recognition </b></span>

@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '300822_1'
+const buildDate = '020922_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -53,8 +53,8 @@ const App = () => {
   const refPreviewContainer = useRef();
   const [chNumber, setChNumber] = useState(1);
   const [currentTab, setCurrentTab] = useState('Drawing');
-  const [animationMethod, setAnimationMethod] = useState('easeinsine');
-  const [inAnimationMethod, setInAnimationMethod] = useState('lefttoright');
+  const [animationMethod, setAnimationMethod] = useState('easenone');
+  const [inAnimationMethod, setInAnimationMethod] = useState('slide-in-bck-center');
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
   const [solidcaption1, setSolidcaption1] = useState('');
   const [tabindex, settabindex] = useState(0)

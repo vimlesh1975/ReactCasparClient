@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
 
-const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
+const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -12,26 +12,51 @@ const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
     const [idofActiveObject, setIdofActiveObject] = useState('');
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
-    
+    const dispatch = useDispatch();
+
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
             element.text = textofActiveObject;
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-
         });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
+
+    const firstLetterCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.text = textofActiveObject[0].toUpperCase() + textofActiveObject.slice(1);;
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+
+    const wordCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            const aa = textofActiveObject.split(" ");
+            const bb = aa.map((val) => val[0].toUpperCase() + val.slice(1))
+            const cc = bb.join(" ");
+            element.text=cc
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+    const allCapitalise = () => {
+        canvas.getActiveObjects().forEach(element => {
+            element.text = textofActiveObject.toUpperCase()
+        });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+    }
+
 
     const setId = () => {
         canvas.getActiveObjects().forEach(element => {
             element.id = idofActiveObject;
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-
         });
+        canvas.requestRenderAll();
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
 
-    const dispatch = useDispatch();
 
     const onDragEnd = (result) => {
         if (result.destination != null) {
@@ -39,7 +64,7 @@ const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-            moveElement (result.source?.index, result.destination?.index) ;
+            moveElement(result.source?.index, result.destination?.index);
         }
     }
 
@@ -136,7 +161,7 @@ const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
                                                             backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(val)) ? 'green' : 'white',
                                                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                                                             verticalAlign: 'top',
-                                                            color:snapshot.isDragging ? 'white':(activeLayers.includes(val)) ? 'white' : '',
+                                                            color: snapshot.isDragging ? 'white' : (activeLayers.includes(val)) ? 'white' : '',
                                                             //  marginTop: 100
                                                         }}
                                                     ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
@@ -174,9 +199,14 @@ const Layers2 = ({moveElement,deleteItemfromtimeline}) => {
 
         <div>
             <br />  <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
-           Font Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={25} />{fontSizeofTexrArea}
-            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 350, height: 190, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
+            Font Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={25} />{fontSizeofTexrArea}
+            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 350, height: 150, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
             <button onClick={setText}>Set Text</button>
+            <button onClick={firstLetterCapitalise}>1st Letter Capitalise</button>
+            <button onClick={allCapitalise}>AllCapitalise</button>
+            <button onClick={wordCapitalise}>Word Capitalise</button>
+
+            
         </div>
     </div>)
 }

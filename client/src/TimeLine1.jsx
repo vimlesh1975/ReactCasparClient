@@ -5,10 +5,10 @@ import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { VscTrash, VscMove } from "react-icons/vsc";
+import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
 
 const timelineWidth = 1024;
-const controlWidth = 250;
+const controlWidth = 275;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -817,6 +817,13 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       //dummy
     }
   }
+
+  const lockUnlock = (canvas) => {
+    canvas.getActiveObjects().forEach((element) => {element.selectable = !element.selectable});
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+  }
+
   return (<div onMouseOver={() => {
     !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
   }}>
@@ -837,8 +844,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={recallPageAndAnimation}>Recall</button>
         <button onClick={copyAnimation}>Copy</button>
         <button onClick={pasteAnimation}>Paste</button>
-        </div>
-        <div>
+      </div>
+      <div>
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
         Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
@@ -854,7 +861,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
           }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
         </div>
       </div>
-      <div style={{ width: timelineWidth-controlWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
+      <div style={{ width: timelineWidth - controlWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
         {Array.from(Array(parseInt(6 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
       </div>
       <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
@@ -884,13 +891,14 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                           }}
                         >
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                            <div style={{  minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e) } style={{marginLeft:5}}>{(element.type)}</span></div>
+                            <div style={{ minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
+                            <div> <button title='Lock selected' onClick={() => lockUnlock(canvas)}>{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);
                               deleteItemfromtimeline();
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input  key1={i} onClick={(e) => selectObject(e)} style={{ width: 130 }} onChange={e => {
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 130 }} onChange={e => {
                               element.id = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
@@ -973,7 +981,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
             )}
           </Droppable>
         </DragDropContext>
-        <div style={{ width: timelineWidth - controlWidth - 20, position: 'relative', left: controlWidth, top: -(((layers.length + 1) * (20 + 2 + 2))-20) }}>
+        <div style={{ width: timelineWidth - controlWidth - 20, position: 'relative', left: controlWidth, top: -(((layers.length + 1) * (20 + 2 + 2)) - 20) }}>
           <Rnd
             dragAxis='x'
             enableResizing={{}}
