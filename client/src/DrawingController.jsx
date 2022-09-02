@@ -277,7 +277,7 @@ export const createIText = (canvas) => {
 
 export const createTextBox = (canvas) => {
 
-    const text = new fabric.Textbox("टाइमलाइन को नीचे स्थानांतरित कर दिया गया है | Timeline has been shifted below ", {
+    const text = new fabric.Textbox("Timeline has been shifted below.", {
         shadow: shadowOptions,
         id: 'ccg_' + fabric.Object.__uid,
         left: 100,
@@ -418,20 +418,20 @@ export const createRect = (canvas) => {
         top: -100,
         left: 90,
         width: 500,
-        height: 80,
+        height: 40,
         opacity: 0.9,
         fill: gradient2(),
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
-        strokeWidth: 3,
+        strokeWidth: 1,
         strokeUniform: true,
         rx: 10,
         ry: 10
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 430, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 435, { onChange: canvas.renderAll.bind(canvas) })
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
