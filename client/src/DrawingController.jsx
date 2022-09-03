@@ -2247,10 +2247,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
+           var bb = document.createElement('div');
+            bb.style.perspective='1920px';
+            bb.style.transformStyle='preserve-3d';
+            document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            document.body.appendChild(aa);
+            bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
@@ -2273,10 +2277,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         endpoint(`call ${window.chNumber}-${layerNumber} "
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            document.body.appendChild(aa);
+            bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';

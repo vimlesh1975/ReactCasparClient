@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '030922_2'
+const buildDate = '030922_3'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -206,10 +206,14 @@ const App = () => {
 
       setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-        document.body.appendChild(aa);
+        bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
