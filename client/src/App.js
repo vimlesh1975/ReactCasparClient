@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '030922_1'
+const buildDate = '030922_2'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -492,11 +492,11 @@ const App = () => {
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}>
-                <Video video={''} layerNumber={videoLayers[0]} />
-                <Video video={''} layerNumber={videoLayers[1]} />
-                <Video video={''} layerNumber={videoLayers[2]} />
-                <Video video={''} layerNumber={videoLayers[3]} />
                 <Video video={''} layerNumber={videoLayers[4]} />
+                <Video video={''} layerNumber={videoLayers[3]} />
+                <Video video={''} layerNumber={videoLayers[2]} />
+                <Video video={''} layerNumber={videoLayers[1]} />
+                <Video video={''} layerNumber={videoLayers[0]} />
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <span style={{ position: 'absolute', left: 506, top: 250, fontSize: 40 }}>.</span>

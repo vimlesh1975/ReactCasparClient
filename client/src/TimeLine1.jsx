@@ -221,7 +221,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         "`);
   }
@@ -551,7 +551,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         document.body.style.padding = '0';
         document.body.style.overflow = 'hidden';
         var aa = document.getElementsByTagName('div')[0];
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         observer.disconnect();
     });
     observer.observe(elementToObserve, { subtree: true, childList: true })

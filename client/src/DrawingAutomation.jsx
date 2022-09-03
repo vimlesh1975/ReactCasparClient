@@ -10,7 +10,8 @@ const DrawingAutomation = ({ i = 0 }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      window.automationeditor[0].canvas.setZoom(0.3)
+      // window.automationeditor[0].canvas.setZoom(0.3)
+      window.automationeditor[0].canvas.setZoom(0.16)
     }, 100);
 
     return () => {

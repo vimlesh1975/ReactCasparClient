@@ -1538,6 +1538,21 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
+    const sdToHD = () => {
+        unlockAll(canvas);
+        selectAll(canvas);
+        canvas.getActiveObjects().forEach(element =>{ 
+            if(( element.type==='image') ||( element.type==='path') ||( element.type==='group')||( element.type==='rect')){
+            element.set({ left: element.left * 1.87, top: element.top * 1.87, scaleX: element.scaleX * 1.87, scaleY: element.scaleY * 1.87 });
+            }
+            else{
+                element.set({ left: element.left * 1.87, top: element.top * 1.87, width: element.width * 1.87, height: element.height * 1.87, fontSize:element.fontSize*1.87 });
+            }
+         } )
+        selectAll(canvas);
+        canvas.requestRenderAll();
+    }
+
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1901,7 +1916,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${horizontalSpeed};
@@ -1955,7 +1970,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${horizontalSpeed2};
@@ -2112,7 +2127,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed};
@@ -2143,7 +2158,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed2};
@@ -2838,6 +2853,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
+                        <button onClick={sdToHD}>sdtoHD</button>
+
                         {/* <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
                             <ColorGradient property1={property1} />
                         </Modal> */}

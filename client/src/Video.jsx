@@ -10,7 +10,7 @@ const Video = ({ video, layerNumber }) => {
     const [videoY, setVideoY] = useState(0);
     const [operateOnline, setOperateOnline] = useState(false);
 
-    return (<>
+    return (<div style={{  overflow: 'hidden', left: layerNumber * 20, top:25+ layerNumber * 20 }}>
         <Rnd
             size={{ width: videoWidth, height: videoHeight }}
             position={{ x: videoX, y: videoY }}
@@ -60,7 +60,7 @@ const Video = ({ video, layerNumber }) => {
                 </div>
             </div>
         </Rnd>
-    </>)
+    </div>)
 }
 
 export default Video
