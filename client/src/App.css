@@ -1,139 +1,170 @@
-@media only screen and (min-width : 1200px) {html, body {margin: 0; height: 100%; overflow: hidden}}
+@media only screen and (min-width : 1200px) {
+
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
+  }
+}
 
 /* .App {
   text-align: left;
 } */
-.nav-bar ul{
+.nav-bar ul {
   list-style: none;
   background-color: rgb(29, 56, 207);
 
 }
 
-.nav-bar ul li a{
+.nav-bar ul li a {
   text-decoration: none;
   color: white;
   width: 100px;
   height: 30px;
 }
-.nav-bar ul li:hover{
+
+.nav-bar ul li:hover {
   background-color: rgb(6, 14, 90);
 }
-.nav-bar ul li{
+
+.nav-bar ul li {
   display: inline-block;
   width: 100px;
   height: 30px;
   line-height: 30px;
   margin-bottom: 5px;
   font-size: 20px;
-  
-  background-color:#9600ec;
+
+  background-color: #9600ec;
   padding: 10px;
- 
+
 
 
 }
 
-.connectbutton:hover{
+.connectbutton:hover {
   background-color: rgb(95, 3, 3);
 }
-.StopChannelButton, .connectbutton{
+
+.StopChannelButton,
+.connectbutton {
   background-color: red;
-   color:white;
-    font-size:15px;
-    padding: 2px;
-    border-radius: 10%;
+  color: white;
+  font-size: 15px;
+  padding: 2px;
+  border-radius: 10%;
 }
-.StopChannelButton:hover{
+
+.StopChannelButton:hover {
   background-color: rgb(95, 3, 3);
 }
-.preview-container{
-  position: relative; 
-  background-color:rgba(14, 15, 15, 0.596);
+
+.preview-container {
+  /* position: absolute; */
+  background-color: rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
   /* background-position: 'center'; */
   /* background-repeat: no-repeat; */
-  background-position:top -30px right -30px;
+  background-position: top -30px right -30px;
   /* background-size:auto; */
   width: 1024px;
   height: 576px;
-  border:2px solid red;
+  /* border: 2px solid red; */
+
+  /* width: 1920px;
+  height: 1080px;
+  scale: 0.5333;
+  transform-origin: left top; */
+
 }
 
+.canvas {
+  position: absolute;
+  /* width: 1024px;
+  height: 576px; */
+  width: 1920px;
+  height: 1080px;
+  scale: 0.5333;
+  transform-origin: top left;
+  overflow: hidden;
+}
 
-.automation-preview-container{
+.automation-preview-container {
   /* position: relative;  */
-  background-color:rgba(14, 15, 15, 0.596);
+  background-color: rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
-  width:309px;
+  width: 309px;
   height: 172px;
-  border:1px solid red;
+  border: 1px solid red;
 }
+
 .automationcanvas {
   width: 309px;
   height: 172px;
 }
-.styleContainer{
-  background-color:rgba(14, 15, 15, 0.596);
+
+.styleContainer {
+  background-color: rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
 }
 
-.topleft:hover{
-cursor: pointer;
+.topleft:hover {
+  cursor: pointer;
 }
-.graphic{
+
+.graphic {
   position: absolute;
   left: 5%;
   background: rgb(80, 3, 124);
   color: rgb(255, 255, 255);
   font-weight: bold;
   border: 2px solid white;
-  padding: 3px 10px;   
-  font-size: 30px;      
+  padding: 3px 10px;
+  font-size: 30px;
 }
-.output{
+
+.output {
   position: absolute;
   width: 100vw;
   height: 100vh;
 }
 
-.palyButton{
+.palyButton {
   background-color: green;
-  color:white;
+  color: white;
 }
-.stopButton{
+
+.stopButton {
   background-color: red;
-  color:white;
+  color: white;
 
 }
 
-.previewButton{
+.previewButton {
   background-color: yellow;
-  color:black;
+  color: black;
 }
 
-.updateButton{
+.updateButton {
   background-color: rgb(129, 219, 231);
-  color:black;
+  color: black;
 }
 
-.canvas {
-  position: absolute;
-  width: 1024px;
-  height: 576px;
-}
 
 .thumbnailcanvas {
   width: 309px;
   height: 172px;
 
 }
-.thumbnail-preview-container{
+
+.thumbnail-preview-container {
   /* position: relative;  */
-  background-color:rgba(14, 15, 15, 0.596);
+  background-color: rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
   width: 103px;
   height: 58px;
-  border:1px solid red;
+  border: 1px solid red;
 }
 
 .canvasOutput {
@@ -142,67 +173,78 @@ cursor: pointer;
   height: 2160px;
 }
 
-.hidetoolbar { display:none !important; }
-.xyz { font-size: xx-large;}
+.hidetoolbar {
+  display: none !important;
+}
 
-.rightClickMenu ul li{
-  padding: 3px 8px;;
-  margin: 1px; ;
+.xyz {
+  font-size: xx-large;
+}
+
+.rightClickMenu ul li {
+  padding: 3px 8px;
+  ;
+  margin: 1px;
+  ;
   background-color: rgb(6, 92, 107);
 }
 
-.rightClickMenu ul li:hover{
+.rightClickMenu ul li:hover {
   background-color: rgb(2, 42, 49);
-  cursor: pointer ;
- 
+  cursor: pointer;
+
 }
-.rightClickMenu ul{
+
+.rightClickMenu ul {
   list-style: none;
   min-width: 180px;
 
 }
 
-.rightClickMenu ul li ul{
+.rightClickMenu ul li ul {
   display: none;
   position: absolute;
   left: 180px;
-  }
-  
+}
 
-.rightClickMenu ul li:hover ul{
-display: inline;
+
+.rightClickMenu ul li:hover ul {
+  display: inline;
 
 }
 
-.rightClickMenu ul li ul li{
-  padding: 3px 8px;;
-  margin: 1px; ;
+.rightClickMenu ul li ul li {
+  padding: 3px 8px;
+  ;
+  margin: 1px;
+  ;
   background-color: rgb(6, 92, 107);
 }
 
-.rightClickMenu ul li ul li:hover{
+.rightClickMenu ul li ul li:hover {
   background-color: rgb(2, 42, 49);
-  cursor: pointer ;
- 
+  cursor: pointer;
+
 }
-.rightClickMenu ul li ul{
+
+.rightClickMenu ul li ul {
   list-style: none;
   min-width: 180px;
 
 }
 
 
-.rightClickMenu ul li ul li ul{
+.rightClickMenu ul li ul li ul {
   display: none;
   position: absolute;
   left: 180px;
-  }
+}
 
-.rightClickMenu ul li ul li:hover ul{
-    display: inline;
-  }
+.rightClickMenu ul li ul li:hover ul {
+  display: inline;
+}
 
-.drawingToolsRow{
+.drawingToolsRow {
   border: 1px solid rgb(235, 232, 232);
   width: 475px;
   margin-top: 3px;
@@ -220,36 +262,40 @@ display: inline;
   border: none;
 }
 
-.inputRange{
+.inputRange {
   width: 100px;
   height: 3px;
 }
-.inputRangeshadow{
+
+.inputRangeshadow {
   width: 70px;
   height: 3px;
 }
-.inputRangeStroke{
+
+.inputRangeStroke {
   width: 50px;
   height: 3px;
 }
-.inputRangeFontSize{
+
+.inputRangeFontSize {
   width: 120px;
   height: 3px;
 }
 
-.selectedTab{
-  background-color: rgb(116, 114, 117);
-  color: white;
-}
-.selectedTab2{
+.selectedTab {
   background-color: rgb(116, 114, 117);
   color: white;
 }
 
-.text-center{
+.selectedTab2 {
+  background-color: rgb(116, 114, 117);
+  color: white;
+}
+
+.text-center {
   text-align: center;
 }
- 
-.root-div{
- margin-top: 150px;
+
+.root-div {
+  margin-top: 150px;
 }

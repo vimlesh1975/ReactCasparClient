@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '020922_1'
+const buildDate = '030922_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -212,7 +212,7 @@ const App = () => {
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var style = document.createElement('style');
         style.textContent = '${inAnimation}';
@@ -242,7 +242,7 @@ const App = () => {
         bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var style = document.createElement('style');
         style.textContent = '${inAnimation}';
@@ -510,7 +510,7 @@ const App = () => {
                 <Tab>Casparcg Window</Tab>
                 <Tab>Timeline</Tab>
               </TabList>
-           
+
               <TabPanel >
                 <div style={{ display: 'flex' }}>
                   <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
@@ -530,7 +530,7 @@ const App = () => {
                     <Automation />
                   </div>
                 </div>
-              
+
               </TabPanel>
               <TabPanel >
                 <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
