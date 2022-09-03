@@ -19,7 +19,8 @@ const DrawingThumbnail = ({ i = 0 }) => {
           return;
         }
       });
-      canvas.setZoom(0.3)
+      // canvas.setZoom(0.3)
+      canvas.setZoom(0.16)
       canvas.requestRenderAll();
     });
   }

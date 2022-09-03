@@ -165,9 +165,9 @@ export const cliptoPath = canvas => {
 export const addClock = canvas => {
     const sss = new fabric.Textbox('', {
         shadow: shadowOptions,
-        left: 10,
-        top: 530,
-        width: 100,
+        left: 10 * 1.87,
+        top: 530 * 1.87,
+        width: 100 * 1.87,
         fill: '#ffffff',
         backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -192,9 +192,9 @@ export const addClock = canvas => {
 export const addUpTimer = canvas => {
     const sss = new fabric.Textbox('', {
         shadow: shadowOptions,
-        left: 10,
-        top: 530,
-        width: 100,
+        left: 10 * 1.87,
+        top: 530 * 1.87,
+        width: 100 * 1.87,
         fill: '#ffffff',
         backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -233,9 +233,9 @@ export const createText = (canvas) => {
     const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
         id: 'ccg_' + fabric.Object.__uid,
         shadow: shadowOptions,
-        left: 100,
+        left: 100 * 1.87,
         top: 0,
-        width: 480,
+        width: 480 * 1.87,
         fill: options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
@@ -248,7 +248,7 @@ export const createText = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 243, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 243 * 1.87, { onChange: canvas.renderAll.bind(canvas) })
 };
 export const createIText = (canvas) => {
 
@@ -280,9 +280,9 @@ export const createTextBox = (canvas) => {
     const text = new fabric.Textbox("Timeline has been shifted below.", {
         shadow: shadowOptions,
         id: 'ccg_' + fabric.Object.__uid,
-        left: 100,
+        left: 100 * 1.87,
         top: 0,
-        width: 480,
+        width: 480 * 1.87,
         fill: '#ffffff',
         // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
@@ -296,7 +296,7 @@ export const createTextBox = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 441, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 958, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
@@ -339,11 +339,11 @@ export const Upload = (e, canvas) => {
                 image
                     .set({
                         id: 'ccg_' + fabric.Object.__uid,
-                        left: 10,
-                        top: 10,
+                        // left: 10,
+                        // top: 10,
                         shadow: shadowOptions,
-                        stroke: 'white',
-                        strokeWidth: 3,
+                        // stroke: 'none',
+                        // strokeWidth: 0,
                         strokeUniform: true,
                         objectCaching: false,
                     })
@@ -415,10 +415,10 @@ export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         id: 'id_' + fabric.Object.__uid,
         shadow: shadowOptions,
-        top: -100,
-        left: 90,
-        width: 500,
-        height: 40,
+        top: -100 * 1.87,
+        left: 90 * 1.87,
+        width: 500 * 1.87,
+        height: 40 * 1.87,
         opacity: 0.9,
         fill: gradient2(),
         hasRotatingPoint: true,
@@ -431,7 +431,7 @@ export const createRect = (canvas) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 435, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 950, { onChange: canvas.renderAll.bind(canvas) })
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
@@ -1228,7 +1228,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 document.body.appendChild(aa);
                 document.body.style.margin='0';
                 document.body.style.padding='0';
-                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
                 document.body.style.overflow='hidden';
                 var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
                 cc.textContent='';
@@ -1299,9 +1299,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const addGameTimer = canvas => {
         const sss = new fabric.Textbox(`${initialMinute.toString().padStart(2, '0')}:${initialSecond.toString().padStart(2, '0')}`, {
             shadow: shadowOptions,
-            left: 10,
-            top: 530,
-            width: 100,
+            left: 10 * 1.87,
+            top: 530 * 1.87,
+            width: 100 * 1.87,
             fill: '#ffffff',
             backgroundColor: options.backgroundColor,
             fontFamily: options.currentFont,
@@ -1328,7 +1328,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
     const makeFullScreen = () => {
         canvas?.getActiveObjects().forEach(element => {
-            element.set({ scaleX: (1024 / element.width), scaleY: (576 / element.height), left: 0, top: 0, strokeWidth: 0, rx: 0, ry: 0 })
+            element.set({ scaleX: (1920 / element.width), scaleY: (1080 / element.height), left: 0, top: 0, strokeWidth: 0, rx: 0, ry: 0 })
         });
         canvas?.requestRenderAll();
     }
@@ -1538,6 +1538,21 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
+    const sdToHD = () => {
+        unlockAll(canvas);
+        selectAll(canvas);
+        canvas.getActiveObjects().forEach(element =>{ 
+            if(( element.type==='image') ||( element.type==='path') ||( element.type==='group')||( element.type==='rect')){
+            element.set({ left: element.left * 1.87, top: element.top * 1.87, scaleX: element.scaleX * 1.87, scaleY: element.scaleY * 1.87 });
+            }
+            else{
+                element.set({ left: element.left * 1.87, top: element.top * 1.87, width: element.width * 1.87, height: element.height * 1.87, fontSize:element.fontSize*1.87 });
+            }
+         } )
+        selectAll(canvas);
+        canvas.requestRenderAll();
+    }
+
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1594,7 +1609,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 document.body.style.padding = '0';
                 document.body.style.overflow = 'hidden';
                 var aa = document.getElementsByTagName('div')[0];
-                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
                 observer.disconnect();
             });
             observer.observe(elementToObserve, { subtree: true, childList: true })
@@ -1857,9 +1872,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.height='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 ${hh}');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
         aa.style.top='100%';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${verticalSpeed};
           setInterval(function(){
@@ -1901,8 +1916,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${horizontalSpeed};
         if (${!ltr}){
@@ -1955,8 +1970,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = document.getElementsByTagName('div')[0];
         aa.style.position='absolute';
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${horizontalSpeed2};
         if (${!ltr2}){
@@ -2013,7 +2028,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
             var aa = document.getElementsByTagName('div')[0];
             aa.style.position='absolute';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             var cc=document.getElementsByTagName('tspan')[0];
             cc.textContent='';
             setInterval(function() {
@@ -2055,7 +2070,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             document.body.style.overflow='hidden';
             var aa = document.getElementsByTagName('div')[0];
             aa.style.position='absolute';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             var cc=document.getElementsByTagName('tspan')[0];
             cc.textContent='';
             var startTime = new Date();
@@ -2090,9 +2105,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.height='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1024 ${hh}');
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
         aa.style.top='100%';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
        document.body.style.overflow='hidden';
        var speed=${verticalSpeed};
        setInterval(function() {
@@ -2112,8 +2127,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed};
         if (${!ltr}){
@@ -2143,8 +2158,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 576');
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var speed=${horizontalSpeed2};
         if (${!ltr2}){
@@ -2176,7 +2191,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
 
         var cc=document.getElementById('clock1').getElementsByTagName('tspan')[0];
@@ -2198,7 +2213,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var cc=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
         cc.textContent='';
@@ -2238,7 +2253,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -2264,7 +2279,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -2838,6 +2853,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
+                        <button onClick={sdToHD}>sdtoHD</button>
+
                         {/* <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
                             <ColorGradient property1={property1} />
                         </Modal> */}

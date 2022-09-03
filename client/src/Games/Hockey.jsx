@@ -120,7 +120,7 @@ const Hockey = () => {
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         "`)
         }, 300);
@@ -207,7 +207,7 @@ const Hockey = () => {
                 document.body.appendChild(aa);
                 document.body.style.margin='0';
                 document.body.style.padding='0';
-                aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
                 document.body.style.overflow='hidden';
                 var cc=document.getElementsByTagName('tspan')[0];
                 cc.textContent='';

@@ -8,8 +8,8 @@ import * as d3 from 'd3';
 import SvgFilter from 'svg-filter';
 
 const Effects = () => {
-    const [videoMixer, setVideoMixer] = useState('0.11 0 0.89 0.78');
-    const [templateMixer, setTemplateMixer] = useState('-0.11 0 1.11 1.22');
+    const [videoMixer, setVideoMixer] = useState('0.12 0 0.88 0.77');
+    const [templateMixer, setTemplateMixer] = useState('-0.12 0 1.12 1.23');
     const [cued, setCued] = useState(false);
     const [applied, setApplied] = useState(false);
     const refkkk = useRef();
@@ -87,7 +87,7 @@ const Effects = () => {
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             "`);
         endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`)
@@ -121,7 +121,7 @@ const Effects = () => {
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -154,7 +154,7 @@ const Effects = () => {
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1024)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -248,8 +248,8 @@ const Effects = () => {
             <div style={{ border: '2px solid red' }}>
                 <b>L Band squeeze</b>
                 <div><button onClick={() => {
-                    setVideoMixer(`${((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 - canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
-                    setTemplateMixer(`${-((canvas.getActiveObjects())[0].left / 1024).toFixed(2)} 0 ${((1 + canvas.getActiveObjects()[0].left / 1024)).toFixed(2)} ${(2 - canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 576).toFixed(2)}`)
+                    setVideoMixer(`${((canvas.getActiveObjects())[0].left / 1920).toFixed(2)} 0 ${((1 - canvas.getActiveObjects()[0].left / 1920)).toFixed(2)} ${(canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 1080).toFixed(2)}`)
+                    setTemplateMixer(`${-((canvas.getActiveObjects())[0].left / 1920).toFixed(2)} 0 ${((1 + canvas.getActiveObjects()[0].left / 1920)).toFixed(2)} ${(2 - canvas.getActiveObjects()[0].height * canvas.getActiveObjects()[0].scaleY / 1080).toFixed(2)}`)
                 }}>Get Video Position by selected element</button>
                 </div>
                 <div> video mixer: <input disabled value={videoMixer} onChange={e => setVideoMixer(e.target.value)} /></div>
@@ -336,10 +336,10 @@ const Effects = () => {
             setlightingcolor(e.target.value);
         }} type="color" value={lightingcolor} />
 
-        <div id='kkk' ref={refkkk} style={{ backgroundColor: 'grey', zoom: 0.78, width: 1024, height: 576 }}>
+        <div id='kkk' ref={refkkk} style={{ backgroundColor: 'grey', zoom: 0.45, width: 1920, height: 1080 }}>
             {/* dummy */}
         </div>
-        <div style={{ zoom: 0.78, width: 1024, height: 220, overflow: 'scroll' }} onMouseOver={() => setCanvasHtml(refkkk?.current?.innerHTML)}>
+        <div style={{  width: 860, height: 150, overflow: 'scroll' }} onMouseOver={() => setCanvasHtml(refkkk?.current?.innerHTML)}>
             {canvasHtml}
         </div>
     </div>)

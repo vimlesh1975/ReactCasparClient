@@ -17,7 +17,7 @@ const Scroll = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [scrollTextProperties,setScrollTextProperties]=useState({
         shadow: shadowOptions,
-        top: 521,
+        top: 980,
         fill: options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
@@ -121,14 +121,15 @@ const Scroll = () => {
                         alert("Error!");
                     } else {
                         // myImg.scaleToWidth(25);
-                        myImg.scaleToHeight(25);
+                        myImg.scaleToHeight(45);
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
                             left: left1,
                             top: scrollTextProperties.top,
                         })
                         canvas.renderAll();
-                        left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
+                        // left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
+                        left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
                             id: 'id_' + uuidv4(),
@@ -137,7 +138,8 @@ const Scroll = () => {
                         });
                         canvas.add(text).setActiveObject(text);
                         canvas.renderAll();
-                        left1 += 15 + canvas.getActiveObjects()[0].width;
+                        // left1 += 15 + canvas.getActiveObjects()[0].width;
+                        left1 += 25 + canvas.getActiveObjects()[0].width;
                     }
                 });
             };
