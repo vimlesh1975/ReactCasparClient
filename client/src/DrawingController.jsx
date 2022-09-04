@@ -1054,6 +1054,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const [htmlpageHandle, sethtmlpageHandle] = useState();
     const [scaleX, setscaleX] = useState(1);
     const [scaleY, setscaleY] = useState(1);
+
+    const [x, setX] = useState(800);
+    const [y, setY] = useState(500);
+
     const [angle, setangle] = useState(0);
     const [itallicnormal, setitallicnormal] = useState('normal');
     const [fontWeight1, setfontWeight1] = useState('normal');
@@ -2518,8 +2522,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
             if (element.opacity !== null) { setOpacity(parseFloat(element.opacity).toFixed(1)); }
             if (element.charSpacing !== null) { setCharSpacing(element.charSpacing); }
+
             if (element.scaleX !== null) { setscaleX((element.scaleX)); }
             if (element.scaleY !== null) { setscaleY(element.scaleY); }
+
+            if (element.left !== null) { setX(parseInt(element.left)); }
+            if (element.top !== null) { setY(parseInt(element.top)); }
+
             if (element.angle !== null) { setangle(parseInt(element.angle)); }
 
             if (element.fontStyle !== null) { setitallicnormal(element.fontStyle); }
@@ -2830,7 +2839,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             )}`
                         }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
                         <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
-                        Stroke/Brush W:
+                        Strk/Brs W:
                         <input style={{ width: '40px' }} onChange={e => {
                             onstrokeSizeChange((e));
                         }} type="number" min='0' max='50' step='1' value={strokeWidth} />
@@ -2845,13 +2854,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                 canvas.getActiveObjects().forEach(item => item.set({ scaleY: e.target.value }))
                                 canvas.requestRenderAll();
                             }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleY} />
+
+                            X: <input style={{ width: '40px' }} onChange={e => {
+                                setX(parseInt(e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ left: parseInt(e.target.value) }))
+                                canvas.requestRenderAll();
+                            }} type="number" min={-100} max={1100} step={1} value={x} />
+                            Y: <input style={{ width: '40px' }} onChange={e => {
+                                setY(parseInt(e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ top: parseInt(e.target.value) }))
+                                canvas.requestRenderAll();
+                            }} type="number" min={-100} max={1100} step={1} value={y} />
+
                             Angle: <input style={{ width: '40px' }} onChange={e => {
                                 setangle(e.target.value);
                                 canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
                                 canvas.requestRenderAll();
                             }} type="number" min='0' max='360' step='1' value={angle} /> </span>
-                        <br /> stroke-dasharray: <input style={{ width: '60px' }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
-                        stroke-dash-offset: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
+
+
+                        strk-dsar: <input style={{ width: '60px' }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
+                        stek-ds-ofst: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
+
 
                     </div>
                     <div style={{ display: 'flex' }}>
