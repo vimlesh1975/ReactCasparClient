@@ -23,6 +23,7 @@ import CasparcgTools from './CasparcgTools';
 
 
 var xxx;
+var xxx2;
 var html;
 
 fabric.Object.prototype.noScaleCache = false;
@@ -1044,7 +1045,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const [initialMinute, setInitilaMinute] = useState(45)
     const [initialSecond, setInitialSecond] = useState(0)
+    const [initialSecond2, setInitialSecond2] = useState(24)
     const [countUp, setCountUp] = useState(false);
+    const [countUp2, setCountUp2] = useState(false);
 
     const dispatch = useDispatch();
     const [htmlfileHandle, sethtmlfileHandle] = useState();
@@ -1280,6 +1283,88 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
            }, 1000);
         "`)
     }
+
+    const pauseClock2 = (layerNumber) => {
+        clearInterval(xxx2)
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        clearInterval(xxx);
+        "`)
+    }
+
+    const showClock2 = (layerNumber) => {
+        //for form
+        var startTime = new Date();
+        startTime.setSeconds(initialSecond2);
+        clearInterval(xxx2)
+        xxx2 = setInterval(() => {
+            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
+            setInitialSecond2(startTime.getSeconds())
+        }, 1000);
+        //for form
+
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        }, 250);
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+                var aa = document.createElement('div');
+                aa.style.position='absolute';
+                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+                document.body.appendChild(aa);
+                document.body.style.margin='0';
+                document.body.style.padding='0';
+                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                document.body.style.overflow='hidden';
+                var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+                cc.textContent='';
+                var startTime = new Date();
+                startTime.setSeconds(${initialSecond2});
+                var xxx=setInterval(()=>{
+                   startTime.setSeconds(startTime.getSeconds() ${countUp2 ? '+' : '-'} 1);
+                    var ss1 =  ((startTime.getSeconds()).toString()).padStart(2, '0');
+                    cc.textContent  =ss1;
+                  }, 1000);
+                "`)
+        }, 300);
+
+        setTimeout(() => {
+            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+        }, 800);
+    }
+
+    const stopClock2 = layerNumber => {
+        clearInterval(xxx2)
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        setTimeout(() => {
+            endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        }, 1000);
+    }
+    const resumeClock2 = (layerNumber) => {
+
+        //for form
+        var startTime = new Date();
+        startTime.setSeconds(initialSecond2);
+        clearInterval(xxx2);
+        xxx2 = setInterval(() => {
+            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
+            setInitialSecond2(startTime.getSeconds())
+        }, 1000);
+        //for form
+
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        startTime.setSeconds(${initialSecond2});
+        clearInterval(xxx);
+        xxx=setInterval(()=>{
+            startTime.setSeconds(startTime.getSeconds() ${countUp2 ? '+' : '-'} 1);
+             var ss1 =((startTime.getSeconds()).toString()).padStart(2, '0');
+             cc.textContent  =ss1;
+           }, 1000);
+        "`)
+    }
+
+
+
     const setOpacity1 = (canvas, e) => {
         setOpacity(e.target.value)
         canvas.getActiveObjects().forEach(element => element.set({ 'opacity': e.target.value }));
@@ -1319,6 +1404,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
+    const addGameTimer2 = canvas => {
+        const sss = new fabric.Textbox(`${initialSecond2.toString().padStart(2, '0')}`, {
+            shadow: shadowOptions,
+            left: 10,
+            top: 530,
+            width: 100,
+            fill: '#ffffff',
+            backgroundColor: options.backgroundColor,
+            fontFamily: options.currentFont,
+            fontWeight: 'bold',
+            fontSize: options.currentFontSize,
+            editable: true,
+            objectCaching: false,
+            textAlign: 'center',
+            stroke: '',
+            strokeWidth: 0,
+            id: 'gameTimer1',
+
+        });
+        canvas.add(sss).setActiveObject(sss);
+        canvas.requestRenderAll();
+    }
 
     const onSizeChange = (e, canvas) => {
         options.currentFontSize = e.target.value
@@ -1541,14 +1648,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const sdToHD = () => {
         unlockAll(canvas);
         selectAll(canvas);
-        canvas.getActiveObjects().forEach(element =>{ 
-            if(( element.type==='image') ||( element.type==='path') ||( element.type==='group')||( element.type==='rect')){
-            element.set({ left: element.left * 1.87, top: element.top * 1.87, scaleX: element.scaleX * 1.87, scaleY: element.scaleY * 1.87 });
+        canvas.getActiveObjects().forEach(element => {
+            if ((element.type === 'image') || (element.type === 'path') || (element.type === 'group') || (element.type === 'rect')) {
+                element.set({ left: element.left * 1.87, top: element.top * 1.87, scaleX: element.scaleX * 1.87, scaleY: element.scaleY * 1.87 });
             }
-            else{
-                element.set({ left: element.left * 1.87, top: element.top * 1.87, width: element.width * 1.87, height: element.height * 1.87, fontSize:element.fontSize*1.87 });
+            else {
+                element.set({ left: element.left * 1.87, top: element.top * 1.87, width: element.width * 1.87, height: element.height * 1.87, fontSize: element.fontSize * 1.87 });
             }
-         } )
+        })
         selectAll(canvas);
         canvas.requestRenderAll();
     }
@@ -2663,6 +2770,17 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
                         <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
                     </div>
+                    <div className='drawingToolsRow' >
+                        <b>Game Timer2:</b>
+                        <button onClick={() => addGameTimer2(canvas)}>Add to Preview</button>
+                        <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond2} onChange={e => setInitialSecond2(e.target.value)} />
+                        <span> Up</span><input type='checkbox' checked={countUp2} onChange={e => setCountUp2(val => !val)} />
+                        <button onClick={() => showClock2(templateLayers.gameTimer2)}><FaPlay /></button>
+                        <button onClick={() => pauseClock2(templateLayers.gameTimer2)}> <FaPause /></button>
+                        <button onClick={() => resumeClock2(templateLayers.gameTimer2)}> <GrResume /> </button>
+                        <button onClick={() => stopClock2(templateLayers.gameTimer2)} ><FaStop /></button>
+                    </div>
+
                 </div>
                 <div style={{ backgroundColor: '#eff4f6', border: '2px solid green' }}>
 
