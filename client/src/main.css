@@ -1,0 +1,9 @@
+rect {
+    animation: dash 5s linear infinite;
+}
+
+@keyframes dash {
+    50% {
+        stroke-dashoffset: 1000;
+    }
+}

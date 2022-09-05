@@ -1215,13 +1215,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
         startTime.setSeconds(initialSecond);
-        clearInterval(xxx)
-        xxx = setInterval(() => {
-            countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
-            setInitilaMinute(startTime.getMinutes())
-            setInitialSecond(startTime.getSeconds())
-        }, 1000);
-        //for form
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1238,15 +1231,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
                 document.body.style.overflow='hidden';
                 var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-                cc.textContent='';
+                cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
                 var startTime = new Date();
                 startTime.setMinutes(${initialMinute});
                 startTime.setSeconds(${initialSecond});
-                var xxx=setInterval(()=>{
-                   startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-                    var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-                    cc.textContent  =ss1;
-                  }, 1000);
+                var xxx;
                 "`)
         }, 300);
 
@@ -1296,15 +1285,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const showClock2 = (layerNumber) => {
-        //for form
         var startTime = new Date();
         startTime.setSeconds(initialSecond2);
-        clearInterval(xxx2)
-        xxx2 = setInterval(() => {
-            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
-            setInitialSecond2(startTime.getSeconds())
-        }, 1000);
-        //for form
+
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1321,14 +1304,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
                 document.body.style.overflow='hidden';
                 var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-                cc.textContent='';
+                cc.textContent=${initialSecond2};
                 var startTime = new Date();
+                var xxx;
                 startTime.setSeconds(${initialSecond2});
-                var xxx=setInterval(()=>{
-                   startTime.setSeconds(startTime.getSeconds() ${countUp2 ? '+' : '-'} 1);
-                    var ss1 =  ((startTime.getSeconds()).toString()).padStart(2, '0');
-                    cc.textContent  =ss1;
-                  }, 1000);
                 "`)
         }, 300);
 
@@ -1351,16 +1330,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         startTime.setSeconds(initialSecond2);
         clearInterval(xxx2);
         xxx2 = setInterval(() => {
-            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
+            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : (startTime.getSeconds() > 0) ? startTime.setSeconds(startTime.getSeconds() - 1) : startTime.setSeconds(0);
             setInitialSecond2(startTime.getSeconds())
         }, 1000);
         //for form
 
         endpoint(`call ${window.chNumber}-${layerNumber} "
         startTime.setSeconds(${initialSecond2});
-        clearInterval(xxx);
+        if (xxx){clearInterval(xxx)};
         xxx=setInterval(()=>{
-            startTime.setSeconds(startTime.getSeconds() ${countUp2 ? '+' : '-'} 1);
+            ${countUp2}  ? startTime.setSeconds(startTime.getSeconds() + 1) : (startTime.getSeconds()>0)? startTime.setSeconds(startTime.getSeconds() - 1):startTime.setSeconds(0) ;
              var ss1 =((startTime.getSeconds()).toString()).padStart(2, '0');
              cc.textContent  =ss1;
            }, 1000);
@@ -2327,14 +2306,31 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var cc=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
-        cc.textContent='';
-        var startTime = new Date();
-        setInterval(function() {
-            var diff = (new Date()).getTime() - startTime.getTime();
-            var date_diff = new Date(diff - 30 * 60 * 1000);
-            var ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+        cc.textContent='00:00:000';
+        var xxx3;
+        var diff;
+        var diffLast=0;
+        var date_diff;
+        var ss1 ;
+        "`)
+    }
+    const resumeUpTimer = () => {
+        endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
+         var startTime = new Date();
+         clearInterval(xxx3);
+         xxx3=setInterval(function() {
+             diff = diffLast + (new Date()).getTime() - startTime.getTime();
+             date_diff = new Date(diff - 30 * 60 * 1000);
+             ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
             cc.textContent  =ss1;
           }, 40);
+         "`)
+    }
+
+    const pauseUpTimer = () => {
+        endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
+       clearInterval(xxx3);
+       diffLast=diff;
         "`)
     }
 
@@ -2683,7 +2679,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             localStorage.setItem('RCC_verticalScroll', '');
 
                         }} ><FaStop /></button>
-                        Speed:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={verticalSpeed} />
+                        S:<input style={{ width: '40px' }} onChange={e => onVerticalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={verticalSpeed} />
 
                         <button onClick={() => exportVerticalScrollAsHTML(canvas)}>To HTML</button>
                         <span> {verticalScroll} </span>
@@ -2704,7 +2700,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             localStorage.setItem('RCC_horizontalScroll', '');
 
                         }} ><FaStop /></button>
-                        Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
+                        S:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
                         <button onClick={() => exportHorizontalScrollAsHTML(canvas)}>To HTML</button>
                         <span> LTR:</span>  <input type="checkbox" value={ltr} onChange={e => setLtr(val => !val)} />
                         <span> {horizontalScroll} </span>
@@ -2725,7 +2721,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             localStorage.setItem('RCC_horizontalScroll2', '');
 
                         }} ><FaStop /></button>
-                        Speed:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
+                        S:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
                         <button onClick={() => exportHorizontalScrollAsHTML2(canvas)}>To HTML</button>
                         <span> LTR:</span>  <input type="checkbox" value={ltr2} onChange={e => setLtr2(val => !val)} />
                         <span> {horizontalScroll2} </span>
@@ -2750,14 +2746,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <span> {clock} </span>
                     </div>
                     <div className='drawingToolsRow' >
-                        <b>Count Up Timer: </b>
+                        <b>Count Up Tmr: </b>
                         <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
-                        <button onClick={() => {
+                        <button  title='Play in Puased mode' onClick={() => {
                             startUpTimer();
                             setUpTimer(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
 
                         }}><FaPlay /></button>
+                        <button title='Resume' onClick={() => {
+                            resumeUpTimer();
+                        }}><GrResume /></button>
+                        <button title='Pause' onClick={() => pauseUpTimer()}> <FaPause /></button>
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
                             setUpTimer('');
@@ -2769,24 +2769,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     </div>
 
                     <div className='drawingToolsRow' >
-                        <b>Game Timer:</b>
+                        <b>Game Tmr:</b>
                         <button onClick={() => addGameTimer(canvas)}>Add to Preview</button>
                         <span> M</span><input type='text' style={{ width: 15 }} value={initialMinute} onChange={e => setInitilaMinute(e.target.value)} />
                         <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                         <span> Up</span><input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
-                        <button onClick={() => showClock(templateLayers.gameTimer)}><FaPlay /></button>
-                        <button onClick={() => pauseClock(templateLayers.gameTimer)}> <FaPause /></button>
-                        <button onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
+                        <button title='Play in Puased mode' onClick={() => showClock(templateLayers.gameTimer)}><FaPlay /></button>
+                        <button title='Resume' onClick={() => resumeClock(templateLayers.gameTimer)}> <GrResume /> </button>
+                        <button title='Pause' onClick={() => pauseClock(templateLayers.gameTimer)}> <FaPause /></button>
                         <button onClick={() => stopClock(templateLayers.gameTimer)} ><FaStop /></button>
                     </div>
                     <div className='drawingToolsRow' >
-                        <b>Game Timer2:</b>
+                        <b>Game Tmr2:</b>
                         <button onClick={() => addGameTimer2(canvas)}>Add to Preview</button>
                         <span> S</span><input type='text' style={{ width: 15 }} value={initialSecond2} onChange={e => setInitialSecond2(e.target.value)} />
                         <span> Up</span><input type='checkbox' checked={countUp2} onChange={e => setCountUp2(val => !val)} />
-                        <button onClick={() => showClock2(templateLayers.gameTimer2)}><FaPlay /></button>
-                        <button onClick={() => pauseClock2(templateLayers.gameTimer2)}> <FaPause /></button>
-                        <button onClick={() => resumeClock2(templateLayers.gameTimer2)}> <GrResume /> </button>
+                        <button title='Play in Puased mode' onClick={() => showClock2(templateLayers.gameTimer2)}><FaPlay /></button>
+                        <button title='Resume' onClick={() => resumeClock2(templateLayers.gameTimer2)}> <GrResume /> </button>
+                        <button title='Pause' onClick={() => pauseClock2(templateLayers.gameTimer2)}> <FaPause /></button>
                         <button onClick={() => stopClock2(templateLayers.gameTimer2)} ><FaStop /></button>
                     </div>
 
