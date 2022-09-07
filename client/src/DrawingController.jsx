@@ -1058,6 +1058,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const [x, setX] = useState(800);
     const [y, setY] = useState(500);
 
+    const [width, setWidth] = useState(800);
+    const [height, setHeight] = useState(500);
+
     const [angle, setangle] = useState(0);
     const [itallicnormal, setitallicnormal] = useState('normal');
     const [fontWeight1, setfontWeight1] = useState('normal');
@@ -2525,6 +2528,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             if (element.left !== null) { setX(parseInt(element.left)); }
             if (element.top !== null) { setY(parseInt(element.top)); }
 
+
+            if (element.width !== null) { setWidth(parseInt(element.width)); }
+            if (element.height !== null) { setHeight(parseInt(element.height)); }
+
             if (element.angle !== null) { setangle(parseInt(element.angle)); }
 
             if (element.fontStyle !== null) { setitallicnormal(element.fontStyle); }
@@ -2748,7 +2755,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     <div className='drawingToolsRow' >
                         <b>Count Up Tmr: </b>
                         <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
-                        <button  title='Play in Puased mode' onClick={() => {
+                        <button title='Play in Puased mode' onClick={() => {
                             startUpTimer();
                             setUpTimer(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
@@ -2828,7 +2835,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             // setCurrentFillColor(e.target.value);
                         }} />}
                         BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
-                        Stroke {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
+                        Strk {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
                             window.changeTab(4);
                             window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke);
                         }} style={{
@@ -2838,7 +2845,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                 }
                             )}`
                         }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
-                        <button onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Stroke Color</button>
+                        <button title='Swap Face/Stroke Color' onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Strk Color</button>
                         Strk/Brs W:
                         <input style={{ width: '40px' }} onChange={e => {
                             onstrokeSizeChange((e));
@@ -2855,12 +2862,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                 canvas.requestRenderAll();
                             }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleY} />
 
-                            X: <input style={{ width: '40px' }} onChange={e => {
+                            X: <input style={{ width: '50px' }} onChange={e => {
                                 setX(parseInt(e.target.value));
                                 canvas.getActiveObjects().forEach(item => item.set({ left: parseInt(e.target.value) }))
                                 canvas.requestRenderAll();
                             }} type="number" min={-100} max={1100} step={1} value={x} />
-                            Y: <input style={{ width: '40px' }} onChange={e => {
+                            Y: <input style={{ width: '50px' }} onChange={e => {
                                 setY(parseInt(e.target.value));
                                 canvas.getActiveObjects().forEach(item => item.set({ top: parseInt(e.target.value) }))
                                 canvas.requestRenderAll();
@@ -2873,8 +2880,22 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             }} type="number" min='0' max='360' step='1' value={angle} /> </span>
 
 
-                        strk-dsar: <input style={{ width: '60px' }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
-                        stek-ds-ofst: <input style={{ width: '60px' }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
+                        strk-dsar: <input style={{ width: 40 }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
+                        ofst: <input style={{ width: 40 }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
+                        W:<input style={{ width: 55 }} onChange={e => {
+                            canvas?.getActiveObjects().forEach(element => {
+                                element.width = parseInt(e.target.value);
+                                setWidth(parseInt(e.target.value));
+                                canvas.requestRenderAll();
+                            })
+                        }} type="number" min='0' max={2000} step='1' value={width} />
+                        H:<input style={{ width: 55 }} onChange={e => {
+                            canvas?.getActiveObjects().forEach(element => {
+                                element.height = parseInt(e.target.value);
+                                setHeight(parseInt(e.target.value));
+                                canvas.requestRenderAll();
+                            })
+                        }} type="number" min='0' max={2000} step='1' value={height} />
 
 
                     </div>
