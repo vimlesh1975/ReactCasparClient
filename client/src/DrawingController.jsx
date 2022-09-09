@@ -2487,10 +2487,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         setVerticalSpeed(localStorage.getItem('RCC_verticalSpeed'));
 
-        axios.post('http://localhost:8080/getfonts').then((aa) => {
-            setFontList(aa.data)
-
-        }).catch((aa) => { console.log('Error', aa) });
+        if (window.location.origin !== 'https://vimlesh1975.github.io') {
+            axios.post('http://localhost:8080/getfonts').then((aa) => {
+                setFontList(aa.data)
+            }).catch((aa) => { console.log('Error', aa) });
+        }
         return () => {
         }
         // eslint-disable-next-line
