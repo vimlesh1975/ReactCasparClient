@@ -319,19 +319,12 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (window.location.origin !== 'https://vimlesh1975.github.io') {
+      refreshMedia();
+    }
 
-    refreshMedia()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaPath])
-
-  // const changepannelEnable = (i) => {
-  //   if (i === 11) {
-  //     dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
-  //   }
-  //   else {
-  //     dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: false })
-  //   }
-  // }
 
   const onTabChange = (index, prevIndex) => {
     // changepannelEnable(index);
