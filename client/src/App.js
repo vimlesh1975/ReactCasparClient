@@ -37,7 +37,7 @@ import UdpClock from './UdpClock';
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const buildDate = '070922_1'
+const buildDate = '090922_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -299,20 +299,22 @@ const App = () => {
   }
 
   useEffect(() => {
-    const socket = socketIOClient(':8080');
-    socket.on("Fromccgsocket", data => {
-      setmediaPath(data);
-    });
-    socket.on("connectionStatus", data => {
-      if (data === 'true') {
-        connectbutton.current.style.backgroundColor = "green";
+    if (window.location.origin !== 'https://vimlesh1975.github.io') {
+      const socket = socketIOClient(':8080');
+      socket.on("Fromccgsocket", data => {
+        setmediaPath(data);
+      });
+      socket.on("connectionStatus", data => {
+        if (data === 'true') {
+          connectbutton.current.style.backgroundColor = "green";
+        }
+        else {
+          connectbutton.current.style.backgroundColor = "red";
+        }
+      });
+      return () => {
+        socket.disconnect();
       }
-      else {
-        connectbutton.current.style.backgroundColor = "red";
-      }
-    });
-    return () => {
-      socket.disconnect();
     }
   }, []);
 
