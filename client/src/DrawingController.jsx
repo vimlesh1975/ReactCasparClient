@@ -281,7 +281,7 @@ export const createTextBox = (canvas) => {
     const text = new fabric.Textbox("Timeline has been shifted below.", {
         shadow: shadowOptions,
         id: 'ccg_' + fabric.Object.__uid,
-        left: 100 * 1.87,
+        left: 103 * 1.87,
         top: 0,
         width: 480 * 1.87,
         fill: '#ffffff',
@@ -297,7 +297,7 @@ export const createTextBox = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 958, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 962, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
