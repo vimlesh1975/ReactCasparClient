@@ -401,14 +401,15 @@ export const setGradientColor = canvas => {
     canvas.requestRenderAll();
 }
 const gradient2 = () => {
+    const aa=Math.floor(Math.random() * 360 + 1);
     return new fabric.Gradient({
         type: 'linear',
         gradientUnits: 'percentage',
         coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
         colorStops: [
-            { offset: 0, color: 'black' },
-            { offset: 0.5, color: `hsl(${Math.floor(Math.random() * 360 + 1)}, 100%, 50%)` },
-            { offset: 1, color: 'black' }
+            { offset: 0, color:`hsl(${aa}, 100%, 25%)` },
+            { offset: 0.5, color: `hsl(${aa}, 100%, 50%)` },
+            { offset: 1, color: `hsl(${aa}, 100%, 25%)` }
         ]
     })
 }

@@ -7,7 +7,7 @@ const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const width1 = 295;
-    const [colors, setColors] = useState(["#000000", "#ff0000", "#000000"]);
+    const [colors, setColors] = useState(["#850000", "#ff0000", "#850000"]);
 
     const [directionAngle, setDirectionAngle] = useState(180);
     const [loaded, setLoaded] = useState(false);
