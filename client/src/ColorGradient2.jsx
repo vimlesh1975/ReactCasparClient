@@ -2,12 +2,21 @@ import React, { useState } from "react";
 import { Rnd } from "react-rnd";
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
+import {rgbaCol} from './common'
 
 const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const width1 = 295;
     const [colors, setColors] = useState(["#850000", "#ff0000", "#850000"]);
+    const [opacity1, setOpacity1] = useState([0.2, 1, 0.2]);
+
+    const positions = colors.map((color, i) => {
+        return (width1 * i) / (colors.length - 1);
+    });
+
+    const [positions1, setpositions1] = useState([...positions]);
+
 
     const [directionAngle, setDirectionAngle] = useState(180);
     const [loaded, setLoaded] = useState(false);
@@ -18,14 +27,19 @@ const ColorGradient2 = () => {
         setColors(updatedColors);
     };
 
+
     const addColorwithlocation = (i, location) => {
         const updatedColors = [...colors];
-        updatedColors.splice(i + 1, 0, "#0000ff");
+        updatedColors.splice(i + 1, 0, '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6));
         setColors(updatedColors);
 
         const updatedpositions1 = [...positions1];
         updatedpositions1.splice(i + 1, 0, location - 20);
         setpositions1(updatedpositions1);
+
+        const updatedOpacity1 = [...opacity1];
+        updatedOpacity1.splice(i + 1, 0, 1);
+        setOpacity1(updatedOpacity1);
     };
     const deleteColor = (i) => {
         const updatedColors = [...colors];
@@ -35,15 +49,16 @@ const ColorGradient2 = () => {
         const updatedpositions1 = [...positions1];
         updatedpositions1.splice(i, 1);
         setpositions1(updatedpositions1);
+
+        const updatedOpacity1 = [...opacity1];
+        updatedOpacity1.splice(i, 1);
+        setOpacity1(updatedOpacity1);
     };
 
     const ondirectionAngleChange = (e) => {
         setDirectionAngle(e.target.value);
     };
-    const positions = colors.map((color, i) => {
-        return (width1 * i) / (colors.length - 1);
-    });
-    const [positions1, setpositions1] = useState([...positions]);
+ 
 
     const ondrag1 = (e, d, i) => {
         const updatedpositions1 = [...positions1];
@@ -83,7 +98,7 @@ const ColorGradient2 = () => {
         gradientUnits: "percentage",
         coords: gerCords(parseInt(directionAngle)),
         colorStops: colors.map((color, i) => {
-            return { offset: positions1[i] / width1, color: color };
+            return { offset: positions1[i] / width1, color: color,opacity:opacity1[i] };
         })
     });
 
@@ -91,10 +106,10 @@ const ColorGradient2 = () => {
         setDirectionAngle(gradient.coords.y2 * 180);
         setColors(gradient.colorStops.map((colorStop) => colorStop.color));
         setpositions1(gradient.colorStops.map((colorStop) => (colorStop.offset) * width1));
+        setOpacity1(gradient.colorStops.map((colorStop) => colorStop.opacity))
     };
 
-    window.fabricGradienttoBackgroundImage=fabricGradienttoBackgroundImage;
-
+    window.fabricGradienttoBackgroundImage = fabricGradienttoBackgroundImage;
 
     return (
         <>
@@ -106,13 +121,14 @@ const ColorGradient2 = () => {
                     <div style={{ border: "2px solid grey" }}>
                         <div
                             style={{
+                                backgroundColor:'grey',
                                 margin: 5,
                                 border: "2px solid blue",
                                 width: width1,
                                 height: 100,
                                 backgroundImage: `linear-gradient(${90}deg,${colors.map(
                                     (color, i) => {
-                                        return `${color} ${100 * (positions1[i] / width1)}%`;
+                                        return `${rgbaCol(color, opacity1[i])}  ${100 * (positions1[i] / width1)}%`;
                                     }
                                 )}`
                             }}
@@ -160,13 +176,14 @@ const ColorGradient2 = () => {
                     <div style={{ marginLeft: 20, border: "2px solid grey" }}>
                         <div
                             style={{
+                                backgroundColor:'grey',
                                 margin: 5,
                                 border: "2px solid blue",
                                 width: width1,
                                 height: 100,
                                 backgroundImage: `linear-gradient(${directionAngle}deg,${colors.map(
                                     (color, i) => {
-                                        return `${color} ${100 * (positions1[i] / width1)}%`;
+                                        return `${rgbaCol(color, opacity1[i])}  ${100 * (positions1[i] / width1)}%`;
                                     }
                                 )}`
                             }}
@@ -204,10 +221,16 @@ const ColorGradient2 = () => {
                             {i}{" "}
                             <input
                                 type="color"
-                                value={colors[i]}
+                                value={color}
                                 onChange={(e) => changeColor(e, i)}
                             />
                             <button onClick={() => deleteColor(i)}>Delete color</button>
+                            <input type='range' min={0} max={1} step={0.1} value={opacity1[i]} onChange={(e) => {
+                                const updatedOpacity1 = [...opacity1];
+                                updatedOpacity1[i] = (e.target.value);
+                                setOpacity1(updatedOpacity1);
+                            }} />
+                            <label>{opacity1[i]}</label>
                         </div>
                     );
                 })}

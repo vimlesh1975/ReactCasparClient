@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "d3": "^7.4.4",
-    "fabric": "^5.2.1",
+    "fabric": "^5.2.4",
     "fabric-history": "^1.6.0",
     "fabricjs-react": "^1.0.8",
     "faker": "^5.5.0",

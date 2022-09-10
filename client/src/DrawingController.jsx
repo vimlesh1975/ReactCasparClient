@@ -21,6 +21,7 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
+import {rgbaCol} from './common'
 
 var xxx;
 var xxx2;
@@ -400,16 +401,15 @@ export const setGradientColor = canvas => {
     canvas.getActiveObjects().forEach(element => element.fill = gradient);
     canvas.requestRenderAll();
 }
-const gradient2 = () => {
-    const aa = Math.floor(Math.random() * 360 + 1);
+export const gradient2 = () => {
     return new fabric.Gradient({
         type: 'linear',
         gradientUnits: 'percentage',
         coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
         colorStops: [
-            { offset: 0, color: `hsl(${aa}, 100%, 25%)` },
-            { offset: 0.5, color: `hsl(${aa}, 100%, 50%)` },
-            { offset: 1, color: `hsl(${aa}, 100%, 25%)` }
+            { offset: 0, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:0.2 },
+            { offset: 0.5, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:1 },
+            { offset: 1, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:0.2 }
         ]
     })
 }
@@ -1207,7 +1207,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const resizeTextWidth = canvas => {
-
         canvas.getActiveObjects().forEach(element => {
             if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
                 element.set({ width: element.__lineWidths[0] + 10 })
@@ -1216,7 +1215,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
-
+  
+    
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -2840,7 +2840,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} style={{
                             display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.fill?.colorStops.map(
                                 (colorStop, i) => {
-                                    return `${colorStop.color} ${colorStop.offset * 100}%`;
+                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
                                 }
                             )}`
                         }} /> : <input type="color" value={currentFillColor} onChange={e => {
@@ -2854,7 +2854,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} style={{
                             display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.stroke?.colorStops.map(
                                 (colorStop, i) => {
-                                    return `${colorStop.color} ${colorStop.offset * 100}%`;
+                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
                                 }
                             )}`
                         }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
@@ -3018,10 +3018,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
                         <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
-
                         <button onClick={makeFullScreen}>Make full Screen</button>
-                        {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
-                        {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
                     </div>
                     <div className='drawingToolsRow' >
                     <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
