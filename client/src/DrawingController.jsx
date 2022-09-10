@@ -231,7 +231,7 @@ function animate(canvas, sss) {
 }
 export const createText = (canvas) => {
 
-    const text = new fabric.Textbox("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
+    const text = new fabric.Text("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
         id: 'ccg_' + fabric.Object.__uid,
         shadow: shadowOptions,
         left: 100 * 1.87,
@@ -401,13 +401,13 @@ export const setGradientColor = canvas => {
     canvas.requestRenderAll();
 }
 const gradient2 = () => {
-    const aa=Math.floor(Math.random() * 360 + 1);
+    const aa = Math.floor(Math.random() * 360 + 1);
     return new fabric.Gradient({
         type: 'linear',
         gradientUnits: 'percentage',
         coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
         colorStops: [
-            { offset: 0, color:`hsl(${aa}, 100%, 25%)` },
+            { offset: 0, color: `hsl(${aa}, 100%, 25%)` },
             { offset: 0.5, color: `hsl(${aa}, 100%, 50%)` },
             { offset: 1, color: `hsl(${aa}, 100%, 25%)` }
         ]
@@ -1205,6 +1205,17 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.discardActiveObject();
         canvas.requestRenderAll();
     }
+
+    const resizeTextWidth = canvas => {
+
+        canvas.getActiveObjects().forEach(element => {
+            if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
+                element.set({ width: element.__lineWidths[0] + 10 })
+            }
+        });
+        canvas.requestRenderAll();
+    }
+
 
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
@@ -2576,8 +2587,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <b>Elements: </b>
                         <button onClick={() => createRect(canvas)}> <VscPrimitiveSquare /></button>
                         <button title="Multi Line Editable Text" onClick={() => createTextBox(canvas)}>TB</button>
-                        {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button> */}
-                        {/* <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
+                        {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
+                        <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
                         <button title="Circle" onClick={() => createCircle(canvas)}>  <VscCircleFilled /></button>
                         <button title="Ellipse" onClick={() => createEllipse(canvas)}>Ellipse</button>
                         <button title="Triangle" onClick={() => createTriangle(canvas)}><VscTriangleUp /></button>
@@ -3006,14 +3017,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
-                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">Import SVG <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
-                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Import JSON<input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
-
-
+                        <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
 
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         {/* <button onClick={removeBorderandCurve}>Remove Border and curve</button> */}
                         {/* <button onClick={attachToPath}>Attach Text to first path</button> */}
+                    </div>
+                    <div className='drawingToolsRow' >
+                    <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
+
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Export: </b>

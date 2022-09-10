@@ -165,8 +165,8 @@ const Effects = () => {
     const hh = `<filter id="demo1"  x="0" y="0" width="100%" height="100%">
     <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
         <fePointLight x="0" y="0" z="14" >
-             <animate attributeName="x" values="-240;240;240;-240;-240" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s" repeatCount="indefinite" />
-             <animate attributeName="y" values="-40;-40;40;40;-40" dur="5s" keyTimes="0; 0.4; 0.5; 0.9; 1" repeatCount="indefinite" />
+             <animate attributeName="x" values="-${canvas?.getActiveObjects(0)[0]?.width / 2};${canvas?.getActiveObjects(0)[0]?.width / 2};${canvas?.getActiveObjects(0)[0]?.width / 2};-${canvas?.getActiveObjects(0)[0]?.width / 2};-${canvas?.getActiveObjects(0)[0]?.width / 2}" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s" repeatCount="indefinite" />
+             <animate attributeName="y" values="-${canvas?.getActiveObjects(0)[0]?.height / 2};-${canvas?.getActiveObjects(0)[0]?.height / 2};${canvas?.getActiveObjects(0)[0]?.height / 2};${canvas?.getActiveObjects(0)[0]?.height / 2};-${canvas?.getActiveObjects(0)[0]?.height / 2}" dur="5s" keyTimes="0; 0.4; 0.5; 0.9; 1" repeatCount="indefinite" />
     </fePointLight>
     </feSpecularLighting>
     <feComposite in="SourceGraphic" in2="spec1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />

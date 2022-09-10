@@ -481,7 +481,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
-    console.log(canvas.item(0))
+    console.log(canvas.getActiveObjects()[0])
   }
 
   const ResetAnimation = () => {
