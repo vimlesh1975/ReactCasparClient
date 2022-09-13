@@ -25,8 +25,6 @@ const Twoliner = () => {
             setPlayerList1(aa);
         }
     }
-
-
     const recallPage = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
@@ -129,53 +127,48 @@ const Twoliner = () => {
                                     style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                                     {...provided.droppableProps}
                                 >
-                                    <table >
-                                        <tbody>
-                                            {playerList1.map((val, i) => {
-                                                return (
-                                                    <Draggable draggableId={"draggable" + i} key={val.name + i} index={i}>
-                                                        {(provided, snapshot) => (
-                                                            <tr
-                                                                ref={provided.innerRef}
-                                                                {...provided.draggableProps}
-                                                                style={{
-                                                                    ...provided.draggableProps.style,
-                                                                    backgroundColor: snapshot.isDragging ? 'red' : 'white',
-                                                                    boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
-                                                                    // margin: '10px'
-                                                                }}
-                                                            >
-                                                                <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' defaultValue={val.name}
+                                    {playerList1.map((val, i) => {
+                                        return (
+                                            <Draggable draggableId={val.id} key={val.id} index={i}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        style={{
+                                                            ...provided.draggableProps.style,
+                                                            backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                            boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                            display: 'flex',
 
-                                                                    onMouseLeave={e => {
-                                                                        newplayerList1 = [...playerList1];
-                                                                        newplayerList1[i].name = e.target.value;
-                                                                        setPlayerList1([...newplayerList1])
+                                                            // margin: '1px'
+                                                        }}
+                                                    >
+                                                        <div style={{ border: '1px solid black', borderBottom: (i === playerList1.length - 1) ? '1px solid black' : 'none', borderRight: 'none' }} {...provided.dragHandleProps}><VscMove /></div>
+                                                        <div style={{ border: '1px solid black', borderBottom: (i === playerList1.length - 1) ? '1px solid black' : 'none', minWidth: 300, borderRight: 'none' }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' value={val.name}
 
-                                                                    }}
-                                                                />
-                                                                </td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' defaultValue={val.designation}
-
-                                                                    onMouseLeave={e => {
-                                                                        newplayerList1 = [...playerList1];
-                                                                        newplayerList1[i].designation = e.target.value;
-                                                                        setPlayerList1([...newplayerList1])
-
-                                                                    }}
-                                                                />
-                                                                </td>
-                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.name, type: 'text' }, { key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></td>
-                                                            </tr>
-                                                        )
-                                                        }
-                                                    </Draggable>
+                                                            onChange={e => {
+                                                                newplayerList1 = [...playerList1];
+                                                                newplayerList1[i].name = e.target.value;
+                                                                setPlayerList1([...newplayerList1])
+                                                            }}
+                                                        />
+                                                        </div>
+                                                        <div style={{ border: '1px solid black', borderBottom: (i === playerList1.length - 1) ? '1px solid black' : 'none', minWidth: 300 }}><input style={{ border: 'none', borderWidth: 0, minWidth: 300 }} type='text' value={val.designation}
+                                                            onChange={e => {
+                                                                newplayerList1 = [...playerList1];
+                                                                newplayerList1[i].designation = e.target.value;
+                                                                setPlayerList1([...newplayerList1])
+                                                            }}
+                                                        />
+                                                        </div>
+                                                        <div><button onClick={() => recallPage(generalayer, pageName, [{ key: 'f0', value: val.name, type: 'text' }, { key: 'f1', value: val.designation, type: 'text' }])}> <FaPlay /></button></div>
+                                                    </div>
                                                 )
-                                            })}
-                                            {provided.placeholder}
-                                        </tbody>
-                                    </table>
+                                                }
+                                            </Draggable>
+                                        )
+                                    })}
+                                    {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>
@@ -183,10 +176,8 @@ const Twoliner = () => {
                 </div>
                 <div>
                     <button style={{ backgroundColor: 'red', width: 100, height: 50 }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
-
                 </div>
             </div>
-
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 import { animation } from './animation.js'
+import { v4 as uuidv4 } from 'uuid';
 
 import * as d3 from 'd3';
 import SvgFilter from 'svg-filter';
@@ -18,10 +19,6 @@ const Effects = () => {
     const [canvasHtml, setCanvasHtml] = useState(false);
     const [hBlur, setHBlur] = useState(0);
     const [vBlur, setVBlur] = useState(0);
-
-
-
-
 
     const [blinkingDuration, setBlinkingDuration] = useState(1)
     const sendBlinkingEffect = (layerNumber) => {
@@ -162,25 +159,41 @@ const Effects = () => {
             "`)
     }
 
-    const hh = `<filter id="demo1"  x="0" y="0" width="100%" height="100%">
-    <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
-        <fePointLight x="0" y="0" z="14" >
-             <animate attributeName="x" values="-${canvas?.getActiveObjects(0)[0]?.width / 2};${canvas?.getActiveObjects(0)[0]?.width / 2};${canvas?.getActiveObjects(0)[0]?.width / 2};-${canvas?.getActiveObjects(0)[0]?.width / 2};-${canvas?.getActiveObjects(0)[0]?.width / 2}" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s" repeatCount="indefinite" />
-             <animate attributeName="y" values="-${canvas?.getActiveObjects(0)[0]?.height / 2};-${canvas?.getActiveObjects(0)[0]?.height / 2};${canvas?.getActiveObjects(0)[0]?.height / 2};${canvas?.getActiveObjects(0)[0]?.height / 2};-${canvas?.getActiveObjects(0)[0]?.height / 2}" dur="5s" keyTimes="0; 0.4; 0.5; 0.9; 1" repeatCount="indefinite" />
-    </fePointLight>
-    </feSpecularLighting>
-    <feComposite in="SourceGraphic" in2="spec1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
-  </filter>`
-
-    const sendFilter = (layerNumber) => {
+    const sendFilter1 = (layerNumber) => {
+        const uuid = uuidv4();
+        const hh = `<filter id=${uuid} x="0" y="0" width="100%" height="100%">
+        <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
+            <fePointLight x="0" y="0" z="14" >
+                 <animate attributeName="x" values="-${canvas?.getActiveObjects()[0]?.width / 2};${canvas?.getActiveObjects()[0]?.width / 2};${canvas?.getActiveObjects()[0]?.width / 2};-${canvas?.getActiveObjects()[0]?.width / 2};-${canvas?.getActiveObjects()[0]?.width / 2}" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s" repeatCount="indefinite" />
+                 <animate attributeName="y" values="-${canvas?.getActiveObjects()[0]?.height / 2};-${canvas?.getActiveObjects()[0]?.height / 2};${canvas?.getActiveObjects()[0]?.height / 2};${canvas?.getActiveObjects()[0]?.height / 2};-${canvas?.getActiveObjects()[0]?.height / 2}" keyTimes="0; 0.4; 0.5; 0.9; 1" dur="5s"repeatCount="indefinite" />
+        </fePointLight>
+        </feSpecularLighting>
+        <feComposite in="SourceGraphic" in2="spec1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+      </filter>`
         endpoint(`call ${window.chNumber}-${layerNumber} "
         var dd = document.getElementsByTagName('defs')[0];
-        dd.innerHTML='${hh.replaceAll('"', '\\"')}';
-        "`);
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-        document.getElementsByTagName('g')[0].style.filter='url(#demo1)';
+        dd.innerHTML +='${hh.replaceAll('"', '\\"')}';
+        document.getElementsByTagName('g')[${canvas.getObjects().indexOf(canvas?.getActiveObjects()[0])}].style.filter +='url(#${uuid} )';
         "`);
     }
+
+    const sendFilter2 = (layerNumber) => {
+        const uuid = uuidv4();
+        const hh = `<filter id=${uuid}  x="0" y="0" width="100%" height="100%">
+        <feSpecularLighting result="spec1"  specularExponent="12" lighting-color="yellow">
+            <fePointLight x="0" y="0" z="14" >
+                 <animate attributeName="x" values="-${canvas?.getActiveObjects()[0]?.width / 2};${canvas?.getActiveObjects()[0]?.width / 2 + 50};${canvas?.getActiveObjects()[0]?.width / 2 + 50}" keyTimes="0;0.5; 1" dur="3s" repeatCount="indefinite" />
+        </fePointLight>
+        </feSpecularLighting>
+        <feComposite in="SourceGraphic" in2="spec1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+      </filter>`
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        var dd = document.getElementsByTagName('defs')[0];
+        dd.innerHTML +='${hh.replaceAll('"', '\\"')}';
+        document.getElementsByTagName('g')[${canvas.getObjects().indexOf(canvas?.getActiveObjects()[0])}].style.filter +='url(#${uuid} )';
+        "`);
+    }
+
     const applyBlurFilter = (h, v) => {
         d3.select('defs').html("");
         var filter = new SvgFilter();
@@ -204,13 +217,12 @@ const Effects = () => {
     const [z, setZ] = useState(14);
 
     const applySpeculerLightingFilter = () => {
-        d3.select('defs').html("");
         var filter = new SvgFilter();
 
         filter
 
             .append('feSpecularLighting')
-         
+
             .attr('result', 'spec1')
             .attr('specularExponent', specularExponent)
             .attr('lighting-color', lightingcolor)
@@ -220,7 +232,7 @@ const Effects = () => {
             .attr('z', z);
 
         filter.append('feComposite')
-           
+
             .attr('in', 'SourceGraphic')
             .attr('in2', 'spec1')
             .attr('operator', 'arithmetic')
@@ -230,6 +242,7 @@ const Effects = () => {
             .attr('k3', 1)
             .attr('k4', 0)
 
+        d3.select('defs').html("");
         d3.selectAll('defs')
             .append('filter')
             .attr('id', filter.id)
@@ -239,6 +252,7 @@ const Effects = () => {
             .attr('height', '100%')
             .html((filter.filter._groups[0][0].innerHTML).trim());
         canvas.getActiveObjects().forEach(element => {
+            // document.getElementById(element.id).style.filter += filter;
             document.getElementById(element.id).style.filter = filter;
         });
     }
@@ -280,7 +294,7 @@ const Effects = () => {
             <div style={{ border: '2px solid red' }}>
                 <b>Effects on solid cap 1</b>
                 <div>
-                    <div>Duration: <input style={{ width: 50 }} type='number' min={0} max={2} step='0.25' value={blinkingDuration} onChange={e => setBlinkingDuration(e.target.value)} /></div>
+                    <div>Duration: <input style={{ width: 50 }} type='number' min='0' max='2' step='0.25' value={blinkingDuration} onChange={e => setBlinkingDuration(e.target.value)} /></div>
                     Blinking Effect =  <button onClick={() => sendBlinkingEffect(templateLayers.solidCaption1)}> Apply</button>
                 </div>
                 <div>
@@ -289,12 +303,16 @@ const Effects = () => {
                 <div>
                     Text Color Effect= <button onClick={() => sendColorEffect(templateLayers.solidCaption1)}> Apply</button>
                 </div>
-                Moving Light Effect <button onClick={() => sendFilter(templateLayers.solidCaption1)}> Apply </button>
+                <div>Corner Light Effect <button onClick={() => sendFilter1(templateLayers.solidCaption1)}> Apply </button></div>
+            </div>
+
+            <div style={{ border: '2px solid red' }}>
+                <div> horizontal Light Effect <button onClick={() => sendFilter2(templateLayers.solidCaption1)}> Apply </button></div>
             </div>
 
         </div>
         <div style={{ border: '2px solid red' }}>
-            <b>Filter Effects on solid cap 1</b>
+            <b>Static Filter Effects on solid cap 1</b>
             <button onClick={() => {
                 refkkk.current.innerHTML = canvas.toSVG();
             }}>load svg from canvas</button>
@@ -313,12 +331,12 @@ const Effects = () => {
         X: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();
             setX(e.target.value);
-        }} type="range" min={-canvas?.getActiveObjects(0)[0]?.width / 2} max={canvas?.getActiveObjects(0)[0]?.width / 2} step='1' value={x} />
+        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.width / 2).toString()} max={(canvas?.getActiveObjects(0)[0]?.width / 2).toString()} step='1' value={x} />
 
         Y: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();
             setY(e.target.value);
-        }} type="range" min={-canvas?.getActiveObjects(0)[0]?.height / 2} max={canvas?.getActiveObjects(0)[0]?.height / 2} step='1' value={y} />
+        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.height / 2).toString()} max={(canvas?.getActiveObjects(0)[0]?.height / 2).toString()} step='1' value={y} />
 
         Z: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();
@@ -339,7 +357,7 @@ const Effects = () => {
         <div id='kkk' ref={refkkk} style={{ backgroundColor: 'grey', zoom: 0.45, width: 1920, height: 1080 }}>
             {/* dummy */}
         </div>
-        <div style={{  width: 860, height: 150, overflow: 'scroll' }} onMouseOver={() => setCanvasHtml(refkkk?.current?.innerHTML)}>
+        <div style={{ width: 860, height: 150, overflow: 'scroll' }} onMouseOver={() => setCanvasHtml(refkkk?.current?.innerHTML)}>
             {canvasHtml}
         </div>
     </div>)
