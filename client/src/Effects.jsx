@@ -20,14 +20,27 @@ const Effects = () => {
             if (e.name === x) {
                 return e
             }
-            if (e.selectors && e.selectors.indexOf("." + x) > -1) {
+            else if (e.selectors && e.selectors.indexOf("." + x) > -1) {
                 return e
             }
-            if (e.selectors && e.selectors.indexOf(".animated") > -1) {
+            else if (e.selectors && e.selectors.indexOf(".animated") > -1) {
                 return e
             }
+            else {
+                return undefined
+            }
+
         }).filter((e) => e !== undefined)
-        console.log(css.stringify(cssObject));
+
+        d3.selectAll('#kkk').selectAll("style").remove();
+
+        d3.selectAll('#kkk')
+            .append('style')
+            .text(css.stringify(cssObject))
+
+        refkkk.current.className = "";
+        refkkk.current.classList.add('animated');
+        refkkk.current.classList.add(x);
         return null;
     }
 
@@ -173,6 +186,7 @@ const Effects = () => {
             aa.style.position='absolute';
             aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
+            aa.classList.add('animated', '${effect1}');
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
@@ -334,10 +348,10 @@ const Effects = () => {
                 <div> horizontal Light Effect <button onClick={() => sendFilter2(templateLayers.solidCaption1)}> Apply </button></div>
                 <div>
                     {effect1}
-                    <select onChange={e=> {
+                    <select onChange={e => {
                         seteffec1(e.target.value);
                         showCss(e.target.value);
-                        }}>
+                    }}>
                         <optgroup label="Attention Seekers">
                             <option value="bounce">bounce</option>
                             <option value="flash">flash</option>
