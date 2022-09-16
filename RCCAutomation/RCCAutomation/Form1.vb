@@ -20,17 +20,17 @@ Public Class Form1
             dgv1.RowTemplate.MinimumHeight = 50
             dgv1.Rows.Add(5)
             With dgv1
-                .Rows(0).Cells(0).Value = GetImageFromUrl("http://localhost:8080/img/flag/Afghanistan.png")
-                .Rows(1).Cells(0).Value = GetImageFromUrl("http://localhost:8080/img/flag/Albania.png")
-                .Rows(2).Cells(0).Value = GetImageFromUrl("http://localhost:8080/img/flag/Belgium.png")
-                .Rows(3).Cells(0).Value = GetImageFromUrl("http://localhost:8080/img/flag/Mauritania.png")
-                .Rows(4).Cells(0).Value = GetImageFromUrl("http://localhost:8080/img/flag/Morocco.png")
+                .Rows(0).Cells(0).Value = GetImageFromUrl("http://localhost:10000/img/flag/Afghanistan.png")
+                .Rows(1).Cells(0).Value = GetImageFromUrl("http://localhost:10000/img/flag/Albania.png")
+                .Rows(2).Cells(0).Value = GetImageFromUrl("http://localhost:10000/img/flag/Belgium.png")
+                .Rows(3).Cells(0).Value = GetImageFromUrl("http://localhost:10000/img/flag/Mauritania.png")
+                .Rows(4).Cells(0).Value = GetImageFromUrl("http://localhost:10000/img/flag/Morocco.png")
 
-                .Rows(0).Cells(1).Value = "http://localhost:8080/img/flag/Afghanistan.png"
-                .Rows(1).Cells(1).Value = "http://localhost:8080/img/flag/Albania.png"
-                .Rows(2).Cells(1).Value = "http://localhost:8080/img/flag/Belgium.png"
-                .Rows(3).Cells(1).Value = "http://localhost:8080/img/flag/Mauritania.png"
-                .Rows(4).Cells(1).Value = "http://localhost:8080/img/flag/Morocco.png"
+                .Rows(0).Cells(1).Value = "http://localhost:10000/img/flag/Afghanistan.png"
+                .Rows(1).Cells(1).Value = "http://localhost:10000/img/flag/Albania.png"
+                .Rows(2).Cells(1).Value = "http://localhost:10000/img/flag/Belgium.png"
+                .Rows(3).Cells(1).Value = "http://localhost:10000/img/flag/Mauritania.png"
+                .Rows(4).Cells(1).Value = "http://localhost:10000/img/flag/Morocco.png"
             End With
         Catch ex As Exception
 

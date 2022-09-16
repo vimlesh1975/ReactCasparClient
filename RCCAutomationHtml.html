@@ -102,7 +102,7 @@ mixer 1-2 fill .3 .4 .3 .4
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/recallPage", true);
+        xhttp.open("POST", "http://localhost:9000/recallPage", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var bb = Math.floor(Math.random() * 100)
         const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" },{ key: "f0", value: document.querySelector("#fill").value, type: "fill" }, { key: "f0", value: document.querySelector("#backgroundColor").value, type: "backgroundColor" }, { key: "f0", value: {color:document.querySelector("#shadow").value}, type: "shadow" }]
@@ -117,7 +117,7 @@ mixer 1-2 fill .3 .4 .3 .4
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/updateData", true);
+        xhttp.open("POST", "http://localhost:9000/updateData", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var bb = Math.floor(Math.random() * 100)
         const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" },{ key: "f0", value: document.querySelector("#fill").value, type: "fill" }, { key: "f0", value: document.querySelector("#backgroundColor").value, type: "backgroundColor" },{ key: "f0", value: {color:document.querySelector("#shadow").value}, type: "shadow" }]
@@ -131,7 +131,7 @@ mixer 1-2 fill .3 .4 .3 .4
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/stopGraphics", true);
+        xhttp.open("POST", "http://localhost:9000/stopGraphics", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var params = `layerNumber=96`
         xhttp.send(params);
@@ -143,7 +143,7 @@ mixer 1-2 fill .3 .4 .3 .4
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/resumeGameTimer", true);
+        xhttp.open("POST", "http://localhost:9000/resumeGameTimer", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var params = `layerNumber=96&countUp=${document.querySelector("#countUp").checked }`
         xhttp.send(params);
@@ -156,7 +156,7 @@ mixer 1-2 fill .3 .4 .3 .4
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/pauseGameTimer", true);
+        xhttp.open("POST", "http://localhost:9000/pauseGameTimer", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var params = `layerNumber=96`
         xhttp.send(params);
@@ -168,7 +168,7 @@ function startGameTimer(){
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/startGameTimer", true);
+        xhttp.open("POST", "http://localhost:9000/startGameTimer", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         const aa = [{ key: "gameTimer1", value:document.querySelector("#initialMinute").value + ':' +document.querySelector("#initialSecond").value , type: "text"}]
       
@@ -192,7 +192,7 @@ const sendRowCommand=(element)=>{
                 document.getElementById("demo").innerHTML = this.responseText;
             }
         };
-        xhttp.open("POST", "http://localhost:8080/endpoint", true);
+        xhttp.open("POST", "http://localhost:9000/endpoint", true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         var params = `string=${element}`;
         xhttp.send(params);

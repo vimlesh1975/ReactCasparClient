@@ -13,7 +13,7 @@ const Automation = () => {
     const [dataReceived, setDataReceived] = useState();
 
     useEffect(() => {
-        const socket = socketIOClient(':8080');
+        const socket = socketIOClient(':9000');
         if (allowAutomation.toString() === 'true') {
             socket.on("recallPage", data => {
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));

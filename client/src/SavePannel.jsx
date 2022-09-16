@@ -95,7 +95,7 @@ const SavePannel = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            fetch('http://localhost:8080/defaultCanvasList')
+            fetch('http://localhost:9000/defaultCanvasList')
                 .then((r) => r.text())
                 .then(text => {
                     var aa = text.split('\r\n');

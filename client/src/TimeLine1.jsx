@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
-import { endpoint } from './common';
 import { fabric } from "fabric";
 import { selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
+import { endpoint, templateLayers } from './common'
 
 const timelineWidth = 1024;
 const controlWidth = 275;
@@ -181,7 +181,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
       canvas.forEachObject((element, i) => {
         endpoint(`
-      call ${window.chNumber}-${108} "
+      call ${window.chNumber}-${templateLayers.animationLayer} "
       document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running';
       document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
       "`);
@@ -208,8 +208,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     canvas.requestRenderAll();
     setinAnimation2();
 
-    endpoint(`play ${window.chNumber}-${108} [html] xyz.html`);
-    endpoint(`call ${window.chNumber}-${108} "
+    endpoint(`play ${window.chNumber}-${templateLayers.animationLayer} [html] xyz.html`);
+    endpoint(`call ${window.chNumber}-${templateLayers.animationLayer} "
         var style = document.createElement('style');
         style.textContent = '${inAnimation2}';
         document.head.appendChild(style);

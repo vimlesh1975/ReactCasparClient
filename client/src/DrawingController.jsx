@@ -2500,7 +2500,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         setVerticalSpeed(localStorage.getItem('RCC_verticalSpeed'));
 
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-            axios.post('http://localhost:8080/getfonts').then((aa) => {
+            axios.post('http://localhost:9000/getfonts').then((aa) => {
                 setFontList(aa.data)
             }).catch((aa) => { console.log('Error', aa) });
         }
