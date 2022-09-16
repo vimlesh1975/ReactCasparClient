@@ -4,12 +4,9 @@ import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 import { animation } from './animation.js'
 import { v4 as uuidv4 } from 'uuid';
-
 import * as d3 from 'd3';
 import SvgFilter from 'svg-filter';
-
-import animateJson from './data/animate.json';
-
+import animateJson from './data/animate2.json';
 import css from 'css';
 
 const Effects = () => {
@@ -20,31 +17,29 @@ const Effects = () => {
             if (e.name === x) {
                 return e
             }
-            else if (e.selectors && e.selectors.indexOf("." + x) > -1) {
+            else if (e.selectors && e.selectors.indexOf(".animate__" + x) > -1) {
                 return e
             }
-            else if (e.selectors && e.selectors.indexOf(".animated") > -1) {
+            else if (e.selectors && e.selectors.indexOf(".animate__animated") > -1) {
+                return e
+            }
+            else if (e.selectors && e.selectors.indexOf(":root") > -1) {
                 return e
             }
             else {
                 return undefined
             }
-
         }).filter((e) => e !== undefined)
 
         d3.selectAll('#kkk').selectAll("style").remove();
-
         d3.selectAll('#kkk')
             .append('style')
             .text(css.stringify(cssObject))
-
         refkkk.current.className = "";
-        refkkk.current.classList.add('animated');
-        refkkk.current.classList.add(x);
+        refkkk.current.classList.add('animate__animated', "animate__" + x);
         return null;
     }
 
-    // showCss(d);
     const [effect1, seteffec1] = useState('bounce')
     const [videoMixer, setVideoMixer] = useState('0.12 0 0.88 0.77');
     const [templateMixer, setTemplateMixer] = useState('-0.12 0 1.12 1.23');
@@ -186,14 +181,11 @@ const Effects = () => {
             aa.style.position='absolute';
             aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
-            aa.classList.add('animated', '${effect1}');
+            aa.classList.add('animate__animated', 'animate__${effect1}');
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
-            var style = document.createElement('style');
-            style.textContent = '${inAnimation}';
-            document.head.appendChild(style);
             "`)
     }
 
@@ -357,14 +349,27 @@ const Effects = () => {
                             <option value="flash">flash</option>
                             <option value="pulse">pulse</option>
                             <option value="rubberBand">rubberBand</option>
-                            <option value="shake">shake</option>
+                            <option value="shakeX">shakeX</option>
+                            <option value="shakeY">shakeY</option>
+                            <option value="headShake">headShake</option>
                             <option value="swing">swing</option>
                             <option value="tada">tada</option>
                             <option value="wobble">wobble</option>
                             <option value="jello">jello</option>
                             <option value="heartBeat">heartBeat</option>
                         </optgroup>
-
+                        <optgroup label="Back Entrances">
+                            <option value="backInDown">backInDown</option>
+                            <option value="backInLeft">backInLeft</option>
+                            <option value="backInRight">backInRight</option>
+                            <option value="backInUp">backInUp</option>
+                        </optgroup>
+                        {/* <optgroup label="Back exits">
+                            <option value="backOutDown">backInDown</option>
+                            <option value="backOutLeft">backInLeft</option>
+                            <option value="backOutRight">backInRight</option>
+                            <option value="backOutUp">backInUp</option>
+                        </optgroup> */}
                         <optgroup label="Bouncing Entrances">
                             <option value="bounceIn">bounceIn</option>
                             <option value="bounceInDown">bounceInDown</option>
@@ -373,13 +378,13 @@ const Effects = () => {
                             <option value="bounceInUp">bounceInUp</option>
                         </optgroup>
 
-                        <optgroup label="Bouncing Exits">
+                        {/* <optgroup label="Bouncing Exits">
                             <option value="bounceOut">bounceOut</option>
                             <option value="bounceOutDown">bounceOutDown</option>
                             <option value="bounceOutLeft">bounceOutLeft</option>
                             <option value="bounceOutRight">bounceOutRight</option>
                             <option value="bounceOutUp">bounceOutUp</option>
-                        </optgroup>
+                        </optgroup> */}
 
                         <optgroup label="Fading Entrances">
                             <option value="fadeIn">fadeIn</option>
@@ -391,9 +396,14 @@ const Effects = () => {
                             <option value="fadeInRightBig">fadeInRightBig</option>
                             <option value="fadeInUp">fadeInUp</option>
                             <option value="fadeInUpBig">fadeInUpBig</option>
+
+                            <option value="fadeInTopLeft">fadeInTopLeft</option>
+                            <option value="fadeInTopRight">fadeInTopRight</option>
+                            <option value="fadeInBottomLeft">fadeInBottomLeft</option>
+                            <option value="fadeInBottomRight">fadeInBottomRight</option>
                         </optgroup>
 
-                        <optgroup label="Fading Exits">
+                        {/* <optgroup label="Fading Exits">
                             <option value="fadeOut">fadeOut</option>
                             <option value="fadeOutDown">fadeOutDown</option>
                             <option value="fadeOutDownBig">fadeOutDownBig</option>
@@ -403,19 +413,26 @@ const Effects = () => {
                             <option value="fadeOutRightBig">fadeOutRightBig</option>
                             <option value="fadeOutUp">fadeOutUp</option>
                             <option value="fadeOutUpBig">fadeOutUpBig</option>
-                        </optgroup>
+
+                            <option value="fadeOutTopLeft">fadeOutTopLeft</option>
+                            <option value="fadeOutTopRight">fadeOutTopRight</option>
+                            <option value="fadeOutBottomRight">fadeOutBottomRight</option>
+                            <option value="fadeOutBottomLeft">fadeOutBottomLeft</option>
+                        </optgroup> */}
 
                         <optgroup label="Flippers">
                             <option value="flip">flip</option>
                             <option value="flipInX">flipInX</option>
                             <option value="flipInY">flipInY</option>
-                            <option value="flipOutX">flipOutX</option>
-                            <option value="flipOutY">flipOutY</option>
+                            {/* <option value="flipOutX">flipOutX</option>
+                            <option value="flipOutY">flipOutY</option> */}
                         </optgroup>
 
                         <optgroup label="Lightspeed">
-                            <option value="lightSpeedIn">lightSpeedIn</option>
-                            <option value="lightSpeedOut">lightSpeedOut</option>
+                            <option value="lightSpeedInRight">lightSpeedInRight</option>
+                            <option value="lightSpeedInLeft">lightSpeedInRight</option>
+                            {/* <option value="lightSpeedOutRight">lightSpeedOutLeft</option>
+                            <option value="lightSpeedOutLeft">lightSpeedOutLeft</option> */}
                         </optgroup>
 
                         <optgroup label="Rotating Entrances">
@@ -426,29 +443,19 @@ const Effects = () => {
                             <option value="rotateInUpRight">rotateInUpRight</option>
                         </optgroup>
 
-                        <optgroup label="Rotating Exits">
+                        {/* <optgroup label="Rotating Exits">
                             <option value="rotateOut">rotateOut</option>
                             <option value="rotateOutDownLeft">rotateOutDownLeft</option>
                             <option value="rotateOutDownRight">rotateOutDownRight</option>
                             <option value="rotateOutUpLeft">rotateOutUpLeft</option>
                             <option value="rotateOutUpRight">rotateOutUpRight</option>
+                        </optgroup> */}
+                        <optgroup label="Specials">
+                            <option value="hinge">hinge</option>
+                            <option value="jackInTheBox">jackInTheBox</option>
+                            <option value="rollIn">rollIn</option>
+                            <option value="rollOut">rollOut</option>
                         </optgroup>
-
-                        <optgroup label="Sliding Entrances">
-                            <option value="slideInUp">slideInUp</option>
-                            <option value="slideInDown">slideInDown</option>
-                            <option value="slideInLeft">slideInLeft</option>
-                            <option value="slideInRight">slideInRight</option>
-
-                        </optgroup>
-                        <optgroup label="Sliding Exits">
-                            <option value="slideOutUp">slideOutUp</option>
-                            <option value="slideOutDown">slideOutDown</option>
-                            <option value="slideOutLeft">slideOutLeft</option>
-                            <option value="slideOutRight">slideOutRight</option>
-
-                        </optgroup>
-
                         <optgroup label="Zoom Entrances">
                             <option value="zoomIn">zoomIn</option>
                             <option value="zoomInDown">zoomInDown</option>
@@ -457,20 +464,30 @@ const Effects = () => {
                             <option value="zoomInUp">zoomInUp</option>
                         </optgroup>
 
-                        <optgroup label="Zoom Exits">
+                        {/* <optgroup label="Zoom Exits">
                             <option value="zoomOut">zoomOut</option>
                             <option value="zoomOutDown">zoomOutDown</option>
                             <option value="zoomOutLeft">zoomOutLeft</option>
                             <option value="zoomOutRight">zoomOutRight</option>
                             <option value="zoomOutUp">zoomOutUp</option>
-                        </optgroup>
+                        </optgroup> */}
+                        <optgroup label="Sliding Entrances">
+                            <option value="slideInUp">slideInUp</option>
+                            <option value="slideInDown">slideInDown</option>
+                            <option value="slideInLeft">slideInLeft</option>
+                            <option value="slideInRight">slideInRight</option>
 
-                        <optgroup label="Specials">
-                            <option value="hinge">hinge</option>
-                            <option value="jackInTheBox">jackInTheBox</option>
-                            <option value="rollIn">rollIn</option>
-                            <option value="rollOut">rollOut</option>
                         </optgroup>
+                        {/* <optgroup label="Sliding Exits">
+                            <option value="slideOutUp">slideOutUp</option>
+                            <option value="slideOutDown">slideOutDown</option>
+                            <option value="slideOutLeft">slideOutLeft</option>
+                            <option value="slideOutRight">slideOutRight</option>
+                        </optgroup> */}
+
+                       
+
+                      
                     </select>
 
                 </div>
