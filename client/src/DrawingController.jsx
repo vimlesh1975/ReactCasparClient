@@ -21,7 +21,7 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
-import {rgbaCol} from './common'
+import { rgbaCol } from './common'
 
 var xxx;
 var xxx2;
@@ -407,9 +407,9 @@ export const gradient2 = () => {
         gradientUnits: 'percentage',
         coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
         colorStops: [
-            { offset: 0, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:0.2 },
-            { offset: 0.5, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:1 },
-            { offset: 1, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity:0.2 }
+            { offset: 0, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity: 0.2 },
+            { offset: 0.5, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity: 1 },
+            { offset: 1, color: '#' + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6), opacity: 0.2 }
         ]
     })
 }
@@ -642,6 +642,16 @@ export const gradientStroke = canvas => {
     canvas.getActiveObjects().forEach(element => { element.set('stroke', gradient) });
     canvas.requestRenderAll();
 };
+
+export const resizeTextWidth = canvas => {
+    canvas.getActiveObjects().forEach(element => {
+        if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
+            element.set({ width: element.__lineWidths[0] + 10 })
+        }
+    });
+    canvas.requestRenderAll();
+}
+
 
 export const deleteSelectedItem = canvas => {
     // canvas.getActiveObjects().forEach(element => { canvas.remove(element) });
@@ -1206,17 +1216,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
-    const resizeTextWidth = canvas => {
-        canvas.getActiveObjects().forEach(element => {
-            if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
-                element.set({ width: element.__lineWidths[0] + 10 })
-            }
-        });
-        canvas.requestRenderAll();
-    }
 
-  
-    
+
+
     const pauseClock = (layerNumber) => {
         clearInterval(xxx)
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -3019,9 +3021,30 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
                         <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
                         <button onClick={makeFullScreen}>Make full Screen</button>
+                        <button onClick={sdToHD}>sdtoHD</button>
+                        {/* <button onClick={() => {
+                            canvas.getActiveObjects().forEach((element) => {
+                                const pointx = 1920 / 2;
+                                const pointy = 1028 / 2;
+                                // const pointx = 1024 / 2;
+                                // const pointy = 576 / 2;
+                                element.set({ originX: (pointx - element.left) / (element.width * element.scaleX), originY: (pointy - element.top) / (element.height * element.scaleY), centeredRotation: false });
+                                // element.set({ originX: 1, originY: 1, centeredRotation: false });
+                                // canvas.requestRenderAll();
+                            })
+                            canvas.requestRenderAll();
+                        }}>test</button>
+                        <button onClick={() => {
+                            const pointx = 1920 / 2;
+                            const pointy = 1028 / 2;
+                            canvas.getActiveObjects().forEach((element) => {
+                                element.set({ left: element.left + ((pointx - element.left) / (element.width * element.scaleX)) * (element.width * element.scaleX), top: element.top + ((pointy - element.top) * (element.height * element.scaleY)) / (element.height * element.scaleY) });
+                            })
+                            canvas.requestRenderAll();
+                        }}>test</button> */}
                     </div>
                     <div className='drawingToolsRow' >
-                    <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
                         <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
 
                     </div>
@@ -3036,7 +3059,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <button onClick={sdToHD}>sdtoHD</button>
 
                         {/* <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
                             <ColorGradient property1={property1} />

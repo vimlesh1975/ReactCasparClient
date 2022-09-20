@@ -3,12 +3,35 @@ import { fabric } from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import CsvReader from './CsvReader';
+import { resizeTextWidth, selectAll, deSelectAll } from './DrawingController'
 
 const JsonReader = () => {
-    const fileName = 'http://localhost:3000/ReactCasparClient/swimming/heat/1_1.json';
+    const fileName = 'http://localhost:10000/ReactCasparClient/swimming/heat/1_1.json';
     const [dataHeat, setdataHeat] = useState('');
     const [dataResult, setdataResult] = useState('');
+    const [dataJson, setDataJson] = useState('');
+
     const canvas = useSelector(state => state.canvasReducer.canvas);
+
+    // const loadJson = fileName1 => {
+    //     console.log(fileName1)
+    //     fetch(fileName1, {
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json'
+    //         }
+    //     }
+    //     )
+    //         .then(function (response) {
+    //             // console.log(response)
+    //             return response.json();
+
+    //         })
+    //         .then(function (myJson) {
+    //             // console.log(myJson);
+    //             setDataJson(myJson);
+    //         });
+    // }
 
     const loadJsonHeat = () => {
         fetch(fileName, {
@@ -29,7 +52,7 @@ const JsonReader = () => {
             });
     }
     const loadJsonResult = () => {
-        fetch('http://localhost:3000/ReactCasparClient/swimming/result/1.json', {
+        fetch('http://localhost:10000/ReactCasparClient/swimming/result/1.json', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -111,7 +134,42 @@ const JsonReader = () => {
         });
     }
 
-    return (
+    const handleFileChosen = (file) => {
+        if (file) {
+            const fileReader = new FileReader();
+            fileReader.onloadend = () => {
+                setDataJson(fileReader.result);
+            }
+            fileReader.readAsText(file);
+        }
+    }
+
+    const addsingletext = (val1) => {
+        console.log(val1)
+        const text = new fabric.Textbox(val1, {
+            shadow: shadowOptions,
+            id: 'ccg_' + fabric.Object.__uid,
+            left: 10,
+            top: 25,
+            width: 900,
+            fill: '#ffffff',
+            fontFamily: options.currentFont,
+            fontWeight: 'bold',
+            fontSize: 50,
+            editable: true,
+            objectCaching: false,
+            textAlign: 'left',
+            padding: 5,
+
+        });
+        canvas.add(text).setActiveObject(text);
+        setTimeout(() => {
+            resizeTextWidth(canvas)
+        }, 100);
+        canvas.requestRenderAll();
+    }
+
+    return (<div>
         <div>
             <button onClick={loadJsonHeat}>Load</button>
             <button onClick={craeteTemplate}>LcraeteTemplateoad</button>
@@ -134,9 +192,32 @@ const JsonReader = () => {
                 </tbody>
             </table>
 
+        </div>
+        <div style={{ border: '1px solid red' }}>
             <CsvReader />
         </div>
-    )
+        <div style={{ border: '1px solid red' }}>
+            <span>Open File:</span><input
+                type='file'
+                id='file'
+                className='input-file'
+                accept='.json'
+                onChange={e => {
+                    handleFileChosen(e.target.files[0]);
+                }}
+            />
+            <div style={{ height: 200, overflow: 'scroll' }}>
+                <span>Double click to add on canvas</span>
+                <table border='1' style={{ border: '1px solid red' }}>
+                    {(dataJson).split('"').filter((val, i) => i % 2 === 1).map((val1, ii) => {
+                        return (<>
+                            <tr> <td onDoubleClick={() => addsingletext(val1)}>{val1}</td></tr>
+                        </>)
+                    })}
+                </table>
+            </div>
+        </div>
+    </div>)
 }
 
 export default JsonReader

@@ -1,14 +1,11 @@
 import React, { } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { v4 as uuidv4 } from 'uuid';
 import { shadowOptions } from './common'
 import { mousedownandmousemoveevent } from './Drawing'
 
-
 var currentValue = [];
 var temprect;
-
 export const startPath = () => {
     window.editor.canvas.off('mouse:down');
     window.editor.canvas.off('mouse:move');
@@ -259,9 +256,9 @@ const PathModifier = () => {
 
         if (currentValue.length !== 0) {
             canvas.remove(temprect);
-            currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + currentValue[0][1])/2, (currentValue[currentValue.length - 1][4] + currentValue[0][2])/2, currentValue[0][1], currentValue[0][2]])
+            currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + currentValue[0][1]) / 2, (currentValue[currentValue.length - 1][4] + currentValue[0][2]) / 2, currentValue[0][1], currentValue[0][2]])
             currentValue.push(['z'])
-            const id1 = 'id_' + uuidv4();
+            const id1 = 'id_' + fabric.Object.__uid;
             const rect = new fabric.Path(currentValue, {
                 id: id1,
                 shadow: shadowOptions,
@@ -278,9 +275,9 @@ const PathModifier = () => {
             })
             canvas.requestRenderAll();
         }
-       canvas.off('mouse:down');
-       canvas.off('mouse:move');
-       mousedownandmousemoveevent(canvas);
+        canvas.off('mouse:down');
+        canvas.off('mouse:move');
+        mousedownandmousemoveevent(canvas);
     }
 
     window.closePath = closePath;
