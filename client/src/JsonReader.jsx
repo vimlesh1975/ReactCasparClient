@@ -3,7 +3,7 @@ import { fabric } from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import CsvReader from './CsvReader';
-import { resizeTextWidth, selectAll, deSelectAll } from './DrawingController'
+import { resizeTextWidth } from './DrawingController'
 
 const JsonReader = () => {
     const fileName = 'http://localhost:10000/ReactCasparClient/swimming/heat/1_1.json';
