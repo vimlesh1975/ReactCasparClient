@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { fabric } from "fabric";
-import { selectAll } from './DrawingController';
+import { deSelectAll, selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
 import { endpoint, templateLayers } from './common'
@@ -41,6 +41,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
   const [timelineScale, settimelineScale] = useState(1);
+
+  const [showTimeline, setshowTimeline] = useState(false);
   const position = i => ({
     delay: kf[i][0] * 10 * timelineScale,
 
@@ -704,6 +706,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     setstopCommand();
     selectAll(canvas);
     getNewFileHandle(canvas)
+
   }
   async function getNewFileHandle(canvas) {
     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -724,7 +727,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     await writable.write(file);
     await writable.close();
 
-    exportPage(canvas, aa)
+    exportPage(canvas, aa);
+
   }
 
   async function exportPage(canvas, aa) {
@@ -745,6 +749,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
     await writable1.write(file1);
     await writable1.close();
+    deSelectAll(canvas);
   }
 
   async function OverrightHtml(canvas) {
@@ -783,6 +788,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       await writable1.write(file1);
       await writable1.close();
     }
+    deSelectAll(canvas);
   }
   const onDragEnd = (result) => {
     if (result.destination != null) {
@@ -819,7 +825,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
 
   const lockUnlock = (canvas) => {
-    canvas.getActiveObjects().forEach((element) => {element.selectable = !element.selectable});
+    canvas.getActiveObjects().forEach((element) => { element.selectable = !element.selectable });
     canvas.discardActiveObject();
     canvas.requestRenderAll();
   }
@@ -853,7 +859,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
-        <button onClick={test}>Console Log</button>  <span><b>Animate Only position, size and Rotation.</b></span>
+        <button onClick={test}>Console Log</button>  <span><b>Animate position, size and Rotation.</b></span><label>Timeline <input type='checkbox' checked={showTimeline} onChange={() => setshowTimeline(val => !val)} /></label>
         <div>
           Timeline Scale: <input width={200} onChange={e => {
             dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
@@ -864,8 +870,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       <div style={{ width: timelineWidth - controlWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
         {Array.from(Array(parseInt(6 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
       </div>
-      <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
 
+      <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
 
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
@@ -904,7 +910,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                               canvas.requestRenderAll();
                             }
                             } value={(element.id)} /></div>
-                            <div onClick={(e) => {
+                            {showTimeline && <div onClick={(e) => {
                               ss({ x: e.screenX - controlWidth });
                               canvas.setActiveObject(canvas.item(i));
                             }} style={{ width: timelineWidth - controlWidth, height: 20, marginTop: 1, }} >
@@ -968,7 +974,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                                   </Rnd>
                                 )}
                               </div>
-                            </div>
+                            </div>}
+
                           </div>
                         </div>
                       )
@@ -981,7 +988,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
             )}
           </Droppable>
         </DragDropContext>
-        <div style={{ width: timelineWidth - controlWidth - 20, position: 'relative', left: controlWidth, top: -(((layers.length + 1) * (20 + 2 + 2)) - 20) }}>
+        {showTimeline && <div style={{ width: timelineWidth - controlWidth - 20, position: 'relative', left: controlWidth, top: -(((layers.length + 1) * (20 + 2 + 2)) - 20) }}>
           <Rnd
             dragAxis='x'
             enableResizing={{}}
@@ -996,18 +1003,13 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
               {(((currentFrame) * timelineScale) / (25 * 4)).toFixed(1)}
             </div>
           </Rnd>
-        </div>
+        </div>}
+
 
       </div>
     </div>
     }
-    <div>
-      Timeline Scale: <input width={200} onChange={e => {
-        dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
-        settimelineScale(e.target.value);
-      }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
-      <span><b>Animate Only position, size and Rotation.</b></span>
-    </div>
+
   </div>)
 }
 

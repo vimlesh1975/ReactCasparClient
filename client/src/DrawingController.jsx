@@ -1874,6 +1874,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         await writable.close();
 
         exportPage(canvas, aa)
+        deSelectAll(canvas);
     }
     async function exportPage(canvas, aa) {
         const options1 = {
@@ -1913,6 +1914,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             await writable1.write(file1);
             await writable1.close();
         }
+        deSelectAll(canvas);
 
     }
 
