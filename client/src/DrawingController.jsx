@@ -652,13 +652,20 @@ export const resizeTextWidth = canvas => {
     canvas.requestRenderAll();
 }
 
+export const sameWidth = canvas => {
+    const arr = [];
+    canvas.getActiveObjects().forEach(element => {
+        arr.push(element.width);
+        const max = Math.max(...arr);
+        if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
+            element.set({ width: max })
+        }
+    });
+    canvas.requestRenderAll();
+}
 
 export const deleteSelectedItem = canvas => {
-    // canvas.getActiveObjects().forEach(element => { canvas.remove(element) });
-    // canvas.discardActiveObject();
-    // canvas.requestRenderAll();
     window.deleteItemfromtimeline();
-
 }
 
 export const swapFaceandStrokeColors = canvas => {
@@ -676,8 +683,6 @@ export const deleteAll = canvas => {
     canvas.discardActiveObject();
     canvas.requestRenderAll();
 }
-
-
 
 export const undo = canvas => {
     canvas.undo()
@@ -3067,6 +3072,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
                         <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
+                        <button onClick={() => sameWidth(canvas)}>Same Width</button>
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
                         {/* <button onClick={() => {
@@ -3091,11 +3097,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }}>test</button> */}
                     </div>
                     <div className='drawingToolsRow' >
-                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
-                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
-
-                    </div>
-                    <div className='drawingToolsRow' >
                         <b> Export: </b>
                         <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
                         Js:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
@@ -3111,6 +3112,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             <ColorGradient property1={property1} />
                         </Modal> */}
                     </div>
+                    <div className='drawingToolsRow' >
+                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
+
+                    </div>
+
                 </div>
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
