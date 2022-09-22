@@ -6,7 +6,6 @@ import CsvReader from './CsvReader';
 import { resizeTextWidth } from './DrawingController'
 
 const JsonReader = () => {
-    const fileName = 'http://localhost:10000/ReactCasparClient/swimming/heat/1_1.json';
     const [dataHeat, setdataHeat] = useState('');
     const [dataResult, setdataResult] = useState('');
     const [dataJson, setDataJson] = useState('');
@@ -34,7 +33,7 @@ const JsonReader = () => {
     // }
 
     const loadJsonHeat = () => {
-        fetch(fileName, {
+        fetch('http://localhost:10000/ReactCasparClient/swimming/heat/1_1.json', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -69,18 +68,17 @@ const JsonReader = () => {
             });
     }
 
-    const craeteTemplate = () => {
-        dataHeat?.entries?.forEach((val, i) => {
-
-            const text = new fabric.IText(val.lane.toString(), {
+    const craeteTemplateHeat = () => {
+        Array.from(Array(3).keys()).forEach((val, i) => {
+            const text = new fabric.Textbox((i === 0) ? 'Lane' : (i === 1) ? 'Name' : 'Uni', {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
-                left: 50,
+                left: (i === 0) ? 50 : (i === 1) ? 200 : 700,
                 top: 0,
                 fill: options.currentColor,
                 fontFamily: options.currentFont,
                 fontWeight: 'bold',
-                fontSize: options.currentFontSize,
+                fontSize: 40,
                 editable: true,
                 objectCaching: false,
                 textAlign: 'left',
@@ -89,18 +87,40 @@ const JsonReader = () => {
             });
             canvas.add(text).setActiveObject(text);
             canvas.renderAll();
-            text.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
+            text.animate('top', 200 - 60, { onChange: canvas.renderAll.bind(canvas) })
+        });
 
-
-            const text1 = new fabric.IText(val.id.toString() + ' ' + val.nametext.toString(), {
+        dataHeat?.entries?.forEach((val, i) => {
+            const text = new fabric.Textbox(val.lane.toString(), {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
-                left: 100,
+                left: 50,
                 top: 0,
                 fill: options.currentColor,
                 fontFamily: options.currentFont,
                 fontWeight: 'bold',
-                fontSize: options.currentFontSize,
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text).setActiveObject(text);
+            canvas.renderAll();
+            text.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+
+
+            const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 150,
+                top: 0,
+                width: 600,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
                 editable: true,
                 objectCaching: false,
                 textAlign: 'left',
@@ -109,17 +129,18 @@ const JsonReader = () => {
             });
             canvas.add(text1).setActiveObject(text1);
             canvas.renderAll();
-            text1.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
+            text1.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
 
-            const text2 = new fabric.IText(val.clubname.toString(), {
+            const text2 = new fabric.Textbox(val.clubname.toString(), {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
-                left: 500,
+                left: 700,
                 top: 0,
+                width: 1100,
                 fill: options.currentColor,
                 fontFamily: options.currentFont,
                 fontWeight: 'bold',
-                fontSize: options.currentFontSize,
+                fontSize: 30,
                 editable: true,
                 objectCaching: false,
                 textAlign: 'left',
@@ -128,11 +149,138 @@ const JsonReader = () => {
             });
             canvas.add(text2).setActiveObject(text2);
             canvas.renderAll();
-            text2.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
+            text2.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
 
 
         });
     }
+
+    const craeteTemplateResult = () => {
+        Array.from(Array(5).keys()).forEach((val, i) => {
+            const text = new fabric.Textbox((i === 0) ? 'Lane' : (i === 1) ? 'Name' : (i === 2) ? 'Uni' : (i === 3) ? 'Time' : 'Place', {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: (i === 0) ? 50 : (i === 1) ? 200 : (i === 2) ? 700 : (i === 3) ? 1600 : 1750,
+                top: 0,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 40,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text).setActiveObject(text);
+            canvas.renderAll();
+            text.animate('top', 200 - 60, { onChange: canvas.renderAll.bind(canvas) })
+        });
+
+
+        dataResult && dataResult.agegroups && dataResult?.agegroups[0]?.results.forEach((val, i) => {
+            const text = new fabric.Textbox(val.lane.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 50,
+                top: 0,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text).setActiveObject(text);
+            canvas.renderAll();
+            text.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+
+
+            const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 150,
+                top: 0,
+                width: 600,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text1).setActiveObject(text1);
+            canvas.renderAll();
+            text1.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+
+            const text2 = new fabric.Textbox(val.clubname.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 700,
+                top: 0,
+                width: 850,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text2).setActiveObject(text2);
+            canvas.renderAll();
+            text2.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+
+            const text3 = new fabric.Textbox(val.swimtime.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 1600,
+                top: 0,
+                width: 200,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text3).setActiveObject(text3);
+            canvas.renderAll();
+            text3.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) });
+
+            const text4 = new fabric.Textbox(val.place.toString(), {
+                id: 'id_' + fabric.Object.__uid,
+                shadow: shadowOptions,
+                left: 1800,
+                top: 0,
+                width: 100,
+                fill: options.currentColor,
+                fontFamily: options.currentFont,
+                fontWeight: 'bold',
+                fontSize: 30,
+                editable: true,
+                objectCaching: false,
+                textAlign: 'left',
+                stroke: options.stroke,
+                strokeWidth: options.strokeWidth,
+            });
+            canvas.add(text4).setActiveObject(text4);
+            canvas.renderAll();
+            text4.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+        });
+    }
+
 
     const handleFileChosen = (file) => {
         if (file) {
@@ -146,11 +294,11 @@ const JsonReader = () => {
 
     const addsingletext = (val1) => {
         console.log(val1)
-        const text = new fabric.IText(val1, {
+        const text = new fabric.Textbox(val1, {
             shadow: shadowOptions,
             id: 'ccg_' + fabric.Object.__uid,
-            left: 10,
-            top: 25,
+            left: Math.floor(Math.random() * 1700) + 1,
+            top: Math.floor(Math.random() * 1050) + 1,
             width: 900,
             fill: '#ffffff',
             fontFamily: options.currentFont,
@@ -169,10 +317,10 @@ const JsonReader = () => {
         canvas.requestRenderAll();
     }
 
-    return (<div>
+    return (<div style={{ overflow: 'scroll', height: 900 }}>
         <div>
-            <button onClick={loadJsonHeat}>Load</button>
-            <button onClick={craeteTemplate}>LcraeteTemplateoad</button>
+            Heat:  <button onClick={loadJsonHeat}>Load</button>
+            <button onClick={craeteTemplateHeat}>Create Template</button>
             <table border='1'>
                 <tbody>
                     <tr><th>lane</th><th>id</th><th>name</th><th>uni</th></tr>
@@ -182,7 +330,9 @@ const JsonReader = () => {
                 </tbody>
             </table>
 
-            <button onClick={loadJsonResult}>Load</button>
+            Result:<button onClick={loadJsonResult}>Load</button>
+            <button onClick={craeteTemplateResult}>Create Template</button>
+
             <table border='1'>
                 <tbody>
                     <tr><th>lane</th><th>id</th><th>name</th><th>uni</th><th>swimtime</th><th>place</th></tr>
