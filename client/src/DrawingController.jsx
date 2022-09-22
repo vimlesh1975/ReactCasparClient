@@ -889,6 +889,47 @@ const alignAllButtom = (canvas) => {
     canvas.requestRenderAll();
 }
 
+const makeVerticalEquidistant = (canvas) => {
+    var arr = [];
+    canvas.getActiveObjects().forEach(item => {
+        arr.push(item.top)
+    })
+    arr = arr.sort((a, b) => {
+        return (a - b)
+    })
+    const difference1 = arr[1] - arr[0];
+    canvas.getActiveObjects().forEach((item, i) => {
+        if (i < 2) {
+            item.top = arr[i];
+        }
+        else {
+            item.top = arr[1] + difference1 * (i - 1);
+        }
+    })
+    canvas.requestRenderAll();
+}
+
+const makeHorizontalEquidistant = (canvas) => {
+    var arr = [];
+    canvas.getActiveObjects().forEach(item => {
+        arr.push(item.left)
+    })
+    arr = arr.sort((a, b) => {
+        return (a - b)
+    })
+    const difference1 = arr[1] - arr[0];
+    canvas.getActiveObjects().forEach((item, i) => {
+        if (i < 2) {
+            item.left = arr[i];
+        }
+        else {
+            item.left = arr[1] + difference1 * (i - 1);
+        }
+    })
+    canvas.requestRenderAll();
+}
+
+
 export const groupObjects = (canvas, shouldGroup) => {
     if (shouldGroup) {
         if (!canvas.getActiveObject()) {
@@ -2988,6 +3029,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
                         <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
                         <button title='Align Bottom' onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                        <button title=' Make Vertical Equidistant' onClick={() => makeVerticalEquidistant(canvas)}>=</button>
+                        <button title=' Make Horizontal Equidistant' onClick={() => makeHorizontalEquidistant(canvas)}>||</button>
+
+
 
                         <button title='Bold' style={{ fontWeight: (fontWeight1 === 'bold') ? 'bold' : 'normal' }} onClick={() => {
                             txtBold(canvas);

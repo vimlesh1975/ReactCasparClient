@@ -72,7 +72,7 @@ const JsonReader = () => {
     const craeteTemplate = () => {
         dataHeat?.entries?.forEach((val, i) => {
 
-            const text = new fabric.Text(val.lane.toString(), {
+            const text = new fabric.IText(val.lane.toString(), {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 50,
@@ -92,7 +92,7 @@ const JsonReader = () => {
             text.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
 
 
-            const text1 = new fabric.Text(val.id.toString() + ' ' + val.nametext.toString(), {
+            const text1 = new fabric.IText(val.id.toString() + ' ' + val.nametext.toString(), {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 100,
@@ -111,7 +111,7 @@ const JsonReader = () => {
             canvas.renderAll();
             text1.animate('top', 50 + i * 40, { onChange: canvas.renderAll.bind(canvas) })
 
-            const text2 = new fabric.Text(val.clubname.toString(), {
+            const text2 = new fabric.IText(val.clubname.toString(), {
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 500,
@@ -146,7 +146,7 @@ const JsonReader = () => {
 
     const addsingletext = (val1) => {
         console.log(val1)
-        const text = new fabric.Textbox(val1, {
+        const text = new fabric.IText(val1, {
             shadow: shadowOptions,
             id: 'ccg_' + fabric.Object.__uid,
             left: 10,
