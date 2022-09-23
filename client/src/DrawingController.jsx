@@ -656,11 +656,15 @@ export const sameWidth = canvas => {
     const arr = [];
     canvas.getActiveObjects().forEach(element => {
         arr.push(element.width);
-        const max = Math.max(...arr);
-        if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
-            element.set({ width: max })
-        }
     });
+
+    const max = Math.max(...arr);
+
+    canvas.getActiveObjects().forEach(element => {
+        if ((element.type === 'text') || (element.type === 'i-text') || (element.type === 'textbox')) {
+            element.set({ width: max });
+        }
+    })
     canvas.requestRenderAll();
 }
 

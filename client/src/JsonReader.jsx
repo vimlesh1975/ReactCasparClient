@@ -316,8 +316,41 @@ const JsonReader = () => {
         }, 100);
         canvas.requestRenderAll();
     }
-
+    const getSelectionText = () => {
+        var text = "";
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type !== "Control") {
+            text = document.selection.createRange().text;
+        }
+        addsingletext(text);
+    }
     return (<div style={{ overflow: 'scroll', height: 900 }}>
+        <div style={{ height: 200, overflow: 'scroll' }}>
+            Double click to add on canvas:<br />
+            <textarea onDoubleClick={getSelectionText} style={{ width: 750, height: 150 }}> fgfg</textarea>
+        </div>
+        <div style={{ border: '1px solid red' }}>
+            <span>Open Json File:</span><input
+                type='file'
+                id='file'
+                className='input-file'
+                accept='.json'
+                onChange={e => {
+                    handleFileChosen(e.target.files[0]);
+                }}
+            />
+            <div style={{ height: 200, overflow: 'scroll' }}>
+                <span>Double click to add on canvas</span>
+                <table border='1' style={{ border: '1px solid red' }}>
+                    {(dataJson).split('"').filter((val, i) => i % 2 === 1).map((val1, ii) => {
+                        return (<>
+                            <tr> <td onDoubleClick={() => addsingletext(val1)}>{val1}</td></tr>
+                        </>)
+                    })}
+                </table>
+            </div>
+        </div>
         <div>
             Heat:  <button onClick={loadJsonHeat}>Load</button>
             <button onClick={craeteTemplateHeat}>Create Template</button>
@@ -345,27 +378,6 @@ const JsonReader = () => {
         </div>
         <div style={{ border: '1px solid red' }}>
             <CsvReader />
-        </div>
-        <div style={{ border: '1px solid red' }}>
-            <span>Open File:</span><input
-                type='file'
-                id='file'
-                className='input-file'
-                accept='.json'
-                onChange={e => {
-                    handleFileChosen(e.target.files[0]);
-                }}
-            />
-            <div style={{ height: 200, overflow: 'scroll' }}>
-                <span>Double click to add on canvas</span>
-                <table border='1' style={{ border: '1px solid red' }}>
-                    {(dataJson).split('"').filter((val, i) => i % 2 === 1).map((val1, ii) => {
-                        return (<>
-                            <tr> <td onDoubleClick={() => addsingletext(val1)}>{val1}</td></tr>
-                        </>)
-                    })}
-                </table>
-            </div>
         </div>
     </div>)
 }
