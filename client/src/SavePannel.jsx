@@ -110,12 +110,11 @@ const SavePannel = () => {
                         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
                     })
             }
-            // fetch('http://localhost:9000/defaultCanvasList')
             else {
                 fetch(`/ReactCasparClient/data/defaultCanvasList.txt`)
                     .then((r) => r.text())
                     .then(text => {
-                        var aa = text.split('\r\n');
+                        var aa = text.split('\n');
                         aa.splice(-1);
                         var updatedcanvasList = [];
                         aa.forEach(element => {
