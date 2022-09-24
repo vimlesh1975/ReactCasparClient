@@ -33,7 +33,7 @@ const JsonReader = () => {
     // }
 
     const loadJsonHeat = () => {
-        fetch('http://localhost:10000/ReactCasparClient/swimming/heat/1_1.json', {
+        fetch('/ReactCasparClient/swimming/heat/1_1.json', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -51,7 +51,7 @@ const JsonReader = () => {
             });
     }
     const loadJsonResult = () => {
-        fetch('http://localhost:10000/ReactCasparClient/swimming/result/1.json', {
+        fetch('/ReactCasparClient/swimming/result/1.json', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'

@@ -355,7 +355,7 @@ const App = () => {
   }
   const onTabChange2 = (index, prevIndex) => {
     settabindex2(index);
-    if (index === 1) {
+    if (index === 0) {
       dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
     }
     else {
@@ -506,10 +506,12 @@ const App = () => {
             </div>
             <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >
               <TabList>
-                <Tab>Casparcg Window</Tab>
                 <Tab>Timeline</Tab>
+                <Tab>Casparcg Window</Tab>
               </TabList>
-
+              <TabPanel >
+                <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
+              </TabPanel>
               <TabPanel >
                 <div style={{ display: 'flex' }}>
                   <div style={{ backgroundColor: 'grey', border: '1px solid yellow', maxWidth: 690, minWidth: 690, height: 400 }}>
@@ -531,12 +533,7 @@ const App = () => {
                 </div>
 
               </TabPanel>
-              <TabPanel >
-                <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
-              </TabPanel>
             </Tabs>
-
-
           </div>
         </div>
       </div>
@@ -604,9 +601,7 @@ const App = () => {
           <TabPanel >
             <Charts />
           </TabPanel>
-          {/* <TabPanel >
-            <TimeLine1 deleteItemfromtimeline={deleteItemfromtimeline} />
-          </TabPanel> */}
+
           <TabPanel >
             <PathModifier />
           </TabPanel>

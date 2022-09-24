@@ -834,50 +834,43 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
   }}>
     {pannelEnable && <div >
-      <div >
-        <label>Show Timeline <input type='checkbox' checked={showTimeline} onChange={() => setshowTimeline(val => !val)} /></label>
-        {showTimeline && <>
-          <button onClick={() => startPoint()}>Set Start Point</button>
-          <button onClick={finalPoint}>Set Final Point</button>
-          <button onClick={finalPoint2}>Set Final2 Point</button>
-          <button onClick={lastPoint}>Set End Point</button>
+      <label>Show Timeline <input type='checkbox' checked={showTimeline} onChange={() => setshowTimeline(val => !val)} /></label>
+      {showTimeline && <>
+        <button onClick={() => startPoint()}>Set Start Point</button>
+        <button onClick={finalPoint}>Set Final Point</button>
+        <button onClick={finalPoint2}>Set Final2 Point</button>
+        <button onClick={lastPoint}>Set End Point</button>
 
-          <button onClick={preView}>Preview</button>
-          <button onClick={cancelPreView}>Cancel Preview</button>
-          <button onClick={playtocasparcg}>Play</button>
-          <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
-          <button onClick={stopFromCasprtcg}>Stop</button>
+        <button onClick={preView}>Preview</button>
+        <button onClick={cancelPreView}>Cancel Preview</button>
+        <button onClick={playtocasparcg}>Play</button>
+        <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
+        <button onClick={stopFromCasprtcg}>Stop</button>
 
-          <button onClick={updatePageAndAnimation}>Save</button>
-          <button onClick={recallPageAndAnimation}>Recall</button>
-          <button onClick={copyAnimation}>Copy</button>
-          <button onClick={pasteAnimation}>Paste</button>
+        <button onClick={updatePageAndAnimation}>Save</button>
+        <button onClick={recallPageAndAnimation}>Recall</button>
+        <button onClick={copyAnimation}>Copy</button>
+        <button onClick={pasteAnimation}>Paste</button>
 
-          <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
-          <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
-          Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-          css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+        <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
+        <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
+        Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+        css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
 
-          {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
-          <button onClick={ResetAnimation}>Reset Animation</button>
-          <button onClick={test}>Console Log</button>  <span><b>Animate position, size and Rotation.</b></span>
-          <div>
-            Timeline Scale: <input width={200} onChange={e => {
-              dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
-              settimelineScale(e.target.value);
-            }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
-          </div>
-        </>
-        }
-
-
-      </div>
-      <div style={{ width: timelineWidth - controlWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
-        {Array.from(Array(parseInt(6 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
-      </div>
-
+        {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
+        <button onClick={ResetAnimation}>Reset Animation</button>
+        <button onClick={test}>Console Log</button>  <span><b>Animate position, size and Rotation.</b></span>
+        <div>
+          Timeline Scale: <input width={200} onChange={e => {
+            dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
+            settimelineScale(e.target.value);
+          }} type="range" min='0.2' max='10.0' step='0.1' value={timelineScale} />{timelineScale}
+        </div>
+        <div style={{ width: timelineWidth - controlWidth, backgroundColor: 'lightgrey', display: 'flex', left: controlWidth, position: 'relative' }}>
+          {Array.from(Array(parseInt(6 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
+        </div>
+      </>}
       <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
-
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
             {(provided, snapshot) => (

@@ -1,7 +1,8 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from './ContextMenu'
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useState } from "react";
 
 export const mousedownandmousemoveevent = (canvas) => {
@@ -33,6 +34,8 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
 
     const [dlgText, setDlgText] = useState('');
     const [styleDlg, setStyleDlg] = useState({ top: -20, left: 20 })
+    // const zoom = useSelector(state => state.canvaszoomReducer.zoom);
+
 
     window.editor = editor;
     function cancelZoomAndPan(canvas) {
@@ -104,26 +107,28 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     const ddd = (canvas) => {
         canvas.on('mouse:over', e => {
             if (e.target) {
-                setStyleDlg({ left: (e.target.left) * 0.533 - 50, top: (e.target.top) * 0.533 - 70 });
+                setStyleDlg({ left: (e.target.left) * 0.533 - 100, top: (e.target.top) * 0.533 });
                 setDlgText(e.target.id);
             }
         });
         canvas.on('mouse:out', e => {
             if (e.target) {
-                setDlgText('');
+                setStyleDlg({ display: 'none' })
             }
         });
         canvas.on('mouse:move', e => {
             if (e.target) {
-                setStyleDlg({ left: (e.target.left) * 0.533 - 50, top: (e.target.top) * 0.533 - 70 });
+                setStyleDlg({ left: (e.target.left) * 0.533 - 100, top: (e.target.top) * 0.533 });
+
             }
         });
     }
 
     return (<div>
         <FabricJSCanvas className={canvasOutput ? 'canvasOutput' : 'canvas'} onReady={onReady} />
+        {/* <div style={{ zoom: zoom }}> <svg width={1920 * 0.533} height={1080 * 0.533}> <rect x='100' y='100' width="800" height="400" style={{ fill: 'transparent', stroke: "red", strokeWidth: 2 }} /></svg></div> */}
         <ContextMenu canvas={editor?.canvas} moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} />
-        {<div style={{ position: 'absolute', color: 'white', ...styleDlg }}><h2>{dlgText}</h2></div>}
+        {<span style={{ backgroundColor: 'black', fontSize: 18, fontWeight: 'bold', padding: '0px 5px 6px 5px', position: 'absolute', color: 'white', ...styleDlg }}>{dlgText}</span>}
     </div>);
 };
 export default Drawing;
