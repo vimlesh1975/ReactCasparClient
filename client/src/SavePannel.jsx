@@ -112,7 +112,7 @@ const SavePannel = () => {
             }
             // fetch('http://localhost:9000/defaultCanvasList')
             else {
-                fetch(`https://vimlesh1975.github.io/ReactCasparClient/data/defaultCanvasList.txt`)
+                fetch(`/data/defaultCanvasList.txt`)
                     .then((r) => r.text())
                     .then(text => {
                         var aa = text.split('\r\n');
