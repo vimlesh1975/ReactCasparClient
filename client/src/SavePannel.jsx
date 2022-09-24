@@ -8,7 +8,7 @@ import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { endpoint, stopGraphics, updateGraphics, templateLayers } from './common'
 import { animation } from './animation.js'
-import defaultCanvasList from './data/defaultCanvasList.txt'
+// import defaultCanvasList from './data/defaultCanvasList.txt'
 
 
 var currentFile = 'new';
@@ -96,19 +96,36 @@ const SavePannel = () => {
 
     useEffect(() => {
         setTimeout(() => {
+            if (window.location.origin !== 'https://vimlesh1975.github.io') {
+                fetch(`${process.env.PUBLIC_URL}/data/defaultCanvasList.txt`)
+                    .then((r) => r.text())
+                    .then(text => {
+                        var aa = text.split('\r\n');
+                        aa.splice(-1);
+                        var updatedcanvasList = [];
+                        aa.forEach(element => {
+                            var cc = JSON.parse(element);
+                            updatedcanvasList.push(cc);
+                        });
+                        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
+                    })
+            }
             // fetch('http://localhost:9000/defaultCanvasList')
-            fetch(defaultCanvasList)
-                .then((r) => r.text())
-                .then(text => {
-                    var aa = text.split('\r\n');
-                    aa.splice(-1);
-                    var updatedcanvasList = [];
-                    aa.forEach(element => {
-                        var cc = JSON.parse(element);
-                        updatedcanvasList.push(cc);
-                    });
-                    dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
-                })
+            else {
+                fetch(`https://vimlesh1975.github.io/ReactCasparClient/data/defaultCanvasList.txt`)
+                    .then((r) => r.text())
+                    .then(text => {
+                        var aa = text.split('\r\n');
+                        aa.splice(-1);
+                        var updatedcanvasList = [];
+                        aa.forEach(element => {
+                            var cc = JSON.parse(element);
+                            updatedcanvasList.push(cc);
+                        });
+                        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
+                    })
+            }
+
         }, 2000);
 
         return () => {
