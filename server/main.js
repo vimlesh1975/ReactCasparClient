@@ -206,13 +206,14 @@ app.post('/stopGraphics', (req, res) => {
 })
 
 
-app.get('/defaultCanvasList', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
-})
+// app.get('/defaultCanvasList', (req, res) => {
+//     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
+// })
 
-app.get('/defaultCanvasList', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
-})
+// app.get('/defaultCanvasList', (req, res) => {
+//     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
+// })
+
 var server;
 function startUdp() {
     var udp = require("dgram");
