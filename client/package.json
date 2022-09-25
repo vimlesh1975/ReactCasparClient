@@ -5,6 +5,9 @@
   "private": false,
   "dependencies": {
     "@craco/craco": "^6.4.5",
+    "@react-three/cannon": "^6.4.0",
+    "@react-three/drei": "^9.32.0",
+    "@react-three/fiber": "^8.8.2",
     "@reduxjs/toolkit": "^1.8.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",

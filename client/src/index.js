@@ -5,10 +5,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes , Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux'
 import store from './store'
 import Drawing2 from './Drawing2';
+import Threejs2 from './Thrrejs2';
 
 window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -17,8 +18,9 @@ root.render(
     <Router basename={process.env.PUBLIC_URL}>
       {/* <Router > */}
       <Routes>
-        <Route exact path='/' element={<App/>} />
+        <Route exact path='/' element={<App />} />
         <Route exact path='/drawing2' element={<Drawing2 canvasOutput={true} />} />
+        <Route exact path='/threejs2' element={<Threejs2 color1={'yellow'} />} />
       </Routes>
     </Router>
   </Provider>

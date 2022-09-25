@@ -1,34 +1,37 @@
 import React from 'react'
 // import { fabric } from 'fabric'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { endpoint, templateLayers } from './common'
 import { v4 as uuidv4 } from 'uuid';
 
 // dispatch({ type:'CHANGE_CANVAS',payload:${'canvas'}});
 const Help = () => {
-  const canvas = useSelector(state => state.canvasReducer.canvas);
+  // const canvas = useSelector(state => state.canvasReducer.canvas);
   // const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
 
   const test = () => {
-    endpoint(`play 1-108 [html] http://localhost:3000/ReactCasparClient/drawing2`)
-    endpoint(`call 1-108 "
-    const circle =new fabric.Rect({
-     width: ${canvas.item(0).width},
-     height: ${canvas.item(0).height},
-     left: ${canvas.item(0).left},
-     top: ${canvas.item(0).top},
-     fill:'yellow',
-     stroke:'${canvas.item(0).stroke}',
-     strokeWidth:${canvas.item(0).strokeWidth},
-     rx:${canvas.item(0).rx},
-     ry:${canvas.item(0).ry},
+    endpoint(`play 1-108 [html] http://localhost:10000/ReactCasparClient/threejs`)
+    // setTimeout(() => {
+    //   endpoint(`call 1-108 "
+    //   const circle =new fabric.Rect({
+    //    width: ${canvas.item(0).width},
+    //    height: ${canvas.item(0).height},
+    //    left: ${canvas.item(0).left},
+    //    top: ${canvas.item(0).top},
+    //    fill:'yellow',
+    //    stroke:'${canvas.item(0).stroke}',
+    //    strokeWidth:${canvas.item(0).strokeWidth},
+    //    rx:${canvas.item(0).rx},
+    //    ry:${canvas.item(0).ry},
 
-    });
-    window.editor.canvas.add(circle);
-    window.editor.canvas.requestRenderAll();
-    console.log(window.editor.canvas.item.length)
-    "
-    `)
+    //   });
+    //   window.editor.canvas.add(circle);
+    //   window.editor.canvas.requestRenderAll();
+    //   console.log(window.editor.canvas.item.length)
+    //   "
+    //   `)
+    // }, 5000);
+
   }
 
   return (<div>
