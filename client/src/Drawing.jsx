@@ -33,7 +33,7 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     const dispatch = useDispatch();
 
     const [dlgText, setDlgText] = useState('');
-    const [styleDlg, setStyleDlg] = useState({ top: -20, left: 20 })
+    const [styleDlg, setStyleDlg] = useState({ display: 'none' })
     // const zoom = useSelector(state => state.canvaszoomReducer.zoom);
 
 

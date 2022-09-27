@@ -36,8 +36,9 @@ import UdpClock from './UdpClock';
 
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import Threejs from './Thrrejs';
 
-const buildDate = '240922_6'
+const buildDate = '270922_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -556,7 +557,7 @@ const App = () => {
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
             <Tab >Udp Clock</Tab>
-
+            <Tab >Threejs</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel >
@@ -614,6 +615,10 @@ const App = () => {
           <TabPanel >
             <UdpClock />
           </TabPanel>
+          <TabPanel >
+            <Threejs />
+          </TabPanel>
+
           <TabPanel >
             <Help />
           </TabPanel>
