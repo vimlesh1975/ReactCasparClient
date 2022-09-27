@@ -328,7 +328,7 @@ const JsonReader = () => {
     return (<div style={{ overflow: 'scroll', height: 900 }}>
         <div style={{ height: 200, overflow: 'scroll' }}>
             Paste content Here and then Double click on any word to add on canvas:<br />
-            <textarea onDoubleClick={getSelectionText} style={{ width: 750, height: 150 }}>1	Archery	Ahmedabad	Sanskardham Venue 1	September 30-October 6 (7 days)
+            <textarea onDoubleClick={getSelectionText} style={{ width: 750, height: 150 }} defaultValue={`1	Archery	Ahmedabad	Sanskardham Venue 1	September 30-October 6 (7 days)
                 2	Kho-Kho	Ahmedabad	Sanskardham Venue 2	September 30-October 4 (5 days)
                 3	Mallakhambh	Ahmedabad	Sanskardham Venue 2	October 7-11 (5 days)
                 4	Rugby 7s	Ahmedabad	Transtadia, Football Ground	September 28-30 (3 days)
@@ -371,7 +371,7 @@ const JsonReader = () => {
                 41	Basketball 3x3	Bhavnagar	Outdoor Courts, SAG	October 1-3 (3 days)
                 42	Basketball 5x5	Bhavnagar	Outdoor Courts, SAG	October 1-6 (6 days)
                 43	Volleyball	Bhavnagar	MPH, SAG	October 8-12 (5 days)
-                44	Cycling (Track)	Delhi	Velodrome	October 1-4 (4 days)</textarea>
+                44	Cycling (Track)	Delhi	Velodrome	October 1-4 (4 days)`} />
         </div>
         <div style={{ border: '1px solid red' }}>
             <span>Open Json File:</span><input
