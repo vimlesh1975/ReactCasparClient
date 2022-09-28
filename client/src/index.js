@@ -20,7 +20,7 @@ root.render(
       <Routes>
         <Route exact path='/' element={<App />} />
         <Route exact path='/drawing2' element={<Drawing2 canvasOutput={true} />} />
-        <Route exact path='/threejs2' element={<Threejs2 color1={'yellow'} />} />
+        <Route exact path='/threejs2' element={<Threejs2 />} />
       </Routes>
     </Router>
   </Provider>

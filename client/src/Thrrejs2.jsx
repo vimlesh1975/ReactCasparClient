@@ -1,8 +1,8 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Text } from "@react-three/drei";
 import { useRef, useState } from 'react';
 
-const Threejs2 = ({ color1 }) => {
+const Threejs2 = () => {
     const refkkk = useRef();
     window.refkkk = refkkk;
     const [scene1, setScene1] = useState({});
@@ -21,8 +21,10 @@ const Threejs2 = ({ color1 }) => {
                 rotation={[0, 0, 0]}
 
             >
+                {/* <mesh>
+                    <Text fontSize={0.2} position={[0, 5, 5]}  > Vimlesh Kumar</Text>
+                </mesh> */}
                 <boxGeometry attach="geometry" />
-
                 <meshNormalMaterial attach="material" />
 
             </mesh>
@@ -34,7 +36,7 @@ const Threejs2 = ({ color1 }) => {
             <Canvas >
                 <OrbitControls />
                 <Box />
-                <primitive object={(scene1)} />
+                <primitive object={scene1} />
             </Canvas>
         </div>
     </div >)

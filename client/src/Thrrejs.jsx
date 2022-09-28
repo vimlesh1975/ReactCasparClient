@@ -41,8 +41,8 @@ const Threejs = () => {
     function Box() {
         const ref = useRef();
         useFrame(() => {
-            ref.current.rotation.y += 0.010;
-            ref.current.rotation.x += 0.010;
+            // ref.current.rotation.y += 0.010;
+            // ref.current.rotation.x += 0.010;
         });
         return (
             <mesh
@@ -63,39 +63,42 @@ const Threejs = () => {
         )
     }
 
-    function ExportSVG() {
+    function showSvgtoCasparcg() {
         var rendererSVG = new SVGRenderer();
         rendererSVG.setSize(window.innerWidth, window.innerHeight);
+        // rendererSVG.setClearColor('red', 0.50);
         rendererSVG.render(scene1, camera1);
-        ExportToSVG(rendererSVG, "test.svg");
-    }
-
-    function ExportToSVG(rendererSVG, filename) {
         var XMLS = new XMLSerializer();
         var svgfile = XMLS.serializeToString(rendererSVG.domElement);
-        var svgData = svgfile;
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        var svgBlob = new Blob([preface, svgData], {
-            type: "image/svg+xml;charset=utf-8"
-        });
-        var svgUrl = URL.createObjectURL(svgBlob);
-        var downloadLink = document.createElement("a");
+        svgfile = preface + svgfile.replace(`style="background-color: rgb(254, 254, 254);"`, "");
 
-        downloadLink.href = svgUrl;
-        downloadLink.download = filename;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        endpoint(`play ${window.chNumber}-${96} [HTML] xyz.html`);
+        endpoint(`call ${window.chNumber}-${96} "
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
+            var aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.innerHTML='${(svgfile).replaceAll('"', '\\"')}';
+            bb.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${1920 * 100}/1920)+'%';
+            document.body.style.overflow='hidden';
+            "`)
     }
+
 
     return (<div >
         <div >
             <button onClick={showToCasparcg}>Show to casparcg</button>
-            <button onClick={useCallback(e => set(items => [...items, uuidv4()]), [])}>add to casparcg</button>
-            <button onClick={ExportSVG}>Export SVG</button>
+            <button onClick={useCallback(e => set(items => [...items, uuidv4()]), [])}>add shere to Cube</button>
+            <button onClick={showSvgtoCasparcg}> Show SVG to casparcg</button>
             <input type='color' onChange={e => setColor(e.target.value)} />
         </div>
-        <div ref={refkkk} style={{ width: 700, height: 500 }}>
+        <div ref={refkkk} style={{ width: 800, height: 450, }}>
             <Canvas
                 onCreated={({ gl, raycaster, scene, camera }) => {
                     // console.log(camera);
@@ -113,11 +116,11 @@ const Threejs = () => {
                     <Cube position={[0, 0, 0]} />
                 </Physics>
             </Canvas>
-            <Canvas id='ggg'
+            {/* <Canvas id='ggg'
             >
                 <OrbitControls />
                 <primitive object={scene1} />
-            </Canvas>
+            </Canvas> */}
         </div>
     </div>
     )
