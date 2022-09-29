@@ -43,6 +43,7 @@
     "svg-filter": "^1.2.2",
     "three": "^0.144.0",
     "url": "^0.11.0",
+    "use-asset": "^1.0.4",
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
     "worker-loader": "^3.0.8"
