@@ -51,8 +51,8 @@ const Threejs2 = () => {
     //     );
     // }
     return (<div >
-
-        <div ref={refkkk} style={{ height: 1080 }}>
+        {/* <input type='text' value='Vimlesh Kumar' onClick={() => alert('hi')} /> */}
+        < div ref={refkkk} style={{ height: 1080 }}>
             <Canvas onCreated={({ gl, raycaster, scene, camera }) => {
                 // console.log(camera.position);
                 // console.log(camera.rotation);
