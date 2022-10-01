@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useState } from "react";
+import { fabric } from "fabric";
 
 export const mousedownandmousemoveevent = (canvas) => {
     canvas.on('mouse:down', function (opt) {
@@ -27,7 +28,7 @@ export const mousedownandmousemoveevent = (canvas) => {
         }
     });
 }
-
+const allelements = ['Line', 'Circle', 'Triangle', 'Ellipse', 'Rect', 'Polygon', 'Group', 'Textbox', 'Image', 'Path'];
 const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
@@ -57,6 +58,8 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
         });
     }
 
+
+
     function setZoomAndPan(canvas) {
         canvas.on('mouse:wheel', function (opt) {
             var delta = opt.e.deltaY;
@@ -82,18 +85,72 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
             this.selection = true;
         });
     }
+    const extendproperty = () => {
+        allelements.forEach((val) => {
+            if (fabric[val].prototype) {
+                fabric[val].prototype._toSVG = (function (_toSVG) {
+                    return function () {
+                        var svg = _toSVG.call(this);
+                        if (val === 'Textbox') {
+                            if (this.textAlign) {
+                                svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
+                            }
+                            if (this.class) {
+                                svg.splice(3, 0, 'class="' + this.class + '" ');
+                            }
+                        }
+                        else {
+                            if (this.class) {
+                                svg.splice(2, 0, 'class="' + this.class + '" ');
+                            }
+                        }
+                        return svg;
+                    }
+                })(fabric[val].prototype._toSVG);
+            }
+        })
+    }
+    const removeExtendproperty = () => {
+        allelements.forEach((val) => {
+            if (fabric[val].prototype) {
+                fabric[val].prototype._toSVG = (function (_toSVG) {
+                    return function () {
+                        var svg = _toSVG.call(this);
+                        if (val === 'Textbox') {
+                            if (this.textAlign) {
+                                svg.splice(1, 1);
+                            }
+                            if (this.class) {
+                                svg.splice(2, 1);
+                            }
+                        }
+                        else {
+                            if (this.class) {
+                                svg.splice(2, 1);
+                            }
+                        }
+                        return svg;
+                    }
+                })(fabric[val].prototype._toSVG);
+            }
+        })
+    }
 
     useEffect(() => {
         setTimeout(() => {
-            window.editor.canvas.extraProps = ['id', 'selectable']
+            window.editor.canvas.extraProps = ['id', 'selectable', 'class']
+            fabric.SHARED_ATTRIBUTES.push('class');
+            extendproperty();
+
             setZoomAndPan(window.editor.canvas);
             window.editor.canvas.preserveObjectStacking = true;
             xyz(window.editor.canvas);
             ddd(window.editor.canvas);
 
-        }, 2000);
+        }, 3000);
         return () => {
-            cancelZoomAndPan(window.editor.canvas)
+            cancelZoomAndPan(window.editor.canvas);
+            removeExtendproperty()
         }
         // eslint-disable-next-line
     }, [])

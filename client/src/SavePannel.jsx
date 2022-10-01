@@ -209,7 +209,7 @@ const SavePannel = () => {
 
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), jsfilename: jsfilename, cssfilename: cssfilename } : val;
+            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), jsfilename: jsfilename, cssfilename: cssfilename } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
@@ -324,7 +324,7 @@ const SavePannel = () => {
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             deleteAll(window.editor?.canvas);
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -333,7 +333,7 @@ const SavePannel = () => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}

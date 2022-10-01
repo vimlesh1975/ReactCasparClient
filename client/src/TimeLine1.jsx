@@ -88,7 +88,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
   const updatePageAndAnimation = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
-      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } } : val;
+      return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'class', 'selectable']), animation: { kf: kf, xpositions: xpositions } } : val;
     });
     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] });
   }
@@ -219,7 +219,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -483,7 +483,13 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
-    console.log(canvas.getActiveObjects()[0])
+    // console.log(canvas.getActiveObjects()[0]);
+    // fabric.Rect.ATTRIBUTE_NAMES.push("class");
+    // console.log(fabric.Rect.ATTRIBUTE_NAMES);
+
+    // fabric.SHARED_ATTRIBUTES.push('class');
+    // console.log(fabric.SHARED_ATTRIBUTES);
+    // console.log(fabric.Object.prototype.toJSON)
   }
 
   const ResetAnimation = () => {
@@ -681,7 +687,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       document.getElementById(str1).style.display = "block";
     }
     </script>
-      <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+      <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
       </body>
       <link rel="stylesheet" href="${cssfilename}.css">
       <script src="${jsfilename}.js"></script>
@@ -744,7 +750,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     const aa1 = await window.showSaveFilePicker(options1);
     sethtmlpageHandle(aa1)
     const writable1 = await aa1.createWritable();
-    const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
+    const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
     const file1 = new Blob([bb], { type: 'text/plain' });
 
     await writable1.write(file1);
@@ -782,7 +788,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
     if (htmlpageHandle) {
       const writable1 = await htmlpageHandle.createWritable();
-      const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
+      const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: { kf: kf, xpositions: xpositions } }) + '\r\n';
 
       const file1 = new Blob([bb], { type: 'text/plain' });
       await writable1.write(file1);
@@ -902,12 +908,18 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                               selectObject(e);
                               deleteItemfromtimeline();
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 130 }} onChange={e => {
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
                               element.id = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
                             }
                             } value={(element.id)} /></div>
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
+                              element.class = e.target.value;
+                              dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+                              canvas.requestRenderAll();
+                            }
+                            } value={(element.class)} /></div>
                             {showTimeline && <div onClick={(e) => {
                               ss({ x: e.screenX - controlWidth });
                               canvas.setActiveObject(canvas.item(i));

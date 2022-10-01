@@ -150,7 +150,8 @@ export const cliptoPath = canvas => {
         });
         var group = new fabric.Group([...clipPath1]);
         group.set({
-            id: 'id_' + fabric.Object.__uid,
+            id: 'ccg_' + fabric.Object.__uid,
+            class: 'class_' + fabric.Object.__uid,
             absolutePositioned: true
         });
         canvas.sendToBack(group);
@@ -181,6 +182,7 @@ export const addClock = canvas => {
         stroke: '',
         strokeWidth: 0,
         id: 'clock1',
+        class: 'class_' + fabric.Object.__uid,
 
     });
     canvas.add(sss).setActiveObject(sss);
@@ -208,6 +210,7 @@ export const addUpTimer = canvas => {
         stroke: '',
         strokeWidth: 0,
         id: 'uptimer1',
+        class: 'class_' + fabric.Object.__uid,
     });
     canvas.add(sss).setActiveObject(sss);
     canvas.requestRenderAll();
@@ -234,6 +237,7 @@ export const createText = (canvas) => {
 
     const text = new fabric.Text("अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.", {
         id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         left: 100 * 1.87,
         top: 0,
@@ -257,6 +261,7 @@ export const createIText = (canvas) => {
     const text = new fabric.IText("अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.", {
         shadow: shadowOptions,
         id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         left: 100,
         top: 0,
         width: 480,
@@ -282,6 +287,7 @@ export const createTextBox = (canvas) => {
     const text = new fabric.Textbox("Timeline has been shifted below.", {
         shadow: shadowOptions,
         id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         left: 103 * 1.87,
         top: 0,
         width: 480 * 1.87,
@@ -310,6 +316,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
         } else {
             var rect = new fabric.Rect({
                 id: 'ccg_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 left: 10,
                 top: 10,
                 stroke: 'red',
@@ -341,6 +348,7 @@ export const Upload = (e, canvas) => {
                 image
                     .set({
                         id: 'ccg_' + fabric.Object.__uid,
+                        class: 'class_' + fabric.Object.__uid,
                         // left: 10,
                         // top: 10,
                         shadow: shadowOptions,
@@ -381,7 +389,8 @@ export const cloneAsImage = canvas => {
             clone.set({
                 left: (finalPosition(element, canvas)).x + 10,
                 top: (finalPosition(element, canvas)).y + 10,
-                id: 'id_' + fabric.Object.__uid,
+                id: 'ccg_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: {
                     color: 'black',
                     blur: 0,
@@ -416,6 +425,7 @@ export const gradient2 = () => {
 export const createRect = (canvas) => {
     const rect = new fabric.Rect({
         id: 'id_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100 * 1.87,
         left: 90 * 1.87,
@@ -437,7 +447,8 @@ export const createRect = (canvas) => {
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: 180,
@@ -458,7 +469,8 @@ export const createEllipse = (canvas) => {
 
 export const createPentagon = (canvas) => {
     const rect = new fabric.Polygon([{ x: 290, y: 124 }, { x: 390, y: 190 }, { x: 354, y: 297 }, { x: 226, y: 297 }, { x: 192, y: 190 }], {
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: 80,
@@ -479,7 +491,8 @@ export const createPentagon = (canvas) => {
 
 // export const createLine = (canvas) => {
 //     const rect = new fabric.Line([500, 450, 800, 450.00001], {
-//         id: 'id_' + fabric.Object.__uid,
+//         id: 'ccg_' + fabric.Object.__uid,
+// class: 'class_' + fabric.Object.__uid,
 //         shadow: { ...shadowOptions, Blur: 10 },
 //         top: -100,
 //         left: 90,
@@ -499,7 +512,8 @@ export const createPentagon = (canvas) => {
 
 export const createVLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 1 500', {
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
@@ -515,7 +529,8 @@ export const createVLine = (canvas) => {
 };
 export const createHLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 500 1', {
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
         left: 90,
@@ -532,7 +547,8 @@ export const createHLine = (canvas) => {
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 0,
         left: 0,
@@ -554,7 +570,8 @@ export const createCircle = (canvas) => {
 export const createTriangle = (canvas) => {
     canvas.isDrawingMode = false;
     const triangle = new fabric.Triangle({
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 50,
         left: -100,
@@ -799,6 +816,7 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
             fabric.Image.fromURL(newData, (fabricImage) => {
                 fabricImage.set({
                     id: 'ccg_' + fabric.Object.__uid,
+                    class: 'class_' + fabric.Object.__uid,
                     left: left,
                     top: top,
                     shadow: { ...shadowOptions, blur: 0 },
@@ -947,7 +965,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         if (canvas.getActiveObject().type !== 'activeSelection') {
             return;
         }
-        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'id_' + fabric.Object.__uid, });
+        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'ccg_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
     }
     else {
         if (!canvas.getActiveObject()) {
@@ -980,7 +998,7 @@ var _clipboard;
 export const copy = (canvas) => {
     canvas?.getActiveObject()?.clone(cloned => {
         _clipboard = cloned;
-    }, ['id']);
+    }, ['id', 'class', 'selectable']);
 }
 
 export const paste = (canvas) => {
@@ -992,7 +1010,8 @@ export const paste = (canvas) => {
                 top: clonedObj.top + 10,
                 evented: true,
                 objectCaching: false,
-                id: 'id_' + fabric.Object.__uid,
+                id: 'ccg_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
@@ -1003,7 +1022,8 @@ export const paste = (canvas) => {
                     obj.set({
                         evented: true,
                         objectCaching: false,
-                        id: 'id_' + fabric.Object.__uid,
+                        id: 'ccg_' + fabric.Object.__uid,
+                        class: 'class_' + fabric.Object.__uid,
                     });
                 });
                 // this should solve the unselectability
@@ -1019,7 +1039,7 @@ export const paste = (canvas) => {
                 window.edit();
             })
             canvas?.requestRenderAll();
-        }, ['id']);
+        }, ['id', 'class', 'selectable']);
     } catch (error) {
         // alert(error)
     }
@@ -1027,7 +1047,8 @@ export const paste = (canvas) => {
 export const createShape = (canvas, shape, size = 0.4) => {
 
     const rect = new fabric.Path(shape, {
-        id: 'id_' + fabric.Object.__uid,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
         left: (Math.random()) * 1000,
@@ -1291,7 +1312,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
                 var aa = document.createElement('div');
                 aa.style.position='absolute';
-                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+                aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
                 document.body.appendChild(aa);
                 document.body.style.margin='0';
                 document.body.style.padding='0';
@@ -1364,7 +1385,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
                 var aa = document.createElement('div');
                 aa.style.position='absolute';
-                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+                aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
                 document.body.appendChild(aa);
                 document.body.style.margin='0';
                 document.body.style.padding='0';
@@ -1448,6 +1469,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             stroke: '',
             strokeWidth: 0,
             id: 'gameTimer1',
+            class: 'class_' + fabric.Object.__uid,
 
         });
         canvas.add(sss).setActiveObject(sss);
@@ -1471,6 +1493,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             stroke: '',
             strokeWidth: 0,
             id: 'gameTimer1',
+            class: 'class_' + fabric.Object.__uid,
 
         });
         canvas.add(sss).setActiveObject(sss);
@@ -1670,7 +1693,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
     const exportSVG = canvas => {
         const element = document.createElement("a");
-        var aa = canvas.toSVG(['id', 'selectable'])
+        var aa = canvas.toSVG(['id', 'class', 'selectable'])
         const file = new Blob([aa], { type: 'text/xml' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1683,7 +1706,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
     const exportJSON = canvas => {
         const element = document.createElement("a");
-        var aa = JSON.stringify(canvas.toJSON(['id', 'selectable']));
+        var aa = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         const file = new Blob([aa], { type: 'text/json' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -1723,9 +1746,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         var textobj = element.toObject();
                         var clonedtextobj = JSON.parse(JSON.stringify(textobj));
                         var aa = new fabric.IText(element.text, clonedtextobj);
+                        aa.set({ id: element.id, objectCaching: false, shadow: { ...shadowOptions } });
                         canvas.remove(element)
                         canvas.add(aa);
-                        aa.set({ objectCaching: false, shadow: { ...shadowOptions } })
                     }
                 });
             });
@@ -1894,7 +1917,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             }
 
             </script>
-            <div> ${canvas.toSVG(['id', 'selectable'])}  </div>
+            <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
             </body>
             <link rel="stylesheet" href="${cssfilename}.css">
             <script src="${jsfilename}.js"></script>
@@ -1939,7 +1962,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const aa1 = await window.showSaveFilePicker(options1);
         sethtmlpageHandle(aa1)
         const writable1 = await aa1.createWritable();
-        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
+        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '' }) + '\r\n';
         const file1 = new Blob([bb], { type: 'text/plain' });
 
         await writable1.write(file1);
@@ -1958,7 +1981,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         if (htmlpageHandle) {
             const writable1 = await htmlpageHandle.createWritable();
-            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'selectable']), animation: '' }) + '\r\n';
+            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '' }) + '\r\n';
 
             const file1 = new Blob([bb], { type: 'text/plain' });
             await writable1.write(file1);
@@ -2025,7 +2048,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         </head>
         <body>
         `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
          <script>
         var aa = document.getElementsByTagName('div')[0];
@@ -2069,7 +2092,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         </head>
         <body>
         `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
          <script>
         var aa = document.getElementsByTagName('div')[0];
@@ -2123,7 +2146,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         </head>
         <body>
         `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
          <script>
         var aa = document.getElementsByTagName('div')[0];
@@ -2176,7 +2199,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         
         <body>
         `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
             </body>
             <script>
@@ -2220,7 +2243,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         
         <body>
         `;
-        aa += '<div>' + canvas.toSVG() + '</div>';
+        aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
             </body>
             <script>
@@ -2261,7 +2284,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.height='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
@@ -2283,7 +2306,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
@@ -2314,7 +2337,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
@@ -2345,7 +2368,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${templateLayers.clock} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
 
         document.body.style.margin='0';
@@ -2368,7 +2391,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -2429,7 +2452,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
@@ -2459,7 +2482,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
@@ -2472,71 +2495,70 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
 
-    useEffect(() => {
-        fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-            return function () {
-                var svg = _toSVG.call(this);
-                if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-                }
-                return svg;
-            }
-        })(fabric.Textbox.prototype._toSVG)
+    // useEffect(() => {
+    //     fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+    //         return function () {
+    //             var svg = _toSVG.call(this);
+    //             if (this.textAlign) {
+    //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
+    //             }
+    //             return svg;
+    //         }
+    //     })(fabric.Textbox.prototype._toSVG)
 
-        fabric.IText.prototype._toSVG = (function (_toSVG) {
-            return function () {
-                var svg = _toSVG.call(this);
-                if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-                }
-                return svg;
-            }
-        })(fabric.IText.prototype._toSVG)
+    //     fabric.IText.prototype._toSVG = (function (_toSVG) {
+    //         return function () {
+    //             var svg = _toSVG.call(this);
+    //             if (this.textAlign) {
+    //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
+    //             }
+    //             return svg;
+    //         }
+    //     })(fabric.IText.prototype._toSVG)
 
-        fabric.Text.prototype._toSVG = (function (_toSVG) {
-            return function () {
-                var svg = _toSVG.call(this);
-                if (this.textAlign) {
-                    svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-                }
-                return svg;
-            }
-        })(fabric.Text.prototype._toSVG)
+    //     fabric.Text.prototype._toSVG = (function (_toSVG) {
+    //         return function () {
+    //             var svg = _toSVG.call(this);
+    //             if (this.textAlign) {
+    //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
+    //             }
+    //             return svg;
+    //         }
+    //     })(fabric.Text.prototype._toSVG)
 
-        return () => {
-            fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-                return function () {
-                    var svg = _toSVG.call(this);
-                    if (this.textAlign) {
-                        svg.splice(1, 1);
-                    }
-                    return svg;
-                }
-            })(fabric.Textbox.prototype._toSVG)
+    //     return () => {
+    //         fabric.Textbox.prototype._toSVG = (function (_toSVG) {
+    //             return function () {
+    //                 var svg = _toSVG.call(this);
+    //                 if (this.textAlign) {
+    //                     svg.splice(1, 1);
+    //                 }
+    //                 return svg;
+    //             }
+    //         })(fabric.Textbox.prototype._toSVG)
 
-            fabric.IText.prototype._toSVG = (function (_toSVG) {
-                return function () {
-                    var svg = _toSVG.call(this);
-                    if (this.textAlign) {
-                        svg.splice(1, 1);
-                    }
-                    return svg;
-                }
-            })(fabric.IText.prototype._toSVG)
-            fabric.Text.prototype._toSVG = (function (_toSVG) {
-                return function () {
-                    var svg = _toSVG.call(this);
-                    if (this.textAlign) {
-                        svg.splice(1, 1);
-                    }
-                    return svg;
-                }
-            })(fabric.Text.prototype._toSVG)
-        }
-        // eslint-disable-next-line
-    }, [])
+    //         fabric.IText.prototype._toSVG = (function (_toSVG) {
+    //             return function () {
+    //                 var svg = _toSVG.call(this);
+    //                 if (this.textAlign) {
+    //                     svg.splice(1, 1);
+    //                 }
+    //                 return svg;
+    //             }
+    //         })(fabric.IText.prototype._toSVG)
+    //         fabric.Text.prototype._toSVG = (function (_toSVG) {
+    //             return function () {
+    //                 var svg = _toSVG.call(this);
+    //                 if (this.textAlign) {
+    //                     svg.splice(1, 1);
+    //                 }
+    //                 return svg;
+    //             }
+    //         })(fabric.Text.prototype._toSVG)
+    //     }
+    //     // eslint-disable-next-line
+    // }, [])
 
-    // const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }

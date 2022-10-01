@@ -38,7 +38,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Thrrejs';
 
-const buildDate = '300922_1'
+const buildDate = '011022_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -213,7 +213,7 @@ const App = () => {
         document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -243,7 +243,7 @@ const App = () => {
         document.body.appendChild(bb);
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
         bb.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
