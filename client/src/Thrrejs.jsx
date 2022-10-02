@@ -1,7 +1,10 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, TransformControls } from "@react-three/drei";
+import { OrbitControls, TransformControls, Html } from "@react-three/drei";
 import Text from './Text'
+import SpriteText from 'three-spritetext';
 
+// import loadFont from 'load-bmfont';
+// import createGeometry from 'three-bmfont-text';
 // import { Physics } from "@react-three/cannon";
 // import { useSelector } from 'react-redux'
 import { endpoint } from './common'
@@ -10,6 +13,9 @@ import * as THREE from 'three'
 // import { Controls, useControl } from "react-three-gui"
 
 // import { SVGRenderer } from 'three/examples/jsm/renderers/SVGRenderer.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+// import { helvetiker } from 'three/examples/fonts/helvetiker_regular.typeface.json'
 import { v4 as uuidv4 } from 'uuid';
 // import { Vector3 } from 'three';
 
@@ -61,14 +67,54 @@ const Threejs = () => {
     }
 
     const resetCameraToCasparc = () => {
-        // console.log(camera1.position)
         endpoint(`call 1-5 "
         camera1.position.set(0, 3.061616997868383e-16, 5)
         "`);
     }
 
+    const addtextfromfont = () => {
+        const loader = new FontLoader();
+        loader.load('http://localhost:10000/reactCasparClient/fonts/helvetiker_regular.typeface.json', function (font) {
+
+            const textGeometry = new TextGeometry('Hello', {
+                font: font,
+                size: 80,
+                height: 5,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 10,
+                bevelSize: 8,
+                bevelOffset: 0,
+                bevelSegments: 5
+            });
+            // create a cube and add to scene
+            var cubeMaterial = new THREE.MeshNormalMaterial();
+            // var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            var cube = new THREE.Mesh(textGeometry, cubeMaterial);
+            cube.position.set(-50, -20, -120)
+
+            scene1.add(cube);
+        });
+
+    }
+
+    const addcss3drendrer = () => {
+
+        const myText = new SpriteText('My text');
+        myText.position.set(-50, -20, -120)
+        scene1.add(myText);
+
+        const map = new THREE.TextureLoader().load('http://localhost:10000/ReactCasparClient/img/pine-wood-500x500.jpg');
+        const material = new THREE.SpriteMaterial({ map: map });
+
+        const sprite = new THREE.Sprite(material);
+        scene1.add(sprite);
+
+    }
+
+
+
     function importScenefromfile(inp) {
-        console.log(inp);
         var reader = new FileReader();
         reader.onload = e => {
             var loader = new THREE.ObjectLoader();
@@ -80,17 +126,6 @@ const Threejs = () => {
         }
         reader.readAsDataURL(inp);
     }
-
-    // const importScenefromData = (inp) => {
-    //     // var inp = scene2.toJSON();
-    //     var loader = new THREE.ObjectLoader();
-    //     loader.parse(inp,
-    //         json => {
-    //             setScene1(json);
-    //         }
-    //     );
-    // }
-
 
     function Spheres() {
         const ref = useRef()
@@ -203,10 +238,35 @@ const Threejs = () => {
         return (
             <group ref={ref}>
                 <Text hAlign="right" position={[-5, -1, 0]} children="THREEJS" />
-
             </group>
         )
     }
+
+    async function drawingFileSaveAs() {
+        const element = document.createElement("a");
+        var aa = JSON.stringify(scene1.toJSON());
+        // canvasList.forEach(val => {
+        //     aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename }) + '\r\n'
+        // });
+        const file = new Blob([aa], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+
+
+        const options = {
+            suggestedName: ss,
+            types: [{
+                description: 'json file',
+                accept: { 'application/json': ['.json'] },
+            }],
+        };
+        const aa1 = await window.showSaveFilePicker(options);
+        const writable = await aa1.createWritable();
+        await writable.write(file);
+        await writable.close();
+
+    }
+
 
     return (<div >
         <div >
@@ -215,7 +275,6 @@ const Threejs = () => {
                 <button onClick={() => window.open("/ReactCasparClient/threejs")}> Opebn Full Window</button>
                 <button onClick={showToCasparcg}>Initialise casparcg</button>
                 <button onClick={resetCameraToCasparc}>caaspar camera Reset</button>
-                <button onClick={() => setScene1()}>Reset Scene</button>
                 {transformMode.map((val, i) =>
                     <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
                 )}
@@ -225,12 +284,16 @@ const Threejs = () => {
 
             <button onClick={useCallback(e => setSpheres(items => [...items, uuidv4()]), [])}>Add Sphere</button>
             <button onClick={useCallback(e => setBoxes(items => [...items, uuidv4()]), [])}>Add Box</button>
-            <button onClick={useCallback(e => setTexts(items => [...items, uuidv4()]), [])}>Add Text</button>
+            <button onClick={useCallback(e => setTexts(items => [...items, uuidv4()]), [])}>Add Drei text3d</button>
+            <button onClick={addtextfromfont}>Add Text from font</button>
+            <button onClick={addcss3drendrer}>Add css3drendrer</button>
+
+
+
             {/* <button onClick={showSvgtoCasparcg}> Show SVG to casparcg</button> */}
             <br /> <button onClick={updatetoCaspar1}>Update to Caspar</button>
             <button onClick={resetCamera1}>Reset Camera</button>
-
-            {/* <button onClick={resetCamera1}>Reset Camera</button> */}
+            <button onClick={drawingFileSaveAs}>Scene FileSave As</button>
 
         </div>
         <div ref={refkkk} style={{ width: 800, height: 450, backgroundColor: 'grey' }} onClick={() => {
@@ -249,6 +312,9 @@ const Threejs = () => {
                     setCamera1(camera);
                 }}
             >
+                <Html>
+                    <div style={{ fontSize: 50 }} >HTMLText</div>
+                </Html>
                 <OrbitControls ref={orbit} />
                 {/* <Stars /> */}
                 <ambientLight intensity={0.5} />
@@ -264,6 +330,7 @@ const Threejs = () => {
                                 >
                                     <boxGeometry attach="geometry" args={[9, 0.5, 0.1]} />
                                     <meshNormalMaterial attach="material" />
+
                                 </mesh>
                             </TransformControls>
                         )
@@ -274,6 +341,7 @@ const Threejs = () => {
 
                     <Spheres position={[0, 0, 0]} />
                     {/* <Effects /> */}
+
 
                 </Suspense>
 

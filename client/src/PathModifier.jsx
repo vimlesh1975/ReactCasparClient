@@ -259,8 +259,10 @@ const PathModifier = () => {
             currentValue.push(['Q', (currentValue[currentValue.length - 1][3] + currentValue[0][1]) / 2, (currentValue[currentValue.length - 1][4] + currentValue[0][2]) / 2, currentValue[0][1], currentValue[0][2]])
             currentValue.push(['z'])
             const id1 = 'id_' + fabric.Object.__uid;
+
             const rect = new fabric.Path(currentValue, {
                 id: id1,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 opacity: 1,
                 fill: 'red',
