@@ -25,8 +25,8 @@ const Threejs2 = () => {
 
     function importScenefromfilegltf(inp) {
         const loader = new GLTFLoader();
-        loader.parseAsync(inp, function (gltf) {
-            setScene1(gltf.scene);
+        loader.parse(inp, "", gltf2 => {
+            setScene1(gltf2.scene);
         });
     }
 

@@ -51,42 +51,27 @@ const Threejs = () => {
     }
 
     const updatetoCaspar1 = () => {
-        transform.current.visible = false;
         const exporter = new GLTFExporter();
-
-        // Parse the input and generate the glTF output
-        exporter.parse(
-            scene1,
-            // called when the gltf has been generated
-            function (gltf) {
-                // downloadJSON(gltf);
-                // importScenefromfilegltf
-                // importScenefromData(${JSON.stringify(gltf).replaceAll('"', '\\"')})
+        exporter.parse(scene1, gltf => {
+            const inp = JSON.stringify(gltf);
+            const loader = new GLTFLoader();
+            loader.parse(inp, "", gltf2 => {
                 endpoint(`call 1-5 "
-                importScenefromfilegltf(${JSON.stringify(gltf).replaceAll('"', '\\"')})
+                importScenefromData(${JSON.stringify(gltf2.scene.toJSON()).replaceAll('"', '\\"')});
+                camera1.position.set(${camera1.position.x}, ${camera1.position.y}, ${camera1.position.z});
                 "`);
-                endpoint(`call 1-5 "
-                camera1.position.set(${camera1.position.x}, ${camera1.position.y}, ${camera1.position.z})
-                "`);
-
-            },
-            // called when there is an error in the generation
-            function (error) {
-
+            });
+        },
+            error => {
                 console.log('An error happened');
             },
             {}
         );
-
-
     }
     const updatetoCaspar2 = () => {
         endpoint(`call 1-5 "
-        importScenefromData(${JSON.stringify(scene2.toJSON()).replaceAll('"', '\\"')})
-        "`);
-
-        endpoint(`call 1-5 "
-        camera1.position.set(${camera2.position.x}, ${camera2.position.y}, ${camera2.position.z})
+        importScenefromData(${JSON.stringify(scene2.toJSON()).replaceAll('"', '\\"')});
+        camera1.position.set(${camera2.position.x}, ${camera2.position.y}, ${camera2.position.z});
         "`);
     }
 
@@ -344,15 +329,15 @@ const Threejs = () => {
                 <button onClick={() => window.open("/ReactCasparClient/threejs")}> Opebn Full Window</button>
                 <button onClick={showToCasparcg}>Initialise casparcg</button>
                 <button onClick={resetCameraToCasparc}>caaspar camera Reset</button>
-                <button onClick={() => {
+                {/* <button onClick={() => {
 
                     endpoint(`call 1-5 "
                     addtextfromfont('${txtvalue}');
                       "`);
 
-                }}>Add 3d text to caspar</button>
+                }}>Add 3d text to caspar</button> */}
 
-                <input type={'text'} value={txtvalue} onChange={e => setTxtvalue(e.target.value)} />
+                {/* <input type={'text'} value={txtvalue} onChange={e => setTxtvalue(e.target.value)} /> */}
             </div>
 
             <button onClick={useCallback(e => setSpheres(items => [...items, uuidv4()]), [])}>Add Sphere</button>
@@ -380,10 +365,6 @@ const Threejs = () => {
 
             <Canvas
                 onCreated={({ gl, raycaster, scene, camera }) => {
-                    // console.log(camera.position);
-                    // console.log(camera.rotation);
-
-                    // console.log(scene);
                     setScene1(scene);
                     setCamera1(camera);
                 }}
@@ -425,37 +406,23 @@ const Threejs = () => {
             </Canvas>
             {/* scene file <input id="importjson" type='file' className='input-file' accept='.json' onChange={e => importScenefromfile(e.target.files[0])} /> */}
             gltf file <input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltf(e.target.files[0])} />
-            <button onClick={() => {
 
+            <button onClick={async () => {
                 const exporter = new GLTFExporter();
-
-                // Parse the input and generate the glTF output
-                exporter.parse(
-                    scene1,
-                    // called when the gltf has been generated
-                    function (gltf) {
-                        // downloadJSON(gltf);
-
-
-                        const inp = JSON.stringify(gltf);
-                        // const inp = gltf;
-                        const loader = new GLTFLoader();
-                        loader.parseAsync(inp, function (gltf) {
-                            setScene2(gltf.scene);
-                        });
-
-                    },
-                    // called when there is an error in the generation
-                    function (error) {
-
+                exporter.parse(scene1, gltf => {
+                    const inp = JSON.stringify(gltf);
+                    const loader = new GLTFLoader();
+                    loader.parse(inp, "", gltf2 => {
+                        setScene2(gltf2.scene);
+                    });
+                },
+                    error => {
                         console.log('An error happened');
                     },
                     {}
                 );
-
             }
-
-            }>  load above as gltf</button>
+            }>load above as gltf</button>
 
             <button onClick={updatetoCaspar2}>Update to Caspar</button>
             <button onClick={resetCamera2}>Reset Camera</button>
