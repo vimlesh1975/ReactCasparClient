@@ -1,6 +1,11 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, TransformControls } from "@react-three/drei";
-import Text from './Text'
+// import Text from './Text'
+// import * as THREE from 'three'
+import { Text as Troikatext } from 'troika-three-text'
+import React, { useMemo } from 'react'
+import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
+import { Text3D } from '@react-three/drei'
 
 import { endpoint } from './common'
 import { useRef, Suspense, useEffect, useCallback, useState } from 'react';
@@ -28,6 +33,21 @@ const Threejs = () => {
     const refkkk = useRef();
     const transform = useRef();
     const orbit = useRef();
+
+    const addTroikatext = () => {
+        // Create:
+        const myText = new Troikatext()
+        scene1.add(myText)
+
+        // Set properties to configure:
+        myText.text = 'Hello world!'
+        myText.fontSize = 2
+        myText.position.z = 0
+        myText.color = 0x9966FF
+
+        // Update the rendering:
+        myText.sync()
+    }
 
     const showToCasparcg = () => {
         endpoint(`play 1-5 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
@@ -82,12 +102,12 @@ const Threejs = () => {
         reader.readAsDataURL(inp);
     }
 
-    function importScenefromdatagltf(inp) {
-        const loader = new GLTFLoader();
-        loader.parse(inp, function (gltf) {
-            setScene1(gltf.scene);
-        });
-    }
+    // function importScenefromdatagltf(inp) {
+    //     const loader = new GLTFLoader();
+    //     loader.parse(inp, function (gltf) {
+    //         setScene1(gltf.scene);
+    //     });
+    // }
 
     function Spheres() {
         const ref = useRef()
@@ -126,35 +146,59 @@ const Threejs = () => {
         }
     })
 
+    function Text({ children, vAlign = 'center', hAlign = 'center', size = 0.1, color = '#ff0000', ...props }) {
+        const config = useMemo(
+            () => ({ size: 1, height: 0.001, curveSegments: 1, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.1, bevelOffset: 0, bevelSegments: 2 }),
+            []
+        )
+        const mesh = useRef()
+        // useLayoutEffect(() => {
+        //     const size = new THREE.Vector3()
+        //     mesh.current.geometry.computeBoundingBox()
+        //     mesh.current.geometry.boundingBox.getSize(size)
+        //     mesh.current.position.x = hAlign === 'center' ? -size.x / 2 : hAlign === 'right' ? 0 : -size.x
+        //     mesh.current.position.y = vAlign === 'center' ? -size.y / 2 : vAlign === 'top' ? 0 : -size.y
+        // }, [children])
+        return (
+            <group {...props} scale={[1, 1, 1]}>
+                <Text3D ref={mesh} font={boldUrl} {...config}>
+                    {children}
+                    <meshStandardMaterial />
+                </Text3D>
+            </group>
+        )
+    }
+
+
     function Jumbo() {
         const ref = useRef()
         useFrame(({ clock }) => (ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z = Math.sin(clock.getElapsedTime()) * 0.3))
         return (
             <group ref={ref}>
-                <Text hAlign="right" position={[-5, -1, 0]} children="THREEJS" />
+                <Text hAlign="right" position={[-5, -1, 0]} children={f0} />
             </group>
         )
     }
 
-    async function drawingFileSaveAsjson() {
-        const element = document.createElement("a");
-        var aa = JSON.stringify(scene1.toJSON());
-        const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        const options = {
-            suggestedName: ss,
-            types: [{
-                description: 'json file',
-                accept: { 'application/json': ['.json'] },
-            }],
-        };
-        const aa1 = await window.showSaveFilePicker(options);
-        const writable = await aa1.createWritable();
-        await writable.write(file);
-        await writable.close();
+    // async function drawingFileSaveAsjson() {
+    //     const element = document.createElement("a");
+    //     var aa = JSON.stringify(scene1.toJSON());
+    //     const file = new Blob([aa], { type: 'text/plain' });
+    //     element.href = URL.createObjectURL(file);
+    //     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+    //     const options = {
+    //         suggestedName: ss,
+    //         types: [{
+    //             description: 'json file',
+    //             accept: { 'application/json': ['.json'] },
+    //         }],
+    //     };
+    //     const aa1 = await window.showSaveFilePicker(options);
+    //     const writable = await aa1.createWritable();
+    //     await writable.write(file);
+    //     await writable.close();
 
-    }
+    // }
     async function drawingFileSaveAsgltf() {
         const exporter = new GLTFExporter();
         exporter.parse(
@@ -187,7 +231,7 @@ const Threejs = () => {
         await writable.write(file);
         await writable.close();
     }
-
+    const [f0, setF0] = useState('vimlesh')
     return (<div >
         <div >
             <div style={{ border: '1px solid red' }}>
@@ -201,6 +245,10 @@ const Threejs = () => {
             <button onClick={useCallback(e => setSpheres(items => [...items, uuidv4()]), [])}>Add Sphere</button>
             <button onClick={useCallback(e => setBoxes(items => [...items, uuidv4()]), [])}>Add Box</button>
             <button onClick={useCallback(e => setTexts(items => [...items, uuidv4()]), [])}>Add Drei text3d</button>
+            <button onClick={addTroikatext}>Add addTroikatext</button>
+
+            <input type='text' value={f0} onChange={e => setF0(e.target.value)} />
+
 
             {transformMode.map((val, i) =>
                 <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
@@ -235,6 +283,8 @@ const Threejs = () => {
                                     <meshStandardMaterial attach="material" />
 
                                 </mesh>
+                                {/* <Html><h1>Vimlesh</h1></Html> */}
+
                             </TransformControls>
                         )
                     })}
@@ -270,7 +320,9 @@ const Threejs = () => {
             >
                 <OrbitControls />
                 {scene2 && <primitive object={scene2} />}
+
             </Canvas>
+
         </div>
     </div >
     )
