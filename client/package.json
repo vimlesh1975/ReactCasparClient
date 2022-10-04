@@ -45,6 +45,7 @@
     "svg-filter": "^1.2.2",
     "three": "^0.144.0",
     "three-bmfont-text": "^3.0.1",
+    "three-gltf-exporter": "^0.0.1",
     "three-spritetext": "^1.6.5",
     "url": "^0.11.0",
     "use-asset": "^1.0.4",
