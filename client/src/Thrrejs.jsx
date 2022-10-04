@@ -6,8 +6,8 @@ import { endpoint } from './common'
 import { useRef, Suspense, useEffect, useCallback, useState } from 'react';
 // import * as THREE from 'three'
 
-// import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
-import GLTFExporter from 'three-gltf-exporter';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
+// import GLTFExporter from 'three-gltf-exporter';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -192,7 +192,7 @@ const Threejs = () => {
                 Casparc Control
                 <button onClick={() => window.open("/ReactCasparClient/threejs")}> Opebn Full Window</button>
                 <button onClick={showToCasparcg}>Initialise casparcg</button>
-                <button onClick={resetCameraToCasparc}>caaspar camera Reset</button>
+                <button onClick={resetCameraToCasparc}>caspar camera Reset</button>
 
             </div>
 
