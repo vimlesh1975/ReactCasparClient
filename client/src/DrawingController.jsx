@@ -1962,7 +1962,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const aa1 = await window.showSaveFilePicker(options1);
         sethtmlpageHandle(aa1)
         const writable1 = await aa1.createWritable();
-        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '' }) + '\r\n';
+        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename }) + '\r\n';
         const file1 = new Blob([bb], { type: 'text/plain' });
 
         await writable1.write(file1);
@@ -1981,7 +1981,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         if (htmlpageHandle) {
             const writable1 = await htmlpageHandle.createWritable();
-            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '' }) + '\r\n';
+            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename }) + '\r\n';
 
             const file1 = new Blob([bb], { type: 'text/plain' });
             await writable1.write(file1);
