@@ -1,25 +1,25 @@
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useLoader, extend } from '@react-three/fiber'
+// Register TextMesh as a react-three-fiber element
+
 import { OrbitControls, TransformControls } from "@react-three/drei";
-// import Text from './Text'
-// import * as THREE from 'three'
-import { Text as Troikatext } from 'troika-three-text'
-import React, { useMemo } from 'react'
+import * as THREE from 'three'
+// import { Text as Troikatext } from 'troika-three-text'
+// import { Text3DFacade } from 'troika-3d-text'
+import { TextMesh } from 'troika-3d-text';
+import React from 'react'
 import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
 import { Text3D } from '@react-three/drei'
-
+import fonts from "./fonts";
 import { endpoint } from './common'
-import { useRef, Suspense, useEffect, useCallback, useState } from 'react';
-// import * as THREE from 'three'
+import { useRef, Suspense, useCallback, useState } from 'react';
 
-// import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { GLTFExporter } from './GLTFExporter.js';
-// import GLTFExporter from 'three-gltf-exporter';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const transformMode = ["scale", "rotate", "translate"];
-
+extend({ TextMesh });
 const Threejs = () => {
     const [boxes, setBoxes] = useState([]);
     const [spheres, setSpheres] = useState([]);
@@ -32,25 +32,70 @@ const Threejs = () => {
 
     const refkkk = useRef();
     const transform = useRef();
-    const orbit = useRef();
+    const refexamplebox = useRef();
+    const [texture1, settexture1] = useState("http://localhost:10000/ReactCasparClient/hh.png");
+
+    const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
+    function Text2() {
+
+
+        return (
+            <>
+                <textMesh
+
+                    position-z={-280}
+
+                    fontSize={22}
+                    color="#99ccff"
+                    maxWidth={300}
+                    lineHeight={1}
+                    letterSpacing={0}
+                    textAlign="justify"
+                    materialType="MeshPhongMaterial"
+                    text={'text'}
+                    font={fonts["Raleway"]}
+                    anchorX="center"
+                    anchorY="middle"
+                >
+                    <shaderMaterial
+                        attach="material"
+                    />
+                </textMesh>
+            </>
+        );
+    }
+
+    const ExampleBox = () => {
+        useFrame(() => {
+            // refexamplebox.current.rotation.y += 0.001;
+        })
+        return (
+            <mesh ref={refexamplebox} >
+                <boxGeometry args={[7, 4, 5]} />
+                <meshBasicMaterial transparent={true} map={useLoader(THREE.TextureLoader, texture1)} />
+            </mesh>
+        )
+    }
 
     const addTroikatext = () => {
-        // Create:
-        const myText = new Troikatext()
-        scene1.add(myText)
+        // // Create:
+        // const myText = new Troikatext()
+        // scene1.add(myText)
 
-        // Set properties to configure:
-        myText.text = 'Hello world!'
-        myText.fontSize = 2
-        myText.position.z = 0
-        myText.color = 0x9966FF
+        // // Set properties to configure:
+        // myText.text = 'Hello world!'
+        // myText.fontSize = 2
+        // myText.position.z = 0
+        // myText.color = 'yellow'
+        // // myText.font = boldUrl
 
-        // Update the rendering:
-        myText.sync()
+        // // Update the rendering:
+        // myText.sync()
+
     }
 
     const showToCasparcg = () => {
-        endpoint(`play 1-5 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
+        endpoint(`play 1-97 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
     }
     const resetCamera1 = () => {
         camera1.position.set(0, 3.061616997868383e-16, 5)
@@ -66,7 +111,7 @@ const Threejs = () => {
             const inp = JSON.stringify(gltf);
             const loader = new GLTFLoader();
             loader.parse(inp, "", gltf2 => {
-                endpoint(`call 1-5 "
+                endpoint(`call 1-97 "
                 importScenefromData(${JSON.stringify(gltf2.scene.toJSON()).replaceAll('"', '\\"')});
                 camera1.position.set(${camera1.position.x}, ${camera1.position.y}, ${camera1.position.z});
                 "`);
@@ -79,14 +124,14 @@ const Threejs = () => {
         )
     }
     const updatetoCaspar2 = () => {
-        endpoint(`call 1-5 "
+        endpoint(`call 1-97 "
         importScenefromData(${JSON.stringify(scene2.toJSON()).replaceAll('"', '\\"')});
         camera1.position.set(${camera2.position.x}, ${camera2.position.y}, ${camera2.position.z});
         "`);
     }
 
     const resetCameraToCasparc = () => {
-        endpoint(`call 1-5 "
+        endpoint(`call 1-97 "
         camera1.position.set(0, 3.061616997868383e-16, 5)
         "`);
     }
@@ -130,53 +175,13 @@ const Threejs = () => {
     }
 
 
-    useEffect(() => {
-        if (boxes.length === 1) { orbit.current.enabled = false }
-        if (transform.current) {
-            const controls = transform.current;
-            const callback = event => {
-                (orbit.current.enabled = !event.value);
-                console.log(event.value)
-            }
-            controls.addEventListener("dragging-changed", callback)
-
-            return () => {
-                controls.removeEventListener("dragging-changed", callback)
-            }
-        }
-    })
-
-    function Text({ children, vAlign = 'center', hAlign = 'center', size = 0.1, color = '#ff0000', ...props }) {
-        const config = useMemo(
-            () => ({ size: 1, height: 0.001, curveSegments: 1, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.1, bevelOffset: 0, bevelSegments: 2 }),
-            []
-        )
-        const mesh = useRef()
-        // useLayoutEffect(() => {
-        //     const size = new THREE.Vector3()
-        //     mesh.current.geometry.computeBoundingBox()
-        //     mesh.current.geometry.boundingBox.getSize(size)
-        //     mesh.current.position.x = hAlign === 'center' ? -size.x / 2 : hAlign === 'right' ? 0 : -size.x
-        //     mesh.current.position.y = vAlign === 'center' ? -size.y / 2 : vAlign === 'top' ? 0 : -size.y
-        // }, [children])
-        return (
-            <group {...props} scale={[1, 1, 1]}>
-                <Text3D ref={mesh} font={boldUrl} {...config}>
-                    {children}
-                    <meshStandardMaterial />
-                </Text3D>
-            </group>
-        )
-    }
-
 
     function Jumbo() {
-        const ref = useRef()
-        useFrame(({ clock }) => (ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z = Math.sin(clock.getElapsedTime()) * 0.3))
         return (
-            <group ref={ref}>
-                <Text hAlign="right" position={[-5, -1, 0]} children={f0} />
-            </group>
+            <Text3D font={boldUrl} position={[-5, -1, 0]} >
+                {f0}
+                <meshStandardMaterial />
+            </Text3D>
         )
     }
 
@@ -232,6 +237,25 @@ const Threejs = () => {
         await writable.close();
     }
     const [f0, setF0] = useState('vimlesh')
+
+    const loadfabricjstoCasparcg = (canvas) => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+        try {
+            canvas.getElement().toBlob(blob => {
+                var a = new FileReader();
+                a.onload = function (e) {
+                    settexture1(e.target.result);
+                }
+                a.readAsDataURL(blob);
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        // }
+    }
+
     return (<div >
         <div >
             <div style={{ border: '1px solid red' }}>
@@ -256,7 +280,10 @@ const Threejs = () => {
 
             <br /> <button onClick={updatetoCaspar1}>Update to Caspar</button>
             <button onClick={resetCamera1}>Reset Camera</button>
+            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricgjs to Casparcg</button>
+
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
+            orbitcontrolenable: <input type={'checkbox'} defaultValue={orbitcontrolenable} onClick={() => setorbitcontrolenable(!orbitcontrolenable)} />
 
         </div>
         <div ref={refkkk} style={{ width: 800, height: 450, backgroundColor: 'grey' }} onClick={() => {
@@ -270,7 +297,7 @@ const Threejs = () => {
                     setCamera1(camera);
                 }}
             >
-                <OrbitControls ref={orbit} />
+                <OrbitControls enabled={orbitcontrolenable} />
                 <spotLight position={[10, 15, 10]} angle={10.5} />
                 <Suspense fallback={null}>
                     {boxes.map((key, i) => {
@@ -289,11 +316,16 @@ const Threejs = () => {
                         )
                     })}
                     {texts.map((key, i) =>
-                        <Jumbo key={i} />
+                        <TransformControls ref={transform} key={key} >
+                            <Jumbo />
+                        </TransformControls>
                     )}
-                    <Spheres position={[0, 0, 0]} />
-                </Suspense>
+                    <Text2 />
+                    <Spheres position={[0, 4, 4]} />
+                    <ExampleBox />
 
+                </Suspense>
+                {/* <Stats /> */}
             </Canvas>
             gltf file <input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltf(e.target.files[0])} />
             <button onClick={async () => {

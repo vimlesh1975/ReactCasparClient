@@ -7,6 +7,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 const Threejs2 = () => {
     const refkkk = useRef();
+    const refprimitive = useRef();
     window.refkkk = refkkk;
     const [scene1, setScene1] = useState({});
     const [scene2, setScene2] = useState({});
@@ -61,14 +62,16 @@ const Threejs2 = () => {
     window.importScenefromData = importScenefromData;
     window.importScenefromfilegltf = importScenefromfilegltf;
 
+
+
     return (<div >
         < div ref={refkkk} style={{ height: 1080 }}>
             <Canvas onCreated={({ gl, raycaster, scene, camera }) => {
                 setScene2(scene);
                 setCamera1(camera);
             }}>
-                <OrbitControls />
-                <primitive object={scene1} />
+                <OrbitControls autoRotate autoRotateSpeed={'0.15'} />
+                <primitive ref={refprimitive} object={scene1} />
             </Canvas>
         </div>
     </div >)
