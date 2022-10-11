@@ -15,7 +15,7 @@ const Scroll = () => {
 
     const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [scrollTextProperties,setScrollTextProperties]=useState({
+    const [scrollTextProperties, setScrollTextProperties] = useState({
         shadow: shadowOptions,
         top: 980,
         fill: options.currentColor,
@@ -43,7 +43,7 @@ const Scroll = () => {
     }
 
     const deletePage = e => {
-        if (playerList1.length===1){
+        if (playerList1.length === 1) {
             return
         }
         const aa = [...playerList1]
@@ -104,7 +104,8 @@ const Scroll = () => {
             if (element.use1 === true) { aa += ` ${delemeter} ` + element.data1 };
         });
         const text = new fabric.IText(aa, {
-            id: 'id_' + uuidv4(),
+            id: 'id_' + fabric.Object.__uid,
+            class: 'class_' + fabric.Object.__uid,
             left: 0,
             ...scrollTextProperties
         });
@@ -124,6 +125,8 @@ const Scroll = () => {
                         myImg.scaleToHeight(45);
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
+                            id: 'id_' + fabric.Object.__uid,
+                            class: 'class_' + fabric.Object.__uid,
                             left: left1,
                             top: scrollTextProperties.top,
                         })
@@ -132,7 +135,8 @@ const Scroll = () => {
                         left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
-                            id: 'id_' + uuidv4(),
+                            id: 'id_' + fabric.Object.__uid,
+                            class: 'class_' + fabric.Object.__uid,
                             left: left1,
                             ...scrollTextProperties
                         });
@@ -173,22 +177,23 @@ const Scroll = () => {
                     <table border='0'>
                         <tbody >
                             <tr>
-                                <td><button onClick={()=>{
-                                    const selectedObject=canvas.getActiveObjects()[0];
-                                    if (selectedObject){
-                                    setScrollTextProperties({
-                                        shadow:selectedObject.shadow,
-                                        top: selectedObject.top,
-                                        fill: selectedObject.fill,
-                                        fontFamily: selectedObject.fontFamily,
-                                        fontWeight: selectedObject.fontWeight,
-                                        fontSize: selectedObject.fontSize,
-                                        editable: true,
-                                        objectCaching: false,
-                                        textAlign: 'left',
-                                        stroke: selectedObject.stroke,
-                                        strokeWidth: selectedObject.strokeWidth,
-                                    })}
+                                <td><button onClick={() => {
+                                    const selectedObject = canvas.getActiveObjects()[0];
+                                    if (selectedObject) {
+                                        setScrollTextProperties({
+                                            shadow: selectedObject.shadow,
+                                            top: selectedObject.top,
+                                            fill: selectedObject.fill,
+                                            fontFamily: selectedObject.fontFamily,
+                                            fontWeight: selectedObject.fontWeight,
+                                            fontSize: selectedObject.fontSize,
+                                            editable: true,
+                                            objectCaching: false,
+                                            textAlign: 'left',
+                                            stroke: selectedObject.stroke,
+                                            strokeWidth: selectedObject.strokeWidth,
+                                        })
+                                    }
                                 }}>Set text Properties as selected object</button></td>
                                 <td><button onClick={setAsScrollText}>Set as Scroll Text with delemeter</button></td>
                                 <td>Delemeter for scroll text</td>

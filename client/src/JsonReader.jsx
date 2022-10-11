@@ -72,6 +72,7 @@ const JsonReader = () => {
         Array.from(Array(3).keys()).forEach((val, i) => {
             const text = new fabric.Textbox((i === 0) ? 'Lane' : (i === 1) ? 'Name' : 'Uni', {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: (i === 0) ? 50 : (i === 1) ? 200 : 700,
                 top: 0,
@@ -93,6 +94,7 @@ const JsonReader = () => {
         dataHeat?.entries?.forEach((val, i) => {
             const text = new fabric.Textbox(val.lane.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 50,
                 top: 0,
@@ -113,7 +115,11 @@ const JsonReader = () => {
 
             const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
+
                 shadow: shadowOptions,
+
+
                 left: 150,
                 top: 0,
                 width: 600,
@@ -132,6 +138,7 @@ const JsonReader = () => {
             text1.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
 
             const text2 = new fabric.Textbox(val.clubname.toString(), {
+                class: 'class_' + fabric.Object.__uid,
                 id: 'id_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 700,
@@ -159,6 +166,7 @@ const JsonReader = () => {
         Array.from(Array(5).keys()).forEach((val, i) => {
             const text = new fabric.Textbox((i === 0) ? 'Lane' : (i === 1) ? 'Name' : (i === 2) ? 'Uni' : (i === 3) ? 'Time' : 'Place', {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: (i === 0) ? 50 : (i === 1) ? 200 : (i === 2) ? 700 : (i === 3) ? 1600 : 1750,
                 top: 0,
@@ -181,6 +189,7 @@ const JsonReader = () => {
         dataResult && dataResult.agegroups && dataResult?.agegroups[0]?.results.forEach((val, i) => {
             const text = new fabric.Textbox(val.lane.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 50,
                 top: 0,
@@ -201,6 +210,7 @@ const JsonReader = () => {
 
             const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 150,
                 top: 0,
@@ -221,6 +231,7 @@ const JsonReader = () => {
 
             const text2 = new fabric.Textbox(val.clubname.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 700,
                 top: 0,
@@ -241,6 +252,7 @@ const JsonReader = () => {
 
             const text3 = new fabric.Textbox(val.swimtime.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 1600,
                 top: 0,
@@ -261,6 +273,7 @@ const JsonReader = () => {
 
             const text4 = new fabric.Textbox(val.place.toString(), {
                 id: 'id_' + fabric.Object.__uid,
+                class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 left: 1800,
                 top: 0,
@@ -297,6 +310,7 @@ const JsonReader = () => {
         const text = new fabric.Textbox(val1, {
             shadow: shadowOptions,
             id: 'ccg_' + fabric.Object.__uid,
+            class: 'class_' + fabric.Object.__uid,
             left: Math.floor(Math.random() * 1700) + 1,
             top: Math.floor(Math.random() * 1050) + 1,
             width: 900,
