@@ -1,5 +1,4 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
 import ReactDOM from 'react-dom/client';
 
 import './index.css';
@@ -16,12 +15,12 @@ window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
-    <Router >
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
-        <Route exact path='ReactCasparClient/' element={<App />} />
-        <Route exact path='ReactCasparClient/drawing2' element={<Drawing2 canvasOutput={true} />} />
-        <Route exact path='ReactCasparClient/threejs' element={<Threejs />} />
-        <Route exact path='ReactCasparClient/threejs2' element={<Threejs2 />} />
+        <Route exact path='/' element={<App />} />
+        <Route exact path='/drawing2' element={<Drawing2 canvasOutput={true} />} />
+        <Route exact path='/threejs' element={<Threejs />} />
+        <Route exact path='/threejs2' element={<Threejs2 />} />
       </Routes>
     </Router>
   </Provider>
