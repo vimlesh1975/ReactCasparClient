@@ -1,4 +1,4 @@
-import { Canvas, useFrame, useLoader, extend } from '@react-three/fiber'
+import { Canvas, useLoader, extend } from '@react-three/fiber'
 // Register TextMesh as a react-three-fiber element
 
 import { OrbitControls, TransformControls } from "@react-three/drei";
@@ -6,7 +6,7 @@ import * as THREE from 'three'
 // import { Text as Troikatext } from 'troika-three-text'
 // import { Text3DFacade } from 'troika-3d-text'
 import { TextMesh } from 'troika-3d-text';
-import React from 'react'
+import React, { useEffect } from 'react'
 import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
 import { Text3D } from '@react-three/drei'
 import fonts from "./fonts";
@@ -21,6 +21,28 @@ import { v4 as uuidv4 } from 'uuid';
 const transformMode = ["scale", "rotate", "translate"];
 extend({ TextMesh });
 const Threejs = () => {
+    function onDocumentMouseDown(event) {
+        var raycaster = new THREE.Raycaster(); // create once
+        var mouse = new THREE.Vector2(); // create once
+
+        mouse.x = (event.clientX / 1920) * 2 - 1;
+        mouse.y = - (event.clientY / 1080) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera1);
+
+        var intersects = raycaster.intersectObjects(scene1.children);
+        console.log(intersects)
+    }
+    useEffect(() => {
+        document.addEventListener('mousedown',
+            onDocumentMouseDown, false);
+
+        return () => {
+            document.removeEventListener('mousedown',
+                onDocumentMouseDown, false);
+        }
+    }, [])
+
     const [boxes, setBoxes] = useState([]);
     const [spheres, setSpheres] = useState([]);
     const [texts, setTexts] = useState([]);
@@ -66,12 +88,10 @@ const Threejs = () => {
     }
 
     const ExampleBox = () => {
-        useFrame(() => {
-            // refexamplebox.current.rotation.y += 0.001;
-        })
         return (
             <mesh ref={refexamplebox} >
                 <boxGeometry args={[7, 4, 5]} />
+                {/* <planeGeometry args={[15, 8, 5]} /> */}
                 <meshBasicMaterial transparent={true} map={useLoader(THREE.TextureLoader, texture1)} />
             </mesh>
         )
@@ -280,15 +300,14 @@ const Threejs = () => {
 
             <br /> <button onClick={updatetoCaspar1}>Update to Caspar</button>
             <button onClick={resetCamera1}>Reset Camera</button>
-            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricgjs to Casparcg</button>
+            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricjs to Casparcg</button>
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
-            orbitcontrolenable: <input type={'checkbox'} defaultValue={orbitcontrolenable} onClick={() => setorbitcontrolenable(!orbitcontrolenable)} />
+            <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onClick={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
 
         </div>
         <div ref={refkkk} style={{ width: 800, height: 450, backgroundColor: 'grey' }} onClick={() => {
             transform.current && (transform.current.visible = true);
-            console.log('clocked')
         }}>
 
             <Canvas
