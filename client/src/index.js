@@ -25,9 +25,10 @@ root.render(
       </Routes>
     </Router>
 
-    <HashRouter >
+    <HashRouter>
       <Routes>
-        <Route exact path={process.env.PUBLIC_URL & '/threejs'} element={<Threejs />} />
+        <Route exact path='/' element={<Threejs />} />
+        {console.log(process.env.PUBLIC_URL)}
       </Routes>
     </HashRouter>
   </Provider>
