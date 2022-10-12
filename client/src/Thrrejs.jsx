@@ -55,7 +55,7 @@ const Threejs = () => {
     const refkkk = useRef();
     const transform = useRef();
     const refexamplebox = useRef();
-    const [texture1, settexture1] = useState("http://localhost:10000/ReactCasparClient/hh.png");
+    const [texture1, settexture1] = useState(window.location.origin + "/ReactCasparClient/hh.png");
 
     const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
     function Text2() {
