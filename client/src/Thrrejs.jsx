@@ -1,118 +1,47 @@
-import { Canvas, useLoader, extend } from '@react-three/fiber'
-// Register TextMesh as a react-three-fiber element
-
+import { Canvas } from '@react-three/fiber'
 import { OrbitControls, TransformControls } from "@react-three/drei";
 import * as THREE from 'three'
-// import { Text as Troikatext } from 'troika-three-text'
-// import { Text3DFacade } from 'troika-3d-text'
-import { TextMesh } from 'troika-3d-text';
 import React, { useEffect } from 'react'
 import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
 import { Text3D } from '@react-three/drei'
-import fonts from "./fonts";
 import { endpoint } from './common'
-import { useRef, Suspense, useCallback, useState } from 'react';
+import { useRef, Suspense, useState } from 'react';
+
 
 import { GLTFExporter } from './GLTFExporter.js';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { v4 as uuidv4 } from 'uuid';
 
 const transformMode = ["scale", "rotate", "translate"];
-extend({ TextMesh });
+
+var intersects;
+
 const Threejs = () => {
-    function onDocumentMouseDown(event) {
-        var raycaster = new THREE.Raycaster(); // create once
-        var mouse = new THREE.Vector2(); // create once
 
-        mouse.x = (event.clientX / 1920) * 2 - 1;
-        mouse.y = - (event.clientY / 1080) * 2 + 1;
-
-        raycaster.setFromCamera(mouse, camera1);
-
-        var intersects = raycaster.intersectObjects(scene1.children);
-        console.log(intersects)
-    }
-    useEffect(() => {
-        document.addEventListener('mousedown',
-            onDocumentMouseDown, false);
-
-        return () => {
-            document.removeEventListener('mousedown',
-                onDocumentMouseDown, false);
-        }
-    }, [])
-
-    const [boxes, setBoxes] = useState([]);
-    const [spheres, setSpheres] = useState([]);
-    const [texts, setTexts] = useState([]);
 
     const [scene1, setScene1] = useState({});
     const [scene2, setScene2] = useState({});
     const [camera1, setCamera1] = useState();
     const [camera2, setCamera2] = useState();
+    const [raycaster1, setRaycaster1] = useState(new THREE.Raycaster())
+
+    // const [gl1, setGl1] = useState()
 
     const refkkk = useRef();
     const transform = useRef();
-    const refexamplebox = useRef();
-    const [texture1, settexture1] = useState(window.location.origin + "/ReactCasparClient/hh.png");
 
     const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
-    function Text2() {
+    const [pickableObjects, setPickableObjects] = useState([])
 
-
-        return (
-            <>
-                <textMesh
-
-                    position-z={-280}
-
-                    fontSize={22}
-                    color="#99ccff"
-                    maxWidth={300}
-                    lineHeight={1}
-                    letterSpacing={0}
-                    textAlign="justify"
-                    materialType="MeshPhongMaterial"
-                    text={'text'}
-                    font={fonts["Raleway"]}
-                    anchorX="center"
-                    anchorY="middle"
-                >
-                    <shaderMaterial
-                        attach="material"
-                    />
-                </textMesh>
-            </>
-        );
-    }
-
-    const ExampleBox = () => {
-        return (
-            <mesh ref={refexamplebox} >
-                <boxGeometry args={[7, 4, 5]} />
-                {/* <planeGeometry args={[15, 8, 5]} /> */}
-                <meshBasicMaterial transparent={true} map={useLoader(THREE.TextureLoader, texture1)} />
-            </mesh>
-        )
-    }
-
-    const addTroikatext = () => {
-        // // Create:
-        // const myText = new Troikatext()
-        // scene1.add(myText)
-
-        // // Set properties to configure:
-        // myText.text = 'Hello world!'
-        // myText.fontSize = 2
-        // myText.position.z = 0
-        // myText.color = 'yellow'
-        // // myText.font = boldUrl
-
-        // // Update the rendering:
-        // myText.sync()
-
-    }
+    // const ExampleBox = () => {
+    //     return (
+    //         <mesh ref={refexamplebox} >
+    //             <boxGeometry args={[7, 4, 5]} />
+    //             {/* <planeGeometry args={[15, 8, 5]} /> */}
+    //             <meshBasicMaterial transparent={true} map={useLoader(THREE.TextureLoader, texture1)} />
+    //         </mesh>
+    //     )
+    // }
 
     const showToCasparcg = () => {
         endpoint(`play 1-97 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
@@ -126,6 +55,7 @@ const Threejs = () => {
     }
 
     const updatetoCaspar1 = () => {
+        DeselectAll();
         var exporter = new GLTFExporter();
         exporter.parse(scene1, gltf => {
             const inp = JSON.stringify(gltf);
@@ -173,37 +103,6 @@ const Threejs = () => {
     //         setScene1(gltf.scene);
     //     });
     // }
-
-    function Spheres() {
-        const ref = useRef()
-        return (
-            <>
-                <mesh ref={ref} >
-                    {spheres.map((key, i) => (
-                        <TransformControls ref={transform} key={key} >
-                            {/* <Spawned key={key} position={[i, 0, 0]}
-                            /> */}
-                            <mesh key={key} position={[i, 0, 0]}>
-                                <sphereGeometry attach="geometry" args={[0.5, 16, 16]} />
-                                <meshStandardMaterial attach="material" color="hotpink" transparent />
-                            </mesh>
-                        </TransformControls>
-                    ))}
-                </mesh>
-            </>
-        )
-    }
-
-
-
-    function Jumbo() {
-        return (
-            <Text3D font={boldUrl} position={[-5, -1, 0]} >
-                {f0}
-                <meshStandardMaterial />
-            </Text3D>
-        )
-    }
 
     // async function drawingFileSaveAsjson() {
     //     const element = document.createElement("a");
@@ -256,7 +155,7 @@ const Threejs = () => {
         await writable.write(file);
         await writable.close();
     }
-    const [f0, setF0] = useState('vimlesh')
+    const [f0, setF0] = useState('Vimlesh Kumar')
 
     const loadfabricjstoCasparcg = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -266,7 +165,13 @@ const Threejs = () => {
             canvas.getElement().toBlob(blob => {
                 var a = new FileReader();
                 a.onload = function (e) {
-                    settexture1(e.target.result);
+                    const geometry = new THREE.BoxGeometry(7, 4, 5);
+                    const material = new THREE.MeshBasicMaterial({ transparent: true, map: new THREE.TextureLoader().load(e.target.result) });
+                    const sphere = new THREE.Mesh(geometry, material);
+                    const dd = scene1.children[2]
+                    scene1.add(sphere);
+                    dd.attach(sphere);
+                    setPickableObjects([...pickableObjects, sphere])
                 }
                 a.readAsDataURL(blob);
             })
@@ -275,6 +180,93 @@ const Threejs = () => {
         }
         // }
     }
+
+    const addSphere = () => {
+        const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const material = new THREE.MeshStandardMaterial({ color: 'hotpink', transparent: true });
+        const sphere = new THREE.Mesh(geometry, material);
+        const dd = scene1.children[2]
+        scene1.add(sphere);
+        dd.attach(sphere);
+        setPickableObjects([...pickableObjects, sphere])
+    }
+
+    const addBox = () => {
+        const geometry = new THREE.BoxGeometry(11, 1, 0.3);
+        const material = new THREE.MeshStandardMaterial({ color: 'maroon', transparent: true });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(0, -3, 0);
+        const dd = scene1.children[2]
+        scene1.add(sphere);
+        dd.attach(sphere);
+        setPickableObjects([...pickableObjects, sphere])
+    }
+
+    const addDreiText = () => {
+        const geometry = scene1.children[3].children[0].geometry;
+        const material = new THREE.MeshStandardMaterial({ color: 'white' });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.set(-5, -3.2, 0.2);
+        sphere.scale.set(0.8, 0.6, 1);
+
+        const dd = scene1.children[2]
+        scene1.add(sphere);
+        dd.attach(sphere);
+        setPickableObjects([...pickableObjects, sphere])
+    }
+
+    const copySelected = () => {
+        if (intersects[0]) {
+            var aa = intersects[0].object.clone();
+            aa.position.set(2, 2, 2); // or any other coordinates
+            scene1.add(aa);
+            setPickableObjects([...pickableObjects, aa]);
+        }
+    }
+
+    const deleteSelected = () => {
+        if (intersects[0]) {
+            scene1.children[2].detach()
+            scene1.remove(intersects[0].object);
+            const updatedpickableObjects = [...pickableObjects]
+            updatedpickableObjects.filter((val) => {
+                return (val !== intersects[0].object)
+            })
+            setPickableObjects(updatedpickableObjects);
+        }
+    }
+    const deleteAll = () => {
+        setPickableObjects([]);
+        pickableObjects.forEach((object) => {
+            scene1.remove(object);
+        })
+    }
+
+    const DeselectAll = () => {
+        scene1.children[2].detach()
+    }
+
+
+    function onDocumentMouseMove(event) {
+        intersects = raycaster1.intersectObjects(pickableObjects, false)
+        if (intersects.length > 0) {
+            scene1.children[2].attach(intersects[0].object);
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('click', onDocumentMouseMove, false);
+        return () => {
+            document.removeEventListener('click', onDocumentMouseMove);
+        }
+        // eslint-disable-next-line
+    }, [pickableObjects])
+
+
+
+
+
+
 
     return (<div >
         <div >
@@ -286,13 +278,15 @@ const Threejs = () => {
 
             </div>
 
-            <button onClick={useCallback(e => setSpheres(items => [...items, uuidv4()]), [])}>Add Sphere</button>
-            <button onClick={useCallback(e => setBoxes(items => [...items, uuidv4()]), [])}>Add Box</button>
-            <button onClick={useCallback(e => setTexts(items => [...items, uuidv4()]), [])}>Add Drei text3d</button>
-            <button onClick={addTroikatext}>Add addTroikatext</button>
+            <button onClick={() => addSphere()}>Add Sphere</button>
+            <button onClick={() => addBox()}>Add Box</button>
+            <button onClick={() => addDreiText()}>Add Text</button>
+            <button onClick={() => deleteSelected()}>Delete</button>
+            <button onClick={() => deleteAll()}>Delete All</button>
+            <button onClick={() => copySelected()}>copy</button>
+            <button onClick={() => DeselectAll()}>DeSelect All</button>
 
             <input type='text' value={f0} onChange={e => setF0(e.target.value)} />
-
 
             {transformMode.map((val, i) =>
                 <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
@@ -303,48 +297,33 @@ const Threejs = () => {
             <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricjs to Casparcg</button>
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
-            <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onClick={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
+            <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
 
         </div>
         <div ref={refkkk} style={{ width: 800, height: 450, backgroundColor: 'grey' }} onClick={() => {
             transform.current && (transform.current.visible = true);
         }}>
-
             <Canvas
                 onCreated={({ gl, raycaster, scene, camera }) => {
                     setScene1(scene);
                     setCamera1(camera);
+                    setRaycaster1(raycaster);
+                    // setGl1(gl);
                 }}
             >
                 <OrbitControls enabled={orbitcontrolenable} />
+                <TransformControls ref={transform} />
                 <spotLight position={[10, 15, 10]} angle={10.5} />
                 <Suspense fallback={null}>
-                    {boxes.map((key, i) => {
-                        return (
-                            <TransformControls ref={transform} key={key} >
-                                <mesh
-                                    position={[0, -3, 0]}
-                                >
-                                    <boxGeometry attach="geometry" args={[9, 0.5, 0.1]} />
-                                    <meshStandardMaterial attach="material" />
+                    <group visible={false}>
+                        <Text3D font={boldUrl} position={[-5, -1, 0]} name='hh' >
+                            {f0}
+                            <meshStandardMaterial />
+                        </Text3D>
+                    </group>
 
-                                </mesh>
-                                {/* <Html><h1>Vimlesh</h1></Html> */}
-
-                            </TransformControls>
-                        )
-                    })}
-                    {texts.map((key, i) =>
-                        <TransformControls ref={transform} key={key} >
-                            <Jumbo />
-                        </TransformControls>
-                    )}
-                    <Text2 />
-                    <Spheres position={[0, 4, 4]} />
-                    <ExampleBox />
-
+                    {/* < ExampleBox /> */}
                 </Suspense>
-                {/* <Stats /> */}
             </Canvas>
             gltf file <input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltf(e.target.files[0])} />
             <button onClick={async () => {
