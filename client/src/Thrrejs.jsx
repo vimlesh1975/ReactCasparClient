@@ -27,11 +27,11 @@ const Threejs = () => {
 
     // const [gl1, setGl1] = useState()
 
-    const refkkk = useRef();
     const transform = useRef();
 
     const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
     const [pickableObjects, setPickableObjects] = useState([])
+    const [selectedObject, setSelectedObject] = useState();
 
     // const ExampleBox = () => {
     //     return (
@@ -96,6 +96,36 @@ const Threejs = () => {
         }
         reader.readAsDataURL(inp);
     }
+
+    // function applyTexture(inp) {
+    //     // console.log(selectedObject.material.map)
+
+    //     // // if (selectedObject) {
+    //     // var loader = new THREE.TextureLoader();
+
+    //     const texture = new THREE.TextureLoader().load(inp);
+    //     const material = new THREE.MeshBasicMaterial({ map: texture });
+    //     selectedObject.material = material;
+    //     // selectedObject.material.map.needsUpdate = true;
+    //     // console.log(selectedObject.material.map)
+
+    //     // loader.load(arr[textureToShow], function (tex) {
+    //     //     // Once the texture has loaded
+    //     //     // Asign it to the material
+    //     //     material.map = tex;
+    //     // console.log(texture)
+    //     // var reader = new FileReader();
+    //     // reader.onload = e => {
+    //     // const loader = new THREE.TextureLoader();
+    //     // console.log(selectedObject.material)
+    //     // loader.load(inp, function (texture) {
+    //     //     selectedObject.material.map.set(new THREE.Texture(texture))
+    //     // });
+    //     // }
+    //     // reader.readAsDataURL(inp);
+    //     // }
+    // }
+
 
     // function importScenefromdatagltf(inp) {
     //     const loader = new GLTFLoader();
@@ -193,7 +223,7 @@ const Threejs = () => {
 
     const addBox = () => {
         const geometry = new THREE.BoxGeometry(11, 1, 0.3);
-        const material = new THREE.MeshStandardMaterial({ color: 'maroon', transparent: true });
+        const material = new THREE.MeshStandardMaterial({ color: 'maroon' });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(0, -3, 0);
         const dd = scene1.children[2]
@@ -245,11 +275,16 @@ const Threejs = () => {
     const DeselectAll = () => {
         scene1.children[2].detach()
     }
-
+    const applyColor = (e) => {
+        if (selectedObject) {
+            selectedObject.material.color.set(new THREE.Color(e.target.value))
+        }
+    }
 
     function onDocumentMouseMove(event) {
         intersects = raycaster1.intersectObjects(pickableObjects, false)
         if (intersects.length > 0) {
+            setSelectedObject(intersects[0].object);
             scene1.children[2].attach(intersects[0].object);
         }
     }
@@ -262,12 +297,6 @@ const Threejs = () => {
         // eslint-disable-next-line
     }, [pickableObjects])
 
-
-
-
-
-
-
     return (<div >
         <div >
             <div style={{ border: '1px solid red' }}>
@@ -278,31 +307,32 @@ const Threejs = () => {
 
             </div>
 
-            <button onClick={() => addSphere()}>Add Sphere</button>
-            <button onClick={() => addBox()}>Add Box</button>
-            <button onClick={() => addDreiText()}>Add Text</button>
+            <button onClick={() => addSphere()}>Sphere</button>
+            <button onClick={() => addBox()}>Box</button>
+            <button onClick={() => addDreiText()}>Text</button>
             <button onClick={() => deleteSelected()}>Delete</button>
             <button onClick={() => deleteAll()}>Delete All</button>
             <button onClick={() => copySelected()}>copy</button>
             <button onClick={() => DeselectAll()}>DeSelect All</button>
+            <input type='color' onChange={e => applyColor(e)} />
 
-            <input type='text' value={f0} onChange={e => setF0(e.target.value)} />
+            <input size={10} type='text' value={f0} onChange={e => setF0(e.target.value)} />
 
             {transformMode.map((val, i) =>
                 <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
-            )}
+            )}  <br />
+            {/* Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} /> */}
 
-            <br /> <button onClick={updatetoCaspar1}>Update to Caspar</button>
+
+            <button onClick={updatetoCaspar1}>Update to Caspar</button>
             <button onClick={resetCamera1}>Reset Camera</button>
-            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricjs to Casparcg</button>
+            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricjs here</button>
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
             <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
 
         </div>
-        <div ref={refkkk} style={{ width: 800, height: 450, backgroundColor: 'grey' }} onClick={() => {
-            transform.current && (transform.current.visible = true);
-        }}>
+        <div style={{ width: 880, height: 450, backgroundColor: 'grey' }} >
             <Canvas
                 onCreated={({ gl, raycaster, scene, camera }) => {
                     setScene1(scene);
@@ -325,25 +355,30 @@ const Threejs = () => {
                     {/* < ExampleBox /> */}
                 </Suspense>
             </Canvas>
-            gltf file <input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltf(e.target.files[0])} />
-            <button onClick={async () => {
-                const exporter = new GLTFExporter();
-                exporter.parse(scene1, gltf => {
-                    const inp = JSON.stringify(gltf);
-                    const loader = new GLTFLoader();
-                    loader.parse(inp, "", gltf2 => {
-                        setScene2(gltf2.scene);
-                    });
+        </div>
+
+        gltf file <input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltf(e.target.files[0])} />
+        <button onClick={async () => {
+            const exporter = new GLTFExporter();
+            exporter.parse(scene1, gltf => {
+                const inp = JSON.stringify(gltf);
+                const loader = new GLTFLoader();
+                loader.parse(inp, "", gltf2 => {
+                    setScene2(gltf2.scene);
+                });
+            },
+                error => {
+                    console.log('An error happened');
                 },
-                    error => {
-                        console.log('An error happened');
-                    },
-                    {}
-                );
-            }
-            }>load above as gltf</button>
-            <button onClick={updatetoCaspar2}>Update to Caspar</button>
-            <button onClick={resetCamera2}>Reset Camera</button>
+                {}
+            );
+        }
+        }>load above as gltf</button>
+        <button onClick={updatetoCaspar2}>Update to Caspar</button>
+        <button onClick={resetCamera2}>Reset Camera</button>
+        <div style={{ width: 880, height: 330, backgroundColor: 'grey' }} >
+
+
             <Canvas onCreated={({ gl, raycaster, scene, camera }) => {
                 setCamera2(camera);
             }}
