@@ -36,64 +36,6 @@ var Direction = {
     DOWN: 3
 };
 
-
-
-
-// fabric.util.addListener(document.body, 'keydown', function (options) {
-//     if (options.target.nodeName === 'BODY') {
-//         var key = options.which || options.keyCode; // key detection
-//         if (key === 37) { // handle Left key
-//             moveSelected(Direction.LEFT);
-//         } else if (key === 38) { // handle Up key
-//             moveSelected(Direction.UP);
-//         } else if (key === 39) { // handle Right key
-//             moveSelected(Direction.RIGHT);
-//         } else if (key === 40) { // handle Down key
-//             moveSelected(Direction.DOWN);
-//         }
-
-//         //--------------
-//         if (options.repeat) {
-//             return;
-//         }
-
-//         if (options.key === 'Delete') {
-//             window.editor.canvas?.getActiveObjects().forEach(item => {
-//                 //  alert(item.type);
-//                 if (!((item.type === 'textbox') && item.isEditing)) {
-//                     // window.editor.canvas?.remove(item);
-//                     // window.editor.canvas?.discardActiveObject();
-//                     // window.editor.canvas?.requestRenderAll();
-//                     window.deleteItemfromtimeline();
-//                 }
-//             });
-//         }
-//         if (options.ctrlKey && options.key.toLowerCase() === 'c') {
-//             const item = window.editor.canvas?.getActiveObjects()[0];
-//             if (!((item?.type === 'textbox') && item?.isEditing)) { copy(window.editor.canvas) }
-//         }
-//         if (options.ctrlKey && options.key.toLowerCase() === 'v') {
-//             const item = window.editor.canvas?.getActiveObjects()[0];
-//             if (!((item?.type === 'textbox') && item?.isEditing)) { paste(window.editor.canvas) }
-//         }
-//         if (options.ctrlKey && options.key.toLowerCase() === 'z') {
-//             // window.editor.canvas?.undo();
-//             window.editor.canvas && undo(window.editor.canvas)
-//         }
-//         if (options.ctrlKey && options.key.toLowerCase() === 'r') {
-//             options.preventDefault();
-//             window.editor.canvas && redo(window.editor.canvas)
-//         }
-//         if (options.ctrlKey && options.key.toLowerCase() === 'a') {
-//             options.preventDefault();
-//             selectAll(window.editor.canvas);
-//         }
-//     }
-// })
-
-
-
-
 function moveSelected(direction) {
     var activeObject = window.editor.canvas.getActiveObject();
     if (activeObject) {
@@ -118,10 +60,6 @@ function moveSelected(direction) {
 
     }
 }
-
-
-
-
 
 export var gradient = new fabric.Gradient({
     type: 'linear',
@@ -163,8 +101,6 @@ export const cliptoPath = canvas => {
     }
 }
 
-
-
 export const addClock = canvas => {
     const sss = new fabric.Textbox('', {
         shadow: shadowOptions,
@@ -191,7 +127,6 @@ export const addClock = canvas => {
         animate(canvas, sss)
     }, 1000);
 }
-
 
 export const addUpTimer = canvas => {
     const sss = new fabric.Textbox('', {
@@ -349,11 +284,7 @@ export const Upload = (e, canvas) => {
                     .set({
                         id: 'ccg_' + fabric.Object.__uid,
                         class: 'class_' + fabric.Object.__uid,
-                        // left: 10,
-                        // top: 10,
                         shadow: shadowOptions,
-                        // stroke: 'none',
-                        // strokeWidth: 0,
                         strokeUniform: true,
                         objectCaching: false,
                     })
@@ -488,27 +419,6 @@ export const createPentagon = (canvas) => {
     canvas.requestRenderAll();
     rect.animate('top', 330, { onChange: canvas.renderAll.bind(canvas) })
 };
-
-// export const createLine = (canvas) => {
-//     const rect = new fabric.Line([500, 450, 800, 450.00001], {
-//         id: 'ccg_' + fabric.Object.__uid,
-// class: 'class_' + fabric.Object.__uid,
-//         shadow: { ...shadowOptions, Blur: 10 },
-//         top: -100,
-//         left: 90,
-//         height: 1,
-//         opacity: 0.9,
-//         fill: '#0000ff',
-//         hasRotatingPoint: true,
-//         objectCaching: false,
-//         stroke: '#0000ff',
-//         strokeWidth: 3,
-//         strokeUniform: true,
-//     });
-//     canvas.add(rect).setActiveObject(rect);
-//     canvas.requestRenderAll();
-//     rect.animate('top', 230, { onChange: canvas.renderAll.bind(canvas) })
-// };
 
 export const createVLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 1 500', {
@@ -1087,6 +997,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
     const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
+
+    const jsfilename2 = useSelector(state => state.jsfilenameReducer2.jsfilename2);
+    const cssfilename2 = useSelector(state => state.cssfilenameReducer2.cssfilename2);
 
     const [verticalSpeed, setVerticalSpeed] = useState(0.3)
     const [horizontalSpeed, setHorizontalSpeed] = useState(0.3)
@@ -1919,8 +1832,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             </script>
             <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
             </body>
-            <link rel="stylesheet" href="${cssfilename}.css">
             <script src="${jsfilename}.js"></script>
+            <link rel="stylesheet" href="${cssfilename}.css">
+            <script src="${jsfilename2}.js"></script>
+            <link rel="stylesheet" href="${cssfilename2}.css">
             </html>`
 
     }
@@ -1962,7 +1877,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const aa1 = await window.showSaveFilePicker(options1);
         sethtmlpageHandle(aa1)
         const writable1 = await aa1.createWritable();
-        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename }) + '\r\n';
+        const bb = JSON.stringify({ pageName: aa1.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n';
         const file1 = new Blob([bb], { type: 'text/plain' });
 
         await writable1.write(file1);
@@ -1981,7 +1896,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         if (htmlpageHandle) {
             const writable1 = await htmlpageHandle.createWritable();
-            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename }) + '\r\n';
+            const bb = JSON.stringify({ pageName: htmlpageHandle.name, pageValue: canvas.toJSON(['id', 'class', 'selectable']), animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n';
 
             const file1 = new Blob([bb], { type: 'text/plain' });
             await writable1.write(file1);
@@ -3125,8 +3040,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     <div className='drawingToolsRow' >
                         <b> Export: </b>
                         <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
-                        Js:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-                        css:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+                        Js:<input type='text' size={2} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+                        css:<input size={2} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+                        Js2:<input type='text' size={2} value={jsfilename2} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME2', payload: e.target.value })} />
+                        css2:<input size={2} type='text' value={cssfilename2} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME2', payload: e.target.value })} />
                         {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
 
                         <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>

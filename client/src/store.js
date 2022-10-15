@@ -150,6 +150,33 @@ const cssfilenameReducer = (state = initialcssfilename, action) => {
     }
 }
 
+
+const initialjsfilename2 = { jsfilename2: 'main2' };
+const jsfilenameReducer2 = (state = initialjsfilename2, action) => {
+    switch (action.type) {
+        case 'CHANGE_JSFILENAME2':
+            return {
+                ...state,
+                jsfilename2: action.payload
+            }
+        default: return state
+    }
+}
+
+const initialcssfilename2 = { cssfilename2: 'main2' };
+const cssfilenameReducer2 = (state = initialcssfilename2, action) => {
+    switch (action.type) {
+        case 'CHANGE_CSSFILENAME2':
+            return {
+                ...state,
+                cssfilename2: action.payload
+            }
+        default: return state
+    }
+}
+
+
+
 const initialPath1 = { path1: [] };
 const path1Reducer = (state = initialPath1, action) => {
     switch (action.type) {
@@ -268,6 +295,8 @@ const rootReducer = combineReducers({
     path1Reducer,
     jsfilenameReducer,
     cssfilenameReducer,
+    jsfilenameReducer2,
+    cssfilenameReducer2,
     pannelEnableReducer,
     kfReducer,
     xpositionsReducer,

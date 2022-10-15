@@ -21,6 +21,8 @@ const SavePannel = () => {
 
     const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
     const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
+    const jsfilename2 = useSelector(state => state.jsfilenameReducer2.jsfilename2);
+    const cssfilename2 = useSelector(state => state.cssfilenameReducer2.cssfilename2);
 
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
@@ -153,10 +155,15 @@ const SavePannel = () => {
 
     }
 
-    const recallPage = (json, canvas, i, jsfilename1, cssfilename1) => {
+    const recallPage = (json, canvas, i, jsfilename1, cssfilename1, jsfilename2, cssfilename2) => {
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+
         dispatch({ type: 'CHANGE_JSFILENAME', payload: (jsfilename1 === undefined) ? 'main' : jsfilename1 });;
         dispatch({ type: 'CHANGE_CSSFILENAME', payload: (cssfilename1 === undefined) ? 'main' : cssfilename1 });
+
+        dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
+        dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
+
         canvas.loadFromJSON(json, function () {
             const aa = canvas.getObjects();
             aa.forEach(element => {
@@ -209,7 +216,7 @@ const SavePannel = () => {
 
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), jsfilename: jsfilename, cssfilename: cssfilename } : val;
+            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
@@ -218,7 +225,7 @@ const SavePannel = () => {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename }) + '\r\n'
+            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -246,7 +253,7 @@ const SavePannel = () => {
         updatePage(canvas);
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename }) + '\r\n'
+            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
 
@@ -324,7 +331,7 @@ const SavePannel = () => {
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             deleteAll(window.editor?.canvas);
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -333,7 +340,7 @@ const SavePannel = () => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -378,7 +385,7 @@ const SavePannel = () => {
                                                             </td>
                                                                 <td>
                                                                     <input type='text' style={{ border: 'none', borderWidth: 0, minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                        recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename);
+                                                                        recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2);
                                                                     }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                     />
                                                                 </td></> :
@@ -407,7 +414,7 @@ const SavePannel = () => {
                                                                             <DrawingThumbnail i={i} />
                                                                         </div>
                                                                         <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                            recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename);
+                                                                            recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2);
                                                                         }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                         />
                                                                     </td></>}

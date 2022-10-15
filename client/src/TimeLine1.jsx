@@ -37,6 +37,9 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
   const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
 
+  const jsfilename2 = useSelector(state => state.jsfilenameReducer2.jsfilename2);
+  const cssfilename2 = useSelector(state => state.cssfilenameReducer2.cssfilename2);
+
   const kf = useSelector(state => state.kfReducer.kf);
   const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
 
@@ -691,6 +694,8 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       </body>
       <link rel="stylesheet" href="${cssfilename}.css">
       <script src="${jsfilename}.js"></script>
+      <link rel="stylesheet" href="${cssfilename2}.css">
+      <script src="${jsfilename2}.js"></script>
       </html>`;
   }
 
@@ -860,9 +865,10 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
         <button onClick={pasteAnimationtoAllLayers}>Paste to All layers</button>
         <button onClick={() => exportHTML1(canvas)}>Expor HTML</button>
-        Js file:<input type='text' size={3} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-        css file:<input size={3} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
-
+        Js:<input type='text' size={2} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+        css:<input size={2} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+        Js2:<input type='text' size={2} value={jsfilename2} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME2', payload: e.target.value })} />
+        css2:<input size={2} type='text' value={cssfilename2} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME2', payload: e.target.value })} />
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>  <span><b>Animate position, size and Rotation.</b></span>
