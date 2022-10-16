@@ -33,15 +33,6 @@ const Threejs = () => {
     const [pickableObjects, setPickableObjects] = useState([])
     const [selectedObject, setSelectedObject] = useState();
 
-    // const ExampleBox = () => {
-    //     return (
-    //         <mesh ref={refexamplebox} >
-    //             <boxGeometry args={[7, 4, 5]} />
-    //             {/* <planeGeometry args={[15, 8, 5]} /> */}
-    //             <meshBasicMaterial transparent={true} map={useLoader(THREE.TextureLoader, texture1)} />
-    //         </mesh>
-    //     )
-    // }
 
     const showToCasparcg = () => {
         endpoint(`play 1-97 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
@@ -97,34 +88,24 @@ const Threejs = () => {
         reader.readAsDataURL(inp);
     }
 
-    // function applyTexture(inp) {
-    //     // console.log(selectedObject.material.map)
+    function applyTexture(inp) {
 
-    //     // // if (selectedObject) {
-    //     // var loader = new THREE.TextureLoader();
-
-    //     const texture = new THREE.TextureLoader().load(inp);
-    //     const material = new THREE.MeshBasicMaterial({ map: texture });
-    //     selectedObject.material = material;
-    //     // selectedObject.material.map.needsUpdate = true;
-    //     // console.log(selectedObject.material.map)
-
-    //     // loader.load(arr[textureToShow], function (tex) {
-    //     //     // Once the texture has loaded
-    //     //     // Asign it to the material
-    //     //     material.map = tex;
-    //     // console.log(texture)
-    //     // var reader = new FileReader();
-    //     // reader.onload = e => {
-    //     // const loader = new THREE.TextureLoader();
-    //     // console.log(selectedObject.material)
-    //     // loader.load(inp, function (texture) {
-    //     //     selectedObject.material.map.set(new THREE.Texture(texture))
-    //     // });
-    //     // }
-    //     // reader.readAsDataURL(inp);
-    //     // }
-    // }
+        if (selectedObject) {
+            var reader = new FileReader();
+            reader.onload = e => {
+                var loader = new THREE.TextureLoader();
+                loader.crossOrigin = "";
+                loader.load(e.target.result, texture => {
+                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                    selectedObject.material = material;
+                    selectedObject.material.map.needsUpdate = true;
+                }, () => { }, error => {
+                    console.log(error)
+                });
+            }
+            reader.readAsDataURL(inp);
+        }
+    }
 
 
     // function importScenefromdatagltf(inp) {
@@ -321,7 +302,7 @@ const Threejs = () => {
             {transformMode.map((val, i) =>
                 <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
             )}  <br />
-            {/* Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} /> */}
+            Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} />
 
 
             <button onClick={updatetoCaspar1}>Update to Caspar</button>
