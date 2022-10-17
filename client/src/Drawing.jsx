@@ -166,6 +166,9 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
             if (e.target) {
                 setStyleDlg({ left: (e.target.left) * 0.533 - 100, top: (e.target.top) * 0.533 });
                 setDlgText(e.target.id);
+                setTimeout(() => {
+                    setStyleDlg({ display: 'none' })
+                }, 2000);
             }
         });
         canvas.on('mouse:out', e => {
