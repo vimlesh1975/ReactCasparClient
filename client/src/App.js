@@ -394,7 +394,7 @@ const App = () => {
   return (<div>
 
     {/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
-    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', alignItems: '' }}>
+    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', minWidth: 1920 }}>
       <div>
         <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
           endpoint(`clear ${chNumber}`);
