@@ -2,15 +2,16 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, TransformControls } from "@react-three/drei";
 import * as THREE from 'three'
 import React, { useEffect } from 'react'
-import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
-import { Text3D } from '@react-three/drei'
+// import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
+// import { Text3D } from '@react-three/drei'
 import { endpoint } from './common'
 import { useRef, Suspense, useState } from 'react';
-
+import * as STDLIB from 'three-stdlib'
 
 import { GLTFExporter } from './GLTFExporter.js';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
 const transformMode = ["scale", "rotate", "translate"];
 
@@ -44,6 +45,11 @@ const Threejs = () => {
     const resetCamera2 = () => {
         camera2.position.set(0, 3.061616997868383e-16, 5)
     }
+    const addLight = () => {
+        const light = new THREE.AmbientLight('white', 1);
+        scene2.add(light);
+    }
+
 
     const updatetoCaspar1 = () => {
         DeselectAll();
@@ -96,7 +102,7 @@ const Threejs = () => {
                 var loader = new THREE.TextureLoader();
                 loader.crossOrigin = "";
                 loader.load(e.target.result, texture => {
-                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                    const material = new THREE.MeshBasicMaterial({ map: texture, color: 'grey' });
                     selectedObject.material = material;
                     selectedObject.material.map.needsUpdate = true;
                 }, () => { }, error => {
@@ -166,7 +172,15 @@ const Threejs = () => {
         await writable.write(file);
         await writable.close();
     }
-    const [f0, setF0] = useState('Vimlesh Kumar')
+    const [f0, setF0] = useState('Vimlesh Kumar');
+
+    const regularWork = (sphere) => {
+        const dd = scene1.children[2]
+        scene1.add(sphere);
+        dd.attach(sphere);
+        setPickableObjects([...pickableObjects, sphere]);
+        setSelectedObject(sphere)
+    }
 
     const loadfabricjstoCasparcg = (canvas) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -179,10 +193,7 @@ const Threejs = () => {
                     const geometry = new THREE.BoxGeometry(7, 4, 5);
                     const material = new THREE.MeshBasicMaterial({ transparent: true, map: new THREE.TextureLoader().load(e.target.result) });
                     const sphere = new THREE.Mesh(geometry, material);
-                    const dd = scene1.children[2]
-                    scene1.add(sphere);
-                    dd.attach(sphere);
-                    setPickableObjects([...pickableObjects, sphere])
+                    regularWork(sphere);
                 }
                 a.readAsDataURL(blob);
             })
@@ -192,14 +203,13 @@ const Threejs = () => {
         // }
     }
 
+
     const addSphere = () => {
         const geometry = new THREE.SphereGeometry(0.5, 16, 16);
         const material = new THREE.MeshStandardMaterial({ color: 'hotpink', transparent: true });
         const sphere = new THREE.Mesh(geometry, material);
-        const dd = scene1.children[2]
-        scene1.add(sphere);
-        dd.attach(sphere);
-        setPickableObjects([...pickableObjects, sphere])
+        regularWork(sphere);
+
     }
 
     const addBox = () => {
@@ -207,24 +217,41 @@ const Threejs = () => {
         const material = new THREE.MeshStandardMaterial({ color: 'maroon' });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(0, -3, 0);
-        const dd = scene1.children[2]
-        scene1.add(sphere);
-        dd.attach(sphere);
-        setPickableObjects([...pickableObjects, sphere])
+        regularWork(sphere);
+
     }
 
     const addDreiText = () => {
-        const geometry = scene1.children[3].children[0].geometry;
-        const material = new THREE.MeshStandardMaterial({ color: 'white' });
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.set(-5, -3.2, 0.2);
-        sphere.scale.set(0.8, 0.6, 1);
+        // const geometry = scene1.children[3].children[0].geometry;
 
-        const dd = scene1.children[2]
-        scene1.add(sphere);
-        dd.attach(sphere);
-        setPickableObjects([...pickableObjects, sphere])
+        var loader = new FontLoader();
+        loader.load("ReactCasparClient/helvetiker_regular.typeface.json", function (font) {
+            var geometry = new STDLIB.TextGeometry(f0, {
+                font: font,
+                size: 1.2,
+                height: .001,
+                curveSegments: 10,
+                bevelThickness: 0.1,
+                bevelSize: 0.01,
+                bevelEnabled: true
+            });
+
+            const material = new THREE.MeshStandardMaterial({ color: 'white' });
+            const sphere = new THREE.Mesh(geometry, material);
+            sphere.position.set(-5, -3.2, 0.25);
+            sphere.scale.set(0.8, 0.6, 1);
+            regularWork(sphere);
+
+        })
     }
+
+
+    const addDreiText2 = () => {
+        const sphere = STDLIB.createText(f0, 2)
+        regularWork(sphere);
+
+    }
+
 
     const copySelected = () => {
         if (intersects[0]) {
@@ -261,6 +288,24 @@ const Threejs = () => {
             selectedObject.material.color.set(new THREE.Color(e.target.value))
         }
     }
+    const changetext = () => {
+        if (selectedObject) {
+            var loader = new FontLoader();
+            loader.load("helvetiker_regular.typeface.json", function (font) {
+                var textGeometry = new STDLIB.TextGeometry(f0, {
+                    font: font,
+                    size: 1.2,
+                    height: .001,
+                    curveSegments: 10,
+                    bevelThickness: 0.1,
+                    bevelSize: 0.01,
+                    bevelEnabled: true
+                });
+                selectedObject.geometry = textGeometry;
+            })
+
+        }
+    }
 
     function onDocumentMouseMove(event) {
         intersects = raycaster1.intersectObjects(pickableObjects, false)
@@ -290,7 +335,11 @@ const Threejs = () => {
 
             <button onClick={() => addSphere()}>Sphere</button>
             <button onClick={() => addBox()}>Box</button>
-            <button onClick={() => addDreiText()}>Text</button>
+            <button onClick={() => addDreiText()}>3D Text</button>
+            <button onClick={() => addDreiText2()}>2D Text</button>
+            <button onClick={() => changetext()}>Change text</button>
+
+
             <button onClick={() => deleteSelected()}>Delete</button>
             <button onClick={() => deleteAll()}>Delete All</button>
             <button onClick={() => copySelected()}>copy</button>
@@ -301,7 +350,7 @@ const Threejs = () => {
 
             {transformMode.map((val, i) =>
                 <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
-            )}  <br />
+            )}
             Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} />
 
 
@@ -311,6 +360,7 @@ const Threejs = () => {
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
             <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
+            <button onClick={() => console.log(scene1)}>console log</button>
 
         </div>
         <div style={{ width: 880, height: 450, backgroundColor: 'grey' }} >
@@ -326,14 +376,12 @@ const Threejs = () => {
                 <TransformControls ref={transform} />
                 <spotLight position={[10, 15, 10]} angle={10.5} />
                 <Suspense fallback={null}>
-                    <group visible={false}>
-                        <Text3D font={boldUrl} position={[-5, -1, 0]} name='hh' >
-                            {f0}
-                            <meshStandardMaterial />
-                        </Text3D>
+                    {/* <group visible={true}>
+                        <primitive object={new THREE.GridHelper(10, 13, 'red', 'darkgrey')} />
                     </group>
-
-                    {/* < ExampleBox /> */}
+                    <group visible={true}>
+                        <primitive object={new THREE.AxesHelper(3)} />
+                    </group> */}
                 </Suspense>
             </Canvas>
         </div>
@@ -357,7 +405,9 @@ const Threejs = () => {
         }>load above as gltf</button>
         <button onClick={updatetoCaspar2}>Update to Caspar</button>
         <button onClick={resetCamera2}>Reset Camera</button>
-        <div style={{ width: 880, height: 330, backgroundColor: 'grey' }} >
+        <button onClick={addLight}>Add light</button>
+        <button onClick={() => console.log(scene2)}>console log</button>
+        <div style={{ width: 880, height: 300, backgroundColor: 'grey' }} >
 
 
             <Canvas onCreated={({ gl, raycaster, scene, camera }) => {
