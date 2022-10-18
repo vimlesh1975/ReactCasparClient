@@ -156,7 +156,14 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     }, [])
 
     useEffect(() => {
-        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
+        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
+        editor?.canvas.getElement().toBlob(blob => {
+            var a = new FileReader();
+            a.onload = function (e) {
+                localStorage.setItem('RCC_currentcanvas', e.target.result)
+            }
+            a.readAsDataURL(blob);
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 

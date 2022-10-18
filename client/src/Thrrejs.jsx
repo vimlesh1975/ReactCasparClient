@@ -182,34 +182,18 @@ const Threejs = () => {
         setSelectedObject(sphere)
     }
 
-    const loadfabricjstoCasparcg = (canvas) => {
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        canvas.discardActiveObject();
-        canvas.requestRenderAll();
-        try {
-            canvas.getElement().toBlob(blob => {
-                var a = new FileReader();
-                a.onload = function (e) {
-                    const geometry = new THREE.BoxGeometry(7, 4, 5);
-                    const material = new THREE.MeshBasicMaterial({ transparent: true, map: new THREE.TextureLoader().load(e.target.result) });
-                    const sphere = new THREE.Mesh(geometry, material);
-                    regularWork(sphere);
-                }
-                a.readAsDataURL(blob);
-            })
-        } catch (error) {
-            console.log(error)
-        }
-        // }
+    const loadfabricjstoCasparcg = () => {
+        const geometry = new THREE.BoxGeometry(7, 4, 5);
+        const material = new THREE.MeshBasicMaterial({ transparent: true, map: new THREE.TextureLoader().load(localStorage.getItem('RCC_currentcanvas')) });
+        const sphere = new THREE.Mesh(geometry, material);
+        regularWork(sphere);
     }
-
 
     const addSphere = () => {
         const geometry = new THREE.SphereGeometry(0.5, 16, 16);
         const material = new THREE.MeshStandardMaterial({ color: 'hotpink', transparent: true });
         const sphere = new THREE.Mesh(geometry, material);
         regularWork(sphere);
-
     }
 
     const addBox = () => {
@@ -218,12 +202,9 @@ const Threejs = () => {
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(0, -3, 0);
         regularWork(sphere);
-
     }
 
     const addDreiText = () => {
-        // const geometry = scene1.children[3].children[0].geometry;
-
         var loader = new FontLoader();
         loader.load("ReactCasparClient/helvetiker_regular.typeface.json", function (font) {
             var geometry = new STDLIB.TextGeometry(f0, {
@@ -259,6 +240,7 @@ const Threejs = () => {
             aa.position.set(2, 2, 2); // or any other coordinates
             scene1.add(aa);
             setPickableObjects([...pickableObjects, aa]);
+            setSelectedObject(aa);
         }
     }
 
@@ -271,17 +253,20 @@ const Threejs = () => {
                 return (val !== intersects[0].object)
             })
             setPickableObjects(updatedpickableObjects);
+            setSelectedObject(null);
         }
     }
     const deleteAll = () => {
         setPickableObjects([]);
+        setSelectedObject(null);
         pickableObjects.forEach((object) => {
             scene1.remove(object);
         })
     }
 
     const DeselectAll = () => {
-        scene1.children[2].detach()
+        scene1.children[2].detach();
+        setSelectedObject(null);
     }
     const applyColor = (e) => {
         if (selectedObject) {
@@ -356,7 +341,7 @@ const Threejs = () => {
 
             <button onClick={updatetoCaspar1}>Update to Caspar</button>
             <button onClick={resetCamera1}>Reset Camera</button>
-            <button onClick={() => loadfabricjstoCasparcg(window.editor.canvas)}>Load fabricjs here</button>
+            <button onClick={() => loadfabricjstoCasparcg()}>Load fabricjs here</button>
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
             <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
