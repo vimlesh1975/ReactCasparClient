@@ -34,6 +34,78 @@ const Threejs = () => {
     const [pickableObjects, setPickableObjects] = useState([])
     const [selectedObject, setSelectedObject] = useState();
 
+    const Shape = (props) => {
+
+        const mesh = useRef();
+        // useFrame(() => {
+        //     mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
+        // });
+
+
+        const allShapes = {
+            box: new THREE.BoxGeometry(1, 1, 1),
+            cylinder: new THREE.CylinderGeometry(1, 1, 1, 32),
+            donut: new THREE.TorusGeometry(0.5, 0.2, 3, 20)
+        }
+
+        const allColors = {
+            box: "red",
+            cylinder: "pink",
+            donut: "blue"
+        }
+
+        return (
+            <mesh {...props} ref={mesh} scale={[1.5, 1.5, 1.5]}>
+                <primitive object={allShapes[props.shape]} attach={"geometry"} />
+                <meshStandardMaterial color={allColors[props.shape]} />
+            </mesh>
+        );
+    }
+    const [shapesOnCanvas, setShapesOnCanvas] = useState([])
+
+    const addShape = (e) => {
+        const shapeCount = shapesOnCanvas.length
+        const shape = e.target.getAttribute("data-shape")
+        setShapesOnCanvas(
+            [
+                ...shapesOnCanvas,
+                <Shape
+                    shape={shape}
+                    key={shapeCount}
+                    position={[-4 + (Math.random()) * 10, 0, 0]}
+                />
+            ]
+        )
+
+
+
+        // regularWork(shape);
+        // console.log(<primitive object={<Shape shape={shape} />} />)
+        // scene1.add(<Shape shape={shape} />)
+        // console.log(<Shape shape={shape} />)
+
+
+    }
+    useEffect(() => {
+        if (scene1?.children) {
+
+            const aa = [...scene1.children];
+            aa.splice(0, 3)
+            console.log(aa)
+            setPickableObjects(aa);
+
+            if (shapesOnCanvas.length > 0) {
+                scene1.children[2].attach(scene1.children[scene1.children.length - 1])
+                setSelectedObject(scene1.children[scene1.children.length - 1])
+            }
+        }
+
+        return () => {
+            // second
+        }
+
+    }, [shapesOnCanvas.length, scene1?.children?.length])
+
 
     const showToCasparcg = () => {
         endpoint(`play 1-97 [html] "http://localhost:10000/ReactCasparClient/threejs2"`);
@@ -222,6 +294,7 @@ const Threejs = () => {
         const material = new THREE.MeshStandardMaterial({ color: 'maroon' });
         const sphere = new THREE.Mesh(geometry, material);
         sphere.position.set(0, -3, 0);
+        sphere.userData = { name: f0 }
         regularWork(sphere);
     }
 
@@ -278,8 +351,8 @@ const Threejs = () => {
         }
     }
     const deleteAll = () => {
-        setPickableObjects([]);
-        setSelectedObject(null);
+        // setPickableObjects([]);
+        // setSelectedObject(null);
         pickableObjects.forEach((object) => {
             scene1.remove(object);
         })
@@ -339,6 +412,10 @@ const Threejs = () => {
 
             </div>
 
+            <button onClick={addShape} data-shape={"box"}>Box </button>
+            <button onClick={addShape} data-shape={"cylinder"}>Cylinder </button>
+            <button onClick={addShape} data-shape={"donut"}>Donut </button>
+
             <button onClick={() => addSphere()}>Sphere</button>
             <button onClick={() => addBox()}>Box</button>
             <button onClick={() => addDreiText()}>3D Text</button>
@@ -391,6 +468,7 @@ const Threejs = () => {
                         <primitive object={new THREE.AxesHelper(3)} />
                     </group> */}
                 </Suspense>
+                {[...shapesOnCanvas]}
             </Canvas>
         </div>
 
