@@ -122,6 +122,7 @@ const Scroll = () => {
                         alert("Error!");
                     } else {
                         // myImg.scaleToWidth(25);
+                        // myImg.setAttribute('crossorigin', 'anonymous')
                         myImg.scaleToHeight(45);
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
@@ -129,6 +130,7 @@ const Scroll = () => {
                             class: 'class_' + fabric.Object.__uid,
                             left: left1,
                             top: scrollTextProperties.top,
+                            crossOrigin: 'anonymous'
                         })
                         canvas.renderAll();
                         // left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;

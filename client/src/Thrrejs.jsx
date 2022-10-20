@@ -12,7 +12,7 @@ import { GLTFExporter } from './GLTFExporter.js';
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-
+// import { JSONTree } from 'react-json-tree';
 const transformMode = ["scale", "rotate", "translate"];
 
 var intersects;
@@ -174,16 +174,37 @@ const Threejs = () => {
     }
     const [f0, setF0] = useState('Vimlesh Kumar');
 
+    // const [json, setJson] = useState({
+    //     array: [1, 2, 3],
+    //     bool: true,
+    //     object: {
+    //         foo: 'bar',
+    //     }
+    // })
+
     const regularWork = (sphere) => {
         const dd = scene1.children[2]
         scene1.add(sphere);
+        // scene1.children.push(sphere);
+
         dd.attach(sphere);
+
+        // const updatedScene = scene1;
+        const updatedScene = scene1;
+        setScene1(updatedScene);
+
+
         setPickableObjects([...pickableObjects, sphere]);
         setSelectedObject(sphere)
+        // setJson({ ...json, aa: 'bb' })
+
+
+
     }
 
     const loadfabricjstoCasparcg = () => {
         const geometry = new THREE.BoxGeometry(7, 4, 5);
+        // const geometry = new THREE.PlaneGeometry(15, 7.6);
         const material = new THREE.MeshBasicMaterial({ transparent: true, map: new THREE.TextureLoader().load(localStorage.getItem('RCC_currentcanvas')) });
         const sphere = new THREE.Mesh(geometry, material);
         regularWork(sphere);
@@ -206,7 +227,7 @@ const Threejs = () => {
 
     const addDreiText = () => {
         var loader = new FontLoader();
-        loader.load("ReactCasparClient/helvetiker_regular.typeface.json", function (font) {
+        loader.load(window.location.origin + "/ReactCasparClient/helvetiker_regular.typeface.json", function (font) {
             var geometry = new STDLIB.TextGeometry(f0, {
                 font: font,
                 size: 1.2,
@@ -214,7 +235,7 @@ const Threejs = () => {
                 curveSegments: 10,
                 bevelThickness: 0.1,
                 bevelSize: 0.01,
-                bevelEnabled: true
+                bevelEnabled: true,
             });
 
             const material = new THREE.MeshStandardMaterial({ color: 'white' });
@@ -228,7 +249,7 @@ const Threejs = () => {
 
 
     const addDreiText2 = () => {
-        const sphere = STDLIB.createText(f0, 2)
+        const sphere = STDLIB.createText(f0, 1.5)
         regularWork(sphere);
 
     }
@@ -345,7 +366,8 @@ const Threejs = () => {
 
             <button onClick={drawingFileSaveAsgltf}>Scene FileSave As gltf</button>
             <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
-            <button onClick={() => console.log(scene1)}>console log</button>
+            <button onClick={() => console.log(scene1.children)}>console log</button>
+            {/* <JSONTree data={scene1.children} />; */}
 
         </div>
         <div style={{ width: 880, height: 450, backgroundColor: 'grey' }} >
@@ -355,6 +377,7 @@ const Threejs = () => {
                     setCamera1(camera);
                     setRaycaster1(raycaster);
                     // setGl1(gl);
+                    console.log('added')
                 }}
             >
                 <OrbitControls enabled={orbitcontrolenable} />

@@ -157,6 +157,7 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
+        // if (editor?.canvas.getElement().toBlob()) {
         editor?.canvas.getElement().toBlob(blob => {
             var a = new FileReader();
             a.onload = function (e) {
@@ -164,6 +165,20 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
             }
             a.readAsDataURL(blob);
         })
+
+
+        // var br = (editor?.canvas.getActiveObject())?.getBoundingRect();
+        // if (br) {
+        //     const aa = editor?.canvas.toDataURL({
+        //         format: 'png',
+        //         left: br.left,
+        //         top: br.top,
+        //         width: br.width,
+        //         height: br.height
+        //     })
+        //     localStorage.setItem('RCC_currentcanvas', aa)
+        // }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
