@@ -8,8 +8,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux'
 import store from './store'
 import Drawing2 from './Drawing2';
-import Threejs from './Thrrejs';
-import Threejs2 from './Thrrejs2';
+// import Threejs from './Threejs';
+import Threejs2 from './Threejs2';
 
 window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -19,7 +19,7 @@ root.render(
       <Routes>
         <Route exact path='/' element={<App />} />
         <Route exact path='/drawing2' element={<Drawing2 canvasOutput={true} />} />
-        <Route exact path='/threejs' element={<Threejs />} />
+        {/* <Route exact path='/threejs' element={<Threejs />} /> */}
         <Route exact path='/threejs2' element={<Threejs2 />} />
       </Routes>
     </Router>

@@ -1,0 +1,2 @@
+cd three
+npm start
