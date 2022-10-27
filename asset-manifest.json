@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/ReactCasparClient/static/css/main.7af8cd4e.css",
-    "main.js": "/ReactCasparClient/static/js/main.4fc5e90c.js",
-    "static/js/787.c4e7f8f9.chunk.js": "/ReactCasparClient/static/js/787.c4e7f8f9.chunk.js",
-    "index.html": "/ReactCasparClient/index.html",
-    "static/media/canvasBg.svg": "/ReactCasparClient/static/media/canvasBg.318f03422b7360431e95.svg",
-    "main.7af8cd4e.css.map": "/ReactCasparClient/static/css/main.7af8cd4e.css.map",
-    "main.4fc5e90c.js.map": "/ReactCasparClient/static/js/main.4fc5e90c.js.map",
-    "787.c4e7f8f9.chunk.js.map": "/ReactCasparClient/static/js/787.c4e7f8f9.chunk.js.map"
+    "main.css": "/three/static/css/main.e6c13ad2.css",
+    "main.js": "/three/static/js/main.53523782.js",
+    "static/js/787.761c5e60.chunk.js": "/three/static/js/787.761c5e60.chunk.js",
+    "index.html": "/three/index.html",
+    "main.e6c13ad2.css.map": "/three/static/css/main.e6c13ad2.css.map",
+    "main.53523782.js.map": "/three/static/js/main.53523782.js.map",
+    "787.761c5e60.chunk.js.map": "/three/static/js/787.761c5e60.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7af8cd4e.css",
-    "static/js/main.4fc5e90c.js"
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.53523782.js"
   ]
 }
