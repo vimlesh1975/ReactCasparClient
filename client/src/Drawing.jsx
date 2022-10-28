@@ -158,13 +158,13 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
         // if (editor?.canvas.getElement().toBlob()) {
-        editor?.canvas.getElement().toBlob(blob => {
-            var a = new FileReader();
-            a.onload = function (e) {
-                localStorage.setItem('RCC_currentcanvas', e.target.result)
-            }
-            a.readAsDataURL(blob);
-        })
+        // editor?.canvas.getElement().toBlob(blob => {
+        //     var a = new FileReader();
+        //     a.onload = function (e) {
+        //         localStorage.setItem('RCC_currentcanvas', e.target.result)
+        //     }
+        //     a.readAsDataURL(blob);
+        // })
 
 
         // var br = (editor?.canvas.getActiveObject())?.getBoundingRect();

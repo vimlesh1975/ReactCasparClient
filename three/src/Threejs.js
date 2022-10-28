@@ -1,6 +1,8 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, TransformControls } from "@react-three/drei";
 import * as THREE from 'three'
+import axios from 'axios';
+import socketIOClient from "socket.io-client";
 
 import { DragControls } from 'three/examples/jsm/controls/DragControls'
 
@@ -35,9 +37,6 @@ const transformMode = ["scale", "rotate", "translate"];
 var intersects;
 
 const Threejs = () => {
-
-
-
     // useEffect(() => {
     //     demoSheet.sequence.play({ iterationCount: Infinity, range: [0, 1] })
     // }, [])
@@ -55,6 +54,7 @@ const Threejs = () => {
     const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
     const [pickableObjects, setPickableObjects] = useState([])
     const [selectedObject, setSelectedObject] = useState();
+    const [shapesOnCanvas, setShapesOnCanvas] = useState([])
 
     const Shape = (props) => {
 
@@ -136,8 +136,41 @@ const Threejs = () => {
     }
 
 
-    const [shapesOnCanvas, setShapesOnCanvas] = useState([])
+    useEffect(() => {
+        const socket = socketIOClient(':9000');
+        socket.on("setCurrentCanvas", data => {
+            // setCurrentCanvas(data.data1);
+            const geometry = new THREE.BoxGeometry(7, 4, 5);
+            const material = new THREE.MeshBasicMaterial({
+                roughness: 0.3, metalness: 0.8,
+                transparent: true,
+                map: new THREE.TextureLoader().load(data.data1, (texture) => {
+                    // console.log(texture)
+                    const shapeCount = shapesOnCanvas.length
+                    const shape = "fabricjs"
+                    setShapesOnCanvas(
+                        [
+                            ...shapesOnCanvas,
+                            <Shapefabricjs
+                                shape={shape}
+                                key={shapeCount}
+                                geometry={geometry}
+                                material={material}
+                                // scale={[0.64, 0.54, 1]}
+                                // position={[0, -3, 0.27]}
+                                theatreKey={shape + shapeCount}
+                            />
+                        ]
+                    )
+                })
+            });
+        }
+        )
 
+        return () => {
+            // second
+        }
+    }, [shapesOnCanvas])
 
     const addShape = (e) => {
         const shapeCount = shapesOnCanvas.length
@@ -379,9 +412,11 @@ const Threejs = () => {
         );
     }
 
-    const dddd = () => {
-        // console.log(demoSheet.sequence)
-        demoSheet.sequence.play({ rate: 10 })
+    const playAnimation = () => {
+        demoSheet.sequence.play({ rate: 1, range: [0, 2], iterationCount: Infinity })
+    }
+    const pauseAnimation = () => {
+        demoSheet.sequence.pause()
     }
     window.demoSheet = demoSheet;
 
@@ -408,29 +443,40 @@ const Threejs = () => {
 
 
     const loadfabricjstoCasparcg = () => {
-        const geometry = new THREE.BoxGeometry(7, 4, 5);
-        const material = new THREE.MeshBasicMaterial({
-            roughness: 0.3, metalness: 0.8,
-            transparent: true, map: new THREE.TextureLoader().load(localStorage.getItem('RCC_currentcanvas'), (texture) => {
-                console.log(texture)
-                const shapeCount = shapesOnCanvas.length
-                const shape = "fabricjs"
-                setShapesOnCanvas(
-                    [
-                        ...shapesOnCanvas,
-                        <Shapefabricjs
-                            shape={shape}
-                            key={shapeCount}
-                            geometry={geometry}
-                            material={material}
-                            // scale={[0.64, 0.54, 1]}
-                            // position={[0, -3, 0.27]}
-                            theatreKey={shape + shapeCount}
-                        />
-                    ]
-                )
-            })
-        });
+        if (window.location.origin !== 'https://vimlesh1975.github.io') {
+            axios.post('http://localhost:9000/getCurrentCanvas').then((aa) => {
+                // console.log(aa.data1)
+                setTimeout(() => {
+                    // const geometry = new THREE.BoxGeometry(7, 4, 5);
+                    // const material = new THREE.MeshBasicMaterial({
+                    //     roughness: 0.3, metalness: 0.8,
+                    //     transparent: true,
+                    //     map: new THREE.TextureLoader().load(CurrentCanvas, (texture) => {
+                    //         // console.log(texture)
+                    //         const shapeCount = shapesOnCanvas.length
+                    //         const shape = "fabricjs"
+                    //         setShapesOnCanvas(
+                    //             [
+                    //                 ...shapesOnCanvas,
+                    //                 <Shapefabricjs
+                    //                     shape={shape}
+                    //                     key={shapeCount}
+                    //                     geometry={geometry}
+                    //                     material={material}
+                    //                     // scale={[0.64, 0.54, 1]}
+                    //                     // position={[0, -3, 0.27]}
+                    //                     theatreKey={shape + shapeCount}
+                    //                 />
+                    //             ]
+                    //         )
+                    //     })
+                    // });
+                }, 4000);
+
+            }).catch((aa) => { console.log('Error', aa) });
+        }
+
+
     }
 
 
@@ -694,18 +740,22 @@ const Threejs = () => {
             <div style={{ border: '1px solid red' }}>
                 <div style={{ border: '1px solid red' }}>
                     <div style={{ border: '1px solid red' }}>
-                        Casparc Control
-                        <button onClick={() => window.open("/ReactCasparClient/threejs")}> Opebn Full Window</button>
+                        Caspar Control
                         <button onClick={showToCasparcg}>Initialise casparcg</button>
                         <button onClick={resetCameraToCasparc}>caspar camera Reset</button>
-
+                        <button onClick={() => {
+                            if (studio.ui.isHidden) {
+                                studio.ui.restore();
+                            }
+                            else {
+                                studio.ui.hide();
+                            }
+                        }}>Toggle Animation Editor</button>
                     </div>
-
                     <button onClick={addBox} data-shape={"box"}>Box </button>
                     <button onClick={addCylinder} >Cylinder </button>
                     <button onClick={addShape} data-shape={"donut"}>Donut </button>
                     <button onClick={addShape} data-shape={"sphere"}>sphere </button>
-
 
                     <button onClick={addDreiText} data-shape={"text3D"}>3D Text</button>
                     <button onClick={() => addDreiText2()}>2D Text</button>
@@ -748,7 +798,8 @@ const Threejs = () => {
                         console.log(scene1.children);
                     }}>console log</button>
 
-                    <button onClick={dddd}>Test4</button>
+                    <button onClick={playAnimation}>Play Animation</button>
+                    <button onClick={pauseAnimation}>Pause Animation</button>
                 </div>
                 <div style={{ height: 650, backgroundColor: 'grey', border: '1px solid red' }} >
                     <Canvas gl={{ preserveDrawingBuffer: true }}

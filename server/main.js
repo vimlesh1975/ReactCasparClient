@@ -186,8 +186,8 @@ app.post('/resumeGameTimer', (req, res) => {
 })
 
 app.post('/recallPage', (req, res) => {
-    // const data = req.body;
-    // console.log(data)
+    const data = req.body;
+    console.log(data)
     io.emit('recallPage', req.body)
     res.end('Sent The Commands:' + JSON.stringify(req.body))
 })
@@ -204,8 +204,17 @@ app.post('/stopGraphics', (req, res) => {
     io.emit('stopGraphics', req.body)
     res.end('Sent The Commands' + JSON.stringify(req.body))
 })
-
-
+app.post('/getCurrentCanvas', (req, res) => {
+    const data = req.body;
+    io.emit('getCurrentCanvas', data)
+    res.end(JSON.stringify(data))
+})
+app.post('/setCurrentCanvas', (req, res) => {
+    const data = req.body;
+    // console.log(data)
+    io.emit('setCurrentCanvas', req.body)
+    res.end(JSON.stringify(req.body))
+})
 // app.get('/defaultCanvasList', (req, res) => {
 //     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
 // })

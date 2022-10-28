@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint } from './common'
 import DrawingAutomation from './DrawingAutomation';
+import axios from 'axios';
 
 const Automation = () => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -14,8 +15,23 @@ const Automation = () => {
 
     useEffect(() => {
         const socket = socketIOClient(':9000');
+
+
         if (allowAutomation.toString() === 'true') {
+            socket.on("getCurrentCanvas", data => {
+                window.editor?.canvas.getElement().toBlob(blob => {
+                    var a = new FileReader();
+                    a.onload = function (e) {
+                        if (window.location.origin !== 'https://vimlesh1975.github.io') {
+                            axios.post('http://localhost:9000/setCurrentCanvas', { data1: e.target.result }).then((aa) => {
+                            }).catch((aa) => { console.log('Error', aa) });
+                        }
+                    }
+                    a.readAsDataURL(blob);
+                })
+            });
             socket.on("recallPage", data => {
+                // console.log(data);
                 recallPage(data.layerNumber, data.pageName, JSON.parse(data.data));
                 setDataReceived(JSON.stringify(data));
             });
@@ -66,7 +82,7 @@ const Automation = () => {
                     data1.forEach(data2 => {
                         window.automationeditor[0].canvas.getObjects().forEach((element) => {
                             try {
-                                element.set({ selectable: false, strokeUniform: true,strokeWidth:element.strokeWidth/3 });
+                                element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                                 if (element.id === data2.key) {
                                     if (data2.type === 'text') {
 
