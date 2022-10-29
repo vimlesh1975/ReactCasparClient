@@ -2,6 +2,8 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from "@react-three/drei"
 import { useRef, useState } from 'react'
 import * as THREE from 'three'
+import { AnimationClip, AnimationMixer } from "three";
+
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -12,6 +14,33 @@ const Threejs2 = () => {
     const [scene1, setScene1] = useState({});
     const [scene2, setScene2] = useState({});
     const [camera1, setCamera1] = useState();
+
+
+    const sampleAnimation = (positionKF2) => {
+
+        var positionKF3 = JSON.stringify(positionKF2[0])
+        // positionKF2.replaceAll('\\"', '"')
+        // const positionKF3 = JSON.parse(positionKF2);
+
+        console.log(positionKF3)
+
+        var pickableObjects = scene1.children;
+        pickableObjects.forEach(mesh => {
+            const moveBlinkClip = new AnimationClip("move-n-blink", -1, [...positionKF3]);
+            const mixer = new AnimationMixer(mesh);
+            var action = mixer.clipAction(moveBlinkClip);
+            action.setLoop(THREE.LoopPingPong, 2);
+            action.play();
+            const clock = new THREE.Clock();
+            const aa1 = () => {
+                mixer.update(clock.getDelta());
+                requestAnimationFrame(aa1);
+            }
+            aa1();
+            // }
+        });
+    }
+    window.sampleAnimation = sampleAnimation;
 
     const importScenefromData = (inp) => {
         var loader = new THREE.ObjectLoader();
