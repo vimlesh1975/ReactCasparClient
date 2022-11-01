@@ -46,17 +46,17 @@ const Threejs2 = () => {
     //     })
     // }
 
-    const sampleAnimation = (positionKF2) => {
+    const sampleAnimation = (positionKF2, i) => {
         console.log(positionKF2.name)
         console.log(JSON.stringify(positionKF2.times))
         console.log(JSON.stringify(positionKF2.values))
 
         const positionKF3 = new NumberKeyframeTrack(`${positionKF2.name}`, Object.values(positionKF2.times), Object.values(positionKF2.values))
-        // const positionKF3 = new NumberKeyframeTrack('.position[x]', [0, 1], [0, 1])
-        // const positionKF3 = JSON.stringify(positionKF2)
-        // const positionKF3 = (JSON.parse(positionKF2)).replaceAll('\\"', '"',)
+
+
         const moveBlinkClip = new AnimationClip("move-n-blink", -1, [positionKF3]);
-        const mixer = new AnimationMixer(dd.current);
+
+        const mixer = new AnimationMixer(scene1.children[i + 3]);
         var action = mixer.clipAction(moveBlinkClip);
         action.setLoop(THREE.LoopPingPong, 2);
         action.play();
@@ -66,6 +66,8 @@ const Threejs2 = () => {
             requestAnimationFrame(aa1);
         }
         aa1();
+
+
     }
 
     window.sampleAnimation = sampleAnimation;
@@ -129,10 +131,10 @@ const Threejs2 = () => {
             }}>
                 {/* <SheetProvider sheet={demoSheet}> */}
                 <OrbitControls autoRotate autoRotateSpeed={'0.15'} />
-                <mesh theatreKey='box0' ref={dd}>
+                {/* <mesh theatreKey='box0' ref={dd}>
                     <boxGeometry />
                     <meshStandardMaterial />
-                </mesh>
+                </mesh> */}
                 <primitive ref={refprimitive} object={scene1} />
                 {/* </SheetProvider> */}
             </Canvas>

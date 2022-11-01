@@ -67,11 +67,31 @@ const Threejs = () => {
     // }
 
     const sampleAnimationcaspar = () => {
-        const positionKF2 = new NumberKeyframeTrack('.position[x]', [0, 1], [0, 5])
-        console.log(positionKF2)
-        endpoint(`call 1-97 "
-        sampleAnimation(${(JSON.stringify(positionKF2)).replaceAll('"', '\\"')});
-        "`);
+        var positionKF2 = [];
+        pickableObjects.forEach((mesh, i) => {
+            const _objectid = mesh.userData.__storeKey.split('Demo Sheet:default:')[1];
+            if (studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid]) {
+                const trackData = Object.values(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid].trackData)
+
+                trackData.forEach(element => {
+                    const animationName = "." + element.__debugName.split(':')[1].split(',')[0].split('"')[1] + "[" + element.__debugName.split(':')[1].split(',')[1].split('"')[1] + "]"
+                    const aa = element.keyframes
+                    const bb = []
+                    aa.forEach((val) => {
+                        bb.push(val.position)
+                    })
+                    const cc = []
+                    aa.forEach((val) => {
+                        cc.push(val.value)
+                    })
+                    positionKF2.push(new NumberKeyframeTrack(animationName, bb, cc))
+                });
+            }
+            endpoint(`call 1-97 "
+            sampleAnimation(${(JSON.stringify(positionKF2[i])).replaceAll('"', '\\"')}, ${i});
+            "`);
+        });
+
     }
 
     const sampleAnimation = () => {
