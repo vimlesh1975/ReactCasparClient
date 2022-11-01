@@ -1,0 +1,57 @@
+{
+    "sheetsById": {
+        "Demo Sheet": {
+            "staticOverrides": {
+                "byObject": {}
+            },
+            "sequence": {
+                "subUnitsPerUnit": 30,
+                "length": 10,
+                "type": "PositionalSequence",
+                "tracksByObject": {
+                    "box0": {
+                        "trackData": {
+                            "wFi6XmGZAf": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "box0:[\"position\",\"x\"]",
+                                "keyframes": [
+                                    {
+                                        "id": "FR5i4MJh1e",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    },
+                                    {
+                                        "id": "7Uu2YNvNpb",
+                                        "position": 2.533,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 2.5599999999999974
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "[\"position\",\"x\"]": "wFi6XmGZAf"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitionVersion": "0.4.0",
+    "revisionHistory": [
+        "AcFwOmiLKjOlUEt-"
+    ]
+}

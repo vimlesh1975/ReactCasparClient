@@ -58,32 +58,20 @@ const Threejs = () => {
     const [shapesOnCanvas, setShapesOnCanvas] = useState([])
     var pickableObjects2;
 
-    const sampleAnimationcaspar=()=>{
-        var positionKF2 = [];
-        pickableObjects.forEach(mesh => {
-            const _objectid = mesh.userData.__storeKey.split('Demo Sheet:default:')[1];
-            if (studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid]) {
-                const trackData = Object.values(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid].trackData)
-                trackData.forEach(element => {
-                    const animationName = "." + element.__debugName.split(':')[1].split(',')[0].split('"')[1] + "[" + element.__debugName.split(':')[1].split(',')[1].split('"')[1] + "]"
-                    const aa = element.keyframes
-                    const bb = []
-                    aa.forEach((val) => {
-                        bb.push(val.position)
-                    })
-                    const cc = []
-                    aa.forEach((val) => {
-                        cc.push(val.value)
-                    })
-                    positionKF2.push(new NumberKeyframeTrack(animationName, bb, cc))
-                });
-            }
-        });
+    // const sampleAnimationcaspar = () => {
+    //     const aa = (JSON.stringify(studio.createContentOfSaveFile('Demo Project'))).replaceAll('\\"', "'");
+    //     const bb = aa.replaceAll('"', '\\"');
+    //     endpoint(`call 1-97 "
+    //     sampleAnimation(${bb});
+    //     "`);
+    // }
 
+    const sampleAnimationcaspar = () => {
+        const positionKF2 = new NumberKeyframeTrack('.position[x]', [0, 1], [0, 5])
+        console.log(positionKF2)
         endpoint(`call 1-97 "
-        sampleAnimation(${JSON.stringify(positionKF2).replaceAll('"', '\\"')});
+        sampleAnimation(${(JSON.stringify(positionKF2)).replaceAll('"', '\\"')});
         "`);
-
     }
 
     const sampleAnimation = () => {
@@ -851,9 +839,9 @@ const Threejs = () => {
                     <div style={{ border: '1px solid red' }}>
                         Caspar Control
                         <button onClick={showToCasparcg}>Initialise casparcg</button>
-                    <button onClick={updatetoCaspar1}>Update to Caspar</button>
-                    <button onClick={sampleAnimationcaspar}>animation to Caspar</button>
-                    
+                        <button onClick={updatetoCaspar1}>Update to Caspar</button>
+                        <button onClick={sampleAnimationcaspar}>animation to Caspar</button>
+
 
                         <button onClick={resetCameraToCasparc}>caspar camera Reset</button>
                         <button onClick={() => {

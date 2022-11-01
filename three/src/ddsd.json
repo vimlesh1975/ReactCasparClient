@@ -1,0 +1,722 @@
+{
+    "sheetsById": {
+        "Demo Sheet": {
+            "staticOverrides": {
+                "byObject": {
+                    "spotLight 1": {},
+                    "text3d1": {},
+                    "Ribbon04545": {
+                        "position": {
+                            "x": 0.24000000000000032,
+                            "z": -0.24999999999999947
+                        }
+                    },
+                    "Dodecahedron01": {
+                        "position": {
+                            "x": 0.5799999999999994,
+                            "y": -0.3699999999999996
+                        }
+                    },
+                    "circle01": {
+                        "position": {
+                            "x": -3.5400000000000014,
+                            "y": 0.649999999999999,
+                            "z": 1.1999999999999982
+                        }
+                    },
+                    "torusknot01": {
+                        "position": {
+                            "x": 0.3200000000000005
+                        },
+                        "scale": {
+                            "x": 0.45999999999999974,
+                            "y": 0.43,
+                            "z": 0.33999999999999786
+                        }
+                    },
+                    "sphere0": {
+                        "position": {
+                            "x": -0.7352242574047192
+                        }
+                    },
+                    "spotLight 2": {
+                        "position": {
+                            "x": -12.924905287744187,
+                            "y": -20.327460459909595,
+                            "z": 9.516453858632623
+                        }
+                    },
+                    "cone11": {
+                        "scale": {
+                            "x": 1.4900000000000055,
+                            "y": 2.9699999999999975
+                        }
+                    },
+                    "lathe01": {
+                        "scale": {
+                            "y": -0.5200000000000001,
+                            "x": 0.19
+                        }
+                    },
+                    "box0": {},
+                    "cyllinder01": {
+                        "scale": {
+                            "y": 0.050000000000001384,
+                            "x": 0.11999999999999962,
+                            "z": 0.17000000000000035
+                        }
+                    },
+                    "fabricjs2": {
+                        "position": {
+                            "x": 3.1000000000000005,
+                            "y": -0.3599999999999999
+                        },
+                        "rotation": {
+                            "x": 0.12999999999999973
+                        }
+                    },
+                    "Dodecahedron81": {
+                        "position": {
+                            "x": 4.689999999999999
+                        }
+                    },
+                    "cyllinder11": {
+                        "position": {
+                            "x": 0,
+                            "y": 1.69274996390146,
+                            "z": 3.685297306212456
+                        },
+                        "scale": {
+                            "x": 0.2,
+                            "y": 0.17173764308221195,
+                            "z": 0.3421261085834233
+                        }
+                    },
+                    "donut2": {
+                        "position": {
+                            "y": -4.058734082369854,
+                            "z": -3.4985615508427266
+                        },
+                        "scale": {
+                            "x": 3.3399999999999914,
+                            "y": 2.589999999999999,
+                            "z": 12.69
+                        },
+                        "rotation": {
+                            "y": -0.49999999999999933,
+                            "z": -1.469999999999993
+                        }
+                    },
+                    "sphere2": {
+                        "position": {
+                            "x": 3.9522837123910595,
+                            "z": 7.479171052237412
+                        }
+                    },
+                    "text3d3": {
+                        "position": {
+                            "x": -7.325232254170665,
+                            "y": -0.1888460030887802,
+                            "z": 0.25
+                        },
+                        "rotation": {
+                            "x": 0.3700000000000011,
+                            "y": 0.47000000000000003
+                        },
+                        "scale": {
+                            "x": 1.9300000000000028
+                        }
+                    }
+                }
+            },
+            "sequence": {
+                "subUnitsPerUnit": 30,
+                "length": 10,
+                "type": "PositionalSequence",
+                "tracksByObject": {
+                    "text3d2": {
+                        "trackData": {
+                            "xhr8LBYaHd": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "text3d2:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "CHEk8spZ3j",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -20
+                                    },
+                                    {
+                                        "id": "cTE12wpGIP",
+                                        "position": 1.6,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -3.899999999999998
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "xhr8LBYaHd"
+                        }
+                    },
+                    "cylinder1": {
+                        "trackData": {
+                            "VkDjznOlce": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "cylinder1:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "5cIPDS0AIE",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 5.982282472341568
+                                    },
+                                    {
+                                        "id": "VMbU7E38I6",
+                                        "position": 1.633,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -4.707717527658431
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "VkDjznOlce"
+                        }
+                    },
+                    "cyllinder01": {
+                        "trackData": {
+                            "bO9lp8c-rE": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "cyllinder01:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "io28dJJ_9E",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -7.029999999999998
+                                    },
+                                    {
+                                        "id": "tZt8eh8JKW",
+                                        "position": 1.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 7.0099999999999945
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "bO9lp8c-rE"
+                        }
+                    },
+                    "lathe41": {
+                        "trackData": {
+                            "e2VZszwbpR": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "lathe41:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "xaCpEvJFE1",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    },
+                                    {
+                                        "id": "i-9_t0gu3E",
+                                        "position": 2.433,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -1.84
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "e2VZszwbpR"
+                        }
+                    },
+                    "donut1": {
+                        "trackData": {
+                            "APBICug5Ub": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "donut1:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "5XROU4B4v8",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 8.238513927334083
+                                    },
+                                    {
+                                        "id": "HrW7E0IzAF",
+                                        "position": 0.867,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -5.051486072665916
+                                    },
+                                    {
+                                        "id": "k9xBL7C72x",
+                                        "position": 1.767,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 2.3585139273340863
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "APBICug5Ub"
+                        }
+                    },
+                    "donut2": {
+                        "trackData": {
+                            "amdRgn2JYL": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "donut2:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "SgXzfNwmn9",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -3.258592743091909
+                                    },
+                                    {
+                                        "id": "AdqCOYxtH-",
+                                        "position": 0.5,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 6.514174876684667
+                                    },
+                                    {
+                                        "id": "pe4ecKbkHj",
+                                        "position": 1.3,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -8.605963246141545
+                                    },
+                                    {
+                                        "id": "ArY_M0eLk7",
+                                        "position": 2.2,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -7.598614731873802
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "amdRgn2JYL"
+                        }
+                    },
+                    "donut0": {
+                        "trackData": {
+                            "T0vGB9M4w7": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "donut0:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "KQTYf4Ib9k",
+                                        "position": 0.167,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -1.6906855537786134
+                                    },
+                                    {
+                                        "id": "lTuB5x6Fl3",
+                                        "position": 0.433,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -7.787846129031578
+                                    },
+                                    {
+                                        "id": "3DmH_XkW_K",
+                                        "position": 1.1,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 3.892672943723916
+                                    },
+                                    {
+                                        "id": "5Ua-17ILoQ",
+                                        "position": 1.533,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -5.350685553778613
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","x"]": "T0vGB9M4w7"
+                        }
+                    },
+                    "sphere0": {
+                        "trackData": {
+                            "BI5t2Zi-gM": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "sphere0:["position","y"]",
+                                "keyframes": [
+                                    {
+                                        "id": "Uhbz5SxeIj",
+                                        "position": 0.333,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 2.459999999999999
+                                    },
+                                    {
+                                        "id": "AIZyuShXTt",
+                                        "position": 1.867,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -4.16
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","y"]": "BI5t2Zi-gM"
+                        }
+                    },
+                    "box0": {
+                        "trackData": {
+                            "ZXDAd5Y59T": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "box0:["position","z"]",
+                                "keyframes": [
+                                    {
+                                        "id": "SX2EUloXqI",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -7.949999999999992
+                                    },
+                                    {
+                                        "id": "2rzbx2kCHG",
+                                        "position": 1.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    }
+                                ]
+                            },
+                            "nZkYPKhs6N": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "box0:["position","y"]",
+                                "keyframes": [
+                                    {
+                                        "id": "ma3_rk9znr",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 7.130000000000006
+                                    },
+                                    {
+                                        "id": "KBhloQISBs",
+                                        "position": 0.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -3
+                                    },
+                                    {
+                                        "id": "aJ9cb5UV88",
+                                        "position": 1.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 2.3700000000000045
+                                    }
+                                ]
+                            },
+                            "WhTEJMq3Pf": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "box0:["position","x"]",
+                                "keyframes": [
+                                    {
+                                        "id": "PiOyq6R2Es",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 3.249999999999992
+                                    },
+                                    {
+                                        "id": "fbju1_wiub",
+                                        "position": 0.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    },
+                                    {
+                                        "id": "Y69u1Odh-p",
+                                        "position": 1.967,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": -7.899999999999997
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","z"]": "ZXDAd5Y59T",
+                            "["position","y"]": "nZkYPKhs6N",
+                            "["position","x"]": "WhTEJMq3Pf"
+                        }
+                    },
+                    "sphere2": {
+                        "trackData": {
+                            "jyNcD0QIZq": {
+                                "type": "BasicKeyframedTrack",
+                                "__debugName": "sphere2:["position","y"]",
+                                "keyframes": [
+                                    {
+                                        "id": "0RskRm-zT0",
+                                        "position": 0,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    },
+                                    {
+                                        "id": "aA1jREtd0w",
+                                        "position": 0.4,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 0
+                                    },
+                                    {
+                                        "id": "9ud0a-xbN2",
+                                        "position": 2.2,
+                                        "connectedRight": true,
+                                        "handles": [
+                                            0.5,
+                                            1,
+                                            0.5,
+                                            0
+                                        ],
+                                        "value": 1.52
+                                    }
+                                ]
+                            }
+                        },
+                        "trackIdByPropPath": {
+                            "["position","y"]": "jyNcD0QIZq"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitionVersion": "0.4.0",
+    "revisionHistory": [
+        "OTN1TaHANPaywePr",
+        "oKzpThRoYsStcGcl",
+        "QKdEE2HjmifRHASQ",
+        "oRCRi1DKFEsWDaAA",
+        "VTypJv3oqwN92wqL",
+        "lnBKcaFDAXm8G0VB",
+        "AK6LhglxwOdSACVX",
+        "i_CK3kSE175qC8cp",
+        "QgKKGRtB29E45qz8",
+        "ku3YoRz9PJnLKb8-",
+        "uVPuUCMBMAcfmcOl",
+        "CLc6jBFhWvuychUH",
+        "Rg_VWb99goqs_XNA",
+        "hdLNKcxaGsd02TFe",
+        "3CHUYQmt_I1QGvbx",
+        "zl6cNOpkVi4-19_E",
+        "O7r6oQ1JpTjgh9lj",
+        "IEbK4PhHe71gGOTD",
+        "_ryLbiellYmFl7Ii",
+        "459-w2OTXlpuEZz7",
+        "oecI8YHqj0vIeZaw",
+        "Uh-hgcE3s3e5J9ca",
+        "XazwhrEOeMbfx6hg",
+        "NlJeq64Ukm3VHKXt",
+        "0nACLlcGIqDsXEO3",
+        "UEBdoVSiQdITBGqH",
+        "mkKs_m2xrWQSN23B",
+        "yCR_y2Az7J-bh-N7",
+        "r6aYwwwutT_hrM7P",
+        "iz_VDoroSESXKSI2",
+        "A94wle09iKAiOLGZ",
+        "XdEXY7CTvnGi6HEi",
+        "Aj2TL5cYDWG3NOTi",
+        "gAQSQ9u1UXuAuSaL",
+        "HMnR8l7MZbA9yoLD",
+        "CVZ-25odqCSuyZ5R",
+        "6-siHbBS5z0EKyHF",
+        "hD0nEv8i70UUdAXp",
+        "NAMKvZyMNfBtt3-u",
+        "DfSKZX1ofhzwCImj",
+        "eI7IrBSA4rFlekuF",
+        "hT2u3Fw6FbiYRNe6",
+        "u7H8BcvTgnxP7fpM",
+        "gfLxW5_zRgNaT79y",
+        "cKk5ecfwBusQVue_",
+        "g6homF_Iqh47GSwg",
+        "_FnxUrQDDBmycAS-",
+        "eWbErXA3B0vHMmoN",
+        "TQMHLGaV8wPEOW7h",
+        "Akhs9takrHll9vcm"
+    ]
+}
