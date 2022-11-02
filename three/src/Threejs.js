@@ -22,17 +22,46 @@ import { getProject } from '@theatre/core'
 import studio from '@theatre/studio'
 import extension from '@theatre/r3f/dist/extension'
 import { editable as e, SheetProvider } from '@theatre/r3f'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { VscTrash, VscMove } from "react-icons/vsc";
+
+// import SavePannel from './SavePannel'
 
 studio.extend(extension);
 
 
-const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
+// var demoSheet = getProject('Demo Project').sheet('Demo Sheet')
 const transformMode = ["scale", "rotate", "translate"];
 
 var intersects;
 
 const Threejs = () => {
+    const [demoSheet, setdemoSheet] = useState(getProject('Demo Project').sheet('Demo Sheet'))
 
+    const onDragEnd = (result) => {
+        const aa1 = [...aa]
+        if (result.destination != null) {
+            aa1.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
+            setAA(aa1)
+        }
+    }
+
+    const deletePage = e => {
+
+        const aa1 = aa.filter((_, i) => {
+            return (parseInt(e.target.getAttribute('key1')) !== i)
+        });
+        setAA([...aa1])
+    }
+    const updatePageName = e => {
+        const aa1 = aa.map((val, i) => {
+            return (i === parseInt(e.target.getAttribute('key1'))) ? { ...val, 'pageName': e.target.value } : val;
+        });
+        setAA([...aa1])
+
+    }
+
+    const [aa, setAA] = useState([])
     const [scene1, setScene1] = useState({});
     const [scene2, setScene2] = useState({});
     const [camera1, setCamera1] = useState();
@@ -290,7 +319,7 @@ const Threejs = () => {
         imported1.push(
             <ShapeImported
                 shape={shape}
-                key={shapeCount}
+                key={(Math.random()) * 1000}
                 theatreKey={shape + shapeCount + i}
                 position={mesh1.position}
                 rotation={mesh1.rotation}
@@ -799,6 +828,82 @@ const Threejs = () => {
         // eslint-disable-next-line
     }, [pickableObjects])
 
+    const loadscene = (i) => {
+        // console.log(JSON.parse(aa[i].animation));
+        // setdemoSheet(getProject('Demo Project', { state: aa[i].animation }).sheet('Demo Sheet'))
+        camera1.position.set(aa[i].cameraPosition[0], aa[i].cameraPosition[1], aa[i].cameraPosition[2])
+        const loader = new GLTFLoader();
+        loader.parse((aa[i].gltf), '', (gltf) => {
+            (gltf.scene.children).forEach((element, i) => {
+
+                if (element.type === 'Mesh') {
+                    addImportedShape("imported", element, i)
+                }
+            })
+            setShapesOnCanvas([...imported1]);
+            setImported1([]);
+        });
+    }
+    const saveScene = () => {
+        const dd = [...aa];
+
+        const exporter = new GLTFExporter();
+        exporter.parse(
+            scene1,
+            gltf => {
+                dd.push({ pageName: 'page' + dd.length, gltf: JSON.stringify(gltf), cameraPosition: [camera1.position.x, camera1.position.y, camera1.position.z], animation: JSON.stringify(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"]) });
+                setAA(dd)
+            },
+            function (error) {
+                console.log('An error happened');
+            },
+            {}
+        );
+    }
+
+    async function saveList() {
+        const options1 = {
+            suggestedName: 'file1.txt',
+            types: [{
+                description: 'Text file',
+                accept: { 'text/plain': ['.txt'] },
+            }],
+        };
+
+        const aa1 = await window.showSaveFilePicker(options1);
+
+        const writable1 = await aa1.createWritable();
+        var bb = '';
+        aa.forEach(val => {
+            bb += JSON.stringify({ pageName: val.pageName, gltf: val.gltf }) + '\r\n'
+        });
+        const file1 = new Blob([bb], { type: 'text/plain' });
+
+        await writable1.write(file1);
+        await writable1.close();
+    }
+    let fileReader;
+    async function openList(file) {
+        if (file) {
+            fileReader = new FileReader();
+            fileReader.onloadend = handleFileRead2;
+            fileReader.readAsText(file);
+        }
+
+    }
+    const handleFileRead2 = (e) => {
+        const content = fileReader.result;
+        var aa1 = content.split('\r\n')
+        aa1.splice(-1)
+        var aa2 = [...aa1]
+        aa2.forEach(element => {
+            var cc = JSON.parse(element)
+            aa1.push(cc)
+        });
+
+        setAA(aa1)
+    };
+
     return (<div>
         <div style={{ display: 'flex', border: '1px solid red' }}>
             <div style={{ minWidth: 200, backgroundColor: 'darkgrey', border: '1px solid red' }}> </div>
@@ -952,8 +1057,77 @@ const Threejs = () => {
                 </div>
             </div>
         </div >
-        <div style={{ textAlign: 'center', minHeight: 220, border: '1px solid red' }}>
-            <h1>Timeline Area</h1>
+        <div style={{ textAlign: 'center', minHeight: 220, border: '1px solid red', display: 'flex' }}>
+            <div style={{ width: '80%', border: '1px solid red', }}>
+                <h1>Timeline Area</h1>
+            </div>
+            <div>
+                <button onClick={saveScene}>Save scene</button>
+                {/* <button onClick={saveList}>Save list</button>
+                <span title="Will append list">Add File:</span>  <input
+                    type='file'
+                    id='file'
+                    className='input-file'
+                    accept='.txt'
+                    onChange={e => openList(e.target.files[0])}
+                /> */}
+
+
+                <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable-1" type="PERSON">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                    {...provided.droppableProps}
+                                >
+                                    <table border='1'>
+                                        <tbody>
+                                            {aa.map((val, i) => {
+                                                return (
+                                                    <Draggable draggableId={"draggable" + i} key={i} index={i}>
+                                                        {(provided, snapshot) => (
+                                                            <tr
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                style={{
+                                                                    ...provided.draggableProps.style,
+                                                                    backgroundColor: snapshot.isDragging ? 'red' : 'white',
+                                                                    boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
+                                                                    // margin: '10px'
+                                                                }}
+                                                            >
+
+                                                                <td>
+                                                                    <span>{i + 1}</span>
+                                                                    <span style={{ marginLeft: 10 }}  {...provided.dragHandleProps}><VscMove /></span>
+                                                                    <button style={{ marginLeft: 10 }} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                                </td>
+                                                                <td>
+                                                                    <input type='text' style={{ border: 'none', borderWidth: 0, minWidth: 245 }} onClick={(e) => {
+                                                                        loadscene(i);
+                                                                    }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                    />
+                                                                </td>
+
+                                                            </tr>
+                                                        )
+                                                        }
+                                                    </Draggable>
+                                                )
+                                            })}
+                                            {provided.placeholder}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </div>
+
+
+            </div>
         </div>
     </div >)
 }
