@@ -8,8 +8,7 @@ import socketIOClient from "socket.io-client";
 import { DragControls } from 'three/examples/jsm/controls/DragControls'
 
 import React, { useEffect } from 'react'
-// import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
-// import { Text3D, Text, Html } from '@react-three/drei'
+
 import { endpoint } from './common'
 import { useRef, Suspense, useState } from 'react';
 import * as STDLIB from 'three-stdlib'
@@ -17,38 +16,28 @@ import * as STDLIB from 'three-stdlib'
 import { GLTFExporter } from './GLTFExporter.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-// import { JSONTree } from 'react-json-tree';
-// import boldUrl from 'three/examples/fonts/helvetiker_bold.typeface.json'
-// import boldUrl2 from './helvetiker_regular.typeface.json'
+
 import { getProject } from '@theatre/core'
 
 import studio from '@theatre/studio'
 import extension from '@theatre/r3f/dist/extension'
 import { editable as e, SheetProvider } from '@theatre/r3f'
-// import projectState from './state.json'
 
 studio.extend(extension);
 
 
 const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
-// const demoSheet = getProject('Demo Project', { state: projectState }).sheet('Demo Sheet')
-
 const transformMode = ["scale", "rotate", "translate"];
 
 var intersects;
 
 const Threejs = () => {
-    // useEffect(() => {
-    //     demoSheet.sequence.play({ iterationCount: Infinity, range: [0, 1] })
-    // }, [])
 
     const [scene1, setScene1] = useState({});
     const [scene2, setScene2] = useState({});
     const [camera1, setCamera1] = useState();
     const [camera2, setCamera2] = useState();
     const [raycaster1, setRaycaster1] = useState(new THREE.Raycaster())
-
-    // const [gl1, setGl1] = useState()
 
     const transform = useRef();
 
@@ -58,22 +47,14 @@ const Threejs = () => {
     const [shapesOnCanvas, setShapesOnCanvas] = useState([])
     var pickableObjects2;
 
-    // const sampleAnimationcaspar = () => {
-    //     const aa = (JSON.stringify(studio.createContentOfSaveFile('Demo Project'))).replaceAll('\\"', "'");
-    //     const bb = aa.replaceAll('"', '\\"');
-    //     endpoint(`call 1-97 "
-    //     sampleAnimation(${bb});
-    //     "`);
-    // }
-
     const sampleAnimationcaspar = () => {
-        var positionKF2 = [];
         pickableObjects.forEach((mesh, i) => {
             const _objectid = mesh.userData.__storeKey.split('Demo Sheet:default:')[1];
             if (studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid]) {
                 const trackData = Object.values(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid].trackData)
 
                 trackData.forEach(element => {
+                    var positionKF2 = [];
                     const animationName = "." + element.__debugName.split(':')[1].split(',')[0].split('"')[1] + "[" + element.__debugName.split(':')[1].split(',')[1].split('"')[1] + "]"
                     const aa = element.keyframes
                     const bb = []
@@ -85,11 +66,13 @@ const Threejs = () => {
                         cc.push(val.value)
                     })
                     positionKF2.push(new NumberKeyframeTrack(animationName, bb, cc))
+                    endpoint(`call 1-97 "
+                    sampleAnimation(${(JSON.stringify(positionKF2[0])).replaceAll('"', '\\"')}, ${i});
+                    "`);
                 });
+
             }
-            endpoint(`call 1-97 "
-            sampleAnimation(${(JSON.stringify(positionKF2[i])).replaceAll('"', '\\"')}, ${i});
-            "`);
+
         });
 
     }
@@ -130,7 +113,6 @@ const Threejs = () => {
     const sampleAnimation2 = () => {
         pickableObjects2 = [...scene2.children]
         pickableObjects2.splice(0, 4)
-        //    console.log(pickableObjects2)
         pickableObjects2.forEach(mesh => {
             const _objectid = mesh.userData.__storeKey.split('Demo Sheet:default:')[1];
             if (studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"].sequence.tracksByObject[_objectid]) {
@@ -264,8 +246,6 @@ const Threejs = () => {
                                 key={shapeCount}
                                 geometry={geometry}
                                 material={material}
-                                // scale={[0.64, 0.54, 1]}
-                                // position={[0, -3, 0.27]}
                                 theatreKey={shape + shapeCount}
                             />
                         ]
@@ -381,6 +361,7 @@ const Threejs = () => {
                 setPickableObjects(aa);
                 scene1.children[3].attach(scene1.children[scene1.children.length - 1])
                 setSelectedObject(scene1.children[scene1.children.length - 1])
+
             }
         }, 100);
 
@@ -562,40 +543,9 @@ const Threejs = () => {
     const loadfabricjstoCasparcg = () => {
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
             axios.post('http://localhost:9000/getCurrentCanvas').then((aa) => {
-                // console.log(aa.data1)
-                setTimeout(() => {
-                    // const geometry = new THREE.BoxGeometry(7, 4, 5);
-                    // const material = new THREE.MeshBasicMaterial({
-                    //     roughness: 0.3, metalness: 0.8,
-                    //     transparent: true,
-                    //     map: new THREE.TextureLoader().load(CurrentCanvas, (texture) => {
-                    //         // console.log(texture)
-                    //         const shapeCount = shapesOnCanvas.length
-                    //         const shape = "fabricjs"
-                    //         setShapesOnCanvas(
-                    //             [
-                    //                 ...shapesOnCanvas,
-                    //                 <Shapefabricjs
-                    //                     shape={shape}
-                    //                     key={shapeCount}
-                    //                     geometry={geometry}
-                    //                     material={material}
-                    //                     // scale={[0.64, 0.54, 1]}
-                    //                     // position={[0, -3, 0.27]}
-                    //                     theatreKey={shape + shapeCount}
-                    //                 />
-                    //             ]
-                    //         )
-                    //     })
-                    // });
-                }, 4000);
-
             }).catch((aa) => { console.log('Error', aa) });
         }
-
-
     }
-
 
     const addDreiText = () => {
         var loader = new FontLoader();
@@ -622,8 +572,6 @@ const Threejs = () => {
                         position={[-5, -3.2, 0.25]}
                         theatreKey={shape + shapeCount}
                         color={'yellow'}
-
-
                     />
                 ]
             )
