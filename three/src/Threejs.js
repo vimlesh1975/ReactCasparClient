@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, TransformControls } from "@react-three/drei";
 import * as THREE from 'three';
-import { NumberKeyframeTrack, AnimationClip, AnimationMixer } from "three";
+import { NumberKeyframeTrack, AnimationClip, AnimationMixer, Vector3, Euler } from "three";
 import axios from 'axios';
 import socketIOClient from "socket.io-client";
 
@@ -17,7 +17,7 @@ import { GLTFExporter } from './GLTFExporter.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
-import { getProject } from '@theatre/core'
+import { getProject, types } from '@theatre/core'
 
 import studio from '@theatre/studio'
 import extension from '@theatre/r3f/dist/extension'
@@ -25,9 +25,11 @@ import { editable as e, SheetProvider } from '@theatre/r3f'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 
-// import SavePannel from './SavePannel'
 
 studio.extend(extension);
+
+studio.initialize();
+
 
 
 // var demoSheet = getProject('Demo Project').sheet('Demo Sheet')
@@ -139,6 +141,26 @@ const Threejs = () => {
             }
         });
     }
+    var currentobj;
+
+    const selectobjectgiven = (object1) => {
+        const theaterKey = object1.userData.__storeKey.split('Demo Sheet:default:')[1];
+        const props1 = {
+            position: { x: types.number(object1.__r3f.memoizedProps.position[0] ? object1.__r3f.memoizedProps.position[0] : object1.__r3f.memoizedProps.position.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.position[1] ? object1.__r3f.memoizedProps.position[1] : object1.__r3f.memoizedProps.position.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.position[2] ? object1.__r3f.memoizedProps.position[2] : object1.__r3f.memoizedProps.position.z, { nudgeMultiplier: 0.01 }) },
+
+            rotation: { x: types.number(object1.__r3f.memoizedProps.rotation[0] ? object1.__r3f.memoizedProps.rotation[0] : object1.__r3f.memoizedProps.rotation._x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.rotation[1] ? object1.__r3f.memoizedProps.rotation[1] : object1.__r3f.memoizedProps.rotation._y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.rotation[2] ? object1.__r3f.memoizedProps.rotation[2] : object1.__r3f.memoizedProps.rotation._z, { nudgeMultiplier: 0.01 }) },
+            scale: { x: types.number(object1.__r3f.memoizedProps.scale[0] ? object1.__r3f.memoizedProps.scale[0] : object1.__r3f.memoizedProps.scale.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.scale[1] ? object1.__r3f.memoizedProps.scale[1] : object1.__r3f.memoizedProps.scale.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.scale[2] ? object1.__r3f.memoizedProps.scale[2] : object1.__r3f.memoizedProps.scale.z, { nudgeMultiplier: 0.01 }) },
+
+        };
+        // console.log(theaterKey)
+        // console.log(props1)
+        const obj = demoSheet.object(theaterKey, props1, { override: true });
+        // obj.onValuesChange(newValues => {
+        //     console.log(newValues)
+        // })
+        studio.setSelection([obj])
+        currentobj = obj;
+    }
     const sampleAnimation2 = () => {
         pickableObjects2 = [...scene2.children]
         pickableObjects2.splice(0, 4)
@@ -194,7 +216,6 @@ const Threejs = () => {
             <e.mesh
                 {...props}
                 ref={mesh}
-                scale={[1.5, 1.5, 1.5]}
                 onPointerOver={e => {
                     e.object.material.emissive.r = 1;
                 }}
@@ -307,7 +328,9 @@ const Threejs = () => {
                     shape={shape}
                     key={shapeCount}
                     theatreKey={shape + shapeCount}
-                    position={[-4 + (Math.random()) * 10, 0, 0]}
+                    position={new Vector3(0, 0, 0)}
+                    rotation={new Euler(0, 0, 0)}
+                    scale={new Vector3(1, 1, 1)}
                 />
             ]
         )
@@ -347,12 +370,12 @@ const Threejs = () => {
 
     const [gl1, setGl1] = useState()
 
-    useEffect(() => {
-        studio.initialize();
-        return () => {
-            // studio.hide();
-        }
-    }, [])
+    // useEffect(() => {
+    //     studio.initialize();
+    //     return () => {
+    //         // studio.hide();
+    //     }
+    // }, [])
 
 
     useEffect(() => {
@@ -361,11 +384,21 @@ const Threejs = () => {
         if (pickableObjects.length > 0) {
             dragControls = new DragControls(pickableObjects, camera1, gl1?.domElement);
             dragControls.addEventListener('dragstart', function (event) {
+                selectobjectgiven(event.object);
                 setorbitcontrolenable(false);
             });
+
+            dragControls.addEventListener('drag', function (event) {
+                studio.transaction(({ set }) => {
+                    set(currentobj.props.position, { x: event.object.position.x, y: event.object.position.y, z: event.object.position.z }) // set the value of obj.props.x to 10
+                })
+
+            });
+
             dragControls.addEventListener('dragend', function (event) {
                 setorbitcontrolenable(true);
             });
+
             transformCurrent.addEventListener('dragging-changed', function (event) {
                 setorbitcontrolenable(!event.value);
             })
@@ -373,6 +406,7 @@ const Threejs = () => {
         return () => {
             if (pickableObjects.length > 0) {
                 dragControls.removeEventListener('dragstart', false);
+                dragControls.removeEventListener('drag', false);
                 dragControls.removeEventListener('dragend', false);
                 transformCurrent.removeEventListener('dragging-changed', false);
             }
@@ -597,8 +631,9 @@ const Threejs = () => {
                         shape={shape}
                         key={shapeCount}
                         geometry={geometry}
-                        scale={[0.8, 0.6, 1]}
-                        position={[-5, -3.2, 0.25]}
+                        position={new Vector3(0, 0, 0)}
+                        rotation={new Euler(0, 0, 0)}
+                        scale={new Vector3(1, 1, 1)}
                         theatreKey={shape + shapeCount}
                         color={'yellow'}
                     />
@@ -616,8 +651,9 @@ const Threejs = () => {
                     shape={shape}
                     key={shapeCount}
                     geometry={new THREE.BoxGeometry(11, 1, 0.3)}
-                    // scale={[0.8, 0.6, 1]}
-                    position={[0, -3, 0]}
+                    position={new Vector3(0, 0, 0)}
+                    rotation={new Euler(0, 0, 0)}
+                    scale={new Vector3(1, 1, 1)}
                     theatreKey={shape + shapeCount}
                     color={'maroon'}
                 />
@@ -637,8 +673,9 @@ const Threejs = () => {
                     key={shapeCount}
                     geometry={dreiText2.geometry}
                     material={dreiText2.material}
-                    scale={[0.64, 0.54, 1]}
-                    position={[0, -3, 0.27]}
+                    position={new Vector3(0, 0, 0)}
+                    rotation={new Euler(0, 0, 0)}
+                    scale={new Vector3(1, 1, 1)}
                     theatreKey={shape + shapeCount}
                     color={'white'}
                 />
@@ -666,15 +703,6 @@ const Threejs = () => {
         setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
         setImported1([]);
     }
-    const addCylinder = () => {
-        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 8, 64, 64), new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, color: 'lightpink', roughness: 0.3, metalness: 0.8 }))
-        mesh.scale.set(0.2, 0.2, 0.2)
-        addImportedShape("cyllinder", mesh, 1);
-        setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
-        setImported1([]);
-    }
-
-
     const addDodecahedronGeometry = () => {
         const mesh = new THREE.Mesh(new THREE.DodecahedronGeometry(1), new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, color: 'yellow', roughness: 0.3, metalness: 0.8 }))
         addImportedShape("Dodecahedron", mesh, 1);
@@ -812,18 +840,19 @@ const Threejs = () => {
         }
     }
 
-    function onDocumentMouseMove(event) {
+    function onMouseclick1(event) {
         intersects = raycaster1.intersectObjects(pickableObjects, false)
         if (intersects.length > 0) {
             setSelectedObject(intersects[0].object);
+            selectobjectgiven(intersects[0].object)
             scene1.children[3].attach(intersects[0].object);
         }
     }
 
     useEffect(() => {
-        document.addEventListener('click', onDocumentMouseMove, false);
+        document.addEventListener('click', onMouseclick1, false);
         return () => {
-            document.removeEventListener('click', onDocumentMouseMove);
+            document.removeEventListener('click', onMouseclick1);
         }
         // eslint-disable-next-line
     }, [pickableObjects])
@@ -927,7 +956,7 @@ const Threejs = () => {
                         }}>Toggle Animation Editor</button>
                     </div>
                     <button onClick={addBox} data-shape={"box"}>Box </button>
-                    <button onClick={addCylinder} >Cylinder </button>
+                    <button onClick={addShape} data-shape={"cylinder"} >Cylinder </button>
                     <button onClick={addShape} data-shape={"donut"}>Donut </button>
                     <button onClick={addShape} data-shape={"sphere"}>sphere </button>
 
@@ -974,6 +1003,7 @@ const Threejs = () => {
                     <button onClick={playAnimation}>Play Animation</button>
                     <button onClick={pauseAnimation}>Pause Animation</button>
                     <button onClick={sampleAnimation}>Play Sample Animation</button>
+                    <button onClick={() => selectobjectgiven(selectedObject)}>selectobjectgiven</button>
                     {/* <button onClick={logkeyframes}>Log keyframes</button> */}
                 </div>
                 <div style={{ height: 650, backgroundColor: 'grey', border: '1px solid red' }} >
@@ -991,29 +1021,7 @@ const Threejs = () => {
                             <e.spotLight position={[10, 15, 10]} angle={10.5} intensity={10} theatreKey='spotLight 1' />
                             <e.spotLight position={[-10, -15, -10]} angle={10.5} intensity={10} theatreKey='spotLight 2' />
                             <Suspense fallback={null}>
-                                {/* <Text color="black" anchorX="center" anchorY="middle">
-                                    hello world!
-                                </Text> */}
-                                {/* <Text font={boldUrl2} characters="abcdefghijklmnopqrstuvwxyz0123456789!">
-                                    hello world!
-                                </Text> */}
-                                {/* <Text3D font={boldUrl2} >
-                                    Hello world!
-                                    <meshNormalMaterial />
-                                </Text3D> */}
-                                {/* <Html occlude ><h1>hello </h1> </Html> */}
-
                                 {shapesOnCanvas}
-
-                                {/* {dd.map((val, i) => {
-                                    return (<>
-                                        <e.mesh key={i} theatreKey={val}>
-                                            <primitive object={new THREE.BoxGeometry(1, 1, 1)} attach={"geometry"} />
-                                            <primitive object={new THREE.MeshStandardMaterial({ color: 'red' })} attach={"material"} />
-                                        </e.mesh>
-                                    </>)
-                                }
-                                )} */}
                             </Suspense>
                         </SheetProvider>
                     </Canvas>
