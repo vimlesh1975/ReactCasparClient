@@ -386,7 +386,7 @@ const Threejs = () => {
 
     useEffect(() => {
         var dragControls;
-        var transformCurrent = reftransform.current;
+        // var transformCurrent = reftransform.current;
         if (pickableObjects.length > 0) {
             dragControls = new DragControls(pickableObjects, camera1, gl1?.domElement);
             dragControls.addEventListener('dragstart', function (event) {
@@ -875,19 +875,20 @@ const Threejs = () => {
     }, [pickableObjects])
 
     const loadscene = (i) => {
-        // console.log(JSON.parse(aa[i].animation));
-        // setdemoSheet(getProject('Demo Project', { state: aa[i].animation }).sheet('Demo Sheet'))
-        camera1.position.set(aa[i].cameraPosition[0], aa[i].cameraPosition[1], aa[i].cameraPosition[2])
+        localStorage.removeItem("theatre-0.4.persistent");
         const loader = new GLTFLoader();
         loader.parse((aa[i].gltf), '', (gltf) => {
-            (gltf.scene.children).forEach((element, i) => {
-
+            (gltf.scene.children).forEach((element, ii) => {
                 if (element.type === 'Mesh') {
-                    addImportedShape("imported", element, i)
+                    addImportedShape("imported", element, ii)
                 }
             })
             setShapesOnCanvas([...imported1]);
             setImported1([]);
+            const cameraPosition = JSON.parse(aa[i].cameraPosition);
+            camera1.position.set(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
+            console.log(JSON.parse(aa[i].animation));
+            setdemoSheet(getProject('Demo Project' + Math.floor(Math.random() * 10), { state: JSON.parse(aa[i].animation) }).sheet('Demo Sheet'))
         });
     }
     const saveScene = () => {
@@ -897,7 +898,7 @@ const Threejs = () => {
         exporter.parse(
             scene1,
             gltf => {
-                dd.push({ pageName: 'page' + dd.length, gltf: JSON.stringify(gltf), cameraPosition: [camera1.position.x, camera1.position.y, camera1.position.z], animation: JSON.stringify(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"]) });
+                dd.push({ pageName: 'page' + dd.length, gltf: JSON.stringify(gltf), cameraPosition: JSON.stringify([camera1.position.x, camera1.position.y, camera1.position.z]), animation: JSON.stringify(studio.createContentOfSaveFile('Demo Project').sheetsById["Demo Sheet"]) });
                 setAA(dd)
             },
             function (error) {
@@ -906,6 +907,8 @@ const Threejs = () => {
             {}
         );
     }
+
+    let fileReader;
 
     async function saveList() {
         const options1 = {
@@ -921,14 +924,13 @@ const Threejs = () => {
         const writable1 = await aa1.createWritable();
         var bb = '';
         aa.forEach(val => {
-            bb += JSON.stringify({ pageName: val.pageName, gltf: val.gltf }) + '\r\n'
+            bb += JSON.stringify({ pageName: val.pageName, gltf: val.gltf, cameraPosition: val.cameraPosition, animation: val.animation }) + '\r\n'
         });
         const file1 = new Blob([bb], { type: 'text/plain' });
 
         await writable1.write(file1);
         await writable1.close();
     }
-    let fileReader;
     async function openList(file) {
         if (file) {
             fileReader = new FileReader();
@@ -941,13 +943,13 @@ const Threejs = () => {
         const content = fileReader.result;
         var aa1 = content.split('\r\n')
         aa1.splice(-1)
-        var aa2 = [...aa1]
-        aa2.forEach(element => {
+        var aa2 = []
+        aa1.forEach(element => {
             var cc = JSON.parse(element)
-            aa1.push(cc)
+            aa2.push(cc)
         });
 
-        setAA(aa1)
+        setAA(aa2)
     };
     const onObjectChange = () => {
 
@@ -1098,14 +1100,14 @@ const Threejs = () => {
             </div>
             <div>
                 <button onClick={saveScene}>Save scene</button>
-                {/* <button onClick={saveList}>Save list</button>
+                <button onClick={saveList}>Save list</button>
                 <span title="Will append list">Add File:</span>  <input
                     type='file'
                     id='file'
                     className='input-file'
                     accept='.txt'
                     onChange={e => openList(e.target.files[0])}
-                /> */}
+                />
 
 
                 <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
