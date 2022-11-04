@@ -40,6 +40,8 @@ var intersects;
 const Threejs = () => {
     const [demoSheet, setdemoSheet] = useState(getProject('Demo Project').sheet('Demo Sheet'))
 
+
+
     const onDragEnd = (result) => {
         const aa1 = [...aa]
         if (result.destination != null) {
@@ -70,7 +72,7 @@ const Threejs = () => {
     const [camera2, setCamera2] = useState();
     const [raycaster1, setRaycaster1] = useState(new THREE.Raycaster())
 
-    const transform = useRef();
+    const reftransform = useRef();
 
     const [orbitcontrolenable, setorbitcontrolenable] = useState(false)
     const [pickableObjects, setPickableObjects] = useState([])
@@ -130,7 +132,9 @@ const Threejs = () => {
                 const moveBlinkClip = new AnimationClip("move-n-blink", -1, [...positionKF2]);
                 const mixer = new AnimationMixer(mesh);
                 var action = mixer.clipAction(moveBlinkClip);
-                action.setLoop(THREE.LoopPingPong, 2);
+                action.clampWhenFinished = true;
+
+                action.setLoop(THREE.LoopOnce);
                 action.play();
                 const clock = new THREE.Clock();
                 const aa1 = () => {
@@ -144,22 +148,24 @@ const Threejs = () => {
     var currentobj;
 
     const selectobjectgiven = (object1) => {
-        const theaterKey = object1.userData.__storeKey.split('Demo Sheet:default:')[1];
-        const props1 = {
-            position: { x: types.number(object1.__r3f.memoizedProps.position[0] ? object1.__r3f.memoizedProps.position[0] : object1.__r3f.memoizedProps.position.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.position[1] ? object1.__r3f.memoizedProps.position[1] : object1.__r3f.memoizedProps.position.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.position[2] ? object1.__r3f.memoizedProps.position[2] : object1.__r3f.memoizedProps.position.z, { nudgeMultiplier: 0.01 }) },
+        if (object1.__r3f) {
+            const theaterKey = object1.userData.__storeKey.split('Demo Sheet:default:')[1];
+            const props1 = {
+                position: { x: types.number(object1.__r3f.memoizedProps.position[0] ? object1.__r3f.memoizedProps.position[0] : object1.__r3f.memoizedProps.position.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.position[1] ? object1.__r3f.memoizedProps.position[1] : object1.__r3f.memoizedProps.position.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.position[2] ? object1.__r3f.memoizedProps.position[2] : object1.__r3f.memoizedProps.position.z, { nudgeMultiplier: 0.01 }) },
 
-            rotation: { x: types.number(object1.__r3f.memoizedProps.rotation[0] ? object1.__r3f.memoizedProps.rotation[0] : object1.__r3f.memoizedProps.rotation._x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.rotation[1] ? object1.__r3f.memoizedProps.rotation[1] : object1.__r3f.memoizedProps.rotation._y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.rotation[2] ? object1.__r3f.memoizedProps.rotation[2] : object1.__r3f.memoizedProps.rotation._z, { nudgeMultiplier: 0.01 }) },
-            scale: { x: types.number(object1.__r3f.memoizedProps.scale[0] ? object1.__r3f.memoizedProps.scale[0] : object1.__r3f.memoizedProps.scale.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.scale[1] ? object1.__r3f.memoizedProps.scale[1] : object1.__r3f.memoizedProps.scale.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.scale[2] ? object1.__r3f.memoizedProps.scale[2] : object1.__r3f.memoizedProps.scale.z, { nudgeMultiplier: 0.01 }) },
+                rotation: { x: types.number(object1.__r3f.memoizedProps.rotation[0] ? object1.__r3f.memoizedProps.rotation[0] : object1.__r3f.memoizedProps.rotation._x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.rotation[1] ? object1.__r3f.memoizedProps.rotation[1] : object1.__r3f.memoizedProps.rotation._y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.rotation[2] ? object1.__r3f.memoizedProps.rotation[2] : object1.__r3f.memoizedProps.rotation._z, { nudgeMultiplier: 0.01 }) },
+                scale: { x: types.number(object1.__r3f.memoizedProps.scale[0] ? object1.__r3f.memoizedProps.scale[0] : object1.__r3f.memoizedProps.scale.x, { nudgeMultiplier: 0.01 }), y: types.number(object1.__r3f.memoizedProps.scale[1] ? object1.__r3f.memoizedProps.scale[1] : object1.__r3f.memoizedProps.scale.y, { nudgeMultiplier: 0.01 }), z: types.number(object1.__r3f.memoizedProps.scale[2] ? object1.__r3f.memoizedProps.scale[2] : object1.__r3f.memoizedProps.scale.z, { nudgeMultiplier: 0.01 }) },
 
-        };
-        // console.log(theaterKey)
-        // console.log(props1)
-        const obj = demoSheet.object(theaterKey, props1, { override: true });
-        // obj.onValuesChange(newValues => {
-        //     console.log(newValues)
-        // })
-        studio.setSelection([obj])
-        currentobj = obj;
+            };
+            // console.log(theaterKey)
+            // console.log(props1)
+            const obj = demoSheet.object(theaterKey, props1, { override: true });
+            // obj.onValuesChange(newValues => {
+            //     console.log(newValues)
+            // })
+            studio.setSelection([obj])
+            currentobj = obj;
+        }
     }
     const sampleAnimation2 = () => {
         pickableObjects2 = [...scene2.children]
@@ -380,35 +386,37 @@ const Threejs = () => {
 
     useEffect(() => {
         var dragControls;
-        var transformCurrent = transform.current;
+        var transformCurrent = reftransform.current;
         if (pickableObjects.length > 0) {
             dragControls = new DragControls(pickableObjects, camera1, gl1?.domElement);
             dragControls.addEventListener('dragstart', function (event) {
                 selectobjectgiven(event.object);
-                setorbitcontrolenable(false);
+                // setorbitcontrolenable(false);
             });
 
             dragControls.addEventListener('drag', function (event) {
-                studio.transaction(({ set }) => {
-                    set(currentobj.props.position, { x: event.object.position.x, y: event.object.position.y, z: event.object.position.z }) // set the value of obj.props.x to 10
-                })
+                if (currentobj) {
+                    studio.transaction(({ set }) => {
+                        set(currentobj.props.position, { x: event.object.position.x, y: event.object.position.y, z: event.object.position.z }) // set the value of obj.props.x to 10
+                    })
+                }
 
             });
 
-            dragControls.addEventListener('dragend', function (event) {
-                setorbitcontrolenable(true);
-            });
+            // dragControls.addEventListener('dragend', function (event) {
+            //     // setorbitcontrolenable(true);
+            // });
 
-            transformCurrent.addEventListener('dragging-changed', function (event) {
-                setorbitcontrolenable(!event.value);
-            })
+            // transformCurrent.addEventListener('dragging-changed', function (event) {
+            //     // setorbitcontrolenable(!event.value);
+            // })
         }
         return () => {
             if (pickableObjects.length > 0) {
                 dragControls.removeEventListener('dragstart', false);
                 dragControls.removeEventListener('drag', false);
-                dragControls.removeEventListener('dragend', false);
-                transformCurrent.removeEventListener('dragging-changed', false);
+                // dragControls.removeEventListener('dragend', false);
+                // transformCurrent.removeEventListener('dragging-changed', false);
             }
         }
         // eslint-disable-next-line 
@@ -417,14 +425,19 @@ const Threejs = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            scene1?.children && scene1?.children[3].detach();
+            // scene1?.children && scene1?.children[3].detach();
             if (scene1?.children?.length > 4) {
+                scene1?.children && scene1?.children[3].detach();
                 const aa = [...scene1.children];
                 aa.splice(0, 4)
                 setPickableObjects(aa);
-                scene1.children[3].attach(scene1.children[scene1.children.length - 1])
-                setSelectedObject(scene1.children[scene1.children.length - 1])
-
+                // scene1.children[3].attach(scene1.children[scene1.children.length - 1])
+                // setSelectedObject(scene1.children[scene1.children.length - 1]);
+                setTimeout(() => {
+                    scene1.children[3].attach(scene1.children[scene1.children.length - 1])
+                    setSelectedObject(scene1.children[scene1.children.length - 1]);
+                    selectobjectgiven(scene1.children[scene1.children.length - 1])
+                }, 1000);
             }
         }, 100);
 
@@ -462,12 +475,16 @@ const Threejs = () => {
                 importScenefromData(${JSON.stringify(gltf2.scene.toJSON()).replaceAll('"', '\\"')});
                 camera1.position.set(${camera1.position.x}, ${camera1.position.y}, ${camera1.position.z});
                 "`);
+                setTimeout(() => {
+                    sampleAnimationcaspar();
+                }, 1000);
             });
         },
             error => {
                 console.log('An error happened');
             },
             {}
+
         )
     }
     const updatetoCaspar2 = () => {
@@ -932,6 +949,20 @@ const Threejs = () => {
 
         setAA(aa1)
     };
+    const onObjectChange = () => {
+
+        if (selectedObject) {
+            selectobjectgiven(selectedObject);
+            if (currentobj) {
+                studio.transaction(({ set }) => {
+                    set(currentobj.props.position, { x: selectedObject.position.x, y: selectedObject.position.y, z: selectedObject.position.z });
+                    set(currentobj.props.rotation, { x: selectedObject.rotation.x, y: selectedObject.rotation.y, z: selectedObject.rotation.z });
+                    set(currentobj.props.scale, { x: selectedObject.scale.x, y: selectedObject.scale.y, z: selectedObject.scale.z });
+                })
+            }
+
+        }
+    }
 
     return (<div>
         <div style={{ display: 'flex', border: '1px solid red' }}>
@@ -947,6 +978,7 @@ const Threejs = () => {
 
                         <button onClick={resetCameraToCasparc}>caspar camera Reset</button>
                         <button onClick={() => {
+                            studio.initialize();
                             if (studio.ui.isHidden) {
                                 studio.ui.restore();
                             }
@@ -959,11 +991,6 @@ const Threejs = () => {
                     <button onClick={addShape} data-shape={"cylinder"} >Cylinder </button>
                     <button onClick={addShape} data-shape={"donut"}>Donut </button>
                     <button onClick={addShape} data-shape={"sphere"}>sphere </button>
-
-                    <button onClick={addDreiText} data-shape={"text3D"}>3D Text</button>
-                    <button onClick={() => addDreiText2()}>2D Text</button>
-                    <button onClick={() => changetext()}>Change text</button>
-
                     <button onClick={addCircle}>Circle</button>
                     <button onClick={addCone}>Cone</button>
                     <button onClick={addDodecahedronGeometry}>Docehedron</button>
@@ -972,30 +999,29 @@ const Threejs = () => {
                     <button onClick={addRing}>Ring</button>
                     <button onClick={addTorusknot}>TorusKnot</button>
                     <button onClick={addTube}>Tube</button>
-
-
-
+                    <button onClick={loadfabricjstoCasparcg}>Load fabricjs here</button>
+                    <input size={10} type='text' value={f0} onChange={e => setF0(e.target.value)} />
+                    <button onClick={addDreiText} data-shape={"text3D"}>3D Text</button>
+                    <button onClick={() => addDreiText2()}>2D Text</button>
+                    <button onClick={() => changetext()}>Change text</button>
 
                     <button onClick={deleteSelected}>Delete</button>
                     <button onClick={() => deleteAll()}>Delete All</button>
                     <button onClick={() => copySelected()}>copy</button>
                     <button onClick={() => DeselectAll()}>DeSelect All</button>
-                    <input type='color' onChange={e => applyColor(e)} />
-
-                    <input size={10} type='text' value={f0} onChange={e => setF0(e.target.value)} />
-
-                    {transformMode.map((val, i) =>
-                        <span key={i}>  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => transform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
-                    )}
-                    Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} />
-
-
-                    <button onClick={resetCamera1}>Reset Camera</button>
-                    <button onClick={loadfabricjstoCasparcg}>Load fabricjs here</button>
-
-                    <button onClick={drawingFileSaveAsgltf}>FileSave As gltf</button>
-                    Open gltf file: < input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltftoscene1(e.target.files[0])} />
-                    <label htmlFor='hhh'> orbitcontrolenable: <input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} /></label>
+                    Color: <input type='color' onChange={e => applyColor(e)} />
+                    <span style={{ border: '2px solid red' }}>
+                        Texture<input id="importjson" type='file' className='input-file' accept='.png,jpg,.bmp,.jpeg' onChange={e => applyTexture(e.target.files[0])} />
+                        <button onClick={drawingFileSaveAsgltf}>Save As gltf</button>
+                        Open gltf: < input id="importjson" type='file' className='input-file' accept='.gltf' onChange={e => importScenefromfilegltftoscene1(e.target.files[0])} />
+                    </span>
+                    <span style={{ border: '2px solid red' }}>
+                        {transformMode.map((val, i) =>
+                            <span key={i} >  <input defaultChecked={(val === 'translate') ? true : false} onClick={e => reftransform.current.setMode(e.target.value)} type="radio" id={val} value={val} name="transformMode" /><label htmlFor={val}>{val}</label></span>
+                        )}
+                        <label htmlFor='hhh'><input id='hhh' type={'checkbox'} checked={orbitcontrolenable} onChange={() => setorbitcontrolenable(!orbitcontrolenable)} />Orbit Control</label>
+                        <button onClick={resetCamera1}>Reset Camera</button>
+                    </span>
                     <button onClick={() => {
                         console.log(scene1.children);
                     }}>console log</button>
@@ -1003,7 +1029,7 @@ const Threejs = () => {
                     <button onClick={playAnimation}>Play Animation</button>
                     <button onClick={pauseAnimation}>Pause Animation</button>
                     <button onClick={sampleAnimation}>Play Sample Animation</button>
-                    <button onClick={() => selectobjectgiven(selectedObject)}>selectobjectgiven</button>
+                    {/* <button onClick={() => selectobjectgiven(selectedObject)}>selectobjectgiven</button> */}
                     {/* <button onClick={logkeyframes}>Log keyframes</button> */}
                 </div>
                 <div style={{ height: 650, backgroundColor: 'grey', border: '1px solid red' }} >
@@ -1017,12 +1043,13 @@ const Threejs = () => {
                     >
                         <SheetProvider sheet={demoSheet}>
                             <OrbitControls enabled={orbitcontrolenable} theatreKey='orb 1' />
-                            <TransformControls ref={transform} theatreKey='transformControls 1' />
+                            <TransformControls ref={reftransform} theatreKey='transformControls 1' onObjectChange={onObjectChange} />
                             <e.spotLight position={[10, 15, 10]} angle={10.5} intensity={10} theatreKey='spotLight 1' />
                             <e.spotLight position={[-10, -15, -10]} angle={10.5} intensity={10} theatreKey='spotLight 2' />
                             <Suspense fallback={null}>
                                 {shapesOnCanvas}
                             </Suspense>
+
                         </SheetProvider>
                     </Canvas>
                 </div>
