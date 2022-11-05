@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import socketIOClient from "socket.io-client";
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint } from './common'
+import { endpoint, stopGraphics } from './common'
 import DrawingAutomation from './DrawingAutomation';
 import axios from 'axios';
 
@@ -194,12 +194,12 @@ const Automation = () => {
         }, 300);
 
     }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
 
     const startGameTimer = (layerNumber = 96, initialMinute = 45, initialSecond = 0, countUp = false) => {
         setTimeout(() => {

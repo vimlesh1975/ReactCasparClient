@@ -38,7 +38,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 
-const buildDate = '291022_2'
+const buildDate = '051122_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -236,7 +236,8 @@ const App = () => {
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-    endpoint(`call ${window.chNumber}-${layerNumber} "
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${layerNumber} "
         var bb = document.createElement('div');
         bb.style.perspective='1920px';
         bb.style.transformStyle='preserve-3d';
@@ -253,7 +254,13 @@ const App = () => {
         style.textContent = '${inAnimation}';
         document.head.appendChild(style);
         "`)
+    }, 100);
+
+    setTimeout(() => {
+      updateGraphics(canvas, layerNumber);
+    }, 1200);
   }
+
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem('RCC_solidCaption1'));

@@ -44,7 +44,7 @@ const http = require("http").Server(app);
 http.listen(port, () => {
     console.log(`Server is liestemnig on ${port}`);
 })
-var aa = new CasparCG
+var aa = new CasparCG("127.0.0.1", 5250)
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
 aa.onConnectionChanged = () => {
     console.log(aa.connected)

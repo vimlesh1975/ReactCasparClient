@@ -2390,7 +2390,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        endpoint(`call ${window.chNumber}-${layerNumber} "
+
+        setTimeout(() => {
+
+            endpoint(`call ${window.chNumber}-${layerNumber} "
         var bb = document.createElement('div');
         bb.style.perspective='1920px';
         bb.style.transformStyle='preserve-3d';
@@ -2407,6 +2410,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
             "`)
+        }, 100);
+        setTimeout(() => {
+            updateGraphics(canvas, layerNumber);
+        }, 1200);
     }
 
 

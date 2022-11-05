@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint } from './common'
+import { endpoint, stopGraphics } from './common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniTwoLiner } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -105,12 +105,12 @@ const Twoliner = () => {
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
 
     return (
         <div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint } from '../common'
+import { endpoint, stopGraphics } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -168,10 +168,11 @@ const Hockey = () => {
     }
     const stopClock = layerNumber => {
         clearInterval(xxx)
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
+        // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+        // setTimeout(() => {
+        //     endpoint(`stop ${window.chNumber}-${layerNumber}`)
+        // }, 1000);
+        stopGraphics(layerNumber)
     }
     const showClock = (pageName) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -239,12 +240,12 @@ const Hockey = () => {
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
     const fileSaveAs = (playerList) => {
         const element = document.createElement("a");
         var aa = ''
