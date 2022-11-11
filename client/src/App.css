@@ -8,6 +8,10 @@
   }
 }
 
+textarea[data-fabric-hiddentextarea] {
+  position: fixed !important;
+}
+
 .nav-bar ul {
   list-style: none;
   background-color: rgb(29, 56, 207);

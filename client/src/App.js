@@ -8,8 +8,8 @@ import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import DrawingController from './DrawingController';
-import { Provider } from 'react-redux'
-import store from './store'
+// import { Provider } from 'react-redux'
+// import store from './store'
 import { v4 as uuidv4 } from 'uuid';
 
 import VideoController from './VideoController';
@@ -38,7 +38,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 
-const buildDate = '051122_1'
+const buildDate = '101122_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -398,10 +398,9 @@ const App = () => {
   }
   window.changeTab = changeTab;
   window.changeTab2 = changeTab2;
-  return (<div>
+  return (<div style={{ minWidth: 1920, minHeight: 1080, top: 0 }}>
 
-    {/* {(window.location.origin !== 'https://vimlesh1975.github.io') && */}
-    <div className='menu_bar' style={{ display: 'flex', justifyContent: 'space-around', minWidth: 1920 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
       <div>
         <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
           endpoint(`clear ${chNumber}`);
@@ -481,21 +480,9 @@ const App = () => {
       </div>
     </div>
 
-    <div style={{
-      display: 'flex',
-      flexDirection: 'row',
-      border: '1px dashed blue',
-      height: '100vh',
-      flexWrap: 'nowrap'
-    }}>
+    <div style={{ display: 'flex', flexDirection: 'row', border: '1px dashed blue' }}>
       <div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'row',
-          border: '1px dashed blue',
-          height: '100vh',
-          flexWrap: 'nowrap'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'row', border: '1px dashed blue' }}>
           <div>
             <div ref={refPreviewContainer} id='preview-container' className='preview-container'>
               <div style={{ display: (currentTab === 'Drawing') ? 'none' : 'block' }}>
@@ -507,9 +494,9 @@ const App = () => {
               </div>
               <div style={{ display: (currentTab === 'Drawing') ? 'block' : 'none' }}>
                 <span style={{ position: 'absolute', left: 506, top: 250, fontSize: 40 }}>.</span>
-                <Provider store={store}>
-                  <Drawing moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} />
-                </Provider>
+                {/* <Provider store={store}> */}
+                <Drawing moveElement={moveElement} sendToBack={sendToBack} bringToFront={bringToFront} />
+                {/* </Provider> */}
               </div>
             </div>
             <Tabs selectedIndex={tabindex2} selectedTabClassName='selectedTab2' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)} >

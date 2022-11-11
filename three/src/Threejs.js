@@ -167,6 +167,8 @@ const Threejs = () => {
             currentobj = obj;
         }
     }
+
+
     const sampleAnimation2 = () => {
         pickableObjects2 = [...scene2.children]
         pickableObjects2.splice(0, 4)
@@ -283,38 +285,50 @@ const Threejs = () => {
 
 
     useEffect(() => {
-        const socket = socketIOClient(':9000');
-        socket.on("setCurrentCanvas", data => {
-            // setCurrentCanvas(data.data1);
-            const geometry = new THREE.BoxGeometry(7, 4, 5);
-            const material = new THREE.MeshBasicMaterial({
-                roughness: 0.3, metalness: 0.8,
-                transparent: true,
-                map: new THREE.TextureLoader().load(data.data1, (texture) => {
-                    // console.log(texture)
-                    const shapeCount = shapesOnCanvas.length
-                    const shape = "fabricjs"
-                    setShapesOnCanvas(
-                        [
-                            ...shapesOnCanvas,
-                            <Shapefabricjs
-                                shape={shape}
-                                key={shapeCount}
-                                geometry={geometry}
-                                material={material}
-                                theatreKey={shape + shapeCount}
-                            />
-                        ]
+        var socket;
+        var request = new XMLHttpRequest();
+        request.open('GET', 'http://localhost:9000/', true);
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status === 404) {
+                    socket = socketIOClient(':9000');
+                    socket.on("setCurrentCanvas", data => {
+                        // setCurrentCanvas(data.data1);
+                        const geometry = new THREE.BoxGeometry(7, 4, 5);
+                        const material = new THREE.MeshBasicMaterial({
+                            roughness: 0.3, metalness: 0.8,
+                            transparent: true,
+                            map: new THREE.TextureLoader().load(data.data1, (texture) => {
+                                // console.log(texture)
+                                const shapeCount = shapesOnCanvas.length
+                                const shape = "fabricjs"
+                                setShapesOnCanvas(
+                                    [
+                                        ...shapesOnCanvas,
+                                        <Shapefabricjs
+                                            shape={shape}
+                                            key={shapeCount}
+                                            geometry={geometry}
+                                            material={material}
+                                            theatreKey={shape + shapeCount}
+                                        />
+                                    ]
+                                )
+                            })
+                        });
+                    }
                     )
-                })
-            });
-        }
-        )
-        socket.on('error', function () {
-            socket?.removeListener('setCurrentCanvas');
-            socket?.off('setCurrentCanvas');
-            socket?.disconnect();
-        })
+
+                }
+            }
+        };
+        request.send();
+
+        // socket.on('error', function () {
+        //     socket?.removeListener('setCurrentCanvas');
+        //     socket?.off('setCurrentCanvas');
+        //     socket?.disconnect();
+        // })
 
 
         return () => {
@@ -367,7 +381,8 @@ const Threejs = () => {
             }}
                 onPointerOut={e => {
                     e.object.material.emissive && (e.object.material.emissive.r = 0)
-                }}>
+                }}
+            >
                 <primitive object={props.geometry} attach={"geometry"} />
                 <primitive object={props.material} attach={"material"} />
             </e.mesh>
@@ -511,16 +526,30 @@ const Threejs = () => {
         reader.readAsDataURL(inp);
     }
 
+    const addelement = (element, i) => {
+        console.log(element);
+        console.log(element.type);
+        if (element.type === 'Group') {
+
+        }
+        if (element.material && element.geometry) {
+            addImportedShape("imported", element, i)
+        }
+        else if (element.children.length > 0) {
+            (element.children).forEach((element1, ii) => {
+                addelement(element1, ii)
+            })
+        }
+    }
+
     function importScenefromfilegltftoscene1(inp) {
         var reader = new FileReader();
         reader.onload = e => {
             const loader = new GLTFLoader();
             loader.load(e.target.result, (gltf) => {
+                // console.log(gltf.scene.type)
                 (gltf.scene.children).forEach((element, i) => {
-                    console.log(element);
-                    if (element.type === 'Mesh') {
-                        addImportedShape("imported", element, i)
-                    }
+                    addelement(element, i)
                 })
                 setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
                 setImported1([]);
@@ -528,7 +557,6 @@ const Threejs = () => {
         }
         reader.readAsDataURL(inp);
     }
-
     function applyTexture(inp) {
 
         if (selectedObject) {
@@ -576,9 +604,11 @@ const Threejs = () => {
 
     // }
     async function drawingFileSaveAsgltf() {
+        const dd = scene1;
+        dd.children.splice(3, 1);// remove transfer control from export
         const exporter = new GLTFExporter();
         exporter.parse(
-            scene1,
+            dd,
             gltf => {
                 downloadJSON(gltf);
             },
@@ -875,7 +905,7 @@ const Threejs = () => {
     }, [pickableObjects])
 
     const loadscene = (i) => {
-        localStorage.removeItem("theatre-0.4.persistent");
+        // localStorage.removeItem("theatre-0.4.persistent");
         const loader = new GLTFLoader();
         loader.parse((aa[i].gltf), '', (gltf) => {
             (gltf.scene.children).forEach((element, ii) => {
@@ -891,6 +921,42 @@ const Threejs = () => {
             setdemoSheet(getProject('Demo Project' + Math.floor(Math.random() * 10), { state: JSON.parse(aa[i].animation) }).sheet('Demo Sheet'))
         });
     }
+
+    // const selectobjectgiven2 = key1 => {
+    // //    pickableObjects.map((val, i) => {
+    // //         // return (val.userData.__storeKey.split('Demo Sheet:default:')[1] === key1)
+    // //    return console.log(val.userData.__storeKey.split('Demo Sheet:default:')[1] )
+
+    // //     })
+    // const updatedpickableObjects =[ ...pickableObjects];
+    // updatedpickableObjects.filter((val) => {
+    //     return (val.userData.__storeKey.split('Demo Sheet:default:')[1] === key1)
+    // })
+    //     console.log(updatedpickableObjects)
+    //     // setTimeout(() => {
+    //     // console.log(scene1.children)
+
+    //     // }, 1000);
+    //     // setSelectedObject(pickableObjects[0])
+    //     // scene1.children[3].attach(pickableObjects[0]);
+    // }
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         studio.onSelectionChange(newSelecton => {
+    //             // console.log(newSelecton[0].address.objectKey)
+    //             if (pickableObjects.length>0){
+    //                 selectobjectgiven2(newSelecton[0].address.objectKey);
+    //             }
+    //         });
+    //     }, 100);
+
+    //     return () => {
+    //     }
+    // }, [shapesOnCanvas])
+
+
+
     const saveScene = () => {
         const dd = [...aa];
 
@@ -966,6 +1032,15 @@ const Threejs = () => {
         }
     }
 
+    const resetAllProps = () => {
+        pickableObjects.forEach(element => {
+            selectobjectgiven(element);
+            studio.transaction(({ unset }) => {
+                unset(currentobj.props)
+            })
+        });
+    }
+
     return (<div>
         <div style={{ display: 'flex', border: '1px solid red' }}>
             <div style={{ minWidth: 200, backgroundColor: 'darkgrey', border: '1px solid red' }}> </div>
@@ -1028,9 +1103,10 @@ const Threejs = () => {
                         console.log(scene1.children);
                     }}>console log</button>
 
-                    <button onClick={playAnimation}>Play Animation</button>
+                    <button onClick={playAnimation}>Play Animation 2s</button>
                     <button onClick={pauseAnimation}>Pause Animation</button>
-                    <button onClick={sampleAnimation}>Play Sample Animation</button>
+                    <button onClick={sampleAnimation}>Play equivalent threejs Animation</button>
+                    <button onClick={resetAllProps}>Reset all Props</button>
                     {/* <button onClick={() => selectobjectgiven(selectedObject)}>selectobjectgiven</button> */}
                     {/* <button onClick={logkeyframes}>Log keyframes</button> */}
                 </div>

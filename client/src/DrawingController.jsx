@@ -234,7 +234,7 @@ export const createTextBox = (canvas) => {
         editable: true,
         objectCaching: false,
         textAlign: 'left',
-        padding: 5,
+        // padding: 5,
 
     });
     canvas.add(text).setActiveObject(text);
