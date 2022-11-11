@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint,tempAlert  } from '../common'
+import { endpoint, tempAlert, stopGraphics } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
@@ -59,8 +59,8 @@ const CustomClient = () => {
             window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
-          // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
-                        element.set({ selectable: false, strokeUniform: true, strokeWidth:element.strokeWidth/3 });
+                        // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
+                        element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -136,12 +136,12 @@ const CustomClient = () => {
     aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
         "`)
     }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
     const updateData = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
@@ -238,7 +238,9 @@ const CustomClient = () => {
                     }} value={pageName}>
                         {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
                     </select>  <button onClick={getAllKeyValue}>getAllKeyValue</button>   <button onClick={saveList}>Save List</button> <button onClick={() => updateList(currentRow)}>Update List</button>
-
+                    <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>
+                    <button onClick={() => updateData(96, pageName, textNodes)}>update</button>
+                    <button onClick={() => stopGraphics(96)}><FaStop /></button>
 
                 </div>
                 <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
@@ -253,18 +255,38 @@ const CustomClient = () => {
                                         });
                                         settextNodes(updatedKeyframe)
                                     }}
-                                /></td><td>=<input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
-                                    const updatednodes = textNodes.map((val, index) => {
-                                        return (i === index) ? { ...val, value: e.target.value } : val;
-                                    });
-                                    settextNodes(updatednodes)
-                                }} /></td>
+                                /></td><td>=
+                                    {(isNaN(val.value - 1)) ? <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
+                                        const updatednodes = textNodes.map((val, index) => {
+                                            return (i === index) ? { ...val, value: e.target.value } : val;
+                                        });
+                                        settextNodes(updatednodes)
+                                    }} /> : <><input style={{ width: 50, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
+                                        const updatednodes = textNodes.map((val, index) => {
+                                            return (i === index) ? { ...val, value: e.target.value } : val;
+                                        });
+                                        settextNodes(updatednodes);
+                                    }} /><button onClick={() => {
+                                        const updatednodes = textNodes.map((val, index) => {
+                                            return (i === index) ? { ...val, value: parseFloat(val.value) + 1 } : val;
+                                        });
+                                        settextNodes(updatednodes);
+                                    }
+                                    }>+</button></>}
+                                    {/* <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
+                                        const updatednodes = textNodes.map((val, index) => {
+                                            return (i === index) ? { ...val, value: e.target.value } : val;
+                                        });
+                                        settextNodes(updatednodes)
+                                    }} /> */}
+
+                                </td>
                             </tr>)
                         })}
                     </tbody></table>
 
                 </div>
-                <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>  <button onClick={() => updateData(96, pageName, textNodes)}>update</button>   <button onClick={() => stopGraphics(96)}><FaStop /></button>
+
 
 
                 <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
