@@ -102,6 +102,7 @@ const CustomClient = () => {
                 });
                 sendToCasparcg(layerNumber)
             });
+            window.automationeditor[0].canvas.requestRenderAll();
         }
         else { tempAlert('Pagename not avalaible', 1000) }
     }
@@ -195,6 +196,7 @@ const CustomClient = () => {
                 }, 300);
 
             });
+            window.automationeditor[0].canvas.requestRenderAll();
         }
     }
     // const addtextNode = () => {

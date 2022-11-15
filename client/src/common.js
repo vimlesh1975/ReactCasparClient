@@ -8,7 +8,7 @@ export var address1 = 'http://' + (window.location.host).split(':')[0] + ':9000'
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 export const videoLayers = [1, 2, 3, 10000, 5];
-export const templateLayers = { solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, kabaddiScore: 157, gameTimer: 160, gameTimer2: 163, LBand: 166 };
+export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, kabaddiScore: 157, gameTimer: 160, gameTimer2: 163, LBand: 166 };
 
 export const endpoint = (string) => {
     const data = { string: string }

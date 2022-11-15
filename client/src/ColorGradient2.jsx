@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Rnd } from "react-rnd";
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
-import {rgbaCol} from './common'
-
+import { rgbaCol } from './common'
+import ColorPattern from './ColorPattern'
 const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -58,7 +58,7 @@ const ColorGradient2 = () => {
     const ondirectionAngleChange = (e) => {
         setDirectionAngle(e.target.value);
     };
- 
+
 
     const ondrag1 = (e, d, i) => {
         const updatedpositions1 = [...positions1];
@@ -98,7 +98,7 @@ const ColorGradient2 = () => {
         gradientUnits: "percentage",
         coords: gerCords(parseInt(directionAngle)),
         colorStops: colors.map((color, i) => {
-            return { offset: positions1[i] / width1, color: color,opacity:opacity1[i] };
+            return { offset: positions1[i] / width1, color: color, opacity: opacity1[i] };
         })
     });
 
@@ -121,7 +121,7 @@ const ColorGradient2 = () => {
                     <div style={{ border: "2px solid grey" }}>
                         <div
                             style={{
-                                backgroundColor:'grey',
+                                backgroundColor: 'grey',
                                 margin: 5,
                                 border: "2px solid blue",
                                 width: width1,
@@ -176,7 +176,7 @@ const ColorGradient2 = () => {
                     <div style={{ marginLeft: 20, border: "2px solid grey" }}>
                         <div
                             style={{
-                                backgroundColor:'grey',
+                                backgroundColor: 'grey',
                                 margin: 5,
                                 border: "2px solid blue",
                                 width: width1,
@@ -235,6 +235,8 @@ const ColorGradient2 = () => {
                     );
                 })}
             </div>
+            < ColorPattern />
+
         </>
     );
 };

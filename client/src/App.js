@@ -8,8 +8,7 @@ import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import DrawingController from './DrawingController';
-// import { Provider } from 'react-redux'
-// import store from './store'
+
 import { v4 as uuidv4 } from 'uuid';
 
 import VideoController from './VideoController';
@@ -38,7 +37,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 
-const buildDate = '111122_1'
+const buildDate = '151122_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
