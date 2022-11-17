@@ -1676,6 +1676,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
+                <link rel="stylesheet" href="${cssfilename}.css">
+                <link rel="stylesheet" href="${cssfilename2}.css">
             </head>
             <body>
             <script>
@@ -1833,9 +1835,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
             </body>
             <script src="${jsfilename}.js"></script>
-            <link rel="stylesheet" href="${cssfilename}.css">
             <script src="${jsfilename2}.js"></script>
-            <link rel="stylesheet" href="${cssfilename2}.css">
             </html>`
 
     }
