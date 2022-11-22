@@ -594,6 +594,45 @@ export const sameWidth = canvas => {
     })
     canvas.requestRenderAll();
 }
+export const sameWidthIMG = canvas => {
+    const arr = [];
+    canvas.getActiveObjects().forEach(element => {
+        arr.push(element.width * element.scaleX);
+    });
+    const max = Math.max(...arr);
+    console.log(arr)
+    console.log(max)
+
+    canvas.getActiveObjects().forEach(element => {
+        if ((element.type === 'rect') || (element.type === 'image')) {
+            element.set({ scaleX: max / (element.width) });
+        }
+    })
+    canvas.requestRenderAll();
+}
+
+export const sameHeightIMG = canvas => {
+    const arr = [];
+    canvas.getActiveObjects().forEach(element => {
+        arr.push(element.height * element.scaleY);
+    });
+    const max = Math.max(...arr);
+    console.log(arr)
+    console.log(max)
+
+    canvas.getActiveObjects().forEach(element => {
+        if ((element.type === 'rect') || (element.type === 'image')) {
+            element.set({ scaleY: max / (element.height) });
+        }
+    })
+    canvas.requestRenderAll();
+}
+
+
+export const sameSizeIMG = canvas => {
+    sameWidthIMG(canvas)
+    sameHeightIMG(canvas)
+}
 
 export const deleteSelectedItem = canvas => {
     window.deleteItemfromtimeline();
@@ -3020,7 +3059,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => sendToBack(canvas)}>Send To BK</button>
                         <button onClick={() => bringToFront(canvas)}>Bring to F</button>
                         <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
-                        <button onClick={() => sameWidth(canvas)}>Same Width</button>
+                        <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
+
+                        <div ><b> Images: or Rects</b>
+                            <button onClick={() => sameWidthIMG(canvas)}>Same Width</button>
+                            <button onClick={() => sameHeightIMG(canvas)}>Same Height</button>
+                            <button onClick={() => sameSizeIMG(canvas)}>Same size</button>
+                        </div>
+
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
                         {/* <button onClick={() => {
