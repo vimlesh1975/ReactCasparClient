@@ -400,6 +400,7 @@ const Threejs = () => {
 
 
     useEffect(() => {
+
         var dragControls;
         // var transformCurrent = reftransform.current;
         if (pickableObjects.length > 0) {
@@ -451,7 +452,7 @@ const Threejs = () => {
                 setTimeout(() => {
                     scene1.children[3].attach(scene1.children[scene1.children.length - 1])
                     setSelectedObject(scene1.children[scene1.children.length - 1]);
-                    selectobjectgiven(scene1.children[scene1.children.length - 1])
+                    selectobjectgiven(scene1.children[scene1.children.length - 1]);
                 }, 1000);
             }
         }, 100);
@@ -905,7 +906,9 @@ const Threejs = () => {
     }, [pickableObjects])
 
     const loadscene = (i) => {
-        // localStorage.removeItem("theatre-0.4.persistent");
+
+
+
         const loader = new GLTFLoader();
         loader.parse((aa[i].gltf), '', (gltf) => {
             (gltf.scene.children).forEach((element, ii) => {
@@ -918,8 +921,13 @@ const Threejs = () => {
             const cameraPosition = JSON.parse(aa[i].cameraPosition);
             camera1.position.set(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
             console.log(JSON.parse(aa[i].animation));
-            setdemoSheet(getProject('Demo Project' + Math.floor(Math.random() * 10), { state: JSON.parse(aa[i].animation) }).sheet('Demo Sheet'))
+            setdemoSheet(getProject('Demo Project' + Math.floor(Math.random() * 10), { state: JSON.parse(aa[i].animation) }).sheet('Demo Sheet'));
+            // localStorage.removeItem("theatre-0.4.persistent");
+            // resetAllProps();
         });
+        // setTimeout(() => {
+        //     resetAllProps();
+        // }, 3000);
     }
 
     // const selectobjectgiven2 = key1 => {

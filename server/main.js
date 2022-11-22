@@ -160,9 +160,9 @@ io.on('connection', (socket) => {
 })
 
 const path = require('path');
-app.use(express.static(path.join(__dirname, '..', 'client/build'))); //client folder build
+app.use(express.static(path.join(__dirname, '..', 'client/public'))); //client folder build
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'client/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client/public', 'index.html'));
 });
 
 app.post('/startGameTimer', (req, res) => {

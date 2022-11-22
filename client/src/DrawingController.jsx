@@ -2645,7 +2645,247 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         </select>
                     </div>
                 </div>
+                <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid blue' }}>
+                    <div className='drawingToolsRow' >
+                        <b>Tools: </b>
+                        <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
+                        <button onClick={() => putatCenter(canvas)}>All at Center</button>
+                        <button onClick={() => selectedatCenter(canvas)}>Center</button>
+                        <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
+                        <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
+                    </div>
+                    <div className='drawingToolsRow' >
 
+                        <button title='Align Left' onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
+                        <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
+                        <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
+                        <button title='Align Bottom' onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
+                        <button title=' Make Vertical Equidistant' onClick={() => makeVerticalEquidistant(canvas)}>=</button>
+                        <button title=' Make Horizontal Equidistant' onClick={() => makeHorizontalEquidistant(canvas)}>||</button>
+
+
+
+                        <button title='Bold' style={{ fontWeight: (fontWeight1 === 'bold') ? 'bold' : 'normal' }} onClick={() => {
+                            txtBold(canvas);
+                            setfontWeight1((fontWeight1 === 'bold') ? 'normal' : 'bold');
+                        }}>B</button>
+                        <button title='Ittalic' style={{ fontStyle: (itallicnormal === 'italic') ? 'italic' : 'normal' }} onClick={() => {
+                            textItalic(canvas);
+                            setitallicnormal((itallicnormal === 'italic') ? 'normal' : 'italic');
+                        }}>I </button>
+                        <button title='Underline' style={{ textDecoration: (underline1 === 'underline') ? 'underline' : '' }} onClick={() => {
+                            textUnderline(canvas);
+                            setunderline1((underline1 === 'underline') ? '' : 'underline');
+                        }}>U</button>
+                        <button title='Linethrough' style={{ textDecoration: (linethrough1 === 'line-through') ? 'line-through' : '' }} onClick={() => {
+                            textLineThrough(canvas);
+                            setlinethrough1((linethrough1 === 'line-through') ? '' : 'line-through');
+
+                        }}>S</button>
+
+
+                        <button title='Delete Selected' onClick={() => deleteSelectedItem()}><VscTrash /> Selected</button>
+                        <button title='Delete All' onClick={() => deleteAll(canvas)}><VscTrash />All</button>
+                        <button title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
+                        <button title='Unlock All' onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
+                        <button onClick={() => undo(canvas)}>Undo</button>
+                        <button onClick={() => redo(canvas)}>Redo</button>
+                        <button onClick={() => copy(canvas)}>Copy</button>
+                        <button onClick={() => paste(canvas)}>Paste</button>
+                        <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
+                        <button onClick={() => selectAll(canvas)}>Select All</button>
+                        <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
+                        <button onClick={() => sendToBack(canvas)}>Send To BK</button>
+                        <button onClick={() => bringToFront(canvas)}>Bring to F</button>
+                        <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
+                        <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
+
+                        <div ><b> Images: or Rects</b>
+                            <button onClick={() => sameWidthIMG(canvas)}>Same Width</button>
+                            <button onClick={() => sameHeightIMG(canvas)}>Same Height</button>
+                            <button onClick={() => sameSizeIMG(canvas)}>Same size</button>
+                        </div>
+                        <button onClick={makeFullScreen}>Make full Screen</button>
+                        <button onClick={sdToHD}>sdtoHD</button>
+
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Export: </b>
+                        <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
+                        Js:<input type='text' size={2} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
+                        css:<input size={2} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
+                        Js2:<input type='text' size={2} value={jsfilename2} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME2', payload: e.target.value })} />
+                        css2:<input size={2} type='text' value={cssfilename2} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME2', payload: e.target.value })} />
+                        {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
+                        <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
+                        <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
+                        <button onClick={() => exportSVG(canvas)}>SVG</button>
+                        <button onClick={() => exportJSON(canvas)}>JSON</button>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
+                    </div>
+                </div>
+
+                <div style={{ backgroundColor: '#eff4f6', border: '2px solid green' }}>
+
+                    <div className='drawingToolsRow' >
+                        <table border='1'>
+                            <tbody>
+                                <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' value={opacity} /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
+                                    setCharSpacing(0);
+                                    canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
+                                    canvas.requestRenderAll();
+                                }}>R</button>{charSpacing}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className='drawingToolsRow' >
+                        <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
+                            {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+                        Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
+                        {fontSize}
+                    </div>
+
+                    <div className='drawingToolsRow' >
+                        <b> Colors: </b>
+                        Fill {(canvas?.getActiveObjects()[0]?.fill?.colorStops) ? <span onClick={() => {
+                            window.changeTab(4);
+                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.fill);
+                        }} style={{
+                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.fill?.colorStops.map(
+                                (colorStop, i) => {
+                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
+                                }
+                            )}`
+                        }} /> : <input type="color" value={currentFillColor} onChange={e => {
+                            changeCurrentColor(e, canvas);
+                            // setCurrentFillColor(e.target.value);
+                        }} />}
+                        BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
+                        Strk {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
+                            window.changeTab(4);
+                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke);
+                        }} style={{
+                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.stroke?.colorStops.map(
+                                (colorStop, i) => {
+                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
+                                }
+                            )}`
+                        }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
+                        <button title='Swap Face/Stroke Color' onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Strk Color</button>
+                        Strk/Brs W:
+                        <input style={{ width: '40px' }} onChange={e => {
+                            onstrokeSizeChange((e));
+                        }} type="number" min='0' max='50' step='1' value={strokeWidth} />
+                        <span>
+                            ScaleX:<input style={{ width: '40px' }} onChange={e => {
+                                setscaleX((e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ scaleX: e.target.value }))
+                                canvas.requestRenderAll();
+                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleX} />
+                            ScaleY:<input style={{ width: '40px' }} onChange={e => {
+                                setscaleY((e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ scaleY: e.target.value }))
+                                canvas.requestRenderAll();
+                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleY} />
+
+                            X: <input style={{ width: '50px' }} onChange={e => {
+                                setX(parseInt(e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ left: parseInt(e.target.value) }))
+                                canvas.requestRenderAll();
+                            }} type="number" min={-100} max={1100} step={1} value={x} />
+                            Y: <input style={{ width: '50px' }} onChange={e => {
+                                setY(parseInt(e.target.value));
+                                canvas.getActiveObjects().forEach(item => item.set({ top: parseInt(e.target.value) }))
+                                canvas.requestRenderAll();
+                            }} type="number" min={-100} max={1100} step={1} value={y} />
+
+                            Angle: <input style={{ width: '40px' }} onChange={e => {
+                                setangle(e.target.value);
+                                canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
+                                canvas.requestRenderAll();
+                            }} type="number" min='0' max='360' step='1' value={angle} /> </span>
+
+
+                        strk-dsar: <input style={{ width: 40 }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
+                        ofst: <input style={{ width: 40 }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
+                        W:<input style={{ width: 55 }} onChange={e => {
+                            canvas?.getActiveObjects().forEach(element => {
+                                element.width = parseInt(e.target.value);
+                                setWidth(parseInt(e.target.value));
+                                canvas.requestRenderAll();
+                            })
+                        }} type="number" min='0' max={2000} step='1' value={width} />
+                        H:<input style={{ width: 55 }} onChange={e => {
+                            canvas?.getActiveObjects().forEach(element => {
+                                element.height = parseInt(e.target.value);
+                                setHeight(parseInt(e.target.value));
+                                canvas.requestRenderAll();
+                            })
+                        }} type="number" min='0' max={2000} step='1' value={height} />
+
+
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <div  >
+                            <table border='1' width='220'>
+                                <tbody>
+                                    <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
+                                    <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
+                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRangeshadow' onChange={e => onBlurSizeChange(e.target.value)} type="range" min='0' max='100' step='1' defaultValue='30' /><button onClick={() => onBlurSizeChange(0)}>R</button></td></tr>
+                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRangeshadow' onChange={e => onoffsetXChange(e.target.value)} type="range" min='-400' max='400' step='1' defaultValue='0' /><button onClick={() => onoffsetXChange(0)}>R</button></td></tr>
+                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRangeshadow' onChange={e => onoffsetYChange(e.target.value)} type="range" min='-200' max='200' step='1' defaultValue='0' /><button onClick={() => onoffsetYChange(0)}>R</button></td></tr>
+                                    <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div  >
+                            <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
+                                <tbody>
+
+                                    <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-88' max='88' step='1' value={skewXSize} /><button onClick={() => {
+                                        setSkewXSize(0);
+                                        canvas.getActiveObjects().forEach(item => item.skewX = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewXSize}</td></tr>
+                                    <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewYSize} /><button onClick={() => {
+                                        setSkewYSize(0);
+                                        canvas.getActiveObjects().forEach(item => item.skewY = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewYSize}</td></tr>
+                                    <tr><td >RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' value={skewRX} /><button onClick={() => {
+                                        setSkewRX(0);
+                                        canvas.getActiveObjects().forEach(item => item.rx = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewRX}</td></tr>
+                                    <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' value={skewRY} /><button onClick={() => {
+                                        setSkewRY(0);
+                                        canvas.getActiveObjects().forEach(item => item.ry = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{skewRY}</td></tr>
+
+                                    <tr><td> cropX:</td><td><input className='inputRange' onChange={e => onCropX(e)} type="range" id='cropX' min='0' max='2360' step='1' value={cropX} /><button onClick={() => {
+                                        setCropX(0);
+                                        canvas.getActiveObjects().forEach(item => item.cropX = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{cropX}</td></tr>
+
+
+                                    <tr><td> cropY:</td><td><input className='inputRange' onChange={e => onCropY(e)} type="range" id='cropY' min='0' max='2360' step='1' value={cropY} /><button onClick={() => {
+                                        setCropY(0);
+                                        canvas.getActiveObjects().forEach(item => item.cropY = 0)
+                                        canvas.requestRenderAll();
+                                    }}>R</button>{cropY}</td></tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid red' }}>
                     <div className='drawingToolsRow' >
                         <b> Solid Cap 2: </b>
@@ -2848,273 +3088,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     </div>
 
                 </div>
-                <div style={{ backgroundColor: '#eff4f6', border: '2px solid green' }}>
 
-                    <div className='drawingToolsRow' >
-                        <table border='1'>
-                            <tbody>
-                                <tr><td> <b>Opacity: </b><input className='inputRange' onChange={e => setOpacity1(canvas, e)} type="range" min='0' max='1' step='0.1' value={opacity} /> {opacity}</td><td> <b>Chr Spacing: </b><input className='inputRange' onChange={e => setCHRSpacing(canvas, e)} type="range" min='-10000' max='10000' step='10' value={charSpacing} /><button onClick={() => {
-                                    setCharSpacing(0);
-                                    canvas.getActiveObjects().forEach(item => item.charSpacing = 0)
-                                    canvas.requestRenderAll();
-                                }}>R</button>{charSpacing}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className='drawingToolsRow' >
-                        <b> Font: </b> <select onChange={e => onFontChange(e)} value={currentFont}>
-                            {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-                        </select>
-                        Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
-                        {fontSize}
-                    </div>
-
-                    <div className='drawingToolsRow' >
-                        <b> Colors: </b>
-                        Fill {(canvas?.getActiveObjects()[0]?.fill?.colorStops) ? <span onClick={() => {
-                            window.changeTab(4);
-                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.fill);
-                        }} style={{
-                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.fill?.colorStops.map(
-                                (colorStop, i) => {
-                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
-                                }
-                            )}`
-                        }} /> : <input type="color" value={currentFillColor} onChange={e => {
-                            changeCurrentColor(e, canvas);
-                            // setCurrentFillColor(e.target.value);
-                        }} />}
-                        BG<input type="color" value={canvas?.getActiveObjects()[0]?.backgroundColor} onChange={e => changeBackGroundColor(e, canvas)} />
-                        Strk {(canvas?.getActiveObjects()[0]?.stroke?.colorStops) ? <span onClick={() => {
-                            window.changeTab(4);
-                            window.fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke);
-                        }} style={{
-                            display: 'inline-block', marginTop: 6, marginLeft: 7, marginRight: 6, border: '1px solid black', width: 35, height: 12, backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180}deg,${canvas?.getActiveObjects()[0]?.stroke?.colorStops.map(
-                                (colorStop, i) => {
-                                    return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100}%`;
-                                }
-                            )}`
-                        }} /> : <input type="color" value={canvas?.getActiveObjects()[0]?.stroke} onChange={e => changeStrokeCurrentColor(e, canvas)} />}
-                        <button title='Swap Face/Stroke Color' onClick={() => swapFaceandStrokeColors(canvas)}>Swap Face/Strk Color</button>
-                        Strk/Brs W:
-                        <input style={{ width: '40px' }} onChange={e => {
-                            onstrokeSizeChange((e));
-                        }} type="number" min='0' max='50' step='1' value={strokeWidth} />
-                        <span>
-                            ScaleX:<input style={{ width: '40px' }} onChange={e => {
-                                setscaleX((e.target.value));
-                                canvas.getActiveObjects().forEach(item => item.set({ scaleX: e.target.value }))
-                                canvas.requestRenderAll();
-                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleX} />
-                            ScaleY:<input style={{ width: '40px' }} onChange={e => {
-                                setscaleY((e.target.value));
-                                canvas.getActiveObjects().forEach(item => item.set({ scaleY: e.target.value }))
-                                canvas.requestRenderAll();
-                            }} type="number" min='-100.00' max='100.00' step='0.01' value={scaleY} />
-
-                            X: <input style={{ width: '50px' }} onChange={e => {
-                                setX(parseInt(e.target.value));
-                                canvas.getActiveObjects().forEach(item => item.set({ left: parseInt(e.target.value) }))
-                                canvas.requestRenderAll();
-                            }} type="number" min={-100} max={1100} step={1} value={x} />
-                            Y: <input style={{ width: '50px' }} onChange={e => {
-                                setY(parseInt(e.target.value));
-                                canvas.getActiveObjects().forEach(item => item.set({ top: parseInt(e.target.value) }))
-                                canvas.requestRenderAll();
-                            }} type="number" min={-100} max={1100} step={1} value={y} />
-
-                            Angle: <input style={{ width: '40px' }} onChange={e => {
-                                setangle(e.target.value);
-                                canvas.getActiveObjects().forEach(item => item.rotate(e.target.value))
-                                canvas.requestRenderAll();
-                            }} type="number" min='0' max='360' step='1' value={angle} /> </span>
-
-
-                        strk-dsar: <input style={{ width: 40 }} onChange={e => onstrokedasharraychange(e)} type="number" min='0' max='1000' step='1' value={strokedasharray[0]} />
-                        ofst: <input style={{ width: 40 }} onChange={e => onstrokedashoffsetchange(e)} type="number" min='-1000' max='1000' step='1' value={strokedashoffset} />
-                        W:<input style={{ width: 55 }} onChange={e => {
-                            canvas?.getActiveObjects().forEach(element => {
-                                element.width = parseInt(e.target.value);
-                                setWidth(parseInt(e.target.value));
-                                canvas.requestRenderAll();
-                            })
-                        }} type="number" min='0' max={2000} step='1' value={width} />
-                        H:<input style={{ width: 55 }} onChange={e => {
-                            canvas?.getActiveObjects().forEach(element => {
-                                element.height = parseInt(e.target.value);
-                                setHeight(parseInt(e.target.value));
-                                canvas.requestRenderAll();
-                            })
-                        }} type="number" min='0' max={2000} step='1' value={height} />
-
-
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <div  >
-                            <table border='1' width='220'>
-                                <tbody>
-                                    <tr><td colSpan='2'><b> Shadow: </b>color <input ref={refShadowColor} type="color" defaultValue='#000000' onChange={e => changeShadowCurrentColor(e, canvas)} /></td></tr>
-                                    <tr><td colSpan='2'>affectStroke<input ref={refAffectStroke} type="checkbox" onChange={(e) => affectStroke(e)} defaultChecked={false} /></td></tr>
-                                    <tr><td>Blur</td><td> <input ref={refBlur} className='inputRangeshadow' onChange={e => onBlurSizeChange(e.target.value)} type="range" min='0' max='100' step='1' defaultValue='30' /><button onClick={() => onBlurSizeChange(0)}>R</button></td></tr>
-                                    <tr><td>offsetX</td><td> <input ref={refOffsetX} className='inputRangeshadow' onChange={e => onoffsetXChange(e.target.value)} type="range" min='-400' max='400' step='1' defaultValue='0' /><button onClick={() => onoffsetXChange(0)}>R</button></td></tr>
-                                    <tr><td> offsetY</td><td><input ref={refOffsetY} className='inputRangeshadow' onChange={e => onoffsetYChange(e.target.value)} type="range" min='-200' max='200' step='1' defaultValue='0' /><button onClick={() => onoffsetYChange(0)}>R</button></td></tr>
-                                    <tr><td><button onClick={() => setasClipPath(canvas)}>SetAsCipPath</button></td><td><button onClick={() => cliptoPath(canvas)}>Clip to Path</button></td></tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <div  >
-                            <table border='1' width='255' style={{ minWidth: 255, maxWidth: 255 }}>
-                                <tbody>
-
-                                    <tr><td>SkewX:</td><td> <input className='inputRange' onChange={e => onSkewXSizeChange(e)} type="range" min='-88' max='88' step='1' value={skewXSize} /><button onClick={() => {
-                                        setSkewXSize(0);
-                                        canvas.getActiveObjects().forEach(item => item.skewX = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{skewXSize}</td></tr>
-                                    <tr><td>SkewY:</td><td> <input className='inputRange' onChange={e => onSkewYSizeChange(e)} type="range" min='-60' max='60' step='1' value={skewYSize} /><button onClick={() => {
-                                        setSkewYSize(0);
-                                        canvas.getActiveObjects().forEach(item => item.skewY = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{skewYSize}</td></tr>
-                                    <tr><td >RX:</td><td>  <input className='inputRange' onChange={e => onRxSizeChange(e)} type="range" id='RX' min='-360' max='360' step='1' value={skewRX} /><button onClick={() => {
-                                        setSkewRX(0);
-                                        canvas.getActiveObjects().forEach(item => item.rx = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{skewRX}</td></tr>
-                                    <tr><td> RY:</td><td><input className='inputRange' onChange={e => onRySizeChange(e)} type="range" id='RY' min='-360' max='360' step='1' value={skewRY} /><button onClick={() => {
-                                        setSkewRY(0);
-                                        canvas.getActiveObjects().forEach(item => item.ry = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{skewRY}</td></tr>
-
-                                    <tr><td> cropX:</td><td><input className='inputRange' onChange={e => onCropX(e)} type="range" id='cropX' min='0' max='2360' step='1' value={cropX} /><button onClick={() => {
-                                        setCropX(0);
-                                        canvas.getActiveObjects().forEach(item => item.cropX = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{cropX}</td></tr>
-
-
-                                    <tr><td> cropY:</td><td><input className='inputRange' onChange={e => onCropY(e)} type="range" id='cropY' min='0' max='2360' step='1' value={cropY} /><button onClick={() => {
-                                        setCropY(0);
-                                        canvas.getActiveObjects().forEach(item => item.cropY = 0)
-                                        canvas.requestRenderAll();
-                                    }}>R</button>{cropY}</td></tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div style={{ backgroundColor: 'rgb(235, 232, 200)', border: '2px solid blue' }}>
-                    <div className='drawingToolsRow' >
-                        <b>Tools: </b>
-                        <button onClick={() => resetZommandPan(canvas)}>Reset Zoom, Pan</button>
-                        <button onClick={() => putatCenter(canvas)}>All at Center</button>
-                        <button onClick={() => selectedatCenter(canvas)}>Center</button>
-                        <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
-                        <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
-                    </div>
-                    <div className='drawingToolsRow' >
-
-                        <button title='Align Left' onClick={() => alignAllLeft(canvas)}><FaAlignLeft /></button>
-                        <button title='Align Right' onClick={() => alignAllRight(canvas)}><FaAlignRight /></button>
-                        <button title='Align Top' onClick={() => alignAllTop(canvas)}><AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop /> </button>
-                        <button title='Align Bottom' onClick={() => alignAllButtom(canvas)}><AiOutlineVerticalAlignBottom /><AiOutlineVerticalAlignBottom /></button>
-                        <button title=' Make Vertical Equidistant' onClick={() => makeVerticalEquidistant(canvas)}>=</button>
-                        <button title=' Make Horizontal Equidistant' onClick={() => makeHorizontalEquidistant(canvas)}>||</button>
-
-
-
-                        <button title='Bold' style={{ fontWeight: (fontWeight1 === 'bold') ? 'bold' : 'normal' }} onClick={() => {
-                            txtBold(canvas);
-                            setfontWeight1((fontWeight1 === 'bold') ? 'normal' : 'bold');
-                        }}>B</button>
-                        <button title='Ittalic' style={{ fontStyle: (itallicnormal === 'italic') ? 'italic' : 'normal' }} onClick={() => {
-                            textItalic(canvas);
-                            setitallicnormal((itallicnormal === 'italic') ? 'normal' : 'italic');
-                        }}>I </button>
-                        <button title='Underline' style={{ textDecoration: (underline1 === 'underline') ? 'underline' : '' }} onClick={() => {
-                            textUnderline(canvas);
-                            setunderline1((underline1 === 'underline') ? '' : 'underline');
-                        }}>U</button>
-                        <button title='Linethrough' style={{ textDecoration: (linethrough1 === 'line-through') ? 'line-through' : '' }} onClick={() => {
-                            textLineThrough(canvas);
-                            setlinethrough1((linethrough1 === 'line-through') ? '' : 'line-through');
-
-                        }}>S</button>
-
-
-                        <button title='Delete Selected' onClick={() => deleteSelectedItem()}><VscTrash /> Selected</button>
-                        <button title='Delete All' onClick={() => deleteAll(canvas)}><VscTrash />All</button>
-                        <button title='Lock selected' onClick={() => lock(canvas)}><VscLock /></button>
-                        <button title='Unlock All' onClick={() => unlockAll(canvas)}><VscUnlock />All</button>
-                        <button onClick={() => undo(canvas)}>Undo</button>
-                        <button onClick={() => redo(canvas)}>Redo</button>
-                        <button onClick={() => copy(canvas)}>Copy</button>
-                        <button onClick={() => paste(canvas)}>Paste</button>
-                        <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
-                        <button onClick={() => selectAll(canvas)}>Select All</button>
-                        <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
-                        <button onClick={() => sendToBack(canvas)}>Send To BK</button>
-                        <button onClick={() => bringToFront(canvas)}>Bring to F</button>
-                        <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
-                        <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
-
-                        <div ><b> Images: or Rects</b>
-                            <button onClick={() => sameWidthIMG(canvas)}>Same Width</button>
-                            <button onClick={() => sameHeightIMG(canvas)}>Same Height</button>
-                            <button onClick={() => sameSizeIMG(canvas)}>Same size</button>
-                        </div>
-
-                        <button onClick={makeFullScreen}>Make full Screen</button>
-                        <button onClick={sdToHD}>sdtoHD</button>
-                        {/* <button onClick={() => {
-                            canvas.getActiveObjects().forEach((element) => {
-                                const pointx = 1920 / 2;
-                                const pointy = 1028 / 2;
-                                // const pointx = 1024 / 2;
-                                // const pointy = 576 / 2;
-                                element.set({ originX: (pointx - element.left) / (element.width * element.scaleX), originY: (pointy - element.top) / (element.height * element.scaleY), centeredRotation: false });
-                                // element.set({ originX: 1, originY: 1, centeredRotation: false });
-                                // canvas.requestRenderAll();
-                            })
-                            canvas.requestRenderAll();
-                        }}>test</button>
-                        <button onClick={() => {
-                            const pointx = 1920 / 2;
-                            const pointy = 1028 / 2;
-                            canvas.getActiveObjects().forEach((element) => {
-                                element.set({ left: element.left + ((pointx - element.left) / (element.width * element.scaleX)) * (element.width * element.scaleX), top: element.top + ((pointy - element.top) * (element.height * element.scaleY)) / (element.height * element.scaleY) });
-                            })
-                            canvas.requestRenderAll();
-                        }}>test</button> */}
-                    </div>
-                    <div className='drawingToolsRow' >
-                        <b> Export: </b>
-                        <button onClick={() => exportHTML(canvas)}>HTML & Page</button>
-                        Js:<input type='text' size={2} value={jsfilename} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME', payload: e.target.value })} />
-                        css:<input size={2} type='text' value={cssfilename} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME', payload: e.target.value })} />
-                        Js2:<input type='text' size={2} value={jsfilename2} onChange={e => dispatch({ type: 'CHANGE_JSFILENAME2', payload: e.target.value })} />
-                        css2:<input size={2} type='text' value={cssfilename2} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME2', payload: e.target.value })} />
-                        {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>}
-
-                        <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
-                        <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
-                        <button onClick={() => exportSVG(canvas)}>SVG</button>
-                        <button onClick={() => exportJSON(canvas)}>JSON</button>
-
-                        {/* <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
-                            <ColorGradient property1={property1} />
-                        </Modal> */}
-                    </div>
-                    <div className='drawingToolsRow' >
-                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
-                        <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
-
-                    </div>
-
-                </div>
             </div>
             <div style={{ width: 380, backgroundColor: '#ddf0db' }}>
                 <Tabs selectedTabClassName='selectedTab' forceRenderTabPanel={true} onSelect={(index, prevIndex) => onTabChange(index, prevIndex)} >
