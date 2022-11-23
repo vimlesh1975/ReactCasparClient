@@ -600,9 +600,6 @@ export const sameWidthIMG = canvas => {
         arr.push(element.width * element.scaleX);
     });
     const max = Math.max(...arr);
-    console.log(arr)
-    console.log(max)
-
     canvas.getActiveObjects().forEach(element => {
         if ((element.type === 'rect') || (element.type === 'image')) {
             element.set({ scaleX: max / (element.width) });
@@ -617,9 +614,6 @@ export const sameHeightIMG = canvas => {
         arr.push(element.height * element.scaleY);
     });
     const max = Math.max(...arr);
-    console.log(arr)
-    console.log(max)
-
     canvas.getActiveObjects().forEach(element => {
         if ((element.type === 'rect') || (element.type === 'image')) {
             element.set({ scaleY: max / (element.height) });
@@ -1158,6 +1152,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     options.preventDefault();
                     selectAll(window.editor.canvas);
                 }
+                if (options.ctrlKey && options.key === 'Enter') {
+                    // options.preventDefault();
+                    previewHtml(window.editor.canvas)
+                }
             }
         })
         return () => {
@@ -1685,6 +1683,22 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
+    const roundedCorners = (cornerRadius) => {
+        canvas.getActiveObjects().forEach(fabricObject => {
+            const aa1 = new fabric.Rect({
+                width: fabricObject.width,
+                height: fabricObject.height,
+                rx: cornerRadius / fabricObject.scaleX,
+                ry: cornerRadius / fabricObject.scaleY,
+                left: -fabricObject.width / 2,
+                top: -fabricObject.height / 2
+            })
+            fabricObject.set({ clipPath: aa1 });
+            // fabricObject.set({ objectCaching: false });
+        })
+        canvas.requestRenderAll();
+    }
+
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -1877,6 +1891,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <script src="${jsfilename2}.js"></script>
             </html>`
 
+    }
+
+    function previewHtml(canvas) {
+        var myWindow = window.open("", "MsgWindow", "width=200,height=100");
+        // setHtmlString()
+        myWindow.document.body.innerHTML = '';
+        myWindow.document.write(canvas.toSVG());
     }
 
     async function exportHTML(canvas) {
@@ -2707,6 +2728,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         </div>
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
+                        <b> Image Round:</b>
+                        <input type={'range'} min={0} max={1920} style={{ width: 120 }} onChange={e => roundedCorners(e.target.value)} />
 
                     </div>
                     <div className='drawingToolsRow' >
@@ -2746,7 +2769,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             {fontList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
                         </select>
                         Size<input value={fontSize} className='inputRangeFontSize' onChange={e => onSizeChange(e, canvas)} type="range" min='0' max='100' step='1' />
-                        {fontSize}
+                        {(parseInt(fontSize))?.toFixed(0)}
                     </div>
 
                     <div className='drawingToolsRow' >

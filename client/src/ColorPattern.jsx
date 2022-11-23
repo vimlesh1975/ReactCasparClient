@@ -26,7 +26,7 @@ const ColorPattern = () => {
         refcopiedDiv.current.innerHTML = '';
         var clone = refPattern.current.cloneNode(true);
         refcopiedDiv.current.append(clone);
-        const inAnimation = `@keyframes example {from {width:0%} to {width:70%}} @keyframes example2 {to {width:0%}} div {animation: example 0.2s forwards }`
+        const inAnimation = `@keyframes example {from {height:-50%} to {height:-20%}} @keyframes example2 {to {width:0%}} div {animation: example 0.2s forwards }`
 
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
