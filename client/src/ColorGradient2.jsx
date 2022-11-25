@@ -3,7 +3,8 @@ import { Rnd } from "react-rnd";
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
 import { rgbaCol } from './common'
-import ColorPattern from './ColorPattern'
+// import ColorPattern from './ColorPattern'
+import GeoPattern1 from "./GeoPattern1";
 const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -116,7 +117,15 @@ const ColorGradient2 = () => {
             <div onMouseOver={() => setLoaded(true)}>
                 <button onClick={() => fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.fill)}>getGradient Fill</button>
                 <button onClick={() => fabricGradienttoBackgroundImage(canvas?.getActiveObjects()[0]?.stroke)}>getGradient Stroke</button>
+                <button onClick={() => {
+                    canvas.getActiveObjects().forEach(element => { element.set('fill', backgroundImagetoFabricGradient) });
+                    canvas.requestRenderAll();
+                }}>SetGradient Fill</button>
 
+                <button onClick={() => {
+                    canvas.getActiveObjects().forEach(element => { element.set('stroke', backgroundImagetoFabricGradient) });
+                    canvas.requestRenderAll();
+                }}>SetGradient Stroke</button>
                 <div style={{ display: "flex" }}>
                     <div style={{ border: "2px solid grey" }}>
                         <div
@@ -201,41 +210,36 @@ const ColorGradient2 = () => {
                             {directionAngle}
                         </div>
                     </div>
+                    <div style={{ marginLeft: 20 }}>
+                        {colors.map((color, i) => {
+                            return (
+                                <div key={i}>
+                                    {i}{" "}
+                                    <input
+                                        type="color"
+                                        value={color}
+                                        onChange={(e) => changeColor(e, i)}
+                                    />
+                                    <button onClick={() => deleteColor(i)}>Delete</button>
+                                    <input style={{ width: 70 }} type='range' min={0} max={1} step={0.1} value={opacity1[i]} onChange={(e) => {
+                                        const updatedOpacity1 = [...opacity1];
+                                        updatedOpacity1[i] = (e.target.value);
+                                        setOpacity1(updatedOpacity1);
+                                    }} />
+                                    <label>{opacity1[i]}</label>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-            <div>
-                <button onClick={() => {
-                    canvas.getActiveObjects().forEach(element => { element.set('fill', backgroundImagetoFabricGradient) });
-                    canvas.requestRenderAll();
-                }}>SetGradient Fill</button>
-                <br />
-                <button onClick={() => {
-                    canvas.getActiveObjects().forEach(element => { element.set('stroke', backgroundImagetoFabricGradient) });
-                    canvas.requestRenderAll();
-                }}>SetGradient Stroke</button>
+
+
+            {/* < ColorPattern /> */}
+            <div style={{ marginTop: 50 }}>
+                <GeoPattern1 />
+
             </div>
-            <div style={{ marginTop: 20 }}>
-                {colors.map((color, i) => {
-                    return (
-                        <div key={i}>
-                            {i}{" "}
-                            <input
-                                type="color"
-                                value={color}
-                                onChange={(e) => changeColor(e, i)}
-                            />
-                            <button onClick={() => deleteColor(i)}>Delete color</button>
-                            <input type='range' min={0} max={1} step={0.1} value={opacity1[i]} onChange={(e) => {
-                                const updatedOpacity1 = [...opacity1];
-                                updatedOpacity1[i] = (e.target.value);
-                                setOpacity1(updatedOpacity1);
-                            }} />
-                            <label>{opacity1[i]}</label>
-                        </div>
-                    );
-                })}
-            </div>
-            < ColorPattern />
 
         </>
     );
