@@ -211,17 +211,19 @@ app.post('/getCurrentCanvas', (req, res) => {
 })
 app.post('/setCurrentCanvas', (req, res) => {
     const data = req.body;
-    // console.log(data)
     io.emit('setCurrentCanvas', req.body)
     res.end(JSON.stringify(req.body))
 })
-// app.get('/defaultCanvasList', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
-// })
 
-// app.get('/defaultCanvasList', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'defaultCanvasList.txt'));
-// })
+app.post('/html', (req, res) => {
+    io.emit('html', req.body)
+    res.end(JSON.stringify(req.body))
+})
+
+app.post('/updateHtml', (req, res) => {
+    io.emit('updateHtml', req.body)
+    res.end(JSON.stringify(req.body))
+})
 
 var server;
 function startUdp() {
@@ -261,9 +263,3 @@ app.post('/showUdpClock', (req, res) => {
     aa.do(new AMCP.CustomCommand(`play 1-96 [html] "${'file:///' + path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')}"`)).then((aa1) => {
     }).catch((aa2) => console.log(aa2));
 })
-
-// aa.do(new AMCP.CallCommand('loop 1', { channel: 1, layer: 1 })).then((aa1) => console.log(aa1)).catch((aa2) => console.log(aa2));
-// aa.call(1, 1, ['loop 1']).then((aa1) => {
-//     console.log('ok' + aa1)
-// }).catch((aa2) => console.log('error' + aa2));
-// aa.call(1, 1, "amb");

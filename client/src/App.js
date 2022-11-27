@@ -37,7 +37,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 
-const buildDate = '251122_1'
+const buildDate = '271122_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

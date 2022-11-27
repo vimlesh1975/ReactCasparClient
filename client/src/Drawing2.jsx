@@ -8,7 +8,7 @@ const Drawing2 = ({ canvasOutput }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
-    window.dispatch=dispatch;
+    window.dispatch = dispatch;
     window.editor = editor;
     function cancesetZoomAndPan(canvas) {
         canvas.on('mouse:wheel', null);

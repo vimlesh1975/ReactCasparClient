@@ -1,7 +1,6 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from './ContextMenu'
 import { useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useState } from "react";
 import { fabric } from "fabric";
@@ -157,28 +156,6 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
-        // if (editor?.canvas.getElement().toBlob()) {
-        // editor?.canvas.getElement().toBlob(blob => {
-        //     var a = new FileReader();
-        //     a.onload = function (e) {
-        //         localStorage.setItem('RCC_currentcanvas', e.target.result)
-        //     }
-        //     a.readAsDataURL(blob);
-        // })
-
-
-        // var br = (editor?.canvas.getActiveObject())?.getBoundingRect();
-        // if (br) {
-        //     const aa = editor?.canvas.toDataURL({
-        //         format: 'png',
-        //         left: br.left,
-        //         top: br.top,
-        //         width: br.width,
-        //         height: br.height
-        //     })
-        //     localStorage.setItem('RCC_currentcanvas', aa)
-        // }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 

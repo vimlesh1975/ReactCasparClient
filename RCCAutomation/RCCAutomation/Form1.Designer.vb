@@ -36,6 +36,7 @@ Partial Class Form1
         Me.dgv1 = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.dgv1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -121,6 +122,7 @@ Partial Class Form1
         'GroupBox1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.MistyRose
+        Me.GroupBox1.Controls.Add(Me.Button1)
         Me.GroupBox1.Controls.Add(Me.txtPageName)
         Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.txtLayerNumber)
@@ -168,6 +170,15 @@ Partial Class Form1
         Me.Column2.Name = "Column2"
         Me.Column2.Width = 400
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(6, 279)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 9
+        Me.Button1.Text = "Test"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -200,4 +211,5 @@ Partial Class Form1
     Friend WithEvents dgv1 As DataGridView
     Friend WithEvents Column1 As DataGridViewImageColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Button1 As Button
 End Class

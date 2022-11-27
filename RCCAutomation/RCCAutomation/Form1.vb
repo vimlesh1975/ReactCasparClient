@@ -47,7 +47,7 @@ Public Class Form1
         Dim allData = {data1, data2}
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text & "&pageName=" & txtPageName.Text & "&data=" & JsonConvert.SerializeObject(allData)
         Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
-        Dim url As String = "http://localhost:8080/recallPage"
+        Dim url As String = "http://localhost:9000/recallPage"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
 
@@ -59,7 +59,7 @@ Public Class Form1
         Dim allData = {data1, data2}
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text & "&pageName=" & txtPageName.Text & "&data=" & JsonConvert.SerializeObject(allData)
         Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
-        Dim url As String = "http://localhost:8080/updateData"
+        Dim url As String = "http://localhost:9000/updateData"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
     End Sub
@@ -67,7 +67,7 @@ Public Class Form1
     Private Sub cmdStop_Click(sender As Object, e As EventArgs) Handles cmdStop.Click
         Dim postData As String = "layerNumber=" & txtLayerNumber.Text
         Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
-        Dim url As String = "http://localhost:8080/stopGraphics"
+        Dim url As String = "http://localhost:9000/stopGraphics"
         client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
         client.UploadData(url, data)
     End Sub
@@ -76,6 +76,17 @@ Public Class Form1
 
 
 
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim data1 = New rccData With {.key = "ccgf0", .value = dgv1.CurrentRow.Cells(1).Value, .type = "text"}
+        Dim data2 = New rccData With {.key = txtKeyImage.Text, .value = dgv1.CurrentRow.Cells(1).Value, .type = "image"}
+        Dim allData = {data1, data2}
+        Dim postData As String = "layerNumber=" & txtLayerNumber.Text & "&pageName=" & txtPageName.Text & "&data=" & JsonConvert.SerializeObject(allData)
+        Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(postData)
+        Dim url As String = "http://localhost:9000/updateHtml"
+        client.Headers.Add("Content-Type", "application/x-www-form-urlencoded")
+        client.UploadData(url, data)
     End Sub
 End Class
 Class rccData
