@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        
+        <body>
+        <div><?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xml:space="preserve">
+<desc>Created with Fabric.js 5.2.4</desc>
+<defs>
+</defs>
+<g transform="matrix(1 0 0 1 721.61 197.1)" style="filter: url(#SVGID_53);" id="clock1"  >
+<filter id="SVGID_53" y="-79%" height="258%" x="-36%" width="172%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+		<rect fill="#50037c" x="-93.5" y="-25.42" width="187" height="50.85"></rect>
+<extraproperty textAlign="center" width="187" originalFontSize="45"></extraproperty>
+		<text xml:space="preserve" class="class_53" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-87.58" y="14.14" >11:11:21</tspan></text>
+</g>
+</svg></div>
+            </body>
+            <script>
+
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            document.body.style.overflow='hidden';
+
+            var aa = document.getElementsByTagName('div')[0];
+            aa.style.position='absolute';
+            aa.style.zoom=(192000/1920)+'%';
+            var cc=document.getElementsByTagName('tspan')[0];
+            cc.textContent='';
+            setInterval(function() {
+                var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+             cc.textContent  =ss1;
+              }, 1000);
+              </script>
+            </html>

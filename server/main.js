@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const fs = require('fs');
 const cors = require("cors");
 const corsOptions = {
     // "Access-Control-Allow-Origin": "*",
@@ -224,6 +224,23 @@ app.post('/updateHtml', (req, res) => {
     io.emit('updateHtml', req.body)
     res.end(JSON.stringify(req.body))
 })
+
+app.post('/loadHtml', (req, res) => {
+    // console.log(req.body)
+    // fs.readFile(req.body.pageName, 'utf8', function (error, html) {
+    fs.readFile(req.body.pageName, 'utf8', function (error, html) {
+        if (error) {
+            console.log(error);
+        }
+        // console.log(html)
+        io.emit('loadHtml', { html: html, data: req.body.data })
+        res.end('');
+    });
+    // io.emit('loadHtml', req.body)
+    // res.end(JSON.stringify(req.body))
+})
+
+
 
 var server;
 function startUdp() {

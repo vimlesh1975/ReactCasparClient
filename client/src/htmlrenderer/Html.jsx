@@ -1,12 +1,138 @@
 import React, { useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
+document.body.addEventListener('keypress', function (e) {
+    if (e.key.toUpperCase() === "S") { stop(); }
+});
+if (window.caspar || window.casparcg || window.tickAnimations) {
+    var css = '[id^=ccg] {display: none; }',
+        head = document.head || document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+    head.appendChild(style);
+    style.type = 'text/css';
+    if (style.styleSheet) {
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+}
+
+const elementToObserve = document.body;
+const observer = new MutationObserver(() => {
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+    var aa = document.getElementsByTagName('div')[0];
+    aa.style.zoom = (1920 * 100 / 1920) + '%';
+    observer.disconnect();
+});
+observer.observe(elementToObserve, { subtree: true, childList: true })
+
+var dataCaspar = {};
+
+function escapeHtml(unsafe) {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// Parse templateData into an XML object
+function parseCaspar(str) {
+    var xmlDoc;
+    if (window.DOMParser) {
+        var parser = new DOMParser();
+        xmlDoc = parser.parseFromString(str, "text/xml");
+    }
+    dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+}
+
+
+// Make the XML templateData message into a more simple key:value object
+function XML2JSON(node) {
+    var data = {}; // resulting object
+    for (var k = 0; k < node.length; k++) {
+        var idCaspar = node[k].getAttribute("id");
+        var valCaspar = node[k].childNodes[0].getAttribute("value");
+        if (idCaspar !== undefined && valCaspar !== undefined) {
+            data[idCaspar] = valCaspar;
+        };
+    }
+    return data;
+}
+
+// Main function to insert data
+function dataInsert(dataCaspar) {
+    for (var idCaspar in dataCaspar) {
+        var idTemplate = document.getElementById(idCaspar);
+        if (idTemplate !== undefined) {
+            var idtext = idTemplate.getElementsByTagName('text')[0];
+            var idimage = idTemplate.getElementsByTagName('image')[0];
+            if (idtext !== undefined) {
+                idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                idTemplate.style.display = "block";
+                if (idTemplate.getElementsByTagName('extraproperty')[0] !== undefined) {
+                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                    if (textalign1 === 'center') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                    }
+                    if (textalign1 === 'right') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    }
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    do {
+                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
+                }
+
+            }
+            else if (idimage !== undefined) {
+                idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+                idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                idTemplate.style.display = "block";
+            }
+        }
+    }
+}
+
+// Call for a update of data from CasparCG client
+function update(str) {
+    parseCaspar(str); // Parse templateData into an XML object
+    dataInsert(dataCaspar); // Insert data
+}
+
+// insert data from CasparCg client when activated
+// function play(str) {
+//     parseCaspar(str); // Parse templateData into an XML object
+//     dataInsert(dataCaspar); // Insert data
+//     // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
+// }
+function stop() {
+    document.body.innerHTML = '';
+}
 
 const Html = () => {
     const refhtml = useRef();
     const updateHtml = (data) => {
-        console.log(data)
-        document.getElementById((JSON.parse(data.data))[0].key).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = (JSON.parse(data.data))[0].value;
+        update(data.replaceAll("\\", ""))
     }
+
+    const scriptEval = () => {
+        var scripts = refhtml.current.getElementsByTagName("script");
+        for (var i = 0; i < scripts.length; i++) {
+            // eslint-disable-next-line 
+            eval(scripts[i].innerText);
+        }
+    }
+
+
     window.updateHtml = updateHtml;
 
     useEffect(() => {
@@ -16,6 +142,11 @@ const Html = () => {
         });
         socket.on("updateHtml", data => {
             updateHtml(data);
+        });
+        socket.on("loadHtml", data => {
+            refhtml.current.innerHTML = data.html;
+            scriptEval()
+            updateHtml(data.data)
         });
         return () => {
             socket?.removeListener('html');
