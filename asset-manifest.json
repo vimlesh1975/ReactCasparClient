@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/ReactCasparClient/static/css/main.bf29e90e.css",
-    "main.js": "/ReactCasparClient/static/js/main.3667582e.js",
+    "main.js": "/ReactCasparClient/static/js/main.fbdcbe10.js",
     "static/js/787.c4e7f8f9.chunk.js": "/ReactCasparClient/static/js/787.c4e7f8f9.chunk.js",
     "index.html": "/ReactCasparClient/index.html",
     "static/media/canvasBg.svg": "/ReactCasparClient/static/media/canvasBg.318f03422b7360431e95.svg",
     "main.bf29e90e.css.map": "/ReactCasparClient/static/css/main.bf29e90e.css.map",
-    "main.3667582e.js.map": "/ReactCasparClient/static/js/main.3667582e.js.map",
+    "main.fbdcbe10.js.map": "/ReactCasparClient/static/js/main.fbdcbe10.js.map",
     "787.c4e7f8f9.chunk.js.map": "/ReactCasparClient/static/js/787.c4e7f8f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bf29e90e.css",
-    "static/js/main.3667582e.js"
+    "static/js/main.fbdcbe10.js"
   ]
 }
