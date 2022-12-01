@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, sendtohtml } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1668,16 +1668,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
-    const sendtohtml = () => {
-        axios.post('http://localhost:9000/html', { data1: canvas.toSVG() }).then((aa) => {
-        }).catch((aa) => { console.log('Error', aa) });
-    }
-
-    // const updateHtml = (data) => {
-    //     axios.post('http://localhost:9000/updateHtml', { data1: data }).then((aa) => {
-    //     }).catch((aa) => { console.log('Error', aa) });
-    // }
-
     const sdToHD = () => {
         unlockAll(canvas);
         selectAll(canvas);
@@ -2754,8 +2744,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <button title='Send to html "http://localhost:10000/ReactCasparClient/html" ' onClick={sendtohtml}>Send to HTML</button>
-                        {/* <button title='Update to html "http://localhost:10000/ReactCasparClient/html" ' onClick={() => updateHtml('updataed data')}>Update to HTML</button> */}
+                        <button title='Send to html "http://localhost:10000/ReactCasparClient/html" ' onClick={() => sendtohtml(canvas)}>Send to HTML</button>
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>

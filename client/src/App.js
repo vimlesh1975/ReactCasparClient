@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import VideoController from './VideoController';
 import Help from './Help';
-import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers } from './common'
+import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers, clearHtml } from './common'
 import Layers from './Layers'
 import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
@@ -37,7 +37,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 
-const buildDate = '301122_1'
+const buildDate = '011222_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -402,6 +402,7 @@ const App = () => {
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
       <div>
         <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
+          clearHtml()
           endpoint(`clear ${chNumber}`);
           endpoint(`mixer ${chNumber} clear`);
         }}>Stop Channel</button>

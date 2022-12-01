@@ -17,6 +17,16 @@ export const endpoint = (string) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
+export const sendtohtml = (canvas) => {
+    axios.post('http://localhost:9000/html', { data1: canvas.toSVG() }).then((aa) => {
+    }).catch((aa) => { console.log('Error', aa) });
+}
+export const clearHtml = (canvas) => {
+    axios.post('http://localhost:9000/html', { data1: '' }).then((aa) => {
+    }).catch((aa) => { console.log('Error', aa) });
+}
+
+
 export function tempAlert(msg, duration, style) {
     var el = document.createElement("div");
     el.setAttribute("style", style);
@@ -28,12 +38,14 @@ export function tempAlert(msg, duration, style) {
 }
 
 export const updateGraphics = (canvas, layerNumber) => {
+    sendtohtml(canvas)
     endpoint(`call ${window.chNumber}-${layerNumber} "
     aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         "`)
 }
 
 export const stopGraphics = layerNumber => {
+    clearHtml()
     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} aa.innerHTML=''`);

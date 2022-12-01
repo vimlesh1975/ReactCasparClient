@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics } from './common'
+import { endpoint, stopGraphics, updateGraphics } from './common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniTwoLiner } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -63,11 +63,11 @@ const Twoliner = () => {
                                     i.src = data2.value;
                                 }
                             }
-                            canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
                 });
+                canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
         }
@@ -96,15 +96,15 @@ const Twoliner = () => {
         }, 800);
 
         setTimeout(() => {
-            updateGraphics(layerNumber);
+            updateGraphics(canvas, layerNumber);
         }, 1100);
     }
 
-    const updateGraphics = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            "`)
-    }
+    // const updateGraphics = layerNumber => {
+    //     endpoint(`call ${window.chNumber}-${layerNumber} "
+    //         aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+    //         "`)
+    // }
     // const stopGraphics = layerNumber => {
     //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     //     setTimeout(() => {

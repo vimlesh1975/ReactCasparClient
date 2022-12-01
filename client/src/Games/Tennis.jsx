@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint } from '../common'
+import { endpoint, updateGraphics, stopGraphics } from '../common'
 
 const Tennis = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const [t1Set, setT1Set] = useState(1);
@@ -21,8 +22,8 @@ const Tennis = () => {
 
 
     const team1pointincrease = () => {
-        if(badminton){
-            setT1point(val=>parseInt(val)+1);
+        if (badminton) {
+            setT1point(val => parseInt(val) + 1);
             setService(true);
             return
         }
@@ -51,8 +52,8 @@ const Tennis = () => {
         }
     }
     const team2pointincrease = () => {
-        if(badminton){
-             setT2point(val=>parseInt(val)+1);
+        if (badminton) {
+            setT2point(val => parseInt(val) + 1);
             setService(false);
             return
 
@@ -82,7 +83,7 @@ const Tennis = () => {
         }
     }
     const team1pointDecrease = () => {
-        if(badminton){return setT1point(val=>parseInt(val)-1)}
+        if (badminton) { return setT1point(val => parseInt(val) - 1) }
         if (t1point === 'AD') {
             setT1point('40');
         }
@@ -96,7 +97,7 @@ const Tennis = () => {
     }
 
     const team2pointDecrease = () => {
-        if(badminton){return setT2point(val=>parseInt(val)-1)}
+        if (badminton) { return setT2point(val => parseInt(val) - 1) }
         if (t2point === 'AD') {
             setT2point('40');
         }
@@ -113,9 +114,9 @@ const Tennis = () => {
         if (index !== -1) {
             // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -148,8 +149,9 @@ const Tennis = () => {
                     });
                 });
                 // sendToCasparcg(layerNumber)
+                canvas.requestRenderAll();
                 setTimeout(() => {
-                    updateGraphics(layerNumber)
+                    updateGraphics(canvas, layerNumber)
                 }, 300);
 
             });
@@ -161,9 +163,9 @@ const Tennis = () => {
         if (index !== -1) {
             // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -195,6 +197,7 @@ const Tennis = () => {
                         }
                     });
                 });
+                canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
         }
@@ -209,11 +212,11 @@ const Tennis = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
     var aa = document.createElement('div');
     aa.style.position='absolute';
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
-    aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     document.body.style.overflow='hidden';
     "`)
         }, 300);
@@ -222,21 +225,10 @@ const Tennis = () => {
         }, 800);
 
         setTimeout(() => {
-            updateGraphics(layerNumber);
+            updateGraphics(canvas, layerNumber);
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(window.automationeditor[0].canvas.toDataURL('png'))}' />\\" ; png method
-    const updateGraphics = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
-        "`)
-    }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+
     const resetData = () => {
         setT1Set(0);
         setT2Set(0);
@@ -252,18 +244,18 @@ const Tennis = () => {
                 <tbody>
                     <tr><th>Set</th><th>Game</th><th>Point</th><th>+</th><th>-</th><th>showService: <input type='checkbox' checked={showService} onChange={() => setShowService(val => !val)}></input></th></tr>
                     <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT1Set(e.target.value)} value={t1Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1game(e.target.value)} value={t1game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT1point(e.target.value)} value={t1point} /></td><td>  <button onClick={team1pointincrease}>+</button></td><td>  <button onClick={team1pointDecrease}>-</button></td><td> <input onChange={e => setService(!service)} type="radio" checked={service} value='t1' name="service" /></td></tr>
-                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT2Set(e.target.value)} value={t2Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2game(e.target.value)} value={t2game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2point(e.target.value)} value={t2point} /></td><td>  <button onClick={team2pointincrease}>+</button></td><td>  <button onClick={team2pointDecrease}>-</button></td><td> <input onChange={e => setService(!service)} type="radio"  checked={!service} value='t2' name="service" /></td></tr>
+                    <tr><td><input style={{ width: 30 }} type='text' onChange={e => setT2Set(e.target.value)} value={t2Set} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2game(e.target.value)} value={t2game} /></td><td><input style={{ width: 30 }} type='text' onChange={e => setT2point(e.target.value)} value={t2point} /></td><td>  <button onClick={team2pointincrease}>+</button></td><td>  <button onClick={team2pointDecrease}>-</button></td><td> <input onChange={e => setService(!service)} type="radio" checked={!service} value='t2' name="service" /></td></tr>
                 </tbody>
             </table>
             <button onClick={() => recallPage(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>Show</button>
-            <button onClick={() => updateData(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service ) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>updateData</button>
+            <button onClick={() => updateData(96, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },])}>updateData</button>
             <button onClick={() => stopGraphics(96)}>Stop</button>
             <button onClick={resetData}>Reset Data</button>
 
         </div>
         <div>
-        Badminton: <input type='checkbox' checked={badminton} onChange={() => setBadminton(val => !val)}></input>
-        </div> 
+            Badminton: <input type='checkbox' checked={badminton} onChange={() => setBadminton(val => !val)}></input>
+        </div>
     </div>
     )
 }

@@ -57,7 +57,7 @@ const SavePannel = () => {
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -89,7 +89,7 @@ const SavePannel = () => {
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
@@ -408,7 +408,10 @@ const SavePannel = () => {
                                                                             <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() => startGraphics(window.thumbnaileditor[i]?.canvas, templateLayers.savePannelPlayer)}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button key1={i} onClick={() => {
+                                                                                recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2)
+                                                                                startGraphics(canvas, templateLayers.savePannelPlayer);
+                                                                            }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
                                                                             <button key1={i} onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
@@ -416,7 +419,7 @@ const SavePannel = () => {
                                                                     </div>
                                                                 </td>
                                                                     <td>
-                                                                        <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i) }}>
+                                                                        <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2) }}>
                                                                             <DrawingThumbnail i={i} />
                                                                         </div>
                                                                         <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {

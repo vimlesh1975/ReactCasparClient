@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { endpoint } from './common'
+import { endpoint, stopGraphics } from './common'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
@@ -150,14 +150,14 @@ const OnelinerAndBreakingNews = () => {
         aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
     const deletePage = e => {
-        if (playerList1.length===1){
+        if (playerList1.length === 1) {
             return
         }
         const aa = [...playerList1]
@@ -254,7 +254,7 @@ const OnelinerAndBreakingNews = () => {
             <div style={{ border: '1px solid red' }}>
                 <table border='1'>
                     <tbody >
-                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input  size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
                             <td>Layer No.</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
                             <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                                 if (e.target.checked === true) {

@@ -215,31 +215,6 @@ app.post('/setCurrentCanvas', (req, res) => {
     res.end(JSON.stringify(req.body))
 })
 
-app.post('/html', (req, res) => {
-    io.emit('html', req.body)
-    res.end(JSON.stringify(req.body))
-})
-
-app.post('/updateHtml', (req, res) => {
-    io.emit('updateHtml', req.body)
-    res.end(JSON.stringify(req.body))
-})
-
-app.post('/loadHtml', (req, res) => {
-    // console.log(req.body)
-    // fs.readFile(req.body.pageName, 'utf8', function (error, html) {
-    fs.readFile(req.body.pageName, 'utf8', function (error, html) {
-        if (error) {
-            console.log(error);
-        }
-        // console.log(html)
-        io.emit('loadHtml', { html: html, data: req.body.data })
-        res.end('');
-    });
-    // io.emit('loadHtml', req.body)
-    // res.end(JSON.stringify(req.body))
-})
-
 
 
 var server;
@@ -279,4 +254,31 @@ app.post('/showUdpClock', (req, res) => {
     startUdp();
     aa.do(new AMCP.CustomCommand(`play 1-96 [html] "${'file:///' + path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')}"`)).then((aa1) => {
     }).catch((aa2) => console.log(aa2));
+})
+
+
+
+app.post('/html', (req, res) => {
+    io.emit('html', req.body)
+    res.end(JSON.stringify(req.body))
+})
+
+app.post('/updateHtml', (req, res) => {
+    io.emit('updateHtml', req.body)
+    res.end(JSON.stringify(req.body))
+})
+
+app.post('/loadHtml', (req, res) => {
+    fs.readFile(req.body.pageName, 'utf8', function (error, html) {
+        if (error) {
+            console.log(error);
+        }
+        io.emit('loadHtml', { html: html, data: req.body.data })
+        res.end('');
+    });
+})
+
+app.post('/callScript', (req, res) => {
+    io.emit('callScript', req.body)
+    res.end(JSON.stringify(req.body))
 })

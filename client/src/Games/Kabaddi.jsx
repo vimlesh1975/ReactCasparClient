@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint, tempAlert , templateLayers} from '../common'
+import { endpoint, tempAlert, templateLayers, updateGraphics, stopGraphics, sendtohtml } from '../common'
 const Kabaddi = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -16,7 +17,7 @@ const Kabaddi = () => {
     const [team2Status, setteam2Status] = useState([0, 1, 1, 1, 1, 1, 1]);
 
     const [half, setHalf] = useState('1ST');
-    const dataKabaddi= [
+    const dataKabaddi = [
         { key: 'TEAM1', value: team1, type: 'text' },
         { key: 'TEAM2', value: team2, type: 'text' },
         { key: 'SCORE1', value: score1, type: 'text' },
@@ -43,9 +44,9 @@ const Kabaddi = () => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
@@ -86,12 +87,16 @@ const Kabaddi = () => {
                         }
                     });
                 });
+                canvas.requestRenderAll();
+
                 sendToCasparcg(layerNumber)
             });
         }
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
+        sendtohtml(canvas);//for html
+
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -100,11 +105,11 @@ const Kabaddi = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
     var aa = document.createElement('div');
     aa.style.position='absolute';
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
-    aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     document.body.style.overflow='hidden';
     "`)
         }, 300);
@@ -116,26 +121,27 @@ const Kabaddi = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(window.automationeditor[0].canvas.toDataURL('png'))}' />\\" ; png method
-    const updateGraphics = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
-        "`)
-    }
-    const stopGraphics = layerNumber => {
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
-    }
+    //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
+    // const updateGraphics = layerNumber => {
+    //     sendtohtml(canvas);//for html
+    //     endpoint(`call ${window.chNumber}-${layerNumber} "
+    // aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+    //     "`)
+    // }
+    // const stopGraphics = layerNumber => {
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
+    //     }, 1000);
+    // }
     const updateData = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
@@ -176,8 +182,10 @@ const Kabaddi = () => {
                         }
                     });
                 });
+
+                canvas.requestRenderAll();
                 setTimeout(() => {
-                    updateGraphics(layerNumber)
+                    updateGraphics(canvas, layerNumber)
                 }, 300);
 
             });
@@ -201,7 +209,7 @@ const Kabaddi = () => {
             <div>
                 <input onChange={e => setScore2(e.target.value)} style={{ width: 30, textAlign: 'center' }} type='text' value={score2} />
                 <input onChange={e => setteam2(e.target.value)} style={{ textAlign: 'center' }} type='text' value={team2} />
-                <div style={{textAlign:'right'}}>  {team2Status.map((val, i) => <input key={i} onChange={e => {
+                <div style={{ textAlign: 'right' }}>  {team2Status.map((val, i) => <input key={i} onChange={e => {
                     const updatedStatus = [...team2Status];
                     updatedStatus[i] = e.target.checked;
                     setteam2Status(updatedStatus);
@@ -211,8 +219,8 @@ const Kabaddi = () => {
         </div>
 
         <div>
-            <button onClick={() => recallPage(templateLayers.kabaddiScore, 'kabaddi',dataKabaddi)} >Play</button>
-            <button onClick={() => updateData(templateLayers.kabaddiScore, 'kabaddi',dataKabaddi)} >Update</button>
+            <button onClick={() => recallPage(templateLayers.kabaddiScore, 'kabaddi', dataKabaddi)} >Play</button>
+            <button onClick={() => updateData(templateLayers.kabaddiScore, 'kabaddi', dataKabaddi)} >Update</button>
             <button onClick={() => stopGraphics(templateLayers.kabaddiScore)} >Stop</button>
         </div>
     </div>)

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint, tempAlert, stopGraphics } from '../common'
+import { endpoint, tempAlert, stopGraphics, sendtohtml } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
@@ -10,6 +10,7 @@ import { VscTrash } from "react-icons/vsc";
 
 
 const CustomClient = () => {
+    const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
@@ -56,9 +57,9 @@ const CustomClient = () => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
                         element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                         try {
@@ -100,13 +101,15 @@ const CustomClient = () => {
                         }
                     });
                 });
+                canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
-            window.automationeditor[0].canvas.requestRenderAll();
         }
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
+        sendtohtml(canvas);//for html
+
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
@@ -115,11 +118,11 @@ const CustomClient = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
     var aa = document.createElement('div');
     aa.style.position='absolute';
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
-    aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     document.body.style.overflow='hidden';
     "`)
         }, 300);
@@ -131,26 +134,23 @@ const CustomClient = () => {
             updateGraphics(layerNumber);
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(window.automationeditor[0].canvas.toDataURL('png'))}' />\\" ; png method
+    //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
     const updateGraphics = layerNumber => {
+        sendtohtml(canvas);//for html
+
         endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         "`)
     }
-    // const stopGraphics = layerNumber => {
-    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-    //     setTimeout(() => {
-    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
-    //     }, 1000);
-    // }
+
     const updateData = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
-                    window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                    canvas.getObjects().forEach((element) => {
                         element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
@@ -191,12 +191,12 @@ const CustomClient = () => {
                         }
                     });
                 });
+                canvas.requestRenderAll();
                 setTimeout(() => {
                     updateGraphics(layerNumber)
                 }, 300);
 
             });
-            window.automationeditor[0].canvas.requestRenderAll();
         }
     }
     // const addtextNode = () => {

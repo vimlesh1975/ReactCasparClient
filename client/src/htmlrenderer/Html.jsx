@@ -107,6 +107,7 @@ function update(str) {
     parseCaspar(str); // Parse templateData into an XML object
     dataInsert(dataCaspar); // Insert data
 }
+window.update = update;
 
 // insert data from CasparCg client when activated
 // function play(str) {
@@ -131,9 +132,19 @@ const Html = () => {
             eval(scripts[i].innerText);
         }
     }
+    const callScript = data => {
+        console.log(JSON.parse(data))
+        const ff = JSON.parse(data)
+        // eslint-disable-next-line 
+        eval(ff[0])
+    }
 
-
-    window.updateHtml = updateHtml;
+    // eslint-disable-next-line 
+    const setColorRect = (id, val) => {
+        Array.from(document.getElementsByTagName(id)).forEach(element => {
+            element.style.fill = val;
+        });
+    }
 
     useEffect(() => {
         const socket = socketIOClient(':9000');
@@ -147,6 +158,9 @@ const Html = () => {
             refhtml.current.innerHTML = data.html;
             scriptEval()
             updateHtml(data.data)
+        });
+        socket.on("callScript", data => {
+            callScript(data.data)
         });
         return () => {
             socket?.removeListener('html');

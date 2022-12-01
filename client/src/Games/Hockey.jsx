@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics } from '../common'
+import { endpoint, stopGraphics, updateGraphics } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -15,6 +15,7 @@ var xxx;
 // import moment from 'moment'
 
 const Hockey = () => {
+
     const [playerList1, setPlayerList1] = useState(iniplayerList1)
     const [playerList2, setPlayerList2] = useState(iniplayerList2)
     var newplayerList1 = [];
@@ -96,11 +97,12 @@ const Hockey = () => {
                                     i.src = data2.value;
                                 }
                             }
-                            canvas.requestRenderAll();
+                            // canvas.requestRenderAll();
                         } catch (error) {
                         }
                     });
                 });
+                canvas.requestRenderAll();
                 sendToCasparcg(layerNumber)
             });
         }
@@ -129,7 +131,7 @@ const Hockey = () => {
         }, 800);
 
         setTimeout(() => {
-            updateGraphics(layerNumber);
+            updateGraphics(canvas, layerNumber);
         }, 1100);
     }
 
@@ -235,17 +237,7 @@ const Hockey = () => {
 
     }
 
-    const updateGraphics = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            "`)
-    }
-    // const stopGraphics = layerNumber => {
-    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-    //     setTimeout(() => {
-    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
-    //     }, 1000);
-    // }
+
     const fileSaveAs = (playerList) => {
         const element = document.createElement("a");
         var aa = ''
