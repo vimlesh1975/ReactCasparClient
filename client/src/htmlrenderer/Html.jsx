@@ -115,6 +115,7 @@ window.update = update;
 //     dataInsert(dataCaspar); // Insert data
 //     // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
 // }
+// eslint-disable-next-line 
 function stop() {
     document.body.innerHTML = '';
 }
