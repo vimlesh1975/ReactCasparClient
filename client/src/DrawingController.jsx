@@ -2729,7 +2729,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
                         <b> Image Round:</b>
-                        <input type={'range'} min={0} max={1920} style={{ width: 120 }} onChange={e => roundedCorners(e.target.value)} />
+                        <input type={'range'} min={0} max={1920} style={{ width: 120 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
 
                     </div>
                     <div className='drawingToolsRow' >
@@ -2747,7 +2747,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button title='Send to html "http://localhost:10000/ReactCasparClient/html" ' onClick={() => sendtohtml(canvas)}>Send to HTML</button>
                     </div>
                     <div className='drawingToolsRow' >
-                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg"> Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
+                        <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">
+                            Svg <input id="importsvg" style={{ display: 'none' }} type='file' className='input-file' accept='.xml,.svg' onChange={e => importSVG(e.target.files[0])} /></label>
                         <label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importjson"> Json <input id="importjson" style={{ display: 'none' }} type='file' className='input-file' accept='.json' onChange={e => importJSON(e.target.files[0])} /></label>
                     </div>
                 </div>

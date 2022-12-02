@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { endpoint, tempAlert, templateLayers, updateGraphics, stopGraphics, sendtohtml } from '../common'
@@ -88,7 +88,6 @@ const Kabaddi = () => {
                     });
                 });
                 canvas.requestRenderAll();
-
                 sendToCasparcg(layerNumber)
             });
         }
@@ -191,29 +190,41 @@ const Kabaddi = () => {
             });
         }
     }
+    const refteam1status = useRef()
     return (<div>
         <div style={{ display: 'flex' }}>
             <div>
                 <input onChange={e => setteam1(e.target.value)} style={{ textAlign: 'center' }} type='text' value={team1} />
-                <input onChange={e => setScore1(e.target.value)} style={{ width: 30, textAlign: 'center' }} type='text' value={score1} />
-                <br /> {team1Status.map((val, i) => <input key={i} key1={i}
+                <input onChange={e => setScore1(e.target.value)} style={{ width: 40, textAlign: 'center' }} type='number' value={score1} />
+                <br />
+                {team1Status.map((val, i) => <input disabled key={i} key1={i}
                     onChange={e => {
                         const updatedStatus = [...team1Status];
                         updatedStatus[i] = e.target.checked;
                         setteam1Status(updatedStatus);
                     }} type='checkbox' checked={val} />)}
+                <input ref={refteam1status} style={{ width: 30, textAlign: 'center' }} type={'number'} min={0} max={7} defaultValue={team1Status.filter(Boolean).length} onChange={e => setteam1Status(val => Array.from(val).map((val1, i) => (6 - i < e.target.value) ? 1 : 0))} />
 
             </div>
+            <button onClick={() => {
+                setScore1(val => parseInt(val) + 1);
+                // refteam1status.current.value -= 1;
+                // setteam2Status([0, 0, 1, 1, 1, 1, 1])
+            }}>+1 </button>
             <input onChange={e => setHalf(e.target.value)} style={{ width: 30, textAlign: 'center' }} type='text' value={half} />
+            <button onClick={() => setScore2(val => parseInt(val) + 1)}>+1 </button>
+
 
             <div>
-                <input onChange={e => setScore2(e.target.value)} style={{ width: 30, textAlign: 'center' }} type='text' value={score2} />
+                <input onChange={e => setScore2(e.target.value)} style={{ width: 40, textAlign: 'center' }} type='number' value={score2} />
                 <input onChange={e => setteam2(e.target.value)} style={{ textAlign: 'center' }} type='text' value={team2} />
-                <div style={{ textAlign: 'right' }}>  {team2Status.map((val, i) => <input key={i} onChange={e => {
+                <div style={{ textAlign: 'right' }}>  {team2Status.map((val, i) => <input disabled key={i} onChange={e => {
                     const updatedStatus = [...team2Status];
                     updatedStatus[i] = e.target.checked;
                     setteam2Status(updatedStatus);
                 }} type='checkbox' checked={val} />)}
+                    <input style={{ width: 30, textAlign: 'center' }} type={'number'} min={0} max={7} defaultValue={team1Status.filter(Boolean).length} onChange={e => setteam2Status(val => Array.from(val).map((val1, i) => (6 - i < e.target.value) ? 1 : 0))} />
+
                 </div>
             </div>
         </div>

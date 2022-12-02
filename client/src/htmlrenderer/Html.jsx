@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import socketIOClient from "socket.io-client";
 document.body.addEventListener('keypress', function (e) {
-    if (e.key.toUpperCase() === "S") { stop(); }
+    // if (e.key.toUpperCase() === "S") { stop(); }
 });
 if (window.caspar || window.casparcg || window.tickAnimations) {
     var css = '[id^=ccg] {display: none; }',
