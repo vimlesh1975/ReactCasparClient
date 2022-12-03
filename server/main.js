@@ -264,8 +264,8 @@ app.post('/html', (req, res) => {
 })
 
 app.post('/updateHtml', (req, res) => {
-    io.emit('updateHtml', req.body)
-    res.end(JSON.stringify(req.body))
+    io.emit('updateHtml', { data: req.body.data })
+    res.end('')
 })
 
 app.post('/loadHtml', (req, res) => {

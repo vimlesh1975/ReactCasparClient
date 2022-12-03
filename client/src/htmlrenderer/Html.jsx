@@ -153,7 +153,7 @@ const Html = () => {
             refhtml.current.innerHTML = data.data1;
         });
         socket.on("updateHtml", data => {
-            updateHtml(data);
+            updateHtml(data.data);
         });
         socket.on("loadHtml", data => {
             refhtml.current.innerHTML = data.html;
