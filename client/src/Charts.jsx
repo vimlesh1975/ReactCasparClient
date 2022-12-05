@@ -6,6 +6,8 @@ import { shadowOptions } from './common'
 import { deleteAll } from './DrawingController';
 import { useState } from 'react';
 import faker from 'faker'
+import { endpoint } from './common'
+
 
 const Charts = () => {
     const refd3 = React.useRef();
@@ -15,6 +17,10 @@ const Charts = () => {
     const [xAxisTitle, setxAxisTitle] = useState("Year");
     const [yAxisTitle, setyAxisTitle] = useState("Values in $");
     const [barData, setbarData] = useState([{ year: 2011, value: 45 }, { year: 2012, value: 47 }, { year: 2013, value: 52 }, { year: 2014, value: 70 }, { year: 2015, value: 75 }, { year: 2016, value: 78 }]);
+
+
+    const [pieChartAddress, setPieChartAddress] = useState('https://3dpie.peterbeshai.com/?spn=0.36&v0=1&v1=3&v2=1&v3=2&l0=BJP&x0=true&x1=true&x2=true&x3=true&h3=0.5&l1=AAP&l2=OTH&l3=CONG')
+    const [barChartAddress, setBarChartAddress] = useState('http://threegraphs.com/charts/preview/8890/embed')
 
     const generatePieChartdata = () => {
         const data = [];
@@ -97,6 +103,8 @@ const Charts = () => {
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
+        refd3.current.innerHTML = ''
+
 
     }
 
@@ -212,11 +220,24 @@ const Charts = () => {
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
+        refd3.current.innerHTML = ''
+
+    }
+    const sendPieCharttoCasparcg = (val) => {
+        endpoint(`play 1-1 [html] "${val}"`);
+        // endpoint(`mixer 1-1 clip 0.25 0.20 0.50 0.60`);
+        endpoint(`mixer 1-1 fill -0.55 -0.55 2.10 2.10`);
     }
 
+    const sendbarCharttoCasparcg = (val) => {
+        endpoint(`play 1-1 [html] "${val}"`);
+        // endpoint(`mixer 1-1 clip 0.25 0.20 0.50 0.60`);
+        endpoint(`mixer 1-1 fill -0.55 -0.05 2.10 1.10`);
+    }
 
     return (<div>
         <button onClick={() => deleteAll(canvas)}>Delete All</button>
+
         <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 10 }}>
             <div style={{ border: '1px solid red' }}>
                 <button onClick={generatePieChartdata}>Generate Data</button>
@@ -228,12 +249,28 @@ const Charts = () => {
                         <tr><td> yAxisTitle:</td><td> <input type='text' value={yAxisTitle} onChange={e => setyAxisTitle(e.target.value)} /></td></tr>
                     </tbody>
                 </table>
-                barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 400, height: 100 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
+                barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 1000, height: 50 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
+            </div>
+            <div ref={refd3} id='d3' />
+        </div>
+        <div style={{ display: 'flex' }}>
+            <div style={{ marginTop: 100 }}>
+                <h5> 3D Pie  Chart direct to Casparcg</h5>
+                <textarea type="text" value={pieChartAddress} style={{ width: 500, height: 50 }} onChange={e => setPieChartAddress(e.target.value)} />
+                <button onClick={() => sendPieCharttoCasparcg(pieChartAddress)}>sendCharttoCasparcg</button>
+                <a href={pieChartAddress} target="_blank" without rel="noreferrer">Edit The data</a>
+                <div><iframe title='pieChart' width={500} height={400} src={pieChartAddress} ></iframe></div>
             </div>
 
-
+            <div style={{ marginTop: 100 }}>
+                <h5> 3D Bar Chart direct to Casparcg</h5>
+                <textarea type="text" value={barChartAddress} style={{ width: 500, height: 50 }} onChange={e => setBarChartAddress(e.target.value)} />
+                <button onClick={() => sendbarCharttoCasparcg(barChartAddress)}>sendCharttoCasparcg</button>
+                <a href={barChartAddress.replace('embed', 'edit')} target="_blank" without rel="noreferrer">Edit The data</a>
+                <div><iframe title='barChart' width={500} height={400} src={barChartAddress} ></iframe></div>
+            </div>
         </div>
-        <div ref={refd3} id='d3' />
+
 
     </div>)
 }
