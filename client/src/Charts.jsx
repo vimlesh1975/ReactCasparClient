@@ -249,25 +249,25 @@ const Charts = () => {
                         <tr><td> yAxisTitle:</td><td> <input type='text' value={yAxisTitle} onChange={e => setyAxisTitle(e.target.value)} /></td></tr>
                     </tbody>
                 </table>
-                barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 1000, height: 50 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
+                barData:<br /><textarea ref={refTextArea} type='text' style={{ width: 800, height: 50 }} defaultValue={JSON.stringify(barData)} onMouseLeave={e => setbarData(JSON.parse(e.target.value))} />
             </div>
             <div ref={refd3} id='d3' />
         </div>
         <div style={{ display: 'flex' }}>
             <div style={{ marginTop: 100 }}>
                 <h5> 3D Pie  Chart direct to Casparcg</h5>
-                <textarea type="text" value={pieChartAddress} style={{ width: 500, height: 50 }} onChange={e => setPieChartAddress(e.target.value)} />
+                <textarea type="text" value={pieChartAddress} style={{ width: 400, height: 50 }} onChange={e => setPieChartAddress(e.target.value)} />
                 <button onClick={() => sendPieCharttoCasparcg(pieChartAddress)}>sendCharttoCasparcg</button>
                 <a href={pieChartAddress} target="_blank" without rel="noreferrer">Edit The data</a>
-                <div><iframe title='pieChart' width={500} height={400} src={pieChartAddress} ></iframe></div>
+                <div><iframe title='pieChart' width={400} height={300} src={pieChartAddress} ></iframe></div>
             </div>
 
             <div style={{ marginTop: 100 }}>
                 <h5> 3D Bar Chart direct to Casparcg</h5>
-                <textarea type="text" value={barChartAddress} style={{ width: 500, height: 50 }} onChange={e => setBarChartAddress(e.target.value)} />
+                <textarea type="text" value={barChartAddress} style={{ width: 400, height: 50 }} onChange={e => setBarChartAddress(e.target.value)} />
                 <button onClick={() => sendbarCharttoCasparcg(barChartAddress)}>sendCharttoCasparcg</button>
                 <a href={barChartAddress.replace('embed', 'edit')} target="_blank" without rel="noreferrer">Edit The data</a>
-                <div><iframe title='barChart' width={500} height={400} src={barChartAddress} ></iframe></div>
+                <div><iframe title='barChart' width={400} height={300} src={barChartAddress} ></iframe></div>
             </div>
         </div>
 
