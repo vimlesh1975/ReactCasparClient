@@ -148,7 +148,7 @@ const Html = () => {
     }
 
     useEffect(() => {
-        const socket = socketIOClient(':9000');
+        const socket = socketIOClient('http://localhost:9000/');
         socket.on("html", data => {
             refhtml.current.innerHTML = data.data1;
         });
