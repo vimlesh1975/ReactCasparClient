@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react'
+import { socketAddress } from '../common'
 import socketIOClient from "socket.io-client";
+
+
 document.body.addEventListener('keypress', function (e) {
     // if (e.key.toUpperCase() === "S") { stop(); }
 });
@@ -147,8 +150,11 @@ const Html = () => {
         });
     }
 
+
+
     useEffect(() => {
-        const socket = socketIOClient('http://localhost:9000/');
+        // const socket = socketIOClient('http://localhost:9000/');
+        const socket = socketIOClient(socketAddress());
         socket.on("html", data => {
             refhtml.current.innerHTML = data.data1;
         });

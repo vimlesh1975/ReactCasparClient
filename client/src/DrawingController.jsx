@@ -83,20 +83,10 @@ export const setasClipPath = canvas => {
 export const cliptoPath = canvas => {
     var img = canvas.getActiveObjects();
     if (clipPath1.length > 0 && img.length > 0) {
-        clipPath1.forEach(element => {
-            element.set({ shadow: { ...shadowOptions, blur: 0 } });
-        });
-        var group = new fabric.Group([...clipPath1]);
-        group.set({
-            id: 'ccg_' + fabric.Object.__uid,
-            class: 'class_' + fabric.Object.__uid,
-            absolutePositioned: true
-        });
-        canvas.sendToBack(group);
-        img[0].set('clipPath', group)
-        clipPath1.forEach(element => {
-            canvas.remove(element);
-        });
+        clipPath1[0].set({ shadow: { ...shadowOptions, blur: 0 }, absolutePositioned: true });
+        canvas.sendToBack(clipPath1[0]);
+        img[0].set('clipPath', clipPath1[0])
+        clipPath1 = null;
         canvas.requestRenderAll();
     }
 }

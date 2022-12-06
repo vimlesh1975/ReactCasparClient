@@ -17,12 +17,41 @@ export const endpoint = (string) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
+// export const sendtohtml = (canvas) => {
+//     axios.post('http://localhost:9000/html', { data1: canvas.toSVG() }).then((aa) => {
+//     }).catch((aa) => { console.log('Error', aa) });
+// }
+// export const clearHtml = (canvas) => {
+//     axios.post('http://localhost:9000/html', { data1: '' }).then((aa) => {
+//     }).catch((aa) => { console.log('Error', aa) });
+// }
+
+export const htmlAddress = () => {
+    if (window.location.origin === 'https://vimlesh1975.github.io') {
+        return 'https://octopus-app-gzws3.ondigitalocean.app/html'
+    }
+    else {
+        return 'http://localhost:9000/html'
+    }
+}
+
+export const socketAddress = () => {
+    if (window.location.origin === 'https://vimlesh1975.github.io') {
+        return 'https://octopus-app-gzws3.ondigitalocean.app'
+    }
+    else {
+        return 'http://localhost:9000'
+    }
+}
 export const sendtohtml = (canvas) => {
-    axios.post('http://localhost:9000/html', { data1: canvas.toSVG() }).then((aa) => {
+    // console.log(htmlAddress())
+    axios.post(htmlAddress(), { data1: canvas.toSVG() }).then((aa) => {
     }).catch((aa) => { console.log('Error', aa) });
+
+
 }
 export const clearHtml = (canvas) => {
-    axios.post('http://localhost:9000/html', { data1: '' }).then((aa) => {
+    axios.post(htmlAddress(), { data1: '' }).then((aa) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
