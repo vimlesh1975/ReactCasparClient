@@ -2,6 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js'
 
 
+
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
 
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':9000';
@@ -13,18 +14,8 @@ export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLa
 export const endpoint = (string) => {
     const data = { string: string }
     axios.post(address1 + '/endpoint', data).then((aa) => {
-        //    console.log(aa)
     }).catch((aa) => { console.log('Error', aa) });
 }
-
-// export const sendtohtml = (canvas) => {
-//     axios.post('http://localhost:9000/html', { data1: canvas.toSVG() }).then((aa) => {
-//     }).catch((aa) => { console.log('Error', aa) });
-// }
-// export const clearHtml = (canvas) => {
-//     axios.post('http://localhost:9000/html', { data1: '' }).then((aa) => {
-//     }).catch((aa) => { console.log('Error', aa) });
-// }
 
 export const htmlAddress = () => {
     if (window.location.origin === 'https://vimlesh1975.github.io') {
@@ -44,14 +35,11 @@ export const socketAddress = () => {
     }
 }
 export const sendtohtml = (canvas) => {
-    // console.log(htmlAddress())
-    axios.post(htmlAddress(), { data1: canvas.toSVG() }).then((aa) => {
+    axios.post(htmlAddress(), { data1: canvas.toSVG(), clientId: window.clientId }).then((aa) => {
     }).catch((aa) => { console.log('Error', aa) });
-
-
 }
-export const clearHtml = (canvas) => {
-    axios.post(htmlAddress(), { data1: '' }).then((aa) => {
+export const clearHtml = () => {
+    axios.post(htmlAddress(), { data1: '', clientId: window.clientId }).then((aa) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 

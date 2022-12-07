@@ -279,7 +279,17 @@ const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
     }
 }
 
-
+const initialClientId = { clientId: '1234' };
+const clientIdReducer = (state = initialClientId, action) => {
+    switch (action.type) {
+        case 'CHANGE_CLIENTID':
+            return {
+                ...state,
+                clientId: action.payload
+            }
+        default: return state
+    }
+}
 
 const rootReducer = combineReducers({
     canvasListReducer,
@@ -300,7 +310,8 @@ const rootReducer = combineReducers({
     pannelEnableReducer,
     kfReducer,
     xpositionsReducer,
-    speechRecognitionReducer
+    speechRecognitionReducer,
+    clientIdReducer
 })
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
 export default store

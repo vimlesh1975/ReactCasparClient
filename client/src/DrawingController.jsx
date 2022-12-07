@@ -1003,6 +1003,9 @@ export const createShape = (canvas, shape, size = 0.4) => {
 }
 
 const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
+    // const [clientId, setClientId] = useState(fabric.Object.__uid)
+    const clientId = useSelector(state => state.clientIdReducer.clientId);
+    window.clientId = clientId;
 
     const refShadowColor = useRef();
     const refAffectStroke = useRef(false);
@@ -2734,7 +2737,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <button title='Send to html "http://localhost:10000/ReactCasparClient/html" ' onClick={() => sendtohtml(canvas)}>Send to HTML</button>
+
+
+                    </div>
+                    <div className='drawingToolsRow' >
+                        Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
+                            dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
+                        }} />
+                        <button onClick={() => window.open(`${window.location}/html/${clientId}`, '_blank')}>Open Client Address</button>
+                        <button title={`'Send to html ${window.location}/html/${clientId}`} onClick={() => sendtohtml(canvas, clientId)}>Send to HTML</button>
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">

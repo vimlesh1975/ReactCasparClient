@@ -122,9 +122,13 @@ window.update = update;
 function stop() {
     document.body.innerHTML = '';
 }
+const clientId = window.location.pathname.replace('/ReactCasparClient/html/', '');
 
 const Html = () => {
+    console.log(clientId)
+
     const refhtml = useRef();
+
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))
     }
@@ -156,7 +160,10 @@ const Html = () => {
         // const socket = socketIOClient('http://localhost:9000/');
         const socket = socketIOClient(socketAddress());
         socket.on("html", data => {
-            refhtml.current.innerHTML = data.data1;
+            console.log(data)
+            if (data.clientId === clientId) {
+                refhtml.current.innerHTML = data.data1;
+            }
         });
         socket.on("updateHtml", data => {
             updateHtml(data.data);
