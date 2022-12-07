@@ -126,13 +126,10 @@ const clientId = window.location.pathname.replace('/ReactCasparClient/html/', ''
 
 const Html = () => {
     console.log(clientId)
-
     const refhtml = useRef();
-
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))
     }
-
     const scriptEval = () => {
         var scripts = refhtml.current.getElementsByTagName("script");
         for (var i = 0; i < scripts.length; i++) {
@@ -160,21 +157,29 @@ const Html = () => {
         // const socket = socketIOClient('http://localhost:9000/');
         const socket = socketIOClient(socketAddress());
         socket.on("html", data => {
-            console.log(data)
+            // console.log(data)
             if (data.clientId === clientId) {
                 refhtml.current.innerHTML = data.data1;
             }
         });
         socket.on("updateHtml", data => {
-            updateHtml(data.data);
+            if (data.clientId === clientId) {
+                updateHtml(data.data);
+            }
         });
         socket.on("loadHtml", data => {
-            refhtml.current.innerHTML = data.html;
-            scriptEval()
-            updateHtml(data.data)
+            if (data.clientId === clientId) {
+                refhtml.current.innerHTML = data.html;
+                scriptEval()
+                updateHtml(data.data)
+            }
+
         });
         socket.on("callScript", data => {
-            callScript(data.data)
+            if (data.clientId === clientId) {
+                callScript(data.data)
+            }
+
         });
         return () => {
             socket?.removeListener('html');

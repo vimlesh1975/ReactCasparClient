@@ -2627,6 +2627,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
+    const clientAddress = () => {
+        const aa = window.location.href + "/html/" + clientId;
+        return aa.replaceAll("//", "/")
+    }
+    const openClientAddress = () => {
+        const aa = clientAddress()
+        window.open(new URL(aa), "_blank")
+    }
+
     window.getvalues = getvalues;
     return (
         <div style={{ display: 'flex' }}>
@@ -2744,8 +2753,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                             dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                         }} />
-                        <button onClick={() => window.open(`${window.location}/html/${clientId}`, '_blank')}>Open Client Address</button>
-                        <button title={`'Send to html ${window.location}/html/${clientId}`} onClick={() => sendtohtml(canvas, clientId)}>Send to HTML</button>
+                        <button title={clientAddress()} onClick={openClientAddress}>Open Client Address</button>
+                        <button title={clientAddress()} onClick={() => sendtohtml(canvas)}>Send to HTML</button>
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">
