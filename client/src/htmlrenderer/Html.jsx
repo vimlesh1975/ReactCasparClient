@@ -6,19 +6,19 @@ import socketIOClient from "socket.io-client";
 document.body.addEventListener('keypress', function (e) {
     // if (e.key.toUpperCase() === "S") { stop(); }
 });
-if (window.caspar || window.casparcg || window.tickAnimations) {
-    var css = '[id^=ccg] {display: none; }',
-        head = document.head || document.getElementsByTagName('head')[0],
-        style = document.createElement('style');
-    head.appendChild(style);
-    style.type = 'text/css';
-    if (style.styleSheet) {
-        // This is required for IE8 and below.
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-}
+// if (window.caspar || window.casparcg || window.tickAnimations) {
+//     var css = '[id^=ccg] {display: none; }',
+//         head = document.head || document.getElementsByTagName('head')[0],
+//         style = document.createElement('style');
+//     head.appendChild(style);
+//     style.type = 'text/css';
+//     if (style.styleSheet) {
+//         // This is required for IE8 and below.
+//         style.styleSheet.cssText = css;
+//     } else {
+//         style.appendChild(document.createTextNode(css));
+//     }
+// }
 
 const elementToObserve = document.body;
 const observer = new MutationObserver(() => {
