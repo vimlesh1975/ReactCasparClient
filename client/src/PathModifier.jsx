@@ -70,6 +70,7 @@ function renderIcon(icon) {
         //   ctx.translate(left, top);
         //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
         ctx.font = "50px Georgia";
+
         ctx.textAlign = "center";
         ctx.fillText(icon, left, top)
         ctx.restore();
