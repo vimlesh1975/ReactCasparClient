@@ -28,6 +28,8 @@ var xxx2;
 var html;
 
 fabric.Object.prototype.noScaleCache = false;
+fabric.Object.prototype.cornerSize = 25;
+
 const STEP = 5;
 var Direction = {
     LEFT: 0,
