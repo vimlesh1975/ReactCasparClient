@@ -312,7 +312,7 @@ export const cloneAsImage = canvas => {
             clone.set({
                 left: (finalPosition(element, canvas)).x + 10,
                 top: (finalPosition(element, canvas)).y + 10,
-                id: 'ccg_' + fabric.Object.__uid,
+                id: 'id_' + fabric.Object.__uid,
                 class: 'class_' + fabric.Object.__uid,
                 shadow: {
                     color: 'black',
@@ -943,7 +943,7 @@ export const paste = (canvas) => {
                 top: clonedObj.top + 10,
                 evented: true,
                 objectCaching: false,
-                id: 'ccg_' + fabric.Object.__uid,
+                id: ((clonedObj.type === 'i-text') || (clonedObj.type === 'textbox') || (clonedObj.type === 'text')) ? 'ccg_' + fabric.Object.__uid : 'id_' + fabric.Object.__uid,
                 class: 'class_' + fabric.Object.__uid,
             });
             if (clonedObj.type === 'activeSelection') {
@@ -955,7 +955,7 @@ export const paste = (canvas) => {
                     obj.set({
                         evented: true,
                         objectCaching: false,
-                        id: 'ccg_' + fabric.Object.__uid,
+                        id: ((obj.type === 'i-text') || (obj.type === 'textbox') || (obj.type === 'text')) ? 'ccg_' + fabric.Object.__uid : 'id_' + fabric.Object.__uid,
                         class: 'class_' + fabric.Object.__uid,
                     });
                 });
