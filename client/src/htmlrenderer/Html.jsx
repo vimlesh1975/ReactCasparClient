@@ -163,11 +163,13 @@ const Html = () => {
             }
         });
         socket.on("updateHtml", data => {
+            // console.log(data)
             if (data.clientId === clientId) {
                 updateHtml(data.data);
             }
         });
         socket.on("loadHtml", data => {
+            // console.log(data)
             if (data.clientId === clientId) {
                 refhtml.current.innerHTML = data.html;
                 scriptEval()
@@ -176,6 +178,8 @@ const Html = () => {
 
         });
         socket.on("callScript", data => {
+            // console.log(data)
+
             if (data.clientId === clientId) {
                 callScript(data.data)
             }

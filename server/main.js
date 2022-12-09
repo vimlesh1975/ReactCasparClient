@@ -273,7 +273,7 @@ app.post('/loadHtml', (req, res) => {
         if (error) {
             console.log(error);
         }
-        io.emit('loadHtml', { html: html, data: req.body.data })
+        io.emit('loadHtml', { html: html, data: req.body.data, clientId: req.body.clientId })
         res.end('');
     });
 })
