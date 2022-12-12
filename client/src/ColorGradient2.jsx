@@ -157,6 +157,7 @@ const ColorGradient2 = () => {
                             {colors.map((color, i) => {
                                 return (
                                     <Rnd
+                                        key={i}
                                         dragAxis="x"
                                         bounds="parent"
                                         enableResizing={false}

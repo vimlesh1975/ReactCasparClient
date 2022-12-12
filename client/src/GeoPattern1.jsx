@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import GeoPattern from "geopattern";
 import { useState } from "react";
 import { useSelector } from 'react-redux'
@@ -6,8 +6,9 @@ import { fabric } from "fabric";
 
 const GeoPattern1 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [color1, setcolor1] = useState("#ff00ff");
-    const [string1, setString1] = useState(0);
+    const [color1, setcolor1] = useState("#023020");
+    const [string1, setString1] = useState(1180);
+    const particlebg = useRef()
 
 
     const setPattern = () => {
@@ -77,7 +78,8 @@ const GeoPattern1 = () => {
             defaultValue={color1}
             onChange={(e) => setcolor1(e.target.value)}
         />
-        Change Pattern: <input type={'range'} min={0} max={1920} onChange={e => setString1(e.target.value)} />
+        Change Pattern: <input type={'range'} min={0} max={1920} value={string1} onChange={e => setString1(e.target.value)} />
+
         <button onClick={setPattern}>Set Pattern</button>
 
         <div className='drawingToolsRow' >
@@ -87,7 +89,10 @@ const GeoPattern1 = () => {
             offsetY:<input type={'range'} min={0} max={1080} onChange={e => changeYoffset(e)} />
             Repeat:<input type={'checkbox'} onChange={e => changerepeat(e)} />
         </div>
-    </div>)
+        <div ref={particlebg} style={{ width: 192, height: 108 }}>
+            {/* <ParticlesBg type="circle" bg={false} /> */}
+        </div>
+    </div >)
 }
 
 export default GeoPattern1

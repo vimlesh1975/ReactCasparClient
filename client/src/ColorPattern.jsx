@@ -2,20 +2,19 @@ import React, { useState, useRef } from "react";
 import { endpoint, stopGraphics, templateLayers } from "./common";
 import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
-
-
+import { selectAll } from './DrawingController';
 import "pattern.css";
 
 const ColorPattern = () => {
     const refPattern = useRef();
     const refcopiedDiv = useRef();
 
-    const [color1, setColor1] = useState('#ff0000');
-    const [color2, setColor2] = useState('#0000ff');
-    const [color2Transparent, setColor2Transparent] = useState(false);
-    const [patternSize, setPatternSize] = useState('sm');
+    const [color1, setColor1] = useState('#0C7A90');
+    const [color2, setColor2] = useState('#08A974');
+    const [color2Transparent, setColor2Transparent] = useState(true);
+    const [patternSize, setPatternSize] = useState('lg');
     const patternSizes = ['sm', 'md', 'lg', 'xl']
-    const [patternType, setPatternType] = useState('checks');
+    const [patternType, setPatternType] = useState('diagonal-stripes');
     const patternTypes = ['checks', 'grid', 'dots', 'cross-dots', 'diagonal-lines', 'horizontal-lines', 'vertical-lines', 'diagonal-stripes', 'horizontal-stripes', 'vertical-stripes', 'triangles', 'zigzag']
 
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
@@ -33,6 +32,10 @@ const ColorPattern = () => {
             endpoint(`play ${window.chNumber}-${layerNumber + 1} [HTML] xyz.html`);
         }, 250);
 
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
+        var br = (canvas.getActiveObject())?.getBoundingRect();
+
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
             var bb = document.createElement('div');
@@ -46,6 +49,10 @@ const ColorPattern = () => {
             document.body.style.margin='0';
             document.body.style.padding='0';
             aa.style.zoom=(${currentscreenSize * 1000}/1920)+'%';
+            aa.style.left='${(br.left / 10) - 2}px';
+            aa.style.top='${(br.top / 10) - 2}px';
+            aa.style.width='10% !important';
+            aa.style.height='10% !important';
             document.body.style.overflow='hidden';
             var style = document.createElement('style');
             style.textContent ='${classPattern} ${inAnimation}';
@@ -109,10 +116,14 @@ const ColorPattern = () => {
             }}
             className={"pattern-" + patternType + "-" + patternSize}
         >
+
+
         </div>
 
 
-        <div style={{ display: 'none' }} ref={refcopiedDiv}></div>
+        <div style={{ display: 'none' }} ref={refcopiedDiv}>
+
+        </div>
 
     </>)
 }
