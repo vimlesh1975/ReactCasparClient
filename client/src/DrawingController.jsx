@@ -2632,8 +2632,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         return aa.replaceAll("//", "/")
     }
     const openClientAddress = () => {
-        const aa = clientAddress()
-        window.open(new URL(aa), "_blank")
+        const aa = clientAddress();
+        window.open(new URL(aa), "_blank");
+        setTimeout(() => {
+            sendtohtml(canvas);
+        }, 1000);
     }
 
     window.getvalues = getvalues;

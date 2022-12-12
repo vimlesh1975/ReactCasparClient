@@ -3,7 +3,7 @@ import { Rnd } from "react-rnd";
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
 import { rgbaCol } from './common'
-// import ColorPattern from './ColorPattern'
+import ColorPattern from './ColorPattern'
 import GeoPattern1 from "./GeoPattern1";
 const ColorGradient2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -235,7 +235,7 @@ const ColorGradient2 = () => {
             </div>
 
 
-            {/* < ColorPattern /> */}
+            < ColorPattern />
             <div style={{ marginTop: 50 }}>
                 <GeoPattern1 />
 
