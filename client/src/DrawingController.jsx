@@ -1536,8 +1536,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const handleFileReadJSON = () => {
         const content = fileReader.result;
         canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
+            object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
         })
-
     };
 
     const resetZommandPan = () => {
