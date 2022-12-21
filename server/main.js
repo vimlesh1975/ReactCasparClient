@@ -282,3 +282,9 @@ app.post('/callScript', (req, res) => {
     io.emit('callScript', req.body)
     res.end(JSON.stringify(req.body))
 })
+
+app.post('/executeScript', (req, res) => {
+    io.emit('executeScript', req.body)
+    res.end('')
+})
+

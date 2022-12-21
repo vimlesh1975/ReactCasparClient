@@ -5,8 +5,14 @@ import { shadowOptions } from './common'
 
 
 const CodeImport = () => {
-    const [svgcode, setSvgCode] = useState()
-    const [jsoncode, setJsonCode] = useState()
+    const [svgcode, setSvgCode] = useState(`<svg height="100" width="100">
+    <circle cx="500" cy="500" r="100" stroke="yellow" stroke-width="3" fill="red" />
+   <rect x="800" y="800" width="300" height="200" stroke="red" stroke-width="3" fill="yellow" />
+  </svg> `)
+    const [jsoncode, setJsonCode] = useState(`{"objects":[
+        {"type":"circle","left":200,"top":200,"radius":100,"fill":"blue","stroke":"yellow", "strokeWidth":15},
+        {"type":"rect","left":800,"top":400,"width":400,"height":250,"stroke":"yellow", "strokeWidth":15, "fill":"red"}
+        ]}`)
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
 

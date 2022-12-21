@@ -43,6 +43,11 @@ export const clearHtml = () => {
     }).catch((aa) => { console.log('Error', aa) });
 }
 
+export const executeScript = (str) => {
+    axios.post('http://localhost:9000/executeScript', { data1: str, clientId: window.clientId }).then((aa) => {
+    }).catch((aa) => { console.log('Error', aa) });
+}
+
 
 export function tempAlert(msg, duration, style) {
     var el = document.createElement("div");

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, sendtohtml } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, sendtohtml, executeScript } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1238,14 +1238,42 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         clearInterval(xxx);
         "`)
+        executeScript(`
+        var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+        var startTime = new Date();
+        var xxx=setInterval(()=>{
+            startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+            var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+            cc.textContent  =ss1;
+            }, 1000);
+            clearInterval(xxx);
+        `)
     }
 
 
     const showClock = (layerNumber) => {
+
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
         startTime.setSeconds(initialSecond);
+
+        const script = ` var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+        cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
+        var startTime = new Date();
+        startTime.setMinutes(${initialMinute});
+        startTime.setSeconds(${initialSecond});
+        var xxx;`
+
+        executeScript(script); //for html
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1253,20 +1281,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }, 250);
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
-                var aa = document.createElement('div');
-                aa.style.position='absolute';
-                aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
-                document.body.appendChild(aa);
-                document.body.style.margin='0';
-                document.body.style.padding='0';
-                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                document.body.style.overflow='hidden';
-                var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-                cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
-                var startTime = new Date();
-                startTime.setMinutes(${initialMinute});
-                startTime.setSeconds(${initialSecond});
-                var xxx;
+               ${script}
                 "`)
         }, 300);
 
@@ -1277,10 +1292,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const stopClock = layerNumber => {
         clearInterval(xxx)
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        }, 1000);
+        stopGraphics(layerNumber);
+        executeScript(`document.getElementsByTagName('svg')[0].innerHTML=''`)
     }
     const resumeClock = (layerNumber) => {
 
@@ -1295,17 +1308,20 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             setInitialSecond(startTime.getSeconds())
         }, 1000);
         //for form
-
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-        startTime.setMinutes(${initialMinute});
+        const script = ` startTime.setMinutes(${initialMinute});
         startTime.setSeconds(${initialSecond});
         clearInterval(xxx);
         xxx=setInterval(()=>{
-            startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-             var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-             cc.textContent  =ss1;
-           }, 1000);
+        startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+        var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+        cc.textContent  =ss1;
+        }, 1000);`
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${script}
         "`)
+        executeScript(` var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+        var startTime = new Date();
+        var xxx;` + script)
     }
 
     const pauseClock2 = (layerNumber) => {
@@ -1534,11 +1550,34 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     };
 
     const handleFileReadJSON = () => {
+        const preCanvas = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\'');
         const content = fileReader.result;
         canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
             object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
         })
+        importSvgCode(preCanvas)
     };
+    const importSvgCode = (ss) => {
+        if (ss) {
+            fabric.loadSVGFromString(ss, function (objects) {
+                objects?.forEach(element => {
+                    canvas.add(element);
+                    element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+                    if (element.type === 'text') {
+                        element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+                        element.set({ type: 'textbox' })
+                        var textobj = element.toObject();
+                        var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+                        var aa = new fabric.Textbox(element.text, clonedtextobj);
+                        aa.set({ id: element.id, class: element.class, objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, width: 1000 });
+                        canvas.remove(element)
+                        canvas.add(aa);
+                    }
+                });
+            });
+            canvas.requestRenderAll();
+        }
+    }
 
     const resetZommandPan = () => {
         canvas.setZoom(1);
@@ -2758,6 +2797,30 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} />
                         <button title={clientAddress()} onClick={openClientAddress}>Open Client Address</button>
                         <button title={clientAddress()} onClick={() => sendtohtml(canvas)}>Send to HTML</button>
+                        <button title={clientAddress()} onClick={() => {
+                            executeScript(`
+                            var aa = document.createElement('div');
+                            aa.style.position='absolute';
+                            aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable']))}\`;
+                            document.body.appendChild(aa);
+                            document.body.style.margin='0';
+                            document.body.style.padding='0';
+                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                            document.body.style.overflow='hidden';
+                            var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+                            cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
+                            var startTime = new Date();
+                            startTime.setMinutes(${initialMinute});
+                            startTime.setSeconds(${initialSecond});
+                            var xxx;
+                            clearInterval(xxx);
+                            xxx=setInterval(()=>{
+                                startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+                                 var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+                                 cc.textContent  =ss1;
+                               }, 1000);
+                        `)
+                        }}>executeScript</button>
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">

@@ -118,6 +118,10 @@ window.update = update;
 //     dataInsert(dataCaspar); // Insert data
 //     // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
 // }
+
+
+
+
 // eslint-disable-next-line 
 function stop() {
     document.body.innerHTML = '';
@@ -144,6 +148,9 @@ const Html = () => {
         eval(ff[0])
     }
 
+
+
+
     // eslint-disable-next-line 
     const setColorRect = (id, val) => {
         Array.from(document.getElementsByTagName(id)).forEach(element => {
@@ -151,6 +158,11 @@ const Html = () => {
         });
     }
 
+    const executeScript = (str) => {
+        console.log(str);
+        // eslint-disable-next-line
+        eval(str)
+    };
 
 
     useEffect(() => {
@@ -178,12 +190,15 @@ const Html = () => {
 
         });
         socket.on("callScript", data => {
-            // console.log(data)
-
             if (data.clientId === clientId) {
-                callScript(data.data)
+                callScript(data.data1)
             }
+        });
 
+        socket.on("executeScript", data => {
+            if (data.clientId === clientId) {
+                executeScript(data.data1)
+            }
         });
         return () => {
             socket?.removeListener('html');
