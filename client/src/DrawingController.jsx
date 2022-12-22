@@ -1239,20 +1239,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         clearInterval(xxx);
         "`)
         executeScript(`
-        var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-        var startTime = new Date();
-        var xxx=setInterval(()=>{
-            startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-            var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-            cc.textContent  =ss1;
-            }, 1000);
             clearInterval(xxx);
         `)
     }
 
 
     const showClock = (layerNumber) => {
-
+        executeScript(`document.getElementsByTagName('div')[2].remove();
+        clearInterval(xxx);`)
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
@@ -1267,13 +1261,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+        window.cc=cc;
         cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
         var startTime = new Date();
+        window.startTime=startTime;
         startTime.setMinutes(${initialMinute});
         startTime.setSeconds(${initialSecond});
-        var xxx;`
+        var xxx=null;
+        window.xxx=xxx;
+        `
 
         executeScript(script); //for html
+
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1293,7 +1292,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const stopClock = layerNumber => {
         clearInterval(xxx)
         stopGraphics(layerNumber);
-        executeScript(`document.getElementsByTagName('svg')[0].innerHTML=''`)
+        executeScript(`document.getElementsByTagName('div')[2].remove();
+        clearInterval(xxx);`)
     }
     const resumeClock = (layerNumber) => {
 
@@ -1308,7 +1308,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             setInitialSecond(startTime.getSeconds())
         }, 1000);
         //for form
-        const script = ` startTime.setMinutes(${initialMinute});
+        const script = `startTime.setMinutes(${initialMinute});
         startTime.setSeconds(${initialSecond});
         clearInterval(xxx);
         xxx=setInterval(()=>{
@@ -1319,9 +1319,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
-        executeScript(` var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-        var startTime = new Date();
-        var xxx;` + script)
+        executeScript(script)
     }
 
     const pauseClock2 = (layerNumber) => {
