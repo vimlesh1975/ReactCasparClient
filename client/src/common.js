@@ -44,8 +44,15 @@ export const clearHtml = () => {
 }
 
 export const executeScript = (str) => {
-    axios.post('http://localhost:9000/executeScript', { data1: str, clientId: window.clientId }).then((aa) => {
-    }).catch((aa) => { console.log('Error', aa) });
+    if (window.location.origin === 'https://vimlesh1975.github.io') {
+        axios.post('https://octopus-app-gzws3.ondigitalocean.app/executeScript', { data1: str, clientId: window.clientId }).then((aa) => {
+        }).catch((aa) => { console.log('Error', aa) });
+    }
+    else {
+        axios.post('http://localhost:9000/executeScript', { data1: str, clientId: window.clientId }).then((aa) => {
+        }).catch((aa) => { console.log('Error', aa) });
+    }
+
 }
 
 
