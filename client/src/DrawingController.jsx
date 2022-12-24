@@ -1252,7 +1252,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         startTime.setMinutes(initialMinute);
         startTime.setSeconds(initialSecond);
 
-        const script = ` var aa = document.createElement('div');
+        const script = ` window.aa = document.createElement('div');
         aa.style.position='absolute';
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
@@ -1260,19 +1260,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-        window.cc=cc;
+        window.cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
         cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
-        var startTime = new Date();
-        window.startTime=startTime;
+        window.startTime = new Date();
         startTime.setMinutes(${initialMinute});
         startTime.setSeconds(${initialSecond});
-        var xxx=null;
-        window.xxx=xxx;
+        window.xxx=null;
         `
 
         executeScript(script); //for html
-
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
@@ -1325,15 +1321,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const pauseClock2 = (layerNumber) => {
         clearInterval(xxx2)
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        clearInterval(xxx2);
+        clearInterval(xxx);
         "`)
-        executeScript(`clearInterval(xxx2)`)
+        executeScript(`clearInterval(xxx)`)
 
     }
 
     const showClock2 = (layerNumber) => {
         executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx2);`)
+        clearInterval(xxx);`)
 
         var startTime = new Date();
         startTime.setSeconds(initialSecond2);
@@ -1354,7 +1350,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         window.cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
         cc.textContent=${initialSecond2};
         window.startTime = new Date();
-        window.xxx2=null;
+        window.xxx=null;
         startTime.setSeconds(${initialSecond2});
         `
         setTimeout(() => {
@@ -1377,7 +1373,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
         executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx2);`)
+        clearInterval(xxx);`)
     }
     const resumeClock2 = (layerNumber) => {
 
@@ -1392,8 +1388,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         //for form
         const script = `
             startTime.setSeconds(${initialSecond2});
-            if (xxx2){clearInterval(xxx2)};
-            xxx2=setInterval(()=>{
+            clearInterval(xxx);
+            xxx=setInterval(()=>{
                 ${countUp2}  ? startTime.setSeconds(startTime.getSeconds() + 1) : (startTime.getSeconds()>0)? startTime.setSeconds(startTime.getSeconds() - 1):startTime.setSeconds(0) ;
                 var ss1 =((startTime.getSeconds()).toString()).padStart(2, '0');
                 cc.textContent  =ss1;
@@ -2436,7 +2432,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const startUpTimer = () => {
 
         executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx3);`)
+        clearInterval(xxx);`)
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2452,7 +2448,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         document.body.style.overflow='hidden';
         window.cc=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
         cc.textContent='00:00:000';
-        window.xxx3=null;
+        window.xxx=null;
         window.diff=null;
         window.diffLast=0;
         window.date_diff=null;
@@ -2466,8 +2462,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const resumeUpTimer = () => {
         const script = `
         window.startTime = new Date();
-        clearInterval(xxx3);
-        xxx3=setInterval(function() {
+        clearInterval(xxx);
+        xxx=setInterval(function() {
             diff = diffLast + (new Date()).getTime() - startTime.getTime();
             date_diff = new Date(diff - 30 * 60 * 1000);
             ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
@@ -2482,7 +2478,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const pauseUpTimer = () => {
         const script = `
-        clearInterval(xxx3);
+        clearInterval(xxx);
         diffLast=diff;
         `
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
@@ -3129,16 +3125,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }}><FaPlay /> </button>
                         <button onClick={() => {
                             endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=0"`);
-                            // executeScript('clearInterval(xxx)');
                             executeScript(`
                             speed=0;
                             `)
                         }}><FaPause /></button>
                         <button onClick={() => {
                             endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${verticalSpeed}"`);
-                            executeScript(`
-                            speed=${verticalSpeed};
-                          `);
+                            executeScript(`speed=${verticalSpeed};`);
+
+
                         }}> <GrResume /></button>
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
@@ -3248,7 +3243,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
                             setUpTimer('');
                             executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx3);`)
+                            clearInterval(xxx);`)
                             localStorage.setItem('RCC_upTimer', '');
 
                         }} ><FaStop /></button>
