@@ -280,7 +280,7 @@ app.post('/loadHtml', (req, res) => {
 
 app.post('/callScript', (req, res) => {
     io.emit('callScript', req.body)
-    res.end(JSON.stringify(req.body))
+    res.end('')
 })
 
 app.post('/executeScript', (req, res) => {

@@ -2851,30 +2851,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} />
                         <button title={clientAddress()} onClick={openClientAddress}>Open Client Address</button>
                         <button title={clientAddress()} onClick={() => sendtohtml(canvas)}>Send to HTML</button>
-                        <button title={clientAddress()} onClick={() => {
-                            executeScript(`
-                            var aa = document.createElement('div');
-                            aa.style.position='absolute';
-                            aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable']))}\`;
-                            document.body.appendChild(aa);
-                            document.body.style.margin='0';
-                            document.body.style.padding='0';
-                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                            document.body.style.overflow='hidden';
-                            var cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-                            cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
-                            var startTime = new Date();
-                            startTime.setMinutes(${initialMinute});
-                            startTime.setSeconds(${initialSecond});
-                            var xxx;
-                            clearInterval(xxx);
-                            xxx=setInterval(()=>{
-                                startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-                                 var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-                                 cc.textContent  =ss1;
-                               }, 1000);
-                        `)
-                        }}>executeScript</button>
+                        {/* <button onClick={() => {
+                            var path = new fabric.Path("M 0 0 C 100 -100 150 -100 300 0", {
+                                fill: 'transparent'
+                            });
+                            canvas.getActiveObjects().forEach(item => item.set({
+                                path: path,
+                                pathSide: "left",
+                                pathStartOffset: 0,
+                                pathAlign :'baseline'
+                            }))
+                            canvas.requestRenderAll();
+                        }}>set text path</button> */}
                     </div>
                     <div className='drawingToolsRow' >
                         <b> Import: </b><label style={{ border: '1px solid #000000', borderRadius: '3px', backgroundColor: 'ButtonFace' }} htmlFor="importsvg">

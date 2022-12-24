@@ -142,7 +142,7 @@ const Html = () => {
         }
     }
     const callScript = data => {
-        console.log(JSON.parse(data))
+        // console.log(JSON.parse(data))
         const ff = JSON.parse(data)
         // eslint-disable-next-line 
         eval(ff[0])
@@ -191,7 +191,7 @@ const Html = () => {
         });
         socket.on("callScript", data => {
             if (data.clientId === clientId) {
-                callScript(data.data1)
+                callScript(data.data)
             }
         });
 
