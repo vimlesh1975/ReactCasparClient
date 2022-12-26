@@ -38,7 +38,7 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import Threejs from './Threejs';
 import CodeImport from './CodeImport';
 
-const buildDate = '241222_2'
+const buildDate = '261222_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
