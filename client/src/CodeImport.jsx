@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { shadowOptions } from './common'
+import { shadowOptions, openaiAddress } from './common'
 
 
 const CodeImport = () => {
+    const [prompt, setPrompt] = useState('Hello How Are You?')
+    const [aiAnswer, setAiAnswer] = useState('')
+
+
     const [svgcode, setSvgCode] = useState(`<svg height="100" width="100">
     <circle cx="500" cy="500" r="100" stroke="yellow" stroke-width="3" fill="red" />
    <rect x="800" y="800" width="300" height="200" stroke="red" stroke-width="3" fill="yellow" />
@@ -58,18 +62,45 @@ const CodeImport = () => {
 
     }
 
+    const askOpenAi = async () => {
+        // setPrompt('')
+        const response = await fetch(openaiAddress(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: prompt
+            })
+        })
+
+        if (response.ok) {
+            const data = await response.json();
+            // trims any trailing spaces/'\n' 
+            setAiAnswer(data.bot.trim())
+
+        } else {
+            const err = await response.text()
+            alert(err)
+        }
+    }
 
     return (<div>
         <div>
             <h3>Svg Import</h3>
-            <textarea style={{ width: '98%', height: 300 }} value={svgcode} onChange={e => setSvgCode(e.target.value)} />
+            <textarea style={{ width: '98%', height: 150 }} value={svgcode} onChange={e => setSvgCode(e.target.value)} />
             <button onClick={() => importSvgCode()}>Import SVG</button>
         </div>
 
         <div>
             <h3>Json Import</h3>
-            <textarea style={{ width: '98%', height: 300 }} value={jsoncode} onChange={e => setJsonCode(e.target.value)} />
+            <textarea style={{ width: '98%', height: 150 }} value={jsoncode} onChange={e => setJsonCode(e.target.value)} />
             <button onClick={importJsonCode}>Import Json</button>
+        </div>
+        <div>
+            <h3>OpenAi Conversation</h3>
+            <textarea rows={1} style={{ width: 600 }} value={prompt} onChange={e => setPrompt(e.target.value)} /> <button onClick={askOpenAi}>Ask OpenAi</button>
+            <textarea rows={15} style={{ width: 600 }} value={aiAnswer} />
         </div>
 
     </div>)
