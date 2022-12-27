@@ -485,9 +485,9 @@ const Effects = () => {
                             <option value="slideOutRight">slideOutRight</option>
                         </optgroup> */}
 
-                       
 
-                      
+
+
                     </select>
 
                 </div>
@@ -515,12 +515,12 @@ const Effects = () => {
         X: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();
             setX(e.target.value);
-        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.width / 2).toString()} max={(canvas?.getActiveObjects(0)[0]?.width / 2).toString()} step='1' value={x} />
+        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.width / 2).toString() ? -(canvas?.getActiveObjects(0)[0]?.width / 2).toString() : 0} max={(canvas?.getActiveObjects(0)[0]?.width / 2).toString()} step='1' value={x} />
 
         Y: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();
             setY(e.target.value);
-        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.height / 2).toString()} max={(canvas?.getActiveObjects(0)[0]?.height / 2).toString()} step='1' value={y} />
+        }} type="range" min={-(canvas?.getActiveObjects(0)[0]?.height / 2).toString() ? -(canvas?.getActiveObjects(0)[0]?.height / 2).toString() : 0} max={(canvas?.getActiveObjects(0)[0]?.height / 2).toString()} step='1' value={y} />
 
         Z: <input style={{ width: 100 }} onChange={e => {
             applySpeculerLightingFilter();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
 import { shadowOptions, openaiAddress } from './common'
@@ -6,7 +6,10 @@ import { shadowOptions, openaiAddress } from './common'
 
 const CodeImport = () => {
     const [prompt, setPrompt] = useState('Hello How Are You?')
-    const [aiAnswer, setAiAnswer] = useState('')
+    const [aiAnswer, setAiAnswer] = useState('');
+    const [models, setModels] = useState([]);
+    const [selectedModel, setSelectedModel] = useState('text-davinci-003');
+
 
 
     const [svgcode, setSvgCode] = useState(`<svg height="100" width="100">
@@ -64,13 +67,14 @@ const CodeImport = () => {
 
     const askOpenAi = async () => {
         // setPrompt('')
-        const response = await fetch(openaiAddress(), {
+        const response = await fetch(openaiAddress() + 'openai', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                prompt: prompt
+                prompt: prompt,
+                model: selectedModel
             })
         })
 
@@ -81,9 +85,41 @@ const CodeImport = () => {
 
         } else {
             const err = await response.text()
-            alert(err)
+            // alert(err)
+            setAiAnswer(err)
         }
     }
+
+    const askOpenAiModels = async () => {
+        // setPrompt('')
+        const response = await fetch(openaiAddress() + 'openai/models', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            })
+        })
+
+        if (response.ok) {
+            const data = await response.json();
+            // trims any trailing spaces/'\n' 
+            // setAiAnswer(data.bot.trim())
+            // console.log(data.bot.data)
+            setModels(data.bot.data)
+            // setModels(['aa', 'bb'])
+
+
+        } else {
+            // const err = await response.text()
+            // alert(err)
+        }
+    }
+
+
+    useEffect(() => {
+        askOpenAiModels()
+    }, [])
 
     return (<div>
         <div>
@@ -99,8 +135,13 @@ const CodeImport = () => {
         </div>
         <div>
             <h3>OpenAi Conversation</h3>
-            <textarea rows={1} style={{ width: 600 }} value={prompt} onChange={e => setPrompt(e.target.value)} /> <button onClick={askOpenAi}>Ask OpenAi</button>
-            <textarea rows={15} style={{ width: 600 }} value={aiAnswer} />
+            <select onChange={e => setSelectedModel(e.target.value)} value={selectedModel}>
+                {models.map((model, i) => (
+                    <option key={i} value={model.id}>{model.id}</option>
+                ))}
+            </select>
+            <textarea rows={1} style={{ width: 500 }} value={prompt} onChange={e => setPrompt(e.target.value)} /> <button onClick={askOpenAi}>Ask OpenAi</button>
+            <textarea rows={15} style={{ width: 600 }} readOnly value={aiAnswer} />
         </div>
 
     </div>)

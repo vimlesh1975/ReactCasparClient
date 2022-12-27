@@ -20,7 +20,7 @@ fontList.getFonts({ disableQuoting: true })
         myFontList = fonts;
     })
     .catch(err => {
-        console.log(err)
+        // console.log(err)
     })
 
 
@@ -52,9 +52,10 @@ app.get('/openai', async (req, res) => {
 app.post('/openai', async (req, res) => {
     try {
         const prompt = req.body.prompt;
+        const model = req.body.model;
 
         const response = await openai.createCompletion({
-            model: "text-davinci-003",
+            model: model,
             prompt: `${prompt}`,
             temperature: 0, // Higher values means the model will take more risks.
             max_tokens: 3000, // The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).
@@ -68,11 +69,22 @@ app.post('/openai', async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error)
+        // console.error(error)
         res.status(500).send(error || 'Something went wrong');
     }
 })
+app.post('/openai/models', async (req, res) => {
+    try {
+        const response = await openai.listEngines();
+        res.status(200).send({
+            bot: response.data
+        });
 
+    } catch (error) {
+        // console.error(error)
+        res.status(500).send(error || 'Something went wrong');
+    }
+})
 //open ai end ------------------------------------------------------------------------------------------
 
 

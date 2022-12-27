@@ -1252,8 +1252,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         startTime.setMinutes(initialMinute);
         startTime.setSeconds(initialSecond);
 
-        const script = ` window.aa = document.createElement('div');
+        const script = `
+        window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.style.zIndex = ${layerNumber};
+        aa.style.top='0';
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';

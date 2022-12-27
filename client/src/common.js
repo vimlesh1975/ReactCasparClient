@@ -28,10 +28,10 @@ export const htmlAddress = () => {
 
 export const openaiAddress = () => {
     if (window.location.origin === 'https://vimlesh1975.github.io') {
-        return 'https://octopus-app-gzws3.ondigitalocean.app/openai'
+        return 'https://octopus-app-gzws3.ondigitalocean.app/'
     }
     else {
-        return 'http://localhost:9000/openai'
+        return 'http://localhost:9000/'
     }
 }
 

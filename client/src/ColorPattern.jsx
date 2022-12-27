@@ -95,7 +95,7 @@ const ColorPattern = () => {
             <div style={{ border: '1px solid red' }}>
                 Color1: <input type='color' value={color1} onChange={e => setColor1(e.target.value)} />
                 Color2 <input type='color' value={color2} onChange={e => setColor2(e.target.value)} />
-                <lable> <input type="checkbox" checked={color2Transparent} onClick={() => setColor2Transparent(!color2Transparent)} />Transparent</lable>
+                <label> <input type="checkbox" checked={color2Transparent} onChange={() => setColor2Transparent(!color2Transparent)} />Transparent</label>
             </div>
 
 
