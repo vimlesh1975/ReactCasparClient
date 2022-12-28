@@ -1238,15 +1238,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         clearInterval(xxx);
         "`)
-        executeScript(`
-            clearInterval(xxx);
-        `)
+        executeScript(`clearInterval(xxx)`)
     }
 
 
     const showClock = (layerNumber) => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
@@ -1255,8 +1253,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
         aa.style.zIndex = ${layerNumber};
-        aa.style.top='0';
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
@@ -1291,8 +1289,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const stopClock = layerNumber => {
         clearInterval(xxx)
         stopGraphics(layerNumber);
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
     }
     const resumeClock = (layerNumber) => {
 
@@ -1315,10 +1314,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
         cc.textContent  =ss1;
         }, 1000);`
+
+        executeScript(script)
+
         endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
-        executeScript(script)
+
     }
 
     const pauseClock2 = (layerNumber) => {
@@ -1331,8 +1333,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const showClock2 = (layerNumber) => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         var startTime = new Date();
         startTime.setSeconds(initialSecond2);
@@ -1344,6 +1346,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
@@ -1375,8 +1379,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         setTimeout(() => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
     }
     const resumeClock2 = (layerNumber) => {
 
@@ -2297,16 +2301,19 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
 
-    const startVerticalScroll = () => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+    const startVerticalScroll = (layerNumber) => {
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 200;
-        endpoint(`play ${window.chNumber}-${templateLayers.verticalScroll} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.getElementsByTagName('svg')[0].style.height='${hh}';
@@ -2320,26 +2327,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }, 1);
         `
 
-        endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} " ${script} "`)
+        endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`)
 
         executeScript(script); //for html
     }
 
-    const startHorizontalScroll = () => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+    const startHorizontalScroll = (layerNumber) => {
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
-        endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
-        document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         window.speed=${horizontalSpeed};
@@ -2358,26 +2367,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             }, 1);
         }
         `
-        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "
+        endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
         executeScript(script);
     }
-    const startHorizontalScroll2 = () => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+    const startHorizontalScroll2 = (layerNumber) => {
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
-        endpoint(`play ${window.chNumber}-${templateLayers.horizontalScroll2} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
-        document.getElementsByTagName('svg')[0].style.width='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
+        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         window.speed=${horizontalSpeed2};
@@ -2396,22 +2407,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             }, 1);
         }
         `
-        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "
+        endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
         executeScript(script);
     }
-    const startClock = () => {
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+    const startClock = (layerNumber) => {
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
 
-        endpoint(`play ${window.chNumber}-${templateLayers.clock} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
 
@@ -2427,22 +2440,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
          cc.textContent  =ss1;
           }, 1000);
         `
-        endpoint(`call ${window.chNumber}-${templateLayers.clock} "
+        endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
         executeScript(script);
     }
-    const startUpTimer = () => {
-
-        executeScript(`document.getElementsByTagName('div')[2].remove();
-        clearInterval(xxx);`)
+    const startUpTimer = (layerNumber) => {
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
-        endpoint(`play ${window.chNumber}-${templateLayers.countUpTimer} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
         window.aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
@@ -2457,7 +2471,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         window.date_diff=null;
         window.ss1=null ;
         `
-        endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
+        endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
         "`)
         executeScript(script);
@@ -2491,6 +2505,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const startGraphics = (canvas, layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         var inAnimation;
         if (window.inAnimationMethod === 'mix') {
             inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
@@ -2508,15 +2524,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
             }, 250);
 
-            setTimeout(() => {
-                endpoint(`call ${window.chNumber}-${layerNumber} "
-           var bb = document.createElement('div');
+            const script = `
+            var bb = document.createElement('div');
             bb.style.perspective='1920px';
             bb.style.transformStyle='preserve-3d';
             document.body.appendChild(bb);
             var aa = document.createElement('div');
             aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
+            aa.setAttribute('id','divid_' + '${layerNumber}');
+            aa.style.zIndex = ${layerNumber};
+            aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
@@ -2525,6 +2542,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
+            `
+            executeScript(script);
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} "
+                ${script}
             "`)
             }, 300);
 
@@ -2540,24 +2562,29 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
 
-        setTimeout(() => {
-
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+        const script = `
         var bb = document.createElement('div');
         bb.style.perspective='1920px';
         bb.style.transformStyle='preserve-3d';
         document.body.appendChild(bb);
-            var aa = document.createElement('div');
-            aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
-            bb.appendChild(aa);
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-            document.body.style.overflow='hidden';
-            var style = document.createElement('style');
-            style.textContent = '${inAnimation}';
-            document.head.appendChild(style);
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        bb.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        var style = document.createElement('style');
+        style.textContent = '${inAnimation}';
+        document.head.appendChild(style);
+        `
+        executeScript(script);
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+       ${script}
             "`)
         }, 100);
         setTimeout(() => {
@@ -3109,7 +3136,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                     <div className='drawingToolsRow' >
                         <b> V Scroll: </b>  <button onClick={() => {
-                            startVerticalScroll();
+                            startVerticalScroll(templateLayers.verticalScroll);
                             setVerticalScroll(canvasList[currentPage]?.pageName)
                             localStorage.setItem('RCC_verticalScroll', canvasList[currentPage]?.pageName);
 
@@ -3129,8 +3156,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
 
-                            executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx);`)
+                            executeScript(`if(window.xxx){clearInterval(xxx)}`);
+                            executeScript(`document.getElementById('divid_${templateLayers.verticalScroll}')?.remove()`);
 
                             setVerticalScroll('')
                             localStorage.setItem('RCC_verticalScroll', '');
@@ -3144,7 +3171,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     <div className='drawingToolsRow' >
                         <b> H Scroll: </b>
                         <button onClick={() => {
-                            startHorizontalScroll(window.editor?.canvas);
+                            startHorizontalScroll(templateLayers.horizontalScroll);
                             setHorizontalScroll(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_horizontalScroll', canvasList[currentPage]?.pageName);
 
@@ -3161,8 +3188,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll}`);
                             setHorizontalScroll('');
                             localStorage.setItem('RCC_horizontalScroll', '');
-                            executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx);`)
+                            executeScript(`if(window.xxx){clearInterval(xxx)}`);
+                            executeScript(`document.getElementById('divid_${templateLayers.horizontalScroll}')?.remove()`);
                         }} ><FaStop /></button>
                         S:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
                         <button onClick={() => exportHorizontalScrollAsHTML(canvas)}>To HTML</button>
@@ -3172,7 +3199,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     <div className='drawingToolsRow' >
                         <b> H Scroll2: </b>
                         <button onClick={() => {
-                            startHorizontalScroll2(window.editor?.canvas);
+                            startHorizontalScroll2(templateLayers.horizontalScroll2);
                             setHorizontalScroll2(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_horizontalScroll2', canvasList[currentPage]?.pageName);
 
@@ -3189,8 +3216,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll2}`);
                             setHorizontalScroll2('');
                             localStorage.setItem('RCC_horizontalScroll2', '');
-                            executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx);`)
+                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`document.getElementById('divid_${templateLayers.horizontalScroll2}').remove()`);
+
                         }} ><FaStop /></button>
                         S:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange2(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed2} />
                         <button onClick={() => exportHorizontalScrollAsHTML2(canvas)}>To HTML</button>
@@ -3202,7 +3230,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <b>Clock: </b>
                         <button onClick={() => addClock(canvas)}>Add to Preview</button>
                         <button onClick={() => {
-                            startClock();
+                            startClock(templateLayers.clock);
                             setClock(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_clock', canvasList[currentPage]?.pageName);
 
@@ -3211,8 +3239,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
                             setClock('');
                             localStorage.setItem('RCC_clock', '');
-                            executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx);`)
+                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`document.getElementById('divid_${templateLayers.clock}').remove()`);
                         }} ><FaStop /></button>
                         <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
                         <span> {clock} </span>
@@ -3221,7 +3249,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <b>Count Up Tmr: </b>
                         <button onClick={() => addUpTimer(canvas)}>Add to Preview</button>
                         <button title='Play in Puased mode' onClick={() => {
-                            startUpTimer();
+                            startUpTimer(templateLayers.countUpTimer);
                             setUpTimer(canvasList[currentPage]?.pageName);
                             localStorage.setItem('RCC_upTimer', canvasList[currentPage]?.pageName);
 
@@ -3233,8 +3261,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
                             setUpTimer('');
-                            executeScript(`document.getElementsByTagName('div')[2].remove();
-                            clearInterval(xxx);`)
+                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`document.getElementById('divid_${templateLayers.countUpTimer}').remove()`);
+
                             localStorage.setItem('RCC_upTimer', '');
 
                         }} ><FaStop /></button>
