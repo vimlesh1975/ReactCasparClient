@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint, tempAlert, stopGraphics, sendtohtml } from '../common'
+import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
@@ -108,22 +108,31 @@ const CustomClient = () => {
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
-        sendtohtml(canvas);//for html
+        // sendtohtml(canvas);//for html
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
+
+        const script = `
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
-    var aa = document.createElement('div');
-    aa.style.position='absolute';
-    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-    document.body.appendChild(aa);
-    document.body.style.margin='0';
-    document.body.style.padding='0';
-    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-    document.body.style.overflow='hidden';
+            ${script}
     "`)
         }, 300);
         setTimeout(() => {
@@ -131,17 +140,17 @@ const CustomClient = () => {
         }, 800);
 
         setTimeout(() => {
-            updateGraphics(layerNumber);
+            updateGraphics(canvas, layerNumber)
         }, 1100);
     }
     //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
-    const updateGraphics = layerNumber => {
-        sendtohtml(canvas);//for html
+    // const updateGraphics = layerNumber => {
+    //     // sendtohtml(canvas);//for html
 
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-        "`)
-    }
+    //     endpoint(`call ${window.chNumber}-${layerNumber} "
+    // aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+    //     "`)
+    // }
 
     const updateData = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -193,7 +202,7 @@ const CustomClient = () => {
                 });
                 canvas.requestRenderAll();
                 setTimeout(() => {
-                    updateGraphics(layerNumber)
+                    updateGraphics(canvas, layerNumber)
                 }, 300);
 
             });

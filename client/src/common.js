@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { animation } from './animation.js'
 
+export const buildDate = '281222_1'
 
 
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
@@ -43,13 +44,14 @@ export const socketAddress = () => {
         return 'http://localhost:9000'
     }
 }
-export const sendtohtml = (canvas) => {
-    axios.post(htmlAddress(), { data1: canvas.toSVG(), clientId: window.clientId }).then((aa) => {
+export const sendtohtml = (canvas, layerNumber) => {
+    axios.post(htmlAddress(), { data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`, clientId: window.clientId }).then((aa) => {
     }).catch((aa) => { console.log('Error', aa) });
 }
-export const clearHtml = () => {
-    axios.post(htmlAddress(), { data1: '', clientId: window.clientId }).then((aa) => {
-    }).catch((aa) => { console.log('Error', aa) });
+export const clearHtml = (layerNumber) => {
+    // axios.post(htmlAddress(), { data1: '', clientId: window.clientId }).then((aa) => {
+    // }).catch((aa) => { console.log('Error', aa) });
+    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 }
 
 export const executeScript = (str) => {
@@ -76,14 +78,16 @@ export function tempAlert(msg, duration, style) {
 }
 
 export const updateGraphics = (canvas, layerNumber) => {
-    sendtohtml(canvas)
+    // sendtohtml(canvas, layerNumber)
+    executeScript(`document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG()}\`:''`);
+
     endpoint(`call ${window.chNumber}-${layerNumber} "
     aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         "`)
 }
 
 export const stopGraphics = layerNumber => {
-    clearHtml()
+    clearHtml(layerNumber)
     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} aa.innerHTML=''`);
@@ -641,3 +645,70 @@ export const animationMethods = [
     "easeinoutbounce",
     "easeoutinbounce",
 ]
+export const languages = [
+    "en-US",
+    "hi-IN",
+    "te-IN",
+    "ta-IN",
+    "mr-IN",
+    "gu-IN",
+    "	kn-IN",
+    "ml-IN",
+    "pa-Guru-IN",
+    "ur-IN",
+    "ar-SA",
+    "bn-BD",
+    "bn-IN",
+    "cs-CZ",
+    "da-DK",
+    "de-AT",
+    "de-CH",
+    "de-DE",
+    "el-GR",
+    "en-AU",
+    "en-CA",
+    "en-GB",
+    "en-IE",
+    "en-IN",
+    "en-NZ",
+    "en-US",
+    "en-ZA",
+    "es-AR",
+    "es-CL",
+    "es-CO",
+    "es-ES",
+    "es-MX",
+    "es-US",
+    "fi-FI",
+    "fr-BE",
+    "fr-CA",
+    "fr-CH",
+    "fr-FR",
+    "he-IL",
+    "hi-IN",
+    "hu-HU",
+    "id-ID",
+    "it-CH",
+    "it-IT",
+    "jp-JP",
+    "ko-KR",
+    "nl-BE",
+    "nl-NL",
+    "no-NO",
+    "pl-PL",
+    "pt-BR",
+    "pt-PT",
+    "ro-RO",
+    "ru-RU",
+    "sk-SK",
+    "sv-SE",
+    "ta-IN",
+    "ta-LK",
+    "th-TH",
+    "tr-TR",
+    "ur_PK",
+    "zh-CN",
+    "zh-HK",
+    "zh-TW",
+    "bh-IN"
+];

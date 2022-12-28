@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics, updateGraphics } from '../common'
+import { endpoint, stopGraphics, updateGraphics, executeScript } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -110,20 +110,30 @@ const Hockey = () => {
     }
 
     const sendToCasparcg = (layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+
+        const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+            ${script}
         "`)
         }, 300);
         setTimeout(() => {
@@ -141,6 +151,7 @@ const Hockey = () => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
         clearInterval(xxx);
         "`)
+        executeScript(`clearInterval(xxx)`)
     }
     const resumeClock = (layerNumber) => {
 
@@ -156,8 +167,7 @@ const Hockey = () => {
 
         }, 1000);
         //for form end
-
-        endpoint(`call ${window.chNumber}-${layerNumber} "
+        const script = `
         startTime.setMinutes(${initialMinute});
         startTime.setSeconds(${initialSecond});
         clearInterval(xxx);
@@ -166,19 +176,27 @@ const Hockey = () => {
              var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
              cc.textContent  =ss1;
            }, 1000);
+        `
+        executeScript(script)
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${script}
         "`)
     }
     const stopClock = layerNumber => {
-        clearInterval(xxx)
-        // endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-        // setTimeout(() => {
-        //     endpoint(`stop ${window.chNumber}-${layerNumber}`)
-        // }, 1000);
-        stopGraphics(layerNumber)
+        clearInterval(xxx);
+        stopGraphics(layerNumber);
+
+        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
     }
     const showClock = (pageName) => {
+
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
+            const layerNumber = clockLayer;
+            executeScript(`if(window.xxx){clearInterval(xxx)}`);
+            executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
             //for form
             var startTime = new Date();
@@ -197,31 +215,38 @@ const Hockey = () => {
                 canvas.requestRenderAll();
             });
 
-            const layerNumber = clockLayer;
+
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
             setTimeout(() => {
                 endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
             }, 250);
+
+            const script = `
+            window.aa = document.createElement('div');
+            aa.style.position='absolute';
+            aa.setAttribute('id','divid_' + '${layerNumber}');
+            aa.style.zIndex = ${layerNumber};
+            aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+            document.body.appendChild(aa);
+            document.body.style.margin='0';
+            document.body.style.padding='0';
+            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+            document.body.style.overflow='hidden';
+            window.cc=document.getElementsByTagName('tspan')[0];
+            cc.textContent='';
+            window.startTime = new Date();
+            startTime.setMinutes(${initialMinute});
+            startTime.setSeconds(${initialSecond});
+            window.xxx=setInterval(()=>{
+               startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
+                var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
+                cc.textContent  =ss1;
+              }, 1000);
+            `
+            executeScript(script); //for html
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
-                var aa = document.createElement('div');
-                aa.style.position='absolute';
-                aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-                document.body.appendChild(aa);
-                document.body.style.margin='0';
-                document.body.style.padding='0';
-                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                document.body.style.overflow='hidden';
-                var cc=document.getElementsByTagName('tspan')[0];
-                cc.textContent='';
-                var startTime = new Date();
-                startTime.setMinutes(${initialMinute});
-                startTime.setSeconds(${initialSecond});
-                var xxx=setInterval(()=>{
-                   startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-                    var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-                    cc.textContent  =ss1;
-                  }, 1000);
+                ${script}
                 "`)
             }, 300);
 

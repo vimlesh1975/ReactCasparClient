@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import VideoController from './VideoController';
 import Help from './Help';
-import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers, clearHtml } from './common'
+import { screenSizes, inAnimationMethods, animationMethods, chNumbers, endpoint, address1, updateGraphics, stopGraphics, templateLayers, clearHtml, languages, buildDate, executeScript } from './common'
 import Layers from './Layers'
 import VideoPlaylist from './VideoPlaylist'
 import Twoliner from './Twoliner'
@@ -38,7 +38,6 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import Threejs from './Threejs';
 import CodeImport from './CodeImport';
 
-const buildDate = '271222_1'
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -67,75 +66,6 @@ const App = () => {
   const continuous1 = useSelector(state => state.speechRecognitionReducer.continuous1);
   const currentLanguage = useSelector(state => state.speechRecognitionReducer.currentLanguage);
   const { listening } = useSpeechRecognition();
-
-
-  const languages = [
-    "en-US",
-    "hi-IN",
-    "te-IN",
-    "ta-IN",
-    "mr-IN",
-    "gu-IN",
-    "	kn-IN",
-    "ml-IN",
-    "pa-Guru-IN",
-    "ur-IN",
-    "ar-SA",
-    "bn-BD",
-    "bn-IN",
-    "cs-CZ",
-    "da-DK",
-    "de-AT",
-    "de-CH",
-    "de-DE",
-    "el-GR",
-    "en-AU",
-    "en-CA",
-    "en-GB",
-    "en-IE",
-    "en-IN",
-    "en-NZ",
-    "en-US",
-    "en-ZA",
-    "es-AR",
-    "es-CL",
-    "es-CO",
-    "es-ES",
-    "es-MX",
-    "es-US",
-    "fi-FI",
-    "fr-BE",
-    "fr-CA",
-    "fr-CH",
-    "fr-FR",
-    "he-IL",
-    "hi-IN",
-    "hu-HU",
-    "id-ID",
-    "it-CH",
-    "it-IT",
-    "jp-JP",
-    "ko-KR",
-    "nl-BE",
-    "nl-NL",
-    "no-NO",
-    "pl-PL",
-    "pt-BR",
-    "pt-PT",
-    "ro-RO",
-    "ru-RU",
-    "sk-SK",
-    "sv-SE",
-    "ta-IN",
-    "ta-LK",
-    "th-TH",
-    "tr-TR",
-    "ur_PK",
-    "zh-CN",
-    "zh-HK",
-    "zh-TW",
-    "bh-IN"
-  ];
 
   const moveElement = (sourceIndex, destinationIndex) => {
     const updatedkf = [...kf];
@@ -186,6 +116,8 @@ const App = () => {
 
 
   const startGraphics = (canvas, layerNumber) => {
+    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
     var inAnimation;
 
     if (window.inAnimationMethod === 'mix') {
@@ -205,23 +137,31 @@ const App = () => {
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
       }, 250);
 
+      const script = `
+      var bb = document.createElement('div');
+      bb.style.perspective='1920px';
+      bb.style.transformStyle='preserve-3d';
+      document.body.appendChild(bb);
+      var aa = document.createElement('div');
+      aa.style.position='absolute';
+      aa.setAttribute('id','divid_' + '${layerNumber}');
+      aa.style.zIndex = ${layerNumber};
+      aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
+      bb.appendChild(aa);
+      document.body.style.margin='0';
+      document.body.style.padding='0';
+      aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+      document.body.style.overflow='hidden';
+      var style = document.createElement('style');
+      style.textContent = '${inAnimation}';
+      document.head.appendChild(style);
+      `
+      executeScript(script);
+
       setTimeout(() => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        var bb = document.createElement('div');
-        bb.style.perspective='1920px';
-        bb.style.transformStyle='preserve-3d';
-        document.body.appendChild(bb);
-        var aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
-        bb.appendChild(aa);
-        document.body.style.margin='0';
-        document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        document.body.style.overflow='hidden';
-        var style = document.createElement('style');
-        style.textContent = '${inAnimation}';
-        document.head.appendChild(style);
+        ${script}
+       
         "`)
       }, 300);
 
@@ -236,23 +176,29 @@ const App = () => {
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    const script = `
+    var bb = document.createElement('div');
+    bb.style.perspective='1920px';
+    bb.style.transformStyle='preserve-3d';
+    document.body.appendChild(bb);
+    var aa = document.createElement('div');
+    aa.style.position='absolute';
+    aa.setAttribute('id','divid_' + '${layerNumber}');
+    aa.style.zIndex = ${layerNumber};
+    aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+    bb.appendChild(aa);
+    document.body.style.margin='0';
+    document.body.style.padding='0';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+    document.body.style.overflow='hidden';
+    var style = document.createElement('style');
+    style.textContent = '${inAnimation}';
+    document.head.appendChild(style);
+    `
+    executeScript(script);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${layerNumber} "
-        var bb = document.createElement('div');
-        bb.style.perspective='1920px';
-        bb.style.transformStyle='preserve-3d';
-        document.body.appendChild(bb);
-        var aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
-        bb.appendChild(aa);
-        document.body.style.margin='0';
-        document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        document.body.style.overflow='hidden';
-        var style = document.createElement('style');
-        style.textContent = '${inAnimation}';
-        document.head.appendChild(style);
+       ${script}
         "`)
     }, 100);
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint, tempAlert, templateLayers, updateGraphics, stopGraphics, sendtohtml } from '../common'
+import { endpoint, tempAlert, templateLayers, updateGraphics, stopGraphics, executeScript } from '../common'
 const Kabaddi = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -95,23 +95,31 @@ const Kabaddi = () => {
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
-        sendtohtml(canvas);//for html
+        // sendtohtml(canvas);//for html
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
+        const script = `
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
-    var aa = document.createElement('div');
-    aa.style.position='absolute';
-    aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-    document.body.appendChild(aa);
-    document.body.style.margin='0';
-    document.body.style.padding='0';
-    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-    document.body.style.overflow='hidden';
-    "`)
+            ${script}
+            "`)
         }, 300);
         setTimeout(() => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
