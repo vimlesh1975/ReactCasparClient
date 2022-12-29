@@ -201,6 +201,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
   }
 
   const playtocasparcg = (layerNumber) => {
+    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
     play();
     canvas.discardActiveObject();
@@ -238,7 +239,6 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     document.body.style.overflow='hidden';
 `
-    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
     executeScript(script); //for html
 
     endpoint(`call ${window.chNumber}-${layerNumber} "
