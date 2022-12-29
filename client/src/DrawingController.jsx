@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, sendtohtml, executeScript } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1244,8 +1244,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
 
     const showClock = (layerNumber) => {
-        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)};
+                        document.getElementById('divid_${layerNumber}')?.remove();`);
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
@@ -1290,8 +1290,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const stopClock = layerNumber => {
         clearInterval(intervalGameTimer1)
         stopGraphics(layerNumber);
-        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)};
+        document.getElementById('divid_${layerNumber}')?.remove();`);
 
     }
     const resumeClock = (layerNumber) => {
@@ -1334,8 +1334,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const showClock2 = (layerNumber) => {
-        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)};
+                        document.getElementById('divid_${layerNumber}')?.remove();`);
 
         var startTimeGameTimer2 = new Date();
         startTimeGameTimer2.setSeconds(initialSecond2);
@@ -1380,8 +1380,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         setTimeout(() => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
-        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)};
+        document.getElementById('divid_${layerNumber}')?.remove();`);
     }
     const resumeClock2 = (layerNumber) => {
 
@@ -2303,8 +2303,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
 
     const startVerticalScroll = (layerNumber) => {
-        executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
+        document.getElementById('divid_${layerNumber}')?.remove();
+        `);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2334,8 +2335,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const startHorizontalScroll = (layerNumber) => {
-        executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
+        document.getElementById('divid_${layerNumber}')?.remove();
+        `);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2374,9 +2376,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startHorizontalScroll2 = (layerNumber) => {
-        executeScript(`if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
-
+        executeScript(`if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)};
+                        document.getElementById('divid_${layerNumber}')?.remove();
+        `);
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
@@ -2414,8 +2416,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startClock = (layerNumber) => {
-        executeScript(`if(window.xxxClock){clearInterval(xxxClock)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`if(window.xxxClock){clearInterval(xxxClock)};
+                        document.getElementById('divid_${layerNumber}')?.remove();`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2447,8 +2449,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startUpTimer = (layerNumber) => {
-        executeScript(`if(window.xxxUpTimer){clearInterval(xxxUpTimer)}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`
+        if(window.xxxUpTimer){clearInterval(xxxUpTimer)};
+        document.getElementById('divid_${layerNumber}')?.remove();
+        `);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
@@ -2506,7 +2510,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const startGraphics = (canvas, layerNumber) => {
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
         var inAnimation;
         if (window.inAnimationMethod === 'mix') {
@@ -2758,9 +2762,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const openClientAddress = () => {
         const aa = clientAddress();
         window.open(new URL(aa), "_blank");
-        setTimeout(() => {
-            sendtohtml(canvas);
-        }, 1000);
+        // setTimeout(() => {
+        //     sendtohtml(canvas);
+        // }, 1000);
     }
 
     window.getvalues = getvalues;
@@ -2881,7 +2885,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                         }} />
                         <button title={clientAddress()} onClick={openClientAddress}>Open Client Address</button>
-                        <button title={clientAddress()} onClick={() => sendtohtml(canvas)}>Send to HTML</button>
+                        {/* <button title={clientAddress()} onClick={() => sendtohtml(canvas)}>Send to HTML</button> */}
                         {/* <button onClick={() => {
                             var path = new fabric.Path("M 0 0 C 100 -100 150 -100 300 0", {
                                 fill: 'transparent'
@@ -3240,8 +3244,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
                             setClock('');
                             localStorage.setItem('RCC_clock', '');
-                            executeScript(`clearInterval(xxxClock);`)
-                            executeScript(`document.getElementById('divid_${templateLayers.clock}').remove()`);
+                            executeScript(`if(window.xxxClock){clearInterval(xxxClock)}`);
+                            executeScript(`document.getElementById('divid_${templateLayers.clock}')?.remove()`);
                         }} ><FaStop /></button>
                         <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
                         <span> {clock} </span>
