@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { animation } from './animation.js'
 
-export const buildDate = '281222_1'
+export const buildDate = '291222_1'
 
 
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
@@ -90,7 +90,7 @@ export const stopGraphics = layerNumber => {
     clearHtml(layerNumber)
     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     setTimeout(() => {
-        endpoint(`call ${window.chNumber}-${layerNumber} aa.innerHTML=''`);
+        endpoint(`call ${window.chNumber}-${layerNumber} "document.getElementById('divid_${layerNumber}')?.remove()"`);
     }, 1000);
     setTimeout(() => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);

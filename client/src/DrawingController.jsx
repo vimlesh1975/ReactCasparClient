@@ -23,8 +23,9 @@ import CasparcgTools from './CasparcgTools';
 
 import { rgbaCol } from './common'
 
-var xxx;
-var xxx2;
+// var intervalVerticalScroll;
+var intervalGameTimer1;
+var intervalGameTimer2;
 var html;
 
 fabric.Object.prototype.noScaleCache = false;
@@ -1234,16 +1235,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
 
     const pauseClock = (layerNumber) => {
-        clearInterval(xxx)
+        clearInterval(intervalGameTimer1)
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        clearInterval(xxx);
+        clearInterval(intervalGameTimer1);
         "`)
-        executeScript(`clearInterval(xxx)`)
+        executeScript(`clearInterval(intervalGameTimer1)`)
     }
 
 
     const showClock = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
         //for form
         var startTime = new Date();
@@ -1251,22 +1252,22 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         startTime.setSeconds(initialSecond);
 
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaGameTimer1 = document.createElement('div');
+        aaGameTimer1.style.position='absolute';
+        aaGameTimer1.setAttribute('id','divid_' + '${layerNumber}');
+        aaGameTimer1.style.zIndex = ${layerNumber};
+        aaGameTimer1.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaGameTimer1);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaGameTimer1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-        cc.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
-        window.startTime = new Date();
-        startTime.setMinutes(${initialMinute});
-        startTime.setSeconds(${initialSecond});
-        window.xxx=null;
+        window.ccGameTimer1=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
+        ccGameTimer1.textContent='${initialMinute}:${initialSecond.toString().padStart(2, 0)}';
+        window.startTimeGameTimer1 = new Date();
+        startTimeGameTimer1.setMinutes(${initialMinute});
+        startTimeGameTimer1.setSeconds(${initialSecond});
+        window.intervalGameTimer1=null;
         `
 
         executeScript(script); //for html
@@ -1287,32 +1288,32 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const stopClock = layerNumber => {
-        clearInterval(xxx)
+        clearInterval(intervalGameTimer1)
         stopGraphics(layerNumber);
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
     }
     const resumeClock = (layerNumber) => {
 
         //for form
-        var startTime = new Date();
-        startTime.setMinutes(initialMinute);
-        startTime.setSeconds(initialSecond);
-        clearInterval(xxx);
-        xxx = setInterval(() => {
-            countUp ? startTime.setSeconds(startTime.getSeconds() + 1) : startTime.setSeconds(startTime.getSeconds() - 1);
-            setInitilaMinute(startTime.getMinutes())
-            setInitialSecond(startTime.getSeconds())
+        var startTimeGameTimer1 = new Date();
+        startTimeGameTimer1.setMinutes(initialMinute);
+        startTimeGameTimer1.setSeconds(initialSecond);
+        clearInterval(intervalGameTimer1);
+        intervalGameTimer1 = setInterval(() => {
+            countUp ? startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() + 1) : startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() - 1);
+            setInitilaMinute(startTimeGameTimer1.getMinutes())
+            setInitialSecond(startTimeGameTimer1.getSeconds())
         }, 1000);
         //for form
-        const script = `startTime.setMinutes(${initialMinute});
-        startTime.setSeconds(${initialSecond});
-        clearInterval(xxx);
-        xxx=setInterval(()=>{
-        startTime.setSeconds(startTime.getSeconds() ${countUp ? '+' : '-'} 1);
-        var ss1 =  ((startTime.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTime.getSeconds()).toString()).padStart(2, '0');
-        cc.textContent  =ss1;
+        const script = `startTimeGameTimer1.setMinutes(${initialMinute});
+        startTimeGameTimer1.setSeconds(${initialSecond});
+        clearInterval(intervalGameTimer1);
+        intervalGameTimer1=setInterval(()=>{
+        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${countUp ? '+' : '-'} 1);
+        var ss3 =  ((startTimeGameTimer1.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTimeGameTimer1.getSeconds()).toString()).padStart(2, '0');
+        ccGameTimer1.textContent  =ss3;
         }, 1000);`
 
         executeScript(script)
@@ -1324,41 +1325,41 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const pauseClock2 = (layerNumber) => {
-        clearInterval(xxx2)
+        clearInterval(intervalGameTimer2)
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        clearInterval(xxx);
+        clearInterval(intervalGameTimer2);
         "`)
-        executeScript(`clearInterval(xxx)`)
+        executeScript(`clearInterval(intervalGameTimer2)`)
 
     }
 
     const showClock2 = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
-        var startTime = new Date();
-        startTime.setSeconds(initialSecond2);
+        var startTimeGameTimer2 = new Date();
+        startTimeGameTimer2.setSeconds(initialSecond2);
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaGameTimer2 = document.createElement('div');
+        aaGameTimer2.style.position='absolute';
+        aaGameTimer2.setAttribute('id','divid_' + '${layerNumber}');
+        aaGameTimer2.style.zIndex = ${layerNumber};
+        aaGameTimer2.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaGameTimer2);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaGameTimer2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.cc=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
-        cc.textContent=${initialSecond2};
-        window.startTime = new Date();
-        window.xxx=null;
-        startTime.setSeconds(${initialSecond2});
+        window.ccGameTimer2=document.getElementById('gameTimer2').getElementsByTagName('tspan')[0];
+        ccGameTimer2.textContent=${initialSecond2};
+        window.startTimeGameTimer2 = new Date();
+        window.intervalGameTimer2=null;
+        startTimeGameTimer2.setSeconds(${initialSecond2});
         `
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -1374,32 +1375,32 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const stopClock2 = layerNumber => {
-        clearInterval(xxx2)
+        clearInterval(intervalGameTimer2)
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`stop ${window.chNumber}-${layerNumber}`)
         }, 1000);
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
     }
     const resumeClock2 = (layerNumber) => {
 
         //for form
-        var startTime = new Date();
-        startTime.setSeconds(initialSecond2);
-        clearInterval(xxx2);
-        xxx2 = setInterval(() => {
-            countUp2 ? startTime.setSeconds(startTime.getSeconds() + 1) : (startTime.getSeconds() > 0) ? startTime.setSeconds(startTime.getSeconds() - 1) : startTime.setSeconds(0);
-            setInitialSecond2(startTime.getSeconds())
+        var startTimeGameTimer2 = new Date();
+        startTimeGameTimer2.setSeconds(initialSecond2);
+        clearInterval(intervalGameTimer2);
+        intervalGameTimer2 = setInterval(() => {
+            countUp2 ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() + 1) : (startTimeGameTimer2.getSeconds() > 0) ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1) : startTimeGameTimer2.setSeconds(0);
+            setInitialSecond2(startTimeGameTimer2.getSeconds())
         }, 1000);
         //for form
         const script = `
-            startTime.setSeconds(${initialSecond2});
-            clearInterval(xxx);
-            xxx=setInterval(()=>{
-                ${countUp2}  ? startTime.setSeconds(startTime.getSeconds() + 1) : (startTime.getSeconds()>0)? startTime.setSeconds(startTime.getSeconds() - 1):startTime.setSeconds(0) ;
-                var ss1 =((startTime.getSeconds()).toString()).padStart(2, '0');
-                cc.textContent  =ss1;
+            startTimeGameTimer2.setSeconds(${initialSecond2});
+            clearInterval(intervalGameTimer2);
+            intervalGameTimer2=setInterval(()=>{
+                ${countUp2}  ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() + 1) : (startTimeGameTimer2.getSeconds()>0)? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1):startTimeGameTimer2.setSeconds(0) ;
+                var ss4 =((startTimeGameTimer2.getSeconds()).toString()).padStart(2, '0');
+                ccGameTimer2.textContent  =ss4;
             }, 1000);
             `
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -1425,7 +1426,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
-    // startTime.getMinutes()).toString()).padStart(2, '0')
+    // startTimeGameTimer2.getMinutes()).toString()).padStart(2, '0')
     const addGameTimer = canvas => {
         const sss = new fabric.Textbox(`${initialMinute.toString().padStart(2, '0')}:${initialSecond.toString().padStart(2, '0')}`, {
             shadow: shadowOptions,
@@ -1466,7 +1467,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             textAlign: 'center',
             stroke: '',
             strokeWidth: 0,
-            id: 'gameTimer1',
+            id: 'gameTimer2',
             class: 'class_' + fabric.Object.__uid,
 
         });
@@ -1676,20 +1677,20 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         setVerticalSpeed(e.target.value)
         localStorage.setItem('RCC_verticalSpeed', e.target.value)
 
-        endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${e.target.value}"`);
-        executeScript(`speed=${e.target.value}`)
+        endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=${e.target.value}"`);
+        executeScript(`verticalSpeed=${e.target.value}`)
     }
     const onHorizontalSpeedChange = (e) => {
         setHorizontalSpeed(e.target.value)
         localStorage.setItem('RCC_horizontalSpeed', e.target.value)
-        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${e.target.value}"`);
-        executeScript(`speed=${e.target.value}`)
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "horizontalSpeed=${e.target.value}"`);
+        executeScript(`horizontalSpeed=${e.target.value}`)
     }
     const onHorizontalSpeedChange2 = (e) => {
         setHorizontalSpeed2(e.target.value)
         localStorage.setItem('RCC_horizontalSpeed2', e.target.value)
-        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${e.target.value}"`);
-        executeScript(`speed=${e.target.value}`)
+        endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "horizontalSpeed2=${e.target.value}"`);
+        executeScript(`horizontalSpeed2=${e.target.value}`)
     }
     const exportSVG = canvas => {
         const element = document.createElement("a");
@@ -2302,7 +2303,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
 
     const startVerticalScroll = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2310,20 +2311,20 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
-        document.getElementsByTagName('svg')[0].style.height='${hh}';
-        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-        aa.style.top='100%';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        window.aaVertical = document.createElement('div');
+        aaVertical.style.position='absolute';
+        aaVertical.setAttribute('id','divid_' + '${layerNumber}');
+        aaVertical.style.zIndex = ${layerNumber};
+        aaVertical.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaVertical);
+        document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
+        document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+        aaVertical.style.top='100%';
+        aaVertical.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.speed=${verticalSpeed};
-        window.xxx= setInterval(()=>{
-        aa.style.top =(aa.getBoundingClientRect().top-speed)+'px';
+        window.verticalSpeed=${verticalSpeed};
+        window.intervalVerticalScroll= setInterval(()=>{
+        aaVertical.style.top =(aaVertical.getBoundingClientRect().top-verticalSpeed)+'px';
         }, 1);
         `
 
@@ -2333,7 +2334,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const startHorizontalScroll = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2341,29 +2342,29 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaHorizontal1 = document.createElement('div');
+        aaHorizontal1.style.position='absolute';
+        aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
+        aaHorizontal1.style.zIndex = ${layerNumber};
+        aaHorizontal1.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaHorizontal1);
         document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.speed=${horizontalSpeed};
+        window.horizontalSpeed=${horizontalSpeed};
         if (${!ltr}){
-                    aa.style.left='100%';
-                    window.xxx=setInterval(function() {
-                    aa.style.left =(aa.getBoundingClientRect().left-speed)+'px';
-                    if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+                    aaHorizontal1.style.left='100%';
+                    window.intervalHorizontalScroll1=setInterval(function() {
+                    aaHorizontal1.style.left =(aaHorizontal1.getBoundingClientRect().left-horizontalSpeed)+'px';
+                    if (aaHorizontal1.getBoundingClientRect().left < -${hh}){aaHorizontal1.style.left='100%'};
                     }, 1);
                     }
         else{
-            aa.style.left=-${hh}+'px';
-            window.xxx=setInterval(function() {
-            aa.style.left =(aa.getBoundingClientRect().left+speed)+'px';
-            if (aa.getBoundingClientRect().left > ${currentscreenSize}){aa.style.left=-${hh} +'px'};
+            aaHorizontal1.style.left=-${hh}+'px';
+            window.intervalHorizontalScroll1=setInterval(function() {
+            aaHorizontal1.style.left =(aaHorizontal1.getBoundingClientRect().left+horizontalSpeed)+'px';
+            if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left=-${hh} +'px'};
             }, 1);
         }
         `
@@ -2373,7 +2374,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startHorizontalScroll2 = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2381,29 +2382,29 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaHorizontal2 = document.createElement('div');
+        aaHorizontal2.style.position='absolute';
+        aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
+        aaHorizontal2.style.zIndex = ${layerNumber};
+        aaHorizontal2.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaHorizontal2);
         document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
         document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaHorizontal2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.speed=${horizontalSpeed2};
+        window.horizontalSpeed2=${horizontalSpeed2};
         if (${!ltr2}){
-                    aa.style.left='100%';
-                    window.xxx=setInterval(()=>{
-                    aa.style.left =aa.getBoundingClientRect().left-speed+'px';
-                    if (aa.getBoundingClientRect().left < -${hh}){aa.style.left='100%'};
+                    aaHorizontal2.style.left='100%';
+                    window.intervalHorizontalScroll2=setInterval(()=>{
+                    aaHorizontal2.style.left =aaHorizontal2.getBoundingClientRect().left-horizontalSpeed2+'px';
+                    if (aaHorizontal2.getBoundingClientRect().left < -${hh}){aaHorizontal2.style.left='100%'};
                     }, 1);
                     }
         else{
-            aa.style.left=-${hh}+'px';
-            window.xxx=setInterval(()=>{
-            aa.style.left =aa.getBoundingClientRect().left+speed+'px';
-            if (aa.getBoundingClientRect().left > ${currentscreenSize}){aa.style.left=-${hh}+'px'};
+            aaHorizontal2.style.left=-${hh}+'px';
+            window.intervalHorizontalScroll2=setInterval(()=>{
+            aaHorizontal2.style.left =aaHorizontal2.getBoundingClientRect().left+horizontalSpeed2+'px';
+            if (aaHorizontal2.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal2.style.left=-${hh}+'px'};
             }, 1);
         }
         `
@@ -2413,7 +2414,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startClock = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.xxxClock){clearInterval(xxxClock)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2421,23 +2422,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaClock = document.createElement('div');
+        aaClock.style.position='absolute';
+        aaClock.setAttribute('id','divid_' + '${layerNumber}');
+        aaClock.style.zIndex = ${layerNumber};
+        aaClock.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaClock);
 
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaClock.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
 
-        window.cc=document.getElementById('clock1').getElementsByTagName('tspan')[0];
-        cc.textContent='';
-        window.xxx=setInterval(()=>{
+        window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
+        ccClock.textContent='';
+        window.xxxClock=setInterval(()=>{
             var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-         cc.textContent  =ss1;
+         ccClock.textContent  =ss1;
           }, 1000);
         `
         endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -2446,30 +2447,30 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         executeScript(script);
     }
     const startUpTimer = (layerNumber) => {
-        executeScript(`if(window.xxx){clearInterval(xxx)}`);
+        executeScript(`if(window.xxxUpTimer){clearInterval(xxxUpTimer)}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
+        window.aaUpTimer = document.createElement('div');
+        aaUpTimer.style.position='absolute';
+        aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
+        aaUpTimer.style.zIndex = ${layerNumber};
+        aaUpTimer.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaUpTimer);
         document.body.style.margin='0';
         document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aaUpTimer.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
-        window.cc=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
-        cc.textContent='00:00:000';
-        window.xxx=null;
+        window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
+        ccUpTimer.textContent='00:00:000';
+        window.xxxUpTimer=null;
         window.diff=null;
         window.diffLast=0;
         window.date_diff=null;
-        window.ss1=null ;
+        window.ss2=null ;
         `
         endpoint(`call ${window.chNumber}-${layerNumber} "
         ${script}
@@ -2479,12 +2480,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const resumeUpTimer = () => {
         const script = `
         window.startTime = new Date();
-        clearInterval(xxx);
-        xxx=setInterval(function() {
+        if(window.xxxUpTimer){clearInterval(xxxUpTimer)};
+        xxxUpTimer=setInterval(function() {
             diff = diffLast + (new Date()).getTime() - startTime.getTime();
             date_diff = new Date(diff - 30 * 60 * 1000);
-            ss1 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
-           cc.textContent  =ss1;
+            ss2 = date_diff.toLocaleString('en-US', { minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+            ccUpTimer.textContent  =ss2;
          }, 40);
         `
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
@@ -2495,7 +2496,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const pauseUpTimer = () => {
         const script = `
-        clearInterval(xxx);
+        clearInterval(xxxUpTimer);
         diffLast=diff;
         `
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
@@ -3142,21 +3143,21 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                         }}><FaPlay /> </button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=0"`);
+                            endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=0"`);
                             executeScript(`
-                            speed=0;
+                            verticalSpeed=0;
                             `)
                         }}><FaPause /></button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "speed=${verticalSpeed}"`);
-                            executeScript(`speed=${verticalSpeed};`);
+                            endpoint(`call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=${verticalSpeed}"`);
+                            executeScript(`verticalSpeed=${verticalSpeed};`);
 
 
                         }}> <GrResume /></button>
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.verticalScroll}`);
 
-                            executeScript(`if(window.xxx){clearInterval(xxx)}`);
+                            executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)}`);
                             executeScript(`document.getElementById('divid_${templateLayers.verticalScroll}')?.remove()`);
 
                             setVerticalScroll('')
@@ -3177,18 +3178,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                         }}><FaPlay /></button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=0"`);
-                            executeScript('speed=0');
+                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "horizontalSpeed=0"`);
+                            executeScript('horizontalSpeed=0');
                         }}> <FaPause /></button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "speed=${horizontalSpeed}"`);
-                            executeScript(`speed=${horizontalSpeed}`);
+                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll} "horizontalSpeed=${horizontalSpeed}"`);
+                            executeScript(`horizontalSpeed=${horizontalSpeed}`);
                         }}> <GrResume /></button>
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll}`);
                             setHorizontalScroll('');
                             localStorage.setItem('RCC_horizontalScroll', '');
-                            executeScript(`if(window.xxx){clearInterval(xxx)}`);
+                            executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)}`);
                             executeScript(`document.getElementById('divid_${templateLayers.horizontalScroll}')?.remove()`);
                         }} ><FaStop /></button>
                         S:<input style={{ width: '40px' }} onChange={e => onHorizontalSpeedChange(e)} type="number" min='0' max='5' step='0.01' value={horizontalSpeed} />
@@ -3205,18 +3206,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                         }}><FaPlay /></button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=0"`);
-                            executeScript('speed=0');
+                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "horizontalSpeed2=0"`);
+                            executeScript('horizontalSpeed2=0');
                         }}> <FaPause /></button>
                         <button onClick={() => {
-                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "speed=${horizontalSpeed2}"`);
-                            executeScript(`speed=${horizontalSpeed2}`);
+                            endpoint(`call ${window.chNumber}-${templateLayers.horizontalScroll2} "horizontalSpeed2=${horizontalSpeed2}"`);
+                            executeScript(`horizontalSpeed2=${horizontalSpeed2}`);
                         }}> <GrResume /></button>
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.horizontalScroll2}`);
                             setHorizontalScroll2('');
                             localStorage.setItem('RCC_horizontalScroll2', '');
-                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)}`);
                             executeScript(`document.getElementById('divid_${templateLayers.horizontalScroll2}').remove()`);
 
                         }} ><FaStop /></button>
@@ -3239,7 +3240,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.clock}`);
                             setClock('');
                             localStorage.setItem('RCC_clock', '');
-                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`clearInterval(xxxClock);`)
                             executeScript(`document.getElementById('divid_${templateLayers.clock}').remove()`);
                         }} ><FaStop /></button>
                         <button onClick={() => exportClockAsHTML(canvas)}>To HTML</button>
@@ -3261,7 +3262,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => {
                             endpoint(`stop ${window.chNumber}-${templateLayers.countUpTimer}`);
                             setUpTimer('');
-                            executeScript(`clearInterval(xxx);`)
+                            executeScript(`clearInterval(xxxUpTimer);`)
                             executeScript(`document.getElementById('divid_${templateLayers.countUpTimer}').remove()`);
 
                             localStorage.setItem('RCC_upTimer', '');

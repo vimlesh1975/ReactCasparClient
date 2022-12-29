@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { endpoint, stopGraphics } from './common'
+import { endpoint, stopGraphics, updateGraphics, executeScript } from './common'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
@@ -121,20 +121,30 @@ const OnelinerAndBreakingNews = () => {
     }
 
     const sendToCasparcg = (layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+
+        const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/309)+'%';
         document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${script}
         "`)
         }, 300);
         setTimeout(() => {
@@ -142,14 +152,19 @@ const OnelinerAndBreakingNews = () => {
         }, 800);
 
         setTimeout(() => {
-            updateGraphics(layerNumber);
+            updateGraphics(window.automationeditor[0].canvas, layerNumber);
         }, 1100);
     }
-    const updateGraphics = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "
-        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
-            "`)
-    }
+    // const updateGraphics = layerNumber => {
+    //     const script = `
+    //     aa.innerHTML=\`${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}\`;
+    //     `
+    //     executeScript(script);
+    //     endpoint(`call ${window.chNumber}-${layerNumber} "
+    //     ${script}
+    //         "`)
+
+    // }
     // const stopGraphics = layerNumber => {
     //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     //     setTimeout(() => {
@@ -245,7 +260,7 @@ const OnelinerAndBreakingNews = () => {
             });
         });
         setTimeout(() => {
-            updateGraphics(layerNumber)
+            updateGraphics(window.automationeditor[0].canvas, layerNumber)
         }, 300);
 
     }

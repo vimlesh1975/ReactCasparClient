@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRef } from 'react';
 import { useSelector } from 'react-redux'
-import { endpoint, templateLayers } from './common'
+import { endpoint, templateLayers, executeScript } from './common'
 import { animation } from './animation.js'
 import { v4 as uuidv4 } from 'uuid';
 import * as d3 from 'd3';
@@ -103,26 +103,38 @@ const Effects = () => {
         cueGraphics(canvas, templateLayers.LBand);
     }
     const cueGraphics = (canvas, layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        const script = `
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
+        bb.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
         endpoint(`call ${window.chNumber}-${layerNumber} "
-            var bb = document.createElement('div');
-            bb.style.perspective='1920px';
-            bb.style.transformStyle='preserve-3d';
-            document.body.appendChild(bb);
-            var aa = document.createElement('div');
-            aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            bb.appendChild(aa);
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-            document.body.style.overflow='hidden';
+        ${script}
+          
             "`);
         endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`)
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill ${templateMixer}`)
     }
     const startGraphics = (canvas, layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         var inAnimation;
 
         if (window.inAnimationMethod === 'mix') {
@@ -142,11 +154,12 @@ const Effects = () => {
                 endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
             }, 250);
 
-            setTimeout(() => {
-                endpoint(`call ${window.chNumber}-${layerNumber} "
+            const script = `
             var aa = document.createElement('div');
             aa.style.position='absolute';
-            aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
+            aa.setAttribute('id','divid_' + '${layerNumber}');
+            aa.style.zIndex = ${layerNumber};
+            aa.innerHTML=\`${(refkkk.current.innerHTML).replaceAll('"', '\\"')}\`;
             document.body.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';
@@ -155,6 +168,13 @@ const Effects = () => {
             var style = document.createElement('style');
             style.textContent = '${inAnimation}';
             document.head.appendChild(style);
+            `
+            executeScript(script);
+
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} "
+            ${script}
+           
             "`)
             }, 300);
 
@@ -172,20 +192,29 @@ const Effects = () => {
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+
+        const script = `
+        var bb = document.createElement('div');
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        document.body.appendChild(bb);
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(refkkk.current.innerHTML).replaceAll('"', '\\"')}\`;
+        bb.appendChild(aa);
+        aa.classList.add('animate__animated', 'animate__${effect1}');
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
         endpoint(`call ${window.chNumber}-${layerNumber} "
-            var bb = document.createElement('div');
-            bb.style.perspective='1920px';
-            bb.style.transformStyle='preserve-3d';
-            document.body.appendChild(bb);
-            var aa = document.createElement('div');
-            aa.style.position='absolute';
-            aa.innerHTML='${(refkkk.current.innerHTML).replaceAll('"', '\\"')}';
-            bb.appendChild(aa);
-            aa.classList.add('animate__animated', 'animate__${effect1}');
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-            document.body.style.overflow='hidden';
+        ${script}
+         
             "`)
     }
 

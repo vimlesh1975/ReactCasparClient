@@ -2,41 +2,115 @@
 <html lang='en'>
 
 <head>
-    <meta charset='UTF-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Document</title>
+	<meta charset='UTF-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<title>Document</title>
 </head>
 
 <body>
 
 </body>
 <script>
-    var aa = document.createElement('div');
-    aa.style.position = 'absolute';
-    aa.innerHTML = `<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
-<!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='1920' height='1080' viewBox='0 0 1920 1080' xml:space='preserve'>
+	document.getElementById('divid_96')?.remove()
+
+	var style = document.createElement('style');
+	style.textContent = `
+	@keyframes rectid_10in
+	{
+		0 % { transform: matrix(1, 0, 0, 1, 0, 500) ; opacity: 0 }
+		100 % { transform: matrix(1, 0, 0, 1, 100, 250)  ; opacity: 1 }
+
+	}
+	@keyframes rectid_10stay
+	{
+		100 % { transform: matrix(1, 0, 0, 1, 150, 250)  ; opacity: 1 }
+	}
+	@keyframes rectid_10out
+	{
+		0 % { transform: matrix(1, 0, 0, 1, 150, 250)  ; opacity: 1 }
+		100 % { transform: matrix(1, 0, 0, 1, 700, 400) ; opacity: 0 }
+	}
+	#id_10 {
+		animation:
+        rectid_10in 0.4s linear 0.2s backwards,
+			rectid_10stay 2s linear 0.6s forwards alternate 1,
+				rectid_10out 0.4s linear 2.6s running forwards
+	}
+
+	@keyframes textccg_12in
+	{
+		0 % { transform: matrix(1, 0, 0, 1, 0, 500) ; opacity: 0 }
+		100 % { transform: matrix(1, 0, 0, 1, 100, 250)  ; opacity: 1 }
+
+	}
+	@keyframes textccg_12stay
+	{
+		100 % { transform: matrix(1, 0, 0, 1, 150, 250)  ; opacity: 1 }
+	}
+	@keyframes textccg_12out
+	{
+		0 % { transform: matrix(1, 0, 0, 1, 150, 250)  ; opacity: 1 }
+		100 % { transform: matrix(1, 0, 0, 1, 700, 400) ; opacity: 0 }
+	}
+	#ccg_12 {
+		animation:
+        textccg_12in 0.4s linear 0.2s backwards,
+			textccg_12stay 2s linear 0.6s forwards alternate 1,
+				textccg_12out 0.4s linear 2.6s running forwards
+	}
+	`;
+	document.head.appendChild(style);
+	var bb = document.createElement('div');
+	document.body.appendChild(bb);
+	var aa = document.createElement('div');
+	aa.style.position = 'absolute';
+	aa.setAttribute('id', 'divid_' + '96');
+	aa.style.zIndex = 96;
+	aa.innerHTML = `<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>
+<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">
+<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"1920\" height=\"1080\" viewBox=\"0 0 1920 1080\" xml:space=\"preserve\">
 <desc>Created with Fabric.js 5.2.4</desc>
 <defs>
 </defs>
-<g transform='matrix(1 0 0 1 222.83 71.47)' style='filter: url(#SVGID_7);' id='gameTimer1'  >
-<filter id='SVGID_7' y='-79%' height='258%' x='-36%' width='172%' >
-	<feGaussianBlur in='SourceAlpha' stdDeviation='15'></feGaussianBlur>
-	<feOffset dx='0' dy='0' result='oBlur' ></feOffset>
-	<feFlood flood-color='rgb(0,0,0)' flood-opacity='1'/>
-	<feComposite in2='oBlur' operator='in' />
+<g transform=\"matrix(1 0 0 1 568 287.9)\" id=\"id_10\"  >
+<linearGradient id=\"SVGID_10\" gradientUnits=\"objectBoundingBox\" gradientTransform=\"matrix(1 0 0 1 0 0)\"  x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">
+<stop offset=\"0%\" style=\"stop-color:#c0e0ae;stop-opacity: 0.2\"/>
+<stop offset=\"50%\" style=\"stop-color:#40ca69;stop-opacity: 1\"/>
+<stop offset=\"100%\" style=\"stop-color:#a3f635;stop-opacity: 0.2\"/>
+</linearGradient>
+<filter id=\"SVGID_11\" y=\"-60%\" height=\"220%\" x=\"-23%\" width=\"146%\" >
+	<feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"15\"></feGaussianBlur>
+	<feOffset dx=\"0\" dy=\"0\" result=\"oBlur\" ></feOffset>
+	<feFlood flood-color=\"rgb(0,0,0)\" flood-opacity=\"1\"/>
+	<feComposite in2=\"oBlur\" operator=\"in\" />
 	<feMerge>
 		<feMergeNode></feMergeNode>
-		<feMergeNode in='SourceGraphic'></feMergeNode>
+		<feMergeNode in=\"SourceGraphic\"></feMergeNode>
 	</feMerge>
 </filter>
-		<rect fill='#50037c' x='-93.5' y='-25.42' width='187' height='50.85'></rect>
-<extraproperty textAlign='center' width='187' originalFontSize='45'></extraproperty>
-		<text xml:space='preserve' class='class_7' font-family='Arial' font-size='45' font-style='normal' font-weight='bold' style='stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;' ><tspan x='-57.55' y='14.14' >25:00</tspan></text>
+<rect style=\"stroke: rgb(255,255,255); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: url(#SVGID_10); fill-rule: nonzero; opacity: 1;filter: url(#SVGID_11);\" vector-effect=\"non-scaling-stroke\"  class=\"class_10\" x=\"-467.5\" y=\"-37.400000000000006\" rx=\"10\" ry=\"10\" width=\"935\" height=\"74.80000000000001\" />
 </g>
-</svg>'`;
-    document.body.appendChild(aa);;
+<g transform=\"matrix(1 0 0 1 549.3 275.93)\" style=\"filter: url(#SVGID_12);\" id=\"ccg_12\"  >
+<filter id=\"SVGID_12\" y=\"-79%\" height=\"258%\" x=\"-23%\" width=\"146%\" >
+	<feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"15\"></feGaussianBlur>
+	<feOffset dx=\"0\" dy=\"0\" result=\"oBlur\" ></feOffset>
+	<feFlood flood-color=\"rgb(0,0,0)\" flood-opacity=\"1\"/>
+	<feComposite in2=\"oBlur\" operator=\"in\" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in=\"SourceGraphic\"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign=\"left\" width=\"897.6\" originalFontSize=\"45\"></extraproperty>
+		<text xml:space=\"preserve\" class=\"class_12\" font-family=\"Arial\" font-size=\"45\" font-style=\"normal\" font-weight=\"bold\" style=\"stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;\" ><tspan x=\"-448.8\" y=\"14.14\" >Timeline has been shifted below.</tspan></text>
+</g>
+</svg>`;
+	bb.appendChild(aa);
+	document.body.style.margin = '0';
+	document.body.style.padding = '0';
+	aa.style.zoom = (192000 / 1920) + '%';
+	document.body.style.overflow = 'hidden';
 </script>
 
 </html>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics, updateGraphics } from './common'
+import { endpoint, stopGraphics, updateGraphics, executeScript } from './common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniTwoLiner } from './hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -75,20 +75,30 @@ const Twoliner = () => {
     }
 
     const sendToCasparcg = (layerNumber) => {
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
+
+        const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
+        `
+        executeScript(script);
+
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${script}
         "`)
         }, 300);
         setTimeout(() => {

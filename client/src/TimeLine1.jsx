@@ -5,7 +5,7 @@ import { fabric } from "fabric";
 import { deSelectAll, selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
-import { endpoint, templateLayers } from './common'
+import { endpoint, templateLayers, executeScript } from './common'
 
 const timelineWidth = 1024;
 const controlWidth = 275;
@@ -185,16 +185,23 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       const minDeley = Math.min(...Delay);
 
       canvas.forEachObject((element, i) => {
+        const script = `
+        document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running';
+        document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+        `
+        executeScript(script); //for html
         endpoint(`
       call ${window.chNumber}-${templateLayers.animationLayer} "
-      document.getElementsByTagName('g')[${i}].style.animationPlayState='running,paused,running';
-      document.getElementsByTagName('g')[${i}].style.animationDelay ='0s,0s,${(position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration - minDeley) / 1000}s';
+      ${script}
       "`);
       });
+
+      // executeScript(`document.getElementById('divid_${templateLayers.animationLayer}')?.remove()`);
     }
   }
 
-  const playtocasparcg = () => {
+  const playtocasparcg = (layerNumber) => {
+
     play();
     canvas.discardActiveObject();
     canvas.forEachObject((element, i) => {
@@ -213,21 +220,29 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     canvas.requestRenderAll();
     setinAnimation2();
 
-    endpoint(`play ${window.chNumber}-${templateLayers.animationLayer} [html] xyz.html`);
-    endpoint(`call ${window.chNumber}-${templateLayers.animationLayer} "
-        var style = document.createElement('style');
-        style.textContent = '${inAnimation2}';
-        document.head.appendChild(style);
-        var bb = document.createElement('div');
-        document.body.appendChild(bb);
-        var aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.innerHTML='${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}';
-        bb.appendChild(aa);
-        document.body.style.margin='0';
-        document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        document.body.style.overflow='hidden';
+    endpoint(`play ${window.chNumber}-${layerNumber} [html] xyz.html`);
+    const script = `
+    var style = document.createElement('style');
+    style.textContent = \`${inAnimation2}\`;
+    document.head.appendChild(style);
+    var bb = document.createElement('div');
+    document.body.appendChild(bb);
+    var aa = document.createElement('div');
+    aa.style.position='absolute';
+    aa.setAttribute('id','divid_' + '${layerNumber}');
+    aa.style.zIndex = ${layerNumber};
+    aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+    bb.appendChild(aa);
+    document.body.style.margin='0';
+    document.body.style.padding='0';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+    document.body.style.overflow='hidden';
+`
+    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+    executeScript(script); //for html
+
+    endpoint(`call ${window.chNumber}-${layerNumber} "
+    ${script}
         "`);
   }
 
@@ -854,7 +869,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
         <button onClick={preView}>Preview</button>
         <button onClick={cancelPreView}>Cancel Preview</button>
-        <button onClick={playtocasparcg}>Play</button>
+        <button onClick={() => playtocasparcg(templateLayers.animationLayer)}>Play</button>
         <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
         <button onClick={stopFromCasprtcg}>Stop</button>
 

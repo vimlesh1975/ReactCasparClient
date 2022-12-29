@@ -349,7 +349,8 @@ const App = () => {
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
       <div>
         <button title='Github Client will not connect to casparcg' className='connectbutton' style={{}} ref={connectbutton} onClick={connectHandler}>Connect</button>  <button className='StopChannelButton' style={{}} onClick={() => {
-          clearHtml()
+          Object.values(templateLayers).forEach((layer) => clearHtml(layer))
+          // clearHtml()
           endpoint(`clear ${chNumber}`);
           endpoint(`mixer ${chNumber} clear`);
         }}>Stop Channel</button>
