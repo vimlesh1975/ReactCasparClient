@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useState } from "react";
 import { fabric } from "fabric";
+import { Uploaddropedfile } from "./DrawingController";
 
 export const mousedownandmousemoveevent = (canvas) => {
     canvas.on('mouse:down', function (opt) {
@@ -28,6 +29,23 @@ export const mousedownandmousemoveevent = (canvas) => {
     });
 }
 const allelements = ['Line', 'Circle', 'Triangle', 'Ellipse', 'Rect', 'Polygon', 'Group', 'Textbox', 'Image', 'Path'];
+
+function handleDrop(ev, canvas) {
+    ev.e.preventDefault();
+    if (ev.e.dataTransfer.items) {
+        [...ev.e.dataTransfer.items].forEach((item, i) => {
+            if (item.kind === 'file') {
+                const file = item.getAsFile();
+                Uploaddropedfile(file, canvas)
+            }
+        });
+    } else {
+        [...ev.e.dataTransfer.files].forEach((file, i) => {
+            console.log(file);
+        });
+    }
+}
+
 const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
@@ -178,9 +196,9 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
         canvas.on('mouse:move', e => {
             if (e.target) {
                 setStyleDlg({ left: (e.target.left) * 0.533 - 100, top: (e.target.top) * 0.533 });
-
             }
         });
+        canvas.on('drop', (e) => handleDrop(e, canvas), false);
     }
 
     return (<div>

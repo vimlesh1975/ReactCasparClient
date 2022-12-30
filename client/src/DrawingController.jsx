@@ -265,6 +265,30 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
     });
 }
 
+export const Uploaddropedfile = (file0, canvas) => {
+    if (file0) {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var imgObj = new Image();
+            imgObj.src = event.target.result;
+            imgObj.onload = function () {
+                var image = new fabric.Image(imgObj);
+                image
+                    .set({
+                        id: 'ccg_' + fabric.Object.__uid,
+                        class: 'class_' + fabric.Object.__uid,
+                        shadow: shadowOptions,
+                        strokeUniform: true,
+                        objectCaching: false,
+                    })
+                // .scale(0.5);
+                canvas.add(image).setActiveObject(image);
+            };
+        };
+        reader.readAsDataURL(file0);
+    }
+}
+
 export const Upload = (e, canvas) => {
     if (e.target.files[0]) {
         var reader = new FileReader();
