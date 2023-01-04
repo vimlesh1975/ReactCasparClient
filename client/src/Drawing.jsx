@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useState } from "react";
 import { fabric } from "fabric";
-import { Uploaddropedfile } from "./DrawingController";
+import { Uploaddropedfile, createTextBoxforDragedText } from "./DrawingController";
 
 export const mousedownandmousemoveevent = (canvas) => {
     canvas.on('mouse:down', function (opt) {
@@ -30,17 +30,22 @@ export const mousedownandmousemoveevent = (canvas) => {
 }
 const allelements = ['Line', 'Circle', 'Triangle', 'Ellipse', 'Rect', 'Polygon', 'Group', 'Textbox', 'Image', 'Path'];
 
-function handleDrop(ev, canvas) {
-    ev.e.preventDefault();
-    if (ev.e.dataTransfer.items) {
-        [...ev.e.dataTransfer.items].forEach((item, i) => {
+function handleDrop(e, canvas) {
+    e.preventDefault();
+    console.log(e)
+    if (e.dataTransfer.getData("Text")) {
+        // console.log(e.dataTransfer.getData("Text"));
+        createTextBoxforDragedText(canvas, e.dataTransfer.getData("Text"), e.offsetX, e.offsetY)
+    }
+    if (e.dataTransfer.items) {
+        [...e.dataTransfer.items].forEach((item, i) => {
             if (item.kind === 'file') {
                 const file = item.getAsFile();
                 Uploaddropedfile(file, canvas)
             }
         });
     } else {
-        [...ev.e.dataTransfer.files].forEach((file, i) => {
+        [...e.dataTransfer.files].forEach((file, i) => {
             console.log(file);
         });
     }
@@ -198,7 +203,7 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
                 setStyleDlg({ left: (e.target.left) * 0.533 - 100, top: (e.target.top) * 0.533 });
             }
         });
-        canvas.on('drop', (e) => handleDrop(e, canvas), false);
+        canvas.on('drop', (e) => handleDrop(e.e, canvas), false);
     }
 
     return (<div>

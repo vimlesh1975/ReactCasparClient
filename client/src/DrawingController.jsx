@@ -235,6 +235,31 @@ export const createTextBox = (canvas) => {
     text.animate('top', 962, { onChange: canvas.renderAll.bind(canvas) })
 };
 
+
+export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
+
+    const text = new fabric.Textbox(dragedText, {
+        shadow: shadowOptions,
+        id: 'ccg_' + fabric.Object.__uid,
+        class: 'class_' + fabric.Object.__uid,
+        left: x,
+        top: y,
+        width: 480 * 1.87,
+        fill: '#ffffff',
+        // backgroundColor: options.backgroundColor,
+        fontFamily: options.currentFont,
+        fontWeight: 'bold',
+        fontSize: options.currentFontSize,
+        editable: true,
+        objectCaching: false,
+        textAlign: 'left',
+        // padding: 5,
+
+    });
+    canvas.add(text).setActiveObject(text);
+    canvas.renderAll();
+    // text.animate('top', 962, { onChange: canvas.renderAll.bind(canvas) })
+};
 export const addRoundedCornerImage = (canvas, imageName1) => {
 
     fabric.util.loadImage(imageName1, myImg => {
@@ -1270,6 +1295,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const showClock = (layerNumber) => {
         executeScript(`if(window.intervalGameTimer1){clearInterval(intervalGameTimer1)};
                         document.getElementById('divid_${layerNumber}')?.remove();`);
+
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
         //for form
         var startTime = new Date();
         startTime.setMinutes(initialMinute);
@@ -1360,6 +1388,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const showClock2 = (layerNumber) => {
         executeScript(`if(window.intervalGameTimer2){clearInterval(intervalGameTimer2)};
                         document.getElementById('divid_${layerNumber}')?.remove();`);
+
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+        selectAll(canvas);
 
         var startTimeGameTimer2 = new Date();
         startTimeGameTimer2.setSeconds(initialSecond2);
@@ -1797,36 +1828,20 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
-    // const exportPDF = () => {
-    //     const pdfstring =
-    //         `
-    //     <!DOCTYPE html>
-    //         <html lang="en">
-    //         <head>
-    //             <meta charset="UTF-8">
-    //             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    //             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    //             <title>Document</title>
-    //         </head>
-    //         <body>
-
-    //         <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
-
-    //         </body>
-    //         </html>
-
-    //     `
-    //     const element = document.createElement("a");
-    //     const file = new Blob([pdfstring], { type: 'text/plain' });
-    //     element.href = URL.createObjectURL(file);
-    //     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-    //     var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    //     if (retVal !== null) {
-    //         element.download = retVal + '.html';
-    //         document.body.appendChild(element); // Required for this to work in FireFox
-    //         element.click();
-    //     }
-    // }
+    const exportPDF = async () => {
+        var aa = ``
+        await canvasList.forEach(val => {
+            canvas.loadFromJSON(val.pageValue, () => {
+                aa += `<div>${canvas.toSVG()}</div>`
+                // console.log(aa)
+            });
+        });
+        // console.log(aa)
+        var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
+        myWindow.document.body.innerHTML = aa;
+        // myWindow.document.write(aa);
+        // myWindow.print()
+    }
     const setHtmlString = () => {
         html = `<!DOCTYPE html>
             <html lang="en">
@@ -2479,28 +2494,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-                                                                                        window.aaClock = document.createElement('div');
-                                                                                        aaClock.style.position='absolute';
-                                                                                        aaClock.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aaClock.style.zIndex = ${layerNumber};
-                                                                                        aaClock.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        document.body.appendChild(aaClock);
+        window.aaClock = document.createElement('div');
+        aaClock.style.position='absolute';
+        aaClock.setAttribute('id','divid_' + '${layerNumber}');
+        aaClock.style.zIndex = ${layerNumber};
+        aaClock.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        document.body.appendChild(aaClock);
 
-                                                                                        document.body.style.margin='0';
-                                                                                        document.body.style.padding='0';
-                                                                                        aaClock.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aaClock.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
 
-                                                                                        window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
-                                                                                        ccClock.textContent='';
+        window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
+        ccClock.textContent='';
         window.xxxClock=setInterval(()=>{
             var ss1 = new Date().toLocaleTimeString('en-US', {hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                                                                                        ccClock.textContent  =ss1;
-          }, 1000);
-                                                                                        `
+            ccClock.textContent  =ss1;
+        }, 1000);
+       `
         endpoint(`call ${window.chNumber}-${layerNumber} "
-                                                                                        ${script}
-                                                                                        "`)
+        ${script}
+        "`)
         executeScript(script);
     }
     const startUpTimer = (layerNumber) => {
@@ -2932,7 +2947,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        {/* <button onClick={() => exportPDF(canvas)}>pdf</button> */}
+                        <button onClick={() => exportPDF(canvas)}>All pages to pdf</button>
 
 
                     </div>
