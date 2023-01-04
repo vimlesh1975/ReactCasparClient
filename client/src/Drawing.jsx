@@ -41,7 +41,7 @@ function handleDrop(e, canvas) {
         [...e.dataTransfer.items].forEach((item, i) => {
             if (item.kind === 'file') {
                 const file = item.getAsFile();
-                Uploaddropedfile(file, canvas)
+                Uploaddropedfile(file, canvas, e.offsetX, e.offsetY)
             }
         });
     } else {

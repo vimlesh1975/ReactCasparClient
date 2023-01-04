@@ -281,6 +281,7 @@ const PathModifier = () => {
         canvas.off('mouse:down');
         canvas.off('mouse:move');
         mousedownandmousemoveevent(canvas);
+        currentValue = [];
     }
 
     window.closePath = closePath;

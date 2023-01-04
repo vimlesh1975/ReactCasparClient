@@ -290,7 +290,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
     });
 }
 
-export const Uploaddropedfile = (file0, canvas) => {
+export const Uploaddropedfile = (file0, canvas, x, y) => {
     if (file0) {
         var reader = new FileReader();
         reader.onload = function (event) {
@@ -305,6 +305,8 @@ export const Uploaddropedfile = (file0, canvas) => {
                         shadow: shadowOptions,
                         strokeUniform: true,
                         objectCaching: false,
+                        left: x,
+                        top: y
                     })
                 // .scale(0.5);
                 canvas.add(image).setActiveObject(image);
