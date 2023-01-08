@@ -113,7 +113,7 @@ const canvaszoomReducer = (state = initialCanvaszoom, action) => {
     }
 }
 
-const initialcurrentscreenSize = { currentscreenSize: 1024 };
+const initialcurrentscreenSize = { currentscreenSize: 1920 };
 const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
     switch (action.type) {
         case 'CHANGE_CURRENTSCREENSIZE':
