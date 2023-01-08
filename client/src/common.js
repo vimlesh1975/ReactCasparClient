@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { animation } from './animation.js'
 
+
 export const buildDate = '080123_2'
 
 
@@ -136,7 +137,6 @@ export const changeBackGroundColor = (e, canvas) => {
     canvas.getActiveObjects().forEach(item => item.backgroundColor = e.target.value)
     canvas.requestRenderAll();
 }
-
 
 
 export const fontLists = [

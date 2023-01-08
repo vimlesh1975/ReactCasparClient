@@ -64,6 +64,27 @@ function moveSelected(direction) {
     }
 }
 
+
+export const pasteClipboard = async (canvas) => {
+    try {
+        const clipboardContents = await navigator.clipboard.read();
+        if (clipboardContents) {
+            for (const item of clipboardContents) {
+                if (item.types.includes('text/plain')) {
+                    createTextBoxforDragedText(canvas, await navigator.clipboard.readText(), (Math.random() * 1920), (Math.random() * 1080))
+                }
+                if (item.types.includes('image/png')) {
+                    const blob = await item.getType('image/png');
+                    fabric.Image.fromURL(URL.createObjectURL(blob), function (img) {
+                        canvas.add(img);
+                    });
+                }
+            }
+        }
+    } catch (error) {
+    }
+}
+
 export var gradient = new fabric.Gradient({
     type: 'linear',
     // gradientUnits: 'pixels', // or 'percentage'
@@ -1807,19 +1828,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
-    const pasteClipboard = async () => {
-        const clipboardContents = await navigator.clipboard.read();
-        for (const item of clipboardContents) {
-            if (item.types.includes('text/plain')) {
-                // console.log(await navigator.clipboard.readText())
-                createTextBoxforDragedText(canvas, await navigator.clipboard.readText(), 100, 100)
-            }
-            if (item.types.includes('image/png')) {
-                const blob = await item.getType('image/png');
-                console.log(blob)
-            }
-        }
-    }
+
 
     const importSVG = file => {
         if (file) {
@@ -2949,7 +2958,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={sdToHD}>sdtoHD</button>
                         <b> Image Round:</b>
                         <input type={'range'} min={0} max={1920} style={{ width: 60 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
-                        <button onClick={() => pasteClipboard()}>pasteClipboard</button>
+                        {/* <button onClick={() => pasteClipboard(canvas)}>pasteClipboard</button> */}
 
                     </div>
                     <div className='drawingToolsRow' >
