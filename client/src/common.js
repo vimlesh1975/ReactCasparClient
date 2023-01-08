@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { animation } from './animation.js'
 
-export const buildDate = '080123_1'
+export const buildDate = '080123_2'
 
 
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';

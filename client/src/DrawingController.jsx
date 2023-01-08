@@ -1810,14 +1810,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const pasteClipboard = async () => {
         const clipboardContents = await navigator.clipboard.read();
         for (const item of clipboardContents) {
-            if (!item.types.includes('image/png')) {
-                console.log(item.type)
-
+            if (item.types.includes('text/plain')) {
+                // console.log(await navigator.clipboard.readText())
+                createTextBoxforDragedText(canvas, await navigator.clipboard.readText(), 100, 100)
             }
-            else {
+            if (item.types.includes('image/png')) {
                 const blob = await item.getType('image/png');
                 console.log(blob)
-
             }
         }
     }
