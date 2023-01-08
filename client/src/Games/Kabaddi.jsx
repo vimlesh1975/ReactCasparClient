@@ -24,21 +24,21 @@ const Kabaddi = () => {
         { key: 'SCORE1', value: score1, type: 'text' },
         { key: 'SCORE2', value: score2, type: 'text' },
         { key: 'HALF', value: half, type: 'text' },
-        { key: '10', value: (team1Status1 > 6) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '11', value: (team1Status1 > 5) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '12', value: (team1Status1 > 4) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '13', value: (team1Status1 > 3) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '14', value: (team1Status1 > 2) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '15', value: (team1Status1 > 1) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '16', value: (team1Status1 > 0) ? '0DDF1A' : 'red', type: 'fill' },
+        { key: '10', value: (team1Status1 > 6) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '11', value: (team1Status1 > 5) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '12', value: (team1Status1 > 4) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '13', value: (team1Status1 > 3) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '14', value: (team1Status1 > 2) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '15', value: (team1Status1 > 1) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '16', value: (team1Status1 > 0) ? '#0DDF1A' : 'red', type: 'fill' },
 
-        { key: '20', value: (team2Status1 > 6) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '21', value: (team2Status1 > 5) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '22', value: (team2Status1 > 4) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '23', value: (team2Status1 > 3) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '24', value: (team2Status1 > 2) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '25', value: (team2Status1 > 1) ? '0DDF1A' : 'red', type: 'fill' },
-        { key: '26', value: (team2Status1 > 0) ? '0DDF1A' : 'red', type: 'fill' },
+        { key: '20', value: (team2Status1 > 6) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '21', value: (team2Status1 > 5) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '22', value: (team2Status1 > 4) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '23', value: (team2Status1 > 3) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '24', value: (team2Status1 > 2) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '25', value: (team2Status1 > 1) ? '#0DDF1A' : 'red', type: 'fill' },
+        { key: '26', value: (team2Status1 > 0) ? '#0DDF1A' : 'red', type: 'fill' },
     ];
 
     const recallPage = (layerNumber, pageName, data) => {
@@ -95,7 +95,8 @@ const Kabaddi = () => {
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
-        // sendtohtml(canvas);//for html
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
