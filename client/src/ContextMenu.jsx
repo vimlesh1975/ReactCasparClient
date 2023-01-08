@@ -42,6 +42,13 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
   return (<div>
     {showMenu ? (<div className='rightClickMenu' style={{ position: 'absolute', left: xPos, top: yPos, color: 'white' }}>
       <ul>
+        <li>Add<ul >
+          <li onClick={() => addImage()}>Image</li>
+          <li onClick={() => createRect(canvas)}>Rectangle <VscPrimitiveSquare /></li>
+          <li onClick={() => createTextBox(canvas)}>Text T</li>
+          <li onClick={() => createCircle(canvas)}>Circle <VscCircleFilled /></li>
+          <li onClick={() => createTriangle(canvas)}>Triangle <VscTriangleUp /></li>
+        </ul></li>
         <li onClick={startPath}>Start Path</li>
         <li onClick={window.closePath}>Close Path</li>
         <li onClick={window.edit}>Edit Path</li>
@@ -51,13 +58,7 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
         <li onClick={() => unlockAll(canvas)}>Unlock All <VscUnlock /></li>
         <li onClick={() => groupObjects(canvas, true)}>Group Selected</li>
         <li onClick={() => groupObjects(canvas, false)}>UnGroup Selected</li>
-        <li>Add<ul >
-          <li onClick={() => addImage()}>Image</li>
-          <li onClick={() => createTextBox(canvas)}>Text T</li>
-          <li onClick={() => createRect(canvas)}>Rectangle <VscPrimitiveSquare /></li>
-          <li onClick={() => createCircle(canvas)}>Circle <VscCircleFilled /></li>
-          <li onClick={() => createTriangle(canvas)}>Triangle <VscTriangleUp /></li>
-        </ul></li>
+
         <li>Text Align<ul >
           <li onClick={() => alignLeft(canvas)}>Left</li>
           <li onClick={() => alignRight(canvas)}>Right</li>

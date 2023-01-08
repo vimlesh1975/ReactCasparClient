@@ -1807,6 +1807,21 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.requestRenderAll();
     }
 
+    const pasteClipboard = async () => {
+        const clipboardContents = await navigator.clipboard.read();
+        for (const item of clipboardContents) {
+            if (!item.types.includes('image/png')) {
+                console.log(item.type)
+
+            }
+            else {
+                const blob = await item.getType('image/png');
+                console.log(blob)
+
+            }
+        }
+    }
+
     const importSVG = file => {
         if (file) {
             var site_url = URL.createObjectURL(file);
@@ -2934,7 +2949,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
                         <b> Image Round:</b>
-                        <input type={'range'} min={0} max={1920} style={{ width: 120 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
+                        <input type={'range'} min={0} max={1920} style={{ width: 60 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
+                        <button onClick={() => pasteClipboard()}>pasteClipboard</button>
 
                     </div>
                     <div className='drawingToolsRow' >
