@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -65,6 +65,7 @@ function moveSelected(direction) {
 }
 
 
+
 export const pasteClipboard = async (canvas) => {
     try {
         const clipboardContents = await navigator.clipboard.read();
@@ -75,13 +76,17 @@ export const pasteClipboard = async (canvas) => {
                 }
                 if (item.types.includes('image/png')) {
                     const blob = await item.getType('image/png');
-                    fabric.Image.fromURL(URL.createObjectURL(blob), function (img) {
-                        canvas.add(img);
+                    base64EncodeBlob(blob).then((base64) => {
+                        console.log('data:image/png;base64,' + base64);
+                        fabric.Image.fromURL('data:image/png;base64,' + base64, function (img) {
+                            canvas.add(img);
+                        });
                     });
                 }
             }
         }
     } catch (error) {
+        console.log(error)
     }
 }
 

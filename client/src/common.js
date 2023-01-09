@@ -138,7 +138,17 @@ export const changeBackGroundColor = (e, canvas) => {
     canvas.requestRenderAll();
 }
 
-
+export const base64EncodeBlob = (blob) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64data = btoa(reader.result);
+            resolve(base64data);
+        };
+        reader.onerror = reject;
+        reader.readAsBinaryString(blob);
+    });
+}
 export const fontLists = [
     "AADevAksharReg",
     "AADevApsBil",
