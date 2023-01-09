@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
-import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript } from '../common'
+import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript, templateLayers } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
@@ -61,7 +61,7 @@ const CustomClient = () => {
                 data1.forEach(data2 => {
                     canvas.getObjects().forEach((element) => {
                         // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
-                        element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
+                        // element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -108,7 +108,8 @@ const CustomClient = () => {
         else { tempAlert('Pagename not avalaible', 1000) }
     }
     const sendToCasparcg = (layerNumber) => {
-        // sendtohtml(canvas);//for html
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
@@ -160,7 +161,7 @@ const CustomClient = () => {
             canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     canvas.getObjects().forEach((element) => {
-                        element.set({ selectable: false, strokeUniform: false });
+                        // element.set({ selectable: false, strokeUniform: false });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -249,9 +250,9 @@ const CustomClient = () => {
                     }} value={pageName}>
                         {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
                     </select>  <button onClick={getAllKeyValue}>getAllKeyValue</button>   <button onClick={saveList}>Save List</button> <button onClick={() => updateList(currentRow)}>Update List</button>
-                    <button onClick={() => { recallPage(96, pageName, textNodes) }}><FaPlay /></button>
-                    <button onClick={() => updateData(96, pageName, textNodes)}>update</button>
-                    <button onClick={() => stopGraphics(96)}><FaStop /></button>
+                    <button onClick={() => { recallPage(templateLayers.customClient, pageName, textNodes) }}><FaPlay /></button>
+                    <button onClick={() => updateData(templateLayers.customClient, pageName, textNodes)}>update</button>
+                    <button onClick={() => stopGraphics(templateLayers.customClient)}><FaStop /></button>
 
                 </div>
                 <div style={{ maxHeight: 400, minHeight: 400, overflow: 'scroll' }}>
