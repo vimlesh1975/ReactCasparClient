@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { animation } from './animation.js'
+import { fabric } from "fabric";
 
 
-export const buildDate = '090123_2'
+export const buildDate = '100123_1'
 
 
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
@@ -11,7 +12,7 @@ export var address1 = 'http://' + (window.location.host).split(':')[0] + ':9000'
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 export const videoLayers = [1, 2, 3, 10000, 5];
-export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, kabaddiScore: 157, customClient: 158, gameTimer: 160, gameTimer2: 163, LBand: 166 };
+export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, kabaddiScore: 157, customClient: 158, cricketScore: 159, gameTimer: 160, gameTimer2: 163, LBand: 166 };
 
 export const endpoint = (string) => {
     const data = { string: string }
@@ -149,6 +150,155 @@ export const base64EncodeBlob = (blob) => {
         reader.readAsBinaryString(blob);
     });
 }
+
+export const recallPage = (layerNumber, pageName, data, canvasList, canvas, currentscreenSize) => {
+    const index = canvasList.findIndex(val => val.pageName === pageName);
+    if (index !== -1) {
+        const data1 = data;
+        canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            data1.forEach(data2 => {
+                canvas.getObjects().forEach((element) => {
+                    element.set({ selectable: false, strokeUniform: false });
+                    try {
+                        if (element.id === data2.key) {
+                            if (data2.type === 'text') {
+                                const originalWidth = element.width;
+                                element.set({ objectCaching: false, text: data2.value.toString() })
+                                if (element.textLines.length > 1) {
+                                    do {
+                                        element.set({ width: element.width + 5 });
+                                    }
+                                    while (element.textLines.length > 1);
+                                    element.set({ scaleX: originalWidth / element.width });
+                                }
+                            }
+                            else if (data2.type === 'image') {
+                                var i = new Image();
+                                i.onload = function () {
+                                    const originalWidth = (element.width) * (element.scaleX);
+                                    const originalHeight = (element.height) * (element.scaleY);
+                                    element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+                                    if (element.type === 'image') {
+                                        element.setSrc(data2.value)
+                                    }
+                                    else if (element.type === 'rect') {
+                                        element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
+                                    }
+                                };
+                                i.src = data2.value;
+                            }
+                            else if (data2.type === 'shadow') {
+                                element.set({ shadow: { ...element.shadow, ...data2.value } })
+                            }
+                            else {
+                                element.set({ [data2.type]: data2.value })
+                            }
+                        }
+                    } catch (error) {
+                    }
+                });
+            });
+            canvas.requestRenderAll();
+            sendToCasparcg(layerNumber, canvas, currentscreenSize)
+        });
+    }
+    else { tempAlert('Pagename not avalaible', 1000) }
+}
+export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+    executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+
+    endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+    setTimeout(() => {
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    }, 250);
+    const script = `
+    var aa = document.createElement('div');
+    aa.style.position='absolute';
+    aa.setAttribute('id','divid_' + '${layerNumber}');
+    aa.style.zIndex = ${layerNumber};
+    aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
+    document.body.appendChild(aa);
+    document.body.style.margin='0';
+    document.body.style.padding='0';
+    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+    document.body.style.overflow='hidden';
+    `
+    executeScript(script);
+
+    setTimeout(() => {
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${script}
+        "`)
+    }, 300);
+    setTimeout(() => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+    }, 800);
+
+    setTimeout(() => {
+        updateGraphics(canvas, layerNumber);
+    }, 1100);
+}
+
+export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
+    const index = canvasList.findIndex(val => val.pageName === pageName);
+    if (index !== -1) {
+        const data1 = data;
+        canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            data1.forEach(data2 => {
+                canvas.getObjects().forEach((element) => {
+                    element.set({ selectable: false, strokeUniform: false });
+                    try {
+                        if (element.id === data2.key) {
+                            if (data2.type === 'text') {
+                                const originalWidth = element.width;
+                                element.set({ objectCaching: false, text: data2.value.toString() })
+                                if (element.textLines.length > 1) {
+                                    do {
+                                        element.set({ width: element.width + 5 });
+                                    }
+                                    while (element.textLines.length > 1);
+                                    element.set({ scaleX: originalWidth / element.width });
+                                }
+                            }
+                            else if (data2.type === 'image') {
+                                var i = new Image();
+                                i.onload = function () {
+                                    const originalWidth = (element.width) * (element.scaleX);
+                                    const originalHeight = (element.height) * (element.scaleY);
+                                    element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+                                    if (element.type === 'image') {
+                                        element.setSrc(data2.value)
+                                    }
+                                    else if (element.type === 'rect') {
+                                        element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
+                                    }
+                                };
+                                i.src = data2.value;
+                            }
+                            else if (data2.type === 'shadow') {
+                                element.set({ shadow: { ...element.shadow, ...data2.value } })
+                            }
+                            else {
+                                element.set({ [data2.type]: data2.value })
+                            }
+                        }
+                    } catch (error) {
+                    }
+                });
+            });
+
+            canvas.requestRenderAll();
+            setTimeout(() => {
+                updateGraphics(canvas, layerNumber)
+            }, 300);
+
+        });
+    }
+}
+
+
 export const fontLists = [
     "AADevAksharReg",
     "AADevApsBil",

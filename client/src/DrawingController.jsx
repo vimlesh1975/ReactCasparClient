@@ -77,9 +77,16 @@ export const pasteClipboard = async (canvas) => {
                 if (item.types.includes('image/png')) {
                     const blob = await item.getType('image/png');
                     base64EncodeBlob(blob).then((base64) => {
-                        console.log('data:image/png;base64,' + base64);
-                        fabric.Image.fromURL('data:image/png;base64,' + base64, function (img) {
-                            canvas.add(img);
+                        fabric.Image.fromURL('data:image/png;base64,' + base64, image => {
+                            image
+                                .set({
+                                    id: 'ccg_' + fabric.Object.__uid,
+                                    class: 'class_' + fabric.Object.__uid,
+                                    shadow: shadowOptions,
+                                    strokeUniform: true,
+                                    objectCaching: false,
+                                })
+                            canvas.add(image);
                         });
                     });
                 }
