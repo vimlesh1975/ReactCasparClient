@@ -155,22 +155,7 @@ const OnelinerAndBreakingNews = () => {
             updateGraphics(window.automationeditor[0].canvas, layerNumber);
         }, 1100);
     }
-    // const updateGraphics = layerNumber => {
-    //     const script = `
-    //     aa.innerHTML=\`${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}\`;
-    //     `
-    //     executeScript(script);
-    //     endpoint(`call ${window.chNumber}-${layerNumber} "
-    //     ${script}
-    //         "`)
 
-    // }
-    // const stopGraphics = layerNumber => {
-    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
-    //     setTimeout(() => {
-    //         endpoint(`stop ${window.chNumber}-${layerNumber}`)
-    //     }, 1000);
-    // }
     const deletePage = e => {
         if (playerList1.length === 1) {
             return

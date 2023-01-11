@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics, updateGraphics, executeScript } from '../common'
+import { endpoint, stopGraphics, recallPage, executeScript } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 
@@ -59,91 +58,91 @@ const Hockey = () => {
         }
     }
 
-    const recallPage = (layerNumber, pageName, data) => {
-        const index = canvasList.findIndex(val => val.pageName === pageName);
-        if (index !== -1) {
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
-            const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
-                data1.forEach(data2 => {
-                    canvas.getObjects().forEach((element) => {
-                        try {
-                            if (element.id === data2.key) {
-                                if (data2.type === 'text') {
-                                    const originalWidth = element.width;
-                                    element.set({ objectCaching: false, text: data2.value.toString() })
-                                    if (element.textLines.length > 1) {
-                                        do {
-                                            element.set({ width: element.width + 5 });
-                                        }
-                                        while (element.textLines.length > 1);
-                                        element.set({ scaleX: originalWidth / element.width });
-                                    }
-                                }
-                                else if (data2.type === 'image') {
-                                    var i = new Image();
-                                    i.onload = function () {
-                                        const originalWidth = (element.width) * (element.scaleX);
-                                        const originalHeight = (element.height) * (element.scaleY);
-                                        element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
-                                        if (element.type === 'image') {
-                                            element.setSrc(data2.value)
-                                        }
-                                        else if (element.type === 'rect') {
-                                            element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
-                                        }
-                                        canvas.requestRenderAll();
-                                    };
-                                    i.src = data2.value;
-                                }
-                            }
-                            // canvas.requestRenderAll();
-                        } catch (error) {
-                        }
-                    });
-                });
-                canvas.requestRenderAll();
-                sendToCasparcg(layerNumber)
-            });
-        }
-        else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
-    }
+    // const recallPage = (layerNumber, pageName, data) => {
+    //     const index = canvasList.findIndex(val => val.pageName === pageName);
+    //     if (index !== -1) {
+    //         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
+    //         const data1 = data;
+    //         canvas.loadFromJSON(canvasList[index].pageValue, () => {
+    //             data1.forEach(data2 => {
+    //                 canvas.getObjects().forEach((element) => {
+    //                     try {
+    //                         if (element.id === data2.key) {
+    //                             if (data2.type === 'text') {
+    //                                 const originalWidth = element.width;
+    //                                 element.set({ objectCaching: false, text: data2.value.toString() })
+    //                                 if (element.textLines.length > 1) {
+    //                                     do {
+    //                                         element.set({ width: element.width + 5 });
+    //                                     }
+    //                                     while (element.textLines.length > 1);
+    //                                     element.set({ scaleX: originalWidth / element.width });
+    //                                 }
+    //                             }
+    //                             else if (data2.type === 'image') {
+    //                                 var i = new Image();
+    //                                 i.onload = function () {
+    //                                     const originalWidth = (element.width) * (element.scaleX);
+    //                                     const originalHeight = (element.height) * (element.scaleY);
+    //                                     element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+    //                                     if (element.type === 'image') {
+    //                                         element.setSrc(data2.value)
+    //                                     }
+    //                                     else if (element.type === 'rect') {
+    //                                         element.set({ width: i.width, height: i.height, fill: new fabric.Pattern({ source: data2.value, repeat: 'no-repeat' }) })
+    //                                     }
+    //                                     canvas.requestRenderAll();
+    //                                 };
+    //                                 i.src = data2.value;
+    //                             }
+    //                         }
+    //                         // canvas.requestRenderAll();
+    //                     } catch (error) {
+    //                     }
+    //                 });
+    //             });
+    //             canvas.requestRenderAll();
+    //             sendToCasparcg(layerNumber)
+    //         });
+    //     }
+    //     else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
+    // }
 
-    const sendToCasparcg = (layerNumber) => {
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+    // const sendToCasparcg = (layerNumber) => {
+    //     executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
-        endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
-        setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        }, 250);
+    //     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
+    //     setTimeout(() => {
+    //         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    //     }, 250);
 
-        const script = `
-        var aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aa);
-        document.body.style.margin='0';
-        document.body.style.padding='0';
-        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        document.body.style.overflow='hidden';
-        `
-        executeScript(script);
+    //     const script = `
+    //     var aa = document.createElement('div');
+    //     aa.style.position='absolute';
+    //     aa.setAttribute('id','divid_' + '${layerNumber}');
+    //     aa.style.zIndex = ${layerNumber};
+    //     aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+    //     document.body.appendChild(aa);
+    //     document.body.style.margin='0';
+    //     document.body.style.padding='0';
+    //     aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+    //     document.body.style.overflow='hidden';
+    //     `
+    //     executeScript(script);
 
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
-            ${script}
-        "`)
-        }, 300);
-        setTimeout(() => {
-            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
-        }, 800);
+    //     setTimeout(() => {
+    //         endpoint(`call ${window.chNumber}-${layerNumber} "
+    //         ${script}
+    //     "`)
+    //     }, 300);
+    //     setTimeout(() => {
+    //         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
+    //     }, 800);
 
-        setTimeout(() => {
-            updateGraphics(canvas, layerNumber);
-        }, 1100);
-    }
+    //     setTimeout(() => {
+    //         updateGraphics(canvas, layerNumber);
+    //     }, 1100);
+    // }
 
 
     const pauseClock = (layerNumber) => {
@@ -417,7 +416,7 @@ const Hockey = () => {
                         </Droppable>
                     </DragDropContext>
                     {currentPlayer1}
-                    <br /><button onClick={() => recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }])}>PlayerId1 <FaPlay /></button>
+                    <br /><button onClick={() => recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId1 <FaPlay /></button>
                     <br />    <button onClick={() => recallPage(500, 'TeamList', [
 
                         { key: 'f0', value: team1, type: 'text' },
@@ -434,7 +433,7 @@ const Hockey = () => {
                         { key: 'f11', value: playerList1[10], type: 'text' },
                         { key: 'f12', value: playerList1[11], type: 'text' },
 
-                    ])}>TeamList 1 <FaPlay /></button>
+                    ], canvasList, canvas, currentscreenSize)}>TeamList 1 <FaPlay /></button>
 
                 </div>
                 <div>
@@ -488,7 +487,7 @@ const Hockey = () => {
                         </Droppable>
                     </DragDropContext>
                     {currentPlayer2}
-                    <br /> <button onClick={() => recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }])}>PlayerId2<FaPlay /></button>
+                    <br /> <button onClick={() => recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId2<FaPlay /></button>
                     <br />  <button onClick={() => recallPage(generalayer, 'TeamList', [
 
                         { key: 'f0', value: team2, type: 'text' },
@@ -505,7 +504,7 @@ const Hockey = () => {
                         { key: 'f11', value: playerList2[10], type: 'text' },
                         { key: 'f12', value: playerList2[11], type: 'text' },
 
-                    ])}>TeamList 2 <FaPlay /></button>
+                    ], canvasList, canvas, currentscreenSize)}>TeamList 2 <FaPlay /></button>
 
                 </div>
 
@@ -539,7 +538,7 @@ const Hockey = () => {
                                 }} style={{ display: 'none' }} />
                             </label>
                         </div>
-                        <button onClick={() => recallPage(generalayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }])}>Versus</button>
+                        <button onClick={() => recallPage(generalayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }], canvasList, canvas, currentscreenSize)}>Versus</button>
                     </div>
                     <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                         <div>
@@ -547,7 +546,7 @@ const Hockey = () => {
                             <br /><input type='text' size="8" value={team2} onChange={e => setTeam2(e.target.value)} /><input type='text' size="1" value={team2Goal} onChange={e => setTeam2Goal(e.target.value)} />
                         </div>
                         <div>
-                            <button onClick={() => recallPage(scoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }])}>Score <FaPlay /></button>
+                            <button onClick={() => recallPage(scoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }], canvasList, canvas, currentscreenSize)}>Score <FaPlay /></button>
                             <button onClick={() => stopGraphics(scoreLayer)} > <FaStop /></button>
                         </div>
                     </div>
@@ -563,7 +562,7 @@ const Hockey = () => {
                         </div>
                         <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                             <div>  <div> <span>IN . .</span><input type='text' value={inPlayer} onChange={e => setInPlayer(e.target.value)} /></div>  <div> <span>OUT</span><input type='text' value={outPlayer} onChange={e => setOutPlayer(e.target.value)} /></div></div>
-                            <div> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: inPlayer, type: 'text' }, { key: 'f1', value: outPlayer, type: 'text' }])}>IN OUT <FaPlay /></button></div>
+                            <div> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: inPlayer, type: 'text' }, { key: 'f1', value: outPlayer, type: 'text' }], canvasList, canvas, currentscreenSize)}>IN OUT <FaPlay /></button></div>
                         </div>
                     </div>
                 </div>

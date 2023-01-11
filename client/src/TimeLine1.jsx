@@ -176,7 +176,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
 
   }
 
-  const stopFromCasprtcg = () => {
+  const stopFromCasprtcg = (layerNumber) => {
     if (!autoOut) {
       var Delay = [];
       for (let i = 0; i < layers?.length; i++) {
@@ -191,7 +191,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         `
         executeScript(script); //for html
         endpoint(`
-      call ${window.chNumber}-${templateLayers.animationLayer} "
+      call ${window.chNumber}-${layerNumber} "
       ${script}
       "`);
       });
@@ -871,7 +871,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={cancelPreView}>Cancel Preview</button>
         <button onClick={() => playtocasparcg(templateLayers.animationLayer)}>Play</button>
         <label> Auto Out: <input type="checkbox" checked={autoOut} onChange={() => setAutoOut(val => !val)} /></label>
-        <button onClick={stopFromCasprtcg}>Stop</button>
+        <button onClick={() => stopFromCasprtcg(templateLayers.animationLayer)}>Stop</button>
 
         <button onClick={updatePageAndAnimation}>Save</button>
         <button onClick={recallPageAndAnimation}>Recall</button>
