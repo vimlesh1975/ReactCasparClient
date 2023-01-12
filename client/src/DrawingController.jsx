@@ -29,7 +29,7 @@ var intervalGameTimer2;
 var html;
 
 fabric.Object.prototype.noScaleCache = false;
-fabric.Object.prototype.cornerSize = 25;
+fabric.Object.prototype.cornerSize = 18;
 
 const STEP = 5;
 var Direction = {
