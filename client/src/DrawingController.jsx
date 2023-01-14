@@ -1602,7 +1602,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         setCurrentMode(mode);
         if (mode === 'none') {
             canvas.isDrawingMode = false;
-            canvas.getObjects().forEach((item) => item.set({ objectCaching: false }))
+            canvas.getObjects().forEach((item) => {
+                if (!item.id) {
+                    const id = fabric.Object.__uid++;
+                    item.set({ objectCaching: false, id: 'id_' + id, class: 'class_' + id });
+                }
+            })
             return;
         } else {
             canvas.isDrawingMode = true;
@@ -1625,14 +1630,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             canvas.freeDrawingBrush.width = options.strokeWidth;
         }
         canvas.freeDrawingBrush.strokeLineCap = currentstrokeLineCap;
-
     }
     window.onDrawingModeChange = onDrawingModeChange;
-    const toggleModeDrawing = (canvas) => {
-        canvas.isDrawingMode = false;
-        setCurrentMode('none');
-    }
-    window.toggleModeDrawing = toggleModeDrawing;
 
     const onFontChange = (e) => {
         options.currentFont = e.target.value;

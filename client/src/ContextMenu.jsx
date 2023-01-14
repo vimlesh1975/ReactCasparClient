@@ -93,17 +93,14 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
         <li onClick={() => pasteClipboard(canvas)}>Paste from Clipboard</li>
         <li onClick={() => cloneAsImage(canvas)}>CloneAsImage</li>
         <li>Drawing Mode<ul >
-          <li onClick={() => window.toggleModeDrawing(canvas)}>Off<VscEdit /></li>
+          <li onClick={() => window.onDrawingModeChange('none', canvas)}>Off<VscEdit /></li>
           <li onClick={() => {
-            canvas.isDrawingMode = true;
             window.onDrawingModeChange('Pencil', canvas)
           }}>Pencil <VscEdit /></li>
           <li onClick={() => {
-            canvas.isDrawingMode = true;
             window.onDrawingModeChange('Spray', canvas)
           }}>Spray <VscEdit /></li>
           <li onClick={() => {
-            canvas.isDrawingMode = true;
             window.onDrawingModeChange('Erase', canvas)
           }}>Erase <VscEdit /></li>
         </ul></li>
