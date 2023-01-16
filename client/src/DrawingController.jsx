@@ -2811,8 +2811,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             const element = canvas?.getActiveObjects()?.[0];
             if (element.rx !== null) { setSkewRX(element.rx); }
             if (element.ry !== null) { setSkewRY(element.ry); }
-            if (element.skewX !== null) { setSkewXSize(element.skewX); }
-            if (element.skewY !== null) { setSkewYSize(element.skewY); }
+            if (element.skewX !== null) { setSkewXSize(element.skewX.toFixed(0)); }
+            // if (element.skewX !== null) { setSkewXSize(element.skewX); }
+            if (element.skewY !== null) { setSkewYSize(element.skewY.toFixed(0)); }
             if (element.fontFamily !== null) { setCurrentFont(element.fontFamily); }
             if (element.fontSize !== null) { setFontSize(element.fontSize); }
             if (element.strokeWidth !== null) { setStrokeWidth(element.strokeWidth); }
