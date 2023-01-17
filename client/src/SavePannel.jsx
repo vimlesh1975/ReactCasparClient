@@ -8,6 +8,8 @@ import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { endpoint, stopGraphics, updateGraphics, templateLayers } from './common'
 import { animation } from './animation.js'
+import { fabric } from "fabric";
+
 // import defaultCanvasList from './data/defaultCanvasList.txt'
 
 
@@ -174,7 +176,7 @@ const SavePannel = () => {
             const aa = canvas.getObjects();
             aa.forEach(element => {
                 try {
-                    element.set({ objectCaching: false });
+                    element.set({ id: element.id ? element.id : 'id_' + fabric.Object.__uid++, class: element.class ? element.class : 'class_' + fabric.Object.__uid++, objectCaching: false });
                     element.on('mousedblclick', () => {
                         window.edit();
                     })

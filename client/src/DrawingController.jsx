@@ -1658,7 +1658,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const preCanvas = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\'');
         const content = fileReader.result;
         canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
-            object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
+            object.set({ id: object.id ? object.id : 'id_' + fabric.Object.__uid, class: object.class ? object.class : 'class_' + fabric.Object.__uid, shadow: object.shadow ? object.shadow : shadowOptions });
         })
         importSvgCode(preCanvas)
     };
@@ -1807,6 +1807,87 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             element.click();
         }
     }
+
+    const exportJSONforTheatrejs = canvas => {
+        const element = document.createElement("a");
+        var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+
+        const aa = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js" integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        </head>
+        <body>
+            <canvas id="canvas" width="1920" height="1080"></canvas>
+            <script>
+                var canvas = new fabric.Canvas('canvas');
+                canvas.preserveObjectStacking = true;
+                const content =${aa1}
+                canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
+                    object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
+                })
+            </script>
+            <script type="module">
+                // import './core-and-studio.js'
+                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-and-studio.js'
+                // We can now access Theatre.core and Theatre.studio from here
+                const { core, studio } = Theatre
+        
+                studio.initialize()
+                // studio.ui.hide() 
+        
+                // const project = core.getProject('HTML Animation Tutorial',{
+                //       state: projectState,
+                //     })
+                const project = core.getProject('HTML Animation Tutorial', {
+        
+                })
+                const sheet = project.sheet('Sheet 1')
+        
+                const dd = (obj, event) => {
+                    studio.transaction(({ set }) => {
+                        set(obj.props.left, event.target.left)
+                        set(obj.props.top, event.target.top)
+                    })
+                }
+                canvas.getObjects().forEach(element => {
+                    const obj = sheet.object(element.id, {
+                        left: element.left,
+                        top: element.top,
+                    })
+                    element.on('mousedown', () => studio.setSelection([obj]), false);
+                    element.on('mousemove', (e) => dd(obj, e), false);
+                    obj.onValuesChange((obj) => {
+                        element.set({ left: obj.left, top: obj.top });
+                        element.setCoords();
+                        canvas.requestRenderAll();
+                    })
+        
+                });
+                project.ready.then(() => {
+                    sheet.sequence.play({ iterationCount: Infinity, range: [0, 1.3] })
+                })
+            </script>
+        </body>
+        </html>`
+
+
+        const file = new Blob([aa], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        if (retVal !== null) {
+            element.download = retVal + '.html';
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+
+
 
     const sdToHD = () => {
         unlockAll(canvas);
@@ -2985,7 +3066,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
-                        <button onClick={() => exportPDF(canvas)}>All pages to pdf</button>
+                        <button onClick={() => exportPDF(canvas)}>Pdf</button>
+                        <button onClick={() => exportJSONforTheatrejs(canvas)}>Theatrejs</button>
 
 
                     </div>
