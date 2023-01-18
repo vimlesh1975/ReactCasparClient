@@ -1809,7 +1809,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const exportJSONforTheatrejs = canvas => {
-        const element = document.createElement("a");
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const aa = `<!DOCTYPE html>
@@ -1822,8 +1821,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js" integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         </head>
         <body>
+        <button>Export html<button>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script>
+            const shadowOptions = {
+                color: 'black',
+                blur: 30,
+                offsetX: 0,
+                offsetY: 0,
+                affectStroke: false
+            };
                 var canvas = new fabric.Canvas('canvas');
                 canvas.preserveObjectStacking = true;
                 const content =${aa1}
@@ -1849,23 +1856,64 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 const sheet = project.sheet('Sheet 1')
         
                 const dd = (obj, event) => {
-                    studio.transaction(({ set }) => {
-                        set(obj.props.left, event.target.left)
-                        set(obj.props.top, event.target.top)
-                    })
-                }
-                canvas.getObjects().forEach(element => {
-                    const obj = sheet.object(element.id, {
-                        left: element.left,
-                        top: element.top,
-                    })
-                    element.on('mousedown', () => studio.setSelection([obj]), false);
-                    element.on('mousemove', (e) => dd(obj, e), false);
+                        // console.log(event)
+                        studio.transaction(({ set }) => {
+                            set(obj.props.left, event.target.left);
+                            set(obj.props.top, event.target.top);
+                            set(obj.props.angle, event.target.angle);
+                        });
+                    };
+                    const dd2 = (obj, event) => {
+                        // console.log(event)
+                        studio.transaction(({ set }) => {
+                            set(obj.props.scaleX, event.transform.target.scaleX);
+                            set(obj.props.scaleY, event.transform.target.scaleY);
+                        });
+                    };
+                    canvas.getObjects().forEach(element => {
+                        var obj = sheet.object(element.id, {
+                            left: element.left,
+                            top: element.top,
+                            width: element.width,
+                            height: element.height,
+                            opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                            scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                            scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                            angle: element.angle,
+                            fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                            rx: 10,
+                            ry: 10,
+                            strokeWidth: core.types.number(2, { range: [0, 100] }),
+                            stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                            shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
+                            fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
+                            fontSize: 20,
+                        });
+                    element.on("mousedown", () => studio.setSelection([obj]), false);
+                    element.on("mousemove", (e) => dd(obj, e), false);
+                    element.on("scaling", (e) => dd2(obj, e), false);
                     obj.onValuesChange((obj) => {
-                        element.set({ left: obj.left, top: obj.top });
+                        element.set({
+                            left: obj.left,
+                            top: obj.top,
+                            width: obj.width,
+                            height: obj.height,
+                            opacity: obj.opacity,
+                            scaleX: obj.scaleX,
+                            scaleY: obj.scaleY,
+                            angle: obj.angle,
+                            fill: obj.fill,
+                            rx: obj.rx,
+                            ry: obj.ry,
+                            strokeWidth: obj.strokeWidth,
+                            stroke: obj.stroke,
+                            shadow: obj.shadow,
+                            fontWeight: obj.fontWeight,
+                            fontSize: obj.fontSize,
+                        });
                         element.setCoords();
                         canvas.requestRenderAll();
-                    })
+                    });
         
                 });
                 project.ready.then(() => {
@@ -1875,7 +1923,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         </body>
         </html>`
 
-
+        const element = document.createElement("a");
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });

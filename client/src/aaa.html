@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js"
+        integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <script>
+        const shadowOptions = {
+            color: 'black',
+            blur: 30,
+            offsetX: 0,
+            offsetY: 0,
+            affectStroke: false
+        };
+        var canvas = new fabric.Canvas('canvas');
+        window.canvas = canvas;
+        console.log('dfdf');
+        canvas.preserveObjectStacking = true;
+        const content = `{ "version": "5.2.4", "objects": [{ "type": "rect", "version": "5.2.4", "originX": "left", "originY": "top", "left": 398.94, "top": 357.46, "width": 935, "height": 74.8, "fill": "#e70404", "stroke": "#ffffff", "strokeWidth": 1, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "#0008eb", "blur": "43", "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 10, "ry": 10, "id": "id_7", "class": "class_7", "selectable": true }, { "type": "textbox", "version": "5.2.4", "originX": "left", "originY": "top", "left": 428.87, "top": 367.59, "width": 738.32, "height": 50.85, "fill": "#09f005", "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": false, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": "49", "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "fontFamily": "Arial", "fontWeight": "bold", "fontSize": 45, "text": "Timeline has been shifted below.", "underline": false, "overline": false, "linethrough": false, "textAlign": "left", "fontStyle": "normal", "lineHeight": 1.16, "textBackgroundColor": "", "charSpacing": 0, "styles": [], "direction": "ltr", "path": null, "pathStartOffset": 0, "pathSide": "left", "pathAlign": "baseline", "minWidth": 20, "splitByGrapheme": false, "id": "ccg_9", "class": "class_9", "selectable": true }] }`
+        canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
+            object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
+        })
+        console.log(canvas.getObjects());
+        import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.5.0-insiders.88df1ef/dist/core-only.min.js'
+        const { core } = Theatre
+
+        const project = core.getProject('HTML Animation Tutorial', { state: { "sheetsById": { "Sheet 1": { "staticOverrides": { "byObject": { "id_7": { "left": 398.94, "top": 357.46, "angle": 0 }, "ccg_9": { "left": 387.25, "top": 369.34, "angle": 0, "fill": { "r": 0.0392156862745098, "g": 0.0196078431372549, "b": 0.9607843137254902, "a": 1 }, "scaleX": 1.028360138310347, "scaleY": 1.6371681415929205, "strokeWidth": 0 }, "id_152": { "left": 62.51, "top": 817.02, "angle": 0 }, "id_176": { "left": 1369.64, "top": 837.59 }, "id_174": { "left": 1369.64, "top": 775.86 }, "id_180": { "left": 1335.76, "top": 177 }, "id_178": { "left": 1317.28, "top": 155.14, "angle": 0 }, "id_156": { "left": 1341.59, "top": 141.92, "angle": 0 }, "id_158": { "left": 1369.64, "top": 276.57 }, "id_132": { "left": 34.46, "top": 121.35, "angle": 0 }, "id_154": { "left": 12.02, "top": 143.92 }, "id_134": { "left": 62.51, "top": 256 }, "id_142": { "left": 62.51, "top": 508.45 }, "id_164": { "left": 1369.64, "top": 459.83 }, "id_162": { "left": 1369.64, "top": 398.12 }, "id_160": { "left": 1369.64, "top": 338.28 }, "id_166": { "left": 1369.64, "top": 529.02 }, "id_136": { "left": 62.51, "top": 317.71 }, "id_140": { "left": 62.51, "top": 439.26 }, "id_138": { "left": 62.51, "top": 377.55 }, "id_168": { "left": 1369.64, "top": 590.73 } } }, "sequence": { "subUnitsPerUnit": 30, "length": 10, "type": "PositionalSequence", "tracksByObject": { "id_7": { "trackData": { "3qJFdDMBSq": { "type": "BasicKeyframedTrack", "__debugName": "id_7:[\"left\"]", "keyframes": [{ "id": "1EUf6HmTYh", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 493.90153792392573 }, { "id": "4JlHogyoGz", "position": 0.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 486.8813211471949 }, { "id": "T1kKbh9Wiv", "position": 0.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 486.05902369437047 }, { "id": "n3fjfTNwnm", "position": 0.2, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 480.15871093125963 }, { "id": "Cb5_iWweno", "position": 0.333, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 462.6191149846094 }, { "id": "mGSA5MQaic", "position": 0.367, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 461.9093411321349 }, { "id": "v4puCpRJGi", "position": 0.4, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 461.3522457805829 }, { "id": "FL5u8qZLT_", "position": 0.467, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 448.74941443331306 }, { "id": "q8O2qptnxX", "position": 0.6, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 437.4808860925663 }, { "id": "TKcR3uKkvz", "position": 0.667, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 433.3418147708465 }, { "id": "j4oc_KItuf", "position": 0.7, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 430.73843413061235 }, { "id": "r4Bzwq21PL", "position": 0.767, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 424.55802878993666 }, { "id": "9hxN6YHAhT", "position": 0.867, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 405.6167840878382 }, { "id": "YLEWW8TUU_", "position": 1.033, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 319.08612338900036 }, { "id": "J7b9s_2qrB", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 314.01943455563344 }, { "id": "IlvaGUgut-", "position": 1.267, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 315.4761822008207 }, { "id": "Y20xWh81Ss", "position": 2.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 365.94000000000005 }] }, "IBg_7SdJ-j": { "type": "BasicKeyframedTrack", "__debugName": "id_7:[\"top\"]", "keyframes": [{ "id": "VHMCzsshcF", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 399.04850759956497 }, { "id": "4wVjkJm5UJ", "position": 0.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 396.55469676303227 }, { "id": "_YkIrtZUPh", "position": 0.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 396.2625897862928 }, { "id": "hL_XEoBO7V", "position": 0.2, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 394.1666055203439 }, { "id": "iEs43gbgZ0", "position": 0.333, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 387.93596680486394 }, { "id": "8zLeqEzXN6", "position": 0.367, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 387.68383189491993 }, { "id": "V6GcnWQ7yi", "position": 0.4, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 387.4859333871007 }, { "id": "WlYYL7lQGe", "position": 0.467, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 338.56132247750554 }, { "id": "2dRGspc-Ks", "position": 0.6, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 379.0060448927646 }, { "id": "rYZJtlQdc5", "position": 0.667, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 377.5357112487238 }, { "id": "8kZySWcPO7", "position": 0.7, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 376.6109052122842 }, { "id": "a-4xvbnObN", "position": 0.767, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 374.4154228927312 }, { "id": "_tSATYypbz", "position": 0.867, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 367.6868726502261 }, { "id": "-GNLYw5E92", "position": 1.033, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 336.94834901113353 }, { "id": "FqoIihVMD6", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 335.14849525734763 }, { "id": "nEs6LiRIUZ", "position": 1.267, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 335.74307034272323 }, { "id": "kfwb8hZ03b", "position": 2.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 356.34 }] } }, "trackIdByPropPath": { "[\"left\"]": "3qJFdDMBSq", "[\"top\"]": "IBg_7SdJ-j" } }, "ccg_9": { "trackData": { "f6-KiCm1MD": { "type": "BasicKeyframedTrack", "__debugName": "ccg_9:[\"left\"]", "keyframes": [{ "id": "s4qhFjmW9Z", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 509.3017637223785 }, { "id": "slcdhqYGBa", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 408.2378636515941 }, { "id": "Q_anXpBtwZ", "position": 1.267, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 408.7712916799386 }, { "id": "8Ibqb0JgTT", "position": 2.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 427.25 }] }, "K21E-1Cvcp": { "type": "BasicKeyframedTrack", "__debugName": "ccg_9:[\"top\"]", "keyframes": [{ "id": "AlhXBjeGrJ", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 403.825884419945 }, { "id": "jrDq5MGKvj", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 343.5403919752837 }, { "id": "X5nJ6tOBdB", "position": 1.267, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 344.0959142836172 }, { "id": "U-_ix8BUTf", "position": 2.1, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 363.34 }] } }, "trackIdByPropPath": { "[\"left\"]": "f6-KiCm1MD", "[\"top\"]": "K21E-1Cvcp" } }, "id_132": { "trackData": { "wf07wcB8aV": { "type": "BasicKeyframedTrack", "__debugName": "id_132:[\"left\"]", "keyframes": [{ "id": "1dPZbWq4pq", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 652.46 }, { "id": "oGCyxkysdJ", "position": 0.3, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 511.6520851779993 }, { "id": "M4sZrqVtyV", "position": 0.8, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 139.82649913088937 }, { "id": "R9DmkFEgk0", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 34.46 }, { "id": "yFy93Ue-Zu", "position": 1.167, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 34.46 }] }, "H_0xtmyEdd": { "type": "BasicKeyframedTrack", "__debugName": "id_132:[\"top\"]", "keyframes": [{ "id": "rJ7GIM4mrB", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 121.35 }, { "id": "dBFXx8FGaF", "position": 0.3, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 121.35 }, { "id": "zTPPvceJkb", "position": 0.8, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 121.35 }, { "id": "DSu2cf1jOO", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 121.35 }, { "id": "Yag831I4sZ", "position": 1.167, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 121.35 }] } }, "trackIdByPropPath": { "[\"left\"]": "wf07wcB8aV", "[\"top\"]": "H_0xtmyEdd" } }, "id_156": { "trackData": { "ui9z4aQ-mE": { "type": "BasicKeyframedTrack", "__debugName": "id_156:[\"left\"]", "keyframes": [{ "id": "EtD_9aCBsS", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 648.5899999999999 }, { "id": "RjUm_K1zwj", "position": 0.3, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 806.782277193068 }, { "id": "S4_z6DXfuX", "position": 0.8, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 1241.6888323391888 }, { "id": "3fjrLV9yAs", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 1348.59 }] }, "k-oiOnCVHr": { "type": "BasicKeyframedTrack", "__debugName": "id_156:[\"top\"]", "keyframes": [{ "id": "F4smOqs-em", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 120.91999999999999 }, { "id": "bGU_gPpt7i", "position": 0.3, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 125.66576831579204 }, { "id": "_CuVc_H4Lf", "position": 0.8, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 138.71296497017565 }, { "id": "JJ9oov73Ya", "position": 1.133, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 141.92 }] } }, "trackIdByPropPath": { "[\"left\"]": "ui9z4aQ-mE", "[\"top\"]": "k-oiOnCVHr" } } } } } }, "definitionVersion": "0.4.0", "revisionHistory": ["ff2NNzqyn4KaMWx3", "nSGWt3TeO2Onfg9D", "V8VvZCdhl-bXY-z8", "2Xlv97kCv-yuyNob", "ORhCOmq2jPNZrPYY", "REtsf8wEOJSLzy5c", "0MQtX9QNN8MkyvFp", "aWaRZH3gMb8gpZXx", "bYfydsCTpfznnjGE", "tvFl1ys1Rwss5jV1", "9tbOYHdNQOq1jpqO", "5Fo3xPG4LyxRfRID", "sIu_3fFiVetLi0Eo", "YIMe4E2_U-uYU_do", "suyybB1Q8NscsP8c", "PODt0mGswtlKKdGm", "gGUL4mYMXd6MNGrk"] } })
+
+        const sheet = project.sheet('Sheet 1')
+
+        console.log(canvas.getObjects());
+        canvas.getObjects().forEach(element => {
+            var obj = sheet.object(element.id, {
+                left: element.left,
+                top: element.top,
+                width: element.width,
+                height: element.height,
+                opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                angle: element.angle,
+                fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                rx: 10,
+                ry: 10,
+                strokeWidth: core.types.number(2, { range: [0, 100] }),
+                stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
+                fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
+                fontSize: 20,
+            });
+
+            obj.onValuesChange((obj) => {
+                element.set({
+                    left: obj.left,
+                    top: obj.top,
+                    width: obj.width,
+                    height: obj.height,
+                    opacity: obj.opacity,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    angle: obj.angle,
+                    fill: obj.fill,
+                    rx: obj.rx,
+                    ry: obj.ry,
+                    strokeWidth: obj.strokeWidth,
+                    stroke: obj.stroke,
+                    shadow: obj.shadow,
+                    fontWeight: obj.fontWeight,
+                    fontSize: obj.fontSize,
+                });
+                element.setCoords();
+                canvas.requestRenderAll();
+            });
+
+        });
+        project.ready.then(() => {
+            sheet.sequence.play({ iterationCount: Infinity, range: [0, 1.3] })
+        })
+    </script>
+</body>
+
+</html>
