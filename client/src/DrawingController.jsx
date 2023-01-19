@@ -1809,9 +1809,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const exportJSONforTheatrejs = canvas => {
-        const element = document.createElement("a");
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-
+        // eslint-disable-next-line
+        const xx = "${" + "JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))" + "}"
         const aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -1822,8 +1822,126 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js" integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         </head>
         <body>
+        <div style="text-align: center;">
+		<button onclick="exporthtml()">Export html</button>
+	    </div>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script>
+            const exporthtml = () => {
+
+                const aa =
+                    \`<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Document</title>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js"
+                        integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA=="
+                        crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
+        </head>
+    
+        <body>
+            <canvas id="canvas" width="1920" height="1080"></canvas>
+            <script type="module">
+                            const shadowOptions = {
+                    color: 'black',
+                    blur: 30,
+                    offsetX: 0,
+                    offsetY: 0,
+                    affectStroke: false
+                };
+                var canvas = new fabric.Canvas('canvas');
+                window.canvas=canvas;
+                canvas.preserveObjectStacking = true;
+                const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
+                canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
+                    object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
+                })
+                console.log(canvas.getObjects());
+                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-only.min.js'
+                const { core } = Theatre
+    
+                const project = core.getProject('HTML Animation Tutorial', {state:${xx}})
+                    
+                const sheet = project.sheet('Sheet 1')
+    
+                canvas.getObjects().forEach(element => {
+                    var obj = sheet.object(element.id, {
+                        left: element.left,
+                        top: element.top,
+                        width: element.width,
+                        height: element.height,
+                        opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                        scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                        scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                        angle: element.angle,
+                        fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                        rx: 10,
+                        ry: 10,
+                        strokeWidth: core.types.number(2, { range: [0, 100] }),
+                        stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                        shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
+                        fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
+                        fontSize: 20,
+                    });
+    
+                    obj.onValuesChange((obj) => {
+                        element.set({
+                            left: obj.left,
+                            top: obj.top,
+                            width: obj.width,
+                            height: obj.height,
+                            opacity: obj.opacity,
+                            scaleX: obj.scaleX,
+                            scaleY: obj.scaleY,
+                            angle: obj.angle,
+                            fill: obj.fill,
+                            rx: obj.rx,
+                            ry: obj.ry,
+                            strokeWidth: obj.strokeWidth,
+                            stroke: obj.stroke,
+                            shadow: obj.shadow,
+                            fontWeight: obj.fontWeight,
+                            fontSize: obj.fontSize,
+                        });
+                        element.setCoords();
+                        canvas.requestRenderAll();
+                    });
+    
+                });
+                project.ready.then(() => {
+                    sheet.sequence.play()
+                })
+        <//script>
+    </body>
+    
+    </html>\`
+    
+    const bb=aa.replaceAll('<//','</')
+                const element = document.createElement("a");
+                const file = new Blob([bb], { type: 'text/html' });
+                element.href = URL.createObjectURL(file);
+                var ss = new Date().toLocaleTimeString('en-US', {
+                    year: "numeric", month: "numeric", day: "numeric", hour12: false,
+                    hour: "numeric", minute: "numeric", second: "numeric"
+                });
+                var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+                if (retVal !== null) {
+                    element.download = retVal + '.html';
+                    document.body.appendChild(element); // Required for this to work in FireFox
+                    element.click();
+                }
+            }
+        
+            const shadowOptions = {
+                color: 'black',
+                blur: 30,
+                offsetX: 0,
+                offsetY: 0,
+                affectStroke: false
+            };
                 var canvas = new fabric.Canvas('canvas');
                 canvas.preserveObjectStacking = true;
                 const content =${aa1}
@@ -1832,50 +1950,84 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 })
             </script>
             <script type="module">
-                // import './core-and-studio.js'
                 import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-and-studio.js'
-                // We can now access Theatre.core and Theatre.studio from here
                 const { core, studio } = Theatre
-        
+                window.studio = studio
                 studio.initialize()
-                // studio.ui.hide() 
-        
-                // const project = core.getProject('HTML Animation Tutorial',{
-                //       state: projectState,
-                //     })
                 const project = core.getProject('HTML Animation Tutorial', {
         
                 })
                 const sheet = project.sheet('Sheet 1')
         
                 const dd = (obj, event) => {
-                    studio.transaction(({ set }) => {
-                        set(obj.props.left, event.target.left)
-                        set(obj.props.top, event.target.top)
-                    })
-                }
-                canvas.getObjects().forEach(element => {
-                    const obj = sheet.object(element.id, {
-                        left: element.left,
-                        top: element.top,
-                    })
-                    element.on('mousedown', () => studio.setSelection([obj]), false);
-                    element.on('mousemove', (e) => dd(obj, e), false);
+                        // console.log(event)
+                        studio.transaction(({ set }) => {
+                            set(obj.props.left, event.target.left);
+                            set(obj.props.top, event.target.top);
+                            set(obj.props.angle, event.target.angle);
+                        });
+                    };
+                    const dd2 = (obj, event) => {
+                        // console.log(event)
+                        studio.transaction(({ set }) => {
+                            set(obj.props.scaleX, event.transform.target.scaleX);
+                            set(obj.props.scaleY, event.transform.target.scaleY);
+                        });
+                    };
+                    canvas.getObjects().forEach(element => {
+                        var obj = sheet.object(element.id, {
+                            left: element.left,
+                            top: element.top,
+                            width: element.width,
+                            height: element.height,
+                            opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                            scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                            scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                            angle: element.angle,
+                            fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                            rx: 10,
+                            ry: 10,
+                            strokeWidth: core.types.number(2, { range: [0, 100] }),
+                            stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
+                            shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
+                            fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
+                            fontSize: 20,
+                        });
+                    element.on("mousedown", () => studio.setSelection([obj]), false);
+                    element.on("mousemove", (e) => dd(obj, e), false);
+                    element.on("scaling", (e) => dd2(obj, e), false);
                     obj.onValuesChange((obj) => {
-                        element.set({ left: obj.left, top: obj.top });
+                        element.set({
+                            left: obj.left,
+                            top: obj.top,
+                            width: obj.width,
+                            height: obj.height,
+                            opacity: obj.opacity,
+                            scaleX: obj.scaleX,
+                            scaleY: obj.scaleY,
+                            angle: obj.angle,
+                            fill: obj.fill,
+                            rx: obj.rx,
+                            ry: obj.ry,
+                            strokeWidth: obj.strokeWidth,
+                            stroke: obj.stroke,
+                            shadow: obj.shadow,
+                            fontWeight: obj.fontWeight,
+                            fontSize: obj.fontSize,
+                        });
                         element.setCoords();
                         canvas.requestRenderAll();
-                    })
+                    });
         
                 });
                 project.ready.then(() => {
-                    sheet.sequence.play({ iterationCount: Infinity, range: [0, 1.3] })
+                    sheet.sequence.play({ iterationCount: 1, range: [0, 10] })
                 })
             </script>
         </body>
         </html>`
 
-
+        const element = document.createElement("a");
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
