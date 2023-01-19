@@ -6,7 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint, stopGraphics, updateGraphics, templateLayers } from './common'
+import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript } from './common'
 import { animation } from './animation.js'
 import { fabric } from "fabric";
 
@@ -34,6 +34,8 @@ const SavePannel = () => {
     const [currentFileName, setCurrentFileName] = useState()
 
     const startGraphics = (canvas, layerNumber) => {
+        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
         var inAnimation;
         if (window.inAnimationMethod === 'mix') {
             inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
@@ -50,21 +52,25 @@ const SavePannel = () => {
             setTimeout(() => {
                 endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
             }, 250);
-
+            const script = `
+                            var aa = document.createElement('div');
+                            aa.style.position='absolute';
+                            aa.setAttribute('id','divid_' + '${layerNumber}');
+                            aa.style.zIndex = ${layerNumber};
+                            aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
+                            document.body.appendChild(aa);
+                            document.body.style.margin='0';
+                            document.body.style.padding='0';
+                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                            document.body.style.overflow='hidden';
+                            var style = document.createElement('style');
+                            style.textContent = '${inAnimation}';
+                            document.head.appendChild(style);
+                        `
+            executeScript(script);
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
-            var aa = document.createElement('div');
-            aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            document.body.appendChild(aa);
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-            document.body.style.overflow='hidden';
-            var style = document.createElement('style');
-            style.textContent = '${inAnimation}';
-            document.head.appendChild(style);
-
+        ${script}
             "`)
             }, 300);
 
@@ -77,25 +83,31 @@ const SavePannel = () => {
             return
         }
 
-        // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        const script = `
+                    var bb = document.createElement('div');
+                    bb.style.perspective='1920px';
+                    bb.style.transformStyle='preserve-3d';
+                    document.body.appendChild(bb);
+                    var aa = document.createElement('div');
+                    aa.style.position='absolute';
+                    aa.setAttribute('id','divid_' + '${layerNumber}');
+                    aa.style.zIndex = ${layerNumber};
+                    aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
+                    bb.appendChild(aa);
+                    document.body.style.margin='0';
+                    document.body.style.padding='0';
+                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                    document.body.style.overflow='hidden';
+                    var style = document.createElement('style');
+                    style.textContent = '${inAnimation}';
+                    document.head.appendChild(style);
+                `
+        executeScript(script);
+
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
-        var bb = document.createElement('div');
-        bb.style.perspective='1920px';
-        bb.style.transformStyle='preserve-3d';
-        document.body.appendChild(bb);
-            var aa = document.createElement('div');
-            aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-            bb.appendChild(aa);
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-            document.body.style.overflow='hidden';
-            var style = document.createElement('style');
-            style.textContent = '${inAnimation}';
-            document.head.appendChild(style);
+        ${script}
             "`)
         }, 100);
         setTimeout(() => {
