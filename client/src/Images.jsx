@@ -22,7 +22,7 @@ const Images = () => {
             dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
         }).catch((aa) => { console.log('Error', aa) });
     }
-  
+
 
     return (<div>
         <div>
@@ -32,7 +32,7 @@ const Images = () => {
         </div>
         <div className='drawingToolsRow' >
             <b> Image from Local PC: </b>
-            <input type="file" accept="image/*" onChange={(e) => Upload(e, canvas)} />
+            <input multiple type="file" accept="image/*" onChange={(e) => Upload(e, canvas)} />
         </div>
 
         <div>
@@ -63,7 +63,7 @@ const Images = () => {
                 </div>
             </div>
         </div>
-<ImageFilterController />
+        <ImageFilterController />
     </div>)
 }
 

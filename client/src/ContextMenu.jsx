@@ -32,6 +32,8 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file"); //opens files
     fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
+    fInput.setAttribute("multiple", true); ////only useful for inspector debugging
+
     fInput.click();
     fInput.onchange = (e) => {
       Upload(e, canvas)
