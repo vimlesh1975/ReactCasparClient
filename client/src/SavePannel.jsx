@@ -208,26 +208,41 @@ const SavePannel = () => {
         canvas.requestRenderAll();
 
     }
-    const handleFileRead2 = (e) => {
-        const content = fileReader.result;
-        var aa = content.split('\r\n')
-        aa.splice(-1)
-        var updatedcanvasList = [...canvasList]
-        aa.forEach(element => {
-            var cc = JSON.parse(element)
-            updatedcanvasList.push(cc)
-        });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-    };
-    const handleFileChosen2 = (file) => {
-        if (file) {
-            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-            fileReader = new FileReader();
-            fileReader.onloadend = handleFileRead2;
-            fileReader.readAsText(file);
+    // const handleFileRead2 = (e) => {
+    //     const content = fileReader.result;
+    //     var aa = content.split('\r\n')
+    //     aa.splice(-1)
+    //     var updatedcanvasList = [...canvasList]
+    //     aa.forEach(element => {
+    //         var cc = JSON.parse(element)
+    //         updatedcanvasList.push(cc)
+    //     });
+    //     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+    // };
+    const handleFileChosen2 = async (files) => {
+        if (files) {
+            var updatedcanvasList = [...canvasList]
+            for (let file of files) {
+                const content = await readFile(file)
+                var aa = content.split('\r\n')
+                aa.splice(-1)
+                aa.forEach(element => {
+                    var cc = JSON.parse(element)
+                    updatedcanvasList.push(cc)
+                });
+            }
+            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
         }
-    };
-
+    }
+    const readFile = (file) => {
+        return new Promise((resolve, reject) => {
+            fileReader = new FileReader();
+            fileReader.onloadend = () => {
+                resolve(fileReader.result);
+            }
+            fileReader.readAsText(file);
+        });
+    }
     const drawingFileNew = () => {
         var updatedcanvasList = [];
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
@@ -340,7 +355,8 @@ const SavePannel = () => {
                         id='file'
                         className='input-file'
                         accept='.txt'
-                        onChange={e => handleFileChosen2(e.target.files[0])}
+                        multiple
+                        onChange={e => handleFileChosen2(e.target.files)}
                     /><br />
                 </div>
                 <div className='drawingToolsRow' >
