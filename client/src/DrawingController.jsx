@@ -1844,7 +1844,31 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
         </head>
     
-        <body>
+        <body style="overflow:hidden">
+        <script>
+
+        const updatestring=(str1, str2) =>{
+            const idTemplate =  canvas.getObjects().filter(function(element) {
+                return element.id=== str1;
+              });
+                idTemplate[0].set({text:str2})
+                canvas.requestRenderAll();
+        }
+        const updateimage=(str1, base64data) =>{
+            const idTemplate =  canvas.getObjects().filter(function(element) {
+                return element.id=== str1;
+              });
+            //   idTemplate[0].set({preserveAspectRatio: 'none'});
+            //   idTemplate[0].setPreserveAspectRatio('none');
+
+              idTemplate[0].setSrc(base64data, function(){
+                idTemplate[0].set({preserveAspectRatio: 'none'});
+                idTemplate[0].setPreserveAspectRatio('none');
+                canvas.requestRenderAll();
+              });
+
+        }
+        <//script>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script type="module">
                             const shadowOptions = {
@@ -1934,7 +1958,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     year: "numeric", month: "numeric", day: "numeric", hour12: false,
                     hour: "numeric", minute: "numeric", second: "numeric"
                 });
-                var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+                // var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+                var retVal =ss + "_FileName";
                 if (retVal !== null) {
                     element.download = retVal + '.html';
                     document.body.appendChild(element); // Required for this to work in FireFox
@@ -2053,7 +2078,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-        var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        // var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
+        var retVal = ss + "_FileName";
         if (retVal !== null) {
             element.download = retVal + '.html';
             document.body.appendChild(element); // Required for this to work in FireFox
