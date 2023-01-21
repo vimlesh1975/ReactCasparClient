@@ -442,7 +442,7 @@ export const createRect = (canvas) => {
         width: 500 * 1.87,
         height: 40 * 1.87,
         opacity: 0.9,
-        fill: gradient2(),
+        fill: '#051b7d',
         hasRotatingPoint: true,
         objectCaching: false,
         stroke: options.stroke,
@@ -1075,7 +1075,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
         scaleX: size,
         scaleY: size,
         opacity: 0.9,
-        fill: gradient2(),
+        fill: '#051b7d',
         objectCaching: false,
         stroke: options.stroke,
         strokeWidth: 2,
@@ -1823,14 +1823,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <title>Document</title>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js" integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         </head>
-        <body>
+        <body style="background-color: grey;">
         <div style="text-align: center;">
 		<button onclick="exporthtml()">Export html</button>
 	    </div>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script>
+            
             const exporthtml = () => {
-
                 const aa =
                     \`<!DOCTYPE html>
                     <html lang="en">
@@ -1868,7 +1868,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 const project = core.getProject('HTML Animation Tutorial', {state:${xx}})
                     
                 const sheet = project.sheet('Sheet 1')
-    
+
+                const hexToRGB = hex => {
+                    const red = parseInt(hex.slice(1, 3), 16)
+                    const green = parseInt(hex.slice(3, 5), 16)
+                    const blue = parseInt(hex.slice(5, 7), 16)
+                    return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
+                    // return [ r, g, b ]
+                }
                 canvas.getObjects().forEach(element => {
                     var obj = sheet.object(element.id, {
                         left: element.left,
@@ -1879,14 +1886,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                         scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                         angle: element.angle,
-                        fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                        rx: 10,
-                        ry: 10,
-                        strokeWidth: core.types.number(2, { range: [0, 100] }),
-                        stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                        shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
-                        fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
-                        fontSize: 20,
+                        fill: core.types.rgba(hexToRGB(element.fill)),
+                        rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
+                        ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
+                        strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                        stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
+                        shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(element.shadow.blur, { range: [0, 100] }) },
+                        fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
                     });
     
                     obj.onValuesChange((obj) => {
@@ -1905,7 +1911,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             strokeWidth: obj.strokeWidth,
                             stroke: obj.stroke,
                             shadow: obj.shadow,
-                            fontWeight: obj.fontWeight,
                             fontSize: obj.fontSize,
                         });
                         element.setCoords();
@@ -1959,13 +1964,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 const project = core.getProject('HTML Animation Tutorial', {
         
                 })
-                const sheet = project.sheet('Sheet 1')
+                const sheet = project.sheet('Sheet 1');
+                window.sheet=sheet;
         
                 const dd = (obj, event) => {
                         // console.log(event)
                         studio.transaction(({ set }) => {
                             set(obj.props.left, event.target.left);
                             set(obj.props.top, event.target.top);
+                            set(obj.props.width, event.target.width);
                             set(obj.props.angle, event.target.angle);
                         });
                     };
@@ -1976,6 +1983,18 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             set(obj.props.scaleY, event.transform.target.scaleY);
                         });
                     };
+                    const dd3 = (obj, event) => {
+                        studio.transaction(({ unset }) => {
+                            unset(obj.props);
+                        });
+                    };
+                    const hexToRGB = hex => {
+                        const red = parseInt(hex.slice(1, 3), 16)
+                        const green = parseInt(hex.slice(3, 5), 16)
+                        const blue = parseInt(hex.slice(5, 7), 16)
+                        return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
+                        // return [ r, g, b ]
+                    }
                     canvas.getObjects().forEach(element => {
                         var obj = sheet.object(element.id, {
                             left: element.left,
@@ -1986,18 +2005,20 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                             scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                             angle: element.angle,
-                            fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                            rx: 10,
-                            ry: 10,
-                            strokeWidth: core.types.number(2, { range: [0, 100] }),
-                            stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                            shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
-                            fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
-                            fontSize: 20,
+                            fill: core.types.rgba(hexToRGB(element.fill)),
+                            rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
+                            ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
+                            strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                            stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
+                            shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                            fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
                         });
+                        
                     element.on("mousedown", () => studio.setSelection([obj]), false);
                     element.on("mousemove", (e) => dd(obj, e), false);
                     element.on("scaling", (e) => dd2(obj, e), false);
+                    element.on("mousedblclick", (e) => dd3(obj, e), false);
+
                     obj.onValuesChange((obj) => {
                         element.set({
                             left: obj.left,
@@ -2014,7 +2035,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             strokeWidth: obj.strokeWidth,
                             stroke: obj.stroke,
                             shadow: obj.shadow,
-                            fontWeight: obj.fontWeight,
                             fontSize: obj.fontSize,
                         });
                         element.setCoords();
