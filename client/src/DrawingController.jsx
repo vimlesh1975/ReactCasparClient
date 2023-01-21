@@ -350,26 +350,28 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
 }
 
 export const Upload = (e, canvas) => {
-    if (e.target.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            var imgObj = new Image();
-            imgObj.src = event.target.result;
-            imgObj.onload = function () {
-                var image = new fabric.Image(imgObj);
-                image
-                    .set({
-                        id: 'ccg_' + fabric.Object.__uid,
-                        class: 'class_' + fabric.Object.__uid,
-                        shadow: shadowOptions,
-                        strokeUniform: true,
-                        objectCaching: false,
-                    })
-                // .scale(0.5);
-                canvas.add(image).setActiveObject(image);
+    if (e.target.files) {
+        Array.from(e.target.files).forEach(element => {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function () {
+                    var image = new fabric.Image(imgObj);
+                    image
+                        .set({
+                            id: 'ccg_' + fabric.Object.__uid,
+                            class: 'class_' + fabric.Object.__uid,
+                            shadow: shadowOptions,
+                            strokeUniform: true,
+                            objectCaching: false,
+                        })
+                    // .scale(0.5);
+                    canvas.add(image).setActiveObject(image);
+                };
             };
-        };
-        reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(element);
+        });
     }
 }
 
