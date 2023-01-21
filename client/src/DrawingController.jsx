@@ -1813,7 +1813,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const exportJSONforTheatrejs = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         // eslint-disable-next-line
-        const xx = "${" + "JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))" + "}"
+        const xx = "${" + "JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))" + "}";
+        // eslint-disable-next-line
+        const xx2 = "${" + "document.getElementById('loopcount').value" + "}";
+        // eslint-disable-next-line
+        const xx3 = "${" + "document.getElementById('duration').value" + "}";
         const aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -1826,6 +1830,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         <body style="background-color: grey;">
         <div style="text-align: center;">
 		<button onclick="exporthtml()">Export html</button>
+		<span>Loop Count:</span><input id="loopcount" type="number" value=1 style="width:40px" />
+		<span>Duration:</span><input id="duration" type="number" value=2 style="width:40px" />
 	    </div>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script>
@@ -1943,7 +1949,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     
                 });
                 project.ready.then(() => {
-                    sheet.sequence.play()
+                    sheet.sequence.play({ iterationCount: ${xx2}, range: [0, ${xx3}] })
                 })
         <//script>
     </body>
