@@ -1818,6 +1818,51 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         const xx2 = "${" + "document.getElementById('loopcount').value != 0 ? document.getElementById('loopcount').value : Infinity" + "}";
         // eslint-disable-next-line
         const xx3 = "${" + "document.getElementById('duration').value" + "}";
+        const xx4 = `canvas.getObjects().forEach(element => {
+            var obj = sheet.object(element.id, {
+                left: element.left,
+                top: element.top,
+                width: element.width,
+                height: element.height,
+                opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                angle: element.angle,
+                fill: core.types.rgba(hexToRGB(element.fill)),
+                rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
+                ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
+                strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
+                shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(element.shadow.blur, { range: [0, 100] }) },
+                fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
+                strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):0, { range: [0, 1000] }),
+                strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):0, { range: [-1000, 1000] }),
+            });`
+
+        const xx5 = ` obj.onValuesChange((obj) => {
+                element.set({
+                    left: obj.left,
+                    top: obj.top,
+                    width: obj.width,
+                    height: obj.height,
+                    opacity: obj.opacity,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    angle: obj.angle,
+                    fill: obj.fill,
+                    rx: obj.rx,
+                    ry: obj.ry,
+                    strokeWidth: obj.strokeWidth,
+                    stroke: obj.stroke,
+                    shadow: obj.shadow,
+                    fontSize: obj.fontSize,
+                    strokeDashArray:[obj.strkdsar,obj.strkdsar],
+                    strokeDashOffset:obj.strkDsOfst
+                });
+                element.setCoords();
+                canvas.requestRenderAll();
+            });`
+
         const aa = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -1905,50 +1950,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
                     // return [ r, g, b ]
                 }
-                canvas.getObjects().forEach(element => {
-                    var obj = sheet.object(element.id, {
-                        left: element.left,
-                        top: element.top,
-                        width: element.width,
-                        height: element.height,
-                        opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-                        scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-                        scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-                        angle: element.angle,
-                        fill: core.types.rgba(hexToRGB(element.fill)),
-                        rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
-                        ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
-                        strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-                        stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
-                        shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(element.shadow.blur, { range: [0, 100] }) },
-                        fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
-                        strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):30, { range: [0, 1000] }),
-                        strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):30, { range: [-1000, 1000] }),
-                    });
+                ${xx4}
+                ${xx5}
     
-                    obj.onValuesChange((obj) => {
-                        element.set({
-                            left: obj.left,
-                            top: obj.top,
-                            width: obj.width,
-                            height: obj.height,
-                            opacity: obj.opacity,
-                            scaleX: obj.scaleX,
-                            scaleY: obj.scaleY,
-                            angle: obj.angle,
-                            fill: obj.fill,
-                            rx: obj.rx,
-                            ry: obj.ry,
-                            strokeWidth: obj.strokeWidth,
-                            stroke: obj.stroke,
-                            shadow: obj.shadow,
-                            fontSize: obj.fontSize,
-                            strokeDashArray:[obj.strkdsar,obj.strkdsar],
-                            strokeDashOffset:obj.strkDsOfst
-                        });
-                        element.setCoords();
-                        canvas.requestRenderAll();
-                    });
+                   
     
                 });
                 project.ready.then(() => {
@@ -2002,13 +2007,16 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 window.sheet=sheet;
         
                 const dd = (obj, event) => {
-                        // console.log(event)
-                        studio.transaction(({ set }) => {
-                            set(obj.props.left, event.target.left);
-                            set(obj.props.top, event.target.top);
-                            set(obj.props.width, event.target.width);
-                            set(obj.props.angle, event.target.angle);
-                        });
+                        // console.log(event.button)
+                        if(event.button === 1){
+                            studio.transaction(({ set }) => {
+                                set(obj.props.left, event.target.left);
+                                set(obj.props.top, event.target.top);
+                                set(obj.props.width, event.target.width);
+                                set(obj.props.angle, event.target.angle);
+                            });
+                        }
+                       
                     };
                     const dd2 = (obj, event) => {
                         // console.log(event)
@@ -2029,55 +2037,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
                         // return [ r, g, b ]
                     }
-                    canvas.getObjects().forEach(element => {
-                        var obj = sheet.object(element.id, {
-                            left: element.left,
-                            top: element.top,
-                            width: element.width,
-                            height: element.height,
-                            opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-                            scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-                            scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-                            angle: element.angle,
-                            fill: core.types.rgba(hexToRGB(element.fill)),
-                            rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
-                            ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
-                            strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-                            stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
-                            shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
-                            fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
-                            strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):30, { range: [0, 1000] }),
-                            strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):30, { range: [-1000, 1000] }),
-                         });
+                    ${xx4}
                         
                     element.on("mousedown", () => studio.setSelection([obj]), false);
                     element.on("mousemove", (e) => dd(obj, e), false);
                     element.on("scaling", (e) => dd2(obj, e), false);
                     element.on("mousedblclick", (e) => dd3(obj, e), false);
 
-                    obj.onValuesChange((obj) => {
-                        element.set({
-                            left: obj.left,
-                            top: obj.top,
-                            width: obj.width,
-                            height: obj.height,
-                            opacity: obj.opacity,
-                            scaleX: obj.scaleX,
-                            scaleY: obj.scaleY,
-                            angle: obj.angle,
-                            fill: obj.fill,
-                            rx: obj.rx,
-                            ry: obj.ry,
-                            strokeWidth: obj.strokeWidth,
-                            stroke: obj.stroke,
-                            shadow: obj.shadow,
-                            fontSize: obj.fontSize,
-                            strokeDashArray:[obj.strkdsar,obj.strkdsar],
-                            strokeDashOffset:obj.strkDsOfst
-                        });
-                        element.setCoords();
-                        canvas.requestRenderAll();
-                    });
+                    ${xx5}
         
                 });
                 project.ready.then(() => {
