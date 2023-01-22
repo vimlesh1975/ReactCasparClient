@@ -1815,7 +1815,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         // eslint-disable-next-line
         const xx = "${" + "JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))" + "}";
         // eslint-disable-next-line
-        const xx2 = "${" + "document.getElementById('loopcount').value" + "}";
+        const xx2 = "${" + "document.getElementById('loopcount').value != 0 ? document.getElementById('loopcount').value : Infinity" + "}";
         // eslint-disable-next-line
         const xx3 = "${" + "document.getElementById('duration').value" + "}";
         const aa = `<!DOCTYPE html>
@@ -1830,7 +1830,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         <body style="background-color: grey;">
         <div style="text-align: center;">
 		<button onclick="exporthtml()">Export html</button>
-		<span>Loop Count:</span><input id="loopcount" type="number" value=1 style="width:40px" />
+		<span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" id="loopcount" type="number" value=0 style="width:40px" />
 		<span>Duration:</span><input id="duration" type="number" value=2 style="width:40px" />
 	    </div>
             <canvas id="canvas" width="1920" height="1080"></canvas>
@@ -1891,7 +1891,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
                     object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
                 })
-                console.log(canvas.getObjects());
                 import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-only.min.js'
                 const { core } = Theatre
     
@@ -1923,6 +1922,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
                         shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(element.shadow.blur, { range: [0, 100] }) },
                         fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
+                        strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):30, { range: [0, 1000] }),
+                        strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):30, { range: [-1000, 1000] }),
                     });
     
                     obj.onValuesChange((obj) => {
@@ -1942,6 +1943,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             stroke: obj.stroke,
                             shadow: obj.shadow,
                             fontSize: obj.fontSize,
+                            strokeDashArray:[obj.strkdsar,obj.strkdsar],
+                            strokeDashOffset:obj.strkDsOfst
                         });
                         element.setCoords();
                         canvas.requestRenderAll();
@@ -2043,7 +2046,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
                             shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                             fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
-                        });
+                            strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):30, { range: [0, 1000] }),
+                            strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):30, { range: [-1000, 1000] }),
+                         });
                         
                     element.on("mousedown", () => studio.setSelection([obj]), false);
                     element.on("mousemove", (e) => dd(obj, e), false);
@@ -2067,6 +2072,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                             stroke: obj.stroke,
                             shadow: obj.shadow,
                             fontSize: obj.fontSize,
+                            strokeDashArray:[obj.strkdsar,obj.strkdsar],
+                            strokeDashOffset:obj.strkDsOfst
                         });
                         element.setCoords();
                         canvas.requestRenderAll();
