@@ -2014,7 +2014,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     mouseDown = 0;
                 }
 
-                const dd = (obj, event) => {
+                const onMouseMove = (obj, event) => {
                         if(mouseDown === 1){
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, event.target.left);
@@ -2025,14 +2025,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }
                        
                     };
-                    const dd2 = (obj, event) => {
+                    const onScaling = (obj, event) => {
                         // console.log(event)
                         studio.transaction(({ set }) => {
                             set(obj.props.scaleX, event.transform.target.scaleX);
                             set(obj.props.scaleY, event.transform.target.scaleY);
                         });
                     };
-                    const dd3 = (obj, event) => {
+                    const onMousedblclick = (obj, event) => {
                         studio.transaction(({ unset }) => {
                             unset(obj.props);
                         });
@@ -2047,15 +2047,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                     ${xx4}
                         
                     element.on("mousedown", () => studio.setSelection([obj]), false);
-                    element.on("mousemove", (e) => dd(obj, e), false);
-                    element.on("scaling", (e) => dd2(obj, e), false);
-                    element.on("mousedblclick", (e) => dd3(obj, e), false);
+                    element.on("mousemove", (e) => onMouseMove(obj, e), false);
+                    element.on("scaling", (e) => onScaling(obj, e), false);
+                    element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
 
                     ${xx5}
         
                 });
                 project.ready.then(() => {
-                    sheet.sequence.play({ iterationCount: 1, range: [0, 10] })
+                    sheet.sequence.play({ iterationCount: 1, range: [0, 2] })
                 })
             </script>
         </body>
