@@ -2005,10 +2005,17 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 })
                 const sheet = project.sheet('Sheet 1');
                 window.sheet=sheet;
-        
+
+                var mouseDown = 0;
+                document.body.onmousedown = function() { 
+                    mouseDown = 1;
+                }
+                document.body.onmouseup = function() {
+                    mouseDown = 0;
+                }
+
                 const dd = (obj, event) => {
-                        // console.log(event.button)
-                        if(event.button === 1){
+                        if(mouseDown === 1){
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, event.target.left);
                                 set(obj.props.top, event.target.top);
