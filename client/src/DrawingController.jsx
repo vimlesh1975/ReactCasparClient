@@ -1877,9 +1877,15 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 		<button onclick="exporthtml()">Export html</button>
 		<span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" id="loopcount" type="number" value=0 style="width:40px" />
 		<span>Duration:</span><input id="duration" type="number" value=2 style="width:40px" />
+		<button onclick="makeAllDefault()">Make All Default</button>
+
 	    </div>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script>
+            const makeAllDefault=()=>{
+                localStorage.clear();
+                location.reload();
+            }
             
             const exporthtml = () => {
                 const aa =
@@ -1993,23 +1999,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 const { core, studio } = Theatre
                 window.studio = studio
 
-                const extensionConfig = {
-                id: 'hello-world-extension',
-                toolbars: {
-                    global(set, studio) {
-                    set([
-                        {
-                        type: 'Icon',
-                        title: 'HTML Export',
-                        svgSource: '👁',
-                        onClick: () => exporthtml()
-                        },
-                    ])
-                    },
-                },
-                panes: [],
-                }
-                studio.extend(extensionConfig)
+                // const extensionConfig = {
+                // id: 'hello-world-extension',
+                // toolbars: {
+                //     global(set, studio) {
+                //     set([
+                //         {
+                //         type: 'Icon',
+                //         title: 'HTML Export',
+                //         svgSource: '👁',
+                //         onClick: () => exporthtml()
+                //         },
+                //     ])
+                //     },
+                // },
+                // panes: [],
+                // }
+                // studio.extend(extensionConfig)
 
                 studio.initialize()
                 const project = core.getProject('HTML Animation Tutorial', {

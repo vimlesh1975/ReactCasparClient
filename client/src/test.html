@@ -11,14 +11,22 @@
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
-<body>
+<body style="background-color: grey;">
 	<div style="text-align: center;">
 		<button onclick="exporthtml()">Export html</button>
+		<span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" id="loopcount"
+			type="number" value=0 style="width:40px" />
+		<span>Duration:</span><input id="duration" type="number" value=2 style="width:40px" />
+		<button onclick="makeAllDefault()">Make All Default</button>
+
 	</div>
 	<canvas id="canvas" width="1920" height="1080"></canvas>
 	<script>
-		const exporthtml = () => {
+		const makeAllDefault = () => {
+			console.log('first')
+		}
 
+		const exporthtml = () => {
 			const aa =
 				`<!DOCTYPE html>
                     <html lang="en">
@@ -32,10 +40,41 @@
                         crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
         </head>
     
-        <body>
+        <body style="overflow:hidden">
+        <script>
+
+        const updatestring=(str1, str2) =>{
+            const idTemplate =  canvas.getObjects().filter(function(element) {
+                return element.id=== str1;
+              });
+                idTemplate[0].set({text:str2})
+                canvas.requestRenderAll();
+        }
+        const updateimage=(str1, base64data) =>{
+            const idTemplate =  canvas.getObjects().filter(function(element) {
+                return element.id=== str1;
+              });
+            //   idTemplate[0].set({preserveAspectRatio: 'none'});
+            //   idTemplate[0].setPreserveAspectRatio('none');
+
+              idTemplate[0].setSrc(base64data, function(){
+                idTemplate[0].set({preserveAspectRatio: 'none'});
+                idTemplate[0].setPreserveAspectRatio('none');
+                canvas.requestRenderAll();
+              });
+
+        }
+        <//script>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script type="module">
-                            const shadowOptions = {
+            const hexToRGB = hex => {
+                const red = parseInt(hex.slice(1, 3), 16)
+                const green = parseInt(hex.slice(3, 5), 16)
+                const blue = parseInt(hex.slice(5, 7), 16)
+                return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
+                // return [ r, g, b ]
+            }
+                 const shadowOptions = {
                     color: 'black',
                     blur: 30,
                     offsetX: 0,
@@ -45,64 +84,59 @@
                 var canvas = new fabric.Canvas('canvas');
                 window.canvas=canvas;
                 canvas.preserveObjectStacking = true;
-                const content ={"version":"5.2.4","objects":[{"type":"circle","version":"5.2.4","originX":"left","originY":"top","left":615.03,"top":166.89,"width":200,"height":200,"fill":"#0000ff","stroke":"#ffffff","strokeWidth":3,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"radius":100,"startAngle":0,"endAngle":360,"id":"ccg_7","class":"class_7","selectable":true},{"type":"polygon","version":"5.2.4","originX":"left","originY":"top","left":921.93,"top":178.12,"width":198,"height":173,"fill":"#0000ff","stroke":"#ffffff","strokeWidth":3,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":0.9,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"id":"ccg_8","class":"class_8","selectable":true,"points":[{"x":290,"y":124},{"x":390,"y":190},{"x":354,"y":297},{"x":226,"y":297},{"x":192,"y":190}]}]};
-                canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
-                    object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
-                })
-                console.log(canvas.getObjects());
-                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-only.min.js'
+                const content ={"version":"5.2.4","objects":[{"type":"image","version":"5.2.4","originX":"left","originY":"top","left":631.91,"top":320.65,"width":204,"height":120,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"id":"ccg_7","class":"class_7","selectable":true,"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4AgMAAADDF/UCAAAADFBMVEUEAQBVCwyVEhTmGR4R/hqBAAADaElEQVRYw+2YMW/UMBSAn3MioUTiJqTqkHoMDJUQ5BfAuarEwkCH7mVjzMrAkYhfEBYYYeh0DGVgYKD1VfyBTEhsqdShKgOHdKCkXPx4Dki49IRfGFi4DG0s+ZP9Pr/42QfY/oEFs2AWzH/ETP3mX9bnMXWEWAL4CnUGYBqJkym7OP0stiHBGnrybh8nkZsJcBbtb3v0mvbWywHmbmYmEJ9IaMYBcRtRDtzxUO+vFEkfpxTV86bt9AYhahrnGh7ROAoLYLjOQcUEBfQiVKXpxc2QaEF/BEoyLRvd7jWVJhjpYSrw0PBuRieVpI457EFAUxRxrdyuQ5zRQBNYhS6ZG2AxYKyPMgxFBZFhNGN9NIgN6k4cDAg8J8E9N6PAYuZJOMsc/sZc5rg+rq14kpcM17PErGpQEBPmZkXrhOM6hV+Px3INm2A/l4DjGpYs5B5wXKdi12IeSY/h7WSntJjoZIe1V2UW43P2Kh1XpxzEFSOvAZYt5CoAx7V4YzE3JINBGRcWE1aC5UBajODt8fUpBwmHGWWn8sAfIcfbI4vZ5XnzZhYzSFk52p9aDDUYOfqU9rZfT0Btjut1i9nnuS67FnO2ys2rP6PsusU88EecHBVlKH4Ssogky3U4iYLU5I/w8rJbcFyvqXESPh4T03lc1B1qc7yt6e56w+xP1BrTWzBbCZu5Fa8HecRisn6x2m8UTFfDqc/ZDzYoR18NG2Z4kXL0nDueGkTt6R/bVaTSRDLOB6a4b9Gp4AVcoJPCF1P63fFksfm8O1Poj82HXfnM89shdEuIJnPq1XxGNTsC1StTtygWzfAmlakNCTG1qQlaMOLJKb9SIAshUsXCGee88+UOVtQ5J38pxHiwxfh+4oMKlk1/4q5CfKdyr0/ub0NPhxQSqELRexY4maPeJkXxqan13yiyS9vX3PHoIruPzd5DA3zwQ8VwUFzWAkdNvo1QqsOQwYwTTIdwnpArMPSw7jCYlCazBzeJeQh7NFVO3W7UHjcOmrNOzb6X/HTQ5i6jJa3p2Uz7I5MGxOReK2bcpyPvtNOKOdFLcE/ttLublSvwOmrr4CY8bOkA4S3cgpb3xve0hzxre9c033ZbxnynbZkxdPBfzI32t9bM7GwddTIaVPt7/dpf/Bbw7i+Yj4vfUBbMglkwzuc7vDLp6ghnOh4AAAAASUVORK5CYII=","crossOrigin":null,"filters":[]},{"type":"image","version":"5.2.4","originX":"left","originY":"top","left":549.41,"top":108.76,"width":204,"height":120,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"id":"ccg_9","class":"class_9","selectable":true,"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4BAMAAABMVwCiAAAAMFBMVEUAAQAfGgMwKQRKPgXWEiJpWgeIdgfnZx2pkwvrgh3vlhbIrQrxqxb1uBLmwwv41hH5Q3rzAAADo0lEQVRo3u2YTWgTQRTHJw0pQg8ueBEEKQgiBDQiihBoL4GlIW0CUuipCQ2Cp+ay94RKobdcelS8eC2xem8uvfdSKHhJ2xg/EIw1H43dZMf52KQzyxZ28c0iuO+0mcP+dt77v/+8CUoFEijEhJgQE2JCTIj5RzELRiCYLH6rGqPjj0YZ4yPlGB6KMQuc8lsxJs0xXcWYRY4ZGWoxS3ZthqmUobI2OzbnS2qktG/015yzgw8Vu4C9IUsVRpc5h4owmW1J1iNFmOz4+8u2DNRgypO2PFBZm9rEZDJ0N4YijFCNmi/L8YXRBWdOq5NAWswTrc62EkxWbBVqol3dAMY08CSGdqHIU6MLjElfYuwdvPFxvnlPWhk7LGbRh6/5qM0Bp1zIY4EBjVnAjveycu2DK42l7ZPjd1cNpisf2EPwpHFpnctZ3IZvz7bQNOPO2YfHkC6pSfNmw7N7+lLaKKW3RQXXpBwCYRbpRSAj3gbKKjDZc/kAZVZ6AYshinrFn44kzBAW820yzOqOgfoQEKO7XmgyDlv4a0zatUEynt3GI2bJ9WABx2RdHV8F5vyKOxUkpux6ToIrLev62bRvvM02PjDYbdWrC3iL6xTTdK7mMe4jyJhhY0DBsVrCuAOKiTGM89PrGJ+BYhA9OTv1irQ2RdaOYTF5OvrdMzVxbZqsVRB8cZqlpnPtcwIUE2HzxhNLfOs8XfoFu53b9J29ub6sAIzfwWKm2HY2BBVEmfpysBh0i77UjJuzci9pwBi0ylXQEpoT2gWYCqr0vcV24bJrzPYZOAZFac3NcfPQnHViBXgMilEZNPO8earwzSn2vZ02+mhpajDo5iRtVAAdpCqStuewfQHnLOaQ9Vq9QssEnbPqe1nW5l1TixPcKXDhLcFSpoisW3MtWhwLFEOc2EzIst6oVggOdDfMNM2cJGtr2UpMY9CzhlukVRwXZ1kjsu4n++gRsAL43xtfnz/UIndW6riF5jD+IOoCzmPE2KX1L/7IKeh9MfpUbmZ8AN37eRljsh2OPRS8OpMgS6Q9X9Zh0xZ1UJiSV4kZ3AeVdIRUvLdiC8HaLLFhmrjOSb0Hez6v458o8pjYzOCZhh5wa462k3gd+PR8WuEloiPGzBpfu1HFe+Bq4/PfwDmJ7sJjXmxtbUpuRw6fvVmkPlZx6TQADHFvKxEAh0zwJwFgIu3e9wAw1O5yAWCugV9xrrrGHQeRtflAdoOiWxoKI4wwwggjjP8p/gAdifpbiJBf/AAAAABJRU5ErkJggg==","crossOrigin":null,"filters":[]},{"type":"image","version":"5.2.4","originX":"left","originY":"top","left":264.39,"top":161.26,"width":204,"height":120,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"id":"ccg_11","class":"class_11","selectable":true,"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4CAMAAACJp+2jAAAAbFBMVEXrEDLnETbZGDbQHTbtF0DEJTi7KjquMzubPT3sJ0mNRUCCTD93UkBtWEFgX0NVZUTtOFZIbUYzeUkjgkwUi07wSGQLkE0AllHyXHX0dYr1hZj2lqb5q7j5t8H7ydD93uT/6uz/8vP/+/n+//woPi8AAAADDElEQVR42u3b2W6rMBAAUEPIQpOQXFZvbM7//2MhjdrYgKG6STVG45dKpQ89srFnxgMp/mTc/mQQxCAGMYhBDGIQgxjEIAYxiEEMYhCDGMQgBjGI+Y+RXk6H3db3gzC8Ui4bdzHxcUuMcWWVi5j8PJA8PKJ1DJOePDI5At44hMltlC+OcgWT7MjsyGo3MNHotAQZ40JKwen1/tyTLmCOI5KdqJ7WVSNZ0P2SKeiY/DCQeMdkcGi28koIVbAx+X5AOaWjEYAqry/XvBgzmJd9MhnOKBG8WEPe+r54F2tsVmcMLuZiWPx4JtBUVELFJMaevElmo2bFaqCY3aTFkgIIBRITGe9LvCifUSVETOrrmIs1OfuZj7YFiDnploM908yeAgJ4mFyfmE1uxXBvdJagYM6WRTbAVAQ2Rs8rt9aChgpJADmfia0TY2AY0TEKGEYPZPzceFw+/78lIbBnRl9lH+Zj4f3UMeo+mQkBY1J9lcWDIiDtTtFM9h6VEeCYf/rhP6xodu98/4DKlhPoGP3E3I+UZ+tHFPr4ARmjJ2XHsVqz0P4EMkYPmKPRwjnVVqKowWI29vf/jmlCo07La5gYfwGmC2LMEb7W8yKMnmMmE/czfKw4SEs3McwNzKJlVg5qapmo17EBdAdo4+zW/BXGfFNki4cmjHCmeuwRgUccCzTziUCz27qUAI9JvZkUoHthAna/pFEUOmYuOeMe/b5uuu9qoDPN36TNFXSMUdCInC5oGOvMqAE6Vmoyi4CRtQhYe7CLgEZ51kut5VkBG2NOzUzhnIIunA+uNCKXrzTMG82ll03VDSLGvAb04wUYxWFeAxaJv6ILWiPcXHR1Xt6gYoZNDScrpgoBNzUUxcfv2k0Y5HaTdTUCjczNdIsWA96ita7muX5P88fbGikTUnCWhfesNCxvNwcwRbJfT8NpPzkbO+Ud0/I2TJGffVtX85t6zrF9fmldYDUfNjySnP6Tk0235ALXPzlZlM8gBjGIQQxiEIMYxCAGMYhBDGIQgxjEIAYxiEEMYhCDmDeNT9HbPhzUngs6AAAAAElFTkSuQmCC","crossOrigin":null,"filters":[]},{"type":"image","version":"5.2.4","originX":"left","originY":"top","left":170.64,"top":378.77,"width":204,"height":120,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"cropX":0,"cropY":0,"id":"ccg_13","class":"class_13","selectable":true,"src":"data:image/png;base64,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","crossOrigin":null,"filters":[]}]};
+                import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
                 const { core } = Theatre
-    
                 const project = core.getProject('HTML Animation Tutorial', {state:${JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))}})
-                    
                 const sheet = project.sheet('Sheet 1')
-    
-                canvas.getObjects().forEach(element => {
-                    var obj = sheet.object(element.id, {
-                        left: element.left,
-                        top: element.top,
-                        width: element.width,
-                        height: element.height,
-                        opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-                        scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-                        scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-                        angle: element.angle,
-                        fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                        rx: 10,
-                        ry: 10,
-                        strokeWidth: core.types.number(2, { range: [0, 100] }),
-                        stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-                        shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
-                        fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
-                        fontSize: 20,
-                    });
-    
-                    obj.onValuesChange((obj) => {
-                        element.set({
-                            left: obj.left,
-                            top: obj.top,
-                            width: obj.width,
-                            height: obj.height,
-                            opacity: obj.opacity,
-                            scaleX: obj.scaleX,
-                            scaleY: obj.scaleY,
-                            angle: obj.angle,
-                            fill: obj.fill,
-                            rx: obj.rx,
-                            ry: obj.ry,
-                            strokeWidth: obj.strokeWidth,
-                            stroke: obj.stroke,
-                            shadow: obj.shadow,
-                            fontWeight: obj.fontWeight,
-                            fontSize: obj.fontSize,
-                        });
-                        element.setCoords();
-                        canvas.requestRenderAll();
-                    });
-    
+                canvas.loadFromJSON(content, ()=> {
+                    canvas.getObjects().forEach(element => {
+            var obj = sheet.object(element.id, {
+                left: element.left,
+                top: element.top,
+                width: element.width,
+                height: element.height,
+                opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                angle: element.angle,
+                fill: core.types.rgba(hexToRGB(element.fill?element.fill:'#ff0000')),
+                rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
+                ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
+                strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
+                shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
+                strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):0, { range: [0, 1000] }),
+                strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):0, { range: [-1000, 1000] }),
+            });
+                     obj.onValuesChange((obj) => {
+                element.set({
+                    left: obj.left,
+                    top: obj.top,
+                    width: obj.width,
+                    height: obj.height,
+                    opacity: obj.opacity,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    angle: obj.angle,
+                    fill: obj.fill,
+                    rx: obj.rx,
+                    ry: obj.ry,
+                    strokeWidth: obj.strokeWidth,
+                    stroke: obj.stroke,
+                    shadow: obj.shadow,
+                    fontSize: obj.fontSize,
+                    strokeDashArray:[obj.strkdsar,obj.strkdsar],
+                    strokeDashOffset:obj.strkDsOfst
+                });
+                element.setCoords();
+                canvas.requestRenderAll();
+            });
+                })
                 });
                 project.ready.then(() => {
-                    sheet.sequence.play({ iterationCount: Infinity, range: [0, 1.3] })
+                    sheet.sequence.play({ iterationCount: ${document.getElementById('loopcount').value != 0 ? document.getElementById('loopcount').value : Infinity}, range: [0, ${document.getElementById('duration').value}] })
                 })
         <//script>
     </body>
@@ -117,7 +151,8 @@
 				year: "numeric", month: "numeric", day: "numeric", hour12: false,
 				hour: "numeric", minute: "numeric", second: "numeric"
 			});
-			var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+			// var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+			var retVal = ss + "_FileName";
 			if (retVal !== null) {
 				element.download = retVal + '.html';
 				document.body.appendChild(element); // Required for this to work in FireFox
@@ -134,36 +169,79 @@
 		};
 		var canvas = new fabric.Canvas('canvas');
 		canvas.preserveObjectStacking = true;
-		const content = { "version": "5.2.4", "objects": [{ "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 615.03, "top": 166.89, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_7", "class": "class_7", "selectable": true }, { "type": "polygon", "version": "5.2.4", "originX": "left", "originY": "top", "left": 921.93, "top": 178.12, "width": 198, "height": 173, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "id": "ccg_8", "class": "class_8", "selectable": true, "points": [{ "x": 290, "y": 124 }, { "x": 390, "y": 190 }, { "x": 354, "y": 297 }, { "x": 226, "y": 297 }, { "x": 192, "y": 190 }] }] }
+		const content = { "version": "5.2.4", "objects": [{ "type": "image", "version": "5.2.4", "originX": "left", "originY": "top", "left": 631.91, "top": 320.65, "width": 204, "height": 120, "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 0, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "cropX": 0, "cropY": 0, "id": "ccg_7", "class": "class_7", "selectable": true, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4AgMAAADDF/UCAAAADFBMVEUEAQBVCwyVEhTmGR4R/hqBAAADaElEQVRYw+2YMW/UMBSAn3MioUTiJqTqkHoMDJUQ5BfAuarEwkCH7mVjzMrAkYhfEBYYYeh0DGVgYKD1VfyBTEhsqdShKgOHdKCkXPx4Dki49IRfGFi4DG0s+ZP9Pr/42QfY/oEFs2AWzH/ETP3mX9bnMXWEWAL4CnUGYBqJkym7OP0stiHBGnrybh8nkZsJcBbtb3v0mvbWywHmbmYmEJ9IaMYBcRtRDtzxUO+vFEkfpxTV86bt9AYhahrnGh7ROAoLYLjOQcUEBfQiVKXpxc2QaEF/BEoyLRvd7jWVJhjpYSrw0PBuRieVpI457EFAUxRxrdyuQ5zRQBNYhS6ZG2AxYKyPMgxFBZFhNGN9NIgN6k4cDAg8J8E9N6PAYuZJOMsc/sZc5rg+rq14kpcM17PErGpQEBPmZkXrhOM6hV+Px3INm2A/l4DjGpYs5B5wXKdi12IeSY/h7WSntJjoZIe1V2UW43P2Kh1XpxzEFSOvAZYt5CoAx7V4YzE3JINBGRcWE1aC5UBajODt8fUpBwmHGWWn8sAfIcfbI4vZ5XnzZhYzSFk52p9aDDUYOfqU9rZfT0Btjut1i9nnuS67FnO2ys2rP6PsusU88EecHBVlKH4Ssogky3U4iYLU5I/w8rJbcFyvqXESPh4T03lc1B1qc7yt6e56w+xP1BrTWzBbCZu5Fa8HecRisn6x2m8UTFfDqc/ZDzYoR18NG2Z4kXL0nDueGkTt6R/bVaTSRDLOB6a4b9Gp4AVcoJPCF1P63fFksfm8O1Poj82HXfnM89shdEuIJnPq1XxGNTsC1StTtygWzfAmlakNCTG1qQlaMOLJKb9SIAshUsXCGee88+UOVtQ5J38pxHiwxfh+4oMKlk1/4q5CfKdyr0/ub0NPhxQSqELRexY4maPeJkXxqan13yiyS9vX3PHoIruPzd5DA3zwQ8VwUFzWAkdNvo1QqsOQwYwTTIdwnpArMPSw7jCYlCazBzeJeQh7NFVO3W7UHjcOmrNOzb6X/HTQ5i6jJa3p2Uz7I5MGxOReK2bcpyPvtNOKOdFLcE/ttLublSvwOmrr4CY8bOkA4S3cgpb3xve0hzxre9c033ZbxnynbZkxdPBfzI32t9bM7GwddTIaVPt7/dpf/Bbw7i+Yj4vfUBbMglkwzuc7vDLp6ghnOh4AAAAASUVORK5CYII=", "crossOrigin": null, "filters": [] }, { "type": "image", "version": "5.2.4", "originX": "left", "originY": "top", "left": 549.41, "top": 108.76, "width": 204, "height": 120, "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 0, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "cropX": 0, "cropY": 0, "id": "ccg_9", "class": "class_9", "selectable": true, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4BAMAAABMVwCiAAAAMFBMVEUAAQAfGgMwKQRKPgXWEiJpWgeIdgfnZx2pkwvrgh3vlhbIrQrxqxb1uBLmwwv41hH5Q3rzAAADo0lEQVRo3u2YTWgTQRTHJw0pQg8ueBEEKQgiBDQiihBoL4GlIW0CUuipCQ2Cp+ay94RKobdcelS8eC2xem8uvfdSKHhJ2xg/EIw1H43dZMf52KQzyxZ28c0iuO+0mcP+dt77v/+8CUoFEijEhJgQE2JCTIj5RzELRiCYLH6rGqPjj0YZ4yPlGB6KMQuc8lsxJs0xXcWYRY4ZGWoxS3ZthqmUobI2OzbnS2qktG/015yzgw8Vu4C9IUsVRpc5h4owmW1J1iNFmOz4+8u2DNRgypO2PFBZm9rEZDJ0N4YijFCNmi/L8YXRBWdOq5NAWswTrc62EkxWbBVqol3dAMY08CSGdqHIU6MLjElfYuwdvPFxvnlPWhk7LGbRh6/5qM0Bp1zIY4EBjVnAjveycu2DK42l7ZPjd1cNpisf2EPwpHFpnctZ3IZvz7bQNOPO2YfHkC6pSfNmw7N7+lLaKKW3RQXXpBwCYRbpRSAj3gbKKjDZc/kAZVZ6AYshinrFn44kzBAW820yzOqOgfoQEKO7XmgyDlv4a0zatUEynt3GI2bJ9WABx2RdHV8F5vyKOxUkpux6ToIrLev62bRvvM02PjDYbdWrC3iL6xTTdK7mMe4jyJhhY0DBsVrCuAOKiTGM89PrGJ+BYhA9OTv1irQ2RdaOYTF5OvrdMzVxbZqsVRB8cZqlpnPtcwIUE2HzxhNLfOs8XfoFu53b9J29ub6sAIzfwWKm2HY2BBVEmfpysBh0i77UjJuzci9pwBi0ylXQEpoT2gWYCqr0vcV24bJrzPYZOAZFac3NcfPQnHViBXgMilEZNPO8earwzSn2vZ02+mhpajDo5iRtVAAdpCqStuewfQHnLOaQ9Vq9QssEnbPqe1nW5l1TixPcKXDhLcFSpoisW3MtWhwLFEOc2EzIst6oVggOdDfMNM2cJGtr2UpMY9CzhlukVRwXZ1kjsu4n++gRsAL43xtfnz/UIndW6riF5jD+IOoCzmPE2KX1L/7IKeh9MfpUbmZ8AN37eRljsh2OPRS8OpMgS6Q9X9Zh0xZ1UJiSV4kZ3AeVdIRUvLdiC8HaLLFhmrjOSb0Hez6v458o8pjYzOCZhh5wa462k3gd+PR8WuEloiPGzBpfu1HFe+Bq4/PfwDmJ7sJjXmxtbUpuRw6fvVmkPlZx6TQADHFvKxEAh0zwJwFgIu3e9wAw1O5yAWCugV9xrrrGHQeRtflAdoOiWxoKI4wwwggjjP8p/gAdifpbiJBf/AAAAABJRU5ErkJggg==", "crossOrigin": null, "filters": [] }, { "type": "image", "version": "5.2.4", "originX": "left", "originY": "top", "left": 264.39, "top": 161.26, "width": 204, "height": 120, "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 0, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "cropX": 0, "cropY": 0, "id": "ccg_11", "class": "class_11", "selectable": true, "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAAB4CAMAAACJp+2jAAAAbFBMVEXrEDLnETbZGDbQHTbtF0DEJTi7KjquMzubPT3sJ0mNRUCCTD93UkBtWEFgX0NVZUTtOFZIbUYzeUkjgkwUi07wSGQLkE0AllHyXHX0dYr1hZj2lqb5q7j5t8H7ydD93uT/6uz/8vP/+/n+//woPi8AAAADDElEQVR42u3b2W6rMBAAUEPIQpOQXFZvbM7//2MhjdrYgKG6STVG45dKpQ89srFnxgMp/mTc/mQQxCAGMYhBDGIQgxjEIAYxiEEMYhCDGMQgBjGI+Y+RXk6H3db3gzC8Ui4bdzHxcUuMcWWVi5j8PJA8PKJ1DJOePDI5At44hMltlC+OcgWT7MjsyGo3MNHotAQZ40JKwen1/tyTLmCOI5KdqJ7WVSNZ0P2SKeiY/DCQeMdkcGi28koIVbAx+X5AOaWjEYAqry/XvBgzmJd9MhnOKBG8WEPe+r54F2tsVmcMLuZiWPx4JtBUVELFJMaevElmo2bFaqCY3aTFkgIIBRITGe9LvCifUSVETOrrmIs1OfuZj7YFiDnploM908yeAgJ4mFyfmE1uxXBvdJagYM6WRTbAVAQ2Rs8rt9aChgpJADmfia0TY2AY0TEKGEYPZPzceFw+/78lIbBnRl9lH+Zj4f3UMeo+mQkBY1J9lcWDIiDtTtFM9h6VEeCYf/rhP6xodu98/4DKlhPoGP3E3I+UZ+tHFPr4ARmjJ2XHsVqz0P4EMkYPmKPRwjnVVqKowWI29vf/jmlCo07La5gYfwGmC2LMEb7W8yKMnmMmE/czfKw4SEs3McwNzKJlVg5qapmo17EBdAdo4+zW/BXGfFNki4cmjHCmeuwRgUccCzTziUCz27qUAI9JvZkUoHthAna/pFEUOmYuOeMe/b5uuu9qoDPN36TNFXSMUdCInC5oGOvMqAE6Vmoyi4CRtQhYe7CLgEZ51kut5VkBG2NOzUzhnIIunA+uNCKXrzTMG82ll03VDSLGvAb04wUYxWFeAxaJv6ILWiPcXHR1Xt6gYoZNDScrpgoBNzUUxcfv2k0Y5HaTdTUCjczNdIsWA96ita7muX5P88fbGikTUnCWhfesNCxvNwcwRbJfT8NpPzkbO+Ud0/I2TJGffVtX85t6zrF9fmldYDUfNjySnP6Tk0235ALXPzlZlM8gBjGIQQxiEIMYxCAGMYhBDGIQgxjEIAYxiEEMYhCDmDeNT9HbPhzUngs6AAAAAElFTkSuQmCC", "crossOrigin": null, "filters": [] }, { "type": "image", "version": "5.2.4", "originX": "left", "originY": "top", "left": 170.64, "top": 378.77, "width": 204, "height": 120, "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 0, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "cropX": 0, "cropY": 0, "id": "ccg_13", "class": "class_13", "selectable": true, "src": "data:image/png;base64,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", "crossOrigin": null, "filters": [] }] }
 		canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
 			object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
 		})
 	</script>
 	<script type="module">
-		import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-and-studio.js'
+		import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-and-studio.js'
 		const { core, studio } = Theatre
 		window.studio = studio
+
+		const extensionConfig = {
+			id: 'hello-world-extension',
+			toolbars: {
+				global(set, studio) {
+					set([
+						{
+							type: 'Icon',
+							title: 'HTML Export',
+							svgSource: '👁',
+							onClick: () => exporthtml()
+						},
+					])
+				},
+			},
+			panes: [],
+		}
+		studio.extend(extensionConfig)
+
 		studio.initialize()
 		const project = core.getProject('HTML Animation Tutorial', {
 
 		})
-		const sheet = project.sheet('Sheet 1')
+		const sheet = project.sheet('Sheet 1');
+		window.sheet = sheet;
 
-		const dd = (obj, event) => {
-			// console.log(event)
-			studio.transaction(({ set }) => {
-				set(obj.props.left, event.target.left);
-				set(obj.props.top, event.target.top);
-				set(obj.props.angle, event.target.angle);
-			});
+		var mouseDown = 0;
+		document.body.onmousedown = function () {
+			mouseDown = 1;
+		}
+		document.body.onmouseup = function () {
+			mouseDown = 0;
+		}
+
+		const onMouseMove = (obj, event) => {
+			if (mouseDown === 1) {
+				studio.transaction(({ set }) => {
+					set(obj.props.left, event.target.left);
+					set(obj.props.top, event.target.top);
+					set(obj.props.width, event.target.width);
+					set(obj.props.angle, event.target.angle);
+				});
+			}
+
 		};
-		const dd2 = (obj, event) => {
+		const onScaling = (obj, event) => {
 			// console.log(event)
 			studio.transaction(({ set }) => {
 				set(obj.props.scaleX, event.transform.target.scaleX);
 				set(obj.props.scaleY, event.transform.target.scaleY);
 			});
 		};
+		const onMousedblclick = (obj, event) => {
+			studio.transaction(({ unset }) => {
+				unset(obj.props);
+			});
+		};
+		const hexToRGB = hex => {
+			const red = parseInt(hex.slice(1, 3), 16)
+			const green = parseInt(hex.slice(3, 5), 16)
+			const blue = parseInt(hex.slice(5, 7), 16)
+			return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
+			// return [ r, g, b ]
+		}
 		canvas.getObjects().forEach(element => {
 			var obj = sheet.object(element.id, {
 				left: element.left,
@@ -174,18 +252,22 @@
 				scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
 				scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
 				angle: element.angle,
-				fill: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-				rx: 10,
-				ry: 10,
-				strokeWidth: core.types.number(2, { range: [0, 100] }),
-				stroke: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }),
-				shadow: { ...shadowOptions, color: core.types.rgba({ r: 255, g: 0, b: 0, a: 1 }), blur: core.types.number(30, { range: [0, 100] }) },
-				fontWeight: core.types.stringLiteral('normal', ['normal', 'bold']),
-				fontSize: 20,
+				fill: core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+				rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
+				ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+				strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+				stroke: core.types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
+				shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+				fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+				strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+				strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
 			});
+
 			element.on("mousedown", () => studio.setSelection([obj]), false);
-			element.on("mousemove", (e) => dd(obj, e), false);
-			element.on("scaling", (e) => dd2(obj, e), false);
+			element.on("mousemove", (e) => onMouseMove(obj, e), false);
+			element.on("scaling", (e) => onScaling(obj, e), false);
+			element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
+
 			obj.onValuesChange((obj) => {
 				element.set({
 					left: obj.left,
@@ -202,8 +284,9 @@
 					strokeWidth: obj.strokeWidth,
 					stroke: obj.stroke,
 					shadow: obj.shadow,
-					fontWeight: obj.fontWeight,
 					fontSize: obj.fontSize,
+					strokeDashArray: [obj.strkdsar, obj.strkdsar],
+					strokeDashOffset: obj.strkDsOfst
 				});
 				element.setCoords();
 				canvas.requestRenderAll();
@@ -211,7 +294,7 @@
 
 		});
 		project.ready.then(() => {
-			sheet.sequence.play({ iterationCount: Infinity, range: [0, 1.3] })
+			sheet.sequence.play({ iterationCount: 1, range: [0, 2] })
 		})
 	</script>
 </body>
