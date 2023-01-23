@@ -1828,12 +1828,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                 scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                 angle: element.angle,
-                fill: core.types.rgba(hexToRGB(element.fill)),
+                fill: core.types.rgba(hexToRGB(element.fill?element.fill:'#ff0000')),
                 rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
                 ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
                 strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
                 stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
-                shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.fill)), blur: core.types.number(element.shadow.blur, { range: [0, 100] }) },
+                shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                 fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
                 strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):0, { range: [0, 1000] }),
                 strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):0, { range: [-1000, 1000] }),
@@ -1922,7 +1922,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         <//script>
             <canvas id="canvas" width="1920" height="1080"></canvas>
             <script type="module">
-                            const shadowOptions = {
+            const hexToRGB = hex => {
+                const red = parseInt(hex.slice(1, 3), 16)
+                const green = parseInt(hex.slice(3, 5), 16)
+                const blue = parseInt(hex.slice(5, 7), 16)
+                return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
+                // return [ r, g, b ]
+            }
+                 const shadowOptions = {
                     color: 'black',
                     blur: 30,
                     offsetX: 0,
@@ -1933,28 +1940,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 window.canvas=canvas;
                 canvas.preserveObjectStacking = true;
                 const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
-                canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
-                    object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
-                })
-                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-only.min.js'
+                import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
                 const { core } = Theatre
-    
                 const project = core.getProject('HTML Animation Tutorial', {state:${xx}})
-                    
                 const sheet = project.sheet('Sheet 1')
-
-                const hexToRGB = hex => {
-                    const red = parseInt(hex.slice(1, 3), 16)
-                    const green = parseInt(hex.slice(3, 5), 16)
-                    const blue = parseInt(hex.slice(5, 7), 16)
-                    return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
-                    // return [ r, g, b ]
-                }
-                ${xx4}
-                ${xx5}
-    
-                   
-    
+                canvas.loadFromJSON(content, ()=> {
+                    ${xx4}
+                    ${xx5}
+                })
                 });
                 project.ready.then(() => {
                     sheet.sequence.play({ iterationCount: ${xx2}, range: [0, ${xx3}] })
@@ -1996,9 +1989,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 })
             </script>
             <script type="module">
-                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-insiders.eba0bf4/dist/core-and-studio.js'
+                import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-and-studio.js'
                 const { core, studio } = Theatre
                 window.studio = studio
+
+                const extensionConfig = {
+                id: 'hello-world-extension',
+                toolbars: {
+                    global(set, studio) {
+                    set([
+                        {
+                        type: 'Icon',
+                        title: 'HTML Export',
+                        svgSource: '👁',
+                        onClick: () => exporthtml()
+                        },
+                    ])
+                    },
+                },
+                panes: [],
+                }
+                studio.extend(extensionConfig)
+
                 studio.initialize()
                 const project = core.getProject('HTML Animation Tutorial', {
         
