@@ -22,7 +22,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     useEffect(() => {
 
         studio.initialize()
-        // studio.ui.hide()
+        studio.ui.hide()
         setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"))
         return () => {
             // second  
