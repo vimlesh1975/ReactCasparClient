@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import studio from '@theatre/studio'
 import { getProject, types } from '@theatre/core'
 import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector } from 'react-redux'
 
-import { shadowOptions } from '../common'
-import { useState } from 'react'
+import { shadowOptions, endpoint, templateLayers } from '../common'
+
 /**
  * Theatre.js
  */
@@ -130,8 +130,20 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const reset = () => {
         localStorage.removeItem("theatre-0.4.persistent");
         window.location.reload();
+    }
+    const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
+        endpoint(`play ${1}-${templateLayers.theatrejs} [HTML] xyz.html`);
+        const dd = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')
+        console.log(dd)
+        const script = `"const aa=document.createElement('div');
+        document.body.appendChild(aa);
+        aa.innerHTML=\`${dd}\`;
+        "`
+        endpoint(`call 1-166 ${script}`)
 
     }
+
+
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -147,6 +159,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
             <button onClick={() => initialiseCore()}>initialiseCore</button>
             <button onClick={() => reset()}>Reset</button>
+            <button onClick={() => playtoCasparcg()}>Play</button>
 
             <DrawingforTheatrejs />
         </div>
