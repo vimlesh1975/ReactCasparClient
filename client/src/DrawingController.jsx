@@ -1814,7 +1814,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const exportJSONforTheatrejs2 = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         localStorage.setItem("RCCtheatrepageData", aa1)
-        window.open("http://localhost:10000/ReactCasparClient/WebAnimator")
+        window.open("/ReactCasparClient/WebAnimator")
     }
     const exportJSONforTheatrejs = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
