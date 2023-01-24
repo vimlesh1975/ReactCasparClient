@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import axios from 'axios';
 import { fabric } from "fabric";
 import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob } from './common'
@@ -1090,6 +1089,9 @@ export const createShape = (canvas, shape, size = 0.4) => {
 }
 
 const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
+
+    // const history = useHistory();
+
     // const [clientId, setClientId] = useState(fabric.Object.__uid)
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
@@ -1809,7 +1811,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             element.click();
         }
     }
-
+    const exportJSONforTheatrejs2 = canvas => {
+        var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+        localStorage.setItem("RCCtheatrepageData", aa1)
+        window.open("http://localhost:10000/ReactCasparClient/WebAnimator")
+    }
     const exportJSONforTheatrejs = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         // eslint-disable-next-line
@@ -3273,6 +3279,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
                         <button onClick={() => exportPDF(canvas)}>Pdf</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Theatrejs</button>
+                        <button onClick={() => exportJSONforTheatrejs2(canvas)}>Theatrejs2</button>
 
 
                     </div>
