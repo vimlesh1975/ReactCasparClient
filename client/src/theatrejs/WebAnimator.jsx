@@ -16,13 +16,13 @@ const project = getProject('HTML Animation Tutorial', {
 const sheet = project.sheet('Sheet 1');
 
 const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
-    const [showStudio, setShowStudio] = useState(false)
+    const [showStudio, setShowStudio] = useState(true)
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
     useEffect(() => {
 
         studio.initialize()
-        studio.ui.hide()
+        studio.ui.restore();
         setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"))
         return () => {
             // second  
@@ -127,7 +127,11 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
 
     }
+    const reset = () => {
+        localStorage.removeItem("theatre-0.4.persistent");
+        window.location.reload();
 
+    }
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -142,6 +146,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
             }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
             <button onClick={() => initialiseCore()}>initialiseCore</button>
+            <button onClick={() => reset()}>Reset</button>
 
             <DrawingforTheatrejs />
         </div>
