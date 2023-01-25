@@ -162,31 +162,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
         const state1 = (JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial')));
 
-        // obj.onValuesChange((obj) => {
-        //     element.set({
-        //         left: obj.left,
-        //     });
-        //     canvas.renderAll();
-        // });
-        // var obj = sheet.object(element.id, {
-        //     left: element.left,
-        // });
-
         var script4 = `"
-       
-      
-
-       canvas.loadFromJSON(content,()=>{
-
-        const { core } = Theatre;
-       const project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
-       const sheet = project.sheet('Sheet 1');
-       
-       project.ready.then(() => {
-        sheet.sequence.play();
-        });
-      
-
+        canvas.loadFromJSON(content,()=>{
+            const { core } = Theatre;
+            const project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            const sheet = project.sheet('Sheet 1');
+            project.ready.then(() => {
+                sheet.sequence.play();
+            });
             canvas.getObjects().forEach(element => {
                 var obj = sheet.object(element.id, {
                     left: element.left,
@@ -204,7 +187,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             });
             console.log(project.isReady);
         });
-
         "`
         setTimeout(() => {
             endpoint(`call 1-166 ${script4}`)
