@@ -48,7 +48,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             canvas.getObjects().forEach(element => {
                 const obj = sheet.object(element.id, {
                     left: element.left,
-                    // top: element.top,
+                    top: element.top,
                     // width: element.width,
                     // height: element.height,
                     // opacity: types.number(element.opacity, { nudgeMultiplier: 0.1 }),
@@ -100,7 +100,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 obj.onValuesChange((obj) => {
                     element.set({
                         left: obj.left,
-                        // top: obj.top,
+                        top: obj.top,
                         // width: obj.width,
                         // height: obj.height,
                         // opacity: obj.opacity,
@@ -137,7 +137,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
         endpoint(`play ${1}-${templateLayers.theatrejs} [HTML] xyz.html`);
 
-        const content = JSON.stringify(canvas.toJSON());
+        const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         const content2 = content.replaceAll('"', '\\"');
         var script1 = `"
         var script = document.createElement('script');
@@ -162,27 +162,49 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
         const state1 = (JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial')));
 
+        // obj.onValuesChange((obj) => {
+        //     element.set({
+        //         left: obj.left,
+        //     });
+        //     canvas.renderAll();
+        // });
+        // var obj = sheet.object(element.id, {
+        //     left: element.left,
+        // });
+
         var script4 = `"
-       const { core } = Theatre;
-       const project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', '\\"')).replaceAll('\\\\"', "'")}});
-       const sheet = project.sheet('Sheet 1');
+       
+      
+
        canvas.loadFromJSON(content,()=>{
-        canvas.getObjects().forEach(element => {
-            var obj = sheet.object(element.id, {
-                left: element.left,
-            });
-            obj.onValuesChange((obj) => {
-                element.set({
-                    left: obj.left,
+
+        const { core } = Theatre;
+       const project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+       const sheet = project.sheet('Sheet 1');
+       
+       project.ready.then(() => {
+        sheet.sequence.play();
+        });
+      
+
+            canvas.getObjects().forEach(element => {
+                var obj = sheet.object(element.id, {
+                    left: element.left,
+                    top: element.top,
                 });
-                canvas.renderAll();
+                obj.onValuesChange((obj) => {
+                        element.set({
+                            left: obj.left,
+                            top: obj.top,
+                        });
+                        console.log(obj.left);
+                        element.setCoords();
+                        canvas.renderAll();
+                });
             });
-        })
+            console.log(project.isReady);
         });
 
-        project.ready.then(() => {
-            sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-        });
         "`
         setTimeout(() => {
             endpoint(`call 1-166 ${script4}`)
