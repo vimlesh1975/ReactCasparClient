@@ -144,7 +144,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         endpoint(`call 1-${layerNumber} sheet.sequence.pause()`)
     }
     const resume = layerNumber => {
-        endpoint(`call 1-${layerNumber} sheet.sequence.play()`)
+        endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(loopcount === 0) ? Infinity : loopcount}, range: [0, ${duration}] });
+        `)
     }
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
         endpoint(`stop 1-${layerNumber}`)
@@ -195,7 +196,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             window.project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: ${(loopcount === '0') ? Infinity : loopcount}, range: [0, ${duration}] });
+                sheet.sequence.play({ iterationCount: ${(loopcount === 0) ? Infinity : loopcount}, range: [0, ${duration}] });
             });
             canvas.getObjects().forEach(element => {
                 const obj = sheet.object(element.id, {
