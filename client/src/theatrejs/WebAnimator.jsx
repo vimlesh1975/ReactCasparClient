@@ -18,6 +18,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const [showStudio, setShowStudio] = useState(true)
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
+    const [duration, setDuration] = useState(2);
+    const [loopcount, setLoopcount] = useState(0);
+
     useEffect(() => {
 
         studio.initialize()
@@ -48,8 +51,52 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 const obj = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
-                });
+                    width: element.width,
+                    height: element.height,
+                    opacity: types.number(element.opacity, { range: [0, 1] }),
+                    scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                    scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                    angle: element.angle,
+                    rx: types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
+                    ry: types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+                    strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
+                    fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+                    strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+                    strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                    stroke: types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
+                    shadow: { ...shadowOptions, color: types.rgba(hexToRGB(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                    skewX: types.number(element.skewX, { range: [-88, 88] }),
+                    skewY: types.number(element.skewY, { range: [-60, 60] }),
 
+
+                });
+                obj.onValuesChange((obj) => {
+                    element.set({
+                        left: obj.left,
+                        top: obj.top,
+                        width: obj.width,
+                        height: obj.height,
+                        opacity: obj.opacity,
+                        scaleX: obj.scaleX,
+                        scaleY: obj.scaleY,
+                        angle: obj.angle,
+                        rx: obj.rx,
+                        ry: obj.ry,
+                        strokeWidth: obj.strokeWidth,
+                        fontSize: obj.fontSize,
+                        strokeDashArray: [obj.strkdsar, obj.strkdsar],
+                        strokeDashOffset: obj.strkDsOfst,
+                        fill: obj.fill,
+                        stroke: obj.stroke,
+                        shadow: obj.shadow,
+                        skewX: obj.skewX,
+                        skewY: obj.skewY,
+
+                    });
+                    element.setCoords();
+                    canvas.requestRenderAll();
+                });
 
 
                 const onMouseMove = (obj, event) => {
@@ -64,7 +111,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
                 };
                 const onScaling = (obj, event) => {
-                    // console.log(event)
                     studio.transaction(({ set }) => {
                         set(obj.props.scaleX, event.transform.target.scaleX);
                         set(obj.props.scaleY, event.transform.target.scaleY);
@@ -81,22 +127,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 element.on("scaling", (e) => onScaling(obj, e), false);
                 element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
 
-                obj.onValuesChange((obj) => {
-                    element.set({
-                        left: obj.left,
-                        top: obj.top,
 
-                    });
-                    console.log(sheet.sequence);
-                    element.setCoords();
-                    canvas.requestRenderAll();
-                });
             })
             project.ready.then(() => {
                 sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
             });
         })
-
 
     }
     const reset = () => {
@@ -104,7 +140,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         window.location.reload();
     }
 
-
+    const pause = layerNumber => {
+        endpoint(`call 1-${layerNumber} sheet.sequence.pause()`)
+    }
+    const resume = layerNumber => {
+        endpoint(`call 1-${layerNumber} sheet.sequence.play()`)
+    }
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
         endpoint(`stop 1-${layerNumber}`)
 
@@ -126,6 +167,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         }, 300);
 
         var script3 = `"
+        
         document.body.style.overflow='hidden';
         document.body.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         var canvas = new fabric.Canvas('canvas');
@@ -141,18 +183,19 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         const state1 = (JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial')));
 
         var script4 = `"
-        const hexToRGB = hex => {
-            const red = parseInt(hex.slice(1, 3), 16);
-            const green = parseInt(hex.slice(3, 5), 16);
-            const blue = parseInt(hex.slice(5, 7), 16);
-            return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } ;
+        const shadowOptions = {
+            color: 'black',
+            blur: 30,
+            offsetX: 0,
+            offsetY: 0,
+            affectStroke: false
         };
         canvas.loadFromJSON(content,()=>{
             const { core } = Theatre;
             window.project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                sheet.sequence.play({ iterationCount: ${(loopcount === '0') ? Infinity : loopcount}, range: [0, ${duration}] });
             });
             canvas.getObjects().forEach(element => {
                 const obj = sheet.object(element.id, {
@@ -172,6 +215,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    fill: core.types.rgba(element.fill),
+                    stroke:core.types.rgba(element.stroke),
+                    shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                    skewX: core.types.number(element.skewX, { range: [-60, 60] }),
+                    skewY: core.types.number(element.skewY, { range: [-60, 60] }),
+
                 });
                 obj.onValuesChange((obj) => {
                         element.set({
@@ -189,13 +238,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                           
                             fontSize: obj.fontSize,
                             strokeDashArray: [obj.strkdsar, obj.strkdsar],
-                            strokeDashOffset: obj.strkDsOfst
+                            strokeDashOffset: obj.strkDsOfst,
+                            fill: obj.fill,
+                            stroke: obj.stroke,
+                            shadow: obj.shadow,
+                            skewX: obj.skewX,
+                            skewY: obj.skewY,
                         });
                         element.setCoords();
                         canvas.renderAll();
                 });
             });
-            console.log(project.isReady);
         });
         "`
         setTimeout(() => {
@@ -222,7 +275,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
             <button onClick={() => initialiseCore()}>initialiseCore</button>
             <button onClick={() => reset()}>Reset</button>
+            <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
             <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}>Play</button>
+            <button onClick={() => pause(templateLayers.theatrejs)}>pause</button>
+            <button onClick={() => resume(templateLayers.theatrejs)}>resume</button>
+
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}>Stop</button>
 
             <DrawingforTheatrejs />
