@@ -126,6 +126,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         }, 300);
 
         var script3 = `"
+        document.body.style.overflow='hidden';
         document.body.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         var canvas = new fabric.Canvas('canvas');
         const content =\`${content2}\`;
