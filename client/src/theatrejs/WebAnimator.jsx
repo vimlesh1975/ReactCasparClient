@@ -153,8 +153,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             endpoint(`play ${1}-${layerNumber} [HTML] xyz.html`);
         }, 100);
 
-
-
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         const content2 = content.replaceAll('"', '\\"');
         var script1 = `"
@@ -207,11 +205,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                     scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                     angle: element.angle,
-                   
                     rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
                     ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
                     strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-                   
                     fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
@@ -235,7 +231,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                             rx: obj.rx,
                             ry: obj.ry,
                             strokeWidth: obj.strokeWidth,
-                          
                             fontSize: obj.fontSize,
                             strokeDashArray: [obj.strkdsar, obj.strkdsar],
                             strokeDashOffset: obj.strkDsOfst,
@@ -254,7 +249,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         setTimeout(() => {
             endpoint(`call 1-166 ${script4}`)
         }, 5000);
-
     }
 
     const stopGraphics1 = (layerNumber) => {
@@ -364,7 +358,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     <//script>
     </body>
 
-    </html>`
+            </html>`
 
         const bb = aa.replaceAll('<//', '</')
         const element = document.createElement("a");
