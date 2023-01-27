@@ -11,233 +11,17 @@
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
-<body style="background-color: grey;">
-	<div style="text-align: center;">
-		<button onclick="exporthtml()">Export html</button>
-		<span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" id="loopcount"
-			type="number" value=0 style="width:40px" />
-		<span>Duration:</span><input id="duration" type="number" value=2 style="width:40px" />
-		<button onclick="makeAllDefault()">Make All Default</button>
-		<button onclick="importHtml()">Import html</button>
+<body style="overflow:hidden">
 
-	</div>
 	<canvas id="canvas" width="1920" height="1080"></canvas>
-	<script>
-		const makeAllDefault = () => {
-			localStorage.clear();
-			location.reload();
+	<script type="module">
+		const hexToRGB = hex => {
+			const red = parseInt(hex.slice(1, 3), 16)
+			const green = parseInt(hex.slice(3, 5), 16)
+			const blue = parseInt(hex.slice(5, 7), 16)
+			return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
+			// return [ r, g, b ]
 		}
-		const importHtml = () => {
-			var fInput = document.createElement("input"); //hidden input to open filedialog
-			fInput.setAttribute("type", "file"); //opens files
-			fInput.setAttribute("accept", "text/html"); ////only useful for inspector debugging
-
-			fInput.click();
-			fInput.onchange = (e) => {
-				var file = e.target.files[0];
-				var reader = new FileReader();
-				reader.onload = function () {
-					var text = reader.result;
-					const content = text.split("const content =")[1].split("import")[0].split(";")[0];
-					// console.log(text)
-
-					canvas.forEachObject((item) => { sheet.detachObject(item.id) });
-					// project = core.getProject('HTML Animation Tutorial', { state: { "sheetsById": { "Sheet 1": { "staticOverrides": { "byObject": { "ccg_11": { "scaleY": 1.9696922462872897, "scaleX": 1, "left": 180, "top": 295, "width": 100, "angle": 0 }, "ccg_12": { "left": 155, "top": 227, "width": 200, "angle": 0 }, "ccg_7": { "left": 421.5, "top": 268.46, "width": 897.6, "angle": 0 }, "id_5": { "left": 429.19, "top": 257.46, "width": 935, "angle": 0 } } }, "sequence": { "subUnitsPerUnit": 30, "length": 10, "type": "PositionalSequence", "tracksByObject": { "ccg_12": { "trackData": { "pcB-nYLVky": { "type": "BasicKeyframedTrack", "__debugName": "ccg_12:[\"left\"]", "keyframes": [{ "id": "CxgSlh3ehv", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 268 }, { "id": "ybFtmTm9Pe", "position": 2, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 888 }] } }, "trackIdByPropPath": { "[\"left\"]": "pcB-nYLVky" } }, "ccg_11": { "trackData": { "vPMjR2Hnmw": { "type": "BasicKeyframedTrack", "__debugName": "ccg_11:[\"left\"]", "keyframes": [{ "id": "bP5J8-_5zX", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 180 }, { "id": "MTme81ObYu", "position": 2, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 534 }] } }, "trackIdByPropPath": { "[\"left\"]": "vPMjR2Hnmw" } }, "ccg_7": { "trackData": { "dPI1oQxL9q": { "type": "BasicKeyframedTrack", "__debugName": "ccg_7:[\"left\"]", "keyframes": [{ "id": "sDEK_4wjwx", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": -451.5 }, { "id": "kmeBwpxwuo", "position": 0.367, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 464.3193763885305 }] } }, "trackIdByPropPath": { "[\"left\"]": "dPI1oQxL9q" } }, "id_5": { "trackData": { "lq9QEiI8nt": { "type": "BasicKeyframedTrack", "__debugName": "id_5:[\"left\"]", "keyframes": [{ "id": "jUYmD7W24e", "position": 0, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 1577.19 }, { "id": "M773na6elg", "position": 0.367, "connectedRight": true, "handles": [0.5, 1, 0.5, 0], "type": "bezier", "value": 429.19 }] } }, "trackIdByPropPath": { "[\"left\"]": "lq9QEiI8nt" } } } } } }, "definitionVersion": "0.4.0", "revisionHistory": ["N18oc80TngW7tuYh", "DX1-FiUYbboWX3yW", "LcFf0ItIZXhr3rg_", "ttLI39_lewC6GAh8", "2JZAFyIcCLFbdedu"] } })
-					const sheet2 = project.sheet('Sheet 2')
-
-					canvas.loadFromJSON(content, () => {
-
-						canvas.getObjects().forEach(element => {
-							var obj = sheet2.object(element.id, {
-								left: element.left,
-								top: element.top,
-								width: element.width,
-								height: element.height,
-								opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-								scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-								scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-								angle: element.angle,
-								fill: core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
-								rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
-								ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
-								strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-								stroke: core.types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
-								shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
-								fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
-								strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
-								strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-							});
-
-							element.on("mousedown", () => studio.setSelection([obj]), false);
-							element.on("mousemove", (e) => onMouseMove(obj, e), false);
-							element.on("scaling", (e) => onScaling(obj, e), false);
-							element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
-
-							obj.onValuesChange((obj) => {
-								element.set({
-									left: obj.left,
-									top: obj.top,
-									width: obj.width,
-									height: obj.height,
-									opacity: obj.opacity,
-									scaleX: obj.scaleX,
-									scaleY: obj.scaleY,
-									angle: obj.angle,
-									fill: obj.fill,
-									rx: obj.rx,
-									ry: obj.ry,
-									strokeWidth: obj.strokeWidth,
-									stroke: obj.stroke,
-									shadow: obj.shadow,
-									fontSize: obj.fontSize,
-									strokeDashArray: [obj.strkdsar, obj.strkdsar],
-									strokeDashOffset: obj.strkDsOfst
-								});
-								element.setCoords();
-								canvas.requestRenderAll();
-							});
-						})
-					})
-
-				};
-				reader.readAsText(file);
-			}
-
-		}
-		const exporthtml = () => {
-			const aa =
-				`<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Document</title>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js"
-                        integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA=="
-                        crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
-        </head>
-    
-        <body style="overflow:hidden">
-        <script>
-
-        const updatestring=(str1, str2) =>{
-            const idTemplate =  canvas.getObjects().filter(function(element) {
-                return element.id=== str1;
-              });
-                idTemplate[0].set({text:str2})
-                canvas.requestRenderAll();
-        }
-        const updateimage=(str1, base64data) =>{
-            const idTemplate =  canvas.getObjects().filter(function(element) {
-                return element.id=== str1;
-              });
-            //   idTemplate[0].set({preserveAspectRatio: 'none'});
-            //   idTemplate[0].setPreserveAspectRatio('none');
-
-              idTemplate[0].setSrc(base64data, function(){
-                idTemplate[0].set({preserveAspectRatio: 'none'});
-                idTemplate[0].setPreserveAspectRatio('none');
-                canvas.requestRenderAll();
-              });
-
-        }
-        <//script>
-            <canvas id="canvas" width="1920" height="1080"></canvas>
-            <script type="module">
-            const hexToRGB = hex => {
-                const red = parseInt(hex.slice(1, 3), 16)
-                const green = parseInt(hex.slice(3, 5), 16)
-                const blue = parseInt(hex.slice(5, 7), 16)
-                return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
-                // return [ r, g, b ]
-            }
-                 const shadowOptions = {
-                    color: 'black',
-                    blur: 30,
-                    offsetX: 0,
-                    offsetY: 0,
-                    affectStroke: false
-                };
-                var canvas = new fabric.Canvas('canvas');
-                window.canvas=canvas;
-                canvas.preserveObjectStacking = true;
-                const content ={"version":"5.2.4","objects":[{"type":"ellipse","version":"5.2.4","originX":"left","originY":"top","left":180,"top":330,"width":100,"height":160,"fill":"#0000ff","stroke":"#ffffff","strokeWidth":3,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":0.9,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"rx":50,"ry":80,"id":"ccg_11","class":"class_11","selectable":true},{"type":"circle","version":"5.2.4","originX":"left","originY":"top","left":150,"top":0,"width":200,"height":200,"fill":"#0000ff","stroke":"#ffffff","strokeWidth":3,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":{"color":"black","blur":30,"offsetX":0,"offsetY":0,"affectStroke":false,"nonScaling":false},"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"fill","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"radius":100,"startAngle":0,"endAngle":360,"id":"ccg_12","class":"class_12","selectable":true}]};
-                import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
-                const { core } = Theatre
-                const project = core.getProject('HTML Animation Tutorial', {state:${JSON.stringify(window.studio.createContentOfSaveFile('HTML Animation Tutorial'))}})
-                const sheet = project.sheet('Sheet 1')
-                canvas.loadFromJSON(content, ()=> {
-                canvas.getObjects().forEach(element => {
-           		var obj = sheet.object(element.id, {
-                left: element.left,
-                top: element.top,
-                width: element.width,
-                height: element.height,
-                opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-                scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-                scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-                angle: element.angle,
-                fill: core.types.rgba(hexToRGB(element.fill?element.fill:'#ff0000')),
-                rx: core.types.number(element.rx?element.rx:10, { range: [0, 100] }),
-                ry: core.types.number(element.ry?element.rx:10, { range: [0, 100] }),
-                strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-                stroke:core.types.rgba(element.stroke?hexToRGB(element.stroke):hexToRGB('#000000')),
-                shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
-                fontSize: core.types.number(element.fontSize?parseInt(element.fontSize):30, { range: [0, 100] }),
-                strkdsar: core.types.number(element.strokeDashArray?parseInt(element.strokeDashArray):0, { range: [0, 1000] }),
-                strkDsOfst: core.types.number(element.strokeDashOffset?parseInt(element.strokeDashOffset):0, { range: [-1000, 1000] }),
-            });
-                     obj.onValuesChange((obj) => {
-                element.set({
-                    left: obj.left,
-                    top: obj.top,
-                    width: obj.width,
-                    height: obj.height,
-                    opacity: obj.opacity,
-                    scaleX: obj.scaleX,
-                    scaleY: obj.scaleY,
-                    angle: obj.angle,
-                    fill: obj.fill,
-                    rx: obj.rx,
-                    ry: obj.ry,
-                    strokeWidth: obj.strokeWidth,
-                    stroke: obj.stroke,
-                    shadow: obj.shadow,
-                    fontSize: obj.fontSize,
-                    strokeDashArray:[obj.strkdsar,obj.strkdsar],
-                    strokeDashOffset:obj.strkDsOfst
-                });
-                element.setCoords();
-                canvas.requestRenderAll();
-            });
-                })
-                });
-                project.ready.then(() => {
-                    sheet.sequence.play({ iterationCount: ${document.getElementById('loopcount').value != 0 ? document.getElementById('loopcount').value : Infinity}, range: [0, ${document.getElementById('duration').value}] })
-                })
-        <//script>
-    </body>
-    
-    </html>`
-
-			const bb = aa.replaceAll('<//', '</')
-			const element = document.createElement("a");
-			const file = new Blob([bb], { type: 'text/html' });
-			element.href = URL.createObjectURL(file);
-			var ss = new Date().toLocaleTimeString('en-US', {
-				year: "numeric", month: "numeric", day: "numeric", hour12: false,
-				hour: "numeric", minute: "numeric", second: "numeric"
-			});
-			// var retVal = prompt("Enter file name to save : ", ss + "_FileName");
-			var retVal = ss + "_FileName";
-			if (retVal !== null) {
-				element.download = retVal + '.html';
-				document.body.appendChild(element); // Required for this to work in FireFox
-				element.click();
-			}
-		}
-
 		const shadowOptions = {
 			color: 'black',
 			blur: 30,
@@ -246,137 +30,637 @@
 			affectStroke: false
 		};
 		var canvas = new fabric.Canvas('canvas');
+		window.canvas = canvas;
 		canvas.preserveObjectStacking = true;
-		const content = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] }
-		canvas.loadFromJSON(content, canvas.renderAll.bind(canvas), function (o, object) {
-			object.set({ shadow: object.shadow ? object.shadow : shadowOptions });
-		})
-	</script>
-	<script type="module">
-		import 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-and-studio.js'
-		const { core, studio } = Theatre
-		window.studio = studio
-		window.core = core
-
-		// const extensionConfig = {
-		// id: 'hello-world-extension',
-		// toolbars: {
-		//     global(set, studio) {
-		//     set([
-		//         {
-		//         type: 'Icon',
-		//         title: 'HTML Export',
-		//         svgSource: '👁',
-		//         onClick: () => exporthtml()
-		//         },
-		//     ])
-		//     },
-		// },
-		// panes: [],
-		// }
-		// studio.extend(extensionConfig)
-
-		studio.initialize()
+		const content = { "version": "5.2.4", "objects": [{ "type": "rect", "version": "5.2.4", "originX": "left", "originY": "top", "left": 444.69, "top": 106.07, "width": 935, "height": 74.8, "fill": { "r": 0.0196078431372549, "g": 0.10588235294117647, "b": 0.49019607843137253, "a": 1 }, "stroke": { "r": 1, "g": 1, "b": 1, "a": 1 }, "strokeWidth": 1, "strokeDashArray": [18.9873417721519, 18.9873417721519], "strokeLineCap": "butt", "strokeDashOffset": 1000, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": { "r": null, "g": 0.047058823529411764, "b": null, "a": 1 }, "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 10, "ry": 10, "id": "id_7", "class": "class_7", "selectable": true }, { "type": "textbox", "version": "5.2.4", "originX": "left", "originY": "top", "left": 502, "top": 116.07, "width": 897.6, "height": 50.85, "fill": { "r": 1, "g": 1, "b": 1, "a": 1 }, "stroke": { "r": 0, "g": 0, "b": 0, "a": 1 }, "strokeWidth": 1, "strokeDashArray": [0, 0], "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": false, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": { "r": null, "g": 0.047058823529411764, "b": null, "a": 1 }, "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "fontFamily": "Arial", "fontWeight": "bold", "fontSize": 45, "text": "Timeline has been shifted below.", "underline": false, "overline": false, "linethrough": false, "textAlign": "left", "fontStyle": "normal", "lineHeight": 1.16, "textBackgroundColor": "", "charSpacing": 0, "styles": [], "direction": "ltr", "path": null, "pathStartOffset": 0, "pathSide": "left", "pathAlign": "baseline", "minWidth": 20, "splitByGrapheme": false, "id": "ccg_8", "class": "class_8", "selectable": true }] };
+		import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
+		const { core } = Theatre
 		const project = core.getProject('HTML Animation Tutorial', {
-
-		})
-		window.project = project;
-		const sheet = project.sheet('Sheet 1');
-		window.sheet = sheet;
-		var mouseDown = 0;
-		document.body.onmousedown = function () {
-			mouseDown = 1;
-		}
-		document.body.onmouseup = function () {
-			mouseDown = 0;
-		}
-
-		const onMouseMove = (obj, event) => {
-			if (mouseDown === 1) {
-				studio.transaction(({ set }) => {
-					set(obj.props.left, event.target.left);
-					set(obj.props.top, event.target.top);
-					set(obj.props.width, event.target.width);
-					set(obj.props.angle, event.target.angle);
-				});
+			state: {
+				"sheetsById": {
+					"Sheet 1": {
+						"staticOverrides": {
+							"byObject": {
+								"id_7": {
+									"left": 442.69,
+									"top": 117.07,
+									"width": 935,
+									"angle": 0
+								}
+							}
+						},
+						"sequence": {
+							"subUnitsPerUnit": 30,
+							"length": 10,
+							"type": "PositionalSequence",
+							"tracksByObject": {
+								"ccg_8": {
+									"trackData": {
+										"-PmsQ2SE3C": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"left\"]",
+											"keyframes": [
+												{
+													"id": "GnUhOIWWeO",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 1542
+												},
+												{
+													"id": "4OhUL6hGs5",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 502
+												}
+											]
+										},
+										"hIVe13FBp0": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"top\"]",
+											"keyframes": [
+												{
+													"id": "v-xONhAoPH",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 122.07
+												},
+												{
+													"id": "tsxPYSFs0Y",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 116.07
+												}
+											]
+										},
+										"P1mR0qaizQ": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"width\"]",
+											"keyframes": [
+												{
+													"id": "klXRKn0M4K",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 897.6
+												},
+												{
+													"id": "drA5oWj1cK",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 897.6
+												}
+											]
+										},
+										"TbQjbWPh3z": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"height\"]",
+											"keyframes": []
+										},
+										"Z0-CvMrn6N": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"opacity\"]",
+											"keyframes": []
+										},
+										"KHcw2DnglQ": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"scaleX\"]",
+											"keyframes": []
+										},
+										"x-bh6lFbIZ": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"scaleY\"]",
+											"keyframes": []
+										},
+										"nKPkLkndj3": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"angle\"]",
+											"keyframes": [
+												{
+													"id": "Qh46CITidS",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 0
+												},
+												{
+													"id": "l1Lfnr7x_x",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 0
+												}
+											]
+										},
+										"7ZUbX1yTlP": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"rx\"]",
+											"keyframes": []
+										},
+										"HEV318E7yN": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"ry\"]",
+											"keyframes": []
+										},
+										"nkG8vYHo4f": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"strokeWidth\"]",
+											"keyframes": []
+										},
+										"KsRGAVFD9i": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"fontSize\"]",
+											"keyframes": []
+										},
+										"qAq80i7ycS": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"strkdsar\"]",
+											"keyframes": []
+										},
+										"ibFR1EJRtj": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"strkDsOfst\"]",
+											"keyframes": []
+										},
+										"ZJLK9_GPYe": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"fill\"]",
+											"keyframes": []
+										},
+										"XxIyALEdZX": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"stroke\"]",
+											"keyframes": []
+										},
+										"1ppl-ZAWOh": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"shadow\",\"color\"]",
+											"keyframes": []
+										},
+										"5pm2hBZnHa": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"shadow\",\"blur\"]",
+											"keyframes": []
+										},
+										"CG1QIF-m4_": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"shadow\",\"offsetX\"]",
+											"keyframes": []
+										},
+										"pjraN_ExCg": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"shadow\",\"offsetY\"]",
+											"keyframes": []
+										},
+										"BXhdesJptW": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"shadow\",\"affectStroke\"]",
+											"keyframes": []
+										},
+										"8PMD49AJL7": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"skewX\"]",
+											"keyframes": []
+										},
+										"gRVmjjQuAj": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "ccg_8:[\"skewY\"]",
+											"keyframes": []
+										}
+									},
+									"trackIdByPropPath": {
+										"[\"left\"]": "-PmsQ2SE3C",
+										"[\"top\"]": "hIVe13FBp0",
+										"[\"width\"]": "P1mR0qaizQ",
+										"[\"height\"]": "TbQjbWPh3z",
+										"[\"opacity\"]": "Z0-CvMrn6N",
+										"[\"scaleX\"]": "KHcw2DnglQ",
+										"[\"scaleY\"]": "x-bh6lFbIZ",
+										"[\"angle\"]": "nKPkLkndj3",
+										"[\"rx\"]": "7ZUbX1yTlP",
+										"[\"ry\"]": "HEV318E7yN",
+										"[\"strokeWidth\"]": "nkG8vYHo4f",
+										"[\"fontSize\"]": "KsRGAVFD9i",
+										"[\"strkdsar\"]": "qAq80i7ycS",
+										"[\"strkDsOfst\"]": "ibFR1EJRtj",
+										"[\"fill\"]": "ZJLK9_GPYe",
+										"[\"stroke\"]": "XxIyALEdZX",
+										"[\"shadow\",\"color\"]": "1ppl-ZAWOh",
+										"[\"shadow\",\"blur\"]": "5pm2hBZnHa",
+										"[\"shadow\",\"offsetX\"]": "CG1QIF-m4_",
+										"[\"shadow\",\"offsetY\"]": "pjraN_ExCg",
+										"[\"shadow\",\"affectStroke\"]": "BXhdesJptW",
+										"[\"skewX\"]": "8PMD49AJL7",
+										"[\"skewY\"]": "gRVmjjQuAj"
+									}
+								},
+								"id_7": {
+									"trackData": {
+										"srqG76Yo7S": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"left\"]",
+											"keyframes": [
+												{
+													"id": "sD1SA4_VQP",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": -168.31
+												},
+												{
+													"id": "sZvmmTQsYd",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 444.69
+												}
+											]
+										},
+										"nlPViqmCRC": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"top\"]",
+											"keyframes": [
+												{
+													"id": "WGmF5SZHem",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 102.07
+												},
+												{
+													"id": "M0LRWw_tfQ",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 106.07
+												}
+											]
+										},
+										"NoM0qLm1iE": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"width\"]",
+											"keyframes": [
+												{
+													"id": "J8YN-21w_q",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 935
+												},
+												{
+													"id": "ob0LiGTM-P",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 935
+												}
+											]
+										},
+										"oTephe1zCJ": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"height\"]",
+											"keyframes": []
+										},
+										"tNN9z5V2ha": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"opacity\"]",
+											"keyframes": []
+										},
+										"4n1762zOyI": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"scaleX\"]",
+											"keyframes": []
+										},
+										"qR-VmrzXMF": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"scaleY\"]",
+											"keyframes": []
+										},
+										"paLYvYFZPj": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"angle\"]",
+											"keyframes": [
+												{
+													"id": "mznzdJobCk",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 0
+												},
+												{
+													"id": "gkQ6NaVMIS",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 0
+												}
+											]
+										},
+										"fLEj9Ebytz": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"rx\"]",
+											"keyframes": []
+										},
+										"4yBaF04Ds3": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"ry\"]",
+											"keyframes": []
+										},
+										"jl6CsDcCwB": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"strokeWidth\"]",
+											"keyframes": []
+										},
+										"Pv5W8wWZbN": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"fontSize\"]",
+											"keyframes": []
+										},
+										"JXlMBiTnY1": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"strkdsar\"]",
+											"keyframes": [
+												{
+													"id": "iYBe4d76zf",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 18.9873417721519
+												}
+											]
+										},
+										"0htUptv1UA": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"strkDsOfst\"]",
+											"keyframes": [
+												{
+													"id": "EUsI7JsMC0",
+													"position": 0,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": -620.2531645569624
+												},
+												{
+													"id": "B-Go3zYJFN",
+													"position": 0.3,
+													"connectedRight": true,
+													"handles": [
+														0.5,
+														1,
+														0.5,
+														0
+													],
+													"type": "bezier",
+													"value": 1000
+												}
+											]
+										},
+										"6nf7iPlwXY": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"fill\"]",
+											"keyframes": []
+										},
+										"n6VDjsiiC-": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"stroke\"]",
+											"keyframes": []
+										},
+										"g-3K-Ei0R-": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"shadow\",\"color\"]",
+											"keyframes": []
+										},
+										"Y1mdkmeAev": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"shadow\",\"blur\"]",
+											"keyframes": []
+										},
+										"tb5hftAtjP": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"shadow\",\"offsetX\"]",
+											"keyframes": []
+										},
+										"6W8qBLdkdA": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"shadow\",\"offsetY\"]",
+											"keyframes": []
+										},
+										"kZ29rvYUtW": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"shadow\",\"affectStroke\"]",
+											"keyframes": []
+										},
+										"LxSpzNTgnz": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"skewX\"]",
+											"keyframes": []
+										},
+										"lnq1DXtslD": {
+											"type": "BasicKeyframedTrack",
+											"__debugName": "id_7:[\"skewY\"]",
+											"keyframes": []
+										}
+									},
+									"trackIdByPropPath": {
+										"[\"left\"]": "srqG76Yo7S",
+										"[\"top\"]": "nlPViqmCRC",
+										"[\"width\"]": "NoM0qLm1iE",
+										"[\"height\"]": "oTephe1zCJ",
+										"[\"opacity\"]": "tNN9z5V2ha",
+										"[\"scaleX\"]": "4n1762zOyI",
+										"[\"scaleY\"]": "qR-VmrzXMF",
+										"[\"angle\"]": "paLYvYFZPj",
+										"[\"rx\"]": "fLEj9Ebytz",
+										"[\"ry\"]": "4yBaF04Ds3",
+										"[\"strokeWidth\"]": "jl6CsDcCwB",
+										"[\"fontSize\"]": "Pv5W8wWZbN",
+										"[\"strkdsar\"]": "JXlMBiTnY1",
+										"[\"strkDsOfst\"]": "0htUptv1UA",
+										"[\"fill\"]": "6nf7iPlwXY",
+										"[\"stroke\"]": "n6VDjsiiC-",
+										"[\"shadow\",\"color\"]": "g-3K-Ei0R-",
+										"[\"shadow\",\"blur\"]": "Y1mdkmeAev",
+										"[\"shadow\",\"offsetX\"]": "tb5hftAtjP",
+										"[\"shadow\",\"offsetY\"]": "6W8qBLdkdA",
+										"[\"shadow\",\"affectStroke\"]": "kZ29rvYUtW",
+										"[\"skewX\"]": "LxSpzNTgnz",
+										"[\"skewY\"]": "lnq1DXtslD"
+									}
+								}
+							}
+						}
+					}
+				},
+				"definitionVersion": "0.4.0",
+				"revisionHistory": [
+					"zLIKd7D7DiTdYC3-",
+					"S5AEuF8QuzA-IZ5p",
+					"BWSiQA-p8_U9qT3X",
+					"RcYZWHN31CKZ5oli"
+				]
 			}
-		};
-		window.onMouseMove = onMouseMove;
-		const onScaling = (obj, event) => {
-			// console.log(event)
-			studio.transaction(({ set }) => {
-				set(obj.props.scaleX, event.transform.target.scaleX);
-				set(obj.props.scaleY, event.transform.target.scaleY);
-			});
-		};
-		window.onScaling = onScaling;
-		const onMousedblclick = (obj, event) => {
-			studio.transaction(({ unset }) => {
-				unset(obj.props);
-			});
-		};
-		window.onMousedblclick = onMousedblclick;
-		const hexToRGB = hex => {
-			const red = parseInt(hex.slice(1, 3), 16)
-			const green = parseInt(hex.slice(3, 5), 16)
-			const blue = parseInt(hex.slice(5, 7), 16)
-			return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
-			// return [ r, g, b ]
-		}
-		window.hexToRGB = hexToRGB;
-		canvas.getObjects().forEach(element => {
-			var obj = sheet.object(element.id, {
-				left: element.left,
-				top: element.top,
-				width: element.width,
-				height: element.height,
-				opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
-				scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-				scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-				angle: element.angle,
-				fill: core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
-				rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
-				ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
-				strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-				stroke: core.types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
-				shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
-				fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
-				strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
-				strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-			});
-
-			element.on("mousedown", () => studio.setSelection([obj]), false);
-			element.on("mousemove", (e) => onMouseMove(obj, e), false);
-			element.on("scaling", (e) => onScaling(obj, e), false);
-			element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
-
-			obj.onValuesChange((obj) => {
-				element.set({
-					left: obj.left,
-					top: obj.top,
-					width: obj.width,
-					height: obj.height,
-					opacity: obj.opacity,
-					scaleX: obj.scaleX,
-					scaleY: obj.scaleY,
-					angle: obj.angle,
-					fill: obj.fill,
-					rx: obj.rx,
-					ry: obj.ry,
-					strokeWidth: obj.strokeWidth,
-					stroke: obj.stroke,
-					shadow: obj.shadow,
-					fontSize: obj.fontSize,
-					strokeDashArray: [obj.strkdsar, obj.strkdsar],
-					strokeDashOffset: obj.strkDsOfst
+		})
+		const sheet = project.sheet('Sheet 1')
+		canvas.loadFromJSON(content, () => {
+			canvas.getObjects().forEach(element => {
+				var obj = sheet.object(element.id, {
+					left: element.left,
+					top: element.top,
+					width: element.width,
+					height: element.height,
+					opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+					scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+					scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+					angle: element.angle,
+					// fill: core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+					rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
+					ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+					strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+					// stroke: core.types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
+					// shadow: { ...shadowOptions, color: core.types.rgba(hexToRGB(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+					fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+					strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+					strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
 				});
-				element.setCoords();
-				canvas.requestRenderAll();
-			});
-
+				obj.onValuesChange((obj) => {
+					element.set({
+						left: obj.left,
+						top: obj.top,
+						width: obj.width,
+						height: obj.height,
+						opacity: obj.opacity,
+						scaleX: obj.scaleX,
+						scaleY: obj.scaleY,
+						angle: obj.angle,
+						fill: obj.fill,
+						rx: obj.rx,
+						ry: obj.ry,
+						strokeWidth: obj.strokeWidth,
+						stroke: obj.stroke,
+						shadow: obj.shadow,
+						fontSize: obj.fontSize,
+						strokeDashArray: [obj.strkdsar, obj.strkdsar],
+						strokeDashOffset: obj.strkDsOfst
+					});
+					element.setCoords();
+					canvas.requestRenderAll();
+				});
+			})
 		});
 		project.ready.then(() => {
-			sheet.sequence.play({ iterationCount: 1, range: [0, 2] })
+			sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] })
 		})
 	</script>
 </body>

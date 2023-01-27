@@ -6,7 +6,6 @@ import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector } from 'react-redux'
 
 import { endpoint, templateLayers, shadowOptions } from '../common'
-
 const project = getProject('HTML Animation Tutorial', {})
 
 
@@ -144,7 +143,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         endpoint(`call 1-${layerNumber} sheet.sequence.pause()`)
     }
     const resume = layerNumber => {
-        endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(loopcount === 0) ? Infinity : loopcount}, range: [0, ${duration}] });
+        endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
     }
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
@@ -196,7 +195,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             window.project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: ${(loopcount === 0) ? Infinity : loopcount}, range: [0, ${duration}] });
+                sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
             canvas.getObjects().forEach(element => {
                 const obj = sheet.object(element.id, {
@@ -261,6 +260,129 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const stopGraphics1 = (layerNumber) => {
         endpoint(`stop 1-${layerNumber}`)
     }
+    const exportHtml = () => {
+        const xx4 = `canvas.getObjects().forEach(element => {
+            var obj = sheet.object(element.id, {
+                left: element.left,
+                left: element.left,
+                top: element.top,
+                width: element.width,
+                height: element.height,
+                opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                angle: element.angle,
+               
+                rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
+                ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+                strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+               
+                fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+                strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+                strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                fill: core.types.rgba(element.fill),
+                stroke:core.types.rgba(element.stroke),
+                shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                skewX: core.types.number(element.skewX, { range: [-60, 60] }),
+                skewY: core.types.number(element.skewY, { range: [-60, 60] }),
+            });`
+
+        const xx5 = ` obj.onValuesChange((obj) => {
+                element.set({
+                    left: obj.left,
+                    top: obj.top,
+                    width: obj.width,
+                    height: obj.height,
+                    opacity: obj.opacity,
+                    scaleX: obj.scaleX,
+                    scaleY: obj.scaleY,
+                    angle: obj.angle,
+                    rx: obj.rx,
+                    ry: obj.ry,
+                    strokeWidth: obj.strokeWidth,
+                  
+                    fontSize: obj.fontSize,
+                    strokeDashArray: [obj.strkdsar, obj.strkdsar],
+                    strokeDashOffset: obj.strkDsOfst,
+                    fill: obj.fill,
+                    stroke: obj.stroke,
+                    shadow: obj.shadow,
+                    skewX: obj.skewX,
+                    skewY: obj.skewY,
+                });
+                element.setCoords();
+                canvas.requestRenderAll();
+            });`
+
+        const aa =
+            `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js"
+                integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
+</head>
+
+<body style="overflow:hidden">
+
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <script type="module">
+    const hexToRGB = hex => {
+        const red = parseInt(hex.slice(1, 3), 16)
+        const green = parseInt(hex.slice(3, 5), 16)
+        const blue = parseInt(hex.slice(5, 7), 16)
+        return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
+        // return [ r, g, b ]
+    }
+         const shadowOptions = {
+            color: 'black',
+            blur: 30,
+            offsetX: 0,
+            offsetY: 0,
+            affectStroke: false
+        };
+        var canvas = new fabric.Canvas('canvas');
+        window.canvas=canvas;
+        canvas.preserveObjectStacking = true;
+        const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
+        import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
+        const { core } = Theatre
+        const project = core.getProject('HTML Animation Tutorial', {state:${JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial'))}});
+        const sheet = project.sheet('Sheet 1')
+        canvas.loadFromJSON(content, ()=> {
+            ${xx4}
+            ${xx5}
+        })
+        });
+        project.ready.then(() => {
+            sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        })
+    <//script>
+    </body>
+
+    </html>`
+
+        const bb = aa.replaceAll('<//', '</')
+        const element = document.createElement("a");
+        const file = new Blob([bb], { type: 'text/html' });
+        element.href = URL.createObjectURL(file);
+        var ss = new Date().toLocaleTimeString('en-US', {
+            year: "numeric", month: "numeric", day: "numeric", hour12: false,
+            hour: "numeric", minute: "numeric", second: "numeric"
+        });
+        // var retVal = prompt("Enter file name to save : ", ss + "_FileName");
+        var retVal = ss + "_FileName";
+        if (retVal !== null) {
+            element.download = retVal + '.html';
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+        }
+    }
+
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -283,6 +405,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             <button onClick={() => resume(templateLayers.theatrejs)}>resume</button>
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}>Stop</button>
+            <button onClick={() => exportHtml()}>Export Html</button>
 
             <DrawingforTheatrejs />
         </div>
