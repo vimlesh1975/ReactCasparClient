@@ -19,15 +19,53 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
     const [duration, setDuration] = useState(2);
     const [loopcount, setLoopcount] = useState(0);
+    const [fabric1, setFabric1] = useState('');
+    const [coreonly1, setCoreonly1] = useState('');
 
     useEffect(() => {
-
         studio.initialize()
         studio.ui.restore();
         setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"))
         return () => {
             // second  
         }
+    }, [])
+
+    useEffect(() => {
+        setTimeout(() => {
+            var fetchfabricjs;
+            if (window.location.origin !== 'https://vimlesh1975.github.io') {
+                fetchfabricjs = `${process.env.PUBLIC_URL}/js/fabric.min.js`;
+            }
+            else {
+                fetchfabricjs = `/ReactCasparClient/js/fabric.min.js`;
+            }
+            fetch(fetchfabricjs)
+                .then((r) => r.text())
+                .then(text => {
+                    setFabric1(text);
+                })
+        }, 2000);
+
+        setTimeout(() => {
+            var fetchcoreonly;
+            if (window.location.origin !== 'https://vimlesh1975.github.io') {
+                fetchcoreonly = `${process.env.PUBLIC_URL}/js/core-only.min.js`;
+            }
+            else {
+                fetchcoreonly = `/ReactCasparClient/js/core-only.min.js`;
+            }
+            fetch(fetchcoreonly)
+                .then((r) => r.text())
+                .then(text => {
+                    setCoreonly1(text);
+                })
+        }, 3000);
+
+        return () => {
+            // cleanup
+        }
+        // eslint-disable-next-line
     }, [])
 
     const initialiseCore = () => {
@@ -316,9 +354,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/6.0.0-rc.1/fabric.min.js"
-                integrity="sha512-P6uimDKoj1nnPSo2sPmgbZy99pPq9nHXhLwddOnLi1DC+fEM83FEUcHPRPifbx1rlRkdMinViaWyDfG45G9BuA=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"><//script>
+                <script>${fabric1}<//script>
+                <script>${coreonly1}<//script>
 </head>
 
 <body style="overflow:hidden">
@@ -343,7 +380,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
-        import "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.6.0-dev.4/dist/core-only.min.js"
         const { core } = Theatre
         const project = core.getProject('HTML Animation Tutorial', {state:${JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial'))}});
         const sheet = project.sheet('Sheet 1')
