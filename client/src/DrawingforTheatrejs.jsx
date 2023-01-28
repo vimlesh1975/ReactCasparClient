@@ -10,7 +10,15 @@ const DrawingforTheatrejs = () => {
     window.dispatch = dispatch;
     window.editor = editor;
 
+    useEffect(() => {
+        setTimeout(() => {
+            window.editor.canvas.preserveObjectStacking = true;
+        }, 3000);
+        return () => {
 
+        }
+        // eslint-disable-next-line
+    }, [])
 
 
 

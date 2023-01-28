@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '270123_3'
+export const buildDate = '280123_1'
 
 
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
@@ -111,7 +111,7 @@ export const options = {
     strokeWidth: 1,
 };
 export const shadowOptions = {
-    color: 'black',
+    color: '#000000',
     blur: 30,
     offsetX: 0,
     offsetY: 0,

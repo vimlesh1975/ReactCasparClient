@@ -292,5 +292,6 @@ textarea[data-fabric-hiddentextarea] {
 .DrawingforTheatrejs {
   width: 1920px;
   height: 1080px;
-  background-color: gray;
+  background-color: rgba(14, 15, 15, 0.596);
+  background-image: url('canvasBg.svg');
 }

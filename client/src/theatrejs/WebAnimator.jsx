@@ -6,12 +6,13 @@ import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector } from 'react-redux'
 
 import { endpoint, templateLayers, shadowOptions } from '../common'
-const project = getProject('HTML Animation Tutorial', {})
-
-
-
+import { createCircle } from '../DrawingController'
+var project = getProject('HTML Animation Tutorial', {})
 
 const sheet = project.sheet('Sheet 1');
+project.ready.then(() => {
+    sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+});
 
 const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
     const [showStudio, setShowStudio] = useState(true)
@@ -24,8 +25,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     useEffect(() => {
         studio.initialize()
-        studio.ui.restore();
-        setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"))
+        // studio.ui.restore();
+        setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"));
+
         return () => {
             // second  
         }
@@ -68,22 +70,27 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         // eslint-disable-next-line
     }, [])
 
-    const initialiseCore = () => {
-        const hexToRGB = hex => {
-            const red = parseInt(hex.slice(1, 3), 16)
-            const green = parseInt(hex.slice(3, 5), 16)
-            const blue = parseInt(hex.slice(5, 7), 16)
-            return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
-        }
-        var mouseDown = 0;
-        document.body.onmousedown = function () {
-            mouseDown = 1;
-        }
-        document.body.onmouseup = function () {
-            mouseDown = 0;
-        }
-        // const content = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] };
-        canvas.loadFromJSON(RCCtheatrepageData, () => {
+    const hexToRGB = hex => {
+        const red = parseInt(hex.slice(1, 3), 16)
+        const green = parseInt(hex.slice(3, 5), 16)
+        const blue = parseInt(hex.slice(5, 7), 16)
+        return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
+    }
+    var mouseDown = 0;
+    document.body.onmousedown = function () {
+        mouseDown = 1;
+    }
+    document.body.onmouseup = function () {
+        mouseDown = 0;
+    }
+
+
+    const initialiseCore = (jsonContent) => {
+        canvas.getObjects().forEach(element => {
+            sheet.detachObject(element.id)
+        })
+
+        canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach(element => {
                 const obj = sheet.object(element.id, {
                     left: element.left,
@@ -100,14 +107,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                    fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
-                    stroke: types.rgba(element.stroke ? hexToRGB(element.stroke) : hexToRGB('#000000')),
-                    shadow: { ...shadowOptions, color: types.rgba(hexToRGB(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+
+                    fill: (element.fill.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
+                    stroke: (element.stroke.r === undefined) ? (types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (types.rgba(element.stroke)),
+                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (types.rgba(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
+                }, { reconfigure: true });
 
-
-                });
                 obj.onValuesChange((obj) => {
                     element.set({
                         left: obj.left,
@@ -129,13 +137,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         shadow: obj.shadow,
                         skewX: obj.skewX,
                         skewY: obj.skewY,
-
                     });
                     element.setCoords();
                     canvas.requestRenderAll();
                 });
-
-
                 const onMouseMove = (obj, event) => {
                     if (mouseDown === 1) {
                         studio.transaction(({ set }) => {
@@ -145,7 +150,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                             set(obj.props.angle, event.target.angle);
                         });
                     }
-
                 };
                 const onScaling = (obj, event) => {
                     studio.transaction(({ set }) => {
@@ -158,19 +162,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         unset(obj.props);
                     });
                 };
-
                 element.on("mousedown", () => studio.setSelection([obj]), false);
                 element.on("mousemove", (e) => onMouseMove(obj, e), false);
                 element.on("scaling", (e) => onScaling(obj, e), false);
                 element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
-
-
             })
-            project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-            });
         })
-
     }
     const reset = () => {
         localStorage.removeItem("theatre-0.4.persistent");
@@ -413,9 +410,33 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         }
     }
 
+    const importHtml = async () => {
+
+        const [aa] = await window.showOpenFilePicker();
+
+        if (aa) {
+            const file = await aa.getFile();
+            const content = await file.text();
+            var canvasContent = content.split('const content =')[1].split(';')[0];
+            initialiseCore(canvasContent);
+
+            var animationContetent = content.split('{state:')[1].split('});')[0];
+            console.log(animationContetent);
+            project = getProject('HTML Animation Tutorial', { state: JSON.parse(animationContetent) });
+
+        }
+
+    }
+
+    const addCircle = () => {
+        createCircle(canvas);
+        initialiseCore(canvas.toJSON(['id']))
+    }
     return (<>
 
         <div style={{ textAlign: 'center' }}>
+            <button onClick={() => addCircle()}>Add circle</button>
+
             <button onClick={() => {
                 if (showStudio) {
                     studio.ui.hide();
@@ -426,7 +447,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 setShowStudio(val => !val);
 
             }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
-            <button onClick={() => initialiseCore()}>initialiseCore</button>
+            <button onClick={() => initialiseCore(RCCtheatrepageData)}>initialiseCore</button>
             <button onClick={() => reset()}>Reset</button>
             <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
@@ -436,6 +457,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}>Stop</button>
             <button onClick={() => exportHtml()}>Export Html</button>
+            <button onClick={() => importHtml()}>Import Html</button>
 
             <DrawingforTheatrejs />
         </div>
