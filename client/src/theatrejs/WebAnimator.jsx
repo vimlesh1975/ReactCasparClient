@@ -84,11 +84,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         mouseDown = 0;
     }
 
-
-    const initialiseCore = (jsonContent) => {
+    const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             sheet.detachObject(element.id)
         })
+        canvas.requestRenderAll()
+    }
+
+    const initialiseCore = (jsonContent) => {
 
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach(element => {
@@ -109,7 +112,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
 
                     fill: (element.fill.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
-                    stroke: (element.stroke.r === undefined) ? (types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (types.rgba(element.stroke)),
+                    stroke: (element.stroke?.r === undefined) ? (types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (types.rgba(element.stroke)),
                     shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (types.rgba(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
@@ -411,7 +414,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }
 
     const importHtml = async () => {
-
+        deleteAllObjects()
         const [aa] = await window.showOpenFilePicker();
 
         if (aa) {
@@ -447,7 +450,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 setShowStudio(val => !val);
 
             }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
-            <button onClick={() => initialiseCore(RCCtheatrepageData)}>initialiseCore</button>
+            <button onClick={() => {
+                deleteAllObjects();
+                initialiseCore(RCCtheatrepageData);
+            }}>initialiseCore</button>
             <button onClick={() => reset()}>Reset</button>
             <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
