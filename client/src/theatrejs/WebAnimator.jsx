@@ -3,16 +3,14 @@ import React, { useEffect, useState } from 'react'
 import studio from '@theatre/studio'
 import { getProject, types } from '@theatre/core'
 import DrawingforTheatrejs from '../DrawingforTheatrejs'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { fabric } from "fabric";
 
-import { endpoint, templateLayers, shadowOptions } from '../common'
+
+import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
 import { createCircle } from '../DrawingController'
-var project = getProject('HTML Animation Tutorial', {})
 
-const sheet = project.sheet('Sheet 1');
-project.ready.then(() => {
-    sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-});
+var project = getProject('HTML Animation Tutorial')
 
 const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
     const [showStudio, setShowStudio] = useState(true)
@@ -22,6 +20,20 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
     const [coreonly1, setCoreonly1] = useState('');
+    const [projectId, setProjectId] = useState('HTML Animation Tutorial')
+    const [htmlfileHandle, sethtmlfileHandle] = useState();
+
+    const clientId = useSelector(state => state.clientIdReducer.clientId);
+    window.clientId = clientId;
+
+
+
+    var sheet = project.sheet('Sheet 1');
+    project.ready.then(() => {
+        sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+    });
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         studio.initialize()
@@ -86,7 +98,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            sheet.detachObject(element.id)
+            project.sheet('Sheet 1').detachObject(element.id)
         })
         canvas.requestRenderAll()
     }
@@ -178,13 +190,18 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }
 
     const pause = layerNumber => {
-        endpoint(`call 1-${layerNumber} sheet.sequence.pause()`)
+        endpoint(`call 1-${layerNumber} sheet.sequence.pause()`);
+        executeScript(`sheet.sequence.pause()`);
     }
     const resume = layerNumber => {
         endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
+        executeScript(`sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+
     }
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
+
+
         endpoint(`stop 1-${layerNumber}`)
 
         setTimeout(() => {
@@ -216,7 +233,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             endpoint(`call 1-166 ${script3}`)
         }, 3000);
 
-        const state1 = (JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial')));
+        const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
         var script4 = `"
         const shadowOptions = {
@@ -228,7 +245,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         };
         canvas.loadFromJSON(content,()=>{
             const { core } = Theatre;
-            window.project = core.getProject('HTML Animation Tutorial', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${projectId}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
                 sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
@@ -287,12 +304,94 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         setTimeout(() => {
             endpoint(`call 1-166 ${script4}`)
         }, 5000);
+
+        // const clientId = '1234';
+        const scriptforhtmlweb = `
+        document.getElementById('divid_${layerNumber}')?.remove();
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        document.body.style.overflow='hidden';
+        aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
+        document.body.appendChild(aa);
+        var canvas = new fabric.Canvas('canvas');
+        const content =\`${content2}\`;
+        const shadowOptions = {
+            color: 'black',
+            blur: 30,
+            offsetX: 0,
+            offsetY: 0,
+            affectStroke: false
+        };
+        __TheatreJS_StudioBundle._studio.initialize();
+        __TheatreJS_StudioBundle._studio.ui.hide();
+        canvas.loadFromJSON(content,()=>{
+            const { core } = __TheatreJS_StudioBundle._coreBundle._studio;
+            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.sheet = project.sheet('Sheet 1');
+            project.ready.then(() => {
+                sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+            });
+            canvas.getObjects().forEach(element => {
+                const obj = sheet.object(element.id, {
+                    left: element.left,
+                    top: element.top,
+                    width: element.width,
+                    height: element.height,
+                    opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                    scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                    scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                    angle: element.angle,
+                    rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
+                    ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+                    strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                    fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+                    strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+                    strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    fill: core.types.rgba(element.fill),
+                    stroke:core.types.rgba(element.stroke),
+                    shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                    skewX: core.types.number(element.skewX, { range: [-60, 60] }),
+                    skewY: core.types.number(element.skewY, { range: [-60, 60] }),
+
+                });
+                obj.onValuesChange((obj) => {
+                        element.set({
+                            left: obj.left,
+                            top: obj.top,
+                            width: obj.width,
+                            height: obj.height,
+                            opacity: obj.opacity,
+                            scaleX: obj.scaleX,
+                            scaleY: obj.scaleY,
+                            angle: obj.angle,
+                            rx: obj.rx,
+                            ry: obj.ry,
+                            strokeWidth: obj.strokeWidth,
+                            fontSize: obj.fontSize,
+                            strokeDashArray: [obj.strkdsar, obj.strkdsar],
+                            strokeDashOffset: obj.strkDsOfst,
+                            fill: obj.fill,
+                            stroke: obj.stroke,
+                            shadow: obj.shadow,
+                            skewX: obj.skewX,
+                            skewY: obj.skewY,
+                        });
+                        element.setCoords();
+                        canvas.renderAll();
+                });
+            });
+        });
+        `
+        executeScript(scriptforhtmlweb);
     }
 
     const stopGraphics1 = (layerNumber) => {
-        endpoint(`stop 1-${layerNumber}`)
+        endpoint(`stop 1-${layerNumber}`);
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
+
     }
-    const exportHtml = () => {
+    const exportHtml = async () => {
         const xx4 = `canvas.getObjects().forEach(element => {
             var obj = sheet.object(element.id, {
                 left: element.left,
@@ -381,7 +480,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
         const { core } = Theatre
-        const project = core.getProject('HTML Animation Tutorial', {state:${JSON.stringify(studio.createContentOfSaveFile('HTML Animation Tutorial'))}});
+        const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         const sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content, ()=> {
             ${xx4}
@@ -397,36 +496,61 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             </html>`
 
         const bb = aa.replaceAll('<//', '</')
-        const element = document.createElement("a");
         const file = new Blob([bb], { type: 'text/html' });
-        element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', {
-            year: "numeric", month: "numeric", day: "numeric", hour12: false,
-            hour: "numeric", minute: "numeric", second: "numeric"
-        });
+        // const element = document.createElement("a");
+        // element.href = URL.createObjectURL(file);
+        // var ss = new Date().toLocaleTimeString('en-US', {
+        //     year: "numeric", month: "numeric", day: "numeric", hour12: false,
+        //     hour: "numeric", minute: "numeric", second: "numeric"
+        // });
         // var retVal = prompt("Enter file name to save : ", ss + "_FileName");
-        var retVal = ss + "_FileName";
-        if (retVal !== null) {
-            element.download = retVal + '.html';
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-        }
+        // // var retVal = ss + "_FileName";
+        // if (retVal !== null) {
+        //     element.download = retVal + '.html';
+        //     document.body.appendChild(element); // Required for this to work in FireFox
+        //     element.click();
+        // }
+
+        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        const options = {
+            suggestedName: ss,
+            types: [{
+                description: 'Html file',
+                accept: { 'text/html': ['.html'] },
+            }],
+        };
+        const aa1 = await window.showSaveFilePicker(options);
+        sethtmlfileHandle(aa1.name)
+        const writable = await aa1.createWritable();
+        await writable.write(file);
+        await writable.close();
     }
 
     const importHtml = async () => {
-        deleteAllObjects()
+
+
         const [aa] = await window.showOpenFilePicker();
 
         if (aa) {
+
+            sethtmlfileHandle(aa.name);
+            deleteAllObjects()
             const file = await aa.getFile();
             const content = await file.text();
             var canvasContent = content.split('const content =')[1].split(';')[0];
-            initialiseCore(canvasContent);
-
             var animationContetent = content.split('{state:')[1].split('});')[0];
-            console.log(animationContetent);
-            project = getProject('HTML Animation Tutorial', { state: JSON.parse(animationContetent) });
 
+            console.log(animationContetent);
+            const pid = `project${fabric.Object.__uid++}`;
+            project = getProject(pid, { state: JSON.parse(animationContetent) });
+            setProjectId(pid)
+
+            sheet = project.sheet('Sheet 1');
+            project.ready.then(() => {
+                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+            });
+
+            initialiseCore(canvasContent);
         }
 
     }
@@ -435,6 +559,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         createCircle(canvas);
         initialiseCore(canvas.toJSON(['id']))
     }
+
+
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -463,7 +589,16 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}>Stop</button>
             <button onClick={() => exportHtml()}>Export Html</button>
+            {/* {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml()}>Overwrite</button>} */}
+            {htmlfileHandle}
             <button onClick={() => importHtml()}>Import Html</button>
+
+
+            Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
+                dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
+            }} />
+
+            {projectId}
 
             <DrawingforTheatrejs />
         </div>
