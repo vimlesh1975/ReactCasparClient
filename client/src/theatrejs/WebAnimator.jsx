@@ -248,9 +248,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                    fill: core.types.rgba(element.fill),
-                    stroke:core.types.rgba(element.stroke),
-                    shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+
+                   
+                    fill: (element.fill?.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
+                    stroke: (element.stroke?.r === undefined) ? (core.types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (core.types.rgba(element.stroke)),
+                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (core.types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (core.types.rgba(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+
                     skewX: core.types.number(element.skewX, { range: [-60, 60] }),
                     skewY: core.types.number(element.skewY, { range: [-60, 60] }),
 
@@ -393,6 +396,84 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         })
          <//script>
+         <script>
+         var dataCaspar = {};
+         function escapeHtml(unsafe) {
+             return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+         }
+         function parseCaspar(str) {
+             var xmlDoc;
+             if (window.DOMParser) {
+                 parser = new DOMParser();
+                 xmlDoc = parser.parseFromString(str, "text/xml");
+             }
+             dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+         }
+         function XML2JSON(node) {
+             var data = {}; // resulting object
+             for (k = 0; k < node.length; k++) {
+                 var idCaspar = node[k].getAttribute("id");
+                 var valCaspar = node[k].childNodes[0].getAttribute("value");
+                 if (idCaspar != undefined && valCaspar != undefined) {
+                     data[idCaspar] = valCaspar;
+                 };
+             }
+             return data;
+         }
+         function dataInsert(dataCaspar) {
+             for (var idCaspar in dataCaspar) {
+                 const aa = canvas.getObjects().filter((item) => {
+                     return item.id === idCaspar;
+                 })
+                 const element = aa[0];
+                 if (element.type === 'image') {
+                     const originalWidth = (element.width) * (element.scaleX);
+                     const originalHeight = (element.height) * (element.scaleY);
+                     element.setSrc(escapeHtml(dataCaspar[idCaspar]), () => {
+                         element.set({ scaleX: (originalWidth / element.width), scaleY: (originalHeight / element.height) })
+                         canvas.requestRenderAll()
+                     });
+                 }
+                 else {
+                     element.set({ text: escapeHtml(dataCaspar[idCaspar]) });
+                 }
+                 canvas.requestRenderAll()
+             }
+         }
+ 
+         function update(str) {
+             parseCaspar(str); // Parse templateData into an XML object
+             dataInsert(dataCaspar); // Insert data
+         }
+ 
+         function play(str) {
+             parseCaspar(str); // Parse templateData into an XML object
+             dataInsert(dataCaspar); // Insert data
+         }
+         function stop() {
+             document.body.innerHTML = '';
+         }
+ 
+         function updatestring(str1, str2) {
+             const aa = canvas.getObjects().filter((item) => {
+                 return item.id === str1;
+             })
+             aa[0].set({ text: str2 });
+             canvas.requestRenderAll();
+         }
+         function updateimage(str1, str2) {
+             const aa = canvas.getObjects().filter((item) => {
+                 return item.id === str1;
+             })
+             const element = aa[0];
+             const originalWidth = (element.width) * (element.scaleX);
+             const originalHeight = (element.height) * (element.scaleY);
+             element.setSrc(str2, () => {
+                 element.set({ objectCaching: false, scaleX: (originalWidth / element.width), scaleY: (originalHeight / element.height) })
+                 canvas.requestRenderAll();
+             });
+         }
+     <//script>
          </body>
      </html>`
 
@@ -424,7 +505,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             deleteAllObjects()
             const file = await aa.getFile();
             const content = await file.text();
-            var canvasContent = content.split('const content =')[1].split(';')[0];
+            var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
+
+            console.log(canvasContent)
             var animationContetent = content.split('{state:')[1].split('});')[0];
 
             console.log(animationContetent);
@@ -480,7 +563,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             <button onClick={() => importHtml()}>Import Html</button>
 
 
-            Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
+            Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
 

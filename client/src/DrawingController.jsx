@@ -364,6 +364,8 @@ export const Upload = (e, canvas) => {
                             shadow: shadowOptions,
                             strokeUniform: true,
                             objectCaching: false,
+                            fill: '#ff0000',
+                            stroke: '#00ff00',
                         })
                     // .scale(0.5);
                     canvas.add(image).setActiveObject(image);

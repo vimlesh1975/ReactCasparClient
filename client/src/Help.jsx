@@ -35,7 +35,6 @@ const Help = () => {
   }
 
   return (<div>
-    <h2>Help</h2>
     <div style={{ display: 'flex' }}>
       <div style={{ width: 600 }}>
         <ol>
@@ -57,22 +56,18 @@ const Help = () => {
 
           <li>There is right click menu also for drawing mode. </li>
 
-
           <li><a href='https://github.com/vimlesh1975/ReactCasparClient' target='_blank' rel="noreferrer">Github Page</a> </li>
           <li><a href='https://vimlesh1975.github.io/ReactCasparClient/' target='_blank' rel="noreferrer">Github Online Client</a> </li>
 
           <li><a href='https://casparcgforum.org/t/react-caspar-client' target='_blank' rel="noreferrer">Casparcg Forum Topic</a> </li>
           <li><a href='https://bit.ly/3jRrhDL' target='_blank' rel="noreferrer">Latest Build</a> </li>
-
-          <li>test</li>
+          <li><a href='https://www.youtube.com/playlist?list=PLeBXICFOkFQu0OC7vJRew471ape0mp1sR' target='_blank' rel="noreferrer">YouTube videos for How to use different Modules</a> </li>
 
         </ol>
       </div>
       <div>
-        <h2>Doesn't work</h2>
         <ol>
           <li>Erase will work on Images from local pc only</li>
-          <li>Images from local pc will be slow </li>
           <li>Emoji is not supported in server2.07 and 2.1 </li>
           <li>Image from local pc method only will get filters. </li>
           <li>Dont use double space in folder or file name. </li>
