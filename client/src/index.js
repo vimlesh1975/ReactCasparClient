@@ -12,6 +12,7 @@ import Drawing2 from './Drawing2';
 import Threejs2 from './Threejs2';
 import HTML from './htmlrenderer/Html'
 import WebAnimator from './theatrejs/WebAnimator';
+import Theatrejs2 from './theatrejs/Theatrejs2';
 
 window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -25,6 +26,7 @@ root.render(
         {/* <Route exact path='/threejs' element={<Threejs />} /> */}
         <Route exact path='/threejs2' element={<Threejs2 />} />
         <Route exact path='/WebAnimator' element={<WebAnimator />} />
+        <Route exact path='/Theatrejs2' element={<Theatrejs2 />} />
       </Routes>
     </Router>
   </Provider>
