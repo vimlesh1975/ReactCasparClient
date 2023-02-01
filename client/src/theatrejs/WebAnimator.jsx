@@ -427,13 +427,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                  })
                  const element = aa[0];
                  if (element.type === 'image') {
-                     const originalWidth = (element.width) * (element.scaleX);
-                     const originalHeight = (element.height) * (element.scaleY);
-                     element.setSrc(escapeHtml(dataCaspar[idCaspar]), () => {
-                         element.set({ scaleX: (originalWidth / element.width), scaleY: (originalHeight / element.height) })
-                         canvas.requestRenderAll()
-                     });
-                 }
+                    const originalWidth = (element.width) * (element.scaleX);
+                    const originalHeight = (element.height) * (element.scaleY);
+                    fabric.Image.fromURL(escapeHtml(dataCaspar[idCaspar]), img => {
+                        img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
+                        img.cloneAsImage(img1 => {
+                            element.setSrc(img1.getSrc(), () => {
+                                canvas.requestRenderAll();
+                            })
+                        })
+                    })
+                }
                  else {
                      element.set({ text: escapeHtml(dataCaspar[idCaspar]) });
                  }
@@ -461,18 +465,23 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
              aa[0].set({ text: str2 });
              canvas.requestRenderAll();
          }
-         function updateimage(str1, str2) {
-             const aa = canvas.getObjects().filter((item) => {
-                 return item.id === str1;
-             })
-             const element = aa[0];
-             const originalWidth = (element.width) * (element.scaleX);
-             const originalHeight = (element.height) * (element.scaleY);
-             element.setSrc(str2, () => {
-                 element.set({ objectCaching: false, scaleX: (originalWidth / element.width), scaleY: (originalHeight / element.height) })
-                 canvas.requestRenderAll();
-             });
-         }
+        function updateimage(str1, str2) {
+            const aa = canvas.getObjects().filter((item) => {
+                return item.id === str1;
+            })
+            const element = aa[0];
+            const originalWidth = (element.width) * (element.scaleX);
+            const originalHeight = (element.height) * (element.scaleY);
+
+            fabric.Image.fromURL(str2, img => {
+                img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
+                img.cloneAsImage(img1 => {
+                    element.setSrc(img1.getSrc(), () => {
+                        canvas.requestRenderAll();
+                    })
+                })
+            })
+        }
      <//script>
          </body>
      </html>`
