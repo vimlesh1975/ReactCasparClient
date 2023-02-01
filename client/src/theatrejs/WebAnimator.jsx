@@ -39,6 +39,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const dispatch = useDispatch();
 
     useEffect(() => {
+        document.title = "RCC Web Animator"
         studio.ui.restore();
         setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"));
 
@@ -298,6 +299,11 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }
     const exportHtml = async () => {
         const xx4 = `canvas.getObjects().forEach(element => {
+            if (screen.colorDepth === 0) {
+                if ((element.id).startsWith("ccg")){
+                    element.set({visible: false});
+                }
+            }
             var obj = sheet.object(element.id, {
                 left: element.left,
                 left: element.left,
@@ -364,7 +370,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
         <body style="overflow:hidden">
 
-    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <div><canvas id="canvas" width="1920" height="1080"></canvas></div>
     <script type="module">
     const hexToRGB = hex => {
         const red = parseInt(hex.slice(1, 3), 16)
@@ -433,13 +439,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
                         img.cloneAsImage(img1 => {
                             element.setSrc(img1.getSrc(), () => {
-                                canvas.requestRenderAll();
+                            element.set({visible: true});
+                            canvas.requestRenderAll();
                             })
                         })
                     })
                 }
                  else {
                      element.set({ text: escapeHtml(dataCaspar[idCaspar]) });
+                     element.set({visible: true});
                  }
                  canvas.requestRenderAll()
              }
@@ -463,6 +471,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                  return item.id === str1;
              })
              aa[0].set({ text: str2 });
+             aa[0].set({visible: true});
              canvas.requestRenderAll();
          }
         function updateimage(str1, str2) {
@@ -477,7 +486,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
                 img.cloneAsImage(img1 => {
                     element.setSrc(img1.getSrc(), () => {
-                        canvas.requestRenderAll();
+                    element.set({visible: true});
+                    canvas.requestRenderAll();
                     })
                 })
             })

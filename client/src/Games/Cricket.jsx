@@ -17,7 +17,7 @@ const Cricket = () => {
     const [run, setRun] = useState(125);
     const [wicket, setWicket] = useState(2);
     const [over, setOver] = useState(3.2);
-    const [autoUpdate, setAutoUpdate] = useState(true)
+    const [autoUpdate, setAutoUpdate] = useState(false)
     const dataCricket = [
         { key: 'teamName', value: team1, type: 'text' },
         { key: 'info1', value: info1, type: 'text' },
