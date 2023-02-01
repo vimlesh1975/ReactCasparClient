@@ -299,7 +299,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }
     const exportHtml = async () => {
         const xx4 = `canvas.getObjects().forEach(element => {
-            if (screen.colorDepth === 0) {
+            if(window.caspar || window.casparcg || window.tickAnimations)  {
                 if ((element.id).startsWith("ccg")){
                     element.set({visible: false});
                 }
