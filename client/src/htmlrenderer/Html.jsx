@@ -2,6 +2,12 @@ import React, { useEffect, useRef } from 'react'
 import { socketAddress } from '../common'
 import socketIOClient from "socket.io-client";
 
+window.hexToRGB = hex => {
+    const red = parseInt(hex.slice(1, 3), 16)
+    const green = parseInt(hex.slice(3, 5), 16)
+    const blue = parseInt(hex.slice(5, 7), 16)
+    return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
+}
 
 document.body.addEventListener('keypress', function (e) {
     // if (e.key.toUpperCase() === "S") { stop(); }
