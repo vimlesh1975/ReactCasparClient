@@ -111,7 +111,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach(element => {
                 var obj1 = {};
-                const isColorObject = (typeof (element.fill) !== 'object');
+                const isColorObject = ((typeof (element.fill) !== 'object') && (typeof (element.stroke) !== 'object'));
                 if (isColorObject) {
                     obj1 = {
                         fill: (element.fill.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
@@ -135,6 +135,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
                     ...obj1,
+
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
                 }, { reconfigure: true });
@@ -218,7 +219,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         const content2 = content.replaceAll('"', '\\"');
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
-        const scriptforhtmlweb = `
+        const scriptforCasparcg = `
         document.getElementById('divid_${layerNumber}')?.remove();
         var aa = document.createElement('div');
         aa.style.position='absolute';
@@ -246,9 +247,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
             canvas.getObjects().forEach(element => {
-              console.log(JSON.stringify(element.fill));
               var obj1 = {};
-              const isnotGradient = (element.fill.type!=='linear');
+              const isnotGradient = ((element.fill?.type!=='linear') && (element.stroke?.type!=='linear')  );
               if (isnotGradient) {
                   obj1 = {
                       fill: (element.fill.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
@@ -310,9 +310,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             });
         });
         `
-        executeScript(scriptforhtmlweb);
+
+        executeScript(scriptforCasparcg);
         endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
-        endpoint(`call 1-${layerNumber} "${scriptforhtmlweb}"`)
+        endpoint(`call 1-${layerNumber} "${scriptforCasparcg}"`)
     }
 
     const stopGraphics1 = (layerNumber) => {
@@ -328,7 +329,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 }
             }
             var obj1 = {};
-              const isnotGradient = (element.fill.type!=='linear');
+              const isnotGradient = ((element.fill.type!=='linear') && (element.stroke.type!=='linear') );
               if (isnotGradient) {
                   obj1 = {
                       fill: (element.fill.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
