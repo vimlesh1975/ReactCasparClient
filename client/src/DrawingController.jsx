@@ -252,14 +252,14 @@ export const createTextBox = (canvas) => {
         top: 0,
         width: 480 * 1.87,
         fill: '#ffffff',
-        // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
         editable: true,
         objectCaching: false,
         textAlign: 'left',
-        // padding: 5,
+        stroke: '#000000',
+        strokeWidth: 0,
 
     });
     canvas.add(text).setActiveObject(text);
@@ -278,14 +278,14 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
         top: y,
         width: 480 * 1.87,
         fill: '#ffffff',
-        // backgroundColor: options.backgroundColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
         fontSize: options.currentFontSize,
         editable: true,
         objectCaching: false,
         textAlign: 'left',
-        // padding: 5,
+        stroke: '#000000',
+        strokeWidth: 0,
 
     });
     canvas.add(text).setActiveObject(text);
