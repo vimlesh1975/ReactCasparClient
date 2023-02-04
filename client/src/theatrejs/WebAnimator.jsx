@@ -103,8 +103,23 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            project.sheet('Sheet 1').detachObject(element.id)
+            studio.transaction((api) => {
+                api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
+                project.sheet('Sheet 1').detachObject(element.id);
+
+            })
         })
+
+        studio.transaction((api) => {
+            // calling this will make it as if you never set values for this object or put it in a sequence
+            // api.__experimental_forgetObject(object)
+
+            // calling this will make it as if you never set values for _any_ object in this sheet, and you never created a sequence either.
+            api.__experimental_forgetSheet(sheet)
+
+            // note that if you're calling __experimental_forgetSheet(), then there is no need to call __experimental_forgetObject() in case that object belongs in that sheet.
+        })
+
         canvas.requestRenderAll()
     }
 
@@ -116,9 +131,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 const isColorObject = ((typeof (element.fill) !== 'object') && (typeof (element.stroke) !== 'object'));
                 if (isColorObject) {
                     obj1 = {
-                        fill: (element.fill.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
+                        fill: (element.fill?.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
                         stroke: (element.stroke?.r === undefined) ? (types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (types.rgba(element.stroke)),
-                        shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (types.rgba(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     };
                 }
                 const obj = sheet.object(element.id, {
@@ -134,6 +148,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (types.rgba(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     ...obj1,
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
@@ -146,7 +161,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         obj2 = {
                             fill: val.fill,
                             stroke: val.stroke,
-                            shadow: val.shadow,
                         };
                     }
                     element.set({
@@ -162,6 +176,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         fontSize: val.fontSize,
                         strokeDashArray: [val.strkdsar, val.strkdsar],
                         strokeDashOffset: val.strkDsOfst,
+                        shadow: val.shadow,
                         ...obj2,
                         skewX: val.skewX,
                         skewY: val.skewY,
@@ -250,7 +265,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                   obj1 = {
                       fill: (element.fill.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
                       stroke: (element.stroke?.r === undefined) ? (core.types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (core.types.rgba(element.stroke)),
-                      shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (core.types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (core.types.rgba(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                   };
               }
                 const obj = sheet.object(element.id, {
@@ -266,6 +280,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (core.types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (core.types.rgba(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     ...obj1,
                     skewX: core.types.number(element.skewX, { range: [-60, 60] }),
                     skewY: core.types.number(element.skewY, { range: [-60, 60] }),
@@ -277,7 +292,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         obj2 = {
                             fill: val.fill,
                             stroke: val.stroke,
-                            shadow: val.shadow,
                         };
                     }
                         element.set({
@@ -294,6 +308,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                             fontSize: val.fontSize,
                             strokeDashArray: [val.strkdsar, val.strkdsar],
                             strokeDashOffset: val.strkDsOfst,
+                            shadow: val.shadow,
                            ...obj2,
                             skewX: val.skewX,
                             skewY: val.skewY,
@@ -328,7 +343,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                   obj1 = {
                       fill: (element.fill?.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
                       stroke: (element.stroke?.r === undefined) ? (core.types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (core.types.rgba(element.stroke)),
-                      shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (core.types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (core.types.rgba(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                   };
               }
             var obj = sheet.object(element.id, {
@@ -347,8 +361,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                 strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                 strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                fill: core.types.rgba(element.fill),
-                stroke:core.types.rgba(element.stroke),
+                ...obj1,
                 shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                 skewX: core.types.number(element.skewX, { range: [-60, 60] }),
                 skewY: core.types.number(element.skewY, { range: [-60, 60] }),
@@ -360,7 +373,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         obj2 = {
                             fill: val.fill,
                             stroke: val.stroke,
-                            shadow: val.shadow,
                         };
                     }
                         element.set({
@@ -376,6 +388,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                             fontSize: val.fontSize,
                             strokeDashArray: [val.strkdsar, val.strkdsar],
                             strokeDashOffset: val.strkDsOfst,
+                            shadow: val.shadow,
                            ...obj2,
                             skewX: val.skewX,
                             skewY: val.skewY,
@@ -549,10 +562,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             const content = await file.text();
             var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
 
-            console.log(canvasContent)
+            // console.log(canvasContent)
             var animationContetent = content.split('{state:')[1].split('});')[0];
 
-            console.log(animationContetent);
+            // console.log(animationContetent);
             const pid = `project${fabric.Object.__uid++}`;
             project = getProject(pid, { state: JSON.parse(animationContetent) });
             setProjectId(pid)
