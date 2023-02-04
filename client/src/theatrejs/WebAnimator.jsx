@@ -123,31 +123,78 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         canvas.requestRenderAll()
     }
 
-    const initialiseCore = (jsonContent) => {
+    const initialiseCore = (jsonContent, importing = false) => {
 
         canvas.loadFromJSON(jsonContent, () => {
+
             canvas.getObjects().forEach(element => {
+                console.log(element.fill);
+                console.log(element.stroke);
+                console.log(element.shadow.color);
+
+                if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
+                    element.set({ fill: '#555252' })
+                }
                 if (element.stroke === null) {
                     element.set({ stroke: '#000000' })
                 }
-                if (element.fill === null) {
-                    element.set({ fill: '#ffffff' })
-                }
+
+
+
+
                 var obj1 = {};
-                const isColorObjectfill = (typeof (element.fill) !== 'object');
-                if (isColorObjectfill) {
+                var isColorObjectfill;
+                var isColorObjectStroke;
+
+                if (importing) {
+                    isColorObjectfill = (element.fill.type !== 'linear');
+                    isColorObjectStroke = (element.stroke.type !== 'linear');
+
+                    if (isColorObjectfill) {
+                        obj1 = {
+                            ...obj1,
+                            fill: types.rgba(element.fill),
+                        };
+                    }
+
+                    if (isColorObjectStroke) {
+                        obj1 = {
+                            ...obj1,
+                            stroke: types.rgba(element.stroke),
+                        };
+                    }
                     obj1 = {
                         ...obj1,
-                        fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                        shadow: { ...element.shadow, color: types.rgba(element.shadow.color) },
                     };
+
                 }
-                const isColorObjectStroke = (typeof (element.stroke) !== 'object');
-                if (isColorObjectStroke) {
+                else {
+                    if (!element.shadow.color.toString().startsWith("#")) {
+                        element.set({ shadow: { ...element.shadow, color: '#ffffff' } })
+                    }
+                    isColorObjectfill = (typeof (element.fill) !== 'object');
+                    isColorObjectStroke = (typeof (element.stroke) !== 'object');
+                    if (isColorObjectfill) {
+                        obj1 = {
+                            ...obj1,
+                            fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                        };
+                    }
+
+                    if (isColorObjectStroke) {
+                        obj1 = {
+                            ...obj1,
+                            stroke: types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000')),
+                        };
+                    }
                     obj1 = {
                         ...obj1,
-                        stroke: types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000')),
+                        shadow: { ...shadowOptions, color: types.rgba(hexToRGB(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     };
+
                 }
+
                 const obj = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
@@ -161,7 +208,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (types.rgba(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     ...obj1,
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
@@ -280,6 +326,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             canvas.getObjects().forEach(element => {
                 console.log(element.fill);
                 console.log(element.stroke);
+                console.log(element.shadow);
+                
               var obj1 = {};
               const isnotGradientfill = (element.fill.type!=='linear');
               if (isnotGradientfill) {
@@ -308,7 +356,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                    shadow: { ...shadowOptions, color: (element.shadow.color.r === undefined) ? (core.types.rgba(hexToRGB(element.shadow.color ? element.shadow.color : '#000000'))) : (core.types.rgba(element.shadow.color)), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                    shadow: { ...shadowOptions, color:(core.types.rgba(element.shadow.color)) , blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     ...obj1,
                     skewX: core.types.number(element.skewX, { range: [-60, 60] }),
                     skewY: core.types.number(element.skewY, { range: [-60, 60] }),
@@ -372,13 +420,20 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 }
             }
             var obj1 = {};
-              const isnotGradient = ((element.fill?.type!=='linear') && (element.stroke?.type!=='linear') );
-              if (isnotGradient) {
-                  obj1 = {
-                      fill: (element.fill?.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
-                      stroke: (element.stroke?.r === undefined) ? (core.types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (core.types.rgba(element.stroke)),
-                  };
-              }
+            const isnotGradientfill = (element.fill.type!=='linear');
+            if (isnotGradientfill) {
+                obj1 = {
+                    ...obj1,
+                    fill: core.types.rgba(element.fill),
+                };
+            }
+            const isnotGradientstroke= (element.stroke.type!=='linear');
+            if (isnotGradientstroke) {
+                obj1 = {
+                    ...obj1,
+                    stroke: core.types.rgba(element.stroke),
+                };
+            }
             var obj = sheet.object(element.id, {
                 left: element.left,
                 left: element.left,
@@ -395,20 +450,26 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                 strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                 strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
-                ...obj1,
                 shadow: { ...shadowOptions, color: core.types.rgba(element.shadow.color), blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                ...obj1,
                 skewX: core.types.number(element.skewX, { range: [-60, 60] }),
                 skewY: core.types.number(element.skewY, { range: [-60, 60] }),
             });`
 
         const xx5 = ` obj.onValuesChange((val) => {
             var obj2 = {};
-                    if (isnotGradient) {
-                        obj2 = {
-                            fill: val.fill,
-                            stroke: val.stroke,
-                        };
-                    }
+            if (isnotGradientfill) {
+                obj2 = {
+                    ...obj2,
+                    fill: val.fill,
+                };
+            }
+            if (isnotGradientstroke) {
+                obj2 = {
+                    ...obj2,
+                    stroke: val.stroke,
+                };
+            }
                         element.set({
                             left: val.left,
                             top: val.top,
@@ -609,7 +670,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
             });
 
-            initialiseCore(canvasContent);
+            initialiseCore(canvasContent, true);
         }
 
     }
