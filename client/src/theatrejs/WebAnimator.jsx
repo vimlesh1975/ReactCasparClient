@@ -127,12 +127,25 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach(element => {
+                if (element.stroke === null) {
+                    element.set({ stroke: '#000000' })
+                }
+                if (element.fill === null) {
+                    element.set({ fill: '#ffffff' })
+                }
                 var obj1 = {};
-                const isColorObject = ((typeof (element.fill) !== 'object') && (typeof (element.stroke) !== 'object'));
-                if (isColorObject) {
+                const isColorObjectfill = (typeof (element.fill) !== 'object');
+                if (isColorObjectfill) {
                     obj1 = {
-                        fill: (element.fill?.r === undefined) ? (types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (types.rgba(element.fill)),
-                        stroke: (element.stroke?.r === undefined) ? (types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (types.rgba(element.stroke)),
+                        ...obj1,
+                        fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                    };
+                }
+                const isColorObjectStroke = (typeof (element.stroke) !== 'object');
+                if (isColorObjectStroke) {
+                    obj1 = {
+                        ...obj1,
+                        stroke: types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000')),
                     };
                 }
                 const obj = sheet.object(element.id, {
@@ -157,9 +170,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
                 obj.onValuesChange((val) => {
                     var obj2 = {};
-                    if (isColorObject) {
+                    if (isColorObjectfill) {
                         obj2 = {
+                            ...obj2,
                             fill: val.fill,
+                        };
+                    }
+                    if (isColorObjectStroke) {
+                        obj2 = {
+                            ...obj2,
                             stroke: val.stroke,
                         };
                     }
