@@ -278,12 +278,21 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
             canvas.getObjects().forEach(element => {
+                console.log(element.fill);
+                console.log(element.stroke);
               var obj1 = {};
-              const isnotGradient = ((element.fill?.type!=='linear') && (element.stroke?.type!=='linear')  );
-              if (isnotGradient) {
+              const isnotGradientfill = (element.fill.type!=='linear');
+              if (isnotGradientfill) {
                   obj1 = {
-                      fill: (element.fill.r === undefined) ? (core.types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000'))) : (core.types.rgba(element.fill)),
-                      stroke: (element.stroke?.r === undefined) ? (core.types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000'))) : (core.types.rgba(element.stroke)),
+                      ...obj1,
+                      fill: core.types.rgba(element.fill),
+                  };
+              }
+              const isnotGradientstroke= (element.stroke.type!=='linear');
+              if (isnotGradientstroke) {
+                  obj1 = {
+                      ...obj1,
+                      stroke: core.types.rgba(element.stroke),
                   };
               }
                 const obj = sheet.object(element.id, {
@@ -307,9 +316,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 });
                 obj.onValuesChange((val) => {
                     var obj2 = {};
-                    if (isnotGradient) {
+                    if (isnotGradientfill) {
                         obj2 = {
+                            ...obj2,
                             fill: val.fill,
+                        };
+                    }
+                    if (isnotGradientstroke) {
+                        obj2 = {
+                            ...obj2,
                             stroke: val.stroke,
                         };
                     }
