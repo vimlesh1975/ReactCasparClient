@@ -124,8 +124,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 const obj = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
-                    width: element.width,
-                    height: element.height,
                     opacity: types.number(element.opacity, { range: [0, 1] }),
                     scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                     scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
@@ -154,8 +152,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     element.set({
                         left: val.left,
                         top: val.top,
-                        width: val.width,
-                        height: val.height,
                         opacity: val.opacity,
                         scaleX: val.scaleX,
                         scaleY: val.scaleY,
@@ -178,7 +174,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         studio.transaction(({ set }) => {
                             set(obj.props.left, event.target.left);
                             set(obj.props.top, event.target.top);
-                            set(obj.props.width, event.target.width);
                             set(obj.props.angle, event.target.angle);
                         });
                     }
@@ -261,8 +256,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 const obj = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
-                    width: element.width,
-                    height: element.height,
                     opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
                     scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                     scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
@@ -290,8 +283,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         element.set({
                             left: val.left,
                             top: val.top,
-                            width: val.width,
-                            height: val.height,
+                          
                             opacity: val.opacity,
                             scaleX: val.scaleX,
                             scaleY: val.scaleY,
@@ -343,8 +335,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 left: element.left,
                 left: element.left,
                 top: element.top,
-                width: element.width,
-                height: element.height,
                 opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
                 scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                 scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
@@ -376,8 +366,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         element.set({
                             left: val.left,
                             top: val.top,
-                            width: val.width,
-                            height: val.height,
                             opacity: val.opacity,
                             scaleX: val.scaleX,
                             scaleY: val.scaleY,
@@ -473,14 +461,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                  })
                  const element = aa[0];
                  if (element.type === 'image') {
-                    const originalWidth = (element.width) * (element.scaleX);
-                    const originalHeight = (element.height) * (element.scaleY);
-                    fabric.Image.fromURL(escapeHtml(dataCaspar[idCaspar]), img => {
-                        img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
+                    fabric.Image.fromURL(str2, img => {
+                        img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
                         img.cloneAsImage(img1 => {
                             element.setSrc(img1.getSrc(), () => {
-                            element.set({visible: true});
-                            canvas.requestRenderAll();
+                                element.set({ visible: true });
+                                canvas.requestRenderAll();
                             })
                         })
                     })
@@ -519,15 +505,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 return item.id === str1;
             })
             const element = aa[0];
-            const originalWidth = (element.width) * (element.scaleX);
-            const originalHeight = (element.height) * (element.scaleY);
-
             fabric.Image.fromURL(str2, img => {
-                img.set({ scaleX: originalWidth / img.width, scaleY: (originalHeight / img.height) })
+                img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
                 img.cloneAsImage(img1 => {
                     element.setSrc(img1.getSrc(), () => {
-                    element.set({visible: true});
-                    canvas.requestRenderAll();
+                        element.set({ visible: true });
+                        canvas.requestRenderAll();
                     })
                 })
             })
