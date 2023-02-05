@@ -6,7 +6,6 @@ import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 
-
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
 import { createCircle } from '../DrawingController'
 
@@ -22,8 +21,8 @@ document.body.onmousedown = function () {
 document.body.onmouseup = function () {
     mouseDown = 0;
 }
-const arrObject = [];
 
+const arrObject = [];
 
 const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
     const [showStudio, setShowStudio] = useState(true)
@@ -38,8 +37,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
-
-
 
     var sheet = project.sheet('Sheet 1');
     project.ready.then(() => {
@@ -680,10 +677,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         initialiseCore(canvas.toJSON(['id']))
     }
 
-    const test = (obj) => {
-        studio.transaction(({ set }) => {
-            set(obj.props.top, 100);
-        });
+    const changePropOfObject = (id, str1, str2) => {
+        const objs = arrObject.filter(object => {
+            return object.address.objectKey === id
+        })
+        if (objs[0]) {
+            const obj = objs[0];
+            studio.transaction(({ set }) => {
+                set(obj.props[str1], str2);
+                set(obj.props.fill, { r: 1, g: 1, b: 0, a: 1 });
+            });
+        }
     }
 
     return (<>
@@ -717,7 +721,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             {/* {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml()}>Overwrite</button>} */}
             {htmlfileHandle}
             <button onClick={() => importHtml()}>Import Html</button>
-            <button onClick={() => test(arrObject[0])}>test</button>
+            <button onClick={() => changePropOfObject(studio.selection[0].address.objectKey, 'top', 100)}>changePropOfObject</button>
 
 
             Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
