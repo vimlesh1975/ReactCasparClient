@@ -313,17 +313,28 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
        
         __TheatreJS_StudioBundle._studio.initialize();
         __TheatreJS_StudioBundle._studio.ui.hide();
+        const arrObject = [];
+        window.changePropOfObject = (id, str1, str2) => {
+            const objs = arrObject.filter(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs[0]) {
+                const obj = objs[0];
+                window.studio.transaction(({ set }) => {
+                    set(obj.props[str1], str2);
+                });
+            }
+        };
         canvas.loadFromJSON(content,()=>{
-            const { core } = __TheatreJS_StudioBundle._coreBundle._studio;
+            const { core, studio } = __TheatreJS_StudioBundle._coreBundle._studio;
+            const { _studio } = __TheatreJS_StudioBundle._coreBundle;
+            window.studio=_studio;
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
                 sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
-            canvas.getObjects().forEach(element => {
-                console.log(element.fill);
-                console.log(element.stroke);
-                console.log(element.shadow);
+            canvas.getObjects().forEach((element,i) => {
                 
               var obj1 = {};
               const isnotGradientfill = (element.fill.type!=='linear');
@@ -340,7 +351,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                       stroke: core.types.rgba(element.stroke),
                   };
               }
-                const obj = sheet.object(element.id, {
+              arrObject[i] = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
                     opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
@@ -359,7 +370,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     skewY: core.types.number(element.skewY, { range: [-60, 60] }),
 
                 });
-                obj.onValuesChange((val) => {
+                arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
                     if (isnotGradientfill) {
                         obj2 = {
@@ -679,7 +690,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const changePropOfObject = (id, str1, str2) => {
         const objs = arrObject.filter(object => {
-            return object.address.objectKey === id
+            return object?.address?.objectKey === id
         })
         if (objs[0]) {
             const obj = objs[0];
@@ -721,7 +732,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             {/* {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml()}>Overwrite</button>} */}
             {htmlfileHandle}
             <button onClick={() => importHtml()}>Import Html</button>
-            <button onClick={() => changePropOfObject(studio.selection[0].address.objectKey, 'top', 100)}>changePropOfObject</button>
+            <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button>
 
 
             Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
