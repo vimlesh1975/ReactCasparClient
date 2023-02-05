@@ -74,10 +74,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         setTimeout(() => {
             var fetchcoreonly;
             if (window.location.origin !== 'https://vimlesh1975.github.io') {
-                fetchcoreonly = `${process.env.PUBLIC_URL}/js/core-only.min.js`;
+                fetchcoreonly = `${process.env.PUBLIC_URL}/js/core-and-studio.js`;
             }
             else {
-                fetchcoreonly = `/ReactCasparClient/js/core-only.min.js`;
+                fetchcoreonly = `/ReactCasparClient/js/core-and-studio.js`;
             }
             fetch(fetchcoreonly)
                 .then((r) => r.text())
@@ -266,10 +266,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         unset(obj.props);
                     });
                 };
-                element.on("mousedown", () => studio.setSelection([arrObject[i]]), false);
-                element.on("mousemove", (e) => onMouseMove(arrObject[i], e), false);
-                element.on("scaling", (e) => onScaling(arrObject[i], e), false);
-                element.on("mousedblclick", (e) => onMousedblclick(arrObject[i], e), false);
+                element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+                element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+                element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+                element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
             })
         })
     }
@@ -421,7 +421,20 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     }
     const exportHtml = async () => {
-        const xx4 = `canvas.getObjects().forEach(element => {
+        const xx4 = `
+        const arrObject = [];
+        window.changePropOfObject = (id, str1, str2) => {
+            const objs = arrObject.filter(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs[0]) {
+                const obj = objs[0];
+                window.studio.transaction(({ set }) => {
+                    set(obj.props[str1], str2);
+                });
+            }
+        };
+        canvas.getObjects().forEach((element,i) => {
             if(window.caspar || window.casparcg || window.tickAnimations)  {
                 if ((element.id).startsWith("ccg")){
                     element.set({visible: false});
@@ -442,7 +455,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     stroke: core.types.rgba(element.stroke),
                 };
             }
-            var obj = sheet.object(element.id, {
+            arrObject[i] = sheet.object(element.id, {
                 left: element.left,
                 left: element.left,
                 top: element.top,
@@ -464,7 +477,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 skewY: core.types.number(element.skewY, { range: [-60, 60] }),
             });`
 
-        const xx5 = ` obj.onValuesChange((val) => {
+        const xx5 = ` arrObject[i].onValuesChange((val) => {
             var obj2 = {};
             if (isnotGradientfill) {
                 obj2 = {
@@ -498,7 +511,32 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 });
                 element.setCoords();
                 canvas.requestRenderAll();
-            });`
+            });
+            const onMouseMove = (obj, event) => {
+                if (mouseDown === 1) {
+                    studio.transaction(({ set }) => {
+                        set(obj.props.left, event.target.left);
+                        set(obj.props.top, event.target.top);
+                        set(obj.props.angle, event.target.angle);
+                    });
+                }
+            };
+            const onScaling = (obj, event) => {
+                studio.transaction(({ set }) => {
+                    set(obj.props.scaleX, event.transform.target.scaleX);
+                    set(obj.props.scaleY, event.transform.target.scaleY);
+                });
+            };
+            const onMousedblclick = (obj, event) => {
+                studio.transaction(({ unset }) => {
+                    unset(obj.props);
+                });
+            };
+            element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+            element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+            element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+            element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
+            `
 
         const aa =
             `<!DOCTYPE html>
@@ -512,10 +550,11 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 <script>${coreonly1}<//script>
         </head>
 
-        <body style="overflow:hidden">
+        <body style='overflow:hidden'>
 
-    <div><canvas id="canvas" width="1920" height="1080"></canvas></div>
+    <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script type="module">
+    var mouseDown = 0;
     const hexToRGB = hex => {
         const red = parseInt(hex.slice(1, 3), 16)
         const green = parseInt(hex.slice(3, 5), 16)
@@ -534,7 +573,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
-        const { core } = Theatre
+        const { core, studio } = Theatre;
+        studio.initialize();
+        studio.ui.hide();
+        window.studio=studio;
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         const sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content, ()=> {
