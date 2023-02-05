@@ -22,6 +22,8 @@ document.body.onmousedown = function () {
 document.body.onmouseup = function () {
     mouseDown = 0;
 }
+const arrObject = [];
+
 
 const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
     const [showStudio, setShowStudio] = useState(true)
@@ -103,34 +105,35 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            studio.transaction((api) => {
-                api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
-                project.sheet('Sheet 1').detachObject(element.id);
+            project.sheet('Sheet 1').detachObject(element.id);
 
-            })
+            // studio.transaction((api) => {
+            //     api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
+            // })
         })
 
-        studio.transaction((api) => {
-            // calling this will make it as if you never set values for this object or put it in a sequence
-            // api.__experimental_forgetObject(object)
+        // studio.transaction((api) => {
+        //     // calling this will make it as if you never set values for this object or put it in a sequence
+        //     // api.__experimental_forgetObject(object)
 
-            // calling this will make it as if you never set values for _any_ object in this sheet, and you never created a sequence either.
-            api.__experimental_forgetSheet(sheet)
+        //     // calling this will make it as if you never set values for _any_ object in this sheet, and you never created a sequence either.
+        //     api.__experimental_forgetSheet(sheet)
 
-            // note that if you're calling __experimental_forgetSheet(), then there is no need to call __experimental_forgetObject() in case that object belongs in that sheet.
-        })
+        //     // note that if you're calling __experimental_forgetSheet(), then there is no need to call __experimental_forgetObject() in case that object belongs in that sheet.
+        // })
 
         canvas.requestRenderAll()
     }
+
 
     const initialiseCore = (jsonContent, importing = false) => {
 
         canvas.loadFromJSON(jsonContent, () => {
 
-            canvas.getObjects().forEach(element => {
-                console.log(element.fill);
-                console.log(element.stroke);
-                console.log(element.shadow.color);
+            canvas.getObjects().forEach((element, i) => {
+                // console.log(element.fill);
+                // console.log(element.stroke);
+                // console.log(element.shadow.color);
 
                 if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
                     element.set({ fill: '#555252' })
@@ -138,9 +141,6 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 if (element.stroke === null) {
                     element.set({ stroke: '#000000' })
                 }
-
-
-
 
                 var obj1 = {};
                 var isColorObjectfill;
@@ -195,7 +195,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
                 }
 
-                const obj = sheet.object(element.id, {
+                arrObject[i] = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
                     opacity: types.number(element.opacity, { range: [0, 1] }),
@@ -212,9 +212,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
-                }, { reconfigure: true });
+                });
 
-                obj.onValuesChange((val) => {
+                arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
                     if (isColorObjectfill) {
                         obj2 = {
@@ -269,10 +269,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         unset(obj.props);
                     });
                 };
-                element.on("mousedown", () => studio.setSelection([obj]), false);
-                element.on("mousemove", (e) => onMouseMove(obj, e), false);
-                element.on("scaling", (e) => onScaling(obj, e), false);
-                element.on("mousedblclick", (e) => onMousedblclick(obj, e), false);
+                element.on("mousedown", () => studio.setSelection([arrObject[i]]), false);
+                element.on("mousemove", (e) => onMouseMove(arrObject[i], e), false);
+                element.on("scaling", (e) => onScaling(arrObject[i], e), false);
+                element.on("mousedblclick", (e) => onMousedblclick(arrObject[i], e), false);
             })
         })
     }
@@ -680,6 +680,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         initialiseCore(canvas.toJSON(['id']))
     }
 
+    const test = (obj) => {
+        studio.transaction(({ set }) => {
+            set(obj.props.top, 100);
+        });
+    }
+
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -711,6 +717,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             {/* {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml()}>Overwrite</button>} */}
             {htmlfileHandle}
             <button onClick={() => importHtml()}>Import Html</button>
+            <button onClick={() => test(arrObject[0])}>test</button>
 
 
             Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
