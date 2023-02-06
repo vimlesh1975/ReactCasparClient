@@ -5,9 +5,10 @@ import { getProject, types } from '@theatre/core'
 import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
+import { FaPlay, FaPause, FaStop } from "react-icons/fa";
+
 
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
-import { createCircle } from '../DrawingController'
 
 studio.initialize();
 studio.ui.hide();
@@ -24,14 +25,13 @@ document.body.onmouseup = function () {
 
 const arrObject = [];
 
-const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "black", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
-    const [showStudio, setShowStudio] = useState(true)
+const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "#000000", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "#000000", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
     const [duration, setDuration] = useState(2);
     const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
-    const [coreonly1, setCoreonly1] = useState('');
+    const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('HTML Animation Tutorial')
     const [htmlfileHandle, sethtmlfileHandle] = useState();
 
@@ -48,7 +48,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     useEffect(() => {
         document.title = "RCC Web Animator"
         studio.ui.restore();
-        setRCCtheatrepageData(localStorage.getItem("RCCtheatrepageData"));
+        setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
 
         return () => {
             // second  
@@ -72,17 +72,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         }, 2000);
 
         setTimeout(() => {
-            var fetchcoreonly;
+            var fetchcoreAndStudio1;
             if (window.location.origin !== 'https://vimlesh1975.github.io') {
-                fetchcoreonly = `${process.env.PUBLIC_URL}/js/core-and-studio.js`;
+                fetchcoreAndStudio1 = `${process.env.PUBLIC_URL}/js/core-and-studio.js`;
             }
             else {
-                fetchcoreonly = `/ReactCasparClient/js/core-and-studio.js`;
+                fetchcoreAndStudio1 = `/ReactCasparClient/js/core-and-studio.js`;
             }
-            fetch(fetchcoreonly)
+            fetch(fetchcoreAndStudio1)
                 .then((r) => r.text())
                 .then(text => {
-                    setCoreonly1(text);
+                    setCoreAndStudio1(text);
                 })
         }, 3000);
 
@@ -103,12 +103,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             project.sheet('Sheet 1').detachObject(element.id);
-
-            // studio.transaction((api) => {
-            //     api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
-            // })
         })
-
+        // studio.transaction((api) => {
+        //     api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
+        // })
         // studio.transaction((api) => {
         //     // calling this will make it as if you never set values for this object or put it in a sequence
         //     // api.__experimental_forgetObject(object)
@@ -274,7 +272,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         })
     }
     const reset = () => {
-        localStorage.removeItem("theatre-0.4.persistent");
+        localStorage.removeItem('theatre-0.4.persistent');
         window.location.reload();
     }
 
@@ -294,6 +292,16 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
         const scriptforCasparcg = `
+       
+        localStorage.removeItem('theatre-0.4.persistent');
+        var mouseDown = 0;
+        document.body.onmousedown = function () {
+            mouseDown = 1;
+        };
+        document.body.onmouseup = function () {
+            mouseDown = 0;
+        };
+        
         document.getElementById('divid_${layerNumber}')?.remove();
         var aa = document.createElement('div');
         aa.style.position='absolute';
@@ -302,9 +310,11 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
         var canvas = new fabric.Canvas('canvas');
+        window.canvas=canvas;
+        canvas.preserveObjectStacking = true;
         const content =\`${content2}\`;
         const shadowOptions = {
-            color: 'black',
+            color: '#000000',
             blur: 30,
             offsetX: 0,
             offsetY: 0,
@@ -326,16 +336,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             }
         };
         canvas.loadFromJSON(content,()=>{
-            const { core, studio } = __TheatreJS_StudioBundle._coreBundle._studio;
+            const { core } = __TheatreJS_StudioBundle._coreBundle._studio;
             const { _studio } = __TheatreJS_StudioBundle._coreBundle;
             window.studio=_studio;
+           
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
                 sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
+           
             canvas.getObjects().forEach((element,i) => {
-                
               var obj1 = {};
               const isnotGradientfill = (element.fill.type!=='linear');
               if (isnotGradientfill) {
@@ -406,6 +417,33 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                         element.setCoords();
                         canvas.requestRenderAll();
                 });
+                        const onMouseMove = (obj, event) => {
+                            if (mouseDown === 1) {
+                                studio.transaction(({ set }) => {
+                                    set(obj.props.left, event.target.left);
+                                    set(obj.props.top, event.target.top);
+                                    set(obj.props.angle, event.target.angle);
+                                });
+                            }
+                        };
+                        const onScaling = (obj, event) => {
+                            studio.transaction(({ set }) => {
+                                set(obj.props.scaleX, event.transform.target.scaleX);
+                                set(obj.props.scaleY, event.transform.target.scaleY);
+                            });
+                        };
+                        const onMousedblclick = (obj, event) => {
+                            studio.transaction(({ unset }) => {
+                                unset(obj.props);
+                            });
+                        };
+                        const onMousedown = (obj, event) => {
+                            studio.setSelection(obj, false);
+                        };
+                        element.on('mousedown', (e) => onMousedown(arrObject[i], e), false);
+                        element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+                        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+                        element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
             });
         });
         `
@@ -420,7 +458,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
     }
-    const exportHtml = async () => {
+    const exportHtml = async (overRide = false) => {
         const xx4 = `
         const arrObject = [];
         window.changePropOfObject = (id, str1, str2) => {
@@ -547,14 +585,21 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
                 <script>${fabric1}<//script>
-                <script>${coreonly1}<//script>
+                <script>${coreAndStudio1}<//script>
         </head>
 
         <body style='overflow:hidden'>
 
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script type="module">
-    var mouseDown = 0;
+        localStorage.removeItem('theatre-0.4.persistent');
+        var mouseDown = 0;
+        document.body.onmousedown = function () {
+            mouseDown = 1;
+        };
+        document.body.onmouseup = function () {
+            mouseDown = 0;
+        };
     const hexToRGB = hex => {
         const red = parseInt(hex.slice(1, 3), 16)
         const green = parseInt(hex.slice(3, 5), 16)
@@ -563,7 +608,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         // return [ r, g, b ]
     }
          const shadowOptions = {
-            color: 'black',
+            color: '#000000',
             blur: 30,
             offsetX: 0,
             offsetY: 0,
@@ -619,7 +664,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                  })
                  const element = aa[0];
                  if (element.type === 'image') {
-                    fabric.Image.fromURL(str2, img => {
+                    fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar]), img => {
                         img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
                         img.cloneAsImage(img1 => {
                             element.setSrc(img1.getSrc(), () => {
@@ -687,8 +732,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 accept: { 'text/html': ['.html'] },
             }],
         };
-        const aa1 = await window.showSaveFilePicker(options);
-        sethtmlfileHandle(aa1.name)
+        var aa1;
+        if (overRide) {
+            aa1 = htmlfileHandle;
+        }
+        else {
+            aa1 = await window.showSaveFilePicker(options);
+        }
+        sethtmlfileHandle(aa1)
         const writable = await aa1.createWritable();
         await writable.write(file);
         await writable.close();
@@ -701,7 +752,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
         if (aa) {
 
-            sethtmlfileHandle(aa.name);
+            sethtmlfileHandle(aa);
             deleteAllObjects()
             const file = await aa.getFile();
             const content = await file.text();
@@ -725,56 +776,43 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     }
 
-    const addCircle = () => {
-        createCircle(canvas);
-        initialiseCore(canvas.toJSON(['id']))
-    }
-
-    const changePropOfObject = (id, str1, str2) => {
-        const objs = arrObject.filter(object => {
-            return object?.address?.objectKey === id
-        })
-        if (objs[0]) {
-            const obj = objs[0];
-            studio.transaction(({ set }) => {
-                set(obj.props[str1], str2);
-                set(obj.props.fill, { r: 1, g: 1, b: 0, a: 1 });
-            });
-        }
-    }
+    // const changePropOfObject = (id, str1, str2) => {
+    //     const objs = arrObject.filter(object => {
+    //         return object?.address?.objectKey === id
+    //     })
+    //     if (objs[0]) {
+    //         const obj = objs[0];
+    //         studio.transaction(({ set }) => {
+    //             set(obj.props[str1], str2);
+    //             set(obj.props.fill, { r: 1, g: 1, b: 0, a: 1 });
+    //         });
+    //     }
+    // }
 
     return (<>
 
         <div style={{ textAlign: 'center' }}>
 
-            <button onClick={() => addCircle()}>Add circle</button>
-            <button onClick={() => {
-                if (showStudio) {
-                    studio.ui.hide();
-                }
-                else {
-                    studio.ui.restore();
-                }
-                setShowStudio(val => !val);
-
-            }}>{showStudio ? 'Hide Studio' : 'Show Studio'}</button>
             <button onClick={() => {
                 deleteAllObjects();
                 initialiseCore(RCCtheatrepageData);
-            }}>initialiseCore</button>
+            }}>Data from RCC</button>
             <button onClick={() => reset()}>Reset</button>
-            <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
-            <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
-            <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}>Play</button>
-            <button onClick={() => pause(templateLayers.theatrejs)}>pause</button>
-            <button onClick={() => resume(templateLayers.theatrejs)}>resume</button>
+            <span>Caspar Control:</span>
+            <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>
+            <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
+            <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
 
-            <button onClick={() => stopGraphics1(templateLayers.theatrejs)}>Stop</button>
+            <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
+            <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+
+            <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+
             <button onClick={() => exportHtml()}>Export Html</button>
-            {/* {htmlfileHandle && htmlfileHandle.name} {htmlfileHandle && <button onClick={() => OverrightHtml()}>Overwrite</button>} */}
-            {htmlfileHandle}
+            {htmlfileHandle && <button onClick={() => exportHtml(true)}>Overwrite</button>}
+            {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import Html</button>
-            <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button>
+            {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}
 
 
             Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
