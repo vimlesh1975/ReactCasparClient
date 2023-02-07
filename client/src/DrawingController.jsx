@@ -458,7 +458,7 @@ export const createRect = (canvas) => {
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
@@ -480,7 +480,7 @@ export const createEllipse = (canvas) => {
 
 export const createPentagon = (canvas) => {
     const rect = new fabric.Polygon([{ x: 290, y: 124 }, { x: 390, y: 190 }, { x: 354, y: 297 }, { x: 226, y: 297 }, { x: 192, y: 190 }], {
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
@@ -502,7 +502,7 @@ export const createPentagon = (canvas) => {
 
 export const createVLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 1 500', {
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
@@ -519,7 +519,7 @@ export const createVLine = (canvas) => {
 };
 export const createHLine = (canvas) => {
     const rect = new fabric.Path('M 0 0 L 500 1', {
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: { ...shadowOptions, Blur: 10 },
         top: -100,
@@ -537,7 +537,7 @@ export const createHLine = (canvas) => {
 
 export const createCircle = (canvas) => {
     const circle = new fabric.Circle({
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 0,
@@ -558,7 +558,7 @@ export const createCircle = (canvas) => {
 export const createTriangle = (canvas) => {
     canvas.isDrawingMode = false;
     const triangle = new fabric.Triangle({
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: 50,
@@ -1068,7 +1068,7 @@ export const paste = (canvas) => {
 export const createShape = (canvas, shape, size = 0.4) => {
 
     const rect = new fabric.Path(shape, {
-        id: 'ccg_' + fabric.Object.__uid,
+        id: 'id_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         shadow: shadowOptions,
         top: -100,
