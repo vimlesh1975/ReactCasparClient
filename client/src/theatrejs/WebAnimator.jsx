@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import studio from '@theatre/studio'
-import { getProject, types } from '@theatre/core'
+import { getProject, types, val, onChange } from '@theatre/core'
 import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
@@ -675,8 +675,17 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     })
                 }
                  else {
-                     element.set({ text: escapeHtml(dataCaspar[idCaspar]) });
+                     const originalWidth = element.width;
+                     element.set({ text: escapeHtml(dataCaspar[idCaspar]),objectCaching: false });
                      element.set({visible: true});
+
+                    if (element.textLines.length > 1) {
+                    do {
+                        element.set({ width: element.width + 5 });
+                    }
+                    while (element.textLines.length > 1);
+                    element.set({ scaleX: originalWidth / element.width });
+                    }
                  }
                  canvas.requestRenderAll()
              }
@@ -696,13 +705,21 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
          }
  
          function updatestring(str1, str2) {
-             const aa = canvas.getObjects().filter((item) => {
-                 return item.id === str1;
-             })
-             aa[0].set({ text: str2 });
-             aa[0].set({visible: true});
-             canvas.requestRenderAll();
-         }
+            const aa = canvas.getObjects().filter((item) => {
+              return item.id === str1;
+            })
+            const element = aa[0];
+            const originalWidth = element.width;
+            element.set({ objectCaching: false, text: str2, visible: true })
+            if (element.textLines.length > 1) {
+              do {
+                element.set({ width: element.width + 5 });
+              }
+              while (element.textLines.length > 1);
+              element.set({ scaleX: originalWidth / element.width });
+            }
+            canvas.requestRenderAll();
+          }
         function updateimage(str1, str2) {
             const aa = canvas.getObjects().filter((item) => {
                 return item.id === str1;
@@ -789,6 +806,20 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     //     }
     // }
 
+    // eslint-disable-next-line 
+    const goto = () => {
+        sheet.sequence.position = 0.5
+        studio.transaction(({ set }) => {
+            set(arrObject[0].props.scaleX, 0.5)
+        })
+        sheet.sequence.play();
+        console.log(arrObject[0].value.left)
+        onChange(arrObject[0].props.left, (left) => {
+            console.log(left)
+        })
+        console.log('current left is', val(arrObject[0].props.left))
+    }
+
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -812,6 +843,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             {htmlfileHandle && <button onClick={() => exportHtml(true)}>Overwrite</button>}
             {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import Html</button>
+            {/* <button onClick={() => goto()}>goto</button> */}
             {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}
 
 
