@@ -13,6 +13,7 @@ import { endpoint, templateLayers, shadowOptions, executeScript } from '../commo
 studio.initialize();
 studio.ui.hide();
 
+
 var project = getProject('HTML Animation Tutorial')
 
 var mouseDown = 0;
@@ -48,12 +49,28 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     useEffect(() => {
         document.title = "RCC Web Animator"
         studio.ui.restore();
-        setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
 
+        setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
         return () => {
             // second  
         }
     }, [])
+
+    useEffect(() => {
+        if (canvas) {
+            studio.onSelectionChange((newSelection) => {
+                const aa = canvas.getObjects().filter((item) => {
+                    return newSelection[0].address.objectKey === item.id;
+                })
+                canvas.setActiveObject(aa[0]);
+                canvas.requestRenderAll()
+            })
+        }
+        return () => {
+            // second
+        }
+    }, [canvas])
+
 
     useEffect(() => {
         setTimeout(() => {
