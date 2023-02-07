@@ -698,10 +698,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     })
                 }
                  else {
-
-                     const originalWidth = element.width;
-                     element.set({ text: escapeHtml(dataCaspar[idCaspar]),objectCaching: false });
-                     element.set({visible: true});
+                    
+                    const bb = originalCanvas.filter((item) => {
+                        return item.id === idCaspar;
+                      })
+        
+                    const originalWidth = bb[0].width;
+                    const originalscaleX = bb[0].scaleX;
+                    element.set({ objectCaching: false, text: escapeHtml(dataCaspar[idCaspar]), visible: true, width:originalWidth, scaleX:originalscaleX });
 
                     if (element.textLines.length > 1) {
                     do {
