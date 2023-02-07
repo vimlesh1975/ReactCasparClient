@@ -608,6 +608,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         <body style='overflow:hidden'>
 
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
+    <script>
+    var originalCanvas=[];
+    </script>
     <script type="module">
         localStorage.removeItem('theatre-0.4.persistent');
         var mouseDown = 0;
@@ -642,6 +645,9 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         const sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content, ()=> {
+            canvas.forEachObject((obj)=>{
+                originalCanvas.push(fabric.util.object.clone(obj,true));
+            });
             ${xx4}
             ${xx5}
         })
@@ -692,6 +698,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                     })
                 }
                  else {
+
                      const originalWidth = element.width;
                      element.set({ text: escapeHtml(dataCaspar[idCaspar]),objectCaching: false });
                      element.set({visible: true});
@@ -726,8 +733,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
               return item.id === str1;
             })
             const element = aa[0];
-            const originalWidth = element.width;
-            element.set({ objectCaching: false, text: str2, visible: true })
+
+            const bb = originalCanvas.filter((item) => {
+                return item.id === str1;
+              })
+
+            const originalWidth = bb[0].width;
+            const originalscaleX = bb[0].scaleX;
+            element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth, scaleX:originalscaleX });
             if (element.textLines.length > 1) {
               do {
                 element.set({ width: element.width + 5 });
@@ -792,10 +805,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             const content = await file.text();
             var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
 
-            // console.log(canvasContent)
             var animationContetent = content.split('{state:')[1].split('});')[0];
 
-            // console.log(animationContetent);
             const pid = `project${fabric.Object.__uid++}`;
             project = getProject(pid, { state: JSON.parse(animationContetent) });
             setProjectId(pid)
