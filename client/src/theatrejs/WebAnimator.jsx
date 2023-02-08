@@ -60,7 +60,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         if (canvas) {
             studio.onSelectionChange((newSelection) => {
                 const aa = canvas.getObjects().filter((item) => {
-                    return newSelection[0].address.objectKey === item.id;
+                    return newSelection[0]?.address?.objectKey === item.id;
                 })
                 canvas.setActiveObject(aa[0]);
                 canvas.requestRenderAll()
@@ -705,14 +705,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         
                     const originalWidth = bb[0].width;
                     const originalscaleX = bb[0].scaleX;
-                    element.set({ objectCaching: false, text: escapeHtml(dataCaspar[idCaspar]), visible: true, width:originalWidth, scaleX:originalscaleX });
+                    element.set({ objectCaching: false, text: escapeHtml(dataCaspar[idCaspar]), visible: true, width:originalWidth });
+                    changePropOfObject(idCaspar, 'scaleX', originalscaleX);
 
                     if (element.textLines.length > 1) {
                     do {
                         element.set({ width: element.width + 5 });
                     }
                     while (element.textLines.length > 1);
-                    element.set({ scaleX: originalWidth / element.width });
+                    changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
                     }
                  }
                  canvas.requestRenderAll()
@@ -744,13 +745,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
             const originalWidth = bb[0].width;
             const originalscaleX = bb[0].scaleX;
-            element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth, scaleX:originalscaleX });
+            element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
+            changePropOfObject(str1, 'scaleX', originalscaleX);
+
             if (element.textLines.length > 1) {
               do {
                 element.set({ width: element.width + 5 });
               }
               while (element.textLines.length > 1);
-              element.set({ scaleX: originalWidth / element.width });
+              changePropOfObject(str1, 'scaleX', originalWidth / element.width);
             }
             canvas.requestRenderAll();
           }
