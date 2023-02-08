@@ -57,15 +57,15 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }, [])
 
     useEffect(() => {
-        if (canvas) {
-            studio.onSelectionChange((newSelection) => {
+        studio.onSelectionChange((newSelection) => {
+            if ((newSelection.length > 0) && canvas && (newSelection[0].type === 'Theatre_SheetObject_PublicAPI')) {
                 const aa = canvas.getObjects().filter((item) => {
                     return newSelection[0]?.address?.objectKey === item.id;
                 })
                 canvas.setActiveObject(aa[0]);
                 canvas.requestRenderAll()
-            })
-        }
+            }
+        })
         return () => {
             // second
         }
