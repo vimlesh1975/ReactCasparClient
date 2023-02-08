@@ -6,6 +6,7 @@ import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
+import { createRect, createTextBox, createCircle, addImage } from '../DrawingController'
 
 
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
@@ -14,7 +15,7 @@ studio.initialize();
 studio.ui.hide();
 
 
-var project = getProject('HTML Animation Tutorial')
+var project = getProject('Fabricjs Object Animation')
 
 var mouseDown = 0;
 document.body.onmousedown = function () {
@@ -33,7 +34,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
-    const [projectId, setProjectId] = useState('HTML Animation Tutorial')
+    const [projectId, setProjectId] = useState('Fabricjs Object Animation')
     const [htmlfileHandle, sethtmlfileHandle] = useState();
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
@@ -47,9 +48,27 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (canvas) {
+            fabric.util.addListener(document.body, 'keydown', function (options) {
+                if (options.key === 'Delete') {
+                    deleteItem();
+                }
+            })
+        }
+        return () => {
+            fabric.util.removeListener(document.body, 'keydown', function (options) {
+                if (options.key === 'Delete') {
+                    deleteItem();
+                }
+            })
+        }
+        // eslint-disable-next-line 
+    }, [canvas])
+
+
+    useEffect(() => {
         document.title = "RCC Web Animator"
         studio.ui.restore();
-
         setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
         return () => {
             // second  
@@ -855,6 +874,91 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         console.log('current left is', val(arrObject[0].props.left))
     }
 
+    const addItem = async (name) => {
+        await name(canvas);
+        const element = canvas.getActiveObjects()[0];
+        console.log(element)
+        const obj1 = {
+            left: 1000,
+            top: 300,
+            opacity: types.number(1, { range: [0, 1] }),
+            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
+            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
+            angle: 0,
+            rx: types.number(10, { range: [0, 100] }),
+            ry: types.number(10, { range: [0, 100] }),
+            strokeWidth: types.number(0, { range: [0, 100] }),
+            fontSize: types.number(30, { range: [0, 100] }),
+            strkdsar: types.number(0, { range: [0, 1000] }),
+            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
+            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
+            stroke: types.rgba(hexToRGB('#000000')),
+            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(30), { range: [0, 100] }) },
+            skewX: types.number(0, { range: [-88, 88] }),
+            skewY: types.number(0, { range: [-60, 60] }),
+        }
+
+        const id = 'id_' + fabric.Object.__uid++;
+        element.set({ id: id });
+        const i = arrObject.length;
+        arrObject[i] = sheet.object(element.id, obj1);
+        arrObject[i].onValuesChange((val) => {
+            element.set({
+                left: val.left,
+                top: val.top,
+                opacity: val.opacity,
+                scaleX: val.scaleX,
+                scaleY: val.scaleY,
+                angle: val.angle,
+                rx: val.rx,
+                ry: val.ry,
+                strokeWidth: val.strokeWidth,
+                fontSize: val.fontSize,
+                strokeDashArray: [val.strkdsar, val.strkdsar],
+                strokeDashOffset: val.strkDsOfst,
+                shadow: val.shadow,
+                fill: val.fill,
+                stroke: val.stroke,
+                skewX: val.skewX,
+                skewY: val.skewY,
+            });
+            element.setCoords();
+            canvas.requestRenderAll();
+        })
+        const onMouseMove = (obj, event) => {
+            if (mouseDown === 1) {
+                studio.transaction(({ set }) => {
+                    set(obj.props.left, event.target.left);
+                    set(obj.props.top, event.target.top);
+                    set(obj.props.angle, event.target.angle);
+                });
+            }
+        };
+        const onScaling = (obj, event) => {
+            studio.transaction(({ set }) => {
+                set(obj.props.scaleX, event.transform.target.scaleX);
+                set(obj.props.scaleY, event.transform.target.scaleY);
+            });
+        };
+        const onMousedblclick = (obj, event) => {
+            studio.transaction(({ unset }) => {
+                unset(obj.props);
+            });
+        };
+        element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+        element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+        element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
+    }
+    const deleteItem = () => {
+        const aa = canvas.getActiveObjects();
+        aa.forEach(element => {
+            canvas.remove(element);
+            project.sheet('Sheet 1').detachObject(element.id);
+        });
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+    }
     return (<>
 
         <div style={{ textAlign: 'center' }}>
@@ -863,6 +967,12 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 deleteAllObjects();
                 initialiseCore(RCCtheatrepageData);
             }}>Data from RCC</button>
+
+            <button onClick={() => addItem(addImage)}>Img</button>
+            <button onClick={() => addItem(createRect)}>Rect</button>
+            <button onClick={() => addItem(createTextBox)}>Text</button>
+            <button onClick={() => addItem(createCircle)}>Circle</button>
+            <button onClick={() => deleteItem()}>delete</button>
             <button onClick={() => reset()}>Reset</button>
             <span>Caspar Control:</span>
             <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>

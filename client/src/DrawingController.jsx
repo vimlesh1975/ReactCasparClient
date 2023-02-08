@@ -264,7 +264,7 @@ export const createTextBox = (canvas) => {
     });
     canvas.add(text).setActiveObject(text);
     canvas.renderAll();
-    text.animate('top', 962, { onChange: canvas.renderAll.bind(canvas) })
+    text.animate('top', 762, { onChange: canvas.renderAll.bind(canvas) })
 };
 
 
@@ -348,32 +348,54 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
     }
 }
 
+
+export const addImage = (canvas) => {
+    return new Promise((resolve, reject) => {
+        var fInput = document.createElement("input"); //hidden input to open filedialog
+        fInput.setAttribute("type", "file"); //opens files
+        fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
+        fInput.setAttribute("multiple", true); ////only useful for inspector debugging
+
+        fInput.click();
+        fInput.onchange = (e) => {
+            Upload(e, canvas).then(() => { resolve(); })
+        }
+
+    })
+}
+
 export const Upload = (e, canvas) => {
-    if (e.target.files) {
-        Array.from(e.target.files).forEach(element => {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var imgObj = new Image();
-                imgObj.src = event.target.result;
-                imgObj.onload = function () {
-                    var image = new fabric.Image(imgObj);
-                    image
-                        .set({
-                            id: 'ccg_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
-                            shadow: shadowOptions,
-                            strokeUniform: true,
-                            objectCaching: false,
-                            fill: '#ff0000',
-                            stroke: '#00ff00',
-                        })
-                    // .scale(0.5);
-                    canvas.add(image).setActiveObject(image);
+    return new Promise((resolve, reject) => {
+        if (e.target.files) {
+            Array.from(e.target.files).forEach(element => {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var imgObj = new Image();
+                    imgObj.src = event.target.result;
+                    imgObj.onload = function () {
+                        var image = new fabric.Image(imgObj);
+                        image
+                            .set({
+                                left: 300,
+                                top: 300,
+                                id: 'ccg_' + fabric.Object.__uid,
+                                class: 'class_' + fabric.Object.__uid,
+                                shadow: shadowOptions,
+                                strokeUniform: true,
+                                objectCaching: false,
+                                fill: '#ff0000',
+                                stroke: '#00ff00',
+                            })
+                        // .scale(0.5);
+                        canvas.add(image).setActiveObject(image);
+                        resolve();
+                    };
                 };
-            };
-            reader.readAsDataURL(element);
-        });
-    }
+                reader.readAsDataURL(element);
+            });
+        }
+
+    })
 }
 
 const finalPosition = (element, canvas) => {
@@ -454,7 +476,7 @@ export const createRect = (canvas) => {
     });
     canvas.add(rect).setActiveObject(rect);
     canvas.requestRenderAll();
-    rect.animate('top', 950, { onChange: canvas.renderAll.bind(canvas) })
+    rect.animate('top', 750, { onChange: canvas.renderAll.bind(canvas) })
 };
 export const createEllipse = (canvas) => {
     const rect = new fabric.Ellipse({
