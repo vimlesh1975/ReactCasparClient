@@ -5,7 +5,19 @@ import { fabric } from "fabric";
 
 export const buildDate = '070223_2'
 
+export const checkIdUniqueness = (canvas) => {
+    var objects = canvas.getObjects(),
+        ids = [];
 
+    for (var i = 0, len = objects.length; i < len; i++) {
+        var object = objects[i];
+        if (ids.indexOf(object.id) !== -1) {
+            return false;
+        }
+        ids.push(object.id);
+    }
+    return true;
+}
 export const rgbaCol = (color, opacity) => 'rgba(' + parseInt(color.slice(-6, -4), 16) + ',' + parseInt(color.slice(-4, -2), 16) + ',' + parseInt(color.slice(-2), 16) + ',' + opacity + ')';
 
 export var address1 = 'http://' + (window.location.host).split(':')[0] + ':9000';

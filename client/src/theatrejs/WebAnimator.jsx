@@ -36,6 +36,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
     const [htmlfileHandle, sethtmlfileHandle] = useState();
+    const [idofElement, setIdofElement] = useState('ccg_1');
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
@@ -875,6 +876,14 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     }
 
     const addItem = async (name) => {
+        const idAlreadyExists = canvas.getObjects().filter((item) => {
+            return item.id === idofElement
+        })
+        if (idAlreadyExists.length > 0) {
+            alert("Id Already exists");
+            return
+        }
+
         await name(canvas);
         const element = canvas.getActiveObjects()[0];
         console.log(element)
@@ -898,8 +907,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
             skewY: types.number(0, { range: [-60, 60] }),
         }
 
-        const id = 'id_' + fabric.Object.__uid++;
-        element.set({ id: id });
+        setIdofElement('id_' + fabric.Object.__uid++);
+        element.set({ id: idofElement });
         const i = arrObject.length;
         arrObject[i] = sheet.object(element.id, obj1);
         arrObject[i].onValuesChange((val) => {
@@ -967,7 +976,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 deleteAllObjects();
                 initialiseCore(RCCtheatrepageData);
             }}>Data from RCC</button>
-
+            <span>Id:</span>
+            <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
             <button onClick={() => addItem(addImage)}>Img</button>
             <button onClick={() => addItem(createRect)}>Rect</button>
             <button onClick={() => addItem(createTextBox)}>Text</button>

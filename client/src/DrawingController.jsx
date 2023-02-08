@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob, checkIdUniqueness } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1835,26 +1835,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             element.click();
         }
     }
-    const checkIdUniqueness = (canvas) => {
-        var objects = canvas.getObjects(),
-            ids = [];
 
-        for (var i = 0, len = objects.length; i < len; i++) {
-            var object = objects[i];
-            if (ids.indexOf(object.id) !== -1) {
-                return false;
-            }
-            ids.push(object.id);
-        }
-        return true;
-    }
     const exportJSONforTheatrejs = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         localStorage.setItem("RCCtheatrepageData", aa1);
         //checke if elements ids are different  
         if (checkIdUniqueness(canvas)) {
             window.open("/ReactCasparClient/WebAnimator");
-
         }
         else {
             alert("All elements must have unique id");
