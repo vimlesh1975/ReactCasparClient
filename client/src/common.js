@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '070223_2'
+export const buildDate = '100223_1'
 
 export const checkIdUniqueness = (canvas) => {
     var objects = canvas.getObjects(),

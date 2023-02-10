@@ -27,9 +27,9 @@ document.body.onmouseup = function () {
 
 const arrObject = [];
 
-const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type": "ellipse", "version": "5.2.4", "originX": "left", "originY": "top", "left": 180, "top": 330, "width": 100, "height": 160, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 0.9, "shadow": { "color": "#000000", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "rx": 50, "ry": 80, "id": "ccg_11", "class": "class_11", "selectable": true }, { "type": "circle", "version": "5.2.4", "originX": "left", "originY": "top", "left": 150, "top": 0, "width": 200, "height": 200, "fill": "#0000ff", "stroke": "#ffffff", "strokeWidth": 3, "strokeDashArray": null, "strokeLineCap": "butt", "strokeDashOffset": 0, "strokeLineJoin": "miter", "strokeUniform": true, "strokeMiterLimit": 4, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "shadow": { "color": "#000000", "blur": 30, "offsetX": 0, "offsetY": 0, "affectStroke": false, "nonScaling": false }, "visible": true, "backgroundColor": "", "fillRule": "nonzero", "paintFirst": "fill", "globalCompositeOperation": "source-over", "skewX": 0, "skewY": 0, "radius": 100, "startAngle": 0, "endAngle": 360, "id": "ccg_12", "class": "class_12", "selectable": true }] } }) => {
+const WebAnimator = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
+    // const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
     const [duration, setDuration] = useState(2);
     const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
@@ -70,7 +70,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     useEffect(() => {
         document.title = "RCC Web Animator"
         studio.ui.restore();
-        setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
+        // setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
         return () => {
             // second  
         }
@@ -139,7 +139,8 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            project.sheet('Sheet 1').detachObject(element.id);
+            // project.sheet('Sheet 1').detachObject(element.id);
+            sheet.detachObject(element.id);
         })
         // studio.transaction((api) => {
         //     api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
@@ -509,6 +510,19 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 });
             }
         };
+        window.getPropOfObject = (id, str1) => {
+            const objs = arrObject.filter(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs[0]) {
+                const obj = objs[0];
+                return obj.value[str1];
+            }
+            else{
+                return null;
+            }
+        };
+
         canvas.getObjects().forEach((element,i) => {
             if(window.caspar || window.casparcg || window.tickAnimations)  {
                 if ((element.id).startsWith("ccg")){
@@ -630,6 +644,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script>
     var originalCanvas=[];
+    var sheet;
     </script>
     <script type="module">
         localStorage.removeItem('theatre-0.4.persistent');
@@ -663,7 +678,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
         studio.ui.hide();
         window.studio=studio;
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
-        const sheet = project.sheet('Sheet 1')
+        sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content, ()=> {
             canvas.forEachObject((obj)=>{
                 originalCanvas.push(fabric.util.object.clone(obj,true));
@@ -758,16 +773,13 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
               return item.id === str1;
             })
             const element = aa[0];
-
             const bb = originalCanvas.filter((item) => {
                 return item.id === str1;
               })
-
             const originalWidth = bb[0].width;
             const originalscaleX = bb[0].scaleX;
             element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
             changePropOfObject(str1, 'scaleX', originalscaleX);
-
             if (element.textLines.length > 1) {
               do {
                 element.set({ width: element.width + 5 });
@@ -971,11 +983,10 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
     return (<>
 
         <div style={{ textAlign: 'center' }}>
-
             <button onClick={() => {
                 deleteAllObjects();
-                initialiseCore(RCCtheatrepageData);
-            }}>Data from RCC</button>
+                initialiseCore(localStorage.getItem('RCCtheatrepageData'));
+            }}>Data from LocalStorage</button>
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
             <button onClick={() => addItem(addImage)}>Img</button>
@@ -1006,7 +1017,7 @@ const WebAnimator = ({ canvasObjects = { "version": "5.2.4", "objects": [{ "type
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
 
-            {projectId}
+            {/* {projectId} */}
 
             <DrawingforTheatrejs />
         </div>

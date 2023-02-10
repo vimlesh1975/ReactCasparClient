@@ -1837,16 +1837,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     }
 
     const exportJSONforTheatrejs = canvas => {
-        var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-        localStorage.setItem("RCCtheatrepageData", aa1);
-        //checke if elements ids are different  
         if (checkIdUniqueness(canvas)) {
+            var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+            localStorage.setItem("RCCtheatrepageData", aa1);
             window.open("/ReactCasparClient/WebAnimator");
         }
         else {
             alert("All elements must have unique id");
         }
-
+    }
+    const saveToLocalStorage = canvas => {
+        if (checkIdUniqueness(canvas)) {
+            var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+            localStorage.setItem("RCCtheatrepageData", aa1);
+        }
+        else {
+            alert("All elements must have unique id");
+        }
     }
 
     const sdToHD = () => {
@@ -3027,6 +3034,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportSVG(canvas)}>SVG</button>
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
                         <button onClick={() => exportPDF(canvas)}>Pdf</button>
+                        <button onClick={() => saveToLocalStorage(canvas)}>saveToLocalStorage</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Web Animator</button>
 
 
