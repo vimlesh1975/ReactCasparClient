@@ -496,7 +496,7 @@ const WebAnimator = () => {
     }
     const exportHtml = async (overRide = false) => {
         const xx4 = `
-        const arrObject = [];
+        
         window.changePropOfObject = (id, str1, str2) => {
             const objs = arrObject.filter(object => {
                 return (object.address.objectKey === id)
@@ -642,6 +642,7 @@ const WebAnimator = () => {
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script>
     var originalCanvas=[];
+    const arrObject = [];
     var sheet;
     </script>
     <script type="module">
@@ -871,19 +872,7 @@ const WebAnimator = () => {
     //     }
     // }
 
-    // eslint-disable-next-line 
-    const goto = () => {
-        sheet.sequence.position = 0.5
-        studio.transaction(({ set }) => {
-            set(arrObject[0].props.scaleX, 0.5)
-        })
-        sheet.sequence.play();
-        console.log(arrObject[0].value.left)
-        onChange(arrObject[0].props.left, (left) => {
-            console.log(left)
-        })
-        console.log('current left is', val(arrObject[0].props.left))
-    }
+
 
     const addItem = async (name) => {
         const idAlreadyExists = canvas.getObjects().filter((item) => {
@@ -977,6 +966,27 @@ const WebAnimator = () => {
         });
         canvas.discardActiveObject();
         canvas.requestRenderAll();
+    }
+
+    // eslint-disable-next-line 
+    const goto = () => {
+        sheet.sequence.position = 0.5
+        studio.transaction(({ set }) => {
+            set(arrObject[0].props.scaleX, 0.5)
+        })
+        sheet.sequence.play();
+        console.log(arrObject[0].value.left)
+        onChange(arrObject[0].props.left, (left) => {
+            console.log(left)
+        })
+        console.log('current left is', val(arrObject[0].props.left))
+        studio.setSelection([arrObject[1], arrObject[0]])
+        canvas.forEachObject((element, i) => {
+            studio.transaction(({ set }) => {
+                set(arrObject[i].props.left, 50.5)
+            })
+        })
+
     }
     return (<>
 

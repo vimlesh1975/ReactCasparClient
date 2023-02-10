@@ -13,6 +13,18 @@ const DrawingforTheatrejs = () => {
     useEffect(() => {
         setTimeout(() => {
             window.editor.canvas.preserveObjectStacking = true;
+            window.editor.canvas.on('selection:created', function (e) {
+                console.log('Multiple objects selected: ', e.selected);
+            });
+            window.editor.canvas.on('selection:cleared', function (e) {
+                // console.log(e)
+                if (e.deselected) {
+                    e.deselected.forEach((val) => {
+                        console.log(val.left)
+                    })
+                }
+            });
+
         }, 3000);
         return () => {
 
