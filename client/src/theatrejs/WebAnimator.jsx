@@ -231,9 +231,9 @@ const WebAnimator = () => {
                 arrObject[i] = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
-                    opacity: types.number(element.opacity, { range: [0, 1] }),
                     scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                     scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                    opacity: types.number(element.opacity, { range: [0, 1] }),
                     angle: element.angle,
                     rx: types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
                     ry: types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
@@ -264,9 +264,9 @@ const WebAnimator = () => {
                     element.set({
                         left: val.left,
                         top: val.top,
-                        opacity: val.opacity,
                         scaleX: val.scaleX,
                         scaleY: val.scaleY,
+                        opacity: val.opacity,
                         angle: val.angle,
                         rx: val.rx,
                         ry: val.ry,
@@ -359,8 +359,7 @@ const WebAnimator = () => {
             affectStroke: false
         };
        
-        __TheatreJS_StudioBundle._studio.initialize();
-        __TheatreJS_StudioBundle._studio.ui.hide();
+        
         const arrObject = [];
         window.changePropOfObject = (id, str1, str2) => {
             const objs = arrObject.filter(object => {
@@ -374,8 +373,8 @@ const WebAnimator = () => {
             }
         };
         canvas.loadFromJSON(content,()=>{
-            const { core } = __TheatreJS_StudioBundle._coreBundle._studio;
-            const { _studio } = __TheatreJS_StudioBundle._coreBundle;
+            const { core } = __TheatreJS_StudioBundle._studio;
+            const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
@@ -476,7 +475,6 @@ const WebAnimator = () => {
                             });
                         };
                         const onMousedown = (obj, event) => {
-                            studio.setSelection(obj, false);
                         };
                         element.on('mousedown', (e) => onMousedown(arrObject[i], e), false);
                         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
@@ -910,7 +908,7 @@ const WebAnimator = () => {
             ry: types.number(10, { range: [0, 100] }),
             strokeWidth: types.number(0, { range: [0, 100] }),
             fontSize: types.number(30, { range: [0, 100] }),
-            strkdsar: types.number(0, { range: [0, 1000] }),
+            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
             strkDsOfst: types.number(0, { range: [-1000, 1000] }),
             fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
             stroke: types.rgba(hexToRGB('#000000')),
@@ -975,7 +973,7 @@ const WebAnimator = () => {
         const aa = canvas.getActiveObjects();
         aa.forEach(element => {
             canvas.remove(element);
-            project.sheet('Sheet 1').detachObject(element.id);
+            sheet.detachObject(element.id);
         });
         canvas.discardActiveObject();
         canvas.requestRenderAll();
