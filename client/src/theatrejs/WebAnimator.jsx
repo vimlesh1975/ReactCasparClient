@@ -5,7 +5,8 @@ import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { createRect, createTextBox, createCircle, addImage } from '../DrawingController'
+import { createRect, createTextBox, createCircle, addImage, createTriangle } from '../DrawingController'
+import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
 
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
@@ -42,6 +43,7 @@ const changePropOfObject = (id, str1, str2) => {
 const DrawingforTheatrejs = () => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
+    const [visibility, setVisibility] = useState(true);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -62,25 +64,58 @@ const DrawingforTheatrejs = () => {
                         changePropOfObject(element.id, 'angle', element.angle);
                     })
                 }
-                console.log(studio)
             });
-
         }, 3000);
         return () => {
         }
         // eslint-disable-next-line
     }, [])
 
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
 
+    const handleClick = e => {
+        e.preventDefault();
+        setVisibility(true);
+        setX(e.clientX);
+        setY(e.clientY);
+    };
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
-    return (<div>
+    function ContextMenu({ x, y }) {
+
+
+
+        return (
+            <div className='rightClickMenu'
+                // style={{
+                //     position: "fixed",
+                //     top: y,
+                //     left: x,
+                //     display: visibility ? "block" : "none"
+                // }}
+                style={{ position: 'fixed', left: x, top: y, color: 'white', display: visibility ? "block" : "none" }}
+            >
+                <ul>
+                    <li>Add<ul >
+                        <li onClick={() => window.addItem(addImage)}>Image</li>
+                        <li onClick={() => window.addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
+                        <li onClick={() => window.addItem(createTextBox)}>Text T</li>
+                        <li onClick={() => window.addItem(createCircle)}>Circle <VscCircleFilled /></li>
+                        <li onClick={() => window.addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
+                    </ul></li>
+                </ul>
+            </div>
+        );
+    }
+
+    return (<div onContextMenu={handleClick} onClick={() => setVisibility(false)}>
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
-        {/* <ContextMenu canvas={editor?.canvas} /> */}
+        <ContextMenu x={x} y={y} visibility={visibility} />
     </div>);
 };
 
@@ -88,7 +123,6 @@ const arrObject = [];
 
 const WebAnimator = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    // const [RCCtheatrepageData, setRCCtheatrepageData] = useState(canvasObjects)
     const [duration, setDuration] = useState(2);
     const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
@@ -918,21 +952,6 @@ const WebAnimator = () => {
 
     }
 
-    // const changePropOfObject = (id, str1, str2) => {
-    //     const objs = arrObject.filter(object => {
-    //         return object?.address?.objectKey === id
-    //     })
-    //     if (objs[0]) {
-    //         const obj = objs[0];
-    //         studio.transaction(({ set }) => {
-    //             set(obj.props[str1], str2);
-    //             set(obj.props.fill, { r: 1, g: 1, b: 0, a: 1 });
-    //         });
-    //     }
-    // }
-
-
-
     const addItem = async (name) => {
         const idAlreadyExists = canvas.getObjects().filter((item) => {
             return item.id === idofElement
@@ -1017,6 +1036,7 @@ const WebAnimator = () => {
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
         element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
     }
+    window.addItem = addItem;
     const deleteItem = () => {
         const aa = canvas.getActiveObjects();
         aa.forEach(element => {
