@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
-import DrawingforTheatrejs from '../DrawingforTheatrejs'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -10,6 +9,9 @@ import { createRect, createTextBox, createCircle, addImage } from '../DrawingCon
 
 
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
+
+import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
+
 
 studio.initialize();
 studio.ui.hide();
@@ -24,6 +26,63 @@ document.body.onmousedown = function () {
 document.body.onmouseup = function () {
     mouseDown = 0;
 }
+
+const changePropOfObject = (id, str1, str2) => {
+    const objs = arrObject.filter(object => {
+        return (object.address.objectKey === id)
+    });
+    if (objs[0]) {
+        const obj = objs[0];
+        studio.transaction(({ set }) => {
+            set(obj.props[str1], str2);
+        });
+    }
+};
+
+const DrawingforTheatrejs = () => {
+    const { editor, onReady } = useFabricJSEditor();
+    const dispatch = useDispatch();
+
+    window.dispatch = dispatch;
+    window.editor = editor;
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.editor.canvas.preserveObjectStacking = true;
+            window.editor.canvas.on('selection:created', function (e) {
+                console.log('Multiple objects selected: ', e.selected);
+            });
+            window.editor.canvas.on('selection:cleared', function (e) {
+                if (e.deselected) {
+                    e.deselected.forEach((element) => {
+                        changePropOfObject(element.id, 'left', element.left);
+                        changePropOfObject(element.id, 'top', element.top);
+                        changePropOfObject(element.id, 'scaleX', element.scaleX);
+                        changePropOfObject(element.id, 'scaleY', element.scaleY);
+                        changePropOfObject(element.id, 'angle', element.angle);
+                    })
+                }
+                console.log(studio)
+            });
+
+        }, 3000);
+        return () => {
+        }
+        // eslint-disable-next-line
+    }, [])
+
+
+
+    useEffect(() => {
+        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editor])
+
+    return (<div>
+        <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
+        {/* <ContextMenu canvas={editor?.canvas} /> */}
+    </div>);
+};
 
 const arrObject = [];
 
