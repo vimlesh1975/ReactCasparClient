@@ -106,6 +106,10 @@ const WebAnimator = () => {
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 
+    const [jsfilename, setJsfilename] = useState('main');
+
+
+
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
@@ -920,6 +924,7 @@ const WebAnimator = () => {
         }
      <//script>
          </body>
+         <script src='${jsfilename}.js'></script>
      </html>`
 
         const bb = aa.replaceAll('<//', '</')
@@ -959,6 +964,8 @@ const WebAnimator = () => {
             var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
 
             var animationContetent = content.split('{state:')[1].split('});')[0];
+            const jsfilename1 = content.split("<script src='")[1].split('.')[0];
+            setJsfilename(jsfilename1);
 
             const pid = `project${fabric.Object.__uid++}`;
             project = getProject(pid, { state: JSON.parse(animationContetent) });
@@ -1100,11 +1107,11 @@ const WebAnimator = () => {
             }}>Data from LocalStorage</button>
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
-            <button onClick={() => addItem(addImage)}>Img</button>
+            {/* <button onClick={() => addItem(addImage)}>Img</button>
             <button onClick={() => addItem(createRect)}>Rect</button>
             <button onClick={() => addItem(createTextBox)}>Text</button>
             <button onClick={() => addItem(createCircle)}>Circle</button>
-            <button onClick={() => deleteItem()}>delete</button>
+            <button onClick={() => deleteItem()}>delete</button> */}
             <button onClick={() => reset()}>Reset</button>
             <span>Caspar Control:</span>
             <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>
@@ -1115,6 +1122,7 @@ const WebAnimator = () => {
             <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
 
             <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
 
             <button onClick={() => exportHtml()}>Export Html</button>
             {htmlfileHandle && <button onClick={() => exportHtml(true)}>Overwrite</button>}
