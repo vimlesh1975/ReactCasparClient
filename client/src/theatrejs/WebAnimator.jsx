@@ -964,8 +964,12 @@ const WebAnimator = () => {
             var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
 
             var animationContetent = content.split('{state:')[1].split('});')[0];
-            const jsfilename1 = content.split("<script src='")[1].split('.')[0];
-            setJsfilename(jsfilename1);
+
+            if ((content.split("<script src='").length > 1) && (content.split("<script src='")[1].split('.')).length > 1) {
+                const jsfilename1 = content.split("<script src='")[1].split('.')[0];
+                setJsfilename(jsfilename1);
+            }
+
 
             const pid = `project${fabric.Object.__uid++}`;
             project = getProject(pid, { state: JSON.parse(animationContetent) });
@@ -1101,7 +1105,7 @@ const WebAnimator = () => {
     return (<>
 
         <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
-            <button onClick={() => {
+            <button title='ReactCasparClient Save to localstorage button' onClick={() => {
                 deleteAllObjects();
                 initialiseCore(localStorage.getItem('RCCtheatrepageData'));
             }}>Data from LocalStorage</button>
@@ -1132,7 +1136,7 @@ const WebAnimator = () => {
             {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}
 
 
-            Client Id<input title='Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
+            Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
 
