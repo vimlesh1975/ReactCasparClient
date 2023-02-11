@@ -5,9 +5,8 @@ import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { createRect, createTextBox, createCircle, addImage, createTriangle } from '../DrawingController'
+import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
-
 
 import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
 
@@ -18,7 +17,8 @@ studio.initialize();
 studio.ui.hide();
 
 
-var project = getProject('Fabricjs Object Animation')
+var project = getProject('Fabricjs Object Animation');
+var sheet;
 
 var mouseDown = 0;
 document.body.onmousedown = function () {
@@ -26,6 +26,10 @@ document.body.onmousedown = function () {
 }
 document.body.onmouseup = function () {
     mouseDown = 0;
+}
+
+const getObjectbyId = id => {
+    return arrObject.find(object => object.address.objectKey === id)
 }
 
 const changePropOfObject = (id, str1, str2) => {
@@ -43,7 +47,7 @@ const changePropOfObject = (id, str1, str2) => {
 const DrawingforTheatrejs = () => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
-    const [visibility, setVisibility] = useState(true);
+
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -71,51 +75,18 @@ const DrawingforTheatrejs = () => {
         // eslint-disable-next-line
     }, [])
 
-    const [x, setX] = useState(0);
-    const [y, setY] = useState(0);
 
-    const handleClick = e => {
-        e.preventDefault();
-        setVisibility(true);
-        setX(e.clientX);
-        setY(e.clientY);
-    };
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
-    function ContextMenu({ x, y }) {
 
 
-
-        return (
-            <div className='rightClickMenu'
-                // style={{
-                //     position: "fixed",
-                //     top: y,
-                //     left: x,
-                //     display: visibility ? "block" : "none"
-                // }}
-                style={{ position: 'fixed', left: x, top: y, color: 'white', display: visibility ? "block" : "none" }}
-            >
-                <ul>
-                    <li>Add<ul >
-                        <li onClick={() => window.addItem(addImage)}>Image</li>
-                        <li onClick={() => window.addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
-                        <li onClick={() => window.addItem(createTextBox)}>Text T</li>
-                        <li onClick={() => window.addItem(createCircle)}>Circle <VscCircleFilled /></li>
-                        <li onClick={() => window.addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
-                    </ul></li>
-                </ul>
-            </div>
-        );
-    }
-
-    return (<div onContextMenu={handleClick} onClick={() => setVisibility(false)}>
+    return (<div >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
-        <ContextMenu x={x} y={y} visibility={visibility} />
+        {/* <ContextMenu x={x} y={y} visibility={visibility} /> */}
     </div>);
 };
 
@@ -131,12 +102,16 @@ const WebAnimator = () => {
     const [htmlfileHandle, sethtmlfileHandle] = useState();
     const [idofElement, setIdofElement] = useState('ccg_1');
 
+    const [visibility, setVisibility] = useState(false);
+    const [x, setX] = useState(0);
+    const [y, setY] = useState(0);
+
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
-    var sheet = project.sheet('Sheet 1');
+    sheet = project.sheet('Sheet 1');
     project.ready.then(() => {
-        sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+        // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
     });
 
     const dispatch = useDispatch();
@@ -229,6 +204,68 @@ const WebAnimator = () => {
         return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
     }
 
+
+    function ContextMenu({ x, y, visibility }) {
+        const canvas = useSelector(state => state.canvasReducer.canvas);
+
+        const sendToBack = canvas => {
+            canvas.getActiveObjects().forEach(element => {
+                canvas.sendToBack(element);
+            });
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+        }
+
+        const bringToFront = canvas => {
+            canvas.getActiveObjects().forEach(element => {
+                canvas.bringToFront(element);
+            });
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+        }
+
+
+        return (
+            <div className='rightClickMenu'
+                style={{ position: 'fixed', left: (x > 1595) ? 1595 : x, top: (y > 685) ? 685 : y, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
+            >
+                <ul>
+                    <li>Add<ul >
+                        <li onClick={() => addItem(addImage)}>Image</li>
+                        <li onClick={() => addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
+                        <li onClick={() => addItem(createTextBox)}>Text T</li>
+                        <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
+                        <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
+                    </ul></li>
+                    <li onClick={() => {
+                        studio.transaction((api) => {
+                            console.log(api)
+                            const aa = canvas.getActiveObjects();
+                            if (aa.length === 1) {
+                                api.unset(getObjectbyId(aa[0].id).props);
+                            }
+                        })
+                    }}>Reset All to Default</li>
+
+                    <li onClick={deleteItem}>Delete</li>
+                    <li>Text Align<ul >
+                        <li onClick={() => alignLeft(canvas)}>Left</li>
+                        <li onClick={() => alignRight(canvas)}>Right</li>
+                        <li onClick={() => alignCenter(canvas)}>Center</li>
+                    </ul></li>
+                    <li>Text Decoration<ul >
+                        <li onClick={() => textUnderline(canvas)}>Underline Toggle</li>
+                        <li onClick={() => textLineThrough(canvas)}>LineThrough Toggle</li>
+                        <li onClick={() => textItalic(canvas)}>Itallic Toggle</li>
+                        <li onClick={() => txtBold(canvas)}>Bold</li>
+                        <li onClick={() => textNormal(canvas)}>Normal</li>
+                    </ul></li>
+                    <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
+                    <li onClick={() => sendToBack(canvas)}>Send To Back</li>
+                </ul>
+            </div>
+        );
+    }
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
@@ -944,7 +981,7 @@ const WebAnimator = () => {
 
             sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
             });
 
             initialiseCore(canvasContent, true);
@@ -963,9 +1000,8 @@ const WebAnimator = () => {
 
         await name(canvas);
         const element = canvas.getActiveObjects()[0];
-        console.log(element)
         const obj1 = {
-            left: 1000,
+            left: 500,
             top: 300,
             opacity: types.number(1, { range: [0, 1] }),
             scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
@@ -974,7 +1010,7 @@ const WebAnimator = () => {
             rx: types.number(10, { range: [0, 100] }),
             ry: types.number(10, { range: [0, 100] }),
             strokeWidth: types.number(0, { range: [0, 100] }),
-            fontSize: types.number(30, { range: [0, 100] }),
+            fontSize: types.number(45, { range: [0, 100] }),
             strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
             strkDsOfst: types.number(0, { range: [-1000, 1000] }),
             fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
@@ -1036,7 +1072,6 @@ const WebAnimator = () => {
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
         element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
     }
-    window.addItem = addItem;
     const deleteItem = () => {
         const aa = canvas.getActiveObjects();
         aa.forEach(element => {
@@ -1067,9 +1102,18 @@ const WebAnimator = () => {
         })
 
     }
+    const handleClick = e => {
+        e.preventDefault();
+        setVisibility(true);
+        setX(e.clientX);
+        setY(e.clientY);
+        console.log(e.clientX)
+
+        console.log(e.clientY)
+    };
     return (<>
 
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
             <button onClick={() => {
                 deleteAllObjects();
                 initialiseCore(localStorage.getItem('RCCtheatrepageData'));
@@ -1104,9 +1148,9 @@ const WebAnimator = () => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
 
-            {/* {projectId} */}
-
             <DrawingforTheatrejs />
+            <ContextMenu x={x} y={y} visibility={visibility} />
+
         </div>
     </>)
 }

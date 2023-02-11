@@ -28,17 +28,6 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
     canvas.requestRenderAll();
   }
 
-  // const addImage = (canvas) => {
-  //   var fInput = document.createElement("input"); //hidden input to open filedialog
-  //   fInput.setAttribute("type", "file"); //opens files
-  //   fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
-  //   fInput.setAttribute("multiple", true); ////only useful for inspector debugging
-
-  //   fInput.click();
-  //   fInput.onchange = (e) => {
-  //     Upload(e, canvas)
-  //   }
-  // }
 
   window.showMenu = showMenu;
   return (<div>
@@ -69,7 +58,7 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
         <li>Text Decoration<ul >
           <li onClick={() => textUnderline(canvas)}>Underline Toggle</li>
           <li onClick={() => textLineThrough(canvas)}>LineThrough Toggle</li>
-          <li onClick={() => textItalic(canvas)}>Itallic</li>
+          <li onClick={() => textItalic(canvas)}>Itallic Toggle</li>
           <li onClick={() => txtBold(canvas)}>Bold</li>
           <li onClick={() => textNormal(canvas)}>Normal</li>
         </ul></li>
