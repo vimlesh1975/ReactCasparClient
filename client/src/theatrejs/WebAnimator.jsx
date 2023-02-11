@@ -427,15 +427,10 @@ const WebAnimator = () => {
                         set(obj.props.scaleY, event.transform.target.scaleY);
                     });
                 };
-                const onMousedblclick = (obj, event) => {
-                    studio.transaction(({ unset }) => {
-                        unset(obj.props);
-                    });
-                };
+
                 element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
                 element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
                 element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-                element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
             })
         })
     }
@@ -599,17 +594,12 @@ const WebAnimator = () => {
                                 set(obj.props.scaleY, event.transform.target.scaleY);
                             });
                         };
-                        const onMousedblclick = (obj, event) => {
-                            studio.transaction(({ unset }) => {
-                                unset(obj.props);
-                            });
-                        };
+                      
                         const onMousedown = (obj, event) => {
                         };
                         element.on('mousedown', (e) => onMousedown(arrObject[i], e), false);
                         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
                         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-                        element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
             });
         });
         `
@@ -744,15 +734,10 @@ const WebAnimator = () => {
                     set(obj.props.scaleY, event.transform.target.scaleY);
                 });
             };
-            const onMousedblclick = (obj, event) => {
-                studio.transaction(({ unset }) => {
-                    unset(obj.props);
-                });
-            };
+           
             element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
             element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
             element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-            element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
             `
 
         const aa =
@@ -1062,15 +1047,10 @@ const WebAnimator = () => {
                 set(obj.props.scaleY, event.transform.target.scaleY);
             });
         };
-        const onMousedblclick = (obj, event) => {
-            studio.transaction(({ unset }) => {
-                unset(obj.props);
-            });
-        };
+
         element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-        element.on('mousedblclick', (e) => onMousedblclick(arrObject[i], e), false);
     }
     const deleteItem = () => {
         const aa = canvas.getActiveObjects();
