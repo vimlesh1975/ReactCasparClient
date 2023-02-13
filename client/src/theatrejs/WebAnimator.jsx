@@ -12,6 +12,8 @@ import { endpoint, templateLayers, shadowOptions, executeScript } from '../commo
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
+import SavePannelTheatre from './SavePannelTheatre';
+
 
 studio.initialize();
 studio.ui.hide();
@@ -107,6 +109,7 @@ const WebAnimator = () => {
     const [y, setY] = useState(0);
 
     const [jsfilename, setJsfilename] = useState('main');
+    const [showSavePannel, setShowSavePannel] = useState(false);
 
 
 
@@ -1111,11 +1114,6 @@ const WebAnimator = () => {
             }}>Data from LocalStorage</button>
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
-            {/* <button onClick={() => addItem(addImage)}>Img</button>
-            <button onClick={() => addItem(createRect)}>Rect</button>
-            <button onClick={() => addItem(createTextBox)}>Text</button>
-            <button onClick={() => addItem(createCircle)}>Circle</button>
-            <button onClick={() => deleteItem()}>delete</button> */}
             <button onClick={() => reset()}>Reset</button>
             <span>Caspar Control:</span>
             <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>
@@ -1139,10 +1137,10 @@ const WebAnimator = () => {
             Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
-
+            <button onClick={() => setShowSavePannel(val => !val)}>Save Pannel Show</button>
+            {showSavePannel && <div style={{ position: 'absolute', left: 1550, top: 25, zIndex: 101, backgroundColor: 'white' }}> <SavePannelTheatre /></div>}
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
-
         </div>
     </>)
 }
