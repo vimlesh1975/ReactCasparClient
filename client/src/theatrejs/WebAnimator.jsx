@@ -117,9 +117,11 @@ const WebAnimator = () => {
     sheet = project.sheet('Sheet 1');
     project.ready.then(() => {
         // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+        const stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
+        window.stateFile = stateFile;
     });
 
-    const [stateFile, setStateFile] = useState('')
+
 
     const dispatch = useDispatch();
 
@@ -246,7 +248,6 @@ const WebAnimator = () => {
                     </ul></li>
                     <li onClick={() => {
                         studio.transaction((api) => {
-                            console.log(api)
                             const aa = canvas.getActiveObjects();
                             if (aa.length === 1) {
                                 api.unset(getObjectbyId(aa[0].id).props);
@@ -954,7 +955,6 @@ const WebAnimator = () => {
     }
 
     const importHtml = async (canvasContent1, animationContetent1) => {
-        console.log(animationContetent1)
         if (canvasContent1) {
             deleteAllObjects();
             initialiseCore(canvasContent1, true);
@@ -982,7 +982,6 @@ const WebAnimator = () => {
                     setJsfilename(jsfilename1);
                 }
                 const pid = `project${fabric.Object.__uid++}`;
-                console.log(animationContetent)
                 project = getProject(pid, { state: JSON.parse(animationContetent) });
                 setProjectId(pid)
 
@@ -1146,13 +1145,13 @@ const WebAnimator = () => {
             <button onClick={() => {
                 setShowSavePannel(val => !val);
             }}>Show Save Pannel</button>
-            <button onClick={() => {
+            {/* <button onClick={() => {
                 console.log(studio.createContentOfSaveFile(projectId));
                 setStateFile(JSON.stringify(studio.createContentOfSaveFile(projectId)));
                 window.stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
 
-            }}>log</button>
-            {showSavePannel && <div style={{ position: 'absolute', left: 1550, top: 25, zIndex: 101, backgroundColor: 'white' }}> <SavePannelTheatre importHtml={importHtml} stateFile={stateFile} /></div>}
+            }}>log</button> */}
+            {showSavePannel && <div style={{ position: 'absolute', left: 1550, top: 25, zIndex: 101, backgroundColor: 'white' }}> <SavePannelTheatre importHtml={importHtml} deleteAllObjects={deleteAllObjects} /></div>}
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>

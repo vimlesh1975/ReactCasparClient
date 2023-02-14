@@ -13,7 +13,7 @@ import { animation } from '../animation.js'
 var currentFile = 'new';
 let fileReader;
 
-const SavePannel = ({ importHtml }) => {
+const SavePannel = ({ importHtml, deleteAllObjects }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -184,7 +184,6 @@ const SavePannel = ({ importHtml }) => {
         importHtml(json, animationTheatrejs)
     }
     const updatePage = () => {
-        console.log(window.stateFile)
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), animationTheatrejs: window.stateFile } : val;
         });
@@ -343,6 +342,7 @@ const SavePannel = ({ importHtml }) => {
                             deleteAll(window.editor?.canvas);
                             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
+                            deleteAllObjects();
                         }
                     }}
                     > Add Blank</button>
