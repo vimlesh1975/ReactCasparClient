@@ -6,7 +6,7 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
-const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation: '', jsfilename: 'main', cssfilename: 'main' }] };
+const initialStateCanvasList = { canvasList: [{ pageName: 'untitled_page', pageValue: '', animation: '', animationTheatrejs: '', jsfilename: 'main', cssfilename: 'main' }] };
 const canvasListReducer = (state = initialStateCanvasList, action) => {
     switch (action.type) {
         case 'CHANGE_CANVAS_LIST':
