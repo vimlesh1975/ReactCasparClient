@@ -12,6 +12,8 @@ import { endpoint, templateLayers, shadowOptions, executeScript } from '../commo
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
+import SavePannelTheatre from './SavePannelTheatre';
+
 
 studio.initialize();
 studio.ui.hide();
@@ -55,9 +57,9 @@ const DrawingforTheatrejs = () => {
     useEffect(() => {
         setTimeout(() => {
             window.editor.canvas.preserveObjectStacking = true;
-            window.editor.canvas.on('selection:created', function (e) {
-                console.log('Multiple objects selected: ', e.selected);
-            });
+            // window.editor.canvas.on('selection:created', function (e) {
+            //     console.log('Multiple objects selected: ', e.selected);
+            // });
             window.editor.canvas.on('selection:cleared', function (e) {
                 if (e.deselected) {
                     e.deselected.forEach((element) => {
@@ -78,7 +80,7 @@ const DrawingforTheatrejs = () => {
 
 
     useEffect(() => {
-        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas })
+        dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
@@ -86,7 +88,6 @@ const DrawingforTheatrejs = () => {
 
     return (<div >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
-        {/* <ContextMenu x={x} y={y} visibility={visibility} /> */}
     </div>);
 };
 
@@ -107,16 +108,23 @@ const WebAnimator = () => {
     const [y, setY] = useState(0);
 
     const [jsfilename, setJsfilename] = useState('main');
-
-
+    const [showSavePannel, setShowSavePannel] = useState(false);
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
+
     sheet = project.sheet('Sheet 1');
     project.ready.then(() => {
         // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+        // const stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
+        // window.stateFile = stateFile;
     });
+
+    window.studio = studio;
+    window.projectId = projectId;
+
+
 
     const dispatch = useDispatch();
 
@@ -243,7 +251,6 @@ const WebAnimator = () => {
                     </ul></li>
                     <li onClick={() => {
                         studio.transaction((api) => {
-                            console.log(api)
                             const aa = canvas.getActiveObjects();
                             if (aa.length === 1) {
                                 api.unset(getObjectbyId(aa[0].id).props);
@@ -932,6 +939,7 @@ const WebAnimator = () => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         const options = {
             suggestedName: ss,
+            excludeAcceptAllOption: true,
             types: [{
                 description: 'Html file',
                 accept: { 'text/html': ['.html'] },
@@ -950,37 +958,57 @@ const WebAnimator = () => {
         await writable.close();
     }
 
-    const importHtml = async () => {
-
-
-        const [aa] = await window.showOpenFilePicker();
-
-        if (aa) {
-
-            sethtmlfileHandle(aa);
-            deleteAllObjects()
-            const file = await aa.getFile();
-            const content = await file.text();
-            var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
-
-            var animationContetent = content.split('{state:')[1].split('});')[0];
-
-            if ((content.split("<script src='").length > 1) && (content.split("<script src='")[1].split('.')).length > 1) {
-                const jsfilename1 = content.split("<script src='")[1].split('.')[0];
-                setJsfilename(jsfilename1);
-            }
-
+    const importHtml = async (canvasContent1, animationContetent1) => {
+        if (canvasContent1) {
+            deleteAllObjects();
 
             const pid = `project${fabric.Object.__uid++}`;
-            project = getProject(pid, { state: JSON.parse(animationContetent) });
+            project = getProject(pid, { state: JSON.parse(animationContetent1) });
             setProjectId(pid)
 
             sheet = project.sheet('Sheet 1');
-            project.ready.then(() => {
-                // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-            });
+            initialiseCore(canvasContent1, true);
 
-            initialiseCore(canvasContent, true);
+            project.ready.then(() => {
+                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+            });
+        }
+        else {
+            const pickerOpts = {
+                multiple: false,
+                excludeAcceptAllOption: true,
+                types: [
+                    {
+                        description: 'HTML files',
+                        accept: {
+                            'text/html': ['.html']
+                        }
+                    },
+                ],
+            };
+            const [aa] = await window.showOpenFilePicker(pickerOpts);
+            if (aa) {
+                sethtmlfileHandle(aa);
+                deleteAllObjects();
+                const file = await aa.getFile();
+                const content = await file.text();
+                var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
+                var animationContetent = content.split('{state:')[1].split('});')[0];
+                if ((content.split("<script src='").length > 1) && (content.split("<script src='")[1].split('.')).length > 1) {
+                    const jsfilename1 = content.split("<script src='")[1].split('.')[0];
+                    setJsfilename(jsfilename1);
+                }
+                const pid = `project${fabric.Object.__uid++}`;
+                project = getProject(pid, { state: JSON.parse(animationContetent) });
+                setProjectId(pid)
+
+                sheet = project.sheet('Sheet 1');
+                project.ready.then(() => {
+                    // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                });
+
+                initialiseCore(canvasContent, true);
+            }
         }
 
     }
@@ -1098,9 +1126,6 @@ const WebAnimator = () => {
         setVisibility(true);
         setX(e.clientX);
         setY(e.clientY);
-        console.log(e.clientX)
-
-        console.log(e.clientY)
     };
     return (<>
 
@@ -1111,11 +1136,6 @@ const WebAnimator = () => {
             }}>Data from LocalStorage</button>
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
-            {/* <button onClick={() => addItem(addImage)}>Img</button>
-            <button onClick={() => addItem(createRect)}>Rect</button>
-            <button onClick={() => addItem(createTextBox)}>Text</button>
-            <button onClick={() => addItem(createCircle)}>Circle</button>
-            <button onClick={() => deleteItem()}>delete</button> */}
             <button onClick={() => reset()}>Reset</button>
             <span>Caspar Control:</span>
             <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>
@@ -1139,10 +1159,13 @@ const WebAnimator = () => {
             Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
+            <button onClick={() => {
+                setShowSavePannel(val => !val);
+            }}>Show Save Pannel</button>
 
+            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre importHtml={importHtml} deleteAllObjects={deleteAllObjects} /></div>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
-
         </div>
     </>)
 }
