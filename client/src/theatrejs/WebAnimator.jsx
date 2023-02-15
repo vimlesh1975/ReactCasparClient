@@ -117,9 +117,12 @@ const WebAnimator = () => {
     sheet = project.sheet('Sheet 1');
     project.ready.then(() => {
         // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-        const stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
-        window.stateFile = stateFile;
+        // const stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
+        // window.stateFile = stateFile;
     });
+
+    window.studio = studio;
+    window.projectId = projectId;
 
 
 
@@ -967,7 +970,7 @@ const WebAnimator = () => {
             initialiseCore(canvasContent1, true);
 
             project.ready.then(() => {
-                // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
             });
         }
         else {
@@ -1159,13 +1162,8 @@ const WebAnimator = () => {
             <button onClick={() => {
                 setShowSavePannel(val => !val);
             }}>Show Save Pannel</button>
-            {/* <button onClick={() => {
-                console.log(studio.createContentOfSaveFile(projectId));
-                setStateFile(JSON.stringify(studio.createContentOfSaveFile(projectId)));
-                window.stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
 
-            }}>log</button> */}
-            {showSavePannel && <div style={{ position: 'absolute', left: 1550, top: 25, zIndex: 101, backgroundColor: 'white' }}> <SavePannelTheatre importHtml={importHtml} deleteAllObjects={deleteAllObjects} /></div>}
+            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre importHtml={importHtml} deleteAllObjects={deleteAllObjects} /></div>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>

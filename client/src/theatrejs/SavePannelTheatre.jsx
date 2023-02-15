@@ -185,7 +185,7 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
     }
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), animationTheatrejs: window.stateFile } : val;
+            return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), animationTheatrejs: JSON.stringify(window.studio.createContentOfSaveFile(window.projectId)) } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
@@ -312,17 +312,17 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
     return (
         <div >
             <div>
-                <div className='drawingToolsRow' >
+                <div style={{ textAlign: 'left' }} >
                     <b> Save: </b>
                     <button title="Will discard list" onClick={drawingFileNew}>File New <FiFile /></button>
                     <button title="Save as new name" onClick={drawingFileSaveAs}>File Save As<FaSave /></button>
                     {currentFileName && <button title="Overwrite" onClick={drawingFileSave}>File Save<FaSave /></button>}
                 </div>
 
-                <div className='drawingToolsRow' >
+                <div style={{ textAlign: 'left' }}>
                     <button title="Will discard list and open list" onClick={importCanvaslist}>Open File</button>{currentFileName?.name}
                 </div>
-                <div className='drawingToolsRow' >
+                <div style={{ textAlign: 'left' }} >
                     <span title="Will append list">Add File:</span>  <input
                         type='file'
                         id='file'
@@ -332,7 +332,7 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                         onChange={e => handleFileChosen2(e.target.files)}
                     /><br />
                 </div>
-                <div className='drawingToolsRow' >
+                <div style={{ textAlign: 'left' }} >
 
                     {canvasList.length}  <b> Pages: </b>
                     <button onClick={() => {
@@ -341,7 +341,7 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                         if (retVal !== null) {
                             deleteAllObjects();
                             deleteAll(window.editor?.canvas);
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2, animationTheatrejs: JSON.stringify(window.studio.createContentOfSaveFile(window.projectId)) }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -350,7 +350,7 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
-                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
+                            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2, animationTheatrejs: JSON.stringify(window.studio.createContentOfSaveFile(window.projectId)) }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
                         }
                     }}
@@ -359,10 +359,11 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
 
                     <button onClick={() => updatePage()}>Update</button>Curr Pg{currentPage + 1}
                 </div>
-                <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView ? 'ListView' : 'Thumbnail View'}
-
+                <div style={{ textAlign: 'left' }} >
+                    <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView ? 'ListView' : 'Thumbnail View'}
+                </div>
             </div>
-            <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+            <div style={{ height: 790, width: 380, overflow: 'scroll', border: '1px solid black' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
                         {(provided, snapshot) => (
