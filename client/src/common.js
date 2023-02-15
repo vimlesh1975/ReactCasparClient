@@ -3,7 +3,27 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '140223_1'
+export const buildDate = '150223_1'
+
+export const rgbaObjectToHex = (rgba) => {
+    // Multiply decimal values by 255 and round to nearest integer
+    let red = Math.round(rgba.r * 255);
+    let green = Math.round(rgba.g * 255);
+    let blue = Math.round(rgba.b * 255);
+    // let alpha = Math.round(rgba.a * 255);
+
+    // Convert decimal values to hexadecimal
+    let redHex = red.toString(16).padStart(2, "0");
+    let greenHex = green.toString(16).padStart(2, "0");
+    let blueHex = blue.toString(16).padStart(2, "0");
+    // let alphaHex = alpha.toString(16).padStart(2, "0");
+
+    // Combine hexadecimal values into a single string
+    let hexString = `#${redHex}${greenHex}${blueHex}`;
+
+    // Return the hexadecimal color code
+    return hexString;
+}
 
 export const checkIdUniqueness = (canvas) => {
     var objects = canvas.getObjects(),

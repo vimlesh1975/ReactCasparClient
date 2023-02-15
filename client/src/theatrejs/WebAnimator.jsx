@@ -625,6 +625,7 @@ const WebAnimator = () => {
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
     }
+
     const exportHtml = async (overRide = false) => {
         const xx4 = `
         
@@ -1161,9 +1162,14 @@ const WebAnimator = () => {
             }} />
             <button onClick={() => {
                 setShowSavePannel(val => !val);
-            }}>Show Save Pannel</button>
+            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Pannel'}</button>
 
-            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre importHtml={importHtml} deleteAllObjects={deleteAllObjects} /></div>
+            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
+                importHtml={importHtml}
+                deleteAllObjects={deleteAllObjects}
+                stopGraphics1={stopGraphics1}
+                playtoCasparcg={playtoCasparcg}
+            /></div>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>

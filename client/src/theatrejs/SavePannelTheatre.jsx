@@ -4,16 +4,15 @@ import { FaSave } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
-import DrawingThumbnail from '../DrawingThumbnail'
+import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript } from '../common'
-import { animation } from '../animation.js'
+import { templateLayers } from '../common'
 
 
 var currentFile = 'new';
 let fileReader;
 
-const SavePannel = ({ importHtml, deleteAllObjects }) => {
+const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics1 }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -25,93 +24,10 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
 
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
-    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
 
     const [currentFileName, setCurrentFileName] = useState()
 
-    const startGraphics = (canvas, layerNumber) => {
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-
-        var inAnimation;
-        if (window.inAnimationMethod === 'mix') {
-            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-
-        else if (((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod)) !== -1) {
-            inAnimation = animation[((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod))].value;
-        }
-        else if (window.inAnimationMethod === 'lefttoright') {
-            inAnimation = ``
-            // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
-
-            setTimeout(() => {
-                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-            }, 250);
-            const script = `
-                            var aa = document.createElement('div');
-                            aa.style.position='absolute';
-                            aa.setAttribute('id','divid_' + '${layerNumber}');
-                            aa.style.zIndex = ${layerNumber};
-                            aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
-                            document.body.appendChild(aa);
-                            document.body.style.margin='0';
-                            document.body.style.padding='0';
-                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                            document.body.style.overflow='hidden';
-                            var style = document.createElement('style');
-                            style.textContent = '${inAnimation}';
-                            document.head.appendChild(style);
-                        `
-            executeScript(script);
-            setTimeout(() => {
-                endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
-            "`)
-            }, 300);
-
-            setTimeout(() => {
-                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
-            }, 800);
-            setTimeout(() => {
-                updateGraphics(canvas, layerNumber);
-            }, 1100);
-            return
-        }
-
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        const script = `
-                    var bb = document.createElement('div');
-                    bb.style.perspective='1920px';
-                    bb.style.transformStyle='preserve-3d';
-                    document.body.appendChild(bb);
-                    var aa = document.createElement('div');
-                    aa.style.position='absolute';
-                    aa.setAttribute('id','divid_' + '${layerNumber}');
-                    aa.style.zIndex = ${layerNumber};
-                    aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
-                    bb.appendChild(aa);
-                    document.body.style.margin='0';
-                    document.body.style.padding='0';
-                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                    document.body.style.overflow='hidden';
-                    var style = document.createElement('style');
-                    style.textContent = '${inAnimation}';
-                    document.head.appendChild(style);
-                `
-        executeScript(script);
-
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
-            "`)
-        }, 100);
-        setTimeout(() => {
-            updateGraphics(canvas, layerNumber);
-        }, 1200);
-
-    }
 
     useEffect(() => {
         setTimeout(() => {
@@ -363,7 +279,7 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                     <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView ? 'ListView' : 'Thumbnail View'}
                 </div>
             </div>
-            <div style={{ height: 790, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+            <div style={{ height: 820, width: 380, overflow: 'scroll', border: '1px solid black' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
                         {(provided, snapshot) => (
@@ -415,17 +331,19 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                                                                         <div>
                                                                             <button key1={i} onClick={() => {
                                                                                 recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs)
-                                                                                startGraphics(canvas, templateLayers.savePannelPlayer);
+                                                                                setTimeout(() => {
+                                                                                    playtoCasparcg(templateLayers.theatrejs);
+                                                                                }, 1000);
                                                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button key1={i} onClick={() => stopGraphics1(templateLayers.theatrejs)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                     <td>
                                                                         <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => { recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs) }}>
-                                                                            <DrawingThumbnail i={i} />
+                                                                            <DrawingThumbnailTheatrejs i={i} />
                                                                         </div>
                                                                         <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                             recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs);

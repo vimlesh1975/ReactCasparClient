@@ -21,6 +21,8 @@ import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
 import { rgbaCol } from './common'
+// import { rgbaObjectToHex } from './common'
+
 
 // var intervalVerticalScroll;
 var intervalGameTimer1;
@@ -3036,6 +3038,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportPDF(canvas)}>Pdf</button>
                         <button onClick={() => saveToLocalStorage(canvas)}>saveToLocalStorage</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Web Animator</button>
+                        {/* <button onClick={() => {
+                            canvas.add(new fabric.Textbox('test', { fill: rgbaObjectToHex({ r: 0, g: 1, b: 0, a: 1 }) }));
+                            canvas.add(new fabric.Textbox('test', { fill: '#ff0000' }));
+                        }}>test</button> */}
 
 
                     </div>
