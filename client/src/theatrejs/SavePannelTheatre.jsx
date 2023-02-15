@@ -339,10 +339,10 @@ const SavePannel = ({ importHtml, deleteAllObjects }) => {
                         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
+                            deleteAllObjects();
                             deleteAll(window.editor?.canvas);
                             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
                             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: canvasList.length })
-                            deleteAllObjects();
                         }
                     }}
                     > Add Blank</button>
