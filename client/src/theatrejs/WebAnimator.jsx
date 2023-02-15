@@ -936,6 +936,7 @@ const WebAnimator = () => {
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         const options = {
             suggestedName: ss,
+            excludeAcceptAllOption: true,
             types: [{
                 description: 'Html file',
                 accept: { 'text/html': ['.html'] },
@@ -957,19 +958,32 @@ const WebAnimator = () => {
     const importHtml = async (canvasContent1, animationContetent1) => {
         if (canvasContent1) {
             deleteAllObjects();
-            initialiseCore(canvasContent1, true);
 
             const pid = `project${fabric.Object.__uid++}`;
             project = getProject(pid, { state: JSON.parse(animationContetent1) });
             setProjectId(pid)
 
             sheet = project.sheet('Sheet 1');
+            initialiseCore(canvasContent1, true);
+
             project.ready.then(() => {
                 // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
             });
         }
         else {
-            const [aa] = await window.showOpenFilePicker();
+            const pickerOpts = {
+                multiple: false,
+                excludeAcceptAllOption: true,
+                types: [
+                    {
+                        description: 'HTML files',
+                        accept: {
+                            'text/html': ['.html']
+                        }
+                    },
+                ],
+            };
+            const [aa] = await window.showOpenFilePicker(pickerOpts);
             if (aa) {
                 sethtmlfileHandle(aa);
                 deleteAllObjects();
