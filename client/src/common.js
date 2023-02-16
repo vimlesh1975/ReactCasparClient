@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '150223_1'
+export const buildDate = '160223_1'
 
 export const rgbaObjectToHex = (rgba) => {
     // Multiply decimal values by 255 and round to nearest integer
