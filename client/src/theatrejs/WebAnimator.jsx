@@ -866,7 +866,7 @@ const WebAnimator = () => {
         
                     const originalWidth = bb[0].width;
                     const originalscaleX = bb[0].scaleX;
-                    element.set({ objectCaching: false, text: escapeHtml(dataCaspar[idCaspar]), visible: true, width:originalWidth });
+                    element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width:originalWidth });
                     changePropOfObject(idCaspar, 'scaleX', originalscaleX);
 
                     if (element.textLines.length > 1) {
