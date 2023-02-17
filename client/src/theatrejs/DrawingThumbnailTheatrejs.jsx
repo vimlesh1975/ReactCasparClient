@@ -18,8 +18,8 @@ const DrawingThumbnailTheatrejs = ({ i = 0 }) => {
         try {
           // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
           element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
-          console.log(element.fill.r)
-          if (element.fill.r) {
+          console.log(element.fill)
+          if (element.fill instanceof Object && typeof element.fill.r === 'number' && typeof element.fill.g === 'number' && typeof element.fill.b === 'number' && typeof element.fill.a === 'number') {
             element.set({ fill: rgbaObjectToHex(element.fill) });
           }
 
