@@ -123,8 +123,7 @@ const WebAnimator = () => {
 
     window.studio = studio;
     window.projectId = projectId;
-
-
+    window.sheet = sheet;
 
     const dispatch = useDispatch();
 
@@ -1139,7 +1138,12 @@ const WebAnimator = () => {
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
             <button onClick={() => reset()}>Reset</button>
             <span>Caspar Control:</span>
-            <button onClick={() => playtoCasparcg(templateLayers.theatrejs)}><FaPlay /></button>
+            <button onClick={() => {
+                sheet.sequence.position = 0;
+                setTimeout(() => {
+                    playtoCasparcg(templateLayers.theatrejs);
+                }, 100);
+            }}><FaPlay /></button>
             <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
             <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
 
@@ -1180,6 +1184,7 @@ const WebAnimator = () => {
                 stopGraphics1={stopGraphics1}
                 playtoCasparcg={playtoCasparcg}
             /></div>
+            <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>

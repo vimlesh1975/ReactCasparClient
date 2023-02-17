@@ -5,8 +5,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'
-import { FaPlay, FaStop } from "react-icons/fa";
-import { templateLayers } from '../common'
+// import { FaPlay, FaStop } from "react-icons/fa";
+// import { templateLayers } from '../common'
 
 
 var currentFile = 'new';
@@ -328,17 +328,20 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics
                                                                         <div>
                                                                             <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
-                                                                        <div>
+                                                                        {/* <div>
                                                                             <button key1={i} onClick={() => {
                                                                                 recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs)
                                                                                 setTimeout(() => {
-                                                                                    playtoCasparcg(templateLayers.theatrejs);
+                                                                                    window.sheet.sequence.position = 0;
                                                                                 }, 1000);
+                                                                                setTimeout(() => {
+                                                                                    playtoCasparcg(templateLayers.theatrejs);
+                                                                                }, 2000);
                                                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
                                                                             <button key1={i} onClick={() => stopGraphics1(templateLayers.theatrejs)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
-                                                                        </div>
+                                                                        </div> */}
                                                                     </div>
                                                                 </td>
                                                                     <td>
