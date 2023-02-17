@@ -1149,8 +1149,18 @@ const WebAnimator = () => {
             <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
 
-            <button onClick={() => exportHtml()}>Export Html</button>
-            {htmlfileHandle && <button onClick={() => exportHtml(true)}>Overwrite</button>}
+            <button onClick={() => {
+                sheet.sequence.position = 0;
+                setTimeout(() => {
+                    exportHtml();
+                }, 1000);
+            }}>Export Html</button>
+            {htmlfileHandle && <button onClick={() => {
+                sheet.sequence.position = 0;
+                setTimeout(() => {
+                    exportHtml(true);
+                }, 1000);
+            }}>Overwrite</button>}
             {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import Html</button>
             {/* <button onClick={() => goto()}>goto</button> */}
