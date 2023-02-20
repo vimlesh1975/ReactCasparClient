@@ -8,6 +8,14 @@ const Theatrejs2 = () => {
         return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
     }
 
+    window.rgbaObjectToHex = (rgba) => {
+        let r = Math.round(rgba.r * 255).toString(16).padStart(2, "0");
+        let g = Math.round(rgba.g * 255).toString(16).padStart(2, "0");
+        let b = Math.round(rgba.b * 255).toString(16).padStart(2, "0");
+        let hex = "#" + r + g + b;
+        return hex;
+    }
+
     return (
         <div></div>
     )
