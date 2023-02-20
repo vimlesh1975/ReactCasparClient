@@ -351,6 +351,7 @@ const WebAnimator = () => {
                         };
                     }
                     else {
+                        console.log(element)
                         const colorStops = element.fill.colorStops.map((colorStop) => {
                             return {
                                 offset: types.number(colorStop.offset, { range: [0, 1] }),
