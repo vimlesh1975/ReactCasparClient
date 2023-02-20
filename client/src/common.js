@@ -3,26 +3,21 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '170223_2'
+export const buildDate = '200223_2'
+
+export const hexToRGB = hex => {
+    const red = parseInt(hex.slice(1, 3), 16)
+    const green = parseInt(hex.slice(3, 5), 16)
+    const blue = parseInt(hex.slice(5, 7), 16)
+    return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
+}
 
 export const rgbaObjectToHex = (rgba) => {
-    // Multiply decimal values by 255 and round to nearest integer
-    let red = Math.round(rgba.r * 255);
-    let green = Math.round(rgba.g * 255);
-    let blue = Math.round(rgba.b * 255);
-    // let alpha = Math.round(rgba.a * 255);
-
-    // Convert decimal values to hexadecimal
-    let redHex = red.toString(16).padStart(2, "0");
-    let greenHex = green.toString(16).padStart(2, "0");
-    let blueHex = blue.toString(16).padStart(2, "0");
-    // let alphaHex = alpha.toString(16).padStart(2, "0");
-
-    // Combine hexadecimal values into a single string
-    let hexString = `#${redHex}${greenHex}${blueHex}`;
-
-    // Return the hexadecimal color code
-    return hexString;
+    let r = Math.round(rgba.r * 255).toString(16).padStart(2, "0");
+    let g = Math.round(rgba.g * 255).toString(16).padStart(2, "0");
+    let b = Math.round(rgba.b * 255).toString(16).padStart(2, "0");
+    let hex = "#" + r + g + b;
+    return hex;
 }
 
 export const checkIdUniqueness = (canvas) => {

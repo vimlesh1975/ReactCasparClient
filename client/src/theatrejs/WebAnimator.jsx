@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { endpoint, templateLayers, shadowOptions, executeScript } from '../common'
+import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -57,9 +57,6 @@ const DrawingforTheatrejs = () => {
     useEffect(() => {
         setTimeout(() => {
             window.editor.canvas.preserveObjectStacking = true;
-            // window.editor.canvas.on('selection:created', function (e) {
-            //     console.log('Multiple objects selected: ', e.selected);
-            // });
             window.editor.canvas.on('selection:cleared', function (e) {
                 if (e.deselected) {
                     e.deselected.forEach((element) => {
@@ -149,7 +146,6 @@ const WebAnimator = () => {
     useEffect(() => {
         document.title = "RCC Web Animator"
         studio.ui.restore();
-        // setRCCtheatrepageData(localStorage.getItem('RCCtheatrepageData'));
         return () => {
             // second  
         }
@@ -208,12 +204,7 @@ const WebAnimator = () => {
         // eslint-disable-next-line
     }, [])
 
-    const hexToRGB = hex => {
-        const red = parseInt(hex.slice(1, 3), 16)
-        const green = parseInt(hex.slice(3, 5), 16)
-        const blue = parseInt(hex.slice(5, 7), 16)
-        return { r: red / 255, g: green / 255, b: blue / 255, a: 1 } // return an object
-    }
+
 
 
     function ContextMenu({ x, y, visibility }) {
@@ -279,23 +270,9 @@ const WebAnimator = () => {
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            // project.sheet('Sheet 1').detachObject(element.id);
             sheet.detachObject(element.id);
         })
-        // studio.transaction((api) => {
-        //     api.__experimental_forgetObject(project.sheet('Sheet 1').object(element.id, {}, { reconfigure: true }));
-        // })
-        // studio.transaction((api) => {
-        //     // calling this will make it as if you never set values for this object or put it in a sequence
-        //     // api.__experimental_forgetObject(object)
-
-        //     // calling this will make it as if you never set values for _any_ object in this sheet, and you never created a sequence either.
-        //     api.__experimental_forgetSheet(sheet)
-
-        //     // note that if you're calling __experimental_forgetSheet(), then there is no need to call __experimental_forgetObject() in case that object belongs in that sheet.
-        // })
-
-        canvas.requestRenderAll()
+        // canvas.requestRenderAll()
     }
 
 
@@ -329,6 +306,25 @@ const WebAnimator = () => {
                             fill: types.rgba(element.fill),
                         };
                     }
+                    else {
+                        const colorStops = element.fill.colorStops.map((colorStop) => {
+                            return {
+                                offset: types.number(colorStop.offset, { range: [0, 1] }),
+                                color: types.rgba(hexToRGB(colorStop.color)),
+                                opacity: types.number(colorStop.opacity, { range: [0, 1] })
+                            };
+                        });
+                        obj1 = {
+                            ...obj1,
+                            ...colorStops,
+                            coords: {
+                                x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                                y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                                x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                                y2: types.number(element.fill.coords.y2, { range: [0, 1] })
+                            }
+                        };
+                    }
 
                     if (isColorObjectStroke) {
                         obj1 = {
@@ -352,6 +348,25 @@ const WebAnimator = () => {
                         obj1 = {
                             ...obj1,
                             fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                        };
+                    }
+                    else {
+                        const colorStops = element.fill.colorStops.map((colorStop) => {
+                            return {
+                                offset: types.number(colorStop.offset, { range: [0, 1] }),
+                                color: types.rgba(hexToRGB(colorStop.color)),
+                                opacity: types.number(colorStop.opacity, { range: [0, 1] })
+                            };
+                        });
+                        obj1 = {
+                            ...obj1,
+                            ...colorStops,
+                            coords: {
+                                x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                                y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                                x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                                y2: types.number(element.fill.coords.y2, { range: [0, 1] })
+                            }
                         };
                     }
 
@@ -393,6 +408,31 @@ const WebAnimator = () => {
                         obj2 = {
                             ...obj2,
                             fill: val.fill,
+                        };
+                    }
+                    else {
+                        obj2 = {
+                            ...obj2,
+                            fill: new fabric.Gradient({
+                                type: element.fill.type,
+                                gradientUnits: element.fill.gradientUnits,
+                                coords: {
+                                    x1: val.coords.x1,
+                                    y1: val.coords.y1,
+                                    x2: val.coords.x2,
+                                    y2: val.coords.y2
+                                },
+                                colorStops: Array.from({
+                                    length: element.fill.colorStops.length
+                                }).map((_, i) => {
+                                    return {
+                                        offset: val[i].offset,
+                                        color: rgbaObjectToHex(val[i].color),
+                                        opacity: val[i].opacity
+                                    };
+                                }),
+                                id: element.fill.id
+                            })
                         };
                     }
                     if (isColorObjectStroke) {
@@ -494,7 +534,13 @@ const WebAnimator = () => {
             affectStroke: false
         };
        
-        
+        const rgbaObjectToHex = (rgba) => {
+            let r = Math.round(rgba.r * 255).toString(16).padStart(2, '0');
+            let g = Math.round(rgba.g * 255).toString(16).padStart(2, '0');
+            let b = Math.round(rgba.b * 255).toString(16).padStart(2, '0');
+            let hex = '#' + r + g + b;
+            return hex;
+        };
         const arrObject = [];
         window.changePropOfObject = (id, str1, str2) => {
             const objs = arrObject.filter(object => {
@@ -527,6 +573,25 @@ const WebAnimator = () => {
                       fill: core.types.rgba(element.fill),
                   };
               }
+              else {
+                const colorStops = element.fill.colorStops.map((colorStop) => {
+                    return {
+                        offset: core.types.number(colorStop.offset, { range: [0, 1] }),
+                        color: core.types.rgba(hexToRGB(colorStop.color)),
+                        opacity: core.types.number(colorStop.opacity, { range: [0, 1] })
+                    };
+                });
+                obj1 = {
+                    ...obj1,
+                    ...colorStops,
+                    coords: {
+                        x1: core.types.number(element.fill.coords.x1, { range: [0, 1] }),
+                        y1: core.types.number(element.fill.coords.y1, { range: [0, 1] }),
+                        x2: core.types.number(element.fill.coords.x2, { range: [0, 1] }),
+                        y2: core.types.number(element.fill.coords.y2, { range: [0, 1] })
+                    }
+                };
+            }
               const isnotGradientstroke= (element.stroke.type!=='linear');
               if (isnotGradientstroke) {
                   obj1 = {
@@ -559,6 +624,31 @@ const WebAnimator = () => {
                         obj2 = {
                             ...obj2,
                             fill: val.fill,
+                        };
+                    }
+                    else {
+                        obj2 = {
+                            ...obj2,
+                            fill: new fabric.Gradient({
+                                type: element.fill.type,
+                                gradientUnits: element.fill.gradientUnits,
+                                coords: {
+                                    x1: val.coords.x1,
+                                    y1: val.coords.y1,
+                                    x2: val.coords.x2,
+                                    y2: val.coords.y2
+                                },
+                                colorStops: Array.from({
+                                    length: element.fill.colorStops.length
+                                }).map((_, i) => {
+                                    return {
+                                        offset: val[i].offset,
+                                        color: rgbaObjectToHex(val[i].color),
+                                        opacity: val[i].opacity
+                                    };
+                                }),
+                                id: element.fill.id
+                            })
                         };
                     }
                     if (isnotGradientstroke) {
@@ -666,6 +756,25 @@ const WebAnimator = () => {
                     fill: core.types.rgba(element.fill),
                 };
             }
+            else {
+                const colorStops = element.fill.colorStops.map((colorStop) => {
+                    return {
+                        offset: core.types.number(colorStop.offset, { range: [0, 1] }),
+                        color: core.types.rgba(hexToRGB(colorStop.color)),
+                        opacity: core.types.number(colorStop.opacity, { range: [0, 1] })
+                    };
+                });
+                obj1 = {
+                    ...obj1,
+                    ...colorStops,
+                    coords: {
+                        x1: core.types.number(element.fill.coords.x1, { range: [0, 1] }),
+                        y1: core.types.number(element.fill.coords.y1, { range: [0, 1] }),
+                        x2: core.types.number(element.fill.coords.x2, { range: [0, 1] }),
+                        y2: core.types.number(element.fill.coords.y2, { range: [0, 1] })
+                    }
+                };
+            }
             const isnotGradientstroke= (element.stroke.type!=='linear');
             if (isnotGradientstroke) {
                 obj1 = {
@@ -701,6 +810,31 @@ const WebAnimator = () => {
                 obj2 = {
                     ...obj2,
                     fill: val.fill,
+                };
+            }
+            else {
+                obj2 = {
+                    ...obj2,
+                    fill: new fabric.Gradient({
+                        type: element.fill.type,
+                        gradientUnits: element.fill.gradientUnits,
+                        coords: {
+                            x1: val.coords.x1,
+                            y1: val.coords.y1,
+                            x2: val.coords.x2,
+                            y2: val.coords.y2
+                        },
+                        colorStops: Array.from({
+                            length: element.fill.colorStops.length
+                        }).map((_, i) => {
+                            return {
+                                offset: val[i].offset,
+                                color: rgbaObjectToHex(val[i].color),
+                                opacity: val[i].opacity
+                            };
+                        }),
+                        id: element.fill.id
+                    })
                 };
             }
             if (isnotGradientstroke) {
@@ -786,6 +920,13 @@ const WebAnimator = () => {
         const blue = parseInt(hex.slice(5, 7), 16)
         return {r:red/255, g:green/255, b:blue/255, a:1} // return an object
         // return [ r, g, b ]
+    }
+    const rgbaObjectToHex = (rgba) => {
+        let r = Math.round(rgba.r * 255).toString(16).padStart(2, "0");
+        let g = Math.round(rgba.g * 255).toString(16).padStart(2, "0");
+        let b = Math.round(rgba.b * 255).toString(16).padStart(2, "0");
+        let hex = "#" + r + g + b;
+        return hex;
     }
          const shadowOptions = {
             color: '#000000',
