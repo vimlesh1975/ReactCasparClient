@@ -5,9 +5,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'
-// import { FaPlay, FaStop } from "react-icons/fa";
-// import { templateLayers } from '../common'
-
 
 var currentFile = 'new';
 let fileReader;
@@ -16,18 +13,13 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-
     const jsfilename = useSelector(state => state.jsfilenameReducer.jsfilename);
     const cssfilename = useSelector(state => state.cssfilenameReducer.cssfilename);
     const jsfilename2 = useSelector(state => state.jsfilenameReducer2.jsfilename2);
     const cssfilename2 = useSelector(state => state.cssfilenameReducer2.cssfilename2);
-
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
-
-
     const [currentFileName, setCurrentFileName] = useState()
-
 
     useEffect(() => {
         setTimeout(() => {
@@ -142,8 +134,6 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
         setCurrentFileName('')
     }
-
-
 
     async function drawingFileSaveAs() {
         const element = document.createElement("a");

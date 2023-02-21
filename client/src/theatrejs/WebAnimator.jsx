@@ -13,7 +13,7 @@ import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaO
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 import SavePannelTheatre from './SavePannelTheatre';
-
+import RecordRTC from 'recordrtc';
 
 studio.initialize();
 studio.ui.hide();
@@ -50,7 +50,6 @@ const DrawingforTheatrejs = () => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
-
     window.dispatch = dispatch;
     window.editor = editor;
 
@@ -74,14 +73,10 @@ const DrawingforTheatrejs = () => {
         // eslint-disable-next-line
     }, [])
 
-
-
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
-
-
 
     return (<div >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
@@ -91,9 +86,10 @@ const DrawingforTheatrejs = () => {
 const arrObject = [];
 
 const WebAnimator = () => {
+    const [recording, setRecording] = useState(false);
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [duration, setDuration] = useState(2);
-    const [loopcount, setLoopcount] = useState(0);
+    const [duration, setDuration] = useState(10);
+    const [loopcount, setLoopcount] = useState(1);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
@@ -110,13 +106,7 @@ const WebAnimator = () => {
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
-
     sheet = project.sheet('Sheet 1');
-    project.ready.then(() => {
-        // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-        // const stateFile = JSON.stringify(studio.createContentOfSaveFile(projectId));
-        // window.stateFile = stateFile;
-    });
 
     window.studio = studio;
     window.projectId = projectId;
@@ -204,9 +194,6 @@ const WebAnimator = () => {
         // eslint-disable-next-line
     }, [])
 
-
-
-
     function ContextMenu({ x, y, visibility }) {
         const canvas = useSelector(state => state.canvasReducer.canvas);
 
@@ -225,7 +212,6 @@ const WebAnimator = () => {
             canvas.discardActiveObject();
             canvas.requestRenderAll();
         }
-
 
         return (
             <div className='rightClickMenu'
@@ -272,14 +258,10 @@ const WebAnimator = () => {
         canvas.getObjects().forEach(element => {
             sheet.detachObject(element.id);
         })
-        // canvas.requestRenderAll()
     }
 
-
     const initialiseCore = (jsonContent, importing = false) => {
-
         canvas.loadFromJSON(jsonContent, () => {
-
             canvas.getObjects().forEach((element, i) => {
                 // console.log(element.fill);
                 // console.log(element.stroke);
@@ -1112,7 +1094,8 @@ const WebAnimator = () => {
             initialiseCore(canvasContent1, true);
 
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+                sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
             });
         }
         else {
@@ -1269,6 +1252,53 @@ const WebAnimator = () => {
         setX(e.clientX);
         setY(e.clientY);
     };
+    const record = () => {
+        canvas.setBackgroundColor('#00ff00');
+        canvas.discardActiveObject();
+        canvas.requestRenderAll()
+        var config = {
+            type: 'video',
+            mimeType: 'video/webm;codecs=vp9',
+        };
+
+        var recorder = new RecordRTC(canvas.getElement().captureStream(), config);
+
+        sheet.sequence.position = 0;
+        sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
+
+        const text = new fabric.Text("a", {
+            left: 10,
+            top: 10,
+            width: 10,
+            fill: '#00ff00',
+            fontSize: 1,
+
+        });
+        canvas.add(text)
+        canvas.requestRenderAll()
+        const dd = setInterval(() => {
+            text.set({ text: (new Date()).getMilliseconds().toString() })
+            canvas.requestRenderAll()
+        }, 100);
+        recorder.setRecordingDuration(parseInt(duration) * 1000, () => {
+            setRecording(false);
+
+            clearInterval(dd);
+            canvas.remove(text);
+            canvas.setBackgroundColor('#00ff0000');
+            canvas.requestRenderAll()
+
+            const blob = recorder.getBlob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "canvas-recording.webm";
+            a.click();
+        })
+        recorder.startRecording();
+        setRecording(true);
+    }
+
     return (<>
 
         <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
@@ -1309,9 +1339,9 @@ const WebAnimator = () => {
             }}>Overwrite</button>}
             {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import Html</button>
+
             {/* <button onClick={() => goto()}>goto</button> */}
             {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}
-
 
             Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
@@ -1319,6 +1349,8 @@ const WebAnimator = () => {
             <button onClick={() => {
                 setShowSavePannel(val => !val);
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Pannel'}</button>
+            <button style={{ display: recording ? 'none' : '' }} onClick={() => record()}>Record</button>
+
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
                 importHtml={importHtml}
@@ -1326,6 +1358,7 @@ const WebAnimator = () => {
                 stopGraphics1={stopGraphics1}
                 playtoCasparcg={playtoCasparcg}
             /></div>
+
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
