@@ -1266,25 +1266,13 @@ const WebAnimator = () => {
         sheet.sequence.position = 0;
         sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
 
-        const text = new fabric.Text("a", {
-            left: 10,
-            top: 10,
-            width: 10,
-            fill: '#00ff00',
-            fontSize: 1,
-
-        });
-        canvas.add(text)
-        canvas.requestRenderAll()
         const dd = setInterval(() => {
-            text.set({ text: (new Date()).getMilliseconds().toString() })
             canvas.requestRenderAll()
         }, 100);
         recorder.setRecordingDuration(parseInt(duration) * 1000, () => {
             setRecording(false);
 
             clearInterval(dd);
-            canvas.remove(text);
             canvas.setBackgroundColor('#00ff0000');
             canvas.requestRenderAll()
 
