@@ -106,6 +106,10 @@ const WebAnimator = () => {
     const [jsfilename, setJsfilename] = useState('main');
     const [showSavePannel, setShowSavePannel] = useState(false);
 
+    const [videoBlob, setVideoBlob] = useState(null);
+    const [processedBlob, setProcessedBlob] = useState(null);
+
+
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
@@ -1264,7 +1268,7 @@ const WebAnimator = () => {
         setX(e.clientX);
         setY(e.clientY);
     };
-    const record = async () => {
+    const record = () => {
         canvas.setBackgroundColor('#00ff00');
         canvas.discardActiveObject();
         canvas.requestRenderAll()
@@ -1277,10 +1281,7 @@ const WebAnimator = () => {
             videoBitsPerSecond: 11256000,
         };
 
-        const ffmpeg = createFFmpeg({
-            log: true,
-        });
-        await ffmpeg.load();
+
 
         var recorder = new RecordRTC(canvas.getElement().captureStream(), config);
 
@@ -1300,15 +1301,16 @@ const WebAnimator = () => {
 
 
             const blob = recorder.getBlob();
-            const url = URL.createObjectURL(blob);
-            console.log(url)
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "canvas-recording.mp4";
-            a.click();
+            // const url = URL.createObjectURL(blob);
+            // console.log(url)
+            // const a = document.createElement("a");
+            // a.href = url;
+            // a.download = "canvas-recording.mp4";
+            // a.click();
+            setVideoBlob(blob);
 
             // ffmpeg.FS('writeFile', 'test.mp4', fetchFile(url));
-            ffmpeg.run('-i', `'${url}'`, '-r', '25', 'test2.mp4');
+            // ffmpeg.run('-i', `'${url}'`, '-r', '25', 'test2.mp4');
 
             // fixWebmDuration(recorder.getBlob(), parseInt(duration) * 1000, function (fixedBlob) {
             //     const url = URL.createObjectURL(fixedBlob);
@@ -1322,6 +1324,25 @@ const WebAnimator = () => {
         recorder.startRecording();
         setRecording(true);
     }
+
+    const handleProcess = async (event) => {
+        const ffmpeg = createFFmpeg({
+            log: true,
+        });
+        await ffmpeg.load();
+        console.log(videoBlob)
+        await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(videoBlob));
+        await ffmpeg.run('-i', 'input.webm', 'output.mp4');
+        const processedData = ffmpeg.FS('readFile', 'output.mp4');
+        const processedBlob = new Blob([processedData.buffer], { type: 'video/mp4' });
+        setProcessedBlob(processedBlob);
+        const url = URL.createObjectURL(processedBlob);
+        console.log(url)
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "canvas-recording.mp4";
+        a.click();
+    };
 
     return (<>
 
@@ -1374,6 +1395,7 @@ const WebAnimator = () => {
                 setShowSavePannel(val => !val);
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Pannel'}</button>
             <button style={{ display: recording ? 'none' : '' }} onClick={() => record()}>Record</button>
+            <button onClick={() => handleProcess()}>Record</button>
 
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
