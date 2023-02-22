@@ -484,7 +484,10 @@ const WebAnimator = () => {
     }
     const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-        const content2 = content.replaceAll('"', '\\"');
+
+        const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
+        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
         const scriptforCasparcg = `
@@ -508,7 +511,13 @@ const WebAnimator = () => {
         var canvas = new fabric.Canvas('canvas');
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
-        const content =\`${content2}\`;
+        var content;
+        if(window.caspar || window.casparcg || window.tickAnimations) {
+            content =\`${contentforcasparcg}\`;
+        }
+        else{
+            content =\`${contentforHtml}\`;
+        }
         const shadowOptions = {
             color: '#000000',
             blur: 30,
