@@ -5,6 +5,8 @@
   "private": false,
   "dependencies": {
     "@craco/craco": "^6.4.5",
+    "@ffmpeg/core": "^0.11.0",
+    "@ffmpeg/ffmpeg": "^0.11.6",
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.8.10",
     "@reduxjs/toolkit": "^1.8.2",
@@ -22,6 +24,7 @@
     "fabricjs-react": "^1.0.8",
     "faker": "^5.5.0",
     "file-saver": "^2.0.5",
+    "fix-webm-duration": "^1.0.5",
     "geopattern": "^1.2.3",
     "gsap": "^3.10.4",
     "hacktimer": "^1.1.3",

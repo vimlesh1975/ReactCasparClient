@@ -13,7 +13,10 @@ import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaO
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 import SavePannelTheatre from './SavePannelTheatre';
-import RecordRTC from 'recordrtc';
+import RecordRTC, { getSeekableBlob } from 'recordrtc';
+import fixWebmDuration from "fix-webm-duration";
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+console.log(getSeekableBlob)
 
 studio.initialize();
 studio.ui.hide();
@@ -1261,14 +1264,23 @@ const WebAnimator = () => {
         setX(e.clientX);
         setY(e.clientY);
     };
-    const record = () => {
+    const record = async () => {
         canvas.setBackgroundColor('#00ff00');
         canvas.discardActiveObject();
         canvas.requestRenderAll()
         var config = {
             type: 'video',
-            mimeType: 'video/webm;codecs=vp9',
+            // mimeType: 'video/webm;codecs=vp9',
+            mimeType: 'video/mp4',
+            frameInterval: 25,
+            frameRate: 25,
+            videoBitsPerSecond: 11256000,
         };
+
+        const ffmpeg = createFFmpeg({
+            log: true,
+        });
+        await ffmpeg.load();
 
         var recorder = new RecordRTC(canvas.getElement().captureStream(), config);
 
@@ -1285,12 +1297,27 @@ const WebAnimator = () => {
             canvas.setBackgroundColor('#00ff0000');
             canvas.requestRenderAll()
 
+
+
             const blob = recorder.getBlob();
             const url = URL.createObjectURL(blob);
+            console.log(url)
             const a = document.createElement("a");
             a.href = url;
-            a.download = "canvas-recording.webm";
+            a.download = "canvas-recording.mp4";
             a.click();
+
+            // ffmpeg.FS('writeFile', 'test.mp4', fetchFile(url));
+            ffmpeg.run('-i', `'${url}'`, '-r', '25', 'test2.mp4');
+
+            // fixWebmDuration(recorder.getBlob(), parseInt(duration) * 1000, function (fixedBlob) {
+            //     const url = URL.createObjectURL(fixedBlob);
+            //     const a = document.createElement("a");
+            //     a.href = url;
+            //     a.download = "canvas-recording.mp4";
+            //     a.click();
+            // });
+
         })
         recorder.startRecording();
         setRecording(true);
