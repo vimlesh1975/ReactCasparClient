@@ -13,10 +13,8 @@ import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaO
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 import SavePannelTheatre from './SavePannelTheatre';
-import RecordRTC, { getSeekableBlob } from 'recordrtc';
-import fixWebmDuration from "fix-webm-duration";
+import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-console.log(getSeekableBlob)
 
 studio.initialize();
 studio.ui.hide();
@@ -105,10 +103,6 @@ const WebAnimator = () => {
 
     const [jsfilename, setJsfilename] = useState('main');
     const [showSavePannel, setShowSavePannel] = useState(false);
-
-    const [videoBlob, setVideoBlob] = useState(null);
-    const [processedBlob, setProcessedBlob] = useState(null);
-
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
@@ -1274,17 +1268,13 @@ const WebAnimator = () => {
         canvas.requestRenderAll()
         var config = {
             type: 'video',
-            // mimeType: 'video/webm;codecs=vp9',
-            mimeType: 'video/mp4',
-            frameInterval: 25,
-            frameRate: 25,
-            videoBitsPerSecond: 11256000,
+            mimeType: 'video/webm;codecs=vp9',
+            canvas: {
+                alpha: true
+            }
         };
 
-
-
         var recorder = new RecordRTC(canvas.getElement().captureStream(), config);
-
         sheet.sequence.position = 0;
         sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
 
@@ -1292,56 +1282,33 @@ const WebAnimator = () => {
             canvas.requestRenderAll()
         }, 100);
         recorder.setRecordingDuration(parseInt(duration) * 1000, () => {
-            setRecording(false);
-
             clearInterval(dd);
             canvas.setBackgroundColor('#00ff0000');
             canvas.requestRenderAll()
-
-
-
             const blob = recorder.getBlob();
-            // const url = URL.createObjectURL(blob);
-            // console.log(url)
-            // const a = document.createElement("a");
-            // a.href = url;
-            // a.download = "canvas-recording.mp4";
-            // a.click();
-            setVideoBlob(blob);
-
-            // ffmpeg.FS('writeFile', 'test.mp4', fetchFile(url));
-            // ffmpeg.run('-i', `'${url}'`, '-r', '25', 'test2.mp4');
-
-            // fixWebmDuration(recorder.getBlob(), parseInt(duration) * 1000, function (fixedBlob) {
-            //     const url = URL.createObjectURL(fixedBlob);
-            //     const a = document.createElement("a");
-            //     a.href = url;
-            //     a.download = "canvas-recording.mp4";
-            //     a.click();
-            // });
-
+            handleProcess(blob)
         })
         recorder.startRecording();
         setRecording(true);
     }
 
-    const handleProcess = async (event) => {
+    const handleProcess = async (blob1) => {
         const ffmpeg = createFFmpeg({
             log: true,
         });
         await ffmpeg.load();
-        console.log(videoBlob)
-        await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(videoBlob));
-        await ffmpeg.run('-i', 'input.webm', 'output.mp4');
-        const processedData = ffmpeg.FS('readFile', 'output.mp4');
-        const processedBlob = new Blob([processedData.buffer], { type: 'video/mp4' });
-        setProcessedBlob(processedBlob);
-        const url = URL.createObjectURL(processedBlob);
+        await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
+        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
+        // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
+        const processedData = ffmpeg.FS('readFile', 'output.mov');
+        const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mov' });
+        const url = URL.createObjectURL(processedBlob1);
         console.log(url)
         const a = document.createElement("a");
         a.href = url;
-        a.download = "canvas-recording.mp4";
+        a.download = "canvas-recording.mov";
         a.click();
+        setRecording(false);
     };
 
     return (<>
@@ -1394,9 +1361,7 @@ const WebAnimator = () => {
             <button onClick={() => {
                 setShowSavePannel(val => !val);
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Pannel'}</button>
-            <button style={{ display: recording ? 'none' : '' }} onClick={() => record()}>Record</button>
-            <button onClick={() => handleProcess()}>Record</button>
-
+            <button disabled={recording ? true : false} onClick={() => record()}>{recording ? 'Recording' : 'Record'} </button>
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
                 importHtml={importHtml}
