@@ -1288,11 +1288,11 @@ const WebAnimator = () => {
             canvas.requestRenderAll()
             const blob = recorder.getBlob();
             handleProcess(blob)
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "canvas-recording.webm";
-            a.click();
+            // const url = URL.createObjectURL(blob);
+            // const a = document.createElement("a");
+            // a.href = url;
+            // a.download = "canvas-recording.webm";
+            // a.click();
             // setRecording(false);
         })
         recorder.startRecording();
