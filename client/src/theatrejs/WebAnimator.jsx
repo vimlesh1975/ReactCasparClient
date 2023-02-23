@@ -88,6 +88,7 @@ const arrObject = [];
 
 const WebAnimator = () => {
     const [recording, setRecording] = useState(false);
+    const [transcoding, setTranscoding] = useState(false);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [duration, setDuration] = useState(10);
     const [loopcount, setLoopcount] = useState(1);
@@ -1287,26 +1288,33 @@ const WebAnimator = () => {
             canvas.requestRenderAll()
             const blob = recorder.getBlob();
             handleProcess(blob)
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "canvas-recording.webm";
+            a.click();
+            // setRecording(false);
         })
         recorder.startRecording();
         setRecording(true);
     }
 
     const handleProcess = async (blob1) => {
+        setTranscoding(true);
         const ffmpeg = createFFmpeg({
             log: true,
         });
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
-        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
+        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', '25', 'output.mp4');
+        // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
-        const processedData = ffmpeg.FS('readFile', 'output.mov');
-        const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mov' });
+        const processedData = ffmpeg.FS('readFile', 'output.mp4');
+        const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mp4' });
         const url = URL.createObjectURL(processedBlob1);
-        console.log(url)
         const a = document.createElement("a");
         a.href = url;
-        a.download = "canvas-recording.mov";
+        a.download = "canvas-recording_transcoded.mp4";
         a.click();
         setRecording(false);
     };
@@ -1360,8 +1368,8 @@ const WebAnimator = () => {
             }} />
             <button onClick={() => {
                 setShowSavePannel(val => !val);
-            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Pannel'}</button>
-            <button disabled={recording ? true : false} onClick={() => record()}>{recording ? 'Recording' : 'Record'} </button>
+            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button>
+            <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
                 importHtml={importHtml}

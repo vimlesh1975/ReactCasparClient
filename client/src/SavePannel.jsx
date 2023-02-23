@@ -385,7 +385,7 @@ const SavePannel = () => {
 
                     <button onClick={() => updatePage()}>Update</button>Curr Pg{currentPage + 1}
                 </div>
-                <button onClick={() => setListView(val => !val)}>Toggle View</button>{listView ? 'ListView' : 'Thumbnail View'}
+                <button onClick={() => setListView(val => !val)}>{listView ? 'ListView' : 'Thumbnail View'}</button>
 
             </div>
             <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
