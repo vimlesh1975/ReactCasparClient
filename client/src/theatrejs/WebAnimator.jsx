@@ -495,6 +495,9 @@ const WebAnimator = () => {
         const scriptforCasparcg = `
        
         localStorage.removeItem('theatre-0.4.persistent');
+        window.canvas?.getObjects().forEach(element => {
+            sheet?.detachObject(element.id);
+        });
         var mouseDown = 0;
         document.body.onmousedown = function () {
             mouseDown = 1;
@@ -511,6 +514,7 @@ const WebAnimator = () => {
         aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
         var canvas = new fabric.Canvas('canvas');
+       
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         var content;
