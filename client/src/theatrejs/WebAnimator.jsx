@@ -89,6 +89,7 @@ const arrObject = [];
 const WebAnimator = () => {
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
+    const [fps, setFps] = useState(25);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [duration, setDuration] = useState(10);
     const [loopcount, setLoopcount] = useState(1);
@@ -251,6 +252,10 @@ const WebAnimator = () => {
                     </ul></li>
                     <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
                     <li onClick={() => sendToBack(canvas)}>Send To Back</li>
+                    <li onClick={record}>Record</li>
+                    <li onClick={() => {
+                        setShowSavePannel(val => !val);
+                    }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                 </ul>
             </div>
         );
@@ -1310,7 +1315,7 @@ const WebAnimator = () => {
         });
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
-        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', '25', 'output.mp4');
+        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps, 'output.mp4');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
         const processedData = ffmpeg.FS('readFile', 'output.mp4');
@@ -1374,6 +1379,7 @@ const WebAnimator = () => {
                 setShowSavePannel(val => !val);
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button>
             <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
+            FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
                 importHtml={importHtml}
