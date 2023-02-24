@@ -323,8 +323,8 @@ const WebAnimator = () => {
 
                 }
                 else {
-                    if (!element.shadow.color.toString().startsWith("#")) {
-                        element.set({ shadow: { ...element.shadow, color: '#ffffff' } })
+                    if (!element.shadow?.color.toString().startsWith("#")) {
+                        element.set({ shadow: { ...element.shadow, color: '#000000' } })
                     }
                     isColorObjectfill = (typeof (element.fill) !== 'object');
                     isColorObjectStroke = (typeof (element.stroke) !== 'object');
@@ -338,9 +338,9 @@ const WebAnimator = () => {
                         console.log(element)
                         const colorStops = element.fill.colorStops.map((colorStop) => {
                             return {
-                                offset: types.number(colorStop.offset, { range: [0, 1] }),
+                                offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
                                 color: types.rgba(hexToRGB(colorStop.color)),
-                                opacity: types.number(colorStop.opacity, { range: [0, 1] })
+                                opacity: types.number(parseFloat(colorStop.opacity), { range: [0, 1] })
                             };
                         });
                         obj1 = {
