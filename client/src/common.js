@@ -119,7 +119,7 @@ export const stopGraphics = layerNumber => {
     clearHtml(layerNumber)
     endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`)
     setTimeout(() => {
-        endpoint(`call ${window.chNumber}-${layerNumber} "document.getElementById('divid_${layerNumber}')?.remove()"`);
+        endpoint(`call ${window.chNumber}-${layerNumber} "document.getElementById('divid_${layerNumber}')\\?.remove()"`);
     }, 1000);
     setTimeout(() => {
         endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);
