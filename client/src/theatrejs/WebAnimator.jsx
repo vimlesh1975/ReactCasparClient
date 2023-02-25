@@ -1273,7 +1273,7 @@ const WebAnimator = () => {
         setY(e.clientY);
     };
     const record = () => {
-        canvas.setBackgroundColor('#00ff00');
+        // canvas.setBackgroundColor('#00ff00');
         canvas.discardActiveObject();
         canvas.requestRenderAll()
         var config = {
@@ -1293,15 +1293,15 @@ const WebAnimator = () => {
         }, 100);
         recorder.setRecordingDuration(parseInt(duration) * 1000, () => {
             clearInterval(dd);
-            canvas.setBackgroundColor('#00ff0000');
+            // canvas.setBackgroundColor('#00ff0000');
             canvas.requestRenderAll()
             const blob = recorder.getBlob();
             handleProcess(blob)
-            // const url = URL.createObjectURL(blob);
-            // const a = document.createElement("a");
-            // a.href = url;
-            // a.download = "canvas-recording.webm";
-            // a.click();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "canvas-recording_for_browser.webm";
+            a.click();
             // setRecording(false);
         })
         recorder.startRecording();
@@ -1315,15 +1315,15 @@ const WebAnimator = () => {
         });
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
-        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps.toString(), 'output.mp4');
-        // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
+        // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps.toString(), 'output.mp4');
+        await ffmpeg.run('-codec:v', 'libvpx-vp9', '-i', 'input.webm', '-codec:v', 'qtrle', '-r', fps.toString(), 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
-        const processedData = ffmpeg.FS('readFile', 'output.mp4');
-        const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mp4' });
+        const processedData = ffmpeg.FS('readFile', 'output.mov');
+        const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mov' });
         const url = URL.createObjectURL(processedBlob1);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "canvas-recording_transcoded.mp4";
+        a.download = "canvas-recording_qtrle.mov";
         a.click();
         setRecording(false);
     };
