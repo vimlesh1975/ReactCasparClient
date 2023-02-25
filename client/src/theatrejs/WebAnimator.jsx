@@ -1315,7 +1315,7 @@ const WebAnimator = () => {
         });
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
-        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps, 'output.mp4');
+        await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps.toString(), 'output.mp4');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'qtrle', '-pix_fmt', 'argb', '-r', '25', 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
         const processedData = ffmpeg.FS('readFile', 'output.mp4');
