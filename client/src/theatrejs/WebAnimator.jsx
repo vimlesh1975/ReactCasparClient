@@ -609,12 +609,12 @@ const WebAnimator = () => {
                     scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
                     scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                     angle: element.angle,
-                    rx: core.types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
-                    ry: core.types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+                    rx: core.types.number(element.rx? element.rx : 10, { range: [0, 100] }),
+                    ry: core.types.number(element.ry? element.rx : 10, { range: [0, 100] }),
                     strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
-                    fontSize: core.types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
-                    strkdsar: core.types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
-                    strkDsOfst: core.types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    fontSize: core.types.number(element.fontSize? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+                    strkdsar: core.types.number(element.strokeDashArray? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+                    strkDsOfst: core.types.number(element.strokeDashOffset? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
                     shadow: { ...shadowOptions, color:(core.types.rgba(element.shadow.color)) , blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     ...obj1,
                     skewX: core.types.number(element.skewX, { range: [-60, 60] }),
@@ -709,7 +709,219 @@ const WebAnimator = () => {
 
         executeScript(scriptforCasparcg);
         endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
-        endpoint(`call 1-${layerNumber} "${scriptforCasparcg}"`)
+        // endpoint(`call 1-${layerNumber} "${scriptforCasparcg}"`)
+        endpoint(`call 1-${layerNumber} "
+        localStorage.removeItem('theatre-0.4.persistent');
+       
+        var mouseDown = 0;
+        document.body.onmousedown = function () {
+            mouseDown = 1;
+        };
+        document.body.onmouseup = function () {
+            mouseDown = 0;
+        };
+        if(document.getElementById('divid_${layerNumber}')){
+            document.getElementById('divid_${layerNumber}').remove();
+        }
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        document.body.style.overflow='hidden';
+        aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
+        document.body.appendChild(aa);
+        var canvas = new fabric.Canvas('canvas');
+
+        window.canvas=canvas;
+        window.canvas\\?.getObjects().forEach(element => {
+            sheet\\?.detachObject(element.id);
+        });
+        canvas.preserveObjectStacking = true;
+        var content;
+        if(window.caspar || window.casparcg || window.tickAnimations) {
+            content =\`${contentforcasparcg}\`;
+        }
+        else{
+            content =\`${contentforHtml}\`;
+        }
+        const shadowOptions = {
+            color: '#000000',
+            blur: 30,
+            offsetX: 0,
+            offsetY: 0,
+            affectStroke: false
+        };
+        const rgbaObjectToHex = (rgba) => {
+            let r = Math.round(rgba.r * 255).toString(16).padStart(2, '0');
+            let g = Math.round(rgba.g * 255).toString(16).padStart(2, '0');
+            let b = Math.round(rgba.b * 255).toString(16).padStart(2, '0');
+            let hex = '#' + r + g + b;
+            return hex;
+        };
+        const arrObject = [];
+        window.changePropOfObject = (id, str1, str2) => {
+            const objs = arrObject.filter(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs[0]) {
+                const obj = objs[0];
+                window.studio.transaction(({ set }) => {
+                    set(obj.props[str1], str2);
+                });
+            }
+        };
+        canvas.loadFromJSON(content,()=>{
+            const { core } = __TheatreJS_StudioBundle._studio;
+            const { _studio } = __TheatreJS_StudioBundle;
+            window.studio=_studio;
+
+            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.sheet = project.sheet('Sheet 1');
+            project.ready.then(() => {
+                sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+            });
+            canvas.getObjects().forEach((element,i) => {
+                var obj1 = {};
+                const isnotGradientfill = (element.fill.type!=='linear');
+                if (isnotGradientfill) {
+                    obj1 = {
+                        ...obj1,
+                        fill: core.types.rgba(element.fill),
+                    };
+                }
+                else {
+                    const colorStops = element.fill.colorStops.map((colorStop) => {
+                        return {
+                            offset: core.types.number(colorStop.offset, { range: [0, 1] }),
+                            color: core.types.rgba(hexToRGB(colorStop.color)),
+                            opacity: core.types.number(colorStop.opacity, { range: [0, 1] })
+                        };
+                    });
+                    obj1 = {
+                        ...obj1,
+                        ...colorStops,
+                        coords: {
+                            x1: core.types.number(element.fill.coords.x1, { range: [0, 1] }),
+                            y1: core.types.number(element.fill.coords.y1, { range: [0, 1] }),
+                            x2: core.types.number(element.fill.coords.x2, { range: [0, 1] }),
+                            y2: core.types.number(element.fill.coords.y2, { range: [0, 1] })
+                        }
+                    };
+                }
+                const isnotGradientstroke= (element.stroke.type!=='linear');
+                if (isnotGradientstroke) {
+                    obj1 = {
+                        ...obj1,
+                        stroke: core.types.rgba(element.stroke),
+                    };
+                }
+
+                arrObject[i] = sheet.object(element.id, {
+                    left: element.left,
+                    top: element.top,
+                    opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
+                    scaleX: core.types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+                    scaleY: core.types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+                    angle: element.angle,
+                    rx: core.types.number(element.rx? element.rx : 10, { range: [0, 100] }),
+                    ry: core.types.number(element.ry? element.rx : 10, { range: [0, 100] }),
+                    strokeWidth: core.types.number(element.strokeWidth, { range: [0, 100] }),
+                    fontSize: core.types.number(element.fontSize? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+                    strkdsar: core.types.number(element.strokeDashArray? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+                    strkDsOfst: core.types.number(element.strokeDashOffset? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+                    shadow: { ...shadowOptions, color:(core.types.rgba(element.shadow.color)) , blur: core.types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+                    ...obj1,
+                    skewX: core.types.number(element.skewX, { range: [-60, 60] }),
+                    skewY: core.types.number(element.skewY, { range: [-60, 60] }),
+
+                });
+                arrObject[i].onValuesChange((val) => {
+                    var obj2 = {};
+                    if (isnotGradientfill) {
+                        obj2 = {
+                            ...obj2,
+                            fill: val.fill,
+                        };
+                    }
+                    else {
+                        obj2 = {
+                            ...obj2,
+                            fill: new fabric.Gradient({
+                                type: element.fill.type,
+                                gradientUnits: element.fill.gradientUnits,
+                                coords: {
+                                    x1: val.coords.x1,
+                                    y1: val.coords.y1,
+                                    x2: val.coords.x2,
+                                    y2: val.coords.y2
+                                },
+                                colorStops: Array.from({
+                                    length: element.fill.colorStops.length
+                                }).map((_, i) => {
+                                    return {
+                                        offset: val[i].offset,
+                                        color: rgbaObjectToHex(val[i].color),
+                                        opacity: val[i].opacity
+                                    };
+                                }),
+                                id: element.fill.id
+                            })
+                        };
+                    }
+                    if (isnotGradientstroke) {
+                        obj2 = {
+                            ...obj2,
+                            stroke: val.stroke,
+                        };
+                    }
+                        element.set({
+                            left: val.left,
+                            top: val.top,
+                          
+                            opacity: val.opacity,
+                            scaleX: val.scaleX,
+                            scaleY: val.scaleY,
+                            angle: val.angle,
+                            rx: val.rx,
+                            ry: val.ry,
+                            strokeWidth: val.strokeWidth,
+                            fontSize: val.fontSize,
+                            strokeDashArray: [val.strkdsar, val.strkdsar],
+                            strokeDashOffset: val.strkDsOfst,
+                            shadow: val.shadow,
+                           ...obj2,
+                            skewX: val.skewX,
+                            skewY: val.skewY,
+                        });
+                        element.setCoords();
+                        canvas.requestRenderAll();
+                });
+                        const onMouseMove = (obj, event) => {
+                            if (mouseDown === 1) {
+                                studio.transaction(({ set }) => {
+                                    set(obj.props.left, event.target.left);
+                                    set(obj.props.top, event.target.top);
+                                    set(obj.props.angle, event.target.angle);
+                                });
+                            }
+                        };
+                        const onScaling = (obj, event) => {
+                            studio.transaction(({ set }) => {
+                                set(obj.props.scaleX, event.transform.target.scaleX);
+                                set(obj.props.scaleY, event.transform.target.scaleY);
+                            });
+                        };
+                      
+                        const onMousedown = (obj, event) => {
+                        };
+                        element.on('mousedown', (e) => onMousedown(arrObject[i], e), false);
+                        element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+                        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+       
+
+            });
+
+        });
+        "`)
     }
 
     const stopGraphics1 = (layerNumber) => {
