@@ -8,13 +8,14 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex } from '../common'
+import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
 import SavePannelTheatre from './SavePannelTheatre';
 import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { v4 as uuidv4 } from 'uuid';
 
 studio.initialize();
 studio.ui.hide();
@@ -91,6 +92,8 @@ const WebAnimator = () => {
     const [transcoding, setTranscoding] = useState(false);
     const [fps, setFps] = useState(25);
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
     const [duration, setDuration] = useState(10);
     const [loopcount, setLoopcount] = useState(1);
     const [fabric1, setFabric1] = useState('');
@@ -137,11 +140,13 @@ const WebAnimator = () => {
 
 
     useEffect(() => {
+        if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
         document.title = "RCC Web Animator"
         studio.ui.restore();
         return () => {
             // second  
         }
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
@@ -516,6 +521,7 @@ const WebAnimator = () => {
         aa.style.position='absolute';
         aa.setAttribute('id','divid_' + '${layerNumber}');
         document.body.style.overflow='hidden';
+        document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
         var canvas = new fabric.Canvas('canvas');
@@ -727,6 +733,7 @@ const WebAnimator = () => {
         aa.style.position='absolute';
         aa.setAttribute('id','divid_' + '${layerNumber}');
         document.body.style.overflow='hidden';
+        document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
         var canvas = new fabric.Canvas('canvas');
@@ -1151,6 +1158,7 @@ const WebAnimator = () => {
             affectStroke: false
         };
         var canvas = new fabric.Canvas('canvas');
+        document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
@@ -1592,6 +1600,12 @@ const WebAnimator = () => {
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button>
             <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
             FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
+
+            Size: <select value={currentscreenSize} onChange={e => {
+                localStorage.setItem('RCC_currentscreenSize', e.target.value)
+                dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
+            }
+            }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
                 importHtml={importHtml}
