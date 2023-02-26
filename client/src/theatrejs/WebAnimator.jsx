@@ -486,12 +486,12 @@ const WebAnimator = () => {
 
     const pause = layerNumber => {
         endpoint(`call 1-${layerNumber} sheet.sequence.pause()`);
-        executeScript(`sheet.sequence.pause()`);
+        executeScript(`sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
         endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
-        executeScript(`sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+        executeScript(`sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
     }
     const playtoCasparcg = (layerNumber, loopcount, duration) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
@@ -504,8 +504,8 @@ const WebAnimator = () => {
         const scriptforHTML = `
        
         localStorage.removeItem('theatre-0.4.persistent');
-        window.canvas?.getObjects().forEach(element => {
-            sheet?.detachObject(element.id);
+        window.canvas_${layerNumber}?.getObjects().forEach(element => {
+            sheet_${layerNumber}?.detachObject(element.id);
         });
         var mouseDown = 0;
         document.body.onmousedown = function () {
@@ -521,12 +521,12 @@ const WebAnimator = () => {
         aa.setAttribute('id','divid_' + '${layerNumber}');
         document.body.style.overflow='hidden';
         document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
+        aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
-        var canvas = new fabric.Canvas('canvas');
+        var canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
        
-        window.canvas=canvas;
-        canvas.preserveObjectStacking = true;
+        window.canvas_${layerNumber}=canvas_${layerNumber};
+        canvas_${layerNumber}.preserveObjectStacking = true;
         var content;
         if(window.caspar || window.casparcg || window.tickAnimations) {
             content =\`${contentforcasparcg}\`;
@@ -561,18 +561,18 @@ const WebAnimator = () => {
                 });
             }
         };
-        canvas.loadFromJSON(content,()=>{
+        canvas_${layerNumber}.loadFromJSON(content,()=>{
             const { core } = __TheatreJS_StudioBundle._studio;
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
-            window.sheet = project.sheet('Sheet 1');
+            window.sheet_${layerNumber} = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+                sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
             });
            
-            canvas.getObjects().forEach((element,i) => {
+            canvas_${layerNumber}.getObjects().forEach((element,i) => {
               var obj1 = {};
               const isnotGradientfill = (element.fill.type!=='linear');
               if (isnotGradientfill) {
@@ -607,7 +607,7 @@ const WebAnimator = () => {
                       stroke: core.types.rgba(element.stroke),
                   };
               }
-              arrObject[i] = sheet.object(element.id, {
+              arrObject[i] = sheet_${layerNumber}.object(element.id, {
                     left: element.left,
                     top: element.top,
                     opacity: core.types.number(element.opacity, { nudgeMultiplier: 0.1 }),
@@ -685,7 +685,7 @@ const WebAnimator = () => {
                             skewY: val.skewY,
                         });
                         element.setCoords();
-                        canvas.requestRenderAll();
+                        canvas_${layerNumber}.requestRenderAll();
                 });
                         const onMouseMove = (obj, event) => {
                             if (mouseDown === 1) {

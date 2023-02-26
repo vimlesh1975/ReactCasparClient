@@ -8,12 +8,12 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     const pause = layerNumber => {
         endpoint(`call 1-${layerNumber} window.sheet.sequence.pause()`);
-        executeScript(`window.sheet.sequence.pause()`);
+        executeScript(`window.sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
         endpoint(`call 1-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
-        executeScript(`window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+        executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
     }
     const stopGraphics1 = (layerNumber) => {
         endpoint(`stop 1-${layerNumber}`);

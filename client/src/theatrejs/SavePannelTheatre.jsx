@@ -358,7 +358,6 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                         )}
                     </Droppable>
                 </DragDropContext>
-                <h5>Html renderer can handle only one player right now</h5>
                 {layers.map((layer) => {
                     return (<div>
                         {layer}: <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
