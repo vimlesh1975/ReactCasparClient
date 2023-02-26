@@ -492,9 +492,8 @@ const WebAnimator = () => {
         endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
         executeScript(`sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
-
     }
-    const playtoCasparcg = (layerNumber = templateLayers.theatrejs) => {
+    const playtoCasparcg = (layerNumber, loopcount, duration) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
@@ -502,7 +501,7 @@ const WebAnimator = () => {
 
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
-        const scriptforCasparcg = `
+        const scriptforHTML = `
        
         localStorage.removeItem('theatre-0.4.persistent');
         window.canvas?.getObjects().forEach(element => {
@@ -713,7 +712,7 @@ const WebAnimator = () => {
         });
         `
 
-        executeScript(scriptforCasparcg);
+        executeScript(scriptforHTML);
         endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
         // endpoint(`call 1-${layerNumber} "${scriptforCasparcg}"`)
         endpoint(`call 1-${layerNumber} "
@@ -923,8 +922,6 @@ const WebAnimator = () => {
                         element.on('mousedown', (e) => onMousedown(arrObject[i], e), false);
                         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
                         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-       
-
             });
 
         });
@@ -934,7 +931,6 @@ const WebAnimator = () => {
     const stopGraphics1 = (layerNumber) => {
         endpoint(`stop 1-${layerNumber}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
-
     }
 
     const exportHtml = async (overRide = false) => {
@@ -1558,11 +1554,14 @@ const WebAnimator = () => {
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
             <button onClick={() => reset()}>Reset</button>
+
+
             <span>Caspar Control:</span>
+
             <button onClick={() => {
                 sheet.sequence.position = 0;
                 setTimeout(() => {
-                    playtoCasparcg(templateLayers.theatrejs);
+                    playtoCasparcg(templateLayers.theatrejs, loopcount, duration);
                 }, 100);
             }}><FaPlay /></button>
             <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
@@ -1570,16 +1569,16 @@ const WebAnimator = () => {
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
             <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+            <span title="Put 0 for Infinity">Loop:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
 
-            <span title="Put 0 for Infinity">Loop Count:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
-
+            Html:
             <button onClick={() => {
                 sheet.sequence.position = 0;
                 setTimeout(() => {
                     exportHtml();
                 }, 1000);
-            }}>Export Html</button>
+            }}>Export</button>
             {htmlfileHandle && <button onClick={() => {
                 sheet.sequence.position = 0;
                 setTimeout(() => {
@@ -1587,7 +1586,7 @@ const WebAnimator = () => {
                 }, 1000);
             }}>Overwrite</button>}
             {htmlfileHandle?.name}
-            <button onClick={() => importHtml()}>Import Html</button>
+            <button onClick={() => importHtml()}>Import</button>
 
             {/* <button onClick={() => goto()}>goto</button> */}
             {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}

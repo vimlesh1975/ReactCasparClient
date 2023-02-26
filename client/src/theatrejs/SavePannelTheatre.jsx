@@ -5,11 +5,13 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'
+import CasparPlayer from './CasparPlayer';
 
 var currentFile = 'new';
 let fileReader;
+const layers = [50, 51, 52, 53, 54]
 
-const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics1 }) => {
+const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -356,7 +358,14 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg, stopGraphics
                         )}
                     </Droppable>
                 </DragDropContext>
+                <h5>Html renderer can handle only one player right now</h5>
+                {layers.map((layer) => {
+                    return (<div>
+                        {layer}: <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
+                    </div>)
+                })}
             </div>
+
         </div>
     )
 }
