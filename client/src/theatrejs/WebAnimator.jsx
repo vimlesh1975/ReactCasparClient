@@ -1570,7 +1570,7 @@ const WebAnimator = () => {
             <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
-            <span>Duration:</span><input type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+            <span>Duration:</span><input type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
             <span title="Put 0 for Infinity">Loop:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
 
             Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />

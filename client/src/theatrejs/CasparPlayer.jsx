@@ -8,6 +8,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const [duration, setDuration] = useState(1);
+    const [outDuration, setOutDuration] = useState(1);
     const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
 
@@ -43,16 +44,60 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     }
 
+    const gotoAndPlay = (layerNumber) => {
+        setMypage('');
 
+        endpoint(` call 1-${layerNumber} "
+        window.sheet.sequence.position=${outDuration}; 
+        window.sheet.sequence.play(); 
+        "`);
+        // setTimeout(() => {
+        //     endpoint(`stop 1-${layerNumber}`);
+        // }, outDuration * 1000);
+
+        executeScript(`
+        window.sheet_${layerNumber}.sequence.position=${outDuration}; 
+        window.sheet_${layerNumber}.sequence.play();
+        `);
+        // setTimeout(() => {
+        //     executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
+        // }, outDuration * 1000);
+
+    }
+    const gotoAndReversePlay = (layerNumber) => {
+        setMypage('');
+
+        endpoint(` call 1-${layerNumber} "
+        window.sheet.sequence.position=${outDuration}; 
+        window.sheet.sequence.play({ direction: 'reverse' });
+         "`);
+        // setTimeout(() => {
+        //     endpoint(`stop 1-${layerNumber}`);
+        // }, outDuration * 1000);
+
+        executeScript(`
+        window.sheet_${layerNumber}.sequence.position=${outDuration}; 
+        window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });
+        `);
+        // setTimeout(() => {
+        //     executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
+        // }, outDuration * 1000);
+
+    }
     return (
         <div style={{ border: '1px solid red', margin: 5, padding: 5 }}>
             <div>
                 <button onClick={() => play(layerNumber)}><FaPlay /></button>
             <button onClick={() => pause(layerNumber)}><FaPause /></button>
             <button title='Resume' onClick={() => resume(layerNumber)}><FaPause /><FaPlay /></button>
-            <button onClick={() => stopGraphics1(layerNumber)}><FaStop /></button>
-            <span>Duration:</span><input title='Time in second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
-            <span title="Put 0 for Infinity">Loop:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+                <button title='Reverse Play and Remove' onClick={() => stopGraphics1(layerNumber)}><FaStop /></button>
+                <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
+                <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            </div>
+            <div >
+                <button onClick={() => gotoAndPlay(layerNumber)}>GotoAndPlay</button>
+                <span title='outDuration'>D:</span><input title='Time in second' type="number" value={outDuration} style={{ width: 40 }} onChange={e => setOutDuration(e.target.value)} />
+                <button onClick={() => gotoAndReversePlay(layerNumber)}>GotoAndReversePlay</button>
             </div>
             <div style={{ fontSize: 20, fontWeight: 'bold' }}>{mypage}</div>
 
