@@ -306,13 +306,13 @@ const WebAnimator = () => {
                 // console.log((new fabric.Color(element.stroke)).getSource());
                 // console.log((new fabric.Color(element.shadow.color)).getSource());
 
-                if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
-                    element.set({ fill: '#555252' })
-                }
+                // if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
+                //     element.set({ fill: '#555252' })
+                // }
 
-                if ((element.stroke === null) || ((element.stroke).toString().startsWith("rgb"))) {
-                    element.set({ stroke: '#000000' })
-                }
+                // if ((element.stroke === null) || ((element.stroke).toString().startsWith("rgb"))) {
+                //     element.set({ stroke: '#000000' })
+                // }
 
                 var obj1 = {};
                 var isColorObjectfill;
