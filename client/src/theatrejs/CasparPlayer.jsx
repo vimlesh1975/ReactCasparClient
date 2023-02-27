@@ -7,8 +7,8 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
-    const [duration, setDuration] = useState(2);
-    const [loopcount, setLoopcount] = useState(0);
+    const [duration, setDuration] = useState(1);
+    const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
 
     const play = (layerNumber) => {
@@ -31,17 +31,21 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const stopGraphics1 = (layerNumber) => {
         setMypage('');
 
+        endpoint(` call 1-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }); `);
+        setTimeout(() => {
         endpoint(`stop 1-${layerNumber}`);
-        executeScript(`
-        document.getElementById('divid_${layerNumber}')?.remove();
-        `);
+        }, duration * 1000);
+
+        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });`);
+        setTimeout(() => {
+            executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
+        }, duration * 1000);
+
     }
 
 
     return (
         <div style={{ border: '1px solid red', margin: 5, padding: 5 }}>
-            {/* <div style={{ fontSize: 20, fontWeight: 'bold' }}>{canvasList[currentPage]?.pageName}</div> */}
-            <div style={{ fontSize: 20, fontWeight: 'bold' }}>{mypage}</div>
             <div>
                 <button onClick={() => play(layerNumber)}><FaPlay /></button>
             <button onClick={() => pause(layerNumber)}><FaPause /></button>
@@ -50,6 +54,8 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             <span>Duration:</span><input title='Time in second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
             <span title="Put 0 for Infinity">Loop:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             </div>
+            <div style={{ fontSize: 20, fontWeight: 'bold' }}>{mypage}</div>
+
         </div>
     )
 }
