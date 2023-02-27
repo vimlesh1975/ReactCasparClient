@@ -269,7 +269,7 @@ const WebAnimator = () => {
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             try {
-            sheet.detachObject(element.id);
+                sheet.detachObject(element.id);
             } catch (error) {
 
             }
@@ -296,9 +296,11 @@ const WebAnimator = () => {
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach((element, i) => {
+                console.log(element);
+                console.log(element.id);
                 console.log(element.fill);
                 console.log(element.stroke);
-                console.log(element.shadow.color);
+                console.log(element.shadow?.color);
 
                 // console.log((new fabric.Color(element.fill)).getSource());
                 // console.log((new fabric.Color(element.stroke)).getSource());
