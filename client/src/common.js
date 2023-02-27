@@ -40,6 +40,22 @@ export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, tennisScore: 156, kabaddiScore: 157, customClient: 158, cricketScore: 159, gameTimer: 160, gameTimer2: 163, LBand: 166, twoliner: 165, theatrejs: 166 };
+export const theatreLayers = [171, 172, 173, 174, 175];
+
+export const stopAllTheatreLayes = () => {
+    // setMypage('');
+    theatreLayers.forEach((layerNumber) => {
+        endpoint(` call 1-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }); `);
+        setTimeout(() => {
+            endpoint(`stop 1-${layerNumber}`);
+        }, 1000);
+
+        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });`);
+        setTimeout(() => {
+            executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
+        }, 1000);
+    })
+}
 
 export const endpoint = (string) => {
     const data = { string: string }

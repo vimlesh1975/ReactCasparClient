@@ -6,10 +6,10 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'
 import CasparPlayer from './CasparPlayer';
+import { theatreLayers, stopAllTheatreLayes } from '../common'
 
 var currentFile = 'new';
 let fileReader;
-const layers = [50, 51, 52, 53, 54]
 
 const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -217,6 +217,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         }
     }
 
+
     return (
         <div >
             <div>
@@ -358,11 +359,12 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                         )}
                     </Droppable>
                 </DragDropContext>
-                {layers.map((layer) => {
+                {theatreLayers.map((layer) => {
                     return (<div>
                         <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
                     </div>)
                 })}
+                <button style={{ backgroundColor: 'red', color: 'white', fontSize: 15 }} onClick={stopAllTheatreLayes}>Stop All Theatre Layes</button>
             </div>
 
         </div>

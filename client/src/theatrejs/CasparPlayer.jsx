@@ -8,7 +8,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const [duration, setDuration] = useState(1);
-    const [outDuration, setOutDuration] = useState(1);
+    const [outDuration, setOutDuration] = useState(0.5);
     const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
 
@@ -44,46 +44,33 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     }
 
-    const gotoAndPlay = (layerNumber) => {
-        setMypage('');
+    // const stopAll = () => {
+    //     layers.forEach((layerNumber) => {
+    //         stopGraphics1(layerNumber);
+    //     })
+    // }
 
+    const gotoAndReversePlayAndStop = (layerNumber, isstop, isReverse) => {
         endpoint(` call 1-${layerNumber} "
         window.sheet.sequence.position=${outDuration}; 
-        window.sheet.sequence.play(); 
-        "`);
-        // setTimeout(() => {
-        //     endpoint(`stop 1-${layerNumber}`);
-        // }, outDuration * 1000);
-
-        executeScript(`
-        window.sheet_${layerNumber}.sequence.position=${outDuration}; 
-        window.sheet_${layerNumber}.sequence.play();
-        `);
-        // setTimeout(() => {
-        //     executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
-        // }, outDuration * 1000);
-
-    }
-    const gotoAndReversePlay = (layerNumber) => {
-        setMypage('');
-
-        endpoint(` call 1-${layerNumber} "
-        window.sheet.sequence.position=${outDuration}; 
-        window.sheet.sequence.play({ direction: 'reverse' });
+        window.sheet.sequence.play({ direction: \`${isReverse ? 'reverse' : 'normal'}\` });
          "`);
-        // setTimeout(() => {
-        //     endpoint(`stop 1-${layerNumber}`);
-        // }, outDuration * 1000);
-
         executeScript(`
         window.sheet_${layerNumber}.sequence.position=${outDuration}; 
-        window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });
+        window.sheet_${layerNumber}.sequence.play({ direction: \`${isReverse ? 'reverse' : 'normal'}\`  });
         `);
-        // setTimeout(() => {
-        //     executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
-        // }, outDuration * 1000);
+        if (isstop) {
+            setMypage('');
 
+            setTimeout(() => {
+                endpoint(`stop 1-${layerNumber}`);
+            }, outDuration * 1000);
+            setTimeout(() => {
+                executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
+            }, outDuration * 1000);
+        }
     }
+
     return (
         <div style={{ border: '1px solid red', margin: 5, padding: 5 }}>
             <div>
@@ -94,13 +81,18 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                 <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
                 <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             </div>
+            {(mypage !== '') && <div>
             <div >
-                <button onClick={() => gotoAndPlay(layerNumber)}>GotoAndPlay</button>
+                    <button onClick={() => gotoAndReversePlayAndStop(layerNumber, false, false)}>GotoAndPlay</button>
                 <span title='outDuration'>D:</span><input title='Time in second' type="number" value={outDuration} style={{ width: 40 }} onChange={e => setOutDuration(e.target.value)} />
-                <button onClick={() => gotoAndReversePlay(layerNumber)}>GotoAndReversePlay</button>
+                    <button onClick={() => gotoAndReversePlayAndStop(layerNumber, false, true)}>GotoAndReversePlay</button>
             </div>
+                <div >
+                    <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, false)}>GotoAndPlay + Stop</button>
+                    <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, true)}>GotoAndReversePlay + Stop</button>
+                </div>
+            </div>}
             <div style={{ fontSize: 20, fontWeight: 'bold' }}>{mypage}</div>
-
         </div>
     )
 }
