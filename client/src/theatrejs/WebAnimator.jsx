@@ -1319,6 +1319,8 @@ const WebAnimator = () => {
     }
 
     const importHtml = async (canvasContent1, animationContetent1) => {
+        localStorage.removeItem('theatre-0.4.persistent');
+
         if (canvasContent1) {
             deleteAllObjects();
 

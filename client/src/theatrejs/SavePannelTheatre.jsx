@@ -360,7 +360,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                 </DragDropContext>
                 {layers.map((layer) => {
                     return (<div>
-                        {layer}: <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
+                        <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
                     </div>)
                 })}
             </div>
