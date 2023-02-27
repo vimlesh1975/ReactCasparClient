@@ -268,21 +268,47 @@ const WebAnimator = () => {
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
+            try {
             sheet.detachObject(element.id);
+            } catch (error) {
+
+            }
         })
+    }
+
+    function rgbaArrayToObject(fill) {
+        const color = new fabric.Color(fill);
+        const rgbaArray = color.getSource();
+        // Normalize the RGBA values to a range between 0 and 1
+        const normalizedValues = rgbaArray.map((value) => value / 255);
+
+        // Create an object with properties for red, green, blue, and alpha
+        const rgbaObject = {
+            r: normalizedValues[0],
+            g: normalizedValues[1],
+            b: normalizedValues[2],
+            a: normalizedValues[3] * 255,
+        };
+
+        return rgbaObject;
     }
 
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach((element, i) => {
-                // console.log(element.fill);
-                // console.log(element.stroke);
-                // console.log(element.shadow.color);
+                console.log(element.fill);
+                console.log(element.stroke);
+                console.log(element.shadow.color);
+
+                // console.log((new fabric.Color(element.fill)).getSource());
+                // console.log((new fabric.Color(element.stroke)).getSource());
+                // console.log((new fabric.Color(element.shadow.color)).getSource());
 
                 if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
                     element.set({ fill: '#555252' })
                 }
-                if (element.stroke === null) {
+
+                if ((element.stroke === null) || ((element.stroke).toString().startsWith("rgb"))) {
                     element.set({ stroke: '#000000' })
                 }
 
@@ -297,7 +323,8 @@ const WebAnimator = () => {
                     if (isColorObjectfill) {
                         obj1 = {
                             ...obj1,
-                            fill: types.rgba(element.fill),
+                            // fill: ((element.fill).toString().startsWith("#")) ? types.rgba(hexToRGB(element.fill)) : types.rgba(element.fill),
+                            fill: types.rgba(rgbaArrayToObject(element.fill)),
                         };
                     }
                     else {
@@ -305,7 +332,7 @@ const WebAnimator = () => {
                             return {
                                 offset: types.number(colorStop.offset, { range: [0, 1] }),
                                 color: types.rgba(hexToRGB(colorStop.color)),
-                                opacity: types.number(colorStop.opacity, { range: [0, 1] })
+                                opacity: types.number(colorStop.opacity ? parseFloat(colorStop.opacity) : 1, { range: [0, 1] })
                             };
                         });
                         obj1 = {
@@ -323,12 +350,14 @@ const WebAnimator = () => {
                     if (isColorObjectStroke) {
                         obj1 = {
                             ...obj1,
-                            stroke: types.rgba(element.stroke),
+                            // stroke: ((element.stroke).toString().startsWith("#")) ? types.rgba(hexToRGB(element.stroke)) : types.rgba(element.stroke),
+                            stroke: types.rgba(rgbaArrayToObject(element.stroke)),
                         };
                     }
                     obj1 = {
                         ...obj1,
-                        shadow: { ...element.shadow, color: types.rgba(element.shadow.color) },
+                        // shadow: { ...element.shadow, color: ((element.shadow.color).toString().startsWith("#")) ? types.rgba(hexToRGB(element.shadow.color)) : types.rgba(element.shadow.color) },
+                        shadow: { ...element.shadow, color: types.rgba(rgbaArrayToObject(element.shadow.color)) },
                     };
 
                 }
@@ -1325,6 +1354,9 @@ const WebAnimator = () => {
             deleteAllObjects();
 
             const pid = `project${fabric.Object.__uid++}`;
+            if (typeof animationContetent1) {
+                animationContetent1 = "{\"sheetsById\":{},\"definitionVersion\":\"0.4.0\",\"revisionHistory\":[\"gjjL6UEXDCUdpAe_\",\"nMdlSYh15PYUGb14\"]}";
+            }
             project = getProject(pid, { state: JSON.parse(animationContetent1) });
             setProjectId(pid)
 
