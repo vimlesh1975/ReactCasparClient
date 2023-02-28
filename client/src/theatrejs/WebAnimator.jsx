@@ -238,17 +238,12 @@ const WebAnimator = () => {
         }
         const allInScreen = () => {
             canvas.getObjects().forEach((element, i) => {
-                // if (i < canvas.getObjects().length / 2) {
-                if (i % 2 === 0) {
                     studio.transaction((api) => {
-                        api.unset(getObjectbyId(element.id).props.left);
+                        api.unset(getObjectbyId(element.id).props);
                     })
-                }
-                else {
                     studio.transaction((api) => {
-                        api.unset(getObjectbyId(element.id).props.left);
+                        api.set(getObjectbyId(element.id).props.left, getObjectbyId(element.id).value.left);
                     })
-                }
             })
         }
 

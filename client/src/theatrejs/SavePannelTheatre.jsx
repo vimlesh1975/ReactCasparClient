@@ -359,8 +359,8 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                         )}
                     </Droppable>
                 </DragDropContext>
-                {theatreLayers.map((layer) => {
-                    return (<div>
+                {theatreLayers.map((layer, i) => {
+                    return (<div key={i}>
                         <div style={{ display: 'inline-block' }}><CasparPlayer playtoCasparcg={playtoCasparcg} layerNumber={layer} /></div>
                     </div>)
                 })}
