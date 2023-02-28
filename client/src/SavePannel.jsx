@@ -197,6 +197,16 @@ const SavePannel = () => {
                     return;
                 }
             });
+            // aa.forEach(element => {
+            //     // console.log(element.fill)
+            //     if (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) {
+            //         element.set({ fill: `rgb(${element.fill.r * 255}, ${element.fill.g * 255}, ${element.fill.b * 255})` })
+            //     }
+            //     if (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) {
+            //         element.set({ fill: `rgb(${element.stroke.r * 255}, ${element.stroke.g * 255}, ${element.stroke.b * 255})` })
+            //     }
+            // })
+
             canvas.renderAll();
         });
     }

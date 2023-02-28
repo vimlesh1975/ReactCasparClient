@@ -1858,6 +1858,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         }
     }
 
+    const getFromLocalStorage = canvas => {
+        const aa1 = localStorage.getItem("RCCtheatrepageData");
+        canvas.loadFromJSON(aa1, () => {
+        })
+    }
+
+
     const sdToHD = () => {
         unlockAll(canvas);
         selectAll(canvas);
@@ -3037,6 +3044,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => exportJSON(canvas)}>JSON</button>
                         <button onClick={() => exportPDF(canvas)}>Pdf</button>
                         <button onClick={() => saveToLocalStorage(canvas)}>saveToLocalStorage</button>
+                        <button onClick={() => getFromLocalStorage(canvas)}>Get from LocalStorage</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Web Animator</button>
                         {/* <button onClick={() => {
                             canvas.add(new fabric.Textbox('test', { fill: rgbaObjectToHex({ r: 0, g: 1, b: 0, a: 1 }) }));

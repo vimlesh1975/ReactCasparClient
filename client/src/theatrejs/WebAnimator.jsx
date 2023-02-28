@@ -17,6 +17,8 @@ import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { v4 as uuidv4 } from 'uuid';
 
+
+
 studio.initialize();
 studio.ui.hide();
 
@@ -1516,6 +1518,10 @@ const WebAnimator = () => {
         canvas.requestRenderAll();
     }
 
+    const saveToLocalStorage = canvas => {
+        var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+        localStorage.setItem("RCCtheatrepageData", aa1);
+    }
     // eslint-disable-next-line 
     const goto = () => {
         sheet.sequence.position = 0.5
@@ -1605,6 +1611,8 @@ const WebAnimator = () => {
                 deleteAllObjects();
                 initialiseCore(localStorage.getItem('RCCtheatrepageData'));
             }}>Data from LocalStorage</button>
+            <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
+
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
             <button onClick={() => reset()}>Reset</button>
