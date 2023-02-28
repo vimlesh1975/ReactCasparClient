@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { fabric } from "fabric";
-import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob, checkIdUniqueness } from './common'
+import { endpoint, fontLists, stopGraphics, updateGraphics, templateLayers, executeScript, base64EncodeBlob, checkIdUniqueness, rgbaObjectToHex } from './common'
 import { useSelector, useDispatch } from 'react-redux'
 import "fabric-history";
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp, VscLock, VscUnlock, VscTrash } from "react-icons/vsc";
@@ -1841,7 +1841,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const exportJSONforTheatrejs = canvas => {
         if (checkIdUniqueness(canvas)) {
             var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-            localStorage.setItem("RCCtheatrepageData", aa1);
+            localStorage.setItem("RCCpageData", aa1);
             window.open("/ReactCasparClient/WebAnimator");
         }
         else {
@@ -1851,20 +1851,32 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const saveToLocalStorage = canvas => {
         if (checkIdUniqueness(canvas)) {
             var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-            localStorage.setItem("RCCtheatrepageData", aa1);
+            localStorage.setItem("RCCpageData", aa1);
         }
         else {
             alert("All elements must have unique id");
         }
     }
 
+
     const getFromLocalStorage = canvas => {
-        const aa1 = localStorage.getItem("RCCtheatrepageData");
+        const aa1 = localStorage.getItem("TheatrepageData");
         canvas.loadFromJSON(aa1, () => {
             const aa = canvas.getObjects();
             aa.forEach(element => {
+                // console.log(element)
                 element.set({ id: element.id ? element.id : 'id_' + fabric.Object.__uid++, class: element.class ? element.class : 'class_' + fabric.Object.__uid++, objectCaching: false });
+                if (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) {
+                    element.set({ fill: rgbaObjectToHex(element.fill) })
+                }
+                if (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) {
+                    element.set({ stroke: rgbaObjectToHex(element.stroke) })
+                }
+                if (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) {
+                    element.set({ shadow: { ...element.shadow, color: rgbaObjectToHex(element.shadow.color) } })
+                }
             })
+            canvas.requestRenderAll()
         })
     }
 

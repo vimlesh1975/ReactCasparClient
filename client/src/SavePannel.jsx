@@ -6,7 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript } from './common'
+import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex } from './common'
 import { animation } from './animation.js'
 import { fabric } from "fabric";
 
@@ -189,25 +189,24 @@ const SavePannel = () => {
             aa.forEach(element => {
                 try {
                     element.set({ id: element.id ? element.id : 'id_' + fabric.Object.__uid++, class: element.class ? element.class : 'class_' + fabric.Object.__uid++, objectCaching: false });
+                    if (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) {
+                        element.set({ fill: rgbaObjectToHex(element.fill) })
+                    }
+                    if (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) {
+                        element.set({ stroke: rgbaObjectToHex(element.stroke) })
+                    }
+                    if (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) {
+                        element.set({ shadow: { ...element.shadow, color: rgbaObjectToHex(element.shadow.color) } })
+                    }
                     element.on('mousedblclick', () => {
                         window.edit();
                     })
                 } catch (error) {
-                    alert(error);
+                    // alert(error);
                     return;
                 }
             });
-            // aa.forEach(element => {
-            //     // console.log(element.fill)
-            //     if (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) {
-            //         element.set({ fill: `rgb(${element.fill.r * 255}, ${element.fill.g * 255}, ${element.fill.b * 255})` })
-            //     }
-            //     if (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) {
-            //         element.set({ fill: `rgb(${element.stroke.r * 255}, ${element.stroke.g * 255}, ${element.stroke.b * 255})` })
-            //     }
-            // })
-
-            canvas.renderAll();
+            canvas.requestRenderAll();
         });
     }
 

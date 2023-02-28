@@ -240,12 +240,12 @@ const WebAnimator = () => {
         }
         const allInScreen = () => {
             canvas.getObjects().forEach((element, i) => {
-                    studio.transaction((api) => {
-                        api.unset(getObjectbyId(element.id).props);
-                    })
-                    studio.transaction((api) => {
-                        api.set(getObjectbyId(element.id).props.left, getObjectbyId(element.id).value.left);
-                    })
+                studio.transaction((api) => {
+                    api.unset(getObjectbyId(element.id).props);
+                })
+                studio.transaction((api) => {
+                    api.set(getObjectbyId(element.id).props.left, getObjectbyId(element.id).value.left);
+                })
             })
         }
 
@@ -1520,7 +1520,7 @@ const WebAnimator = () => {
 
     const saveToLocalStorage = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-        localStorage.setItem("RCCtheatrepageData", aa1);
+        localStorage.setItem("TheatrepageData", aa1);
     }
     // eslint-disable-next-line 
     const goto = () => {
@@ -1609,7 +1609,7 @@ const WebAnimator = () => {
         <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
             <button title='ReactCasparClient Save to localstorage button' onClick={() => {
                 deleteAllObjects();
-                initialiseCore(localStorage.getItem('RCCtheatrepageData'));
+                initialiseCore(localStorage.getItem('RCCpageData'));
             }}>Data from LocalStorage</button>
             <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
 
