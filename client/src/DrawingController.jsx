@@ -1861,6 +1861,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     const getFromLocalStorage = canvas => {
         const aa1 = localStorage.getItem("RCCtheatrepageData");
         canvas.loadFromJSON(aa1, () => {
+            const aa = canvas.getObjects();
+            aa.forEach(element => {
+                element.set({ id: element.id ? element.id : 'id_' + fabric.Object.__uid++, class: element.class ? element.class : 'class_' + fabric.Object.__uid++, objectCaching: false });
+            })
         })
     }
 
