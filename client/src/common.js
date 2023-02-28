@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '270223_2'
+export const buildDate = '280223_1'
 
 export const hexToRGB = hex => {
     const red = parseInt(hex.slice(1, 3), 16)

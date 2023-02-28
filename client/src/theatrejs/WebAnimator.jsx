@@ -221,6 +221,39 @@ const WebAnimator = () => {
             canvas.requestRenderAll();
         }
 
+        const allOutofScreen = () => {
+            canvas.getObjects().forEach((element, i) => {
+                // if (i < canvas.getObjects().length / 2) {
+                if (i % 2 === 0) {
+                    studio.transaction((api) => {
+                        api.set(getObjectbyId(element.id).props.left, -1500);
+                    })
+                }
+                else {
+                    studio.transaction((api) => {
+                        api.set(getObjectbyId(element.id).props.left, 2500);
+                    })
+                }
+            })
+        }
+        const allInScreen = () => {
+            canvas.getObjects().forEach((element, i) => {
+                // if (i < canvas.getObjects().length / 2) {
+                if (i % 2 === 0) {
+                    studio.transaction((api) => {
+                        api.unset(getObjectbyId(element.id).props.left);
+                    })
+                }
+                else {
+                    studio.transaction((api) => {
+                        api.unset(getObjectbyId(element.id).props.left);
+                    })
+                }
+            })
+        }
+
+
+
         return (
             <div className='rightClickMenu'
                 style={{ position: 'fixed', left: (x > 1595) ? 1595 : x, top: (y > 685) ? 685 : y, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
@@ -261,6 +294,9 @@ const WebAnimator = () => {
                     <li onClick={() => {
                         setShowSavePannel(val => !val);
                     }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
+                    <li onClick={allOutofScreen}>All Out of Screen</li>
+                    <li onClick={allInScreen}>All on Screen</li>
+
                 </ul>
             </div>
         );
@@ -297,22 +333,22 @@ const WebAnimator = () => {
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach((element, i) => {
                 console.log(element);
-                console.log(element.id);
-                console.log(element.fill);
-                console.log(element.stroke);
-                console.log(element.shadow?.color);
+                // console.log(element.id);
+                // console.log(element.fill);
+                // console.log(element.stroke);
+                // console.log(element.shadow?.color);
 
                 // console.log((new fabric.Color(element.fill)).getSource());
                 // console.log((new fabric.Color(element.stroke)).getSource());
                 // console.log((new fabric.Color(element.shadow.color)).getSource());
 
-                // if ((element.fill === null) || ((element.fill).toString().startsWith("rgb"))) {
-                //     element.set({ fill: '#555252' })
-                // }
+                if (element.fill === null) {
+                    element.set({ fill: '#555252' })
+                }
 
-                // if ((element.stroke === null) || ((element.stroke).toString().startsWith("rgb"))) {
-                //     element.set({ stroke: '#000000' })
-                // }
+                if (element.stroke === null) {
+                    element.set({ stroke: '#000000' })
+                }
 
                 var obj1 = {};
                 var isColorObjectfill;
@@ -326,14 +362,15 @@ const WebAnimator = () => {
                         obj1 = {
                             ...obj1,
                             // fill: ((element.fill).toString().startsWith("#")) ? types.rgba(hexToRGB(element.fill)) : types.rgba(element.fill),
-                            fill: types.rgba(rgbaArrayToObject(element.fill)),
+                            fill: (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) ? types.rgba(element.fill) : types.rgba(rgbaArrayToObject(element.fill)),
                         };
                     }
                     else {
                         const colorStops = element.fill.colorStops.map((colorStop) => {
                             return {
-                                offset: types.number(colorStop.offset, { range: [0, 1] }),
-                                color: types.rgba(hexToRGB(colorStop.color)),
+                                offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
+                                // color: types.rgba(hexToRGB(colorStop.color)),
+                                color: ((colorStop.color).toString().startsWith("rgb")) ? types.rgba(rgbaArrayToObject(colorStop.color)) : types.rgba(hexToRGB(colorStop.color)),
                                 opacity: types.number(colorStop.opacity ? parseFloat(colorStop.opacity) : 1, { range: [0, 1] })
                             };
                         });
@@ -353,13 +390,13 @@ const WebAnimator = () => {
                         obj1 = {
                             ...obj1,
                             // stroke: ((element.stroke).toString().startsWith("#")) ? types.rgba(hexToRGB(element.stroke)) : types.rgba(element.stroke),
-                            stroke: types.rgba(rgbaArrayToObject(element.stroke)),
+                            stroke: (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) ? types.rgba(element.stroke) : types.rgba(rgbaArrayToObject(element.stroke)),
                         };
                     }
                     obj1 = {
                         ...obj1,
                         // shadow: { ...element.shadow, color: ((element.shadow.color).toString().startsWith("#")) ? types.rgba(hexToRGB(element.shadow.color)) : types.rgba(element.shadow.color) },
-                        shadow: { ...element.shadow, color: types.rgba(rgbaArrayToObject(element.shadow.color)) },
+                        shadow: { ...element.shadow, color: (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) ? types.rgba(element.shadow.color) : types.rgba(rgbaArrayToObject(element.shadow.color)) },
                     };
 
                 }
@@ -376,12 +413,11 @@ const WebAnimator = () => {
                         };
                     }
                     else {
-                        console.log(element)
                         const colorStops = element.fill.colorStops.map((colorStop) => {
                             return {
                                 offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
-                                color: types.rgba(hexToRGB(colorStop.color)),
-                                opacity: types.number(parseFloat(colorStop.opacity), { range: [0, 1] })
+                                color: ((colorStop.color).toString().startsWith("rgb")) ? types.rgba(rgbaArrayToObject(colorStop.color)) : types.rgba(hexToRGB(colorStop.color)),
+                                opacity: types.number(parseFloat((colorStop.opacity === undefined) ? 1 : colorStop.opacity), { range: [0, 1] })
                             };
                         });
                         obj1 = {
@@ -416,8 +452,8 @@ const WebAnimator = () => {
                     scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
                     opacity: types.number(element.opacity, { range: [0, 1] }),
                     angle: element.angle,
-                    rx: types.number(element.rx ? element.rx : 10, { range: [0, 100] }),
-                    ry: types.number(element.ry ? element.rx : 10, { range: [0, 100] }),
+                    rx: types.number(element.rx ? parseInt(element.rx) : 10, { range: [-360, 360] }),
+                    ry: types.number(element.ry ? parseInt(element.rx) : 10, { range: [-360, 360] }),
                     strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
                     fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
@@ -558,13 +594,7 @@ const WebAnimator = () => {
        
         window.canvas_${layerNumber}=canvas_${layerNumber};
         canvas_${layerNumber}.preserveObjectStacking = true;
-        var content;
-        if(window.caspar || window.casparcg || window.tickAnimations) {
-            content =\`${contentforcasparcg}\`;
-        }
-        else{
-            content =\`${contentforHtml}\`;
-        }
+        var content =\`${contentforHtml}\`;
         const shadowOptions = {
             color: '#000000',
             blur: 30,
@@ -773,13 +803,7 @@ const WebAnimator = () => {
             sheet\\?.detachObject(element.id);
         });
         canvas.preserveObjectStacking = true;
-        var content;
-        if(window.caspar || window.casparcg || window.tickAnimations) {
-            content =\`${contentforcasparcg}\`;
-        }
-        else{
-            content =\`${contentforHtml}\`;
-        }
+        var content =\`${contentforcasparcg}\`;
         const shadowOptions = {
             color: '#000000',
             blur: 30,
@@ -1351,12 +1375,11 @@ const WebAnimator = () => {
 
     const importHtml = async (canvasContent1, animationContetent1) => {
         localStorage.removeItem('theatre-0.4.persistent');
-
         if (canvasContent1) {
             deleteAllObjects();
 
             const pid = `project${fabric.Object.__uid++}`;
-            if (typeof animationContetent1) {
+            if (animationContetent1 === undefined) {
                 animationContetent1 = "{\"sheetsById\":{},\"definitionVersion\":\"0.4.0\",\"revisionHistory\":[\"gjjL6UEXDCUdpAe_\",\"nMdlSYh15PYUGb14\"]}";
             }
             project = getProject(pid, { state: JSON.parse(animationContetent1) });
@@ -1367,7 +1390,7 @@ const WebAnimator = () => {
 
             project.ready.then(() => {
                 // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-                sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
+                sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseFloat(duration)] })
             });
         }
         else {
@@ -1538,12 +1561,12 @@ const WebAnimator = () => {
 
         var recorder = new RecordRTC(canvas.getElement().captureStream(), config);
         sheet.sequence.position = 0;
-        sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseInt(duration)] })
+        sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseFloat(duration)] })
 
         const dd = setInterval(() => {
             canvas.requestRenderAll()
         }, 100);
-        recorder.setRecordingDuration(parseInt(duration) * 1000, () => {
+        recorder.setRecordingDuration(parseFloat(duration) * 1000, () => {
             clearInterval(dd);
             // canvas.setBackgroundColor('#00ff0000');
             canvas.requestRenderAll()
