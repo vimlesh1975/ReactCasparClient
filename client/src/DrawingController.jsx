@@ -20,7 +20,9 @@ import { options, shadowOptions, changeCurrentColor, changeBackGroundColor, chan
 import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
-import { rgbaCol } from './common'
+import { rgbaCol, listglobalCompositeOperation } from './common'
+
+
 // import { rgbaObjectToHex } from './common'
 
 
@@ -1131,6 +1133,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
     const [fontList, setFontList] = useState(fontLists);
     const [currentFont, setCurrentFont] = useState('Arial')
+    const [currentglobalCompositeOperation, setCurrentglobalCompositeOperation] = useState('source-over')
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
 
@@ -1650,6 +1653,14 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.getActiveObjects().forEach(item => item.fontFamily = e.target.value)
         canvas.requestRenderAll();
     }
+
+    const onglobalCompositeOperationChange = (e) => {
+        // options.currentFont = e.target.value;
+        setCurrentglobalCompositeOperation(e.target.value);
+        canvas.getActiveObjects().forEach(item => item.globalCompositeOperation = e.target.value)
+        canvas.requestRenderAll();
+    }
+
     const onstrokeLineCapChange = e => {
         canvas.freeDrawingBrush.strokeLineCap = e.target.value;
         setCurrentstrokeLineCap(e.target.value);
@@ -3057,7 +3068,11 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 </div>
 
                 <div style={{ backgroundColor: '#eff4f6', border: '2px solid green' }}>
-
+                    <div className='drawingToolsRow' >
+                        <b>globalCompositeOperation: </b> <select onChange={e => onglobalCompositeOperationChange(e)} value={currentglobalCompositeOperation}>
+                            {listglobalCompositeOperation.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                        </select>
+                    </div>
                     <div className='drawingToolsRow' >
                         <table border='1'>
                             <tbody>

@@ -3,7 +3,8 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 
 
-export const buildDate = '010323_1'
+export const buildDate = '010323_2'
+export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor']
 
 export const hexToRGB = hex => {
     const red = parseInt(hex.slice(1, 3), 16)
