@@ -141,7 +141,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2, animationTheatrejs: val.animationTheatrejs }) + '\r\n'
+            aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2, animationTheatrejs: val.animationTheatrejs }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/the' });
         element.href = URL.createObjectURL(file);
@@ -169,7 +169,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         updatePage(canvas);
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2, animationTheatrejs: val.animationTheatrejs }) + '\r\n'
+            aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2, animationTheatrejs: val.animationTheatrejs }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/the' });
 

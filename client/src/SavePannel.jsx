@@ -269,7 +269,7 @@ const SavePannel = () => {
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n'
+            aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -297,7 +297,7 @@ const SavePannel = () => {
         updatePage(canvas);
         var aa = ''
         canvasList.forEach(val => {
-            aa += JSON.stringify({ pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2 }) + '\r\n'
+            aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2 }) + '\r\n'
         });
         const file = new Blob([aa], { type: 'text/plain' });
 

@@ -301,10 +301,8 @@ const WebAnimator = () => {
 
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
-            try {
+            if (getObjectbyId(element.id) !== undefined) {
                 sheet.detachObject(element.id);
-            } catch (error) {
-
             }
         })
     }
