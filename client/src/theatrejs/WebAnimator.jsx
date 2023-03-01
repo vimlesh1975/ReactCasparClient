@@ -337,7 +337,7 @@ const WebAnimator = () => {
                 // console.log((new fabric.Color(element.stroke)).getSource());
                 // console.log((new fabric.Color(element.shadow.color)).getSource());
 
-                if (element.fill === null) {
+                if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
                 }
 
@@ -353,7 +353,11 @@ const WebAnimator = () => {
                     isColorObjectfill = (element.fill.type !== 'linear');
                     isColorObjectStroke = (element.stroke.type !== 'linear');
 
-                    if (isColorObjectfill) {
+                    if (element.fill.type === 'pattern') {
+                        // do nothing
+                    }
+
+                    else if (isColorObjectfill) {
                         obj1 = {
                             ...obj1,
                             // fill: ((element.fill).toString().startsWith("#")) ? types.rgba(hexToRGB(element.fill)) : types.rgba(element.fill),
@@ -406,6 +410,9 @@ const WebAnimator = () => {
                             ...obj1,
                             fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
                         };
+                    }
+                    else if (element.fill.type === 'pattern') {
+                        // do nothing
                     }
                     else {
                         const colorStops = element.fill.colorStops.map((colorStop) => {
@@ -466,6 +473,9 @@ const WebAnimator = () => {
                             ...obj2,
                             fill: val.fill,
                         };
+                    }
+                    else if (element.fill.type === 'pattern') {
+                        // do nothing
                     }
                     else {
                         obj2 = {
