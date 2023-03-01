@@ -1087,7 +1087,9 @@ const WebAnimator = () => {
 
         const xx5 = ` arrObject[i].onValuesChange((val) => {
             var obj2 = {};
-            if (isnotGradientfill) {
+            if (element.fill.type === 'pattern') {
+            }
+            else if (isnotGradientfill) {
                 obj2 = {
                     ...obj2,
                     fill: val.fill,
