@@ -468,15 +468,17 @@ const WebAnimator = () => {
 
                 arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
-                    if (isColorObjectfill) {
+                    if (element.fill.type === 'pattern') {
+                        // do nothing
+                    }
+
+                    else if (isColorObjectfill) {
                         obj2 = {
                             ...obj2,
                             fill: val.fill,
                         };
                     }
-                    else if (element.fill.type === 'pattern') {
-                        // do nothing
-                    }
+
                     else {
                         obj2 = {
                             ...obj2,
