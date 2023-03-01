@@ -1,27 +1,29 @@
-import React, { useState } from 'react'
-import { addRoundedCornerImage, Upload } from './DrawingController'
-import axios from 'axios'
-import { address1 } from './common'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { } from 'react'
+import { Upload } from './DrawingController'
+// import { addRoundedCornerImage } from './DrawingController'
+// import axios from 'axios'
+// import { address1 } from './common'
+import { useSelector } from 'react-redux'
+// import { useDispatch, } from 'react-redux'
 import ImageFilterController from './ImageFilterController'
 
 const Images = () => {
-    const dispatch = useDispatch();
-    const media = useSelector(state => state.mediaReducer.media)
-    const [searchText2, setSearchText2] = useState('');
+    // const dispatch = useDispatch();
+    // const media = useSelector(state => state.mediaReducer.media)
+    // const [searchText2, setSearchText2] = useState('');
     // const onlineImageUrl = useSelector(state => state.onlineImageUrleReducer.onlineImageUrl);
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
-    const imageName = useSelector(state => state.imageNameReducer.imageName)
+    // const imageName = useSelector(state => state.imageNameReducer.imageName)
 
-    const searchedMedia2 = media.filter((value) => {
-        return (value.toLowerCase().search(searchText2.toLowerCase()) > -1)
-    })
-    const refreshMedia = () => {
-        axios.post(address1 + '/getmedia').then((aa) => {
-            dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
-        }).catch((aa) => { console.log('Error', aa) });
-    }
+    // const searchedMedia2 = media.filter((value) => {
+    //     return (value.toLowerCase().search(searchText2.toLowerCase()) > -1)
+    // })
+    // const refreshMedia = () => {
+    //     axios.post(address1 + '/getmedia').then((aa) => {
+    //         dispatch({ type: 'CHANGE_MEDIA', payload: aa.data })
+    //     }).catch((aa) => { console.log('Error', aa) });
+    // }
 
 
     return (<div>
@@ -35,7 +37,7 @@ const Images = () => {
             <input multiple type="file" accept="image/*" onChange={(e) => Upload(e, canvas)} />
         </div>
 
-        <div>
+        {/* <div>
             <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia2.length} files<br />
             <span>search:</span><input type='text' onChange={e => setSearchText2(e.target.value)} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -62,7 +64,7 @@ const Images = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
         <ImageFilterController />
     </div>)
 }

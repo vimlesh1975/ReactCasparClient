@@ -59,7 +59,7 @@ const ImageFilterController = () => {
     return (
         <div>
             <h5>Image from local pc method only will get filters. </h5>
-        <div style={{ border: '1px solid black', height: 360, overflow: 'scroll' }} >
+            <div style={{}} >
 
             <table border='1'>
                 <tbody>
