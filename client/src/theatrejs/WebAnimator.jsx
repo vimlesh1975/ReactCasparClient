@@ -1028,7 +1028,10 @@ const WebAnimator = () => {
             }
             var obj1 = {};
             const isnotGradientfill = (element.fill.type!=='linear');
-            if (isnotGradientfill) {
+            if (element.fill.type === 'pattern') {
+                
+            }
+            else if (isnotGradientfill) {
                 obj1 = {
                     ...obj1,
                     fill: core.types.rgba(element.fill),
