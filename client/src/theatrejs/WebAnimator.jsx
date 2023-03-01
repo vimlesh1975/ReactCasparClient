@@ -308,6 +308,7 @@ const WebAnimator = () => {
     }
 
     function rgbaArrayToObject(fill) {
+        console.log(fill)
         const color = new fabric.Color(fill);
         const rgbaArray = color.getSource();
         // Normalize the RGBA values to a range between 0 and 1
@@ -1606,6 +1607,26 @@ const WebAnimator = () => {
         recorder.startRecording();
         setRecording(true);
     }
+    const getTranscodedVideoSize = () => {
+        if (currentscreenSize === 1024) {
+            return '1024x576';
+        } else if (currentscreenSize === 1280) {
+            return '1280x720';
+        }
+        else if (currentscreenSize === 1920) {
+            return '1920x1080';
+        } else if (currentscreenSize === 2048) {
+            return '2048x1080';
+        } else if (currentscreenSize === 3840) {
+            return '3840x2160';
+        } else if (currentscreenSize === 4096) {
+            return '4096x2160';
+        }
+        else {
+            // Handle other cases here
+            return '1920x1080';
+        }
+    };
 
     const handleProcess = async (blob1) => {
         setTranscoding(true);
@@ -1615,7 +1636,7 @@ const WebAnimator = () => {
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps.toString(), 'output.mp4');
-        await ffmpeg.run('-codec:v', 'libvpx-vp9', '-i', 'input.webm', '-codec:v', 'qtrle', '-r', fps.toString(), 'output.mov');
+        await ffmpeg.run('-codec:v', 'libvpx-vp9', '-i', 'input.webm', '-codec:v', 'qtrle', '-r', fps.toString(), '-s', getTranscodedVideoSize(), 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
         const processedData = ffmpeg.FS('readFile', 'output.mov');
         const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mov' });
@@ -1686,8 +1707,8 @@ const WebAnimator = () => {
             FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
 
             Size: <select value={currentscreenSize} onChange={e => {
-                localStorage.setItem('RCC_currentscreenSize', e.target.value)
-                dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
+                localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))
+                dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) })
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
 

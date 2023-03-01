@@ -421,8 +421,8 @@ const App = () => {
       </div>
       <div  >
         Size: <select value={currentscreenSize} onChange={e => {
-          localStorage.setItem('RCC_currentscreenSize', e.target.value)
-          dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: e.target.value })
+          localStorage.setItem('RCC_currentscreenSize', parseInt((e.target.value)));
+          dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) });
         }
         }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
       </div>
