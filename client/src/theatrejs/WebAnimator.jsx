@@ -1631,7 +1631,8 @@ const WebAnimator = () => {
     const handleProcess = async (blob1) => {
         setTranscoding(true);
         const ffmpeg = createFFmpeg({
-            log: true,
+            // log: true,
+            log: false,
         });
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));

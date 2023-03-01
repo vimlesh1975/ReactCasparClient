@@ -142,7 +142,7 @@ export const addClock = canvas => {
         editable: true,
         objectCaching: false,
         textAlign: 'center',
-        stroke: '',
+        stroke: '#000000',
         strokeWidth: 0,
         id: 'clock1',
         class: 'class_' + fabric.Object.__uid,
@@ -169,7 +169,7 @@ export const addUpTimer = canvas => {
         editable: true,
         objectCaching: false,
         textAlign: 'center',
-        stroke: '',
+        stroke: '#000000',
         strokeWidth: 0,
         id: 'uptimer1',
         class: 'class_' + fabric.Object.__uid,
@@ -306,7 +306,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
                 class: 'class_' + fabric.Object.__uid,
                 left: 10,
                 top: 10,
-                stroke: 'red',
+                stroke: '#000000',
                 strokeWidth: 3,
                 rx: 30,
                 objectCaching: false,
@@ -1561,7 +1561,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             editable: true,
             objectCaching: false,
             textAlign: 'center',
-            stroke: '',
+            stroke: '#000000',
             strokeWidth: 0,
             id: 'gameTimer1',
             class: 'class_' + fabric.Object.__uid,
@@ -1585,7 +1585,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             editable: true,
             objectCaching: false,
             textAlign: 'center',
-            stroke: '',
+            stroke: '#000000',
             strokeWidth: 0,
             id: 'gameTimer2',
             class: 'class_' + fabric.Object.__uid,
@@ -1607,26 +1607,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         });
         canvas?.requestRenderAll();
     }
-    // const removeBorderandCurve = () => {
-    //     canvas?.getActiveObjects().forEach(element => {
-    //         element.set({ strokeWidth: 0, rx: 0, ry: 0 })
-    //     });
-    //     canvas?.requestRenderAll();
-    // }
-
-    // const attachToPath = () => {
-    //     const paths = canvas.getObjects().filter((obj) => (obj.type === 'path'))
-    //     if (paths[0]) {
-    //         canvas.getActiveObjects(0).forEach(element => {
-    //             paths[0].set({ fill: 'transparent', strokeWidth: 0 })
-    //             element.set('path', paths[0]);
-    //             canvas.remove(paths[0]);
-    //         });
-    //         canvas?.requestRenderAll();
-    //     }
-    // }
-
-
 
     const onDrawingModeChange = (mode, canvas) => {
         setCurrentMode(mode);
@@ -3043,7 +3023,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={sdToHD}>sdtoHD</button>
                         <b> Image Round:</b>
                         <input type={'range'} min={0} max={1920} style={{ width: 60 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
-                        {/* <button onClick={() => pasteClipboard(canvas)}>pasteClipboard</button> */}
 
                     </div>
                     <div className='drawingToolsRow' >
@@ -3062,12 +3041,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => saveToLocalStorage(canvas)}>saveToLocalStorage</button>
                         <button onClick={() => getFromLocalStorage(canvas)}>Get from LocalStorage</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Web Animator</button>
-                        {/* <button onClick={() => {
-                            canvas.add(new fabric.Textbox('test', { fill: rgbaObjectToHex({ r: 0, g: 1, b: 0, a: 1 }) }));
-                            canvas.add(new fabric.Textbox('test', { fill: '#ff0000' }));
-                        }}>test</button> */}
-
-
                     </div>
                     <div className='drawingToolsRow' >
                         Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {

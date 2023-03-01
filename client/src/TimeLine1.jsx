@@ -874,7 +874,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
         <button onClick={() => stopFromCasprtcg(templateLayers.animationLayer)}>Stop</button>
 
         <button onClick={updatePageAndAnimation}>Save</button>
-        <button onClick={recallPageAndAnimation}>Recall</button>
+        <button onClick={recallPageAndAnimation}>Recall</button><br />
         <button onClick={copyAnimation}>Copy</button>
         <button onClick={pasteAnimation}>Paste</button>
 
