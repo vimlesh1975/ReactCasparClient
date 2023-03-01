@@ -9,7 +9,7 @@ const Images = () => {
     const dispatch = useDispatch();
     const media = useSelector(state => state.mediaReducer.media)
     const [searchText2, setSearchText2] = useState('');
-    const onlineImageUrl = useSelector(state => state.onlineImageUrleReducer.onlineImageUrl);
+    // const onlineImageUrl = useSelector(state => state.onlineImageUrleReducer.onlineImageUrl);
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const imageName = useSelector(state => state.imageNameReducer.imageName)
@@ -25,11 +25,11 @@ const Images = () => {
 
 
     return (<div>
-        <div>
+        {/* <div>
             <b> Image from URL: </b>
             <input onChange={(e) => dispatch({ type: 'CHANGE_ONLINEIMAGE_URL', payload: e.target.value })} size="55" type='text' defaultValue={onlineImageUrl}></input>
             <button onClick={() => addRoundedCornerImage(canvas, onlineImageUrl)}>Add Rounded Rectange Image</button>
-        </div>
+        </div> */}
         <div className='drawingToolsRow' >
             <b> Image from Local PC: </b>
             <input multiple type="file" accept="image/*" onChange={(e) => Upload(e, canvas)} />

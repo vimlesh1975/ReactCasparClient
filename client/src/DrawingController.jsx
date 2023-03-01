@@ -298,6 +298,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 
     fabric.util.loadImage(imageName1, myImg => {
         // fabric.Image.fromURL(imageName1,  myImg => {
+        console.log(myImg)
         if (myImg == null) {
             alert("Error!");
         } else {
