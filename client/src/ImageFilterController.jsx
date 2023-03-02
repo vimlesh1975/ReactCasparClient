@@ -58,7 +58,7 @@ const ImageFilterController = () => {
 
     return (
         <div>
-            <h5>Image from local pc method only will get filters. </h5>
+            {/* <h5>Image from local pc method only will get filters. </h5> */}
             <div style={{}} >
 
             <table border='1'>
