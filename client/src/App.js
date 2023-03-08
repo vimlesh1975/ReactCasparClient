@@ -37,6 +37,7 @@ import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 import CodeImport from './CodeImport';
+import CsvData from './CsvData';
 
 
 const App = () => {
@@ -501,6 +502,7 @@ const App = () => {
             <Tab >Udp Clock</Tab>
             <Tab >Threejs</Tab>
             <Tab >Code Import</Tab>
+            <Tab >CSV Data</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel >
@@ -564,7 +566,9 @@ const App = () => {
           <TabPanel >
             <CodeImport />
           </TabPanel>
-
+          <TabPanel >
+            <CsvData />
+          </TabPanel>
           <TabPanel >
             <Help />
           </TabPanel>
