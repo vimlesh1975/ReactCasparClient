@@ -22,11 +22,6 @@ import CasparcgTools from './CasparcgTools';
 
 import { rgbaCol, listglobalCompositeOperation } from './common'
 
-
-// import { rgbaObjectToHex } from './common'
-
-
-// var intervalVerticalScroll;
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
@@ -253,7 +248,7 @@ export const createTextBox = (canvas) => {
         id: 'ccg_' + fabric.Object.__uid,
         class: 'class_' + fabric.Object.__uid,
         left: 103 * 1.87,
-        top: 0,
+        top: 762,
         width: 480 * 1.87,
         fill: '#ffffff',
         fontFamily: options.currentFont,
@@ -267,8 +262,7 @@ export const createTextBox = (canvas) => {
 
     });
     canvas.add(text).setActiveObject(text);
-    canvas.renderAll();
-    text.animate('top', 762, { onChange: canvas.renderAll.bind(canvas) })
+    canvas.requestRenderAll();
 };
 
 

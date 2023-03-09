@@ -18,6 +18,10 @@ import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { v4 as uuidv4 } from 'uuid';
 
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
+import Papa from "papaparse";
+
 
 studio.initialize();
 studio.ui.hide();
@@ -109,7 +113,7 @@ const WebAnimator = () => {
     const [y, setY] = useState(0);
 
     const [jsfilename, setJsfilename] = useState('main');
-    const [showSavePannel, setShowSavePannel] = useState(false);
+    const [showSavePannel, setShowSavePannel] = useState(true);
 
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
@@ -204,7 +208,7 @@ const WebAnimator = () => {
         // eslint-disable-next-line
     }, [])
 
-    function ContextMenu({ x, y, visibility }) {
+    const ContextMenu = ({ x, y, visibility }) => {
         const canvas = useSelector(state => state.canvasReducer.canvas);
 
         const sendToBack = canvas => {
@@ -299,6 +303,89 @@ const WebAnimator = () => {
         );
     }
 
+    const data1 = `name,age,email
+Milind Soman,30,john@example.com
+Ramaswami Aiyanger,25,jane@example.com
+Vimlesh Kumar,48,Vimlersh1975@gmail.com
+Vilash Bhandare,56,vlbhandare@gmail.com
+Viresh Kumar,50,Kviresh10@gmail.com`;
+
+    // var initialTop = 100;
+
+    const CsvData = () => {
+        const canvas = useSelector(state => state.canvasReducer.canvas);
+
+        const [headers, setHeaders] = useState(Object.keys(Papa.parse(data1, { header: true }).data[0]))
+        const [datas, setDatas] = useState(Papa.parse(data1, { header: true }).data)
+
+        const handleChange = e => {
+            if (e.target.files[0]) {
+                console.log(e.target.files[0])
+                Papa.parse(e.target.files[0], {
+                    header: true,
+                    complete: responses => {
+                        console.log(responses);
+                        console.log(Object.keys(responses.data[0]));
+                        setDatas(responses.data);
+                        setHeaders(Object.keys(responses.data[0]))
+                    }
+                });
+            }
+
+        }
+
+        const updateData = (index) => {
+            headers.forEach((header, i) => {
+                const myelement = canvas.getObjects().find(element => element.id === header)
+                myelement.set({ text: datas[index][headers[i]] })
+            })
+            canvas.requestRenderAll();
+            playtoCasparcg(templateLayers.theatrejs, 1, 4);
+        }
+        const changeToImage = (i, j) => {
+            // const updatedData = [...datas]
+            // // console.log(updatedData[i][headers[j]])
+            // // console.log(i, j)
+            // updatedData[i][headers[j]] = "vimlesh"
+            // setDatas(updatedData)
+        }
+
+        return (<div>
+            <input type="file" onChange={handleChange} />
+            <table border='1'>
+                <tbody>
+                    <tr>
+                        {headers.map((row, i) => {
+                            return (<th key={i}   >{row}</th>)
+                        })}
+                        <th>Update</th>
+                    </tr>
+
+                    {datas.map((row, i) => {
+                        return (<tr key={i}  >{headers.map((header, ii) => {
+                            return (<td onClick={() => changeToImage(i, ii)} key={ii}>
+                                {row[header]}
+                            </td>
+                            )
+                        })}<td><button onClick={() => updateData(i)}>Play</button></td></tr>)
+                    })}
+                </tbody>
+            </table>
+
+            <button onClick={() => {
+                headers.forEach((header) => {
+                    setTimeout(() => {
+                        addItem(createTextBox, header);
+                    }, 100);
+                })
+            }}>Create Temlplate</button>
+            <button onClick={playtoCasparcg}>Play</button>
+
+        </div>)
+    }
+
+
+
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             if (getObjectbyId(element.id) !== undefined) {
@@ -307,7 +394,7 @@ const WebAnimator = () => {
         })
     }
 
-    function rgbaArrayToObject(fill) {
+    const rgbaArrayToObject = (fill) => {
         console.log(fill)
         const color = new fabric.Color(fill);
         const rgbaArray = color.getSource();
@@ -1454,9 +1541,9 @@ const WebAnimator = () => {
 
     }
 
-    const addItem = async (name) => {
+    const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = canvas.getObjects().filter((item) => {
-            return item.id === idofElement
+            return item.id === id
         })
         if (idAlreadyExists.length > 0) {
             alert("Id Already exists");
@@ -1464,7 +1551,12 @@ const WebAnimator = () => {
         }
 
         await name(canvas);
+
         const element = canvas.getActiveObjects()[0];
+        element.set({ id: id.toString(), text: id.toString() });
+
+        setIdofElement('id_' + fabric.Object.__uid++);
+
         const obj1 = {
             left: 500,
             top: 300,
@@ -1485,8 +1577,8 @@ const WebAnimator = () => {
             skewY: types.number(0, { range: [-60, 60] }),
         }
 
-        setIdofElement('id_' + fabric.Object.__uid++);
-        element.set({ id: idofElement });
+
+
         const i = arrObject.length;
         arrObject[i] = sheet.object(element.id, obj1);
         arrObject[i].onValuesChange((val) => {
@@ -1713,13 +1805,22 @@ const WebAnimator = () => {
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
 
-            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}> <SavePannelTheatre
+            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
+                <Tabs forceRenderTabPanel={true} >
+                    <TabList>
+                        <Tab>Data Pannel</Tab>
+                        <Tab>Save Pannel</Tab>
+                    </TabList>
+                    <TabPanel ><CsvData /></TabPanel>
+
+                    <TabPanel > <SavePannelTheatre
                 importHtml={importHtml}
                 deleteAllObjects={deleteAllObjects}
                 stopGraphics1={stopGraphics1}
                 playtoCasparcg={playtoCasparcg}
-            /></div>
-
+                    /></TabPanel>
+                </Tabs >
+            </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
             <DrawingforTheatrejs />
             <ContextMenu x={x} y={y} visibility={visibility} />
