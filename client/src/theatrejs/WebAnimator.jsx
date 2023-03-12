@@ -386,15 +386,18 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
             }}>Create Temlplate</button>
 
             <button onClick={() => {
-                // headers.forEach((header, i) => {
-                //     const myelement = canvas.getObjects().find(element => element.id === header)
-                //     myelement.set({ text: datas[0][headers[i]] })
-                // })
-                // canvas.requestRenderAll();
-                // playtoCasparcg(templateLayers.theatrejs, 1, 4);
-                const script1 = "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
-                    "let i=0;" +
-                    "setInterval(() => {" +
+                headers.forEach((header, i) => {
+                    const myelement = canvas.getObjects().find(element => element.id === header)
+                    myelement.set({ text: datas[0][headers[i]] })
+                })
+
+                canvas.requestRenderAll();
+                playtoCasparcg(templateLayers.theatrejs, 1, 4);
+                const scriptforhtml = "let csvInterval; " +
+                    "if(csvInterval){clearInterval(csvInterval)};" +
+                    "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
+                    "let i=1;" +
+                    "csvInterval=setInterval(() => {" +
                     "sheet_" + templateLayers.theatrejs + ".sequence.position=0;" +
                     "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
                     "headers.forEach(function(header) { " +
@@ -405,8 +408,25 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                     " if (i < " + (datas.length - 1) + ") { i += 1; } else { i = 0; }" +
                     " }, 2000);"
 
-                executeScript(`${script1}`);
-                endpoint(`call 1-${templateLayers.theatrejs} ${script1}`);
+
+                executeScript(`${scriptforhtml}`);
+
+                const scriptforCasparcg = "let csvInterval; " +
+                    "if(csvInterval){clearInterval(csvInterval)};" +
+                    "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
+                    "let i=1;" +
+                    "csvInterval=setInterval(() => {" +
+                    "sheet.sequence.position=0;" +
+                    "sheet.sequence.play();" +
+                    "headers.forEach(function(header) { " +
+                    "const myelement = canvas.getObjects().find(element => element.id === header); " +
+                    "myelement.set({text:" + JSON.stringify(datas).replaceAll('"', "'") + "[i][header]});" +
+                    "canvas.requestRenderAll();" +
+                    "});" +
+                    " if (i < " + (datas.length - 1) + ") { i += 1; } else { i = 0; }" +
+                    " }, 2000);"
+
+                endpoint(`call 1-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
 
 
             }}>Play11</button>
