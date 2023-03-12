@@ -358,7 +358,7 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                         {headers.map((row, i) => {
                             return (<th key={i}   >{row}</th>)
                         })}
-                        <th>Update</th>
+                        <th>Play</th>
                     </tr>
 
                     {datas.map((row, i) => {
@@ -371,15 +371,45 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                     })}
                 </tbody>
             </table>
-
+            {/* myelement.set({ text: '${datas[3][headers[0]]}'}) */}
+            {/* [${headers}].forEach((header, i) => {
+                    const myelement = canvas_${templateLayers.theatrejs}.getObjects().find(element => element.id === header);
+                    console.log(myelement);
+                }) */}
             <button onClick={() => {
                 headers.forEach((header) => {
                     setTimeout(() => {
                         addItem(createTextBox, header);
                     }, 100);
                 })
+
             }}>Create Temlplate</button>
-            <button onClick={playtoCasparcg}>Play</button>
+
+            <button onClick={() => {
+                // headers.forEach((header, i) => {
+                //     const myelement = canvas.getObjects().find(element => element.id === header)
+                //     myelement.set({ text: datas[0][headers[i]] })
+                // })
+                // canvas.requestRenderAll();
+                // playtoCasparcg(templateLayers.theatrejs, 1, 4);
+                const script1 = "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
+                    "let i=0;" +
+                    "setInterval(() => {" +
+                    "sheet_" + templateLayers.theatrejs + ".sequence.position=0;" +
+                    "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
+                    "headers.forEach(function(header) { " +
+                    "const myelement = canvas_" + templateLayers.theatrejs + ".getObjects().find(element => element.id === header); " +
+                    "myelement.set({text:" + JSON.stringify(datas).replaceAll('"', "'") + "[i][header]});" +
+                    "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
+                    "});" +
+                    " if (i < " + (datas.length - 1) + ") { i += 1; } else { i = 0; }" +
+                    " }, 2000);"
+
+                executeScript(`${script1}`);
+                endpoint(`call 1-${templateLayers.theatrejs} ${script1}`);
+
+
+            }}>Play11</button>
 
         </div>)
     }
@@ -1081,7 +1111,6 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
                         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
             });
-
         });
         "`)
     }
@@ -1814,10 +1843,10 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                     <TabPanel ><CsvData /></TabPanel>
 
                     <TabPanel > <SavePannelTheatre
-                importHtml={importHtml}
-                deleteAllObjects={deleteAllObjects}
-                stopGraphics1={stopGraphics1}
-                playtoCasparcg={playtoCasparcg}
+                        importHtml={importHtml}
+                        deleteAllObjects={deleteAllObjects}
+                        stopGraphics1={stopGraphics1}
+                        playtoCasparcg={playtoCasparcg}
                     /></TabPanel>
                 </Tabs >
             </div>
