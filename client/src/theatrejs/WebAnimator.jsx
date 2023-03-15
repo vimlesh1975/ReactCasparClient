@@ -340,7 +340,10 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                 myelement.set({ text: datas[index][headers[i]] })
             })
             canvas.requestRenderAll();
+            window.sheet.sequence.position = 0;
+            setTimeout(() => {
             playtoCasparcg(templateLayers.theatrejs, 1, 4);
+            }, 100);
         }
         const changeToImage = (i, j) => {
             // const updatedData = [...datas]
