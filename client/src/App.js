@@ -31,12 +31,13 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 import JsonReader from './JsonReader';
-import UdpClock from './UdpClock';
+// import UdpClock from './UdpClock';
 
 import ColorGradient2 from './ColorGradient2'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import Threejs from './Threejs';
 import CodeImport from './CodeImport';
+import GsapPlayer from './GsapPlayer';
 
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -496,9 +497,10 @@ const App = () => {
             <Tab >Path Modifier</Tab>
             <Tab >Effects</Tab>
             <Tab >JsonReader</Tab>
-            <Tab >Udp Clock</Tab>
+            {/* <Tab >Udp Clock</Tab> */}
             <Tab >Threejs</Tab>
             <Tab >Code Import</Tab>
+            <Tab >Gsap Player</Tab>
             <Tab>Help</Tab>
           </TabList>
           <TabPanel >
@@ -553,9 +555,9 @@ const App = () => {
           <TabPanel >
             <JsonReader />
           </TabPanel>
-          <TabPanel >
+          {/* <TabPanel >
             <UdpClock />
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel >
             <Threejs />
           </TabPanel>
@@ -563,8 +565,12 @@ const App = () => {
             <CodeImport />
           </TabPanel>
           <TabPanel >
+            <GsapPlayer />
+          </TabPanel>
+          <TabPanel >
             <Help />
           </TabPanel>
+
         </Tabs >
       </div >
 

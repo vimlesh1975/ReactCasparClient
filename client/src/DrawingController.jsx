@@ -21,7 +21,6 @@ import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
 import { rgbaCol, listglobalCompositeOperation } from './common'
-
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
@@ -1927,7 +1926,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var aa = ``
         await canvasList.forEach(val => {
             canvas.loadFromJSON(val.pageValue, () => {
-                aa += `<div>${canvas.toSVG()}</div>`
+                aa += `< div > ${canvas.toSVG()}</div > `
                 // console.log(aa)
             });
         });
@@ -1938,174 +1937,174 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         // myWindow.print()
     }
     const setHtmlString = () => {
-        html = `<!DOCTYPE html>
-            <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                <title>Document</title>
-                                <link rel="stylesheet" href="${cssfilename}.css">
+        html = `< !DOCTYPE html >
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Document</title>
+                            <link rel="stylesheet" href="${cssfilename}.css">
                                 <link rel="stylesheet" href="${cssfilename2}.css">
-                                    </head>
-                                    <body>
-                                        <script>
-                                            document.body.addEventListener('keypress', function(e) {
+                                </head>
+                                <body>
+                                    <script>
+                                        document.body.addEventListener('keypress', function(e) {
                 if(e.key.toUpperCase() === "S") {stop(); }
               });
-                                            if (screen.colorDepth === 0) {
+                                        if (screen.colorDepth === 0) {
                 var css = '[id^=ccg] {display: none; }',
-                                            head = document.head || document.getElementsByTagName('head')[0],
-                                            style = document.createElement('style');
-                                            head.appendChild(style);
-                                            style.type = 'text/css';
-                                            if (style.styleSheet) {
-                                                // This is required for IE8 and below.
-                                                style.styleSheet.cssText = css;
+                                        head = document.head || document.getElementsByTagName('head')[0],
+                                        style = document.createElement('style');
+                                        head.appendChild(style);
+                                        style.type = 'text/css';
+                                        if (style.styleSheet) {
+                                            // This is required for IE8 and below.
+                                            style.styleSheet.cssText = css;
                 } else {
-                                                style.appendChild(document.createTextNode(css));
+                                            style.appendChild(document.createTextNode(css));
                 }
             }
 
-                                            const elementToObserve = document.body;
+                                        const elementToObserve = document.body;
             const observer = new MutationObserver(() => {
-                                                document.body.style.margin = '0';
-                                            document.body.style.padding = '0';
-                                            document.body.style.overflow = 'hidden';
-                                            var aa = document.getElementsByTagName('div')[0];
-                                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                            observer.disconnect();
+                                            document.body.style.margin = '0';
+                                        document.body.style.padding = '0';
+                                        document.body.style.overflow = 'hidden';
+                                        var aa = document.getElementsByTagName('div')[0];
+                                        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                        observer.disconnect();
             });
-                                            observer.observe(elementToObserve, {subtree: true, childList: true })
+                                        observer.observe(elementToObserve, {subtree: true, childList: true })
 
-                                            var dataCaspar = { };
+                                        var dataCaspar = { };
 
-                                            function escapeHtml(unsafe) {
+                                        function escapeHtml(unsafe) {
             return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
             }
 
-                                        // Parse templateData into an XML object
-                                        function parseCaspar(str) {
+                                    // Parse templateData into an XML object
+                                    function parseCaspar(str) {
             var xmlDoc;
-                                        if (window.DOMParser) {
-                                            parser = new DOMParser();
-                                        xmlDoc = parser.parseFromString(str, "text/xml");
+                                    if (window.DOMParser) {
+                                        parser = new DOMParser();
+                                    xmlDoc = parser.parseFromString(str, "text/xml");
             }
-                                        dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+                                    dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
             }
 
 
-                                        // Make the XML templateData message into a more simple key:value object
-                                        function XML2JSON(node) {
+                                    // Make the XML templateData message into a more simple key:value object
+                                    function XML2JSON(node) {
             var data = { }; // resulting object
-                                        for (k = 0; k < node.length; k++) {
+                                    for (k = 0; k < node.length; k++) {
             var idCaspar = node[k].getAttribute("id");
-                                        var valCaspar = node[k].childNodes[0].getAttribute("value");
-                                        if (idCaspar != undefined && valCaspar != undefined) {
-                                            data[idCaspar] = valCaspar;
+                                    var valCaspar = node[k].childNodes[0].getAttribute("value");
+                                    if (idCaspar != undefined && valCaspar != undefined) {
+                                        data[idCaspar] = valCaspar;
             };
             }
-                                        return data;
+                                    return data;
             }
 
-                                        // Main function to insert data
-                                        function dataInsert(dataCaspar) {
+                                    // Main function to insert data
+                                    function dataInsert(dataCaspar) {
             for (var idCaspar in dataCaspar) {
             var idTemplate = document.getElementById(idCaspar);
-                                        if (idTemplate != undefined) {
+                                    if (idTemplate != undefined) {
             var idtext = idTemplate.getElementsByTagName('text')[0];
-                                        var idimage = idTemplate.getElementsByTagName('image')[0];
-                                        if (idtext != undefined) {
-                                            idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
-                                        idTemplate.style.display = "block";
-                                        if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                                    var idimage = idTemplate.getElementsByTagName('image')[0];
+                                    if (idtext != undefined) {
+                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                                    idTemplate.style.display = "block";
+                                    if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
                     var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                                        var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
-                                        var originalFontSize =  idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
-                                        if (textalign1 == 'center') {
-                                            idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
-                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                    var originalFontSize =  idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                                    if (textalign1 == 'center') {
+                                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
                     }
-                                        if (textalign1 == 'right') {
-                                            idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
-                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                                    if (textalign1 == 'right') {
+                                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
                     }
-                                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-                                        do {
+                                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                                    do {
                         var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
-                                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
-                                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                                    var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
                     } while (width2 > width1);
                 }
 
             }
-                                        else if (idimage != undefined) {
-                                            idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
-                                        idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
-                                        idTemplate.style.display = "block";
+                                    else if (idimage != undefined) {
+                                        idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+                                    idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                    idTemplate.style.display = "block";
             }
             }
             }
             }
 
-                                        // Call for a update of data from CasparCG client
-                                        function update(str) {
-                                            parseCaspar(str); // Parse templateData into an XML object
-                                        dataInsert(dataCaspar); // Insert data
+                                    // Call for a update of data from CasparCG client
+                                    function update(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
             }
 
-                                        // insert data from CasparCg client when activated
-                                        function play(str) {
-                                            parseCaspar(str); // Parse templateData into an XML object
-                                        dataInsert(dataCaspar); // Insert data
+                                    // insert data from CasparCg client when activated
+                                    function play(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
             // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
             }
-                                        function stop() {
-                                            document.body.innerHTML = '' ;
+                                    function stop() {
+                                        document.body.innerHTML = '' ;
             }
-                                        function updatestring(str1, str2) {
-                                            document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
-                                        document.getElementById(str1).style.display = "block";
-                                        if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
+                                    function updatestring(str1, str2) {
+                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                                    document.getElementById(str1).style.display = "block";
+                                    if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
                     var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                                        var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
-                                        var originalFontSize =  document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
-                                        if (textalign1 == 'center') {
-                                            document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                        document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
-                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                                    var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                    var originalFontSize =  document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                                    if (textalign1 == 'center') {
+                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
                     }
-                                        if (textalign1 == 'right') {
-                                            document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                        document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = 'normal';
-                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                                    if (textalign1 == 'right') {
+                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
                     }
-                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-                                        do {
+                                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                                    do {
                         var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
-                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
-                                        var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                                    var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
                     } while (width2 > width1);
                 }
             }
-                                        function updateimage(str1, str2) {
-                                            document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
-                                        document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
-                                        document.getElementById(str1).style.display = "block";
+                                    function updateimage(str1, str2) {
+                                        document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+                                    document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                    document.getElementById(str1).style.display = "block";
             }
 
-                                    </script>
-                                    <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
-                                </body>
-                                <script src="${jsfilename}.js"></script>
-                                <script src="${jsfilename2}.js"></script>
-                            </html>`
+                                </script>
+                                <div> ${canvas.toSVG(['id', 'class', 'selectable'])}  </div>
+                            </body>
+                            <script src="${jsfilename}.js"></script>
+                            <script src="${jsfilename2}.js"></script>
+                        </html>`
 
     }
 
@@ -2230,34 +2229,34 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 100;
         const element = document.createElement("a");
         var aa = `<!DOCTYPE html>
-                            <html lang="en">
-                                <head>
-                                    <meta charset="UTF-8">
-                                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                <title>Document</title>
-                                            </head>
-                                            <body>
-                                                `;
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                            <title>Document</title>
+                                        </head>
+                                        <body>
+                                            `;
         aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
-                                                <script>
-                                                    var aa = document.getElementsByTagName('div')[0];
-                                                    aa.style.position='absolute';
-                                                    document.getElementsByTagName('svg')[0].style.height='${hh}';
-                                                    document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-                                                    aa.style.top='100%';
-                                                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                    document.body.style.overflow='hidden';
-                                                    var speed=${verticalSpeed};
-                                                    setInterval(function(){
-                                                        aa.style.top = (aa.getBoundingClientRect().top - speed) + 'px';
+                                            <script>
+                                                var aa = document.getElementsByTagName('div')[0];
+                                                aa.style.position='absolute';
+                                                document.getElementsByTagName('svg')[0].style.height='${hh}';
+                                                document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+                                                aa.style.top='100%';
+                                                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                document.body.style.overflow='hidden';
+                                                var speed=${verticalSpeed};
+                                                setInterval(function(){
+                                                    aa.style.top = (aa.getBoundingClientRect().top - speed) + 'px';
              }, 1);
-                                                </script>
-                                                `;
+                                            </script>
+                                            `;
         aa += `
-                                            </body>
-                                        </html>`
+                                        </body>
+                                    </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -2274,44 +2273,44 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
         const element = document.createElement("a");
         var aa = `<!DOCTYPE html>
-                                        <html lang="en">
-                                            <head>
-                                                <meta charset="UTF-8">
-                                                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                            <title>Document</title>
-                                                        </head>
-                                                        <body>
-                                                            `;
+                                    <html lang="en">
+                                        <head>
+                                            <meta charset="UTF-8">
+                                                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                        <title>Document</title>
+                                                    </head>
+                                                    <body>
+                                                        `;
         aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
-                                                            <script>
-                                                                var aa = document.getElementsByTagName('div')[0];
-                                                                aa.style.position='absolute';
-                                                                document.getElementsByTagName('svg')[0].style.width='${hh}';
-                                                                document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                document.body.style.overflow='hidden';
-                                                                var speed=${horizontalSpeed};
-                                                                if (${!ltr}){
-                                                                    aa.style.left = '100%';
-                                                                setInterval(function(){
-                                                                    aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
-                                                                if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
+                                                        <script>
+                                                            var aa = document.getElementsByTagName('div')[0];
+                                                            aa.style.position='absolute';
+                                                            document.getElementsByTagName('svg')[0].style.width='${hh}';
+                                                            document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+                                                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                            document.body.style.overflow='hidden';
+                                                            var speed=${horizontalSpeed};
+                                                            if (${!ltr}){
+                                                                aa.style.left = '100%';
+                                                            setInterval(function(){
+                                                                aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
+                                                            if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
            }, 1);
         }
-                                                                else{
-                                                                    aa.style.left = -${hh};
-                                                                setInterval(function(){
-                                                                    aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
+                                                            else{
+                                                                aa.style.left = -${hh};
+                                                            setInterval(function(){
+                                                                aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
                 if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
              }, 1);
         }
-                                                            </script>
-                                                            `;
+                                                        </script>
+                                                        `;
         aa += `
-                                                        </body>
-                                                    </html>`
+                                                    </body>
+                                                </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -2328,44 +2327,44 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 100;
         const element = document.createElement("a");
         var aa = `<!DOCTYPE html>
-                                                    <html lang="en">
-                                                        <head>
-                                                            <meta charset="UTF-8">
-                                                                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                                        <title>Document</title>
-                                                                    </head>
-                                                                    <body>
-                                                                        `;
+                                                <html lang="en">
+                                                    <head>
+                                                        <meta charset="UTF-8">
+                                                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                    <title>Document</title>
+                                                                </head>
+                                                                <body>
+                                                                    `;
         aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
-                                                                        <script>
-                                                                            var aa = document.getElementsByTagName('div')[0];
-                                                                            aa.style.position='absolute';
-                                                                            document.getElementsByTagName('svg')[0].style.width='${hh}';
-                                                                            document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                            document.body.style.overflow='hidden';
-                                                                            var speed=${horizontalSpeed2};
-                                                                            if (${!ltr2}){
-                                                                                aa.style.left = '100%';
-                                                                            setInterval(function(){
-                                                                                aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
-                                                                            if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
+                                                                    <script>
+                                                                        var aa = document.getElementsByTagName('div')[0];
+                                                                        aa.style.position='absolute';
+                                                                        document.getElementsByTagName('svg')[0].style.width='${hh}';
+                                                                        document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+                                                                        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                        document.body.style.overflow='hidden';
+                                                                        var speed=${horizontalSpeed2};
+                                                                        if (${!ltr2}){
+                                                                            aa.style.left = '100%';
+                                                                        setInterval(function(){
+                                                                            aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
+                                                                        if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
            }, 1);
         }
-                                                                            else{
-                                                                                aa.style.left = -${hh};
-                                                                            setInterval(function(){
-                                                                                aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
+                                                                        else{
+                                                                            aa.style.left = -${hh};
+                                                                        setInterval(function(){
+                                                                            aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
                 if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
              }, 1);
         }
-                                                                        </script>
-                                                                        `;
+                                                                    </script>
+                                                                    `;
         aa += `
-                                                                    </body>
-                                                                </html>`
+                                                                </body>
+                                                            </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -2380,36 +2379,36 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         const element = document.createElement("a");
         var aa = `<!DOCTYPE html>
-                                                                <html lang="en">
-                                                                    <head>
-                                                                        <meta charset="UTF-8">
-                                                                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                                                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                                                    <title>Document</title>
-                                                                                </head>
+                                                            <html lang="en">
+                                                                <head>
+                                                                    <meta charset="UTF-8">
+                                                                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                                                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                <title>Document</title>
+                                                                            </head>
 
-                                                                                <body>
-                                                                                    `;
+                                                                            <body>
+                                                                                `;
         aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
-                                                                                </body>
-                                                                                <script>
+                                                                            </body>
+                                                                            <script>
 
-                                                                                    document.body.style.margin='0';
-                                                                                    document.body.style.padding='0';
-                                                                                    document.body.style.overflow='hidden';
+                                                                                document.body.style.margin='0';
+                                                                                document.body.style.padding='0';
+                                                                                document.body.style.overflow='hidden';
 
-                                                                                    var aa = document.getElementsByTagName('div')[0];
-                                                                                    aa.style.position='absolute';
-                                                                                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                    var cc=document.getElementsByTagName('tspan')[0];
-                                                                                    cc.textContent='';
-                                                                                    setInterval(function() {
+                                                                                var aa = document.getElementsByTagName('div')[0];
+                                                                                aa.style.position='absolute';
+                                                                                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                var cc=document.getElementsByTagName('tspan')[0];
+                                                                                cc.textContent='';
+                                                                                setInterval(function() {
                 var ss1 = new Date().toLocaleTimeString('en-US', {hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                                                                                    cc.textContent  =ss1;
+                                                                                cc.textContent  =ss1;
               }, 1000);
-                                                                                </script>
-                                                                            </html>`
+                                                                            </script>
+                                                                        </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -2424,37 +2423,37 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         const element = document.createElement("a");
         var aa = `<!DOCTYPE html>
-                                                                            <html lang="en">
-                                                                                <head>
-                                                                                    <meta charset="UTF-8">
-                                                                                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                                                                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                                                                                <title>Document</title>
-                                                                                            </head>
+                                                                        <html lang="en">
+                                                                            <head>
+                                                                                <meta charset="UTF-8">
+                                                                                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                                                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                            <title>Document</title>
+                                                                                        </head>
 
-                                                                                            <body>
-                                                                                                `;
+                                                                                        <body>
+                                                                                            `;
         aa += '<div>' + canvas.toSVG(['id', 'class', 'selectable']) + '</div>';
         aa += `
-                                                                                            </body>
-                                                                                            <script>
-                                                                                                document.body.style.margin='0';
-                                                                                                document.body.style.padding='0';
-                                                                                                document.body.style.overflow='hidden';
-                                                                                                var aa = document.getElementsByTagName('div')[0];
-                                                                                                aa.style.position='absolute';
-                                                                                                aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                                var cc=document.getElementsByTagName('tspan')[0];
-                                                                                                cc.textContent='';
-                                                                                                var startTime = new Date();
-                                                                                                setInterval(function() {
+                                                                                        </body>
+                                                                                        <script>
+                                                                                            document.body.style.margin='0';
+                                                                                            document.body.style.padding='0';
+                                                                                            document.body.style.overflow='hidden';
+                                                                                            var aa = document.getElementsByTagName('div')[0];
+                                                                                            aa.style.position='absolute';
+                                                                                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                            var cc=document.getElementsByTagName('tspan')[0];
+                                                                                            cc.textContent='';
+                                                                                            var startTime = new Date();
+                                                                                            setInterval(function() {
             var diff = (new Date()).getTime() - startTime.getTime();
-                                                                                                var date_diff = new Date(diff - 30 * 60 * 1000);
-                                                                                                var ss1 = date_diff.toLocaleString('en-US', {minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
-                                                                                                cc.textContent  =ss1;
+                                                                                            var date_diff = new Date(diff - 30 * 60 * 1000);
+                                                                                            var ss1 = date_diff.toLocaleString('en-US', {minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+                                                                                            cc.textContent  =ss1;
           }, 40);
-                                                                                            </script>
-                                                                                        </html>`
+                                                                                        </script>
+                                                                                    </html>`
         const file = new Blob([aa], { type: 'text/html' });
         element.href = URL.createObjectURL(file);
         var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -2477,22 +2476,22 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().height + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-                                                                                        window.aaVertical = document.createElement('div');
-                                                                                        aaVertical.style.position='absolute';
-                                                                                        aaVertical.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aaVertical.style.zIndex = ${layerNumber};
-                                                                                        aaVertical.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        document.body.appendChild(aaVertical);
-                                                                                        document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
-                                                                                        document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-                                                                                        aaVertical.style.top='100%';
-                                                                                        aaVertical.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        window.verticalSpeed=${verticalSpeed};
+                                                                                    window.aaVertical = document.createElement('div');
+                                                                                    aaVertical.style.position='absolute';
+                                                                                    aaVertical.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aaVertical.style.zIndex = ${layerNumber};
+                                                                                    aaVertical.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    document.body.appendChild(aaVertical);
+                                                                                    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
+                                                                                    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+                                                                                    aaVertical.style.top='100%';
+                                                                                    aaVertical.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    window.verticalSpeed=${verticalSpeed};
         window.intervalVerticalScroll= setInterval(()=>{
-                                                                                            aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
+                                                                                        aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
         }, 1);
-                                                                                        `
+                                                                                    `
 
         endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`)
 
@@ -2509,35 +2508,35 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-                                                                                        window.aaHorizontal1 = document.createElement('div');
-                                                                                        aaHorizontal1.style.position='absolute';
-                                                                                        aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aaHorizontal1.style.zIndex = ${layerNumber};
-                                                                                        aaHorizontal1.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        document.body.appendChild(aaHorizontal1);
-                                                                                        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
-                                                                                        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                        aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        window.horizontalSpeed=${horizontalSpeed};
-                                                                                        if (${!ltr}){
-                                                                                            aaHorizontal1.style.left = '100%';
-                                                                                        window.intervalHorizontalScroll1=setInterval(function() {
-                                                                                            aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left - horizontalSpeed) + 'px';
-                                                                                        if (aaHorizontal1.getBoundingClientRect().left < -${hh}){aaHorizontal1.style.left = '100%'};
+                                                                                    window.aaHorizontal1 = document.createElement('div');
+                                                                                    aaHorizontal1.style.position='absolute';
+                                                                                    aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aaHorizontal1.style.zIndex = ${layerNumber};
+                                                                                    aaHorizontal1.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    document.body.appendChild(aaHorizontal1);
+                                                                                    document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
+                                                                                    document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+                                                                                    aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    window.horizontalSpeed=${horizontalSpeed};
+                                                                                    if (${!ltr}){
+                                                                                        aaHorizontal1.style.left = '100%';
+                                                                                    window.intervalHorizontalScroll1=setInterval(function() {
+                                                                                        aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left - horizontalSpeed) + 'px';
+                                                                                    if (aaHorizontal1.getBoundingClientRect().left < -${hh}){aaHorizontal1.style.left = '100%'};
                     }, 1);
                     }
-                                                                                        else{
-                                                                                            aaHorizontal1.style.left = -${hh}+'px';
-                                                                                        window.intervalHorizontalScroll1=setInterval(function() {
-                                                                                            aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left + horizontalSpeed) + 'px';
+                                                                                    else{
+                                                                                        aaHorizontal1.style.left = -${hh}+'px';
+                                                                                    window.intervalHorizontalScroll1=setInterval(function() {
+                                                                                        aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left + horizontalSpeed) + 'px';
             if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left = -${hh} +'px'};
             }, 1);
         }
-                                                                                        `
+                                                                                    `
         endpoint(`call ${window.chNumber}-${layerNumber} "
-                                                                                        ${script}
-                                                                                        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
     const startHorizontalScroll2 = (layerNumber) => {
@@ -2549,35 +2548,35 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         var hh = (canvas.getActiveObject())?.getBoundingRect().width + 200;
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-                                                                                        window.aaHorizontal2 = document.createElement('div');
-                                                                                        aaHorizontal2.style.position='absolute';
-                                                                                        aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aaHorizontal2.style.zIndex = ${layerNumber};
-                                                                                        aaHorizontal2.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        document.body.appendChild(aaHorizontal2);
-                                                                                        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
-                                                                                        document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                        aaHorizontal2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        window.horizontalSpeed2=${horizontalSpeed2};
-                                                                                        if (${!ltr2}){
-                                                                                            aaHorizontal2.style.left = '100%';
+                                                                                    window.aaHorizontal2 = document.createElement('div');
+                                                                                    aaHorizontal2.style.position='absolute';
+                                                                                    aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aaHorizontal2.style.zIndex = ${layerNumber};
+                                                                                    aaHorizontal2.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    document.body.appendChild(aaHorizontal2);
+                                                                                    document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
+                                                                                    document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
+                                                                                    aaHorizontal2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    window.horizontalSpeed2=${horizontalSpeed2};
+                                                                                    if (${!ltr2}){
+                                                                                        aaHorizontal2.style.left = '100%';
                     window.intervalHorizontalScroll2=setInterval(()=>{
-                                                                                            aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left - horizontalSpeed2 + 'px';
-                                                                                        if (aaHorizontal2.getBoundingClientRect().left < -${hh}){aaHorizontal2.style.left = '100%'};
+                                                                                        aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left - horizontalSpeed2 + 'px';
+                                                                                    if (aaHorizontal2.getBoundingClientRect().left < -${hh}){aaHorizontal2.style.left = '100%'};
                     }, 1);
                     }
-                                                                                        else{
-                                                                                            aaHorizontal2.style.left = -${hh}+'px';
+                                                                                    else{
+                                                                                        aaHorizontal2.style.left = -${hh}+'px';
             window.intervalHorizontalScroll2=setInterval(()=>{
-                                                                                            aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left + horizontalSpeed2 + 'px';
+                                                                                        aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left + horizontalSpeed2 + 'px';
             if (aaHorizontal2.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal2.style.left = -${hh}+'px'};
             }, 1);
         }
-                                                                                        `
+                                                                                    `
         endpoint(`call ${window.chNumber}-${layerNumber} "
-                                                                                        ${script}
-                                                                                        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
     const startClock = (layerNumber) => {
@@ -2589,28 +2588,28 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-        window.aaClock = document.createElement('div');
-        aaClock.style.position='absolute';
-        aaClock.setAttribute('id','divid_' + '${layerNumber}');
-        aaClock.style.zIndex = ${layerNumber};
-        aaClock.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-        document.body.appendChild(aaClock);
+                                                                                    window.aaClock = document.createElement('div');
+                                                                                    aaClock.style.position='absolute';
+                                                                                    aaClock.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aaClock.style.zIndex = ${layerNumber};
+                                                                                    aaClock.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    document.body.appendChild(aaClock);
 
-        document.body.style.margin='0';
-        document.body.style.padding='0';
-        aaClock.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        document.body.style.overflow='hidden';
+                                                                                    document.body.style.margin='0';
+                                                                                    document.body.style.padding='0';
+                                                                                    aaClock.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
 
-        window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
-        ccClock.textContent='';
+                                                                                    window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
+                                                                                    ccClock.textContent='';
         window.xxxClock=setInterval(()=>{
             var ss1 = new Date().toLocaleTimeString('en-US', {hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-            ccClock.textContent  =ss1;
+                                                                                    ccClock.textContent  =ss1;
         }, 1000);
-       `
+                                                                                    `
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
-        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
     const startUpTimer = (layerNumber) => {
@@ -2623,54 +2622,54 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         selectAll(canvas);
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         const script = `
-                                                                                        window.aaUpTimer = document.createElement('div');
-                                                                                        aaUpTimer.style.position='absolute';
-                                                                                        aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aaUpTimer.style.zIndex = ${layerNumber};
-                                                                                        aaUpTimer.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        document.body.appendChild(aaUpTimer);
-                                                                                        document.body.style.margin='0';
-                                                                                        document.body.style.padding='0';
-                                                                                        aaUpTimer.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
-                                                                                        ccUpTimer.textContent='00:00:000';
-                                                                                        window.xxxUpTimer=null;
-                                                                                        window.diff=null;
-                                                                                        window.diffLast=0;
-                                                                                        window.date_diff=null;
-                                                                                        window.ss2=null ;
-                                                                                        `
+                                                                                    window.aaUpTimer = document.createElement('div');
+                                                                                    aaUpTimer.style.position='absolute';
+                                                                                    aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aaUpTimer.style.zIndex = ${layerNumber};
+                                                                                    aaUpTimer.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    document.body.appendChild(aaUpTimer);
+                                                                                    document.body.style.margin='0';
+                                                                                    document.body.style.padding='0';
+                                                                                    aaUpTimer.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
+                                                                                    ccUpTimer.textContent='00:00:000';
+                                                                                    window.xxxUpTimer=null;
+                                                                                    window.diff=null;
+                                                                                    window.diffLast=0;
+                                                                                    window.date_diff=null;
+                                                                                    window.ss2=null ;
+                                                                                    `
         endpoint(`call ${window.chNumber}-${layerNumber} "
-                                                                                        ${script}
-                                                                                        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
     const resumeUpTimer = () => {
         const script = `
-                                                                                        window.startTime = new Date();
-                                                                                        if(window.xxxUpTimer){clearInterval(xxxUpTimer)};
-                                                                                        xxxUpTimer=setInterval(function() {
-                                                                                            diff = diffLast + (new Date()).getTime() - startTime.getTime();
-                                                                                        date_diff = new Date(diff - 30 * 60 * 1000);
-                                                                                        ss2 = date_diff.toLocaleString('en-US', {minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
-                                                                                        ccUpTimer.textContent  =ss2;
+                                                                                    window.startTime = new Date();
+                                                                                    if(window.xxxUpTimer){clearInterval(xxxUpTimer)};
+                                                                                    xxxUpTimer=setInterval(function() {
+                                                                                        diff = diffLast + (new Date()).getTime() - startTime.getTime();
+                                                                                    date_diff = new Date(diff - 30 * 60 * 1000);
+                                                                                    ss2 = date_diff.toLocaleString('en-US', {minute: '2-digit', second: '2-digit' }) + ':' + String(date_diff.getMilliseconds()).padStart(3, '0');
+                                                                                    ccUpTimer.textContent  =ss2;
          }, 40);
-                                                                                        `
+                                                                                    `
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
-                                                                                        ${script}
-                                                                                        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
 
     const pauseUpTimer = () => {
         const script = `
-                                                                                        clearInterval(xxxUpTimer);
-                                                                                        diffLast=diff;
-                                                                                        `
+                                                                                    clearInterval(xxxUpTimer);
+                                                                                    diffLast=diff;
+                                                                                    `
         endpoint(`call ${window.chNumber}-${templateLayers.countUpTimer} "
-                                                                                        ${script}
-                                                                                        "`)
+                                                                                    ${script}
+                                                                                    "`)
         executeScript(script);
     }
 
@@ -2695,24 +2694,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             }, 250);
 
             const script = `
-                                                                                        var bb = document.createElement('div');
-                                                                                        bb.style.perspective='1920px';
-                                                                                        bb.style.transformStyle='preserve-3d';
-                                                                                        document.body.appendChild(bb);
-                                                                                        var aa = document.createElement('div');
-                                                                                        aa.style.position='absolute';
-                                                                                        aa.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aa.style.zIndex = ${layerNumber};
-                                                                                        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        bb.appendChild(aa);
-                                                                                        document.body.style.margin='0';
-                                                                                        document.body.style.padding='0';
-                                                                                        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        var style = document.createElement('style');
-                                                                                        style.textContent = '${inAnimation}';
-                                                                                        document.head.appendChild(style);
-                                                                                        `
+                                                                                    var bb = document.createElement('div');
+                                                                                    bb.style.perspective='1920px';
+                                                                                    bb.style.transformStyle='preserve-3d';
+                                                                                    document.body.appendChild(bb);
+                                                                                    var aa = document.createElement('div');
+                                                                                    aa.style.position='absolute';
+                                                                                    aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aa.style.zIndex = ${layerNumber};
+                                                                                    aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    bb.appendChild(aa);
+                                                                                    document.body.style.margin='0';
+                                                                                    document.body.style.padding='0';
+                                                                                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    var style = document.createElement('style');
+                                                                                    style.textContent = '${inAnimation}';
+                                                                                    document.head.appendChild(style);
+                                                                                    `
             executeScript(script);
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -2733,24 +2732,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
 
         const script = `
-                                                                                        var bb = document.createElement('div');
-                                                                                        bb.style.perspective='1920px';
-                                                                                        bb.style.transformStyle='preserve-3d';
-                                                                                        document.body.appendChild(bb);
-                                                                                        var aa = document.createElement('div');
-                                                                                        aa.style.position='absolute';
-                                                                                        aa.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                        aa.style.zIndex = ${layerNumber};
-                                                                                        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
-                                                                                        bb.appendChild(aa);
-                                                                                        document.body.style.margin='0';
-                                                                                        document.body.style.padding='0';
-                                                                                        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                                                                                        document.body.style.overflow='hidden';
-                                                                                        var style = document.createElement('style');
-                                                                                        style.textContent = '${inAnimation}';
-                                                                                        document.head.appendChild(style);
-                                                                                        `
+                                                                                    var bb = document.createElement('div');
+                                                                                    bb.style.perspective='1920px';
+                                                                                    bb.style.transformStyle='preserve-3d';
+                                                                                    document.body.appendChild(bb);
+                                                                                    var aa = document.createElement('div');
+                                                                                    aa.style.position='absolute';
+                                                                                    aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                    aa.style.zIndex = ${layerNumber};
+                                                                                    aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+                                                                                    bb.appendChild(aa);
+                                                                                    document.body.style.margin='0';
+                                                                                    document.body.style.padding='0';
+                                                                                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+                                                                                    document.body.style.overflow='hidden';
+                                                                                    var style = document.createElement('style');
+                                                                                    style.textContent = '${inAnimation}';
+                                                                                    document.head.appendChild(style);
+                                                                                    `
         executeScript(script);
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -2871,7 +2870,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             if (element.rx !== null) { setSkewRX(element.rx); }
             if (element.ry !== null) { setSkewRY(element.ry); }
             if (element.skewX !== null) { setSkewXSize(element.skewX.toFixed(0)); }
-            // if (element.skewX !== null) { setSkewXSize(element.skewX); }
+            // if (element.skewX !== null) {setSkewXSize(element.skewX); }
             if (element.skewY !== null) { setSkewYSize(element.skewY.toFixed(0)); }
             if (element.fontFamily !== null) { setCurrentFont(element.fontFamily); }
             if (element.fontSize !== null) { setFontSize(element.fontSize); }
@@ -3047,6 +3046,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={() => saveToLocalStorage(canvas)}>saveToLocalStorage</button>
                         <button onClick={() => getFromLocalStorage(canvas)}>Get from LocalStorage</button>
                         <button onClick={() => exportJSONforTheatrejs(canvas)}>Web Animator</button>
+
+
+
                     </div>
                     <div className='drawingToolsRow' >
                         Client Id<input title='Put Unique Id so that other may not iterfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {

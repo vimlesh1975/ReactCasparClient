@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = '090323_1'
+export const buildDate = '160323_1'
 export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor', 'darker', 'multiply', 'screen']
 
 export const hexToRGB = hex => {
@@ -40,7 +40,7 @@ export var address1 = 'http://' + (window.location.host).split(':')[0] + ':9000'
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096]
 
 export const videoLayers = [1, 2, 3, 10000, 5];
-export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, tennisScore: 156, kabaddiScore: 157, customClient: 158, cricketScore: 159, gameTimer: 160, gameTimer2: 163, LBand: 166, twoliner: 165, theatrejs: 166 };
+export const templateLayers = { patternLayer: 95, solidCaption1: 96, animationLayer: 96, savePannelPlayer: 105, solidCaption2: 115, solidCaption3: 120, logo: 125, locationBand: 130, verticalScroll: 135, horizontalScroll: 140, horizontalScroll2: 145, clock: 150, countUpTimer: 155, tennisScore: 156, kabaddiScore: 157, customClient: 158, cricketScore: 159, gameTimer: 160, gameTimer2: 163, LBand: 166, twoliner: 165, theatrejs: 166, gsap: 167 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 
 export const stopAllTheatreLayes = () => {
