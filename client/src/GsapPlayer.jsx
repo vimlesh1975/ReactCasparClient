@@ -53,7 +53,16 @@ const GsapPlayer = () => {
 
     const preview = canvas => {
         const sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
-        gsap.from(sortedElements, { duration: duration, left: -2100, ease: ease, stagger: stagger, onUpdate: () => { canvas.requestRenderAll(); } });
+        // gsap.from(sortedElements, { duration: duration, left: -2100, ease: ease, stagger: stagger, onUpdate: () => { canvas.requestRenderAll(); } });
+        var tl = gsap.timeline();
+        tl.pause();
+        tl.from(sortedElements, { duration: duration, left: -2100, ease: ease, stagger: stagger, onUpdate: () => { canvas.requestRenderAll(); }  });
+        tl.play();
+
+        // setTimeout(() => {
+        //     tl.reverse();
+        //   }, 8000);
+
     }
 
     const testGsapCaspar = (canvas, layerNumber) => {
@@ -73,17 +82,20 @@ const GsapPlayer = () => {
         var canvas = new fabric.Canvas('canvas');
         window.canvas=canvas;
         canvas.loadFromJSON(${contentforcasparcg},()=>{
-            window.sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
-            gsap.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
+        window.sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
+        window.tl = gsap.timeline();
+        tl.pause();
+        tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
             setTimeout(() => {
                 document.body.style.opacity = 1;
             }, 50);
-        })
+        });
+        tl.play();
         "`)
     }
     const stopGsapLayer = (layerNumber) => {
         endpoint(`call 1-${layerNumber} "
-        gsap.to(Array.from(sortedElements).reverse(), { duration: ${duration}, left:4200, ease: '${ease}', stagger: ${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
+        tl.reverse();
         "`)
     }
     return (
