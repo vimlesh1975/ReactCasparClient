@@ -2,7 +2,6 @@ import { applyMiddleware } from 'redux'
 import { legacy_createStore as createStore } from 'redux'
 // import { configureStore} from  '@reduxjs/toolkit'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { combineReducers } from 'redux';
 
@@ -313,5 +312,5 @@ const rootReducer = combineReducers({
     speechRecognitionReducer,
     clientIdReducer
 })
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)))
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware( thunk)))
 export default store
