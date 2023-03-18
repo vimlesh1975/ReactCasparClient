@@ -82,6 +82,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^4.0.0",
+    "sass": "^1.59.3"
   }
 }
