@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = '170323_1'
+export const buildDate = '180323_1'
 export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor', 'darker', 'multiply', 'screen']
 
 export const hexToRGB = hex => {
@@ -915,4 +915,41 @@ export const languages = [
     "zh-HK",
     "zh-TW",
     "bh-IN"
+];
+export const easeTypes = [
+    "none",
+    "power1.in",
+    "power1.out",
+    "power1.inOut",
+    "power2.in",
+    "power2.out",
+    "power2.inOut",
+    "power3.in",
+    "power3.out",
+    "power3.inOut",
+    "power4.in",
+    "power4.out",
+    "power4.inOut",
+    "linear",
+    "back.in",
+    "back.out",
+    "back.inOut",
+    "bounce.in",
+    "bounce.out",
+    "bounce.inOut",
+    "elastic.in",
+    "elastic.out",
+    "elastic.inOut",
+    "rough",
+    "slow",
+    "stepped",
+    "circ.in",
+    "circ.out",
+    "circ.inOut",
+    "expo.in",
+    "expo.out",
+    "expo.inOut",
+    "sine.in",
+    "sine.out",
+    "sine.inOut"
 ];

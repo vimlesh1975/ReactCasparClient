@@ -21,6 +21,9 @@ import Layers2 from './Layers2';
 import CasparcgTools from './CasparcgTools';
 
 import { rgbaCol, listglobalCompositeOperation } from './common'
+import GsapPlayer from './GsapPlayer'
+
+
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
@@ -3260,7 +3263,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} ><FaStop /></button>
                         <span> {solidcaption3} </span>
                     </div>
+                    <div className='drawingToolsRow' >
 
+                        <GsapPlayer />
+                    </div>
                     <div className='drawingToolsRow' >
                         <b> Logo: </b>
 
