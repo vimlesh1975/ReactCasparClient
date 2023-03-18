@@ -19,7 +19,7 @@ const GsapPlayer = () => {
         tl.play();
     }
 
-    const testGsapCaspar = (canvas, layerNumber) => {
+    const playtoGsapCaspar = (canvas, layerNumber) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
@@ -89,12 +89,52 @@ const GsapPlayer = () => {
         executeScript(script);
 
     }
+
+    const updateCaspar = (canvas, layerNumber) => {
+        const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+
+        const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
+        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+
+        // endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/CanvasPlayer"`);
+        const script = `
+
+        canvas.loadFromJSON(${contentforcasparcg},()=>{
+           
+        });
+        `
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`)
+        }, 100);
+
+
+        const scriptforHtml = `
+        document.getElementById('divid_${layerNumber}')?.remove();
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        document.body.style.opacity = 1;
+        document.body.style.overflow='hidden';
+        document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
+        document.body.appendChild(aa);
+        var canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
+       
+        var content =\`${contentforHtml}\`;
+
+        canvas_${layerNumber}.loadFromJSON(content,()=>{
+           
+        })
+        `
+        executeScript(scriptforHtml)
+    }
+
     return (
         <div>
             <b> GsapPlayer: </b>
             <button onClick={() => preview(canvas)}>Preview</button>
-            <button onClick={() => testGsapCaspar(canvas, templateLayers.gsap)}><FaPlay /></button>
-            {/* <button onClick={() => testGsapCaspar(canvas,50)}><FaPlay /></button> */}
+            <button onClick={() => playtoGsapCaspar(canvas, templateLayers.gsap)}><FaPlay /></button>
+            <button onClick={() => updateCaspar(canvas, templateLayers.gsap)}>Update</button>
             <button onClick={() => stopGsapLayer(templateLayers.gsap)}><FaStop /></button>
 
             <div>
