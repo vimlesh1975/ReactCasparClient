@@ -3263,7 +3263,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} ><FaStop /></button>
                         <span> {solidcaption3} </span>
                     </div>
-                    <div className='drawingToolsRow' >
+                    <div className='drawingToolsRow' style={{border:'1px solid black'}} >
 
                         <GsapPlayer />
                     </div>
