@@ -21,6 +21,8 @@ const GsapPlayer = () => {
 
     const testGsapCaspar = (canvas, layerNumber) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+
+        const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
         const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
 
         endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/CanvasPlayer"`);
@@ -50,7 +52,6 @@ const GsapPlayer = () => {
         }, 100);
 
 
-        const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
         const scriptforHtml = `
         document.getElementById('divid_${layerNumber}')?.remove();
         var aa = document.createElement('div');
