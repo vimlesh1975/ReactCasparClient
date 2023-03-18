@@ -52,9 +52,9 @@ const GsapPlayer = () => {
         tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
             setTimeout(() => {
                 document.body.style.opacity = 1;
+        tl.play();
             }, 100);
         });
-        tl.play();
         "`)
         }, 100);
 
