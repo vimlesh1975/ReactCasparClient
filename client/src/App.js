@@ -38,6 +38,8 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import Threejs from './Threejs';
 import CodeImport from './CodeImport';
 
+import Tsparticles1 from './tsparticles/Tsparticles1';
+
 const App = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const zoom = useSelector(state => state.canvaszoomReducer.zoom);
@@ -499,6 +501,8 @@ const App = () => {
             {/* <Tab >Udp Clock</Tab> */}
             <Tab >Threejs</Tab>
             <Tab >Code Import</Tab>
+            <Tab >Tsparticles</Tab>
+
             <Tab>Help</Tab>
           </TabList>
           <TabPanel >
@@ -561,6 +565,9 @@ const App = () => {
           </TabPanel>
           <TabPanel >
             <CodeImport />
+          </TabPanel>
+          <TabPanel >
+            <Tsparticles1 />
           </TabPanel>
 
           <TabPanel >

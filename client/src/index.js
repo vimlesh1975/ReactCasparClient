@@ -14,6 +14,9 @@ import HTML from './htmlrenderer/Html'
 import WebAnimator from './theatrejs/WebAnimator';
 import Theatrejs2 from './theatrejs/Theatrejs2';
 import CanvasPlayer from './CanvasPlayer';
+import Tsparticles1 from './tsparticles/Tsparticles1';
+
+
 
 
 window.store = store;
@@ -30,6 +33,7 @@ root.render(
         <Route exact path='/WebAnimator' element={<WebAnimator />} />
         <Route exact path='/Theatrejs2' element={<Theatrejs2 />} />
         <Route exact path='/CanvasPlayer' element={<CanvasPlayer />} />
+        <Route exact path='/Tsparticles1' element={<Tsparticles1 />} />
       </Routes>
     </Router>
   </Provider>
