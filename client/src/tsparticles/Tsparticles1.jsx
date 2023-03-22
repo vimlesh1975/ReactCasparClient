@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { endpoint, templateLayers } from '../common'
 
 const Tsparticles1 = () => {
-  const [opacity, setOpacity] = useState(0.3);
+  const [opacity, setOpacity] = useState(1);
   const [size, setSize] = useState(20);
   const [number, setNumber] = useState(20);
   const [speed, setSpeed] = useState(6);
@@ -12,6 +12,8 @@ const Tsparticles1 = () => {
   const [strokeWidth, setStrokeWidth] = useState(3);
   const [shape, setShape] = useState('polygon');
   const [strokeColor, setStrokeColor] = useState('#ff00ff');
+  const [file, setFile] = useState('/ReactCasparClient/img/pine-wood-500x500.jpg');
+  const [link, setLink] = useState(true);
 
 
   const width = 850;
@@ -54,7 +56,7 @@ const Tsparticles1 = () => {
           "nb_sides": parseInt(polygoneSides)
         },
         "image": {
-          "src": "img/github.svg",
+          "src": file,
           "width": 40,
           "height": 20
         }
@@ -80,7 +82,7 @@ const Tsparticles1 = () => {
         }
       },
       "line_linked": {
-        "enable": false,
+        "enable": link,
         "distance": 150,
         "color": "#000000",
         "opacity": 1,
@@ -113,6 +115,30 @@ const Tsparticles1 = () => {
     padding: '5px',
   };
 
+  const setfileforTsparticle = () => {
+    var fInput = document.createElement("input");
+    fInput.setAttribute("type", "file");
+    fInput.setAttribute("accept", "image/*");
+    fInput.setAttribute("multiple", false);
+
+    fInput.click();
+    fInput.onchange = (e) => {
+      if (e.target.files) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setFile(reader.result);
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    }
+  }
+  useEffect(() => {
+
+    return () => {
+      // second
+    }
+  }, [])
+
   return (<div>
     <div >
       <table style={styles}>
@@ -122,14 +148,17 @@ const Tsparticles1 = () => {
             <option value="circle">Circle</option>
             <option value="star">Star</option>
             <option value="polygon">Polygon</option>
+            <option value="image">Image</option>
           </select></td> </tr>
           <tr style={styles}><td style={styles}>Speed</td>  <td style={styles}><input className='inputRange' onChange={e => setSpeed(e.target.value)} type="range" min={0} max={100} step={1} value={speed} /> {speed}</td> </tr>
+          {(shape === 'image') && <tr style={styles}><td style={styles}>Image</td><td onClick={setfileforTsparticle} style={styles}>  <img src={file} alt="particle_image" style={{ width: 60, height: 20 }} /></td></tr>}
           <tr style={styles}><td style={styles}>Opacity</td>  <td style={styles}><input className='inputRange' onChange={e => setOpacity(e.target.value)} type="range" min={0} max={1} step={0.1} value={opacity} /> {opacity}</td> </tr>
           <tr style={styles}><td style={styles}>Size</td><td style={styles}><input className='inputRange' onChange={e => setSize(e.target.value)} type="range" min={0} max={200} step={1} value={size} /> {size}</td></tr>
           <tr style={styles}><td style={styles}>Number</td>  <td style={styles}> <input className='inputRange' onChange={e => setNumber(e.target.value)} type="range" min={0} max={200} step={1} value={number} /> {number}  </td></tr>
           <tr style={styles}><td style={styles}>Sides</td><td style={styles}> <input className='inputRange' onChange={e => setPolygoneSides(e.target.value)} type="range" min={0} max={30} step={1} value={polygoneSides} /> {polygoneSides} </td></tr>
           <tr style={styles}><td style={styles}>Stroke</td><td style={styles}>  <input className='inputRange' onChange={e => setStrokeWidth(e.target.value)} type="range" min={0} max={200} step={1} value={strokeWidth} /> {strokeWidth}</td></tr>
           <tr style={styles}><td style={styles}>Stroke Color</td><td style={styles}>  <input onChange={e => setStrokeColor(e.target.value)} type="color" value={strokeColor} /></td></tr>
+          <tr style={styles}><td style={styles}>Link</td><td onClick={() => setLink(val => !val)} style={styles}>  <input type="checkbox" checked={link} /></td></tr>
 
           {/* <tr style={styles}><td style={styles}></td><td style={styles}></td></tr>
         <tr style={styles}><td style={styles}></td><td style={styles}></td></tr> */}

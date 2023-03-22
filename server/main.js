@@ -163,10 +163,12 @@ app.post('/getmedia', (req, res) => {
 })
 
 app.post('/endpoint', (req, res) => {
+    console.log(req.headers.referer);
     aa.do(new AMCP.CustomCommand(req.body.string)).then((aa1) => {
-        // console.log(req.body.string)
-        // console.log(aa1.response.raw)
-    }).catch((aa2) => console.log(aa2));
+        // console.log(aa1.response.raw);
+    }).catch((aa2) => {
+        // console.log(aa2.response.raw)
+    });
     res.end()
 })
 
