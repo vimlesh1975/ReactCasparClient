@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { socketAddress } from '../common'
 import socketIOClient from "socket.io-client";
+import Tsparticles2 from '../tsparticles/Tsparticles2';
 
 window.hexToRGB = hex => {
     const red = parseInt(hex.slice(1, 3), 16)
@@ -216,9 +217,10 @@ const Html = () => {
         // eslint-disable-next-line
     }, [])
 
-    return (
+    return (<>
         <div ref={refhtml}></div>
-    )
+        <Tsparticles2 />
+    </>)
 }
 
 export default Html

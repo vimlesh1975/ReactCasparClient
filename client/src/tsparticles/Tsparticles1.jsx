@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import { endpoint, templateLayers } from '../common'
+import { endpoint, templateLayers, executeScript } from '../common'
 
 const Tsparticles1 = () => {
   const [opacity, setOpacity] = useState(1);
@@ -13,7 +13,7 @@ const Tsparticles1 = () => {
   const [shape, setShape] = useState('polygon');
   const [strokeColor, setStrokeColor] = useState('#ff00ff');
   const [file, setFile] = useState('/ReactCasparClient/img/pine-wood-500x500.jpg');
-  const [link, setLink] = useState(true);
+  const [link, setLink] = useState(false);
 
 
   const width = 850;
@@ -24,12 +24,14 @@ const Tsparticles1 = () => {
     // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
     // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(engine);
+
   }, []);
 
   const particlesLoaded = useCallback(async (container) => {
     await console.log(container);
-    window.tsParticles = container._engine;
+    // window.tsParticles = container._engine;
   }, []);
+
   const initialise = (layerNumber) => {
     endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Tsparticles2"`);
   }
@@ -109,6 +111,17 @@ const Tsparticles1 = () => {
     endpoint(`call 1-${layerNumber} "
         ${bb}
         "`);
+    const script = `
+        ${aa}
+        `
+    executeScript(`
+        ${script}
+        `);
+  }
+  const stop = (layerNumber) => {
+    endpoint(`call 1-${layerNumber} "document.getElementById('tsparticles')?.remove()"`);
+    executeScript(`document.getElementById('tsparticles')?.remove()`);
+
   }
   const styles = {
     border: '1px solid black',
@@ -144,31 +157,28 @@ const Tsparticles1 = () => {
       <table style={styles}>
 
         <tbody>
-          <tr style={styles}><td style={styles}>Shape</td>  <td style={styles}>  <select value={shape} onChange={e => setShape(e.target.value)}>
+          <tr style={styles}><td style={styles}>Shape</td><td style={styles}><select value={shape} onChange={e => setShape(e.target.value)}>
             <option value="circle">Circle</option>
             <option value="star">Star</option>
             <option value="polygon">Polygon</option>
             <option value="image">Image</option>
-          </select></td> </tr>
-          <tr style={styles}><td style={styles}>Speed</td>  <td style={styles}><input className='inputRange' onChange={e => setSpeed(e.target.value)} type="range" min={0} max={100} step={1} value={speed} /> {speed}</td> </tr>
+          </select></td></tr>
+          <tr style={styles}><td style={styles}>Speed</td><td style={styles}><input className='inputRange' onChange={e => setSpeed(e.target.value)} type="range" min={0} max={100} step={1} value={speed} />{speed}</td></tr>
           {(shape === 'image') && <tr style={styles}><td style={styles}>Image</td><td onClick={setfileforTsparticle} style={styles}>  <img src={file} alt="particle_image" style={{ width: 60, height: 20 }} /></td></tr>}
-          <tr style={styles}><td style={styles}>Opacity</td>  <td style={styles}><input className='inputRange' onChange={e => setOpacity(e.target.value)} type="range" min={0} max={1} step={0.1} value={opacity} /> {opacity}</td> </tr>
+          <tr style={styles}><td style={styles}>Opacity</td><td style={styles}><input className='inputRange' onChange={e => setOpacity(e.target.value)} type="range" min={0} max={1} step={0.1} value={opacity} />{opacity}</td></tr>
           <tr style={styles}><td style={styles}>Size</td><td style={styles}><input className='inputRange' onChange={e => setSize(e.target.value)} type="range" min={0} max={200} step={1} value={size} /> {size}</td></tr>
-          <tr style={styles}><td style={styles}>Number</td>  <td style={styles}> <input className='inputRange' onChange={e => setNumber(e.target.value)} type="range" min={0} max={200} step={1} value={number} /> {number}  </td></tr>
-          <tr style={styles}><td style={styles}>Sides</td><td style={styles}> <input className='inputRange' onChange={e => setPolygoneSides(e.target.value)} type="range" min={0} max={30} step={1} value={polygoneSides} /> {polygoneSides} </td></tr>
-          <tr style={styles}><td style={styles}>Stroke</td><td style={styles}>  <input className='inputRange' onChange={e => setStrokeWidth(e.target.value)} type="range" min={0} max={200} step={1} value={strokeWidth} /> {strokeWidth}</td></tr>
-          <tr style={styles}><td style={styles}>Stroke Color</td><td style={styles}>  <input onChange={e => setStrokeColor(e.target.value)} type="color" value={strokeColor} /></td></tr>
-          <tr style={styles}><td style={styles}>Link</td><td onClick={() => setLink(val => !val)} style={styles}>  <input type="checkbox" checked={link} /></td></tr>
-
-          {/* <tr style={styles}><td style={styles}></td><td style={styles}></td></tr>
-        <tr style={styles}><td style={styles}></td><td style={styles}></td></tr> */}
+          <tr style={styles}><td style={styles}>Number</td><td style={styles}><input className='inputRange' onChange={e => setNumber(e.target.value)} type="range" min={0} max={200} step={1} value={number} />{number}</td></tr>
+          <tr style={styles}><td style={styles}>Sides</td><td style={styles}><input className='inputRange' onChange={e => setPolygoneSides(e.target.value)} type="range" min={0} max={30} step={1} value={polygoneSides} />{polygoneSides}</td></tr>
+          <tr style={styles}><td style={styles}>Stroke</td><td style={styles}><input className='inputRange' onChange={e => setStrokeWidth(e.target.value)} type="range" min={0} max={200} step={1} value={strokeWidth} />{strokeWidth}</td></tr>
+          <tr style={styles}><td style={styles}>Stroke Color</td><td style={styles}><input onChange={e => setStrokeColor(e.target.value)} type="color" value={strokeColor} /></td></tr>
+          <tr style={styles}><td style={styles}>Link</td><td onClick={() => setLink(val => !val)} style={styles}><input type="checkbox" checked={link} onChange={() => { }} /></td></tr>
 
         </tbody>
-
       </table>
 
-      <button onClick={() => initialise(templateLayers.Tsparticles1)}>Initialise</button>
+      <button onClick={() => initialise(templateLayers.Tsparticles1)}>Initialise only once</button>
       <button onClick={() => update(templateLayers.Tsparticles1)}>Update</button>
+      <button onClick={() => stop(templateLayers.Tsparticles1)}>Stop</button>
     </div>
 
     <Particles
