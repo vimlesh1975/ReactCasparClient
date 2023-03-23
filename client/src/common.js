@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = '220323_1'
+export const buildDate = '230323_1'
 export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor', 'darker', 'multiply', 'screen']
 
 export const hexToRGB = hex => {
@@ -952,4 +952,56 @@ export const easeTypes = [
     "sine.in",
     "sine.out",
     "sine.inOut"
+];
+export const colors = [
+    '#1b648f',
+    '#a14e89',
+    '#af6b1c',
+    '#797362',
+    '#c8d23b',
+    '#7d45b6',
+    '#c8459e',
+    '#45c1a1',
+    '#c45d4b',
+    '#4f7390',
+    '#b95d9d',
+    '#2c907a',
+    '#946757',
+    '#8d3a4a',
+    '#44a764',
+    '#9c6da1',
+    '#4e6a2f',
+    '#8c438f',
+    '#a25e37',
+    '#536b8f',
+    '#a85357',
+    '#5b7e5f',
+    '#c97d91',
+    '#5c5d5d',
+    '#c2623b',
+    '#5e7c8d',
+    '#b94c74',
+    '#9d6e43',
+    '#b84e38',
+    '#7b8d4b',
+    '#c85f4c',
+    '#9a6f8d',
+    '#46685d',
+    '#c3478f',
+    '#7a5d6f',
+    '#c85e9a',
+    '#7a985d',
+    '#b64d38',
+    '#567c8e',
+    '#b64c7a',
+    '#5b7d5f',
+    '#c9496f',
+    '#5e748f',
+    '#c8643b',
+    '#637d5d',
+    '#b34e9d',
+    '#5e6a8d',
+    '#c65d7a',
+    '#9d6f43',
+    '#b34d38'
 ];

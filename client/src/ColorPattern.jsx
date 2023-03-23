@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { endpoint, stopGraphics, templateLayers } from "./common";
+import { endpoint, stopGraphics, templateLayers, executeScript } from "./common";
 import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
 import { selectAll } from './DrawingController';
@@ -35,6 +35,8 @@ const ColorPattern = () => {
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
         selectAll(canvas);
         var br = (canvas.getActiveObject())?.getBoundingRect();
+        executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
+        executeScript(`document.getElementById('divid_${layerNumber + 1}')?.remove();`);
 
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -43,6 +45,8 @@ const ColorPattern = () => {
             bb.style.transformStyle='preserve-3d';
             document.body.appendChild(bb);
             var aa = document.createElement('div');
+            aa.setAttribute('id','divid_' + '${layerNumber}');
+            aa.style.zIndex = ${layerNumber};
             aa.style.position='absolute';
             aa.innerHTML='${(refcopiedDiv.current.innerHTML).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
@@ -67,6 +71,8 @@ const ColorPattern = () => {
             bb.style.transformStyle='preserve-3d';
             document.body.appendChild(bb);
             var aa = document.createElement('div');
+            aa.setAttribute('id','divid_' + '${layerNumber + 1}');
+            aa.style.zIndex = ${layerNumber + 1};
             aa.style.position='absolute';
             aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             bb.appendChild(aa);
