@@ -1940,7 +1940,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         // myWindow.print()
     }
     const setHtmlString = () => {
-        html = `< !DOCTYPE html >
+        html = `<!DOCTYPE html >
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
@@ -3263,7 +3263,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         }} ><FaStop /></button>
                         <span> {solidcaption3} </span>
                     </div>
-                    <div className='drawingToolsRow' style={{border:'1px solid black'}} >
+                    <div className='drawingToolsRow' style={{ border: '1px solid black' }} >
 
                         <GsapPlayer />
                     </div>
