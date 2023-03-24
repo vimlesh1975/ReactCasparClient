@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux'
 import { stopGraphics, recallPage, updateData, templateLayers } from '../common'
 
 const Tennis = () => {
+
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
+
     const [t1Set, setT1Set] = useState(1);
     const [t2Set, setT2Set] = useState(2);
 
@@ -18,6 +21,7 @@ const Tennis = () => {
     const [showService, setShowService] = useState(true)
     const [service, setService] = useState(true)
     const [badminton, setBadminton] = useState(false)
+    const [autoUpdate, setAutoUpdate] = useState(false)
 
 
     const team1pointincrease = () => {
@@ -116,6 +120,14 @@ const Tennis = () => {
         setT1point(0);
         setT2point(0);
     }
+
+    useEffect(() => {
+        if (autoUpdate) {
+            updateData(templateLayers.tennisScore, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },], canvasList, canvas);
+        }
+        // eslint-disable-next-line
+    }, [showService, service, t1Set, t2Set, t1game, t2game, t1point, t2point])
+
     return (<div>
         <div>
             <h1> Score</h1>
@@ -130,6 +142,8 @@ const Tennis = () => {
             <button onClick={() => updateData(templateLayers.tennisScore, 'Crunch Scoreboard', [{ key: 'service1', value: (showService && service) ? 1 : 0, type: 'opacity' }, { key: 'service2', value: (showService && !service) ? 1 : 0, type: 'opacity' }, { key: 't1set', value: t1Set, type: 'text' }, { key: 't2set', value: t2Set, type: 'text' }, { key: 't1game', value: t1game, type: 'text' }, { key: 't2game', value: t2game, type: 'text' }, { key: 't1point', value: t1point, type: 'text' }, { key: 't2point', value: t2point, type: 'text' },], canvasList, canvas)}>updateData</button>
             <button onClick={() => stopGraphics(templateLayers.tennisScore)}>Stop</button>
             <button onClick={resetData}>Reset Data</button>
+            <input type={'checkbox'} checked={autoUpdate} onChange={e => setAutoUpdate(val => !val)} />Auto Update
+
 
         </div>
         <div>

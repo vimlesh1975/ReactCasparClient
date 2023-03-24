@@ -126,7 +126,7 @@ const Tsparticles1 = () => {
 
   const update2 = (layerNumber) => {
     canvas.discardActiveObject();
-    var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+    const sel = new fabric.ActiveSelection(canvas.getObjects(), {
       canvas: canvas,
     });
     canvas.setActiveObject(sel);

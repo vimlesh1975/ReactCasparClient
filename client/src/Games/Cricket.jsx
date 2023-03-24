@@ -6,10 +6,15 @@ import { useSelector } from 'react-redux'
 
 
 const Cricket = () => {
-    const canvas = useSelector(state => state.canvasReducer.canvas);
-    const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+    // const canvas = useSelector(state => state.canvasReducer.canvas);
+    // const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+    // const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
+    const { canvas, canvasList, currentscreenSize } = useSelector(state => ({
+        canvas: state.canvasReducer.canvas,
+        canvasList: state.canvasListReducer.canvasList,
+        currentscreenSize: state.currentscreenSizeReducer.currentscreenSize
+    }));
 
     const [team1, setTeam1] = useState('ONGC Cricket');
     const [info1, setInfo1] = useState('This Over 2 1 0 6 0 1');
@@ -31,8 +36,6 @@ const Cricket = () => {
     useEffect(() => {
         if (autoUpdate) {
             updateData(templateLayers.cricketScore, 'cricket_score', dataCricket, canvasList, canvas)
-        }
-        return () => {
         }
         // eslint-disable-next-line
     }, [run, wicket, over, team1, info1, info2])
