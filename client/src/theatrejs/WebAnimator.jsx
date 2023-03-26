@@ -303,12 +303,12 @@ const WebAnimator = () => {
         );
     }
 
-    const data1 = `name,age,email
-Milind Soman,30,john@example.com
-Ramaswami Aiyanger,25,jane@example.com
-Vimlesh Kumar,48,Vimlersh1975@gmail.com
-Vilash Bhandare,56,vlbhandare@gmail.com
-Viresh Kumar,50,Kviresh10@gmail.com`;
+    const data1 = `image,name,age,email
+img/flag/Albania.png,Milind Soman,30,john@example.com
+img/flag/Afghanistan.png,Ramaswami Aiyanger,25,jane@example.com
+img/flag/Belgium.png,Vimlesh Kumar,48,Vimlersh1975@gmail.com
+img/flag/Mauritania.png,Vilash Bhandare,56,vlbhandare@gmail.com
+img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     // var initialTop = 100;
 
@@ -335,17 +335,30 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
         }
 
         const updateData = (index) => {
-            headers.forEach((header, i) => {
+            headers.forEach((header,) => {
                 const myelement = canvas.getObjects().find(element => element.id === header)
-                myelement.set({ text: datas[index][headers[i]] })
+                if (header.includes('image')) {
+                    fabric.Image.fromURL('/ReactCasparClient/' + datas[index][header], img => {
+                        img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
+                        img.cloneAsImage(img1 => {
+                            myelement.setSrc(img1.getSrc(), () => {
+                                myelement.set({ visible: true });
+                                canvas.requestRenderAll();
+                            })
+                        })
+                    })
+                }
+                else {
+                    myelement.set({ text: datas[index][header] })
+                }
             })
             canvas.requestRenderAll();
             window.sheet.sequence.position = 0;
             setTimeout(() => {
-            playtoCasparcg(templateLayers.theatrejs, 1, 4);
+                playtoCasparcg(templateLayers.theatrejs, 1, 4);
             }, 100);
         }
-        const changeToImage = (i, j) => {
+        const changeImage = (i, j) => {
             // const updatedData = [...datas]
             // // console.log(updatedData[i][headers[j]])
             // // console.log(i, j)
@@ -353,7 +366,7 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
             // setDatas(updatedData)
         }
 
-        return (<div>
+        return (<div style={{ fontSize: 14 }}>
             <input type="file" onChange={handleChange} />
             <table border='1'>
                 <tbody>
@@ -366,36 +379,70 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
 
                     {datas.map((row, i) => {
                         return (<tr key={i}  >{headers.map((header, ii) => {
-                            return (<td onClick={() => changeToImage(i, ii)} key={ii}>
-                                {row[header]}
+                            return (<td key={ii}>
+                                {((row[header]).includes('/')) ? <img onClick={() => changeImage(i, ii)} src={'/ReactCasparClient/' + row[header]} alt='dd' width={20} height={20} /> : row[header]}
                             </td>
                             )
                         })}<td><button onClick={() => updateData(i)}>Play</button></td></tr>)
                     })}
                 </tbody>
             </table>
-            {/* myelement.set({ text: '${datas[3][headers[0]]}'}) */}
-            {/* [${headers}].forEach((header, i) => {
-                    const myelement = canvas_${templateLayers.theatrejs}.getObjects().find(element => element.id === header);
-                    console.log(myelement);
-                }) */}
+
             <button onClick={() => {
                 headers.forEach((header) => {
                     setTimeout(() => {
-                        addItem(createTextBox, header);
+                        if (header.includes('image')) {
+                            addItem(addImage, header);
+                        }
+                        else {
+                            addItem(createTextBox, header);
+                        }
                     }, 100);
                 })
 
             }}>Create Temlplate</button>
 
             <button onClick={() => {
-                headers.forEach((header, i) => {
+                headers.forEach((header) => {
                     const myelement = canvas.getObjects().find(element => element.id === header)
-                    myelement.set({ text: datas[0][headers[i]] })
+                    if (header.includes('image')) {
+                        fabric.Image.fromURL('/ReactCasparClient/' + datas[0][header], img => {
+                            img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
+                            img.cloneAsImage(img1 => {
+                                myelement.setSrc(img1.getSrc(), () => {
+                                    myelement.set({ visible: true });
+                                    canvas.requestRenderAll();
+                                })
+                            })
+                        })
+                    }
+                    else {
+                        myelement.set({ text: datas[0][header] })
+                    }
                 })
 
                 canvas.requestRenderAll();
                 playtoCasparcg(templateLayers.theatrejs, 1, 4);
+
+                // const newDatas = datas.map(item => {
+                //     return {
+                //         ...item,
+                //         image: '/ReactCasparClient/' + item.image
+                //     };
+                // });
+
+                const newDatas = datas.map(item => {
+                    const newItem = {};
+                    for (const [key, value] of Object.entries(item)) {
+                        if (key.includes("image")) {
+                            newItem[key] = '/ReactCasparClient/' + value;
+                        } else {
+                            newItem[key] = value;
+                        }
+                    }
+                    return newItem;
+                });
+
                 const scriptforhtml = "let csvInterval; " +
                     "if(csvInterval){clearInterval(csvInterval)};" +
                     "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
@@ -405,11 +452,23 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                     "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
                     "headers.forEach(function(header) { " +
                     "const myelement = canvas_" + templateLayers.theatrejs + ".getObjects().find(element => element.id === header); " +
-                    "myelement.set({text:" + JSON.stringify(datas).replaceAll('"', "'") + "[i][header]});" +
+                    "if (header.includes('image')) {" +
+                    "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
+                    "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
+                    "img.cloneAsImage(img1 => {" +
+                    "myelement.setSrc(img1.getSrc(), () => {" +
+                    "myelement.set({ visible: true });" +
+                    "})" +
+                    "})" +
+                    "})" +
+                    "}" +
+                    "else{" +
+                    "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
+                    "}" +
                     "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
                     "});" +
-                    " if (i < " + (datas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                    " }, 2000);"
+                    " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
+                    " }, " + duration * 1000 + ");"
 
 
                 executeScript(`${scriptforhtml}`);
@@ -423,16 +482,30 @@ Viresh Kumar,50,Kviresh10@gmail.com`;
                     "sheet.sequence.play();" +
                     "headers.forEach(function(header) { " +
                     "const myelement = canvas.getObjects().find(element => element.id === header); " +
-                    "myelement.set({text:" + JSON.stringify(datas).replaceAll('"', "'") + "[i][header]});" +
+
+                    "if (header.includes('image')) {" +
+                    "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
+                    "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
+                    "img.cloneAsImage(img1 => {" +
+                    "myelement.setSrc(img1.getSrc(), () => {" +
+                    "myelement.set({ visible: true });" +
+                    "})" +
+                    "})" +
+                    "})" +
+                    "}" +
+                    "else{" +
+                    "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
+                    "}" +
+
                     "canvas.requestRenderAll();" +
                     "});" +
-                    " if (i < " + (datas.length - 1) + ") { i += 1; } else { i = 0; }" +
+                    " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
                     " }, 2000);"
 
                 endpoint(`call 1-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
 
 
-            }}>Play11</button>
+            }}>Play All</button>
 
         </div>)
     }
