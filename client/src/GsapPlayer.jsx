@@ -62,7 +62,7 @@ const GsapPlayer = () => {
         document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
         document.body.appendChild(aa);
-        var canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
+        window.canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
        
         var content =\`${contentforHtml}\`;
         tl.pause();
@@ -80,13 +80,22 @@ const GsapPlayer = () => {
     }
 
     const stopGsapLayer = (layerNumber) => {
-        const script=`
-        tl.reverse();
+        const scriptforhtml = `
+        const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
+        tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
+            tl.play();
         `;
-        endpoint(`call 1-${layerNumber} "
-        ${script}
+        executeScript(scriptforhtml);
+
+        const scriptforCasparcg = `
+        const sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
+        tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
+            tl.play();
+        `;
+
+        endpoint(`call ${window.chNumber}-${layerNumber} "
+        ${scriptforCasparcg}
         "`)
-        executeScript(script);
 
     }
 
@@ -109,17 +118,7 @@ const GsapPlayer = () => {
 
 
         const scriptforHtml = `
-        document.getElementById('divid_${layerNumber}')?.remove();
-        var aa = document.createElement('div');
-        aa.style.position='absolute';
-        aa.setAttribute('id','divid_' + '${layerNumber}');
-        document.body.style.opacity = 1;
-        document.body.style.overflow='hidden';
-        document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-        aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
-        document.body.appendChild(aa);
-        var canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
-       
+      
         var content =\`${contentforHtml}\`;
 
         canvas_${layerNumber}.loadFromJSON(content,()=>{

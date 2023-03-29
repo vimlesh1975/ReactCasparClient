@@ -184,7 +184,7 @@ const Charts = () => {
 
         axisLeft
             .append("text")
-            .attr("transform", "rotate(-90)")
+            .attr("transform", "rotate(271)")
             .attr("y", 47)
             .attr("dy", "-5.1em")
             .attr("text-anchor", "end")

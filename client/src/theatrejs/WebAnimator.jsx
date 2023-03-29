@@ -1866,6 +1866,15 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         setRecording(false);
     };
 
+    // const test = () => {
+    //     studio.transaction((api) => {
+    //         for (let i = 0; i <= 10; i++) {
+    //             sheet.sequence.position = i;
+    //             api.set(getObjectbyId('name').props.left, i * 100);
+    //         }
+    //     })
+    // }
+
     return (<>
 
         <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
@@ -1873,6 +1882,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 deleteAllObjects();
                 initialiseCore(localStorage.getItem('RCCpageData'));
             }}>Data from LocalStorage</button>
+            {/* <button onClick={test}>test</button> */}
             <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
 
             <span>Id:</span>
