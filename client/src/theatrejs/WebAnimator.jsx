@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes } from '../common'
+import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -115,6 +115,8 @@ const WebAnimator = () => {
     const [jsfilename, setJsfilename] = useState('main');
     const [showSavePannel, setShowSavePannel] = useState(true);
 
+    const [chNumber, setChNumber] = useState(1);
+
     const clientId = useSelector(state => state.clientIdReducer.clientId);
     window.clientId = clientId;
 
@@ -125,6 +127,18 @@ const WebAnimator = () => {
     window.sheet = sheet;
 
     const dispatch = useDispatch();
+
+    const changeChannelNumber = e => {
+        setChNumber(e.target.value);
+    }
+
+    useEffect(() => {
+        window.chNumber = chNumber;
+        document.title = `RCC WebAnimator_${buildDate}_CH #${chNumber}`;
+        return () => {
+            // cleanup
+        }
+    }, [chNumber])
 
     useEffect(() => {
         if (canvas) {
@@ -458,6 +472,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     "img.cloneAsImage(img1 => {" +
                     "myelement.setSrc(img1.getSrc(), () => {" +
                     "myelement.set({ visible: true });" +
+                    "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
                     "})" +
                     "})" +
                     "})" +
@@ -489,6 +504,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     "img.cloneAsImage(img1 => {" +
                     "myelement.setSrc(img1.getSrc(), () => {" +
                     "myelement.set({ visible: true });" +
+                    "canvas.requestRenderAll();" +
                     "})" +
                     "})" +
                     "})" +
@@ -500,9 +516,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     "canvas.requestRenderAll();" +
                     "});" +
                     " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                    " }, 2000);"
+                    " }, " + duration * 1000 + ");"
 
-                endpoint(`call 1-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
+                endpoint(`call ${window.chNumber}-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
 
 
             }}>Play All</button>
@@ -772,11 +788,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
 
     const pause = layerNumber => {
-        endpoint(`call 1-${layerNumber} sheet.sequence.pause()`);
+        endpoint(`call ${window.chNumber}-${layerNumber} sheet.sequence.pause()`);
         executeScript(`sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
-        endpoint(`call 1-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        endpoint(`call ${window.chNumber}-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
         executeScript(`sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
     }
@@ -998,9 +1014,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         `
 
         executeScript(scriptforHTML);
-        endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
-        // endpoint(`call 1-${layerNumber} "${scriptforCasparcg}"`)
-        endpoint(`call 1-${layerNumber} "
+        endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
+        // endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`)
+        endpoint(`call ${window.chNumber}-${layerNumber} "
         localStorage.removeItem('theatre-0.4.persistent');
        
         var mouseDown = 0;
@@ -1212,7 +1228,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
 
     const stopGraphics1 = (layerNumber) => {
-        endpoint(`stop 1-${layerNumber}`);
+        endpoint(`stop ${window.chNumber}-${layerNumber}`);
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
     }
 
@@ -1884,6 +1900,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }}>Data from LocalStorage</button>
             {/* <button onClick={test}>test</button> */}
             <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
+            <b>Channel:</b>
+            <select onChange={e => changeChannelNumber(e)} value={chNumber}>
+                {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+            </select>
 
             <span>Id:</span>
             <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />

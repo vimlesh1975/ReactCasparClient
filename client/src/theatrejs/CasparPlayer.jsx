@@ -21,20 +21,20 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
         }, 100);
     }
     const pause = layerNumber => {
-        endpoint(`call 1-${layerNumber} window.sheet.sequence.pause()`);
+        endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.pause()`);
         executeScript(`window.sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
-        endpoint(`call 1-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
         `)
         executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
     }
     const stopGraphics1 = (layerNumber) => {
         setMypage('');
 
-        endpoint(` call 1-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }); `);
+        endpoint(` call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }); `);
         setTimeout(() => {
-        endpoint(`stop 1-${layerNumber}`);
+            endpoint(`stop ${window.chNumber}-${layerNumber}`);
         }, duration * 1000);
 
         executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });`);
@@ -51,7 +51,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     // }
 
     const gotoAndReversePlayAndStop = (layerNumber, isstop, isReverse) => {
-        endpoint(` call 1-${layerNumber} "
+        endpoint(` call ${window.chNumber}-${layerNumber} "
         window.sheet.sequence.position=${outDuration}; 
         window.sheet.sequence.play({ direction: \`${isReverse ? 'reverse' : 'normal'}\` });
          "`);
@@ -63,7 +63,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             setMypage('');
 
             setTimeout(() => {
-                endpoint(`stop 1-${layerNumber}`);
+                endpoint(`stop ${window.chNumber}-${layerNumber}`);
             }, outDuration * 1000);
             setTimeout(() => {
                 executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);

@@ -3,7 +3,7 @@ import { animation } from './animation.js'
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = '230323_1'
+export const buildDate = '290323_2'
 export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor', 'darker', 'multiply', 'screen']
 
 export const hexToRGB = hex => {
