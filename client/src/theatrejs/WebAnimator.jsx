@@ -457,11 +457,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     return newItem;
                 });
 
-                const scriptforhtml = "let csvInterval; " +
-                    "if(csvInterval){clearInterval(csvInterval)};" +
+                const scriptforhtml =
+                    "if(window.csvInterval){clearInterval(csvInterval)};" +
                     "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
                     "let i=1;" +
-                    "csvInterval=setInterval(() => {" +
+                    "window.csvInterval=setInterval(() => {" +
                     "sheet_" + templateLayers.theatrejs + ".sequence.position=0;" +
                     "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
                     "headers.forEach(function(header) { " +
