@@ -23,6 +23,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Papa from "papaparse";
 
 
+
 studio.initialize();
 studio.ui.hide();
 
@@ -256,16 +257,16 @@ const WebAnimator = () => {
                 }
             })
         }
-        const allInScreen = () => {
-            canvas.getObjects().forEach((element, i) => {
-                studio.transaction((api) => {
-                    api.unset(getObjectbyId(element.id).props);
-                })
-                studio.transaction((api) => {
-                    api.set(getObjectbyId(element.id).props.left, getObjectbyId(element.id).value.left);
-                })
-            })
-        }
+        // const allInScreen = () => {
+        //     canvas.getObjects().forEach((element, i) => {
+        //         // studio.transaction((api) => {
+        //         //     api.unset(getObjectbyId(element.id).props.left);
+        //         // })
+        //         studio.transaction((api) => {
+        //             api.set(getObjectbyId(element.id).props.left, 0);
+        //         })
+        //     })
+        // }
 
 
 
@@ -310,23 +311,24 @@ const WebAnimator = () => {
                         setShowSavePannel(val => !val);
                     }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
-                    <li onClick={allInScreen}>All on Screen</li>
+                    {/* <li onClick={allInScreen}>All on Screen</li> */}
 
                 </ul>
             </div>
         );
     }
 
-    const data1 = `image,name,age,email
+
+
+    // var initialTop = 100;
+
+    const CsvData = () => {
+        const data1 = `image,name,age,email
 img/flag/Albania.png,Milind Soman,30,john@example.com
 img/flag/Afghanistan.png,Ramaswami Aiyanger,25,jane@example.com
 img/flag/Belgium.png,Vimlesh Kumar,48,Vimlersh1975@gmail.com
 img/flag/Mauritania.png,Vilash Bhandare,56,vlbhandare@gmail.com
 img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
-
-    // var initialTop = 100;
-
-    const CsvData = () => {
         const canvas = useSelector(state => state.canvasReducer.canvas);
 
         const [headers, setHeaders] = useState(Object.keys(Papa.parse(data1, { header: true }).data[0]))
@@ -394,7 +396,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     {datas.map((row, i) => {
                         return (<tr key={i}  >{headers.map((header, ii) => {
                             return (<td key={ii}>
-                                {((row[header]).includes('/')) ? <img onClick={() => changeImage(i, ii)} src={'/ReactCasparClient/' + row[header]} alt='dd' width={20} height={20} /> : row[header]}
+                                {(typeof row[header] === 'string' && row[header] !== undefined && row[header].includes('/')) ? <img onClick={() => changeImage(i, ii)} src={'/ReactCasparClient/' + row[header]} alt='dd' width={20} height={20} /> : row[header]}
                             </td>
                             )
                         })}<td><button onClick={() => updateData(i)}>Play</button></td></tr>)

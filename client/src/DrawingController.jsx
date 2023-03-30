@@ -243,11 +243,11 @@ export const createIText = (canvas) => {
 };
 
 
-export const createTextBox = (canvas) => {
+export const createTextBox = (canvas, id = 'ccg_' + fabric.Object.__uid) => {
 
-    const text = new fabric.Textbox("Timeline has been shifted below.", {
+    const text = new fabric.Textbox(id, {
         shadow: shadowOptions,
-        id: 'ccg_' + fabric.Object.__uid,
+        id: id,
         class: 'class_' + fabric.Object.__uid,
         left: 103 * 1.87,
         top: 762,
@@ -350,7 +350,7 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
 }
 
 
-export const addImage = (canvas) => {
+export const addImage = (canvas, id = 'ccg_' + fabric.Object.__uid) => {
     return new Promise((resolve, reject) => {
         var fInput = document.createElement("input"); //hidden input to open filedialog
         fInput.setAttribute("type", "file"); //opens files
@@ -359,13 +359,13 @@ export const addImage = (canvas) => {
 
         fInput.click();
         fInput.onchange = (e) => {
-            Upload(e, canvas).then(() => { resolve(); })
+            Upload(e, canvas, id).then(() => { resolve(); })
         }
 
     })
 }
 
-export const Upload = (e, canvas) => {
+export const Upload = (e, canvas, id = 'ccg_' + fabric.Object.__uid) => {
     return new Promise((resolve, reject) => {
         if (e.target.files) {
             Array.from(e.target.files).forEach(element => {
@@ -379,7 +379,7 @@ export const Upload = (e, canvas) => {
                             .set({
                                 left: 300,
                                 top: 300,
-                                id: 'ccg_' + fabric.Object.__uid,
+                                id: id,
                                 class: 'class_' + fabric.Object.__uid,
                                 shadow: shadowOptions,
                                 strokeUniform: true,

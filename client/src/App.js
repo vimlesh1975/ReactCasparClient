@@ -31,6 +31,8 @@ import PathModifier from './PathModifier';
 import OnelinerAndBreakingNews from './OnelinerAndBreakingNews';
 import Effects from './Effects';
 import JsonReader from './JsonReader';
+
+import CsvReader2 from './CsvReader2';
 // import UdpClock from './UdpClock';
 
 import ColorGradient2 from './ColorGradient2'
@@ -502,6 +504,7 @@ const App = () => {
             <Tab >Threejs</Tab>
             <Tab >Code Import</Tab>
             <Tab >Tsparticles</Tab>
+            <Tab >Csv</Tab>
 
             <Tab>Help</Tab>
           </TabList>
@@ -570,6 +573,9 @@ const App = () => {
             <Tsparticles1 />
           </TabPanel>
 
+          <TabPanel >
+            <CsvReader2 />
+          </TabPanel>
           <TabPanel >
             <Help />
           </TabPanel>
