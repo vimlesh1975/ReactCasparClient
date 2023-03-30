@@ -7,15 +7,6 @@ import { sendToCasparcg, endpoint, templateLayers, shadowOptions, executeScript,
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from './DrawingController'
 import GsapPlayer from './GsapPlayer';
 
-// const CsvReader2 = () => {
-//     return (<>
-//         <div>
-
-
-//         </div>
-//     </>)
-// }
-
 const data1 = `image,name,age,email
 img/flag/Albania.png,Milind Soman,30,john@example.com
 img/flag/Afghanistan.png,Ramaswami Aiyanger,25,jane@example.com
@@ -35,8 +26,8 @@ const CsvReader2 = () => {
             Papa.parse(e.target.files[0], {
                 header: true,
                 complete: responses => {
-                    console.log(responses);
-                    console.log(Object.keys(responses.data[0]));
+                    // console.log(responses);
+                    // console.log(Object.keys(responses.data[0]));
                     setDatas(responses.data);
                     setHeaders(Object.keys(responses.data[0]))
                 }
