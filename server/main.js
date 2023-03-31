@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const cors = require("cors");
+const https = require('https');
 const corsOptions = {
     // "Access-Control-Allow-Origin": "*",
 }
@@ -10,7 +11,7 @@ var serveStatic = require("serve-static");
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
 
 
-const { CasparCG, Priority, ConnectionOptions, CasparCGSocket, Options, AMCP } = require('casparcg-connection');
+const { CasparCG, CasparCGSocket, Options, AMCP } = require('casparcg-connection');
 
 const fontList = require('font-list')
 var myFontList
@@ -100,6 +101,61 @@ app.post('/openaiimage', async (req, res) => {
 
     }
 })
+
+
+app.post('/openaiimagebase64', async (req, res) => {
+    // console.log(req)
+    try {
+        const prompt = req.body.prompt;
+        const response = await openai.createImage({
+            prompt: `${prompt}`,
+            n: 1,
+            size: '256x256',
+        });
+        // console.log(response['data'].data[0].url)
+
+        https.get(response['data'].data[0].url, (resnode) => {
+            let data = '';
+
+            resnode.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            resnode.on('end', () => {
+                const base64 = Buffer.from(data).toString('base64');
+                // console.log(base64);
+                res.status(200).send({
+                    bot: base64
+                });
+
+
+            });
+        }).on('error', (err) => {
+            console.error(err);
+        });
+
+
+
+        // fetch(response['data'].data[0].url)
+        //     .then(response => response.blob())
+        //     .then(blob => {
+        //         // Convert the blob to a base64-encoded data URL
+        //         const reader = new FileReader();
+        //         reader.readAsDataURL(blob);
+        //         reader.onloadend = () => {
+        //             const base64data = reader.result;
+        //             res.status(200).send({
+        //                 bot: base64data
+        //             });
+        //         };
+        //     });
+
+    } catch (error) {
+        // console.log(JSON.stringify(error.message))
+        res.status(500).send(error.message || 'Something went wrong');
+    }
+})
+
 
 app.post('/openai/models', async (req, res) => {
     try {

@@ -21,6 +21,7 @@ const CodeImport = () => {
     const [models, setModels] = useState([]);
     const [selectedModel, setSelectedModel] = useState('text-davinci-003');
 
+    const [image1, setImage1] = useState()
 
 
     const [svgcode, setSvgCode] = useState(`<svg height="100" width="100">
@@ -164,7 +165,30 @@ const CodeImport = () => {
             askOpenAi(event.target.value)
         }
     }
+    const sendToOpenAiforImage = async (str) => {
+        const response = await fetch(openaiAddress() + 'openaiimagebase64', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: str,
+            })
+        })
 
+        if (response.ok) {
+            const data = await response.json();
+            // const img = document.createElement('img');
+            // img.src = data.bot.trim();
+            setImage1(data.bot.trim());
+        } else {
+            const err = await response.text()
+            // alert(err)
+            setAiAnswer(err)
+            console.log(err)
+        }
+
+    }
 
     return (<div>
 
@@ -194,6 +218,14 @@ const CodeImport = () => {
                 <div>
                     <br />
                     <button onClick={() => askOpenAi(errorLog)}>Ask Open Ai About error/ general Question</button><br />
+                    <button onClick={() => sendToOpenAiforImage(errorLog)}>Create image</button>
+                    {image1 ? (
+                        <img src={`data:image/png;base64,${image1}`} alt="example" />
+                    ) : (
+                        <p>Loading...</p>
+                    )}
+
+                    <img width={300} height={200} src={image1} alt='' />
                 </div>
             </div>
         </div>
