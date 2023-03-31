@@ -49,7 +49,6 @@ app.get('/openai', async (req, res) => {
     })
 })
 
-var previous_state='None';
 app.post('/openai', async (req, res) => {
     try {
         const prompt = req.body.prompt;
@@ -78,6 +77,30 @@ app.post('/openai', async (req, res) => {
 
     }
 })
+
+
+app.post('/openaiimage', async (req, res) => {
+    // console.log(req)
+    try {
+        const prompt = req.body.prompt;
+        const response = await openai.createImage({
+            prompt: `${prompt}`,
+            n: 1,
+            size: '256x256',
+        });
+        // console.log(response['data'].data[0].url)
+
+        res.status(200).send({
+            bot: response['data'].data[0].url
+        });
+
+    } catch (error) {
+        // console.log(JSON.stringify(error.message))
+        res.status(500).send(error.message || 'Something went wrong');
+
+    }
+})
+
 app.post('/openai/models', async (req, res) => {
     try {
         const response = await openai.listEngines();

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Papa from "papaparse";
 
 import { fabric } from "fabric";
-import { sendToCasparcg, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers } from './common'
-import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from './DrawingController'
-import GsapPlayer from './GsapPlayer';
+import { sendToCasparcg, endpoint, templateLayers, executeScript } from './common'
+import { createTextBox, addImage } from './DrawingController'
+// import GsapPlayer from './GsapPlayer';
 
 const data1 = `image,name,age,email
 img/flag/Albania.png,Milind Soman,30,john@example.com
@@ -36,27 +36,30 @@ const CsvReader2 = () => {
 
     }
 
-    const updateData = (index) => {
+    const updateData = (index, layerNumber) => {
         headers.forEach((header,) => {
             const myelement = canvas.getObjects().find(element => element.id === header)
-            if (header.includes('image')) {
-                fabric.Image.fromURL('/ReactCasparClient/' + datas[index][header], img => {
-                    img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
-                    img.cloneAsImage(img1 => {
-                        myelement.setSrc(img1.getSrc(), () => {
-                            myelement.set({ visible: true });
-                            canvas.requestRenderAll();
+            if (myelement) {
+                if (header.includes('image')) {
+                    fabric.Image.fromURL('/ReactCasparClient/' + datas[index][header], img => {
+                        img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
+                        img.cloneAsImage(img1 => {
+                            myelement.setSrc(img1.getSrc(), () => {
+                                myelement.set({ visible: true });
+                                canvas.requestRenderAll();
+                            })
                         })
                     })
-                })
+                }
+                else {
+                    myelement.set({ text: datas[index][header] })
+                }
             }
-            else {
-                myelement.set({ text: datas[index][header] })
-            }
+
         })
         canvas.requestRenderAll();
         setTimeout(() => {
-            sendToCasparcg(templateLayers.gsap, canvas, currentscreenSize)
+            sendToCasparcg(layerNumber, canvas, currentscreenSize)
         }, 100);
     }
     const changeImage = (i, j) => {
@@ -67,6 +70,101 @@ const CsvReader2 = () => {
         // setDatas(updatedData)
     }
 
+    // const playAll = (layerNumber) => {
+    //     headers.forEach((header) => {
+    //         const myelement = canvas.getObjects().find(element => element.id === header)
+    //         if (header.includes('image')) {
+    //             fabric.Image.fromURL('/ReactCasparClient/' + datas[0][header], img => {
+    //                 img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
+    //                 img.cloneAsImage(img1 => {
+    //                     myelement.setSrc(img1.getSrc(), () => {
+    //                         myelement.set({ visible: true });
+    //                         canvas.requestRenderAll();
+    //                     })
+    //                 })
+    //             })
+    //         }
+    //         else {
+    //             myelement.set({ text: datas[0][header] })
+    //         }
+    //     })
+
+    //     canvas.requestRenderAll();
+    //     // setTimeout(() => {
+    //     //     sendToCasparcg(layerNumber, canvas, currentscreenSize)
+    //     // }, 100);
+
+    //     const newDatas = datas.map(item => {
+    //         const newItem = {};
+    //         for (const [key, value] of Object.entries(item)) {
+    //             if (key.includes("image")) {
+    //                 newItem[key] = '/ReactCasparClient/' + value;
+    //             } else {
+    //                 newItem[key] = value;
+    //             }
+    //         }
+    //         return newItem;
+    //     });
+
+    //     const scriptforhtml =
+    //         "if(window.csvInterval){clearInterval(csvInterval)};" +
+    //         "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
+    //         "let i=1;" +
+    //         "window.csvInterval=setInterval(() => {" +
+    //         "headers.forEach(function(header) { " +
+    //         "const myelement = canvas_" + layerNumber + ".getObjects().find(element => element.id === header); " +
+    //         "if (header.includes('image')) {" +
+    //         "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
+    //         "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
+    //         "img.cloneAsImage(img1 => {" +
+    //         "myelement.setSrc(img1.getSrc(), () => {" +
+    //         "myelement.set({ visible: true });" +
+    //         "canvas_" + layerNumber + ".requestRenderAll();" +
+    //         "})" +
+    //         "})" +
+    //         "})" +
+    //         "}" +
+    //         "else{" +
+    //         "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
+    //         "}" +
+    //         "canvas_" + layerNumber + ".requestRenderAll();" +
+    //         "});" +
+    //         " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
+    //         " }, " + 2 * 1000 + ");"
+
+
+    //     executeScript(`${scriptforhtml}`);
+
+    //     const scriptforCasparcg = "let csvInterval; " +
+    //         "if(csvInterval){clearInterval(csvInterval)};" +
+    //         "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
+    //         "let i=1;" +
+    //         "csvInterval=setInterval(() => {" +
+    //         "headers.forEach(function(header) { " +
+    //         "const myelement = canvas.getObjects().find(element => element.id === header); " +
+
+    //         "if (header.includes('image')) {" +
+    //         "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
+    //         "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
+    //         "img.cloneAsImage(img1 => {" +
+    //         "myelement.setSrc(img1.getSrc(), () => {" +
+    //         "myelement.set({ visible: true });" +
+    //         "canvas.requestRenderAll();" +
+    //         "})" +
+    //         "})" +
+    //         "})" +
+    //         "}" +
+    //         "else{" +
+    //         "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
+    //         "}" +
+
+    //         "canvas.requestRenderAll();" +
+    //         "});" +
+    //         " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
+    //         " }, " + 2 * 1000 + ");"
+
+    //     endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`);
+    // }
     return (<div style={{ fontSize: 14 }}>
         <input type="file" onChange={handleChange} />
         <table border='1'>
@@ -84,7 +182,7 @@ const CsvReader2 = () => {
                             {(typeof row[header] === 'string' && row[header] !== undefined && row[header].includes('/')) ? <img onClick={() => changeImage(i, ii)} src={'/ReactCasparClient/' + row[header]} alt='dd' width={20} height={20} /> : row[header]}
                         </td>
                         )
-                    })}<td><button onClick={() => updateData(i)}>Play</button></td></tr>)
+                    })}<td><button onClick={() => updateData(i, templateLayers.gsap)}>Play</button></td></tr>)
                 })}
             </tbody>
         </table>
@@ -103,116 +201,12 @@ const CsvReader2 = () => {
 
         }}>Create Temlplate</button>
 
-        <button onClick={() => {
-            headers.forEach((header) => {
-                const myelement = canvas.getObjects().find(element => element.id === header)
-                if (header.includes('image')) {
-                    fabric.Image.fromURL('/ReactCasparClient/' + datas[0][header], img => {
-                        img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
-                        img.cloneAsImage(img1 => {
-                            myelement.setSrc(img1.getSrc(), () => {
-                                myelement.set({ visible: true });
-                                canvas.requestRenderAll();
-                            })
-                        })
-                    })
-                }
-                else {
-                    myelement.set({ text: datas[0][header] })
-                }
-            })
-
-            canvas.requestRenderAll();
-            // playtoCasparcg(templateLayers.theatrejs, 1, 4);
-
-            // const newDatas = datas.map(item => {
-            //     return {
-            //         ...item,
-            //         image: '/ReactCasparClient/' + item.image
-            //     };
-            // });
-
-            const newDatas = datas.map(item => {
-                const newItem = {};
-                for (const [key, value] of Object.entries(item)) {
-                    if (key.includes("image")) {
-                        newItem[key] = '/ReactCasparClient/' + value;
-                    } else {
-                        newItem[key] = value;
-                    }
-                }
-                return newItem;
-            });
-
-            const scriptforhtml =
-                "if(window.csvInterval){clearInterval(csvInterval)};" +
-                "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
-                "let i=1;" +
-                "window.csvInterval=setInterval(() => {" +
-                "sheet_" + templateLayers.theatrejs + ".sequence.position=0;" +
-                "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
-                "headers.forEach(function(header) { " +
-                "const myelement = canvas_" + templateLayers.theatrejs + ".getObjects().find(element => element.id === header); " +
-                "if (header.includes('image')) {" +
-                "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
-                "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
-                "img.cloneAsImage(img1 => {" +
-                "myelement.setSrc(img1.getSrc(), () => {" +
-                "myelement.set({ visible: true });" +
-                "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
-                "})" +
-                "})" +
-                "})" +
-                "}" +
-                "else{" +
-                "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
-                "}" +
-                "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
-                "});" +
-                " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                " }, " + 2 * 1000 + ");"
-
-
-            executeScript(`${scriptforhtml}`);
-
-            const scriptforCasparcg = "let csvInterval; " +
-                "if(csvInterval){clearInterval(csvInterval)};" +
-                "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
-                "let i=1;" +
-                "csvInterval=setInterval(() => {" +
-                "sheet.sequence.position=0;" +
-                "sheet.sequence.play();" +
-                "headers.forEach(function(header) { " +
-                "const myelement = canvas.getObjects().find(element => element.id === header); " +
-
-                "if (header.includes('image')) {" +
-                "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
-                "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
-                "img.cloneAsImage(img1 => {" +
-                "myelement.setSrc(img1.getSrc(), () => {" +
-                "myelement.set({ visible: true });" +
-                "canvas.requestRenderAll();" +
-                "})" +
-                "})" +
-                "})" +
-                "}" +
-                "else{" +
-                "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
-                "}" +
-
-                "canvas.requestRenderAll();" +
-                "});" +
-                " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                " }, " + 2 * 1000 + ");"
-
-            endpoint(`call ${window.chNumber}-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
-
-
-        }}>Play All</button>
-        <div>
+        {/* <button onClick={() => playAll(templateLayers.gsap)}>Play All</button> */}
+        {/* <div style={{ border: '1px solid red' }}>
+            <button onClick={setonCanvas}>Set on canvas</button>
             <GsapPlayer />
 
-        </div>
+        </div> */}
 
     </div>)
 }
