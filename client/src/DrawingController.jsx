@@ -1892,7 +1892,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                 rx: cornerRadius / fabricObject.scaleX,
                 ry: cornerRadius / fabricObject.scaleY,
                 left: -fabricObject.width / 2,
-                top: -fabricObject.height / 2
+                top: -fabricObject.height / 2,
+                // objectCaching: false
             })
             fabricObject.set({ clipPath: aa1 });
             // fabricObject.set({ objectCaching: false });
@@ -3030,7 +3031,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                         <button onClick={makeFullScreen}>Make full Screen</button>
                         <button onClick={sdToHD}>sdtoHD</button>
                         <b> Image Round:</b>
-                        <input type={'range'} min={0} max={1920} style={{ width: 60 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
+                        <input type={'number'} min={0} max={1920} step={1} style={{ width: 60 }} defaultValue={0} onChange={e => roundedCorners(e.target.value)} />
 
                     </div>
                     <div className='drawingToolsRow' >
