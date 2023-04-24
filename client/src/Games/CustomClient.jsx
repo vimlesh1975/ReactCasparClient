@@ -60,8 +60,6 @@ const CustomClient = () => {
             canvas.loadFromJSON(canvasList[index].pageValue, () => {
                 data1.forEach(data2 => {
                     canvas.getObjects().forEach((element) => {
-                        // strokeWidth:element.strokeWidth/3 has been put so that zoom will make again multiply by 3
-                        // element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                         try {
                             if (element.id === data2.key) {
                                 if (data2.type === 'text') {
@@ -222,6 +220,9 @@ const CustomClient = () => {
             if (type === 'text') {
                 aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily })
             }
+            if (type === 'image') {
+                aa.push({ key: element.id, value: element.src, type: 'image' })
+            }
         });
         settextNodes([...aa])
     }
@@ -259,41 +260,70 @@ const CustomClient = () => {
 
                     <table border='0'><tbody>
                         {textNodes.map((val, i) => {
-                            return (<tr key={i}>
-                                <td><input disabled type='text' style={{ width: 260 }} value={val.key}
-                                    onChange={e => {
-                                        const updatedKeyframe = textNodes.map((val, index) => {
-                                            return (i === index) ? { ...val, key: e.target.value } : val;
-                                        });
-                                        settextNodes(updatedKeyframe)
-                                    }}
-                                /></td><td>=
-                                    {(isNaN(val.value - 1)) ? <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
-                                        const updatednodes = textNodes.map((val, index) => {
-                                            return (i === index) ? { ...val, value: e.target.value } : val;
-                                        });
-                                        settextNodes(updatednodes)
-                                    }} /> : <><input style={{ width: 50, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
-                                        const updatednodes = textNodes.map((val, index) => {
-                                            return (i === index) ? { ...val, value: e.target.value } : val;
-                                        });
-                                        settextNodes(updatednodes);
-                                    }} /><button onClick={() => {
-                                        const updatednodes = textNodes.map((val, index) => {
-                                            return (i === index) ? { ...val, value: parseFloat(val.value) + 1 } : val;
-                                        });
-                                        settextNodes(updatednodes);
-                                    }
-                                    }>+</button></>}
-                                    {/* <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
-                                        const updatednodes = textNodes.map((val, index) => {
-                                            return (i === index) ? { ...val, value: e.target.value } : val;
-                                        });
-                                        settextNodes(updatednodes)
-                                    }} /> */}
+                            if (val.type === 'text') {
+                                return (<tr key={i}>
+                                    <td><input disabled type='text' style={{ width: 260 }} value={val.key}
+                                        onChange={e => {
+                                            const updatedKeyframe = textNodes.map((val, index) => {
+                                                return (i === index) ? { ...val, key: e.target.value } : val;
+                                            });
+                                            settextNodes(updatedKeyframe)
+                                        }}
+                                    /></td><td>=
+                                        {(isNaN(val.value - 1)) ? <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
+                                            const updatednodes = textNodes.map((val, index) => {
+                                                return (i === index) ? { ...val, value: e.target.value } : val;
+                                            });
+                                            settextNodes(updatednodes)
+                                        }} /> : <><input style={{ width: 50, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
+                                            const updatednodes = textNodes.map((val, index) => {
+                                                return (i === index) ? { ...val, value: e.target.value } : val;
+                                            });
+                                            settextNodes(updatednodes);
+                                        }} /><button onClick={() => {
+                                            const updatednodes = textNodes.map((val, index) => {
+                                                return (i === index) ? { ...val, value: parseFloat(val.value) + 1 } : val;
+                                            });
+                                            settextNodes(updatednodes);
+                                        }
+                                        }>+</button></>}
+                                    </td>
+                                </tr>)
+                            }
+                            else if (val.type === 'image') {
+                                return (<tr key={i}>
+                                    <td><input disabled type='text' style={{ width: 260 }} value={val.key}
+                                        onChange={e => {
+                                            const updatedKeyframe = textNodes.map((val, index) => {
+                                                return (i === index) ? { ...val, key: e.target.value } : val;
+                                            });
+                                            settextNodes(updatedKeyframe)
+                                        }}
+                                    /></td>
+                                    <td>
+                                        =<img src={val.value} alt={val.key} style={{ width: 40, height: 30 }} onClick={(e) => {
+                                            var input = document.createElement('input');
+                                            input.type = 'file';
+                                            input.addEventListener('change', function () {
+                                                var file = this.files[0];
+                                                var reader = new FileReader();
+                                                reader.onload = function () {
+                                                    const updatedKeyframe = textNodes.map((val, index) => {
+                                                        return (i === index) ? { ...val, value: reader.result } : val;
+                                                    });
+                                                    settextNodes(updatedKeyframe)
+                                                }
+                                                reader.readAsDataURL(file);
+                                            });
+                                            input.click();
+                                        }
 
-                                </td>
-                            </tr>)
+                                        } />
+                                    </td>
+                                </tr>)
+                            }
+                            else return null
+
                         })}
                     </tbody></table>
 
@@ -326,8 +356,24 @@ const CustomClient = () => {
                                                                 }
                                                             });
                                                         }
+                                                        if (type === 'image') {
+                                                            val.pageValue.forEach(element1 => {
+                                                                if (element.id === element1.key) {
+
+                                                                    var i = new Image();
+                                                                    i.onload = function () {
+                                                                        const originalWidth = (element.width) * (element.scaleX);
+                                                                        const originalHeight = (element.height) * (element.scaleY);
+                                                                        element.set({ objectCaching: false, scaleX: (originalWidth / i.width), scaleY: (originalHeight / i.height) })
+                                                                        element.setSrc(element1.value)
+                                                                        window.editor.canvas.requestRenderAll();
+                                                                    };
+                                                                    i.src = element1.value;
+                                                                }
+                                                            });
+                                                        }
                                                     } catch (error) {
-                                                        alert(error);
+                                                        // alert(error);
                                                         return;
                                                     }
                                                 });
