@@ -100,7 +100,9 @@ const CustomClient = () => {
                     });
                 });
                 canvas.requestRenderAll();
-                sendToCasparcg(layerNumber)
+                setTimeout(() => {
+                    sendToCasparcg(layerNumber)
+                }, 1000);
             });
         }
         else { tempAlert('Pagename not avalaible', 1000) }
@@ -142,14 +144,7 @@ const CustomClient = () => {
             updateGraphics(canvas, layerNumber)
         }, 1100);
     }
-    //aa.innerHTML=\\"<img src='${(canvas.toDataURL('png'))}' />\\" ; png method
-    // const updateGraphics = layerNumber => {
-    //     // sendtohtml(canvas);//for html
 
-    //     endpoint(`call ${window.chNumber}-${layerNumber} "
-    // aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
-    //     "`)
-    // }
 
     const updateData = (layerNumber, pageName, data) => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
@@ -352,7 +347,7 @@ const CustomClient = () => {
                                                         if (type === 'text') {
                                                             val.pageValue.forEach(element1 => {
                                                                 if (element.id === element1.key) {
-                                                                    element.set({ text: element1.value });
+                                                                    element.set({ text: element1.value.toString() });
                                                                 }
                                                             });
                                                         }
@@ -381,7 +376,7 @@ const CustomClient = () => {
                                             });
                                         }
                                     }} key={i} style={{ backgroundColor: currentRow === i ? 'green' : '' }}>
-                                        <td ><button onClick={() => deleteData(i)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>  <td >{val.pageName}</td><td style={{ display: 'none1' }}> {JSON.stringify(val.pageValue)}</td>
+                                        <td ><button onClick={() => deleteData(i)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>  <td >{val.pageName}</td><td title={JSON.stringify(val.pageValue)} style={{ display: 'none1' }}> {(JSON.stringify(val.pageValue)).substring(0, 100)}</td>
                                     </tr>
                                 )
                             })}
