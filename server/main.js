@@ -6,6 +6,9 @@ const https = require('https');
 const corsOptions = {
     // "Access-Control-Allow-Origin": "*",
 }
+
+const mos1 = require('./mos1.js');
+
 app.use(cors(corsOptions))
 var serveStatic = require("serve-static");
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
@@ -179,7 +182,7 @@ const options = { cors: true };
 const http = require("http").Server(app);
 
 http.listen(port, () => {
-    console.log(`Server is liestemnig on ${port}`);
+    console.log(`node Server is liestemnig on ${port}`);
 })
 var aa = new CasparCG("127.0.0.1", 5250)
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
@@ -291,7 +294,7 @@ const ccgsocket = new CasparCGSocket('localhost', 5250)
 global.app = app;
 
 io.on('connection', (socket) => {
-    console.log("New client connected");
+    console.log("New Web Socket client connected");
     socket.emit('connectionStatus', (aa.connected).toString())
     socket.on("disconnect", () => {
         console.log("client disconnected")
