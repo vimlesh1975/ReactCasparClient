@@ -17,32 +17,29 @@ const mos = new MosConnection(
 
 mos.on('rawMessage', (_source, _type, _message) => {
     if (!(_message.includes('From'))) {
+        console.log(_message)
+        // const data = (xml2js(_message.replace(/[^\x20-\x7E]/g, '')))
+        const data = (xml2js(_message))
+        // console.log(data.mos?.pageName)
 
-        const dd = `<?xml version="1.0" encoding="utf-32BE"?><mos xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><mosID>mosID_RCC</mosID><ncsID>NCS_RCC</ncsID><messageID>333</messageID><heartbeat><time>2023-04-25T15:08:36.5534377+05:30</time></heartbeat></mos>`
-        console.log(xml2js(dd))// word
-        console.log(xml2js(_message)) // error <ref *1> Error: Text data outside of root node.
+        const axios = require('axios');
+
+        // const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }, { key: "f0", value: 'blue', type: "fill" }, { key: "f0", value: 'white', type: "backgroundColor" }, { key: "f0", value: { color: 'black' }, type: "shadow" }]
+        if (data?.mos?.pageName) {
+            const aa = []
+            var params = `layerNumber=96&pageName=${data?.mos?.pageName}&data=${JSON.stringify(aa)}`
+            axios.post('http://localhost:9000/recallPage', params)
+                .then(response => {
+                    // console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
 
     }
 
-    const axios = require('axios');
 
-    const data = {
-        foo: 'bar',
-        baz: 123
-    };
-
-
-    // const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }, { key: "f0", value: 'blue', type: "fill" }, { key: "f0", value: 'white', type: "backgroundColor" }, { key: "f0", value: { color: 'black' }, type: "shadow" }]
-    const aa = []
-    var params = `layerNumber=96&pageName=LBand&data=${JSON.stringify(aa)}`
-
-    // axios.post('http://localhost:9000/recallPage', params)
-    //     .then(response => {
-    //         // console.log(response.data);
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
 
 })
 

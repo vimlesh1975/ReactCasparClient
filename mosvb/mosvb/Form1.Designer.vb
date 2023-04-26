@@ -31,11 +31,13 @@ Partial Class Form1
         Me.cmbHost = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtPageName = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(12, 118)
+        Me.Button1.Location = New System.Drawing.Point(255, 128)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 0
@@ -72,7 +74,7 @@ Partial Class Form1
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(146, 21)
         Me.ComboBox2.TabIndex = 3
-        Me.ComboBox2.Text = "utf-32BE"
+        Me.ComboBox2.Text = "utf-16BE"
         '
         'Label1
         '
@@ -120,11 +122,30 @@ Partial Class Form1
         Me.Label4.TabIndex = 8
         Me.Label4.Text = "Label4"
         '
+        'txtPageName
+        '
+        Me.txtPageName.Location = New System.Drawing.Point(109, 131)
+        Me.txtPageName.Name = "txtPageName"
+        Me.txtPageName.Size = New System.Drawing.Size(140, 20)
+        Me.txtPageName.TabIndex = 9
+        Me.txtPageName.Text = "PlayerId1"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(12, 134)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(82, 13)
+        Me.Label5.TabIndex = 10
+        Me.Label5.Text = "Template Name"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(502, 163)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.txtPageName)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
@@ -150,4 +171,6 @@ Partial Class Form1
     Friend WithEvents cmbHost As ComboBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
+    Friend WithEvents txtPageName As TextBox
+    Friend WithEvents Label5 As Label
 End Class

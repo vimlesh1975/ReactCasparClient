@@ -27,6 +27,7 @@ Public Class Form1
         mos.mosID = "mosID_RCC"
         mos.ncsID = "NCS_RCC"
         mos.heartbeat = heartbeat
+        mos.pageName = txtPageName.Text
 
         Dim encodingValue As String = ComboBox2.Text
         Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)

@@ -11,3 +11,16 @@ C:\Users\Administrator\source\repos\mosvb\mosvb\obj\x64\Debug\mosvb.vbproj.CoreC
 C:\Users\Administrator\source\repos\mosvb\mosvb\obj\x64\Debug\mosvb.exe
 C:\Users\Administrator\source\repos\mosvb\mosvb\obj\x64\Debug\mosvb.xml
 C:\Users\Administrator\source\repos\mosvb\mosvb\obj\x64\Debug\mosvb.pdb
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\bin\x64\Debug\mosvb.exe.config
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\bin\x64\Debug\mosvb.exe
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\bin\x64\Debug\mosvb.pdb
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\bin\x64\Debug\mosvb.xml
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.vbproj.AssemblyReference.cache
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.vbproj.SuggestedBindingRedirects.cache
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.Form1.resources
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.Resources.resources
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.vbproj.GenerateResource.cache
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.vbproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.exe
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.xml
+C:\Users\Administrator\Documents\GitHub\ReactCasparClient260423_1\mosvb\mosvb\obj\x64\Debug\mosvb.pdb

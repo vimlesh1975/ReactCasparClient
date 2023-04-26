@@ -7,7 +7,7 @@ Imports System.Xml.Serialization
 Namespace mosprotocol
     <XmlRoot("mos")>
     Public Class cMOS
-        Private _mosID, _ncsID As String
+        Private _mosID, _ncsID, _pageName As String
         Private _messageID As Long
         Private _heartbeat As cHeartBeat
 
@@ -28,7 +28,14 @@ Namespace mosprotocol
                 _ncsID = value
             End Set
         End Property
-
+        Public Property pageName As String
+            Get
+                Return _pageName
+            End Get
+            Set(ByVal value As String)
+                _pageName = value
+            End Set
+        End Property
         Public Property messageID As Long
             Get
                 Return _messageID
