@@ -33,11 +33,16 @@ Partial Class Form1
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtPageName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.txtmosID = New System.Windows.Forms.TextBox()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(255, 128)
+        Me.Button1.Location = New System.Drawing.Point(277, 172)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 0
@@ -49,7 +54,7 @@ Partial Class Form1
         Me.cmdConnect.BackColor = System.Drawing.Color.Red
         Me.cmdConnect.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmdConnect.ForeColor = System.Drawing.SystemColors.ButtonHighlight
-        Me.cmdConnect.Location = New System.Drawing.Point(6, 62)
+        Me.cmdConnect.Location = New System.Drawing.Point(220, 8)
         Me.cmdConnect.Name = "cmdConnect"
         Me.cmdConnect.Size = New System.Drawing.Size(107, 35)
         Me.cmdConnect.TabIndex = 1
@@ -60,7 +65,7 @@ Partial Class Form1
         '
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Items.AddRange(New Object() {"10540", "10541", "10542", "", "11000", "12000", "13000"})
-        Me.ComboBox1.Location = New System.Drawing.Point(198, 19)
+        Me.ComboBox1.Location = New System.Drawing.Point(88, 42)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(65, 21)
         Me.ComboBox1.TabIndex = 2
@@ -70,7 +75,7 @@ Partial Class Form1
         '
         Me.ComboBox2.FormattingEnabled = True
         Me.ComboBox2.Items.AddRange(New Object() {"10540", "10541", "10542", "", "11000", "12000", "13000"})
-        Me.ComboBox2.Location = New System.Drawing.Point(327, 17)
+        Me.ComboBox2.Location = New System.Drawing.Point(88, 102)
         Me.ComboBox2.Name = "ComboBox2"
         Me.ComboBox2.Size = New System.Drawing.Size(146, 21)
         Me.ComboBox2.TabIndex = 3
@@ -79,7 +84,7 @@ Partial Class Form1
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(165, 22)
+        Me.Label1.Location = New System.Drawing.Point(41, 41)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(26, 13)
         Me.Label1.TabIndex = 4
@@ -88,7 +93,7 @@ Partial Class Form1
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 20)
+        Me.Label2.Location = New System.Drawing.Point(38, 20)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(29, 13)
         Me.Label2.TabIndex = 6
@@ -98,7 +103,7 @@ Partial Class Form1
         '
         Me.cmbHost.FormattingEnabled = True
         Me.cmbHost.Items.AddRange(New Object() {"localhost", "127.0.0.1", "192.168.1.10", "192.168.15.157"})
-        Me.cmbHost.Location = New System.Drawing.Point(38, 17)
+        Me.cmbHost.Location = New System.Drawing.Point(88, 17)
         Me.cmbHost.Name = "cmbHost"
         Me.cmbHost.Size = New System.Drawing.Size(117, 21)
         Me.cmbHost.TabIndex = 5
@@ -107,7 +112,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(269, 20)
+        Me.Label3.Location = New System.Drawing.Point(15, 103)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(52, 13)
         Me.Label3.TabIndex = 7
@@ -116,7 +121,7 @@ Partial Class Form1
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(155, 62)
+        Me.Label4.Location = New System.Drawing.Point(288, 209)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(39, 13)
         Me.Label4.TabIndex = 8
@@ -124,26 +129,61 @@ Partial Class Form1
         '
         'txtPageName
         '
-        Me.txtPageName.Location = New System.Drawing.Point(109, 131)
+        Me.txtPageName.Location = New System.Drawing.Point(119, 172)
         Me.txtPageName.Name = "txtPageName"
         Me.txtPageName.Size = New System.Drawing.Size(140, 20)
         Me.txtPageName.TabIndex = 9
-        Me.txtPageName.Text = "PlayerId1"
+        Me.txtPageName.Text = "InOut"
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 134)
+        Me.Label5.Location = New System.Drawing.Point(22, 175)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(82, 13)
         Me.Label5.TabIndex = 10
         Me.Label5.Text = "Template Name"
         '
+        'DataGridView1
+        '
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1})
+        Me.DataGridView1.Location = New System.Drawing.Point(14, 198)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.Size = New System.Drawing.Size(248, 150)
+        Me.DataGridView1.TabIndex = 11
+        '
+        'Column1
+        '
+        Me.Column1.HeaderText = "Column1"
+        Me.Column1.Name = "Column1"
+        Me.Column1.Width = 200
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(30, 70)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(37, 13)
+        Me.Label6.TabIndex = 13
+        Me.Label6.Text = "mosID"
+        '
+        'txtmosID
+        '
+        Me.txtmosID.Location = New System.Drawing.Point(88, 69)
+        Me.txtmosID.Name = "txtmosID"
+        Me.txtmosID.Size = New System.Drawing.Size(107, 20)
+        Me.txtmosID.TabIndex = 14
+        Me.txtmosID.Text = "mosID_RCC"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(502, 163)
+        Me.ClientSize = New System.Drawing.Size(497, 359)
+        Me.Controls.Add(Me.txtmosID)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.txtPageName)
         Me.Controls.Add(Me.Label4)
@@ -157,6 +197,7 @@ Partial Class Form1
         Me.Controls.Add(Me.Button1)
         Me.Name = "Form1"
         Me.Text = "Form1"
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -173,4 +214,8 @@ Partial Class Form1
     Friend WithEvents Label4 As Label
     Friend WithEvents txtPageName As TextBox
     Friend WithEvents Label5 As Label
+    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Label6 As Label
+    Friend WithEvents txtmosID As TextBox
 End Class
