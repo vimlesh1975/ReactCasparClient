@@ -12,23 +12,22 @@ const mos = new MosConnection(
             '4': true
         },
         openRelay: true,
-        debug: false
+        debug: true
     })
 )
 
 
 
 mos.on('rawMessage', (_source, _type, _message) => {
-    console.log(_source, _type, _message)
-    if (!(_message.includes('From'))) {
+    if (_message.includes('<?xml')) {
         console.log(_message)
         const data = xml2js(_message)
-        console.log(data.mos?.dataList?.cData)
+        console.log(data?.mos?.dataList?.cData)
         // const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }, { key: "f0", value: 'blue', type: "fill" }, { key: "f0", value: 'white', type: "backgroundColor" }, { key: "f0", value: { color: 'black' }, type: "shadow" }]
         if (data?.mos?.pageName) {
             const aa = data.mos?.dataList.cData
             var params = `layerNumber=${data.mos?.layerNumber}&pageName=${data?.mos?.pageName}&data=${JSON.stringify(aa)}`
-            const type = data.mos?.type
+            const type = data?.mos?.type
             console.log(type)
             axios.post('http://localhost:9000/recallPage', params)
                 .then(response => {
@@ -38,7 +37,6 @@ mos.on('rawMessage', (_source, _type, _message) => {
                     console.error(error);
                 });
         }
-
     }
 })
 

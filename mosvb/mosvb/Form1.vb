@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.ComponentModel
+Imports System.IO
 Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading
@@ -139,38 +140,49 @@ Public Class Form1
     Private Sub ReceiveData()
 
         While True
-
-            Dim message As String = "<mos><mosID>mosID_RCC</mosID><ncsID>ncs vbdotnet</ncsID><heartbeat><time>2022-04-27T12:00:00</time></heartbeat></mos>"
-
-            Dim encodingValue As String = "utf-16BE"
-            Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
-
-            Dim data As Byte() = encoding.GetBytes(message)
-            stream.Write(data, 0, data.Length)
-
-            If Stream.DataAvailable Then
-                ' Receive a response from the device
-                Dim responseData As Byte() = New Byte(1024) {}
-                Dim response As String = ""
-                Dim bytes As Integer = stream.Read(responseData, 0, responseData.Length)
+            If (stream.CanWrite) Then
+                Dim message As String = "<mos><mosID>" + txtmosID.Text + "</mosID><ncsID>my-ncs-id</ncsID><heartbeat><time>2022-04-27T12:00:00</time></heartbeat></mos>"
 
 
-                response = Encoding.GetString(responseData, 0, bytes)
+                Dim encodingValue As String = "utf-16BE"
+                Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
 
-                ' Process the response
-                'Label4.Text = ("Received response: " + response)
-                ' Inside your code that receives the response:
-                ' Create an instance of the delegate with the method that updates the label
-                Dim updateLabelDelegate As UpdateLabelDelegate = New UpdateLabelDelegate(AddressOf UpdateLabel)
+                Dim data As Byte() = encoding.GetBytes(message)
 
-                ' Invoke the delegate on the UI thread to update the label
-                Label4.Invoke(updateLabelDelegate, "Received response: " + response)
+                stream.Write(data, 0, data.Length)
+
+
+                If stream.DataAvailable Then
+                    ' Receive a response from the device
+                    Dim responseData As Byte() = New Byte(1024) {}
+                    Dim response As String = ""
+                    Dim bytes As Integer = stream.Read(responseData, 0, responseData.Length)
+
+
+                    response = encoding.GetString(responseData, 0, bytes)
+
+                    ' Process the response
+                    'Label4.Text = ("Received response: " + response)
+                    ' Inside your code that receives the response:
+                    ' Create an instance of the delegate with the method that updates the label
+                    Dim updateLabelDelegate As UpdateLabelDelegate = New UpdateLabelDelegate(AddressOf UpdateLabel)
+
+                    ' Invoke the delegate on the UI thread to update the label
+                    Label4.Invoke(updateLabelDelegate, "Received response: " + response)
+                End If
+                'Wait for some time before checking for incoming data again'
+                Thread.Sleep(5000)
             End If
-            'Wait for some time before checking for incoming data again'
-            Thread.Sleep(5000)
         End While
     End Sub
 
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        On Error Resume Next
+        receiveThread.Abort()
+        stream.Close()
+        mosClient.Close()
+
+    End Sub
 End Class
 
 
