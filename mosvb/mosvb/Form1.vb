@@ -13,13 +13,13 @@ Public Class Form1
 
     Dim stream As NetworkStream
     Private receiveThread As Thread
+    Dim encodingValue As String = "utf-16BE"
+    Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim allEncodings() As EncodingInfo = Encoding.GetEncodings()
 
-        'Add encoding names to combo box
-        For Each encoding As EncodingInfo In allEncodings
-            ComboBox2.Items.Add(encoding.Name)
-        Next
+
         ' connect()
 
         With DataGridView1
@@ -29,6 +29,8 @@ Public Class Form1
             .Rows(2).Cells(0).Value = "NITIN V SUMANTH"
             .Rows(3).Cells(0).Value = "MOHAMAD ALGARNI"
         End With
+
+
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -59,8 +61,6 @@ Public Class Form1
 
         mos.dataList = dataList
 
-        Dim encodingValue As String = ComboBox2.Text
-        Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
 
         Dim settings As XmlWriterSettings = New XmlWriterSettings()
         settings.Encoding = encoding
@@ -72,24 +72,21 @@ Public Class Form1
             If mosClient.Connected Then
                 mosClient.GetStream().Write(ms.GetBuffer(), 0, CInt(ms.Length))
 
+                If stream.DataAvailable Then
+                    Dim responseData As Byte() = New Byte(1024) {}
+                    Dim response As String = ""
+                    Dim bytes As Integer = stream.Read(responseData, 0, responseData.Length)
 
-                'Thread.Sleep(2000)
-                'Dim returndata As String = ""
-                'Dim data(1024) As Byte
-                'Try
-                '    mosClient.GetStream().Read(data, 0, 1024)
-                '    returndata = encoding.GetString(data)
-                '    Label4.Text = returndata
-                'Catch ex As Exception
-                '    Console.WriteLine(ex.ToString)
-                'End Try
+                    response = encoding.GetString(responseData, 0, bytes)
+                    Dim updateLabelDelegate As UpdateLabelDelegate = New UpdateLabelDelegate(AddressOf UpdateLabel)
 
+                    Label4.Invoke(updateLabelDelegate, "Received response: " + response)
+                End If
 
             End If
         Catch ex As Exception
 
         End Try
-
     End Sub
 
     Private Sub cmdConnect_Click(sender As Object, e As EventArgs) Handles cmdConnect.Click
@@ -100,27 +97,19 @@ Public Class Form1
     Sub connect()
         Try
             If mosClient.Connected Then
-                mosClient.Dispose()
+                receiveThread.Abort()
+                stream.Close()
+                mosClient.Close()
+
                 cmdConnect.BackColor = Color.Red
                 mosClient = New TcpClient
 
             Else
                 mosClient = New TcpClient(cmbHost.Text, ComboBox1.Text)
-
                 cmdConnect.BackColor = Color.Green
-
                 stream = mosClient.GetStream()
-                Dim message As String = "<mos><mosID>" + txtmosID.Text + "</mosID><ncsID>my-ncs-id</ncsID><heartbeat><time>2022-04-27T12:00:00</time></heartbeat></mos>"
-
-                Dim encodingValue As String = ComboBox2.Text
-                Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
-
-                Dim data As Byte() = encoding.GetBytes(message)
-                stream.Write(data, 0, data.Length)
-
                 receiveThread = New Thread(AddressOf ReceiveData)
                 receiveThread.Start()
-
 
             End If
         Catch ex As Exception
@@ -138,39 +127,38 @@ Public Class Form1
 
 
     Private Sub ReceiveData()
+        Dim message As String = "<mos><mosID>" + txtmosID.Text + "</mosID><ncsID>my-ncs-id</ncsID><messageID>100</messageID><heartbeat><time>2022-04-27T12:00:00</time></heartbeat></mos>"
+        Dim data As Byte() = Encoding.GetBytes(message)
+        stream.Write(data, 0, data.Length)
 
         While True
-            If (stream.CanWrite) Then
-                Dim message As String = "<mos><mosID>" + txtmosID.Text + "</mosID><ncsID>my-ncs-id</ncsID><heartbeat><time>2022-04-27T12:00:00</time></heartbeat></mos>"
+            If (stream.CanWrite) And mosClient.Connected Then
+                'stream.Write(data, 0, data.Length)
+
+                'Dim message1 As String = "<?xml version='1.0' encoding='UTF-16BE'?>" & vbCrLf &
+                '        "<mos>" & vbCrLf &
+                '        "    <mosID>" & cRequestMachineInfo.MOSID & "</mosID>" & vbCrLf &
+                '        "    <ncsID>my-ncs-id</ncsID>" & vbCrLf &
+                '        "    <messageID>" & cRequestMachineInfo.MESSAGEID & "</messageID>" & vbCrLf &
+                '        "     <reqMachInfo/>" & vbCrLf &
+                '        "</mos>"
+
+                'Dim messageBytes As Byte() = Encoding.GetEncoding("UTF-16BE").GetBytes(message1)
+                'stream.Write(messageBytes, 0, messageBytes.Length)
 
 
-                Dim encodingValue As String = "utf-16BE"
-                Dim encoding As Encoding = Encoding.GetEncoding(encodingValue)
-
-                Dim data As Byte() = encoding.GetBytes(message)
-
-                stream.Write(data, 0, data.Length)
-
+                Thread.Sleep(100) 'wait to get responce
 
                 If stream.DataAvailable Then
-                    ' Receive a response from the device
-                    Dim responseData As Byte() = New Byte(1024) {}
+                    Dim responseData As Byte() = New Byte(10024) {}
                     Dim response As String = ""
                     Dim bytes As Integer = stream.Read(responseData, 0, responseData.Length)
 
-
                     response = encoding.GetString(responseData, 0, bytes)
-
-                    ' Process the response
-                    'Label4.Text = ("Received response: " + response)
-                    ' Inside your code that receives the response:
-                    ' Create an instance of the delegate with the method that updates the label
                     Dim updateLabelDelegate As UpdateLabelDelegate = New UpdateLabelDelegate(AddressOf UpdateLabel)
 
-                    ' Invoke the delegate on the UI thread to update the label
                     Label4.Invoke(updateLabelDelegate, "Received response: " + response)
                 End If
-                'Wait for some time before checking for incoming data again'
                 Thread.Sleep(5000)
             End If
         End While
@@ -183,6 +171,16 @@ Public Class Form1
         mosClient.Close()
 
     End Sub
+
+    Public Class cRequestMachineInfo
+        Public Const MOSID As String = "mosID_RCC"
+        Public Const MOSVERSION As String = "2.8"
+        Public Const MESSAGEID As String = "REQUESTMACHINEINFO"
+        Public Const PROTOCOLVERSION As String = "1.0"
+        Public Const REVISION As String = "0"
+    End Class
+
+
 End Class
 
 

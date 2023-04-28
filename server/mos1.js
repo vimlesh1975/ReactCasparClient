@@ -16,11 +16,12 @@ const mos = new MosConnection(
     })
 )
 
-
+var connected_MOS_Device
 
 mos.on('rawMessage', (_source, _type, _message) => {
+    console.log(_source, _type, _message)
+
     if (_message.includes('<?xml')) {
-        console.log(_message)
         const data = xml2js(_message)
         console.log(data?.mos?.dataList?.cData)
         // const aa = [{ key: "f0", value: `https://picsum.photos/id/${bb}/300/200`, type: "text" }, { key: "img1", value: `https://picsum.photos/id/${bb}/300/200`, type: "image" }, { key: "f0", value: 'blue', type: "fill" }, { key: "f0", value: 'white', type: "backgroundColor" }, { key: "f0", value: { color: 'black' }, type: "shadow" }]
@@ -37,6 +38,7 @@ mos.on('rawMessage', (_source, _type, _message) => {
                     console.error(error);
                 });
         }
+
     }
 })
 
@@ -48,6 +50,7 @@ mos.on('error', (err) => {
 })
 mos.onConnection((mosDevice) => {
     console.log('A new Mosdevice connected')
+    connected_MOS_Device = mosDevice
 
     const mosTypes = mosDevice.mosTypes // Could also be retrieved with getMosTypes(strict)
 

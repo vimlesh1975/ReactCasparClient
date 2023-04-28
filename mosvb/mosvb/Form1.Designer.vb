@@ -25,11 +25,9 @@ Partial Class Form1
         Me.Button1 = New System.Windows.Forms.Button()
         Me.cmdConnect = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cmbHost = New System.Windows.Forms.ComboBox()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtPageName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -71,16 +69,6 @@ Partial Class Form1
         Me.ComboBox1.TabIndex = 2
         Me.ComboBox1.Text = "10540"
         '
-        'ComboBox2
-        '
-        Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Items.AddRange(New Object() {"10540", "10541", "10542", "", "11000", "12000", "13000"})
-        Me.ComboBox2.Location = New System.Drawing.Point(88, 102)
-        Me.ComboBox2.Name = "ComboBox2"
-        Me.ComboBox2.Size = New System.Drawing.Size(146, 21)
-        Me.ComboBox2.TabIndex = 3
-        Me.ComboBox2.Text = "utf-16BE"
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -108,15 +96,6 @@ Partial Class Form1
         Me.cmbHost.Size = New System.Drawing.Size(117, 21)
         Me.cmbHost.TabIndex = 5
         Me.cmbHost.Text = "127.0.0.1"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(15, 103)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(52, 13)
-        Me.Label3.TabIndex = 7
-        Me.Label3.Text = "Encoding"
         '
         'Label4
         '
@@ -187,11 +166,9 @@ Partial Class Form1
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.txtPageName)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.cmbHost)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.ComboBox2)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.cmdConnect)
         Me.Controls.Add(Me.Button1)
@@ -206,11 +183,9 @@ Partial Class Form1
     Friend WithEvents Button1 As Button
     Friend WithEvents cmdConnect As Button
     Friend WithEvents ComboBox1 As ComboBox
-    Friend WithEvents ComboBox2 As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents cmbHost As ComboBox
-    Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents txtPageName As TextBox
     Friend WithEvents Label5 As Label
