@@ -1,4 +1,4 @@
-const { MosConnection, ConnectionConfig, xml2js } = require('@mos-connection/connector')
+const { MosConnection, ConnectionConfig, xml2js, MosModel, MosDevice, getMosTypes } = require('@mos-connection/connector')
 const axios = require('axios');
 
 const mos = new MosConnection(
@@ -12,11 +12,11 @@ const mos = new MosConnection(
             '4': true
         },
         openRelay: true,
-        debug: true
+        debug: false
     })
 )
 
-var connected_MOS_Device
+
 
 mos.on('rawMessage', (_source, _type, _message) => {
     console.log(_source, _type, _message)
@@ -40,6 +40,13 @@ mos.on('rawMessage', (_source, _type, _message) => {
         }
 
     }
+    const reply = {
+        ID: 'mosID_RCC',
+        Status: getMosTypes(true).mosString128.create('OK'),
+        Stories: [],
+    }
+    return reply
+
 })
 
 mos.on('connection', (stream) => {
@@ -50,10 +57,18 @@ mos.on('error', (err) => {
 })
 mos.onConnection((mosDevice) => {
     console.log('A new Mosdevice connected')
-    connected_MOS_Device = mosDevice
+
+
 
     const mosTypes = mosDevice.mosTypes // Could also be retrieved with getMosTypes(strict)
-
+    mosDevice.onRequestMOSObject(async () => {
+        const reply = {
+            ID: 'mosID_RCC',
+            Status: mosTypes.mosString128.create('OK'),
+            Stories: [],
+        }
+        return reply
+    })
     mosDevice.onRequestMachineInfo(async () => {
         return {
             manufacturer: mosTypes.mosString128.create('manufacturer RCC'),

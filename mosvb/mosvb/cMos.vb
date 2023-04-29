@@ -3,11 +3,18 @@
 Namespace mosprotocol
     <XmlRoot("mos")>
     Public Class cMOS
-        Private _mosID, _ncsID, _pageName, _type As String
+        Private _mosID, _ncsID, _pageName, _type, _mosReqObj As String
         Private _messageID, _layerNumber As Long
         Private _heartbeat As cHeartBeat
         Private _dataList As List(Of cData)
-
+        Public Property mosReqObj As String
+            Get
+                Return _mosReqObj
+            End Get
+            Set(ByVal value As String)
+                _mosReqObj = value
+            End Set
+        End Property
         Public Property mosID As String
             Get
                 Return _mosID

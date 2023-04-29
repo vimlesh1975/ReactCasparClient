@@ -28,19 +28,22 @@ Partial Class Form1
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cmbHost = New System.Windows.Forms.ComboBox()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.lblreqMachInfo = New System.Windows.Forms.Label()
         Me.txtPageName = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.txtmosID = New System.Windows.Forms.TextBox()
+        Me.cmdreqMachInfo = New System.Windows.Forms.Button()
+        Me.lblmsgHeartbeat = New System.Windows.Forms.Label()
+        Me.lblCustomObject = New System.Windows.Forms.Label()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(277, 172)
+        Me.Button1.Location = New System.Drawing.Point(279, 175)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 0
@@ -97,14 +100,14 @@ Partial Class Form1
         Me.cmbHost.TabIndex = 5
         Me.cmbHost.Text = "127.0.0.1"
         '
-        'Label4
+        'lblreqMachInfo
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(288, 209)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(39, 13)
-        Me.Label4.TabIndex = 8
-        Me.Label4.Text = "Label4"
+        Me.lblreqMachInfo.AutoSize = True
+        Me.lblreqMachInfo.Location = New System.Drawing.Point(607, 102)
+        Me.lblreqMachInfo.Name = "lblreqMachInfo"
+        Me.lblreqMachInfo.Size = New System.Drawing.Size(77, 13)
+        Me.lblreqMachInfo.TabIndex = 8
+        Me.lblreqMachInfo.Text = "lblreqMachInfo"
         '
         'txtPageName
         '
@@ -155,17 +158,47 @@ Partial Class Form1
         Me.txtmosID.TabIndex = 14
         Me.txtmosID.Text = "mosID_RCC"
         '
+        'cmdreqMachInfo
+        '
+        Me.cmdreqMachInfo.Location = New System.Drawing.Point(653, 66)
+        Me.cmdreqMachInfo.Name = "cmdreqMachInfo"
+        Me.cmdreqMachInfo.Size = New System.Drawing.Size(97, 23)
+        Me.cmdreqMachInfo.TabIndex = 15
+        Me.cmdreqMachInfo.Text = "reqMachInfo"
+        Me.cmdreqMachInfo.UseVisualStyleBackColor = True
+        '
+        'lblmsgHeartbeat
+        '
+        Me.lblmsgHeartbeat.AutoSize = True
+        Me.lblmsgHeartbeat.Location = New System.Drawing.Point(342, 17)
+        Me.lblmsgHeartbeat.Name = "lblmsgHeartbeat"
+        Me.lblmsgHeartbeat.Size = New System.Drawing.Size(55, 13)
+        Me.lblmsgHeartbeat.TabIndex = 17
+        Me.lblmsgHeartbeat.Text = "HeartBeat"
+        '
+        'lblCustomObject
+        '
+        Me.lblCustomObject.AutoSize = True
+        Me.lblCustomObject.Location = New System.Drawing.Point(276, 201)
+        Me.lblCustomObject.Name = "lblCustomObject"
+        Me.lblCustomObject.Size = New System.Drawing.Size(76, 13)
+        Me.lblCustomObject.TabIndex = 18
+        Me.lblCustomObject.Text = "Custom Object"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(497, 359)
+        Me.ClientSize = New System.Drawing.Size(861, 359)
+        Me.Controls.Add(Me.lblCustomObject)
+        Me.Controls.Add(Me.lblmsgHeartbeat)
+        Me.Controls.Add(Me.cmdreqMachInfo)
         Me.Controls.Add(Me.txtmosID)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.txtPageName)
-        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.lblreqMachInfo)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.cmbHost)
         Me.Controls.Add(Me.Label1)
@@ -186,11 +219,14 @@ Partial Class Form1
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents cmbHost As ComboBox
-    Friend WithEvents Label4 As Label
+    Friend WithEvents lblreqMachInfo As Label
     Friend WithEvents txtPageName As TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Label6 As Label
     Friend WithEvents txtmosID As TextBox
+    Friend WithEvents cmdreqMachInfo As Button
+    Friend WithEvents lblmsgHeartbeat As Label
+    Friend WithEvents lblCustomObject As Label
 End Class
