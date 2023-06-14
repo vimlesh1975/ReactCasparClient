@@ -16,7 +16,7 @@ const Scroll = () => {
     const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [scrollTextProperties, setScrollTextProperties] = useState({
-        shadow: shadowOptions,
+        shadow: { ...shadowOptions, blur: 0 },
         top: 980,
         fill: options.currentColor,
         fontFamily: options.currentFont,
@@ -100,16 +100,23 @@ const Scroll = () => {
 
     const setAsScrollText = () => {
         var aa = '';
+        var left1 = 0;
         playerList1.forEach(element => {
-            if (element.use1 === true) { aa += ` ${delemeter} ` + element.data1 };
+            if (element.use1 === true) {
+                aa = ` ${delemeter} ` + element.data1;
+                const text = new fabric.IText(aa, {
+                    id: 'id_' + fabric.Object.__uid,
+                    class: 'class_' + fabric.Object.__uid,
+                    left: left1,
+                    ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
+                });
+                canvas.add(text).setActiveObject(text);;
+                canvas.renderAll();
+                left1 += canvas.getActiveObjects()[0].width;
+            };
+
         });
-        const text = new fabric.IText(aa, {
-            id: 'id_' + fabric.Object.__uid,
-            class: 'class_' + fabric.Object.__uid,
-            left: 0,
-            ...scrollTextProperties
-        });
-        canvas.add(text);
+
         canvas.requestRenderAll();
     }
 
@@ -140,7 +147,7 @@ const Scroll = () => {
                             id: 'id_' + fabric.Object.__uid,
                             class: 'class_' + fabric.Object.__uid,
                             left: left1,
-                            ...scrollTextProperties
+                            ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                         });
                         canvas.add(text).setActiveObject(text);
                         canvas.renderAll();
