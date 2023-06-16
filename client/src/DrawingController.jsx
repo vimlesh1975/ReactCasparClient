@@ -1009,7 +1009,7 @@ export const groupObjects = (canvas, shouldGroup) => {
         if (canvas.getActiveObject().type !== 'activeSelection') {
             return;
         }
-        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'ccg_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+        canvas.getActiveObject().toGroup().set({ shadow: shadowOptions, id: 'ccg_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, fill: '#ff0000' });
     }
     else {
         if (!canvas.getActiveObject()) {

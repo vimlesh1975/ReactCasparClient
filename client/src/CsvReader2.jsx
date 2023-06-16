@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import Papa from "papaparse";
 
 import { fabric } from "fabric";
-import { sendToCasparcg, endpoint, templateLayers, executeScript } from './common'
+import { sendToCasparcg, templateLayers } from './common'
 import { createTextBox, addImage } from './DrawingController'
 // import GsapPlayer from './GsapPlayer';
 
