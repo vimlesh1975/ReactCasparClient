@@ -501,32 +501,24 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
-    // console.log(canvas.getActiveObjects()[0]);
-    const dd = group => {
-      group.getObjects().forEach(element => {
+    const findElementWithId = (group, id) => {
+      const objects = group.getObjects();
+      for (let i = 0; i < objects.length; i++) {
+        const element = objects[i];
         if (element.type === 'group') {
-          dd(element);
+          const result = findElementWithId(element, id);
+          if (result) {
+            return result;
+          }
+        } else if (element.id === id) {
+          return element;
         }
-        else {
-          console.log(element)
-        }
-      })
-    }
-    canvas.getObjects().forEach(element => {
-      if (element.type === 'group') {
-        dd(element)
       }
-      else {
-        console.log(element)
-      }
-    })
+      return null;
+    };
 
-    // fabric.Rect.ATTRIBUTE_NAMES.push("class");
-    // console.log(fabric.Rect.ATTRIBUTE_NAMES);
+    console.log(findElementWithId(canvas, 'f0'));
 
-    // fabric.SHARED_ATTRIBUTES.push('class');
-    // console.log(fabric.SHARED_ATTRIBUTES);
-    // console.log(fabric.Object.prototype.toJSON)
   }
 
   const ResetAnimation = () => {

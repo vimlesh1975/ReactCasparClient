@@ -42,7 +42,21 @@ document.body.onmouseup = function () {
 const getObjectbyId = id => {
     return arrObject.find(object => object.address.objectKey === id)
 }
-
+const findElementWithId = (group, id) => {
+    const objects = group.getObjects();
+    for (let i = 0; i < objects.length; i++) {
+        const element = objects[i];
+        if (element.type === 'group') {
+            const result = findElementWithId(element, id);
+            if (result) {
+                return result;
+            }
+        } else if (element.id === id) {
+            return element;
+        }
+    }
+    return null;
+};
 const changePropOfObject = (id, str1, str2) => {
     const objs = arrObject.find(object => {
         return (object.address.objectKey === id)
@@ -52,6 +66,13 @@ const changePropOfObject = (id, str1, str2) => {
         studio.transaction(({ set }) => {
             set(obj.props[str1], str2);
         });
+    }
+    else {
+        const aa = findElementWithId(window.canvas, id);
+        if (aa) {
+            aa.set({ str1: str2 })
+            window.canvas.requestRenderAll();
+        }
     }
 };
 
@@ -1243,9 +1264,16 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             });
             if (objs) {
                 const obj = objs;
-                window.studio.transaction(({ set }) => {
+                studio.transaction(({ set }) => {
                     set(obj.props[str1], str2);
                 });
+            }
+            else {
+                const aa = findElementWithId(window.canvas, id);
+                if (aa) {
+                    aa.set(str1, str2)
+                    window.canvas.requestRenderAll();
+                }
             }
         };
         window.getPropOfObject = (id, str1) => {
@@ -1508,42 +1536,38 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
          }
          function dataInsert(dataCaspar) {
              for (var idCaspar in dataCaspar) {
-                 const aa = canvas.getObjects().find((item) => {
-                     return item.id === idCaspar;
-                 })
-                 const element = aa;
-                 if (element.type === 'image') {
-                    fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar]), img => {
-                        img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                        img.cloneAsImage(img1 => {
-                            element.setSrc(img1.getSrc(), () => {
-                                element.set({ visible: true });
-                                canvas.requestRenderAll();
-                            })
-                        })
-                    })
-                }
-                 else {
-                    
-                    const bb = originalCanvas.find((item) => {
-                        return item.id === idCaspar;
-                      })
-        
-                    const originalWidth = bb.width;
-                    const originalscaleX = bb.scaleX;
-                    element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width:originalWidth });
-                    changePropOfObject(idCaspar, 'scaleX', originalscaleX);
-
-                    if (element.textLines.length > 1) {
-                    do {
-                        element.set({ width: element.width + 5 });
+                 const aa =findElementWithId(canvas,idCaspar);
+                 if (aa){
+                    const element = aa;
+                    if (element.type === 'image') {
+                       fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar]), img => {
+                           img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
+                           img.cloneAsImage(img1 => {
+                               element.setSrc(img1.getSrc(), () => {
+                                   element.set({ visible: true });
+                                   canvas.requestRenderAll();
+                               })
+                           })
+                       })
+                   }
+                    else {
+                        const bb =  findElementWithId(originalCanvas,idCaspar);
+                       const originalWidth = bb.width;
+                       const originalscaleX = bb.scaleX;
+                       element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width:originalWidth });
+                       changePropOfObject(idCaspar, 'scaleX', originalscaleX);
+   
+                       if (element.textLines.length > 1) {
+                       do {
+                           element.set({ width: element.width + 5 });
+                       }
+                       while (element.textLines.length > 1);
+                       changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
+                       }
                     }
-                    while (element.textLines.length > 1);
-                    changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
-                    }
+                    canvas.requestRenderAll()
                  }
-                 canvas.requestRenderAll()
-             }
+            }
          }
  
          function update(str) {
@@ -1558,42 +1582,56 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
          function stop() {
              document.body.innerHTML = '';
          }
+         const findElementWithId = (group, id) => {
+            const objects = group.getObjects();
+            for (let i = 0; i < objects.length; i++) {
+              const element = objects[i];
+              if (element.type === 'group') {
+                const result = findElementWithId(element, id);
+                if (result) {
+                  return result;
+                }
+              } else if (element.id === id) {
+                return element;
+              }
+            }
+            return null;
+        };
  
          function updatestring(str1, str2) {
-            const aa = canvas.getObjects().find((item) => {
-              return item.id === str1;
-            })
-            const element = aa;
-            const bb = originalCanvas.find((item) => {
-                return item.id === str1;
-              })
-            const originalWidth = bb.width;
-            const originalscaleX = bb.scaleX;
-            element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
-            changePropOfObject(str1, 'scaleX', originalscaleX);
-            if (element.textLines.length > 1) {
-              do {
-                element.set({ width: element.width + 5 });
-              }
-              while (element.textLines.length > 1);
-              changePropOfObject(str1, 'scaleX', originalWidth / element.width);
+            const aa = findElementWithId(canvas,str1);
+            if (aa){
+                const element = aa;
+                const bb =findElementWithId(originalCanvas,str1);
+                const originalWidth = bb.width;
+                const originalscaleX = bb.scaleX;
+                element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
+                changePropOfObject(str1, 'scaleX', originalscaleX);
+                if (element.textLines.length > 1) {
+                  do {
+                    element.set({ width: element.width + 5 });
+                  }
+                  while (element.textLines.length > 1);
+                  changePropOfObject(str1, 'scaleX', originalWidth / element.width);
+                }
+                canvas.requestRenderAll();
             }
-            canvas.requestRenderAll();
-          }
+        }
         function updateimage(str1, str2) {
-            const aa = canvas.getObjects().find((item) => {
-                return item.id === str1;
-            })
-            const element = aa;
-            fabric.Image.fromURL(str2, img => {
-                img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                img.cloneAsImage(img1 => {
-                    element.setSrc(img1.getSrc(), () => {
-                        element.set({ visible: true });
-                        canvas.requestRenderAll();
+            const aa = findElementWithId(canvas,str1);
+            if (aa){
+                const element = aa;
+                fabric.Image.fromURL(str2, img => {
+                    img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
+                    img.cloneAsImage(img1 => {
+                        element.setSrc(img1.getSrc(), () => {
+                            element.set({ visible: true });
+                            canvas.requestRenderAll();
+                        })
                     })
                 })
-            })
+            }
+          
         }
      <//script>
          </body>
@@ -1683,11 +1721,23 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
 
     }
-
+    const findElementWithId = (group, id) => {
+        const objects = group.getObjects();
+        for (let i = 0; i < objects.length; i++) {
+            const element = objects[i];
+            if (element.type === 'group') {
+                const result = findElementWithId(element, id);
+                if (result) {
+                    return result;
+                }
+            } else if (element.id === id) {
+                return element;
+            }
+        }
+        return null;
+    };
     const addItem = async (name, id = idofElement) => {
-        const idAlreadyExists = canvas.getObjects().find((item) => {
-            return item.id === id
-        })
+        const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
             alert("Id Already exists");
             return
