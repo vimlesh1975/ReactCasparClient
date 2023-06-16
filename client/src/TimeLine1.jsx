@@ -501,7 +501,26 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
-    console.log(canvas.getActiveObjects()[0]);
+    // console.log(canvas.getActiveObjects()[0]);
+    const dd = group => {
+      group.getObjects().forEach(element => {
+        if (element.type === 'group') {
+          dd(element);
+        }
+        else {
+          console.log(element)
+        }
+      })
+    }
+    canvas.getObjects().forEach(element => {
+      if (element.type === 'group') {
+        dd(element)
+      }
+      else {
+        console.log(element)
+      }
+    })
+
     // fabric.Rect.ATTRIBUTE_NAMES.push("class");
     // console.log(fabric.Rect.ATTRIBUTE_NAMES);
 
