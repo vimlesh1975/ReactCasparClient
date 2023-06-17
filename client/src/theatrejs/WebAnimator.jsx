@@ -57,6 +57,22 @@ const findElementWithId = (group, id) => {
     }
     return null;
 };
+// eslint-disable-next-line
+const findElementWithIdoriginalCanvas = (group, id) => {
+    const objects = group;
+    for (let i = 0; i < objects.length; i++) {
+        const element = objects[i];
+        if (element.type === 'group') {
+            const result = findElementWithIdoriginalCanvas(element._objects, id);
+            if (result) {
+                return result;
+            }
+        } else if (element.id === id) {
+            return element;
+        }
+    }
+    return null;
+};
 const changePropOfObject = (id, str1, str2) => {
     const objs = arrObject.find(object => {
         return (object.address.objectKey === id)
@@ -1285,7 +1301,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 return obj.value[str1];
             }
             else{
-                return null;
+                const aa = findElementWithId(window.canvas, id);
+                if (aa) {
+                    return aa[str1];
+                }
             }
         };
 
@@ -1551,7 +1570,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                        })
                    }
                     else {
-                        const bb =  findElementWithId(originalCanvas,idCaspar);
+                        const bb =  findElementWithIdoriginalCanvas(originalCanvas,idCaspar);
                        const originalWidth = bb.width;
                        const originalscaleX = bb.scaleX;
                        element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width:originalWidth });
@@ -1597,12 +1616,27 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
             return null;
         };
+        const findElementWithIdoriginalCanvas = (group, id) => {
+            const objects = group;
+            for (let i = 0; i < objects.length; i++) {
+                const element = objects[i];
+                if (element.type === 'group') {
+                    const result = findElementWithIdoriginalCanvas(element._objects, id);
+                    if (result) {
+                        return result;
+                    }
+                } else if (element.id === id) {
+                    return element;
+                }
+            }
+            return null;
+        };
  
          function updatestring(str1, str2) {
             const aa = findElementWithId(canvas,str1);
             if (aa){
                 const element = aa;
-                const bb =findElementWithId(originalCanvas,str1);
+                const bb =findElementWithIdoriginalCanvas(originalCanvas,str1);
                 const originalWidth = bb.width;
                 const originalscaleX = bb.scaleX;
                 element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
