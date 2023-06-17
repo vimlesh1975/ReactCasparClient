@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import Papa from "papaparse";
 
 import { fabric } from "fabric";
-import { sendToCasparcg, templateLayers } from './common'
+import { sendToCasparcg, templateLayers, findElementWithId } from './common'
 import { createTextBox, addImage } from './DrawingController'
 // import GsapPlayer from './GsapPlayer';
 
@@ -38,7 +38,7 @@ const CsvReader2 = () => {
 
     const updateData = (index, layerNumber) => {
         headers.forEach((header,) => {
-            const myelement = canvas.getObjects().find(element => element.id === header)
+            const myelement = findElementWithId(canvas, header)
             if (myelement) {
                 if (header.includes('image')) {
                     fabric.Image.fromURL('/ReactCasparClient/' + datas[index][header], img => {
@@ -46,6 +46,9 @@ const CsvReader2 = () => {
                         img.cloneAsImage(img1 => {
                             myelement.setSrc(img1.getSrc(), () => {
                                 myelement.set({ visible: true });
+                                setTimeout(() => {
+                                    myelement.set({ fill: '#ff0000' })//dummy 
+                                }, 100);
                                 canvas.requestRenderAll();
                             })
                         })

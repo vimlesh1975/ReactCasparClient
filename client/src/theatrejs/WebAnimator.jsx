@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers } from '../common'
+import { findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -42,21 +42,21 @@ document.body.onmouseup = function () {
 const getObjectbyId = id => {
     return arrObject.find(object => object.address.objectKey === id)
 }
-const findElementWithId = (group, id) => {
-    const objects = group.getObjects();
-    for (let i = 0; i < objects.length; i++) {
-        const element = objects[i];
-        if (element.type === 'group') {
-            const result = findElementWithId(element, id);
-            if (result) {
-                return result;
-            }
-        } else if (element.id === id) {
-            return element;
-        }
-    }
-    return null;
-};
+// const findElementWithId = (group, id) => {
+//     const objects = group.getObjects();
+//     for (let i = 0; i < objects.length; i++) {
+//         const element = objects[i];
+//         if (element.type === 'group') {
+//             const result = findElementWithId(element, id);
+//             if (result) {
+//                 return result;
+//             }
+//         } else if (element.id === id) {
+//             return element;
+//         }
+//     }
+//     return null;
+// };
 // eslint-disable-next-line
 const findElementWithIdoriginalCanvas = (group, id) => {
     const objects = group;
@@ -1564,6 +1564,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                            img.cloneAsImage(img1 => {
                                element.setSrc(img1.getSrc(), () => {
                                    element.set({ visible: true });
+                                   setTimeout(() => {
+                                    changePropOfObject(idCaspar, 'fill', 'red')
+                                }, 100);
                                    canvas.requestRenderAll();
                                })
                            })
@@ -1660,6 +1663,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     img.cloneAsImage(img1 => {
                         element.setSrc(img1.getSrc(), () => {
                             element.set({ visible: true });
+                            setTimeout(() => {
+                                    changePropOfObject(str1, 'fill', 'red')
+                                }, 100);
                             canvas.requestRenderAll();
                         })
                     })

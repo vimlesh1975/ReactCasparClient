@@ -6,6 +6,21 @@ import { fabric } from "fabric";
 export const buildDate = '170623_1'
 export const listglobalCompositeOperation = ['source-over', 'source-atop', 'source-in', 'source-out', 'destination-over', 'destination-atop', 'destination-in', 'destination-out', 'lighter', 'copy', 'xor', 'darker', 'multiply', 'screen']
 
+export const findElementWithId = (group, id) => {
+    const objects = group.getObjects();
+    for (let i = 0; i < objects.length; i++) {
+        const element = objects[i];
+        if (element.type === 'group') {
+            const result = findElementWithId(element, id);
+            if (result) {
+                return result;
+            }
+        } else if (element.id === id) {
+            return element;
+        }
+    }
+    return null;
+};
 export const hexToRGB = hex => {
     const red = parseInt(hex.slice(1, 3), 16)
     const green = parseInt(hex.slice(3, 5), 16)
