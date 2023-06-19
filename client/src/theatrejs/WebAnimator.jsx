@@ -1564,9 +1564,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                            img.cloneAsImage(img1 => {
                                element.setSrc(img1.getSrc(), () => {
                                    element.set({ visible: true });
-                                   setTimeout(() => {
-                                    changePropOfObject(idCaspar, 'fill', 'red')
-                                }, 100);
+                                    setTimeout(() => {
+                                   changePropOfObject(idCaspar, 'scaleX',getPropOfObject(idCaspar, 'scaleX')+0.00001)  ;
+                                  }, 10);
                                    canvas.requestRenderAll();
                                })
                            })
@@ -1664,8 +1664,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         element.setSrc(img1.getSrc(), () => {
                             element.set({ visible: true });
                             setTimeout(() => {
-                                    changePropOfObject(str1, 'fill', 'red')
-                                }, 100);
+                               changePropOfObject(str1, 'scaleX',getPropOfObject(str1, 'scaleX')+0.00001)  ;
+                                }, 10);
                             canvas.requestRenderAll();
                         })
                     })
