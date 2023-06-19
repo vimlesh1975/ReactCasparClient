@@ -1307,13 +1307,23 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
             }
         };
-
-        canvas.getObjects().forEach((element,i) => {
+        const setAllCcgInvisble=element=>{
             if(window.caspar || window.casparcg || window.tickAnimations)  {
+              if (element.type==='group'){
+                element.getObjects().forEach((element1) => {
+                  setAllCcgInvisble(element1);
+                })
+              }
+              else{
                 if ((element.id).startsWith("ccg")){
                     element.set({visible: false});
                 }
+              }
             }
+        }
+        canvas.getObjects().forEach((element,i) => {
+            setAllCcgInvisble(element);
+           
             var obj1 = {};
             const isnotGradientfill = (element.fill.type!=='linear');
             if (element.fill.type === 'pattern') {
