@@ -1,56 +1,34 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import flvjs from "flv.js";
 var flvPlayer;
 const VideoPlayer = ({ sourceUrl }) => {
   const videoRef = useRef(null);
-
-  useEffect(() => {
-    let player;
-
-    const setupPlayer = () => {
-      const videoElement = videoRef.current;
-      player = videojs(videoElement, {
-        html5: {
-          hls: {
-            overrideNative: true,
-          },
-        },
-      });
-
-      flvPlayer = flvjs.createPlayer({
-        type: "flv",
-        url: sourceUrl,
-      });
-
-      //   player.src({
-      //     src: sourceUrl,
-      //     type: "video/flv",
-      //   });
-
-      flvPlayer.attachMediaElement(videoElement);
-      //   flvPlayer.load();
-      //   flvPlayer.play();
-    };
-
-    setupPlayer();
-
-    return () => {
-      if (player) {
-        player.dispose();
-      }
-    };
-  }, [sourceUrl]);
+  const [streamingUrl, setStreamingUrl] = useState(sourceUrl);
 
   const preview = () => {
+    const videoElement = videoRef.current;
+    videojs(videoElement, {
+      html5: {
+        hls: {
+          overrideNative: true,
+        },
+      },
+    });
+
+    flvPlayer = flvjs.createPlayer({
+      type: "flv",
+      url: streamingUrl,
+    });
+
+    flvPlayer.attachMediaElement(videoElement);
     flvPlayer.load();
     flvPlayer.play();
   };
 
   return (
     <>
-      <button onClick={preview}>Preview</button>
       <div>
         <video
           ref={videoRef}
@@ -58,6 +36,14 @@ const VideoPlayer = ({ sourceUrl }) => {
           width={500}
         />
       </div>
+      <strong>Url:</strong>
+      <input
+        value={streamingUrl}
+        type="text"
+        style={{ width: 450 }}
+        onChange={(e) => setStreamingUrl(e.target.value)}
+      />
+      <button onClick={preview}>Preview</button>
     </>
   );
 };
