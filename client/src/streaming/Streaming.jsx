@@ -17,7 +17,7 @@ const Streaming = () => {
         <button onClick={starRtmpStreaming}>
           Start rtmp Streaming from Casparcg{" "}
         </button>{" "}
-        <strong>Url:</strong>
+        <strong>Command:</strong>
       </div>
       <textarea
         value={streamingUrl}
