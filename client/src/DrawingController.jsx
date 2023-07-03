@@ -1245,6 +1245,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
 
 const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
   // const history = useHistory();
+  const showId = useSelector((state) => state.showIdReducer.showId);
 
   // const [clientId, setClientId] = useState(fabric.Object.__uid)
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
@@ -3633,7 +3634,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             >
               ||
             </button>
-
             <button
               title="Bold"
               style={{ fontWeight: fontWeight1 === "bold" ? "bold" : "normal" }}
@@ -3685,7 +3685,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             >
               S
             </button>
-
             <button
               title="Delete Selected"
               onClick={() => deleteSelectedItem()}
@@ -3714,7 +3713,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <button onClick={() => bringToFront(canvas)}>Bring to F</button>
             <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
             <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
-
             <div>
               <b> Images: or Rects</b>
               <button onClick={() => sameWidthIMG(canvas)}>Same Width</button>
@@ -3732,6 +3730,12 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
               style={{ width: 60 }}
               defaultValue={0}
               onChange={(e) => roundedCorners(e.target.value)}
+            />
+            <span> Show ID:</span>{" "}
+            <input
+              type="checkbox"
+              checked={showId}
+              onChange={(e) => dispatch({ type: "SHOW_ID", payload: !showId })}
             />
           </div>
           <div className="drawingToolsRow">
