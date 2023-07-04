@@ -22,6 +22,16 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import Papa from "papaparse";
 
+function getKeyframes(sheet, tracks, objectKey) {
+    console.log(sheet.address)
+    const { projectId, sheetId } = sheet.address;
+    const json = studio.createContentOfSaveFile(projectId);
+    console.log(json)
+    const { trackData, trackIdByPropPath } = json.sheetsById[sheetId].sequence.tracksByObject[objectKey];
+    return tracks.map(track =>
+        trackData[trackIdByPropPath[`["${track}"]`]].keyframes.map(k => { return { value: k.value, position: k.position } })
+    )
+}
 
 
 studio.initialize();
@@ -2061,6 +2071,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) })
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+            <button onClick={() => {
+                const ddd = getKeyframes(sheet, ['left'], 'ccg_1');
+                console.log(ddd)
+            }}>test</button>
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
                 <Tabs forceRenderTabPanel={true} >
