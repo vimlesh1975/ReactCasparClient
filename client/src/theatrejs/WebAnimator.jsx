@@ -23,10 +23,10 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Papa from "papaparse";
 
 function getKeyframes(sheet, tracks, objectKey) {
-    console.log(sheet.address)
+    // console.log(sheet.address)
     const { projectId, sheetId } = sheet.address;
     const json = studio.createContentOfSaveFile(projectId);
-    console.log(json)
+    // console.log(json)
     const { trackData, trackIdByPropPath } = json.sheetsById[sheetId].sequence.tracksByObject[objectKey];
     return tracks.map(track =>
         trackData[trackIdByPropPath[`["${track}"]`]].keyframes.map(k => { return { value: k.value, position: k.position } })
@@ -2072,8 +2072,14 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
             <button onClick={() => {
-                const ddd = getKeyframes(sheet, ['left'], 'ccg_1');
-                console.log(ddd)
+                const ddd = getKeyframes(sheet, ['left'], studio.selection[0].address.objectKey);
+                studio.transaction((api) => {
+                    ddd[0].forEach((val) => {
+                        sheet.sequence.position = val.position
+                        api.unset(getObjectbyId(studio.selection[0].address.objectKey).props.left);
+                    })
+                })
+                console.log(studio.selection[0].address.objectKey)
             }}>test</button>
 
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
