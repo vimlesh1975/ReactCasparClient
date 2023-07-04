@@ -151,7 +151,7 @@ const WebAnimator = () => {
     const [y, setY] = useState(0);
 
     const [jsfilename, setJsfilename] = useState('main');
-    const [showSavePannel, setShowSavePannel] = useState(true);
+    const [showSavePannel, setShowSavePannel] = useState(false);
 
     const [chNumber, setChNumber] = useState(1);
 
@@ -2065,17 +2065,16 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
                 <Tabs forceRenderTabPanel={true} >
                     <TabList>
-                        <Tab>Data Pannel</Tab>
                         <Tab>Save Pannel</Tab>
+                        <Tab>Data Pannel</Tab>
                     </TabList>
-                    <TabPanel ><CsvData /></TabPanel>
-
                     <TabPanel > <SavePannelTheatre
                         importHtml={importHtml}
                         deleteAllObjects={deleteAllObjects}
                         stopGraphics1={stopGraphics1}
                         playtoCasparcg={playtoCasparcg}
                     /></TabPanel>
+                    <TabPanel ><CsvData /></TabPanel>
                 </Tabs >
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
