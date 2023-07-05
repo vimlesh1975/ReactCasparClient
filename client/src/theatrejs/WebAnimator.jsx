@@ -23,14 +23,14 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Papa from "papaparse";
 
 function getKeyframes(sheet, tracks, objectKey) {
-    // console.log(sheet.address)
-    const { projectId, sheetId } = sheet.address;
-    const json = studio.createContentOfSaveFile(projectId);
-    // console.log(json)
-    const { trackData, trackIdByPropPath } = json.sheetsById[sheetId].sequence.tracksByObject[objectKey];
-    return tracks.map(track =>
-        trackData[trackIdByPropPath[`["${track}"]`]].keyframes.map(k => { return { value: k.value, position: k.position } })
-    )
+    const json = studio.createContentOfSaveFile(sheet.address.projectId);
+    const { trackData, trackIdByPropPath } = json.sheetsById[sheet.address.sheetId].sequence.tracksByObject[objectKey];
+    return tracks.reduce((result, track) => {
+        result[track] = trackData[trackIdByPropPath[`["${track}"]`]].keyframes.map(k => {
+            return { position: k.position, value: k.value };
+        });
+        return result;
+    }, {});
 }
 
 
@@ -2072,11 +2072,14 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
             <button onClick={() => {
-                const ddd = getKeyframes(sheet, ['left'], studio.selection[0].address.objectKey);
+                const tracks = ['left', 'top']
+                const keyframes = getKeyframes(sheet, tracks, studio.selection[0].address.objectKey);
                 studio.transaction((api) => {
-                    ddd[0].forEach((val) => {
-                        sheet.sequence.position = val.position
-                        api.unset(getObjectbyId(studio.selection[0].address.objectKey).props.left);
+                    tracks.forEach((track) => {
+                        keyframes[track].forEach((val) => {
+                            sheet.sequence.position = val.position
+                            api.unset(getObjectbyId(studio.selection[0].address.objectKey).props[track]);
+                        })
                     })
                 })
                 console.log(studio.selection[0].address.objectKey)
