@@ -2,12 +2,14 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
-import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
+import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor, moveElement, deleteItemfromtimeline } from './common'
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
-const Layers = ({ moveElement }) => {
+const Layers = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
+    const kf = useSelector((state) => state.kfReducer.kf);
+    const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
     const [textofActiveObject, setTextofActiveObject] = useState('');
     const [idofActiveObject, setIdofActiveObject] = useState('');
@@ -18,7 +20,7 @@ const Layers = ({ moveElement }) => {
     const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
     const currentLanguage = useSelector(state => state.speechRecognitionReducer.currentLanguage);
-    const continuous1= useSelector(state => state.speechRecognitionReducer.continuous1);
+    const continuous1 = useSelector(state => state.speechRecognitionReducer.continuous1);
     const dispatch = useDispatch();
 
 
@@ -43,7 +45,7 @@ const Layers = ({ moveElement }) => {
             const aa = textofActiveObject.split(" ");
             const bb = aa.map((val) => val[0].toUpperCase() + val.slice(1))
             const cc = bb.join(" ");
-            element.text=cc
+            element.text = cc
         });
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
@@ -84,31 +86,20 @@ const Layers = ({ moveElement }) => {
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     }
 
-
-    // const moveElement = (sourceIndex, destinationIndex) => {
-    //     const updatedkf = [...kf];
-    //     updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-    //     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-
-    //     const updatedxpositions = [...xpositions];
-    //     updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-    //     dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-    // }
-
     const onDragEnd = (result) => {
         if (result.destination != null) {
             canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-            moveElement(result.source?.index, result.destination?.index);
+            moveElement(result.source?.index, result.destination?.index, kf, xpositions, dispatch);
         }
     }
 
 
     const deleteLayer = (e, canvas) => {
         canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
-        window.deleteItemfromtimeline();
+        deleteItemfromtimeline(kf, xpositions, dispatch);
     }
     const toggleLock = (e, canvas) => {
         try {
@@ -235,17 +226,17 @@ const Layers = ({ moveElement }) => {
 
         <div>
             <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
-            
+
             Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={42} />{fontSizeofTexrArea}
-             <button onClick={setText}>Set Text</button>
-             <button onClick={firstLetterCapitalise}>1st Letter Capitalise</button>
+            <button onClick={setText}>Set Text</button>
+            <button onClick={firstLetterCapitalise}>1st Letter Capitalise</button>
             <button onClick={allCapitalise}>AllCapitalise</button>
             <button onClick={wordCapitalise}>Word Capitalise</button>
 
             <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 820, height: 100, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
             <div style={{ border: '1px solid red' }}>
-            <span> <b>Speech Recognition </b></span>
-            <span>Microphone: {listening ? "ON " : "OFF "}</span>
+                <span> <b>Speech Recognition </b></span>
+                <span>Microphone: {listening ? "ON " : "OFF "}</span>
                 <button
                     onClick={() => {
                         SpeechRecognition.startListening({
@@ -277,10 +268,10 @@ const Layers = ({ moveElement }) => {
                     Stop
                 </button>
                 }
-               
+
                 <span> Replace: </span> <input type="checkbox" checked={replace1} onChange={e => setReplace1(val => !val)} />
-                <span> Continuous: </span> <input type="checkbox" checked={continuous1} onChange={e => dispatch({ type: 'CHANGE_CONTINUOUS1', payload: !continuous1})} />
-                
+                <span> Continuous: </span> <input type="checkbox" checked={continuous1} onChange={e => dispatch({ type: 'CHANGE_CONTINUOUS1', payload: !continuous1 })} />
+
                 <div> {transcript}</div>
             </div>
         </div>

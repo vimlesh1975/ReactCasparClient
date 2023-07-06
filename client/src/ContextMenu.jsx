@@ -40,11 +40,16 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { sendToBack, bringToFront, sendBackward, bringForward } from "./common";
 
-const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
+
+const ContextMenu = ({ canvas }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
   const [currentGradient, setcurrentGradient] = useState(gradient);
   const showId = useSelector((state) => state.showIdReducer.showId);
+  const kf = useSelector((state) => state.kfReducer.kf);
+  const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
+
   const dispatch = useDispatch();
 
   const getgradientFill = (canvas) => {
@@ -106,8 +111,11 @@ const ContextMenu = ({ canvas, sendToBack, bringToFront }) => {
             <li onClick={startPath}>Start Path</li>
             <li onClick={window.closePath}>Close Path</li>
             <li onClick={window.edit}>Edit Path</li>
-            <li onClick={() => bringToFront(canvas)}>Bring To Front</li>
-            <li onClick={() => sendToBack(canvas)}>Send To Back</li>
+            <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring To Front</li>
+            <li onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>Bring +1</li>
+            <li onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>Send To Back</li>
+            <li onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>Send -1</li>
+
             <li onClick={() => lock(canvas)}>
               Lock <VscLock />
             </li>

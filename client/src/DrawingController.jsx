@@ -11,6 +11,7 @@ import {
   base64EncodeBlob,
   checkIdUniqueness,
   rgbaObjectToHex,
+  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 import "fabric-history";
@@ -55,6 +56,7 @@ import CasparcgTools from "./CasparcgTools";
 
 import { rgbaCol, listglobalCompositeOperation } from "./common";
 import GsapPlayer from "./GsapPlayer";
+// import { dispatch } from "d3";
 
 var intervalGameTimer1;
 var intervalGameTimer2;
@@ -834,9 +836,7 @@ export const sameSizeIMG = (canvas) => {
   sameHeightIMG(canvas);
 };
 
-export const deleteSelectedItem = (canvas) => {
-  window.deleteItemfromtimeline();
-};
+
 
 export const swapFaceandStrokeColors = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -1175,8 +1175,8 @@ export const paste = (canvas) => {
           objectCaching: false,
           id:
             clonedObj.type === "i-text" ||
-            clonedObj.type === "textbox" ||
-            clonedObj.type === "text"
+              clonedObj.type === "textbox" ||
+              clonedObj.type === "text"
               ? "ccg_" + fabric.Object.__uid
               : "id_" + fabric.Object.__uid,
           class: "class_" + fabric.Object.__uid,
@@ -1191,8 +1191,8 @@ export const paste = (canvas) => {
               objectCaching: false,
               id:
                 obj.type === "i-text" ||
-                obj.type === "textbox" ||
-                obj.type === "text"
+                  obj.type === "textbox" ||
+                  obj.type === "text"
                   ? "ccg_" + fabric.Object.__uid
                   : "id_" + fabric.Object.__uid,
               class: "class_" + fabric.Object.__uid,
@@ -1243,11 +1243,8 @@ export const createShape = (canvas, shape, size = 0.4) => {
   });
 };
 
-const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
-  // const history = useHistory();
+const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
-
-  // const [clientId, setClientId] = useState(fabric.Object.__uid)
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
   window.clientId = clientId;
 
@@ -1348,6 +1345,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
   const [strokedasharray, setstrokedasharray] = useState([0, 0]);
   const [currentFillColor, setCurrentFillColor] = useState("#000000");
 
+  const kf = useSelector((state) => state.kfReducer.kf);
+  const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
+
   useEffect(() => {
     fabric.util.addListener(document.body, "keydown", function (options) {
       if (options.target.nodeName === "BODY") {
@@ -1373,12 +1373,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
         if (options.key === "Delete") {
           window.editor.canvas?.getActiveObjects().forEach((item) => {
-            //  alert(item.type);
             if (!(item.type === "textbox" && item.isEditing)) {
-              // window.editor.canvas?.remove(item);
-              // window.editor.canvas?.discardActiveObject();
-              // window.editor.canvas?.requestRenderAll();
-              window.deleteItemfromtimeline();
+              deleteItemfromtimeline(kf, xpositions, dispatch);
             }
           });
         }
@@ -1395,7 +1391,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
           }
         }
         if (options.ctrlKey && options.key.toLowerCase() === "z") {
-          // window.editor.canvas?.undo();
           window.editor.canvas && undo(window.editor.canvas);
         }
         if (options.ctrlKey && options.key.toLowerCase() === "r") {
@@ -1407,7 +1402,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
           selectAll(window.editor.canvas);
         }
         if (options.ctrlKey && options.key === "Enter") {
-          // options.preventDefault();
           previewHtml(window.editor.canvas);
         }
       }
@@ -1437,12 +1431,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
           if (options.key === "Delete") {
             window.editor.canvas?.getActiveObjects().forEach((item) => {
-              //  alert(item.type);
               if (!(item.type === "textbox" && item.isEditing)) {
-                // window.editor.canvas?.remove(item);
-                // window.editor.canvas?.discardActiveObject();
-                // window.editor.canvas?.requestRenderAll();
-                window.deleteItemfromtimeline();
+                deleteItemfromtimeline(kf, xpositions, dispatch);
               }
             });
           }
@@ -1476,28 +1466,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const sendToBack = (canvas) => {
-    canvas.getActiveObjects().forEach((element) => {
-      const sourceIndex = canvas.getObjects().indexOf(element);
-      const destinationIndex = 0;
-      moveElement(sourceIndex, destinationIndex);
-      canvas.sendToBack(element);
-    });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  };
-
-  const bringToFront = (canvas) => {
-    canvas.getActiveObjects().forEach((element) => {
-      const sourceIndex = canvas.getObjects().indexOf(element);
-      const destinationIndex = canvas.getObjects().length - 1;
-      moveElement(sourceIndex, destinationIndex);
-      canvas.bringToFront(element);
-    });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  };
-
   const pauseClock = (layerNumber) => {
     clearInterval(intervalGameTimer1);
     endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -1523,8 +1491,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aaGameTimer1.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer1.style.zIndex = ${layerNumber};
         aaGameTimer1.innerHTML=\`${canvas
-          .toSVG(["id", "class", "selectable"])
-          .replaceAll('"', '\\"')}\`;
+        .toSVG(["id", "class", "selectable"])
+        .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer1);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -1532,8 +1500,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         document.body.style.overflow='hidden';
         window.ccGameTimer1=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
         ccGameTimer1.textContent='${initialMinute}:${initialSecond
-      .toString()
-      .padStart(2, 0)}';
+        .toString()
+        .padStart(2, 0)}';
         window.startTimeGameTimer1 = new Date();
         startTimeGameTimer1.setMinutes(${initialMinute});
         startTimeGameTimer1.setSeconds(${initialSecond});
@@ -1585,9 +1553,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         startTimeGameTimer1.setSeconds(${initialSecond});
         clearInterval(intervalGameTimer1);
         intervalGameTimer1=setInterval(()=>{
-        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${
-          countUp ? "+" : "-"
-        } 1);
+        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${countUp ? "+" : "-"
+      } 1);
         var ss3 =  ((startTimeGameTimer1.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTimeGameTimer1.getSeconds()).toString()).padStart(2, '0');
         ccGameTimer1.textContent  =ss3;
         }, 1000);`;
@@ -1629,8 +1596,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
         aaGameTimer2.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer2.style.zIndex = ${layerNumber};
         aaGameTimer2.innerHTML=\`${canvas
-          .toSVG(["id", "class", "selectable"])
-          .replaceAll('"', '\\"')}\`;
+        .toSVG(["id", "class", "selectable"])
+        .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer2);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -1677,8 +1644,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
       countUp2
         ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() + 1)
         : startTimeGameTimer2.getSeconds() > 0
-        ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
-        : startTimeGameTimer2.setSeconds(0);
+          ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
+          : startTimeGameTimer2.setSeconds(0);
       setInitialSecond2(startTimeGameTimer2.getSeconds());
     }, 1000);
     //for form
@@ -1714,7 +1681,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     canvas.requestRenderAll();
   };
 
-  // startTimeGameTimer2.getMinutes()).toString()).padStart(2, '0')
   const addGameTimer = (canvas) => {
     const sss = new fabric.Textbox(
       `${initialMinute.toString().padStart(2, "0")}:${initialSecond
@@ -1980,10 +1946,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
       .getActiveObjects()
       .forEach(
         (item) =>
-          (item.strokeDashArray = [
-            parseInt(e.target.value),
-            parseInt(e.target.value),
-          ])
+        (item.strokeDashArray = [
+          parseInt(e.target.value),
+          parseInt(e.target.value),
+        ])
       );
     canvas.requestRenderAll();
   };
@@ -2204,6 +2170,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
     canvas.requestRenderAll();
   };
 
+  const deleteSelectedItem = (canvas) => {
+    deleteItemfromtimeline(kf, xpositions, dispatch);
+  };
+
   const roundedCorners = (cornerRadius) => {
     canvas.getActiveObjects().forEach((fabricObject) => {
       const aa1 = new fabric.Rect({
@@ -2252,21 +2222,26 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
   };
 
   const exportPDF = async () => {
-    var aa = ``;
-    await canvasList.forEach((val) => {
-      canvas.loadFromJSON(val.pageValue, () => {
-        aa += `< div > ${canvas.toSVG()}</div > `;
-        // console.log(aa)
+    var aa = "";
+    for (const val of canvasList) {
+      // eslint-disable-next-line
+      await new Promise((resolve) => {
+        canvas.loadFromJSON(val.pageValue, () => {
+          aa += `<div> ${canvas.toSVG()}</div> `;
+          canvas.renderAll();
+          resolve();
+        });
       });
-    });
-    // console.log(aa)
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
     myWindow.document.body.innerHTML = aa;
-    // myWindow.document.write(aa);
-    // myWindow.print()
   };
+
+
   const setHtmlString = () => {
-    html = `<!DOCTYPE html >
+    html = `<!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
@@ -2301,9 +2276,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                         document.body.style.padding = '0';
                                         document.body.style.overflow = 'hidden';
                                         var aa = document.getElementsByTagName('div')[0];
-                                        aa.style.zoom=(${
-                                          currentscreenSize * 100
-                                        }/1920)+'%';
+                                        aa.style.zoom=(${currentscreenSize * 100
+      }/1920)+'%';
                                         observer.disconnect();
             });
                                         observer.observe(elementToObserve, {subtree: true, childList: true })
@@ -2432,10 +2406,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                                 </script>
                                 <div> ${canvas.toSVG([
-                                  "id",
-                                  "class",
-                                  "selectable",
-                                ])}  </div>
+        "id",
+        "class",
+        "selectable",
+      ])}  </div>
                             </body>
                             <script src="${jsfilename}.js"></script>
                             <script src="${jsfilename2}.js"></script>
@@ -2623,9 +2597,8 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                 document.getElementsByTagName('svg')[0].style.height='${hh}';
                                                 document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
                                                 aa.style.top='100%';
-                                                aa.style.zoom=(${
-                                                  currentscreenSize * 100
-                                                }/1920)+'%';
+                                                aa.style.zoom=(${currentscreenSize * 100
+      }/1920)+'%';
                                                 document.body.style.overflow='hidden';
                                                 var speed=${verticalSpeed};
                                                 setInterval(function(){
@@ -2676,10 +2649,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                             aa.style.position='absolute';
                                                             document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                             document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                            aa.style.zoom=(${
-                                                              currentscreenSize *
-                                                              100
-                                                            }/1920)+'%';
+                                                            aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                             document.body.style.overflow='hidden';
                                                             var speed=${horizontalSpeed};
                                                             if (${!ltr}){
@@ -2741,10 +2713,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                         aa.style.position='absolute';
                                                                         document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                                         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                        aa.style.zoom=(${
-                                                                          currentscreenSize *
-                                                                          100
-                                                                        }/1920)+'%';
+                                                                        aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                         document.body.style.overflow='hidden';
                                                                         var speed=${horizontalSpeed2};
                                                                         if (${!ltr2}){
@@ -2809,10 +2780,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
 
                                                                                 var aa = document.getElementsByTagName('div')[0];
                                                                                 aa.style.position='absolute';
-                                                                                aa.style.zoom=(${
-                                                                                  currentscreenSize *
-                                                                                  100
-                                                                                }/1920)+'%';
+                                                                                aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                 var cc=document.getElementsByTagName('tspan')[0];
                                                                                 cc.textContent='';
                                                                                 setInterval(function() {
@@ -2862,10 +2832,9 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                             document.body.style.overflow='hidden';
                                                                                             var aa = document.getElementsByTagName('div')[0];
                                                                                             aa.style.position='absolute';
-                                                                                            aa.style.zoom=(${
-                                                                                              currentscreenSize *
-                                                                                              100
-                                                                                            }/1920)+'%';
+                                                                                            aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                             var cc=document.getElementsByTagName('tspan')[0];
                                                                                             cc.textContent='';
                                                                                             var startTime = new Date();
@@ -2911,25 +2880,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aaVertical.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaVertical.style.zIndex = ${layerNumber};
                                                                                     aaVertical.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaVertical);
                                                                                     document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                     document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
                                                                                     aaVertical.style.top='100%';
-                                                                                    aaVertical.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaVertical.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.verticalSpeed=${verticalSpeed};
         window.intervalVerticalScroll= setInterval(()=>{
@@ -2957,24 +2925,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal1.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal1.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaHorizontal1);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal1.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaHorizontal1.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed=${horizontalSpeed};
                                                                                     if (${!ltr}){
@@ -3011,24 +2978,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal2.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal2.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaHorizontal2);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal2.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaHorizontal2.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
                                                                                     if (${!ltr2}){
@@ -3065,25 +3031,24 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aaClock.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaClock.style.zIndex = ${layerNumber};
                                                                                     aaClock.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaClock);
 
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaClock.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaClock.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
 
                                                                                     window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
@@ -3113,24 +3078,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaUpTimer.style.zIndex = ${layerNumber};
                                                                                     aaUpTimer.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaUpTimer);
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaUpTimer.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaUpTimer.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
                                                                                     ccUpTimer.textContent='00:00:000';
@@ -3211,24 +3175,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aa.style.zIndex = ${layerNumber};
                                                                                     aa.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+          .toSVG(
+            [
+              "id",
+              "class",
+              "selectable",
+            ]
+          )
+          .replaceAll(
+            '"',
+            '\\"'
+          )}\`;
                                                                                     bb.appendChild(aa);
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aa.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aa.style.zoom=(${currentscreenSize *
+        100
+        }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     var style = document.createElement('style');
                                                                                     style.textContent = '${inAnimation}';
@@ -3265,24 +3228,23 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                                                                                     aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aa.style.zIndex = ${layerNumber};
                                                                                     aa.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     bb.appendChild(aa);
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aa.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     var style = document.createElement('style');
                                                                                     style.textContent = '${inAnimation}';
@@ -3393,7 +3355,7 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
           console.log("Error", aa);
         });
     }
-    return () => {};
+    return () => { };
     // eslint-disable-next-line
   }, []);
 
@@ -3709,8 +3671,10 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
             <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
             <button onClick={() => selectAll(canvas)}>Select All</button>
             <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
-            <button onClick={() => sendToBack(canvas)}>Send To BK</button>
-            <button onClick={() => bringToFront(canvas)}>Bring to F</button>
+            <button onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>Send To BK</button>
+            <button onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>Send -1</button>
+            <button onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring to F</button>
+            <button onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>Bring +1</button>
             <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
             <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
             <div>
@@ -3970,15 +3934,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${
-                    canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
-                  }deg,${canvas
-                    ?.getActiveObjects()[0]
-                    ?.fill?.colorStops.map((colorStop, i) => {
-                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
-                        colorStop.offset * 100
-                      }%`;
-                    })}`,
+                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
+                    }deg,${canvas
+                      ?.getActiveObjects()[0]
+                      ?.fill?.colorStops.map((colorStop, i) => {
+                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
+                          }%`;
+                      })}`,
                 }}
               />
             ) : (
@@ -4014,15 +3976,13 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${
-                    canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
-                  }deg,${canvas
-                    ?.getActiveObjects()[0]
-                    ?.stroke?.colorStops.map((colorStop, i) => {
-                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
-                        colorStop.offset * 100
-                      }%`;
-                    })}`,
+                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
+                    }deg,${canvas
+                      ?.getActiveObjects()[0]
+                      ?.stroke?.colorStops.map((colorStop, i) => {
+                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
+                          }%`;
+                      })}`,
                 }}
               />
             ) : (
@@ -5003,8 +4963,6 @@ const DrawingController = ({ moveElement, deleteItemfromtimeline }) => {
           </TabPanel>
           <TabPanel>
             <Layers2
-              moveElement={moveElement}
-              deleteItemfromtimeline={deleteItemfromtimeline}
             />
           </TabPanel>
           <TabPanel>

@@ -2,9 +2,9 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
-import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor } from './common'
+import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor, moveElement, deleteItemfromtimeline } from './common'
 
-const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
+const Layers2 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -13,6 +13,8 @@ const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
     const [fontofInputBox, setFontofInputBox] = useState('Arial')
     const [fontSizeofTexrArea, setFontSizeofTexrArea] = useState(42);
     const dispatch = useDispatch();
+    const kf = useSelector((state) => state.kfReducer.kf);
+    const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
 
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
@@ -35,7 +37,7 @@ const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
             const aa = textofActiveObject.split(" ");
             const bb = aa.map((val) => val[0].toUpperCase() + val.slice(1))
             const cc = bb.join(" ");
-            element.text=cc
+            element.text = cc
         });
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
@@ -64,13 +66,13 @@ const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-            moveElement(result.source?.index, result.destination?.index);
+            moveElement(result.source?.index, result.destination?.index, kf, xpositions, dispatch);
         }
     }
 
     const deleteLayer = (e, canvas) => {
         canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
-        deleteItemfromtimeline();
+        deleteItemfromtimeline(kf, xpositions, dispatch);
     }
     const toggleLock = (e, canvas) => {
         try {
@@ -206,7 +208,7 @@ const Layers2 = ({ moveElement, deleteItemfromtimeline }) => {
             <button onClick={allCapitalise}>AllCapitalise</button>
             <button onClick={wordCapitalise}>Word Capitalise</button>
 
-            
+
         </div>
     </div>)
 }

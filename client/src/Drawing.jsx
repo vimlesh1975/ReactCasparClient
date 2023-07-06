@@ -70,7 +70,7 @@ function handleDrop(e, canvas) {
   }
 }
 
-const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
+const Drawing = ({ canvasOutput }) => {
   const { editor, onReady } = useFabricJSEditor();
   const dispatch = useDispatch();
 
@@ -242,9 +242,6 @@ const Drawing = ({ canvasOutput, moveElement, sendToBack, bringToFront }) => {
       {/* <div style={{ zoom: zoom }}> <svg width={1920 * 0.533} height={1080 * 0.533}> <rect x='100' y='100' width="800" height="400" style={{ fill: 'transparent', stroke: "red", strokeWidth: 2 }} /></svg></div> */}
       <ContextMenu
         canvas={editor?.canvas}
-        moveElement={moveElement}
-        sendToBack={sendToBack}
-        bringToFront={bringToFront}
       />
       {
         <span

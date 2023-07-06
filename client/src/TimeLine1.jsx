@@ -5,7 +5,7 @@ import { fabric } from "fabric";
 import { deSelectAll, selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
-import { endpoint, templateLayers, executeScript } from './common'
+import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement } from './common'
 
 const timelineWidth = 1024;
 const controlWidth = 275;
@@ -16,7 +16,7 @@ var stopCommand;
 var html;
 var aborted = false;
 
-const TimeLine1 = ({ deleteItemfromtimeline }) => {
+const TimeLine1 = () => {
 
   const dispatch = useDispatch();
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -837,19 +837,13 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
       canvas.requestRenderAll();
       dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 
-      moveElement(sourceIndex, destinationIndex);
+      moveElement(sourceIndex, destinationIndex,
+        kf,
+        xpositions,
+        dispatch);
     }
   }
 
-  const moveElement = (sourceIndex, destinationIndex) => {
-    const updatedkf = [...kf]
-    updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-    dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-
-    const updatedxpositions = [...xpositions];
-    updatedxpositions.splice(destinationIndex, 0, updatedxpositions.splice(sourceIndex, 1)[0]);
-    dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
-  }
 
   const selectObject = (e) => {
     try {
@@ -938,7 +932,7 @@ const TimeLine1 = ({ deleteItemfromtimeline }) => {
                             <div> <button title='Lock selected' onClick={() => lockUnlock(canvas)}>{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);
-                              deleteItemfromtimeline();
+                              deleteItemfromtimeline(kf, xpositions, dispatch);
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
                             <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
                               element.id = e.target.value;

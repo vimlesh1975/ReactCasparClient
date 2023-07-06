@@ -21,6 +21,88 @@ export const listglobalCompositeOperation = [
   "screen",
 ];
 
+export const moveElement = (
+  sourceIndex,
+  destinationIndex,
+  kf,
+  xpositions,
+  dispatch
+) => {
+  const updatedkf = [...kf];
+  updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
+
+  const updatedxpositions = [...xpositions];
+  updatedxpositions.splice(
+    destinationIndex,
+    0,
+    updatedxpositions.splice(sourceIndex, 1)[0]
+  );
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
+};
+
+export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
+  const updatedkf = [...kf];
+  const updatedxpositions = [...xpositions];
+  window.editor.canvas?.getActiveObjects().forEach((element) => {
+    const index1 = window.editor.canvas?.getObjects().indexOf(element);
+    window.editor.canvas?.remove(element);
+    updatedkf.splice(index1, 1);
+    updatedxpositions.splice(index1, 1);
+  });
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
+  window.editor.canvas?.discardActiveObject();
+  window.editor.canvas?.requestRenderAll();
+};
+window.deleteItemfromtimeline = deleteItemfromtimeline;
+
+export const sendToBack = (canvas, kf, xpositions, dispatch) => {
+  canvas.getActiveObjects().forEach((element) => {
+    const sourceIndex = canvas.getObjects().indexOf(element);
+    const destinationIndex = 0;
+    moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
+    canvas.sendToBack(element);
+  });
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
+export const bringToFront = (canvas, kf, xpositions, dispatch) => {
+  canvas.getActiveObjects().forEach((element) => {
+    const sourceIndex = canvas.getObjects().indexOf(element);
+    const destinationIndex = canvas.getObjects().length - 1;
+    moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
+    canvas.bringToFront(element);
+  });
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
+export const bringForward = (canvas, kf, xpositions, dispatch) => {
+  const element = canvas.getActiveObjects()[0];
+  const sourceIndex = canvas.getObjects().indexOf(element);
+  if (sourceIndex !== canvas.getObjects().length - 1) {
+    const destinationIndex = sourceIndex + 1;
+    moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
+    canvas.bringForward(element);
+  }
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
+export const sendBackward = (canvas, kf, xpositions, dispatch) => {
+  const element = canvas.getActiveObjects()[0];
+  const sourceIndex = canvas.getObjects().indexOf(element);
+  if (sourceIndex !== 0) {
+    const destinationIndex = sourceIndex - 1;
+    moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
+    canvas.sendBackwards(element);
+  }
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
 export const findElementWithId = (group, id) => {
   const objects = group.getObjects();
   for (let i = 0; i < objects.length; i++) {
