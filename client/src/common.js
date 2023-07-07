@@ -3,7 +3,7 @@ import { animation } from "./animation.js";
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = "030723_1";
+export const buildDate = "070723_1";
 export const listglobalCompositeOperation = [
   "source-over",
   "source-atop",
