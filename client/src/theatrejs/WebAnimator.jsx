@@ -2052,7 +2052,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             <button onClick={() => reset()}>Reset</button>
 
 
-            <span>Caspar Control:</span>
+            <span>Caspar:</span>
 
             <button onClick={() => {
                 sheet.sequence.position = 0;

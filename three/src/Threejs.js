@@ -73,6 +73,8 @@ const Threejs = () => {
   };
 
   const [aa, setAA] = useState([]);
+  const [currentPage, setCurrentPage] = useState(null);
+
   const [scene1, setScene1] = useState({});
   const [scene2, setScene2] = useState({});
   const [camera1, setCamera1] = useState();
@@ -624,6 +626,7 @@ const Threejs = () => {
 
   const updatetoCaspar1 = () => {
     DeselectAll();
+    demoSheet.sequence.position = 0;
     var exporter = new GLTFExporter();
     exporter.parse(
       scene1,
@@ -1129,7 +1132,7 @@ const Threejs = () => {
     }
   };
 
-  function onMouseclick1(event) {
+  function mouseclickHandler(event) {
     intersects = raycaster1.intersectObjects(pickableObjects, false);
     if (intersects.length > 0) {
       setSelectedObject(intersects[0].object);
@@ -1139,9 +1142,9 @@ const Threejs = () => {
   }
 
   useEffect(() => {
-    document.addEventListener("click", onMouseclick1, false);
+    document.addEventListener("click", mouseclickHandler, false);
     return () => {
-      document.removeEventListener("click", onMouseclick1);
+      document.removeEventListener("click", mouseclickHandler);
     };
     // eslint-disable-next-line
   }, [pickableObjects]);
@@ -1152,7 +1155,6 @@ const Threejs = () => {
     loader.parse(aa[i].gltf, "", (gltf) => {
       gltf.scene.children.forEach((element, ii) => {
         if (element.type === "Mesh") {
-          //   console.log(element.userData.__storeKey.split(":")[2]);
           addImportedShape2(
             element.userData.__storeKey.split(":")[2],
             element,
@@ -1237,6 +1239,35 @@ const Threejs = () => {
             studio.createContentOfSaveFile("Demo Project")
           ),
         });
+        setAA(dd);
+      },
+      function (error) {
+        console.log("An error happened");
+      },
+      {}
+    );
+  };
+
+  const updateScene = (index) => {
+    const dd = [...aa];
+
+    const exporter = new GLTFExporter();
+    exporter.parse(
+      scene1,
+      (gltf) => {
+        const updatedScene = {
+          pageName: "page" + dd.length,
+          gltf: JSON.stringify(gltf),
+          cameraPosition: JSON.stringify([
+            camera1.position.x,
+            camera1.position.y,
+            camera1.position.z,
+          ]),
+          animation: JSON.stringify(
+            studio.createContentOfSaveFile("Demo Project")
+          ),
+        };
+        dd[index] = updatedScene;
         setAA(dd);
       },
       function (error) {
@@ -1595,9 +1626,10 @@ const Threejs = () => {
           <h1>Timeline Area</h1>
         </div>
         <div>
+          {currentPage}
           <button onClick={saveScene}>Save scene</button>
+          <button onClick={() => updateScene(currentPage)}>Update scene</button>
           <button onClick={saveList}>Save list</button>
-          <span title="Will append list">Add File:</span>{" "}
           <input
             type="file"
             id="file"
@@ -1678,6 +1710,7 @@ const Threejs = () => {
                                       }}
                                       onClick={(e) => {
                                         loadscene(i);
+                                        setCurrentPage(i);
                                       }}
                                       key1={i}
                                       key2={"vimlesh"}
