@@ -1972,26 +1972,17 @@ const DrawingController = () => {
     executeScript(`horizontalSpeed2=${e.target.value}`);
   };
   const exportSVG = (canvas) => {
-    const element = document.createElement("a");
-    var aa = canvas.toSVG(["id", "class", "selectable"]);
-    const file = new Blob([aa], { type: "text/xml" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".svg";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const options = {
+      suggestedName: generalFileName(),
+      types: [{
+        description: 'svg file',
+        accept: { 'image/svg+xml': ['.svg'], }
+      }],
+    };
+    const data = new Blob([canvas.toSVG(["id", "class", "selectable"])], { type: "text/xml" });
+    saveFile(options, data)
   };
+
   const exportJSON = (canvas) => {
     const element = document.createElement("a");
     var aa = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
