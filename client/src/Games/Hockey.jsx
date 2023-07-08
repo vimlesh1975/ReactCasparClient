@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { endpoint, stopGraphics, recallPage, executeScript } from '../common'
+import { endpoint, stopGraphics, recallPage, executeScript, generalFileName, saveFile } from '../common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
@@ -178,22 +178,23 @@ const Hockey = () => {
 
 
     const fileSaveAs = (playerList) => {
-        const element = document.createElement("a");
         var aa = ''
         playerList.forEach(val => {
             aa += val + '\r\n'
         });
-        const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-
-        var retVal = prompt("Enter  file name to save : ", 'playerList' + ss);
-
-        if (retVal !== null) {
-            element.download = retVal;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-        }
+        const data = new Blob([aa], { type: 'text/plain' });
+        const options = {
+            suggestedName: 'Team_' + generalFileName(),
+            types: [
+                {
+                    description: 'text Files',
+                    accept: {
+                        'text/plain': ['.txt'],
+                    },
+                },
+            ],
+        };
+        saveFile(options, data)
     }
     let fileReader;
 
