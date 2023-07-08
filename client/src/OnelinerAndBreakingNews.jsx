@@ -173,23 +173,7 @@ const OnelinerAndBreakingNews = () => {
 
     }
 
-    const drawingFileSaveAs = () => {
-        // const element = document.createElement("a");
-        // var aa = ''
-        // playerList1.forEach(val => {
-        //     aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
-        // });
-        // const file = new Blob([aa], { type: 'text/plain' });
-        // element.href = URL.createObjectURL(file);
-        // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-
-        // var retVal = prompt("Enter  file name to save : ", 'Oneliner_' + ss);
-
-        // if (retVal !== null) {
-        //     element.download = retVal;
-        //     document.body.appendChild(element); // Required for this to work in FireFox
-        //     element.click();
-        // }
+    const onelinerFileSaveAs = () => {
         var aa = ''
         playerList1.forEach(val => {
             aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
@@ -295,7 +279,7 @@ const OnelinerAndBreakingNews = () => {
                 <table border='0'>
                     <tbody >
                         <tr>
-                            <td><button onClick={drawingFileSaveAs}>Save</button></td>
+                            <td><button onClick={onelinerFileSaveAs}>Save</button></td>
                             <td><span>Open File:</span><input
                                 type='file'
                                 id='file'

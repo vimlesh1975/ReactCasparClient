@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from "lodash";
-import { shadowOptions, options } from './common'
+import { shadowOptions, options, generalFileName, saveFile } from './common'
 
 const Scroll = () => {
 
@@ -59,22 +59,25 @@ const Scroll = () => {
 
     }
 
-    const drawingFileSaveAs = () => {
-        const element = document.createElement("a");
+    const scrollFileSaveAs = () => {
         var aa = ''
         playerList1.forEach(val => {
             aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1, delemeterLogo: val.delemeterLogo }) + '\r\n'
         });
-        const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        const data = new Blob([aa], { type: 'text/plain' });
 
-        var retVal = prompt("Enter  file name to save : ", 'Scroll_' + ss);
-        if (retVal !== null) {
-            element.download = retVal;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-        }
+        const options = {
+            suggestedName: 'Scroll_' + generalFileName(),
+            types: [
+                {
+                    description: 'text Files',
+                    accept: {
+                        'text/plain': ['.txt'],
+                    },
+                },
+            ],
+        };
+        saveFile(options, data)
     }
     let fileReader;
 
@@ -168,7 +171,7 @@ const Scroll = () => {
                     <tbody >
                         <tr>
 
-                            <td><button onClick={drawingFileSaveAs}>Save</button></td>
+                            <td><button onClick={scrollFileSaveAs}>Save</button></td>
                             <td><span>Open File:</span><input
                                 type='file'
                                 id='file'
