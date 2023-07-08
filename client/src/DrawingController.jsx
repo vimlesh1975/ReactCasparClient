@@ -2487,7 +2487,6 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
-    const element = document.createElement("a");
     var aa = `<!DOCTYPE html>
                         <html lang="en">
                             <head>
@@ -2518,29 +2517,24 @@ const DrawingController = () => {
     aa += `
                                         </body>
                                     </html>`;
-    const file = new Blob([aa], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".html";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'HTML Files',
+          accept: {
+            'text/html': ['.html'],
+          },
+        },
+      ],
+    };
+    saveFile(options, data)
   };
   const exportHorizontalScrollAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 100;
-    const element = document.createElement("a");
     var aa = `<!DOCTYPE html>
                                     <html lang="en">
                                         <head>
@@ -2582,29 +2576,24 @@ const DrawingController = () => {
     aa += `
                                                     </body>
                                                 </html>`;
-    const file = new Blob([aa], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".html";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'HTML Files',
+          accept: {
+            'text/html': ['.html'],
+          },
+        },
+      ],
+    };
+    saveFile(options, data)
   };
   const exportHorizontalScrollAsHTML2 = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 100;
-    const element = document.createElement("a");
     var aa = `<!DOCTYPE html>
                                                 <html lang="en">
                                                     <head>
@@ -2646,27 +2635,24 @@ const DrawingController = () => {
     aa += `
                                                                 </body>
                                                             </html>`;
-    const file = new Blob([aa], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".html";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'HTML Files',
+          accept: {
+            'text/html': ['.html'],
+          },
+        },
+      ],
+    };
+    saveFile(options, data)
   };
+
+
   const exportClockAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const element = document.createElement("a");
     var aa = `<!DOCTYPE html>
                                                             <html lang="en">
                                                                 <head>
@@ -2700,27 +2686,23 @@ const DrawingController = () => {
               }, 1000);
                                                                             </script>
                                                                         </html>`;
-    const file = new Blob([aa], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".html";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'HTML Files',
+          accept: {
+            'text/html': ['.html'],
+          },
+        },
+      ],
+    };
+    saveFile(options, data)
   };
+
   const exportUpTimerAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    const element = document.createElement("a");
     var aa = `<!DOCTYPE html>
                                                                         <html lang="en">
                                                                             <head>
@@ -2755,23 +2737,19 @@ const DrawingController = () => {
           }, 40);
                                                                                         </script>
                                                                                     </html>`;
-    const file = new Blob([aa], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".html";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'HTML Files',
+          accept: {
+            'text/html': ['.html'],
+          },
+        },
+      ],
+    };
+    saveFile(options, data)
   };
 
   const startVerticalScroll = (layerNumber) => {
