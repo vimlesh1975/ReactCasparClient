@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { endpoint, stopGraphics, updateGraphics, executeScript } from './common'
+import { endpoint, stopGraphics, updateGraphics, executeScript, generalFileName, saveFile } from './common'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
@@ -174,23 +174,43 @@ const OnelinerAndBreakingNews = () => {
     }
 
     const drawingFileSaveAs = () => {
-        const element = document.createElement("a");
+        // const element = document.createElement("a");
+        // var aa = ''
+        // playerList1.forEach(val => {
+        //     aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
+        // });
+        // const file = new Blob([aa], { type: 'text/plain' });
+        // element.href = URL.createObjectURL(file);
+        // var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+
+        // var retVal = prompt("Enter  file name to save : ", 'Oneliner_' + ss);
+
+        // if (retVal !== null) {
+        //     element.download = retVal;
+        //     document.body.appendChild(element); // Required for this to work in FireFox
+        //     element.click();
+        // }
         var aa = ''
         playerList1.forEach(val => {
             aa += JSON.stringify({ id: val.id, data1: val.data1, use1: val.use1 }) + '\r\n'
         });
-        const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        const data = new Blob([aa], { type: 'text/plain' });
 
-        var retVal = prompt("Enter  file name to save : ", 'Oneliner_' + ss);
-
-        if (retVal !== null) {
-            element.download = retVal;
-            document.body.appendChild(element); // Required for this to work in FireFox
-            element.click();
-        }
+        const options = {
+            suggestedName: 'Oneliner_' + generalFileName(),
+            types: [
+                {
+                    description: 'text Files',
+                    accept: {
+                        'text/plain': ['.txt'],
+                    },
+                },
+            ],
+        };
+        saveFile(options, data)
     }
+
+
     let fileReader;
 
     const handleFileChosen = (file) => {
