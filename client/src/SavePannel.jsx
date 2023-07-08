@@ -6,7 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex } from './common'
+import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex, saveFile } from './common'
 import { animation } from './animation.js'
 import { fabric } from "fabric";
 
@@ -266,13 +266,14 @@ const SavePannel = () => {
     }
 
     async function drawingFileSaveAs() {
+        updatePage(canvas);
         const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
             aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n'
         });
-        const file = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
+        const data = new Blob([aa], { type: 'text/plain' });
+        element.href = URL.createObjectURL(data);
         var ss
         if (currentFile === 'new') {
             ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
@@ -286,12 +287,7 @@ const SavePannel = () => {
                 accept: { 'text/plain': ['.txt'] },
             }],
         };
-        const aa1 = await window.showSaveFilePicker(options);
-        const writable = await aa1.createWritable();
-        setCurrentFileName(aa1);
-        await writable.write(file);
-        await writable.close();
-
+        setCurrentFileName(await saveFile(options, data));
     }
     async function drawingFileSave() {
         updatePage(canvas);
@@ -299,13 +295,8 @@ const SavePannel = () => {
         canvasList.forEach(val => {
             aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: val.jsfilename2, cssfilename2: val.cssfilename2 }) + '\r\n'
         });
-        const file = new Blob([aa], { type: 'text/plain' });
-
-        const writable = await currentFileName.createWritable();
-
-        await writable.write(file);
-        await writable.close();
-
+        const data = new Blob([aa], { type: 'text/plain' });
+        saveFile(null, data, currentFileName)
     }
 
     const onDragEnd = (result) => {

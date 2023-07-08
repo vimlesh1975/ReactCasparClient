@@ -11,7 +11,7 @@ import {
   base64EncodeBlob,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline
+  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 import "fabric-history";
@@ -2386,15 +2386,11 @@ const DrawingController = () => {
         },
       ],
     };
-    const aa = await window.showSaveFilePicker(options);
-    sethtmlfileHandle(aa);
-    const writable = await aa.createWritable();
-
     setHtmlString();
-    const file = new Blob([html], { type: "text/html" });
+    const data = new Blob([html], { type: "text/html" });
 
-    await writable.write(file);
-    await writable.close();
+    const aa = await saveFile(options, data)
+    sethtmlfileHandle(aa)
 
     exportPage(canvas, aa);
     deSelectAll(canvas);
@@ -2432,11 +2428,12 @@ const DrawingController = () => {
   async function OverrightHtml(canvas) {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    const writable = await htmlfileHandle.createWritable();
+    // const writable = await htmlfileHandle.createWritable();
     setHtmlString();
-    const file = new Blob([html], { type: "text/html" });
-    await writable.write(file);
-    await writable.close();
+    const data = new Blob([html], { type: "text/html" });
+    // await writable.write(file);
+    // await writable.close();
+    saveFile(null, data, htmlfileHandle)
 
     if (htmlpageHandle) {
       const writable1 = await htmlpageHandle.createWritable();

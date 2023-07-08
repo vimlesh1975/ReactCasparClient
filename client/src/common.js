@@ -3,7 +3,21 @@ import { animation } from "./animation.js";
 import { fabric } from "fabric";
 // console.log(fabric.util.)
 
-export const buildDate = "070723_1";
+export const saveFile = async (options, data, fileHandle = null) => {
+  try {
+    const handle = fileHandle || (await window.showSaveFilePicker(options));
+    const writable = await handle.createWritable();
+    await writable.write(data);
+    await writable.close();
+    console.log("File saved successfully!", handle.name);
+    return handle; // Return the FileHandle object
+  } catch (error) {
+    console.error("Error saving the file:", error);
+    throw error; // Throw the error to be caught by the caller
+  }
+};
+
+export const buildDate = "080723_1";
 export const listglobalCompositeOperation = [
   "source-over",
   "source-atop",
