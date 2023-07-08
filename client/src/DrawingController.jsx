@@ -1984,25 +1984,19 @@ const DrawingController = () => {
   };
 
   const exportJSON = (canvas) => {
-    const element = document.createElement("a");
-    var aa = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
-    const file = new Blob([aa], { type: "text/json" });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter  file name to save : ", ss + "_FileName");
-    if (retVal !== null) {
-      element.download = retVal + ".json";
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: 'JSON Files',
+          accept: {
+            'application/json': ['.json'],
+          },
+        },
+      ],
+    };
+    const data = new Blob([JSON.stringify(canvas.toJSON(["id", "class", "selectable"]))], { type: "text/xml" });
+    saveFile(options, data)
   };
 
   const exportJSONforTheatrejs = (canvas) => {
