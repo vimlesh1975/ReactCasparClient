@@ -267,13 +267,13 @@ const SavePannel = () => {
 
     async function drawingFileSaveAs() {
         updatePage(canvas);
-        const element = document.createElement("a");
+        // const element = document.createElement("a");
         var aa = ''
         canvasList.forEach(val => {
             aa += JSON.stringify({ ...val, pageName: val.pageName, pageValue: val.pageValue, animation: val.animation, jsfilename: val.jsfilename, cssfilename: val.cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }) + '\r\n'
         });
         const data = new Blob([aa], { type: 'text/plain' });
-        element.href = URL.createObjectURL(data);
+        // element.href = URL.createObjectURL(data);
         var ss
         if (currentFile === 'new') {
             ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });

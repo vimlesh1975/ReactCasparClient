@@ -11,7 +11,7 @@ import {
   base64EncodeBlob,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile
+  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 import "fabric-history";
@@ -36,7 +36,7 @@ import {
   AiOutlineVerticalAlignBottom,
 } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import SavePannel from "./SavePannel";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Images from "./Images";
@@ -2455,62 +2455,47 @@ const DrawingController = () => {
     deSelectAll(canvas);
   }
 
-  const exportPng = (canvas) => {
+  const exportPng = async (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var br = canvas.getActiveObject()?.getBoundingRect();
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter file name to save : ", ss + "_FileName");
-
-    if (retVal !== null) {
-      try {
-        saveAs(
-          canvas.toDataURL({
-            format: "png",
-            left: br.left,
-            top: br.top,
-            width: br.width,
-            height: br.height,
-          }),
-          retVal + ".png"
-        );
-      } catch (error) {
-        alert(error);
-      }
-    }
+    var ss = generalFileName();
+    const options = {
+      suggestedName: ss,
+      types: [{
+        description: 'png file',
+        accept: {
+          'image/png': ['.png'],
+        },
+      }],
+    };
+    const data1 = canvas.toDataURL({
+      format: "png",
+      left: br.left,
+      top: br.top,
+      width: br.width,
+      height: br.height,
+    })
+    const data = await (await fetch(data1)).blob();
+    saveFile(options, data);
   };
+
   const exportPngFullPage = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    // deSelectAll(canvas);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
-    var retVal = prompt("Enter file name to save : ", ss + "_FileName");
-
-    if (retVal !== null) {
-      try {
-        canvas.getElement().toBlob((blob) => {
-          saveAs(blob, retVal + ".png");
-        });
-      } catch (error) {
-        alert(error);
-      }
-    }
+    var ss = generalFileName();
+    const options = {
+      suggestedName: ss,
+      types: [{
+        description: 'png file',
+        accept: {
+          'image/png': ['.png'],
+        },
+      }],
+    };
+    canvas.getElement().toBlob((data) => {
+      saveFile(options, data);
+    })
   };
 
   const exportVerticalScrollAsHTML = (canvas) => {

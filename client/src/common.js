@@ -16,6 +16,17 @@ export const saveFile = async (options, data, fileHandle = null) => {
     throw error; // Throw the error to be caught by the caller
   }
 };
+export const generalFileName = () => {
+  return new Date().toLocaleTimeString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+};
 
 export const buildDate = "080723_1";
 export const listglobalCompositeOperation = [
