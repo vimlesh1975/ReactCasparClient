@@ -28,7 +28,7 @@ export const generalFileName = () => {
   });
 };
 
-export const buildDate = "080723_1";
+export const buildDate = "110723_1";
 export const listglobalCompositeOperation = [
   "source-over",
   "source-atop",
@@ -245,7 +245,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -288,7 +288,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -306,7 +306,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -316,7 +316,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -475,7 +475,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
       canvas.requestRenderAll();
@@ -578,7 +578,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
 

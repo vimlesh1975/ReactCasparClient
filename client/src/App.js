@@ -9,6 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DrawingController from "./DrawingController";
 
+
 import { v4 as uuidv4 } from "uuid";
 
 import VideoController from "./VideoController";
@@ -57,6 +58,7 @@ import Threejs from "./Threejs";
 import CodeImport from "./CodeImport";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1";
+import HtmlOutput from "./HtmlOutput";
 
 const App = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -134,8 +136,8 @@ const App = () => {
       aa.setAttribute('id','divid_' + '${layerNumber}');
       aa.style.zIndex = ${layerNumber};
       aa.innerHTML='${canvas
-        .toSVG(["id", "class", "selectable"])
-        .replaceAll('"', '\\"')}';
+          .toSVG(["id", "class", "selectable"])
+          .replaceAll('"', '\\"')}';
       bb.appendChild(aa);
       document.body.style.margin='0';
       document.body.style.padding='0';
@@ -177,8 +179,8 @@ const App = () => {
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
     aa.innerHTML=\`${canvas
-      .toSVG(["id", "class", "selectable"])
-      .replaceAll('"', '\\"')}\`;
+        .toSVG(["id", "class", "selectable"])
+        .replaceAll('"', '\\"')}\`;
     bb.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
@@ -227,7 +229,7 @@ const App = () => {
     if (connectbutton.current.style.backgroundColor === "green") {
       axios
         .post(address1 + "/disconnect")
-        .then((aa) => {})
+        .then((aa) => { })
         .catch((aa) => {
           console.log("Error", aa);
         });
@@ -235,7 +237,7 @@ const App = () => {
       const data = { host: "localhost", port: 5250 };
       axios
         .post(address1 + "/connect", data)
-        .then((aa) => {})
+        .then((aa) => { })
         .catch((aa) => {
           console.log("Error", aa);
         });
@@ -333,11 +335,11 @@ const App = () => {
     const updatedcanvasList = canvasList.map((val, i) => {
       return i === currentPage
         ? {
-            ...val,
-            pageValue: canvas.toJSON(["id", "selectable"]),
-            jsfilename: jsfilename,
-            cssfilename: cssfilename,
-          }
+          ...val,
+          pageValue: canvas.toJSON(["id", "selectable"]),
+          jsfilename: jsfilename,
+          cssfilename: cssfilename,
+        }
         : val;
     });
     dispatch({ type: "CHANGE_CANVAS_LIST", payload: [...updatedcanvasList] });
@@ -584,6 +586,7 @@ const App = () => {
                 <TabList>
                   <Tab>Timeline</Tab>
                   <Tab>Casparcg Window</Tab>
+                  <Tab>Html Output Window</Tab>
                 </TabList>
                 <TabPanel>
                   <TimeLine1 />
@@ -615,6 +618,9 @@ const App = () => {
                       <Automation />
                     </div>
                   </div>
+                </TabPanel>
+                <TabPanel>
+                  <HtmlOutput />
                 </TabPanel>
               </Tabs>
             </div>
