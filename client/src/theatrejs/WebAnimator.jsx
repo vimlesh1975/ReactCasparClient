@@ -316,6 +316,32 @@ const WebAnimator = () => {
         // }
 
 
+        const lockUnlock1 = (canvas) => {
+            canvas.getActiveObjects().forEach((element) => {
+                element.set({
+                    lockMovementX: !element.lockMovementX,
+                    lockMovementY: !element.lockMovementY,
+
+                    lockScalingX: !element.lockScalingX,
+                    lockScalingY: !element.lockScalingY,
+                    lockRotation: !element.lockRotation,
+                })
+
+                // element.selectable = !element.selectable
+            })
+            canvas.requestRenderAll();
+            dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+        }
+
+        const visibleInVisible1 = (canvas) => {
+            canvas.getActiveObjects().forEach((element) => {
+                element.visible = !element.visible
+            })
+            canvas.requestRenderAll();
+            dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+        }
+
+
 
         return (
             <div className='rightClickMenu'
@@ -339,6 +365,10 @@ const WebAnimator = () => {
                     }}>Reset All to Default</li>
 
                     <li onClick={deleteItem}>Delete Object</li>
+                    <li onClick={() => lockUnlock1(window.editor.canvas)}>LockUnlock Object</li>
+                    <li onClick={() => visibleInVisible1(window.editor.canvas)}>Visibility of Object</li>
+
+
                     <li>Delete KeyFrames<ul>
                         <li onClick={() => {
                             const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value)// ['left', 'top']
@@ -353,8 +383,8 @@ const WebAnimator = () => {
                                 })
                             })
                         }}>All</li>
-                        {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map((val1 => {
-                            return <li onClick={() => {
+                        {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map(((val1, index) => {
+                            return <li key={index} onClick={() => {
                                 const tracks = [val1]
                                 const keyframes = getKeyframes(sheet, tracks, studio.selection[0].address.objectKey);
                                 studio.transaction((api) => {

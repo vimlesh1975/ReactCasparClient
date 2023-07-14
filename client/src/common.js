@@ -1,7 +1,31 @@
 import axios from "axios";
 import { animation } from "./animation.js";
 import { fabric } from "fabric";
-// console.log(fabric.util.)
+
+
+
+export const buildDate = "140723_1";
+
+export const lockUnlock = (canvas, i, dispatch) => {
+  canvas.getObjects().forEach((element, ii) => {
+    if (i === ii) {
+      element.selectable = !element.selectable
+    }
+  });
+  canvas.requestRenderAll();
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+}
+
+export const visibleInVisible = (canvas, i, dispatch) => {
+  canvas.getObjects().forEach((element, ii) => {
+    if (i === ii) {
+      element.visible = !element.visible
+    }
+  });
+  canvas.requestRenderAll();
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+
+}
 
 export const saveFile = async (options, data, fileHandle = null) => {
   try {
@@ -28,7 +52,6 @@ export const generalFileName = () => {
   });
 };
 
-export const buildDate = "110723_1";
 export const listglobalCompositeOperation = [
   "source-over",
   "source-atop",

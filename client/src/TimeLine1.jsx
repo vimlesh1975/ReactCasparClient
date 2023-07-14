@@ -4,8 +4,8 @@ import { Rnd } from 'react-rnd';
 import { fabric } from "fabric";
 import { deSelectAll, selectAll } from './DrawingController';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { VscTrash, VscMove, VscLock, VscUnlock } from "react-icons/vsc";
-import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement } from './common'
+import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
+import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement, lockUnlock, visibleInVisible } from './common'
 
 const timelineWidth = 1024;
 const controlWidth = 275;
@@ -855,11 +855,27 @@ const TimeLine1 = () => {
     }
   }
 
-  const lockUnlock = (canvas) => {
-    canvas.getActiveObjects().forEach((element) => { element.selectable = !element.selectable });
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
-  }
+  // const lockUnlock = (canvas, i) => {
+  //   canvas.getObjects().forEach((element, ii) => {
+  //     if (i === ii) {
+  //       element.selectable = !element.selectable
+  //     }
+  //   });
+  //   canvas.requestRenderAll();
+  //   dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+  // }
+
+  // const visible = (canvas, i) => {
+  //   canvas.getObjects().forEach((element, ii) => {
+  //     if (i === ii) {
+  //       element.visible = !element.visible
+  //     }
+  //   });
+  //   canvas.requestRenderAll();
+  //   dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+
+  // }
+
 
   return (<div onMouseOver={() => {
     !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
@@ -929,7 +945,8 @@ const TimeLine1 = () => {
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
                             <div style={{ minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
-                            <div> <button title='Lock selected' onClick={() => lockUnlock(canvas)}>{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
+                            <div> <button title='Lock selected' onClick={() => lockUnlock(canvas, i, dispatch)}>{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
+                            <div> <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}>{element.visible ? < VscEye /> : < VscEyeClosed />}</button></div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);
                               deleteItemfromtimeline(kf, xpositions, dispatch);

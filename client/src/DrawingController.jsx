@@ -65,6 +65,16 @@ var html;
 fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
 
+// Extend Fabric.js objects to include visibility property
+// fabric.Object.prototype.visible = true;
+// fabric.Object.prototype.originDraw = fabric.Object.prototype._render;
+
+// fabric.Object.prototype._render = function (ctx) {
+//   if (this.visible) {
+//     this.originDraw.call(this, ctx);
+//   }
+// };
+
 const STEP = 5;
 var Direction = {
   LEFT: 0,
