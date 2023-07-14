@@ -4,7 +4,7 @@ import { fabric } from "fabric";
 
 
 
-export const buildDate = "140723_1";
+export const buildDate = "140723_2";
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
