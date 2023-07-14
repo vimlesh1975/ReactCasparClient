@@ -553,11 +553,11 @@ const App = () => {
                     display: currentTab === "Drawing" ? "none" : "block",
                   }}
                 >
+                  <Video video={""} layerNumber={videoLayers[0]} />
+                  <Video video={""} layerNumber={videoLayers[1]} />
+                  <Video video={""} layerNumber={videoLayers[2]} />
                   <Video video={""} layerNumber={videoLayers[4]} />
                   <Video video={""} layerNumber={videoLayers[3]} />
-                  <Video video={""} layerNumber={videoLayers[2]} />
-                  <Video video={""} layerNumber={videoLayers[1]} />
-                  <Video video={""} layerNumber={videoLayers[0]} />
                 </div>
                 <div
                   style={{
