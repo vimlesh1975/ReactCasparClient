@@ -10,8 +10,6 @@ import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, 
 import { animation } from './animation.js'
 import { fabric } from "fabric";
 
-// import defaultCanvasList from './data/defaultCanvasList.txt'
-
 
 var currentFile = 'new';
 let fileReader;
@@ -217,17 +215,7 @@ const SavePannel = () => {
         canvas.requestRenderAll();
 
     }
-    // const handleFileRead2 = (e) => {
-    //     const content = fileReader.result;
-    //     var aa = content.split('\r\n')
-    //     aa.splice(-1)
-    //     var updatedcanvasList = [...canvasList]
-    //     aa.forEach(element => {
-    //         var cc = JSON.parse(element)
-    //         updatedcanvasList.push(cc)
-    //     });
-    //     dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
-    // };
+
     const handleFileChosen2 = async (files) => {
         if (files) {
             var updatedcanvasList = [...canvasList]
@@ -237,7 +225,14 @@ const SavePannel = () => {
                 aa.splice(-1)
                 aa.forEach(element => {
                     var cc = JSON.parse(element)
-                    updatedcanvasList.push(cc)
+                    const lastFourLetters = (cc.pageName).substring(cc.pageName.length - 4);
+                    if (lastFourLetters === '.txt') {
+                        const cc1 = { ...cc, pageName: cc.pageName.slice(0, -4) }
+                        updatedcanvasList.push(cc1)
+                    }
+                    else {
+                        updatedcanvasList.push(cc)
+                    }
                 });
             }
             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
