@@ -1256,6 +1256,8 @@ export const createShape = (canvas, shape, size = 0.4) => {
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
+
+
   window.clientId = clientId;
 
   const refShadowColor = useRef();
@@ -2363,17 +2365,9 @@ const DrawingController = () => {
   async function exportHTML(canvas) {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    });
+    var ss = generalFileName();
     const options = {
-      suggestedName: ss,
+      suggestedName: canvasList[currentPage] ? canvasList[currentPage].pageName : ss,
       types: [
         {
           description: "Html file",
