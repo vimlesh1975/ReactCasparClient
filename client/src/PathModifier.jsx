@@ -306,90 +306,27 @@ const PathModifier = () => {
         }
     }
 
-    const addValuePoint = index => {
+    const addValuePoint = (index, pointType) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const updatedPath = [...path1];
+            var nextIndex
 
             if (updatedPath[index + 1][0] === 'z') {
-                const nextIndex = 0;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-                // If the current point is a closing command, insert the new point after the previous point
-                updatedPath.splice(index + 1, 0, ['L', midX, midY]);
+                nextIndex = 0;
             } else {
-                const nextIndex = (index + 1) % updatedPath.length;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-                // If the current point is not a closing command, insert the new point after the current point
+                nextIndex = (index + 1);
+            }
+            const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
+            const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
+            if (pointType === 'L') {
                 updatedPath.splice(index + 1, 0, ['L', midX, midY]);
             }
-
-            currentValue = updatedPath;
-            dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
-            canvas.getActiveObjects()[0].set({ path: updatedPath });
-            canvas?.requestRenderAll();
-            edit();
-            edit();
-        }
-    }
-
-    const addValuePointQPoint = index => {
-        if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const updatedPath = [...path1];
-
-            if (updatedPath[index + 1][0] === 'z') {
-                const nextIndex = 0;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-                // If the current point is a closing command, insert the new point after the previous point
-                updatedPath.splice(index + 1, 0, ['Q', midX, midY, midX, midY]);
-            } else {
-                const nextIndex = (index + 1) % updatedPath.length;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-                // If the current point is not a closing command, insert the new point after the current point
+            if (pointType === 'Q') {
                 updatedPath.splice(index + 1, 0, ['Q', midX, midY, midX, midY]);
             }
-
-            currentValue = updatedPath;
-            dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
-            canvas.getActiveObjects()[0].set({ path: updatedPath });
-            canvas?.requestRenderAll();
-            edit();
-            edit();
-        }
-    }
-    const addValuePointCPoint = index => {
-        if (canvas.getActiveObjects()[0]?.type === 'path') {
-            const updatedPath = [...path1];
-
-            if (updatedPath[index + 1][0] === 'z') {
-                const nextIndex = 0;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-
-                // Find the second control point
-                const nextNextIndex = (nextIndex + 1) % updatedPath.length;
-                const controlX = (updatedPath[nextIndex][1] + updatedPath[nextNextIndex][1]) / 2;
-                const controlY = (updatedPath[nextIndex][2] + updatedPath[nextNextIndex][2]) / 2;
-
-                // Insert the new cubic Bezier curve point after the current point
-                updatedPath.splice(index + 1, 0, ['C', midX, midY, controlX, controlY, midX, midY]);
-
-            } else {
-                const nextIndex = (index + 1) % updatedPath.length;
-                const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-                const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
-                // Find the second control point
-                const nextNextIndex = (nextIndex + 1) % updatedPath.length;
-                const controlX = (updatedPath[nextIndex][1] + updatedPath[nextNextIndex][1]) / 2;
-                const controlY = (updatedPath[nextIndex][2] + updatedPath[nextNextIndex][2]) / 2;
-
-                // Insert the new cubic Bezier curve point after the current point
-                updatedPath.splice(index + 1, 0, ['C', midX, midY, controlX, controlY, midX, midY]);
-
+            if (pointType === 'C') {
+                updatedPath.splice(index + 1, 0, ['C', midX, midY, midX, midY, midX, midY]);
             }
-
             currentValue = updatedPath;
             dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
             canvas.getActiveObjects()[0].set({ path: updatedPath });
@@ -398,10 +335,6 @@ const PathModifier = () => {
             edit();
         }
     }
-
-
-
-
 
     const updatePath1 = (i, ii, e) => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
@@ -506,9 +439,9 @@ const PathModifier = () => {
                         Point {i + 1}/{path1.length}
                         {(i !== path1.length - 1) && <>
                             <button onClick={() => deleteValuePoint(i)} >Delete</button>
-                            <button onClick={() => addValuePoint(i)} >Add L Point</button>
-                            <button onClick={() => addValuePointQPoint(i)} >Add Q Point</button>
-                            <button onClick={() => addValuePointCPoint(i)} >Add C Point</button>
+                            <button onClick={() => addValuePoint(i, 'L')} >Add L Point</button>
+                            <button onClick={() => addValuePoint(i, 'Q')} >Add Q Point</button>
+                            <button onClick={() => addValuePoint(i, 'C')} >Add C Point</button>
                         </>}
                         {val.map((vv, ii) => {
                             return (<div key={ii} >
