@@ -310,14 +310,27 @@ const PathModifier = () => {
         if (canvas.getActiveObjects()[0]?.type === 'path') {
             const updatedPath = [...path1];
             var nextIndex
-
+            var midX
+            var midY
             if (updatedPath[index + 1][0] === 'z') {
                 nextIndex = 0;
-            } else {
+            }
+            else {
                 nextIndex = (index + 1);
             }
-            const midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
-            const midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
+            if (updatedPath[index][0] === 'L' || updatedPath[index][0] === 'M') {
+                midX = (updatedPath[index][1] + updatedPath[nextIndex][1]) / 2;
+                midY = (updatedPath[index][2] + updatedPath[nextIndex][2]) / 2;
+            }
+            else if (updatedPath[index][0] === 'Q') {
+                midX = (updatedPath[index][3] + updatedPath[nextIndex][1]) / 2;
+                midY = (updatedPath[index][4] + updatedPath[nextIndex][2]) / 2;
+            }
+            else if (updatedPath[index][0] === 'C') {
+                midX = (updatedPath[index][5] + updatedPath[nextIndex][1]) / 2;
+                midY = (updatedPath[index][6] + updatedPath[nextIndex][2]) / 2;
+            }
+
             if (pointType === 'L') {
                 updatedPath.splice(index + 1, 0, ['L', midX, midY]);
             }
