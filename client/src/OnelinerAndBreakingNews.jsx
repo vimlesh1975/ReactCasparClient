@@ -128,6 +128,7 @@ const OnelinerAndBreakingNews = () => {
             endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
         }, 250);
 
+        window.automationeditor[0].canvas.set({ width: 309, height: 172, ViewBox: [0, 0, 1931.25, 1075] })
         const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';

@@ -2,7 +2,7 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import { fabric } from "fabric";
 
-export const buildDate = "200723_1";
+export const buildDate = "210723_1";
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -355,6 +355,8 @@ export function tempAlert(msg, duration, style) {
 
 export const updateGraphics = (canvas, layerNumber) => {
   // sendtohtml(canvas, layerNumber)
+  // canvas.requestRenderAll();
+
   executeScript(
     `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG()}\`:''`
   );
