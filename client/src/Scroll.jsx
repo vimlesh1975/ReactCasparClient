@@ -7,6 +7,7 @@ import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from "lodash";
 import { shadowOptions, options, generalFileName, saveFile } from './common'
+import { createRect } from './DrawingController'
 
 const Scroll = () => {
 
@@ -163,6 +164,12 @@ const Scroll = () => {
         canvas.requestRenderAll();
     }
 
+    const addStrip = () => {
+        createRect(canvas)
+        canvas.getActiveObjects()[0].set({ id: 'scroll1_strip' })
+
+    }
+
     return (
         <div>
             <div style={{ display: 'flex1' }}>
@@ -238,6 +245,7 @@ const Scroll = () => {
 
 
                                 }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
+                                    <button onClick={addStrip}>Add Strip with id strip</button>
                                 </td>
                             </tr>
                         </tbody>

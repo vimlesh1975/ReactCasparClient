@@ -224,6 +224,7 @@ export const templateLayers = {
   locationBand: 130,
   verticalScroll: 135,
   horizontalScroll: 140,
+  scroll1_strip: 141,
   horizontalScroll2: 145,
   clock: 150,
   countUpTimer: 155,
@@ -265,7 +266,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -308,7 +309,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -326,7 +327,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -336,7 +337,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -497,7 +498,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
       canvas.requestRenderAll();
@@ -600,7 +601,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
 

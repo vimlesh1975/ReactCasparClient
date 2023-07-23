@@ -1292,9 +1292,9 @@ const DrawingController = () => {
     (state) => state.cssfilenameReducer2.cssfilename2
   );
 
-  const [verticalSpeed, setVerticalSpeed] = useState(0.3);
-  const [horizontalSpeed, setHorizontalSpeed] = useState(0.3);
-  const [horizontalSpeed2, setHorizontalSpeed2] = useState(0.3);
+  const [verticalSpeed, setVerticalSpeed] = useState(1.0);
+  const [horizontalSpeed, setHorizontalSpeed] = useState(1.0);
+  const [horizontalSpeed2, setHorizontalSpeed2] = useState(1.0);
   const [ltr, setLtr] = useState(false);
   const [ltr2, setLtr2] = useState(false);
 
@@ -2575,7 +2575,28 @@ const DrawingController = () => {
                 if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
              }, 1);
         }
-                                                        </script>
+        const elementToRemove = document.getElementById('scroll1_strip');
+		if (elementToRemove) {
+			const svgElement = document.getElementsByTagName('svg')[0];
+			const clonedSvg = svgElement.cloneNode(true);
+
+			Array.from(clonedSvg.children).forEach((child) => {
+				if (child.id !== 'scroll1_strip') {
+					child.remove();
+				}
+			});
+
+			const clonedScrollStrip = clonedSvg.getElementById('scroll1_strip');
+			clonedScrollStrip.setAttribute('id', 'new_scroll1_strip');
+
+			const newDiv = document.createElement('div');
+			newDiv.setAttribute('id', 'div_${templateLayers.scroll1_strip});
+			newDiv.appendChild(clonedSvg);
+			document.body.appendChild(newDiv);
+
+			elementToRemove.remove();
+		}                                               
+        </script>
                                                         `;
     aa += `
                                                     </body>
@@ -2804,6 +2825,7 @@ const DrawingController = () => {
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
         document.getElementById('divid_${layerNumber}')?.remove();
+        document.getElementById('divid_${templateLayers.scroll1_strip}')?.remove();
         `);
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2849,6 +2871,28 @@ const DrawingController = () => {
             if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left = -${hh} +'px'};
             }, 1);
         }
+        const elementToRemove = document.getElementById('strip');
+        if (elementToRemove) {
+          const svgElement = document.getElementsByTagName('svg')[0];
+          const clonedSvg = svgElement.cloneNode(true);
+    
+          Array.from(clonedSvg.children).forEach((child) => {
+            if (child.id !== 'strip') {
+              child.remove();
+            }
+          });
+    
+          const clonedScrollStrip = clonedSvg.getElementById('strip');
+          clonedScrollStrip.setAttribute('id', 'new_strip');
+    
+          const newDiv = document.createElement('div');
+          newDiv.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
+
+          newDiv.appendChild(clonedSvg);
+          document.body.appendChild(newDiv);
+    
+          elementToRemove.remove();
+        }             
                                                                                     `;
     endpoint(`call ${window.chNumber}-${layerNumber} "
                                                                                     ${script}
@@ -3380,7 +3424,7 @@ const DrawingController = () => {
         <div style={{ backgroundColor: "#eff4f6", border: "2px solid yellow" }}>
           <div className="drawingToolsRow">
             <b>Elements: </b>
-            <button onClick={() => createRect(canvas)}>
+            <button title="Reactangle" onClick={() => createRect(canvas)}>
               {" "}
               <VscPrimitiveSquare />
             </button>
@@ -4564,7 +4608,9 @@ const DrawingController = () => {
                   `if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)}`
                 );
                 executeScript(
-                  `document.getElementById('divid_${templateLayers.horizontalScroll}')?.remove()`
+                  `document.getElementById('divid_${templateLayers.horizontalScroll}')?.remove();
+                  document.getElementById('divid_${templateLayers.scroll1_strip}')?.remove();
+                  `
                 );
               }}
             >
