@@ -226,6 +226,7 @@ export const templateLayers = {
   horizontalScroll: 140,
   scroll1_strip: 141,
   horizontalScroll2: 145,
+  scroll2_strip: 146,
   clock: 150,
   countUpTimer: 155,
   tennisScore: 156,

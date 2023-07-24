@@ -2590,7 +2590,7 @@ const DrawingController = () => {
 			clonedScrollStrip.setAttribute('id', 'new_scroll1_strip');
 
 			const newDiv = document.createElement('div');
-			newDiv.setAttribute('id', 'div_${templateLayers.scroll1_strip});
+			newDiv.setAttribute('id', 'div_${templateLayers.scroll1_strip}');
 			newDiv.appendChild(clonedSvg);
 			document.body.appendChild(newDiv);
 
@@ -2655,6 +2655,27 @@ const DrawingController = () => {
                 if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
              }, 1);
         }
+        const elementToRemove = document.getElementById('scroll2_strip');
+        if (elementToRemove) {
+          const svgElement = document.getElementsByTagName('svg')[0];
+          const clonedSvg = svgElement.cloneNode(true);
+    
+          Array.from(clonedSvg.children).forEach((child) => {
+            if (child.id !== 'scroll2_strip') {
+              child.remove();
+            }
+          });
+    
+          const clonedScrollStrip = clonedSvg.getElementById('scroll2_strip');
+          clonedScrollStrip.setAttribute('id', 'new_scroll2_strip');
+    
+          const newDiv = document.createElement('div');
+          newDiv.setAttribute('id', 'div_${templateLayers.scroll2_strip}');
+          newDiv.appendChild(clonedSvg);
+          document.body.appendChild(newDiv);
+    
+          elementToRemove.remove();
+        }             
                                                                     </script>
                                                                     `;
     aa += `
@@ -2825,7 +2846,6 @@ const DrawingController = () => {
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
         document.getElementById('divid_${layerNumber}')?.remove();
-        document.getElementById('divid_${templateLayers.scroll1_strip}')?.remove();
         `);
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2871,18 +2891,18 @@ const DrawingController = () => {
             if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left = -${hh} +'px'};
             }, 1);
         }
-        const elementToRemove = document.getElementById('strip');
+        const elementToRemove = document.getElementById('scroll1_strip');
         if (elementToRemove) {
           const svgElement = document.getElementsByTagName('svg')[0];
           const clonedSvg = svgElement.cloneNode(true);
     
           Array.from(clonedSvg.children).forEach((child) => {
-            if (child.id !== 'strip') {
+            if (child.id !== 'scroll1_strip') {
               child.remove();
             }
           });
     
-          const clonedScrollStrip = clonedSvg.getElementById('strip');
+          const clonedScrollStrip = clonedSvg.getElementById('scroll1_strip');
           clonedScrollStrip.setAttribute('id', 'new_strip');
     
           const newDiv = document.createElement('div');
@@ -2946,7 +2966,28 @@ const DrawingController = () => {
             if (aaHorizontal2.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal2.style.left = -${hh}+'px'};
             }, 1);
         }
-                                                                                    `;
+        const elementToRemove = document.getElementById('scroll2_strip');
+        if (elementToRemove) {
+          const svgElement = document.getElementsByTagName('svg')[0];
+          const clonedSvg = svgElement.cloneNode(true);
+    
+          Array.from(clonedSvg.children).forEach((child) => {
+            if (child.id !== 'scroll2_strip') {
+              child.remove();
+            }
+          });
+    
+          const clonedScrollStrip = clonedSvg.getElementById('scroll2_strip');
+          clonedScrollStrip.setAttribute('id', 'new_strip2');
+    
+          const newDiv = document.createElement('div');
+          newDiv.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
+
+          newDiv.appendChild(clonedSvg);
+          document.body.appendChild(newDiv);
+    
+          elementToRemove.remove();
+        }                                                                                 `;
     endpoint(`call ${window.chNumber}-${layerNumber} "
                                                                                     ${script}
                                                                                     "`);
@@ -4684,7 +4725,9 @@ const DrawingController = () => {
                   `if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)}`
                 );
                 executeScript(
-                  `document.getElementById('divid_${templateLayers.horizontalScroll2}').remove()`
+                  `document.getElementById('divid_${templateLayers.horizontalScroll2}').remove();
+                  document.getElementById('divid_${templateLayers.scroll2_strip}')?.remove();
+                  `
                 );
               }}
             >
