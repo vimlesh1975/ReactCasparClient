@@ -2906,6 +2906,7 @@ const DrawingController = () => {
           clonedScrollStrip.setAttribute('id', 'new_strip');
     
           const newDiv = document.createElement('div');
+          newDiv.style.position='absolute';
           newDiv.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
 
           newDiv.appendChild(clonedSvg);
@@ -2981,6 +2982,7 @@ const DrawingController = () => {
           clonedScrollStrip.setAttribute('id', 'new_strip2');
     
           const newDiv = document.createElement('div');
+          newDiv.style.position='absolute';
           newDiv.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
 
           newDiv.appendChild(clonedSvg);
