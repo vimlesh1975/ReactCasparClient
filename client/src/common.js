@@ -2,7 +2,7 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import { fabric } from "fabric";
 
-export const buildDate = "240723_2";
+export const buildDate = "250723_1";
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -267,7 +267,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -310,7 +310,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -328,7 +328,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -338,7 +338,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -499,7 +499,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
@@ -602,7 +602,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 

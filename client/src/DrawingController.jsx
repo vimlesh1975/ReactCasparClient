@@ -2846,6 +2846,7 @@ const DrawingController = () => {
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
         document.getElementById('divid_${layerNumber}')?.remove();
+        document.getElementById('divid_${templateLayers.scroll1_strip}')?.remove();
         `);
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2891,28 +2892,28 @@ const DrawingController = () => {
             if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left = -${hh} +'px'};
             }, 1);
         }
-        const elementToRemove = document.getElementById('scroll1_strip');
-        if (elementToRemove) {
-          const svgElement = document.getElementsByTagName('svg')[0];
-          const clonedSvg = svgElement.cloneNode(true);
+        const elementToRemove1 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll1_strip');
+        if (elementToRemove1) {
+          const svgElement1 = document.getElementById('divid_' + '${layerNumber}').querySelectorAll('svg')[0];
+          const clonedSvg1 = svgElement1.cloneNode(true);
     
-          Array.from(clonedSvg.children).forEach((child) => {
+          Array.from(clonedSvg1.children).forEach((child) => {
             if (child.id !== 'scroll1_strip') {
               child.remove();
             }
           });
     
-          const clonedScrollStrip = clonedSvg.getElementById('scroll1_strip');
-          clonedScrollStrip.setAttribute('id', 'new_strip');
+          const clonedScrollStrip1 = clonedSvg1.getElementById('scroll1_strip');
+          clonedScrollStrip1.setAttribute('id', 'new_strip');
     
-          const newDiv = document.createElement('div');
-          newDiv.style.position='absolute';
-          newDiv.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
+          const newDiv1 = document.createElement('div');
+          newDiv1.style.position='absolute';
+          newDiv1.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
 
-          newDiv.appendChild(clonedSvg);
-          document.body.appendChild(newDiv);
+          newDiv1.appendChild(clonedSvg1);
+          document.body.appendChild(newDiv1);
     
-          elementToRemove.remove();
+          elementToRemove1.remove();
         }             
                                                                                     `;
     endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -2923,6 +2924,7 @@ const DrawingController = () => {
   const startHorizontalScroll2 = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll2){clearInterval(intervalHorizontalScroll2)};
                         document.getElementById('divid_${layerNumber}')?.remove();
+                        document.getElementById('divid_${templateLayers.scroll2_strip}')?.remove();
         `);
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
@@ -2967,29 +2969,29 @@ const DrawingController = () => {
             if (aaHorizontal2.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal2.style.left = -${hh}+'px'};
             }, 1);
         }
-        const elementToRemove = document.getElementById('scroll2_strip');
-        if (elementToRemove) {
-          const svgElement = document.getElementsByTagName('svg')[0];
-          const clonedSvg = svgElement.cloneNode(true);
+        const elementToRemove2 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll2_strip');
+        if (elementToRemove2) {
+          const svgElement2 = document.getElementById('divid_' + '${layerNumber}').querySelectorAll('svg')[0];
+          const clonedSvg2 = svgElement2.cloneNode(true);
     
-          Array.from(clonedSvg.children).forEach((child) => {
+          Array.from(clonedSvg2.children).forEach((child) => {
             if (child.id !== 'scroll2_strip') {
               child.remove();
             }
           });
     
-          const clonedScrollStrip = clonedSvg.getElementById('scroll2_strip');
-          clonedScrollStrip.setAttribute('id', 'new_strip2');
+          const clonedScrollStrip2 = clonedSvg2.getElementById('scroll2_strip');
+          clonedScrollStrip2.setAttribute('id', 'new_strip2');
     
-          const newDiv = document.createElement('div');
-          newDiv.style.position='absolute';
-          newDiv.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
+          const newDiv2 = document.createElement('div');
+          newDiv2.style.position='absolute';
+          newDiv2.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
 
-          newDiv.appendChild(clonedSvg);
-          document.body.appendChild(newDiv);
+          newDiv2.appendChild(clonedSvg2);
+          document.body.appendChild(newDiv2);
     
-          elementToRemove.remove();
-        }                                                                                 `;
+          elementToRemove2.remove();
+        }                                                                                      `;
     endpoint(`call ${window.chNumber}-${layerNumber} "
                                                                                     ${script}
                                                                                     "`);
