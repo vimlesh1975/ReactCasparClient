@@ -2,7 +2,7 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import { fabric } from "fabric";
 
-export const buildDate = "250723_1";
+export const buildDate = "260723_1";
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -615,6 +615,28 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
 };
 
 export const fontLists = [
+  "Madhubala",
+  "Dhurjati",
+  "Aaradhana",
+  "Ajantha",
+  "GowthamiBold",
+  "Suranna",
+  "Gidugu",
+  "Gurajada",
+  "Mallanna",
+  "Mandali",
+  "NATS",
+  "NTR",
+  "Peddana",
+  "Potti Sreeramulu",
+  "Ramabhadra",
+  "Ramaraja",
+  "Sree Krushnadevaraya",
+  "Suranna",
+  "Suravaram",
+  "Syamala Ramana",
+  "TenaliRamakrishna",
+  "Timmana",
   "AADevAksharReg",
   "AADevApsBil",
   "AADevApsReg",
