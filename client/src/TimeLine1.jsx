@@ -8,7 +8,7 @@ import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "rea
 import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement, lockUnlock, visibleInVisible } from './common'
 
 const timelineWidth = 1024;
-const controlWidth = 275;
+const controlWidth = 305;
 var cf = 0;
 var aa;
 var inAnimation2;
@@ -855,28 +855,6 @@ const TimeLine1 = () => {
     }
   }
 
-  // const lockUnlock = (canvas, i) => {
-  //   canvas.getObjects().forEach((element, ii) => {
-  //     if (i === ii) {
-  //       element.selectable = !element.selectable
-  //     }
-  //   });
-  //   canvas.requestRenderAll();
-  //   dispatch({ type: "CHANGE_CANVAS", payload: canvas });
-  // }
-
-  // const visible = (canvas, i) => {
-  //   canvas.getObjects().forEach((element, ii) => {
-  //     if (i === ii) {
-  //       element.visible = !element.visible
-  //     }
-  //   });
-  //   canvas.requestRenderAll();
-  //   dispatch({ type: "CHANGE_CANVAS", payload: canvas });
-
-  // }
-
-
   return (<div onMouseOver={() => {
     !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
   }}>
@@ -907,8 +885,8 @@ const TimeLine1 = () => {
         css2:<input size={2} type='text' value={cssfilename2} onChange={e => dispatch({ type: 'CHANGE_CSSFILENAME2', payload: e.target.value })} />
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
-        <button onClick={test}>Console Log</button>  <span><b>Animate position, size and Rotation.</b></span>
-        <div>
+        <button onClick={test}>Console Log</button>
+        <div><b>Animate position, size and Rotation.</b>
           Timeline Scale: <input width={200} onChange={e => {
             dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
             settimelineScale(e.target.value);
@@ -949,8 +927,8 @@ const TimeLine1 = () => {
                               canvas.discardActiveObject();
                               lockUnlock(canvas, i, dispatch);
                             }}
-                            >{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
-                            <div> <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}>{element.visible ? < VscEye /> : < VscEyeClosed />}</button></div>
+                            >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
+                            <div> <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}>{element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.5 }} />}</button></div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);
                               deleteItemfromtimeline(kf, xpositions, dispatch);
