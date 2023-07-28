@@ -945,7 +945,11 @@ const TimeLine1 = () => {
                           <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
                             <div style={{ minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
-                            <div> <button title='Lock selected' onClick={() => lockUnlock(canvas, i, dispatch)}>{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
+                            <div> <button title='Lock selected' onClick={() => {
+                              canvas.discardActiveObject();
+                              lockUnlock(canvas, i, dispatch);
+                            }}
+                            >{element.selectable ? < VscUnlock /> : < VscLock />}</button></div>
                             <div> <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}>{element.visible ? < VscEye /> : < VscEyeClosed />}</button></div>
                             <div> <button key1={i} onClick={(e) => {
                               selectObject(e);
