@@ -427,7 +427,7 @@ const App = () => {
         </div>
         <div style={{ minWidth: 500 }}>
           <b> Solid Cap 1: </b>
-          <button
+          <button title="Play to Casparcg or Html"
             onClick={() => {
               startGraphics(canvas, templateLayers.solidCaption1);
               setSolidcaption1(canvasList[currentPage]?.pageName);

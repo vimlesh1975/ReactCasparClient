@@ -17,7 +17,7 @@ const Help = () => {
         <div style={{ width: 600 }}>
           <ol>
             <li>Github Client will not connect to casparcg</li>
-            <li>It works with all version of Server</li>
+            <li>This works on every version of casparcg. But All features will work only on 2.3</li>
             <li>
               {" "}
               Put as below in casparcg.config file and drag screen consumer
@@ -28,9 +28,9 @@ const Help = () => {
               &lt;/screen&gt;
             </li>
 
-            <li>Select Casparcg Screen Sizes from drop down</li>
+            <li>Select Casparcg Screen Sizes from drop down from top left</li>
             <li>
-              Add some text or rectangle by clicking on buttons and then click
+              Add some text or rectangle by clicking on Elements buttons and then click
               Show to Casparcg
             </li>
 
@@ -42,8 +42,8 @@ const Help = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                Github Page
-              </a>{" "}
+                Github Page for Source Code
+              </a>
             </li>
             <li>
               <a
@@ -52,7 +52,7 @@ const Help = () => {
                 rel="noreferrer"
               >
                 Github Online Client
-              </a>{" "}
+              </a>
             </li>
 
             <li>
@@ -78,10 +78,25 @@ const Help = () => {
                 YouTube videos for How to use different Modules
               </a>{" "}
             </li>
-
-            <li>Erase will work on Images from local pc only</li>
+            <li>
+              <a
+                href="https://bit.ly/3PCcHP6"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Special Applications with scroll, clock and breaking news and many games bases on templates made from this client.
+              </a>
+            </li>
+            <li>
+              <a
+                href="http://bit.ly/2z5xXae"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Popular Desktop Application for CasparcgCg
+              </a>
+            </li>
             <li>Emoji is not supported in server2.07 and 2.1 </li>
-            <li>Image from local pc method only will get filters. </li>
             <li>Dont use double space in folder or file name. </li>
           </ol>
           <div>

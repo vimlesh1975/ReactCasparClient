@@ -886,7 +886,7 @@ const TimeLine1 = () => {
         {htmlfileHandle && <button onClick={() => OverrightHtml(canvas)}>Overwrite HTML</button>}
         <button onClick={ResetAnimation}>Reset Animation</button>
         <button onClick={test}>Console Log</button>
-        <div><b>Animate position, size and Rotation.</b>
+        <div><b> Four Point Animation - Animate position, size and Rotation.</b>
           Timeline Scale: <input width={200} onChange={e => {
             dispatch({ type: 'CHANGE_KF', payload: kf.map((val) => val.map((val1) => val1 * timelineScale / e.target.value)) });
             settimelineScale(e.target.value);
