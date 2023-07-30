@@ -229,9 +229,9 @@ const GenerativeArts = () => {
     }
     return (
         <div>
-            GenerativeArts
+            Generative Arts
             <button onClick={() => sendcode(templateLayers.GenerativeArts)}> Send</button>
-            <button onClick={() => stopGraphics(templateLayers.GenerativeArts)}> Send</button>
+            <button onClick={() => stopGraphics(templateLayers.GenerativeArts)}> Stop</button>
         </div>
     )
 }
