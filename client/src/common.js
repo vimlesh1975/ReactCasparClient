@@ -2,7 +2,7 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import { fabric } from "fabric";
 
-export const buildDate = "280723_1";
+export const buildDate = "300723_1";
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -213,6 +213,7 @@ export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {
+  GenerativeArts: 93,
   Tsparticles1: 94,
   patternLayer: 95,
   solidCaption1: 96,

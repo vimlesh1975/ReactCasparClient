@@ -59,6 +59,7 @@ import CodeImport from "./CodeImport";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1";
 import HtmlOutput from "./HtmlOutput";
+import GenerativeArts from "./GenerativeArts/GenerativeArts";
 
 const App = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -655,6 +656,8 @@ const App = () => {
               <Tab>Csv</Tab>
 
               <Tab>Help</Tab>
+              <Tab>GA</Tab>
+
             </TabList>
             <TabPanel>
               <div style={{ border: "1px dashed blue", width: 900 }}>
@@ -739,6 +742,9 @@ const App = () => {
             </TabPanel>
             <TabPanel>
               <Help />
+            </TabPanel>
+            <TabPanel>
+              <GenerativeArts />
             </TabPanel>
           </Tabs>
         </div>
