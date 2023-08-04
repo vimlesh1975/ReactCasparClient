@@ -1,48 +1,48 @@
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, TransformControls } from "@react-three/drei";
-import * as THREE from "three";
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, TransformControls } from '@react-three/drei';
+import * as THREE from 'three';
 import {
   NumberKeyframeTrack,
   AnimationClip,
   AnimationMixer,
   Vector3,
   Euler,
-} from "three";
-import axios from "axios";
-import socketIOClient from "socket.io-client";
+} from 'three';
+import axios from 'axios';
+import socketIOClient from 'socket.io-client';
 
-import { DragControls } from "three/examples/jsm/controls/DragControls";
+import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import { endpoint } from "./common";
-import { useRef, Suspense, useState } from "react";
-import * as STDLIB from "three-stdlib";
+import { endpoint } from './common';
+import { useRef, Suspense, useState } from 'react';
+import * as STDLIB from 'three-stdlib';
 
-import { GLTFExporter } from "./GLTFExporter.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { GLTFExporter } from './GLTFExporter.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
-import { getProject, types } from "@theatre/core";
+import { getProject, types } from '@theatre/core';
 
-import studio from "@theatre/studio";
-import extension from "@theatre/r3f/dist/extension";
-import { editable as e, SheetProvider } from "@theatre/r3f";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { VscTrash, VscMove } from "react-icons/vsc";
+import studio from '@theatre/studio';
+import extension from '@theatre/r3f/dist/extension';
+import { editable as e, SheetProvider } from '@theatre/r3f';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { VscTrash, VscMove } from 'react-icons/vsc';
 
 studio.extend(extension);
 
 studio.initialize();
 
 // var demoSheet = getProject('Demo Project').sheet('Demo Sheet')
-const transformMode = ["scale", "rotate", "translate"];
+const transformMode = ['scale', 'rotate', 'translate'];
 
 var intersects;
 
 const Threejs = () => {
   const [demoSheet, setdemoSheet] = useState(
-    getProject("Demo Project").sheet("Demo Sheet")
+    getProject('Demo Project').sheet('Demo Sheet')
   );
 
   const onDragEnd = (result) => {
@@ -59,13 +59,13 @@ const Threejs = () => {
 
   const deletePage = (e) => {
     const aa1 = aa.filter((_, i) => {
-      return parseInt(e.target.getAttribute("key1")) !== i;
+      return parseInt(e.target.getAttribute('key1')) !== i;
     });
     setAA([...aa1]);
   };
   const updatePageName = (e) => {
     const aa1 = aa.map((val, i) => {
-      return i === parseInt(e.target.getAttribute("key1"))
+      return i === parseInt(e.target.getAttribute('key1'))
         ? { ...val, pageName: e.target.value }
         : val;
     });
@@ -92,26 +92,26 @@ const Threejs = () => {
   const sampleAnimationcaspar = () => {
     pickableObjects.forEach((mesh, i) => {
       const _objectid = mesh.userData.__storeKey.split(
-        "Demo Sheet:default:"
+        'Demo Sheet:default:'
       )[1];
       if (
-        studio.createContentOfSaveFile("Demo Project").sheetsById["Demo Sheet"]
+        studio.createContentOfSaveFile('Demo Project').sheetsById['Demo Sheet']
           .sequence.tracksByObject[_objectid]
       ) {
         const trackData = Object.values(
-          studio.createContentOfSaveFile("Demo Project").sheetsById[
-            "Demo Sheet"
+          studio.createContentOfSaveFile('Demo Project').sheetsById[
+            'Demo Sheet'
           ].sequence.tracksByObject[_objectid].trackData
         );
 
         trackData.forEach((element) => {
           var positionKF2 = [];
           const animationName =
-            "." +
-            element.__debugName.split(":")[1].split(",")[0].split('"')[1] +
-            "[" +
-            element.__debugName.split(":")[1].split(",")[1].split('"')[1] +
-            "]";
+            '.' +
+            element.__debugName.split(':')[1].split(',')[0].split('"')[1] +
+            '[' +
+            element.__debugName.split(':')[1].split(',')[1].split('"')[1] +
+            ']';
           const aa = element.keyframes;
           const bb = [];
           aa.forEach((val) => {
@@ -136,25 +136,25 @@ const Threejs = () => {
   const sampleAnimation = () => {
     pickableObjects.forEach((mesh) => {
       const _objectid = mesh.userData.__storeKey.split(
-        "Demo Sheet:default:"
+        'Demo Sheet:default:'
       )[1];
       if (
-        studio.createContentOfSaveFile("Demo Project").sheetsById["Demo Sheet"]
+        studio.createContentOfSaveFile('Demo Project').sheetsById['Demo Sheet']
           .sequence.tracksByObject[_objectid]
       ) {
         const trackData = Object.values(
-          studio.createContentOfSaveFile("Demo Project").sheetsById[
-            "Demo Sheet"
+          studio.createContentOfSaveFile('Demo Project').sheetsById[
+            'Demo Sheet'
           ].sequence.tracksByObject[_objectid].trackData
         );
         var positionKF2 = [];
         trackData.forEach((element) => {
           const animationName =
-            "." +
-            element.__debugName.split(":")[1].split(",")[0].split('"')[1] +
-            "[" +
-            element.__debugName.split(":")[1].split(",")[1].split('"')[1] +
-            "]";
+            '.' +
+            element.__debugName.split(':')[1].split(',')[0].split('"')[1] +
+            '[' +
+            element.__debugName.split(':')[1].split(',')[1].split('"')[1] +
+            ']';
           const aa = element.keyframes;
           const bb = [];
           aa.forEach((val) => {
@@ -166,7 +166,7 @@ const Threejs = () => {
           });
           positionKF2.push(new NumberKeyframeTrack(animationName, bb, cc));
         });
-        const moveBlinkClip = new AnimationClip("move-n-blink", -1, [
+        const moveBlinkClip = new AnimationClip('move-n-blink', -1, [
           ...positionKF2,
         ]);
         const mixer = new AnimationMixer(mesh);
@@ -189,7 +189,7 @@ const Threejs = () => {
   const selectobjectgiven = (object1) => {
     if (object1.__r3f) {
       const theaterKey = object1.userData.__storeKey.split(
-        "Demo Sheet:default:"
+        'Demo Sheet:default:'
       )[1];
       const props1 = {
         position: {
@@ -270,25 +270,25 @@ const Threejs = () => {
     pickableObjects2.splice(0, 4);
     pickableObjects2.forEach((mesh) => {
       const _objectid = mesh.userData.__storeKey.split(
-        "Demo Sheet:default:"
+        'Demo Sheet:default:'
       )[1];
       if (
-        studio.createContentOfSaveFile("Demo Project").sheetsById["Demo Sheet"]
+        studio.createContentOfSaveFile('Demo Project').sheetsById['Demo Sheet']
           .sequence.tracksByObject[_objectid]
       ) {
         const trackData = Object.values(
-          studio.createContentOfSaveFile("Demo Project").sheetsById[
-            "Demo Sheet"
+          studio.createContentOfSaveFile('Demo Project').sheetsById[
+            'Demo Sheet'
           ].sequence.tracksByObject[_objectid].trackData
         );
         var positionKF2 = [];
         trackData.forEach((element) => {
           const animationName =
-            "." +
-            element.__debugName.split(":")[1].split(",")[0].split('"')[1] +
-            "[" +
-            element.__debugName.split(":")[1].split(",")[1].split('"')[1] +
-            "]";
+            '.' +
+            element.__debugName.split(':')[1].split(',')[0].split('"')[1] +
+            '[' +
+            element.__debugName.split(':')[1].split(',')[1].split('"')[1] +
+            ']';
           const aa = element.keyframes;
           const bb = [];
           aa.forEach((val) => {
@@ -300,7 +300,7 @@ const Threejs = () => {
           });
           positionKF2.push(new NumberKeyframeTrack(animationName, bb, cc));
         });
-        const moveBlinkClip = new AnimationClip("move-n-blink", -1, [
+        const moveBlinkClip = new AnimationClip('move-n-blink', -1, [
           ...positionKF2,
         ]);
         const mixer = new AnimationMixer(mesh);
@@ -326,10 +326,10 @@ const Threejs = () => {
       sphere: new THREE.SphereGeometry(0.5, 16, 16),
     };
     const allColors = {
-      box: "red",
-      cylinder: "pink",
-      donut: "blue",
-      sphere: "green",
+      box: 'red',
+      cylinder: 'pink',
+      donut: 'blue',
+      sphere: 'green',
     };
     return (
       <e.mesh
@@ -342,7 +342,7 @@ const Threejs = () => {
           e.object.material.emissive.r = 0;
         }}
       >
-        <primitive object={allShapes[props.shape]} attach={"geometry"} />
+        <primitive object={allShapes[props.shape]} attach={'geometry'} />
         <meshStandardMaterial
           color={allColors[props.shape]}
           roughness={0.3}
@@ -365,7 +365,7 @@ const Threejs = () => {
           e.object.material.emissive.r = 0;
         }}
       >
-        <primitive object={props.geometry} attach={"geometry"} />
+        <primitive object={props.geometry} attach={'geometry'} />
         <meshStandardMaterial color={props.color} />
       </e.mesh>
     );
@@ -384,8 +384,8 @@ const Threejs = () => {
           e.object.material.emissive && (e.object.material.emissive.r = 0);
         }}
       >
-        <primitive object={props.geometry} attach={"geometry"} />
-        <primitive object={props.material} attach={"material"} />
+        <primitive object={props.geometry} attach={'geometry'} />
+        <primitive object={props.material} attach={'material'} />
       </e.mesh>
     );
   };
@@ -403,8 +403,8 @@ const Threejs = () => {
           e.object.material.emissive && (e.object.material.emissive.r = 0);
         }}
       >
-        <primitive object={props.geometry} attach={"geometry"} />
-        <primitive object={props.material} attach={"material"} />
+        <primitive object={props.geometry} attach={'geometry'} />
+        <primitive object={props.material} attach={'material'} />
       </e.mesh>
     );
   };
@@ -412,12 +412,12 @@ const Threejs = () => {
   useEffect(() => {
     var socket;
     var request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:9000/", true);
+    request.open('GET', 'http://localhost:9000/', true);
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
         if (request.status === 404) {
-          socket = socketIOClient(":9000");
-          socket.on("setCurrentCanvas", (data) => {
+          socket = socketIOClient(':9000');
+          socket.on('setCurrentCanvas', (data) => {
             // setCurrentCanvas(data.data1);
             const geometry = new THREE.BoxGeometry(7, 4, 5);
             const material = new THREE.MeshBasicMaterial({
@@ -427,7 +427,7 @@ const Threejs = () => {
               map: new THREE.TextureLoader().load(data.data1, (texture) => {
                 // console.log(texture)
                 const shapeCount = shapesOnCanvas.length;
-                const shape = "fabricjs";
+                const shape = 'fabricjs';
                 setShapesOnCanvas([
                   ...shapesOnCanvas,
                   <Shapefabricjs
@@ -453,15 +453,15 @@ const Threejs = () => {
     // })
 
     return () => {
-      socket?.removeListener("setCurrentCanvas");
-      socket?.off("setCurrentCanvas");
+      socket?.removeListener('setCurrentCanvas');
+      socket?.off('setCurrentCanvas');
       socket?.disconnect();
     };
   }, [shapesOnCanvas]);
 
   const addShape = (e) => {
     const shapeCount = shapesOnCanvas.length;
-    const shape = e.target.getAttribute("data-shape");
+    const shape = e.target.getAttribute('data-shape');
     setShapesOnCanvas([
       ...shapesOnCanvas,
       <Shape
@@ -520,8 +520,8 @@ const Threejs = () => {
             e.object.material.emissive && (e.object.material.emissive.r = 0);
           }}
         >
-          <primitive object={props.geometry} attach={"geometry"} />
-          <primitive object={props.material} attach={"material"} />
+          <primitive object={props.geometry} attach={'geometry'} />
+          <primitive object={props.material} attach={'material'} />
         </e.mesh>
       </>
     );
@@ -545,12 +545,12 @@ const Threejs = () => {
         camera1,
         gl1?.domElement
       );
-      dragControls.addEventListener("dragstart", function (event) {
+      dragControls.addEventListener('dragstart', function (event) {
         selectobjectgiven(event.object);
         // setorbitcontrolenable(false);
       });
 
-      dragControls.addEventListener("drag", function (event) {
+      dragControls.addEventListener('drag', function (event) {
         if (currentobj) {
           studio.transaction(({ set }) => {
             set(currentobj.props.position, {
@@ -572,8 +572,8 @@ const Threejs = () => {
     }
     return () => {
       if (pickableObjects.length > 0) {
-        dragControls.removeEventListener("dragstart", false);
-        dragControls.removeEventListener("drag", false);
+        dragControls.removeEventListener('dragstart', false);
+        dragControls.removeEventListener('drag', false);
         // dragControls.removeEventListener('dragend', false);
         // transformCurrent.removeEventListener('dragging-changed', false);
       }
@@ -620,7 +620,7 @@ const Threejs = () => {
     camera2.position.set(0, 3.061616997868383e-16, 5);
   };
   const addLight = () => {
-    const light = new THREE.AmbientLight("white", 1);
+    const light = new THREE.AmbientLight('white', 1);
     scene2.add(light);
   };
 
@@ -633,7 +633,7 @@ const Threejs = () => {
       (gltf) => {
         const inp = JSON.stringify(gltf);
         const loader = new GLTFLoader();
-        loader.parse(inp, "", (gltf2) => {
+        loader.parse(inp, '', (gltf2) => {
           endpoint(`call 1-97 "
                 importScenefromData(${JSON.stringify(
                   gltf2.scene.toJSON()
@@ -648,7 +648,7 @@ const Threejs = () => {
         });
       },
       (error) => {
-        console.log("An error happened");
+        console.log('An error happened');
       },
       {}
     );
@@ -685,10 +685,10 @@ const Threejs = () => {
   const addelement = (element, i) => {
     console.log(element);
     console.log(element.type);
-    if (element.type === "Group") {
+    if (element.type === 'Group') {
     }
     if (element.material && element.geometry) {
-      addImportedShape("imported", element, i);
+      addImportedShape('imported', element, i);
     } else if (element.children.length > 0) {
       element.children.forEach((element1, ii) => {
         addelement(element1, ii);
@@ -716,7 +716,7 @@ const Threejs = () => {
       var reader = new FileReader();
       reader.onload = (e) => {
         var loader = new THREE.TextureLoader();
-        loader.crossOrigin = "";
+        loader.crossOrigin = '';
         loader.load(
           e.target.result,
           (texture) => {
@@ -773,7 +773,7 @@ const Threejs = () => {
         downloadJSON(gltf);
       },
       function (error) {
-        console.log("An error happened");
+        console.log('An error happened');
       },
       {}
     );
@@ -793,25 +793,25 @@ const Threejs = () => {
   window.studio = studio;
 
   async function downloadJSON(gltf) {
-    const element = document.createElement("a");
+    const element = document.createElement('a');
     var aa = JSON.stringify(gltf);
-    const file = new Blob([aa], { type: "text/plain" });
+    const file = new Blob([aa], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
+    var ss = new Date().toLocaleTimeString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
       hour12: false,
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
     });
     const options = {
       suggestedName: ss,
       types: [
         {
-          description: "gltf file",
-          accept: { "application/json": [".gltf"] },
+          description: 'gltf file',
+          accept: { 'application/json': ['.gltf'] },
         },
       ],
     };
@@ -820,15 +820,15 @@ const Threejs = () => {
     await writable.write(file);
     await writable.close();
   }
-  const [f0, setF0] = useState("Vimlesh Kumar");
+  const [f0, setF0] = useState('Vimlesh Kumar');
 
   const loadfabricjstoCasparcg = () => {
-    if (window.location.origin !== "https://vimlesh1975.github.io") {
+    if (window.location.origin !== 'https://vimlesh1975.github.io') {
       axios
-        .post("http://localhost:9000/getCurrentCanvas")
+        .post('http://localhost:9000/getCurrentCanvas')
         .then((aa) => {})
         .catch((aa) => {
-          console.log("Error", aa);
+          console.log('Error', aa);
         });
     }
   };
@@ -836,7 +836,7 @@ const Threejs = () => {
   const addDreiText = () => {
     var loader = new FontLoader();
     loader.load(
-      window.location.origin + "/three/helvetiker_regular.typeface.json",
+      window.location.origin + '/three/helvetiker_regular.typeface.json',
       function (font) {
         var geometry = new STDLIB.TextGeometry(f0, {
           font: font,
@@ -848,7 +848,7 @@ const Threejs = () => {
           bevelEnabled: true,
         });
         const shapeCount = shapesOnCanvas.length;
-        const shape = "text3d";
+        const shape = 'text3d';
         setShapesOnCanvas([
           ...shapesOnCanvas,
           <Shapetext3D
@@ -859,7 +859,7 @@ const Threejs = () => {
             rotation={new Euler(0, 0, 0)}
             scale={new Vector3(1, 1, 1)}
             theatreKey={shape + shapeCount}
-            color={"yellow"}
+            color={'yellow'}
           />,
         ]);
       }
@@ -867,7 +867,7 @@ const Threejs = () => {
   };
   const addBox = () => {
     const shapeCount = shapesOnCanvas.length;
-    const shape = "box";
+    const shape = 'box';
     setShapesOnCanvas([
       ...shapesOnCanvas,
       <Shapetext3D
@@ -878,7 +878,7 @@ const Threejs = () => {
         rotation={new Euler(0, 0, 0)}
         scale={new Vector3(1, 1, 1)}
         theatreKey={shape + shapeCount}
-        color={"maroon"}
+        color={'maroon'}
       />,
     ]);
   };
@@ -886,7 +886,7 @@ const Threejs = () => {
   const addDreiText2 = () => {
     const dreiText2 = STDLIB.createText(f0, 1.5);
     const shapeCount = shapesOnCanvas.length;
-    const shape = "2dText";
+    const shape = '2dText';
     setShapesOnCanvas([
       ...shapesOnCanvas,
       <Shapetext2D
@@ -898,14 +898,14 @@ const Threejs = () => {
         rotation={new Euler(0, 0, 0)}
         scale={new Vector3(1, 1, 1)}
         theatreKey={shape + shapeCount}
-        color={"white"}
+        color={'white'}
       />,
     ]);
   };
 
   const copySelected = () => {
     if (selectedObject) {
-      addImportedShape("copied", selectedObject, 1);
+      addImportedShape('copied', selectedObject, 1);
       setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
       setImported1([]);
     }
@@ -916,12 +916,12 @@ const Threejs = () => {
       new THREE.CircleGeometry(1, 24),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "green",
+        color: 'green',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
-    addImportedShape("circle", mesh, 1);
+    addImportedShape('circle', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -930,12 +930,12 @@ const Threejs = () => {
       new THREE.ConeGeometry(1, 2, 16),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "red",
+        color: 'red',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
-    addImportedShape("cone", mesh, 1);
+    addImportedShape('cone', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -944,12 +944,12 @@ const Threejs = () => {
       new THREE.DodecahedronGeometry(1),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "yellow",
+        color: 'yellow',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
-    addImportedShape("Dodecahedron", mesh, 1);
+    addImportedShape('Dodecahedron', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -978,13 +978,13 @@ const Threejs = () => {
       new THREE.ExtrudeGeometry(shape, extrudeSettings),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "pink",
+        color: 'pink',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
     mesh.scale.set(0.2, 0.2, 0.2);
-    addImportedShape("extruded", mesh, 1);
+    addImportedShape('extruded', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -998,13 +998,13 @@ const Threejs = () => {
       new THREE.LatheGeometry(points),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "yellow",
+        color: 'yellow',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
     mesh.scale.set(0.2, 0.2, 0.2);
-    addImportedShape("lathe", mesh, 1);
+    addImportedShape('lathe', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -1013,13 +1013,13 @@ const Threejs = () => {
       new THREE.RingGeometry(2, 7, 18),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "yellow",
+        color: 'yellow',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
     mesh.scale.set(0.2, 0.2, 0.2);
-    addImportedShape("ring", mesh, 1);
+    addImportedShape('ring', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -1028,13 +1028,13 @@ const Threejs = () => {
       new THREE.TorusKnotGeometry(3.5, 1.5, 64, 64, 2, 3),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "lightblue",
+        color: 'lightblue',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
     mesh.scale.set(0.2, 0.2, 0.2);
-    addImportedShape("torusknot", mesh, 1);
+    addImportedShape('torusknot', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -1068,13 +1068,13 @@ const Threejs = () => {
       ),
       new THREE.MeshStandardMaterial({
         side: THREE.DoubleSide,
-        color: "lightblue",
+        color: 'lightblue',
         roughness: 0.3,
         metalness: 0.8,
       })
     );
     mesh.scale.set(0.2, 0.2, 0.2);
-    addImportedShape("tube", mesh, 1);
+    addImportedShape('tube', mesh, 1);
     setShapesOnCanvas([...shapesOnCanvas, ...imported1]);
     setImported1([]);
   };
@@ -1086,7 +1086,7 @@ const Threejs = () => {
       const bb = updatedshapesOnCanvas.filter((val, i) => {
         return (
           intersects[0].object.userData.__storeKey !==
-          "Demo Sheet:default:" + updatedshapesOnCanvas[i].props.theatreKey
+          'Demo Sheet:default:' + updatedshapesOnCanvas[i].props.theatreKey
         );
       });
       setShapesOnCanvas(bb);
@@ -1117,7 +1117,7 @@ const Threejs = () => {
   const changetext = () => {
     if (selectedObject) {
       var loader = new FontLoader();
-      loader.load("helvetiker_regular.typeface.json", function (font) {
+      loader.load('helvetiker_regular.typeface.json', function (font) {
         var textGeometry = new STDLIB.TextGeometry(f0, {
           font: font,
           size: 1.2,
@@ -1142,9 +1142,9 @@ const Threejs = () => {
   }
 
   useEffect(() => {
-    document.addEventListener("click", mouseclickHandler, false);
+    document.addEventListener('click', mouseclickHandler, false);
     return () => {
-      document.removeEventListener("click", mouseclickHandler);
+      document.removeEventListener('click', mouseclickHandler);
     };
     // eslint-disable-next-line
   }, [pickableObjects]);
@@ -1152,11 +1152,11 @@ const Threejs = () => {
   const loadscene = (i) => {
     deleteAll();
     const loader = new GLTFLoader();
-    loader.parse(aa[i].gltf, "", (gltf) => {
+    loader.parse(aa[i].gltf, '', (gltf) => {
       gltf.scene.children.forEach((element, ii) => {
-        if (element.type === "Mesh") {
+        if (element.type === 'Mesh') {
           addImportedShape2(
-            element.userData.__storeKey.split(":")[2],
+            element.userData.__storeKey.split(':')[2],
             element,
             ii
           );
@@ -1175,9 +1175,9 @@ const Threejs = () => {
       );
       //   console.log(JSON.parse(aa[i].animation));
       setdemoSheet(
-        getProject("Demo Project" + Math.floor(Math.random() * 1000), {
+        getProject('Demo Project' + Math.floor(Math.random() * 1000), {
           state: JSON.parse(aa[i].animation),
-        }).sheet("Demo Sheet")
+        }).sheet('Demo Sheet')
       );
       // localStorage.removeItem("theatre-0.4.persistent");
       // resetAllProps();
@@ -1228,7 +1228,7 @@ const Threejs = () => {
       scene1,
       (gltf) => {
         dd.push({
-          pageName: "page" + dd.length,
+          pageName: 'page' + dd.length,
           gltf: JSON.stringify(gltf),
           cameraPosition: JSON.stringify([
             camera1.position.x,
@@ -1236,13 +1236,13 @@ const Threejs = () => {
             camera1.position.z,
           ]),
           animation: JSON.stringify(
-            studio.createContentOfSaveFile("Demo Project")
+            studio.createContentOfSaveFile('Demo Project')
           ),
         });
         setAA(dd);
       },
       function (error) {
-        console.log("An error happened");
+        console.log('An error happened');
       },
       {}
     );
@@ -1256,7 +1256,7 @@ const Threejs = () => {
       scene1,
       (gltf) => {
         const updatedScene = {
-          pageName: "page" + dd.length,
+          pageName: 'page' + dd.length,
           gltf: JSON.stringify(gltf),
           cameraPosition: JSON.stringify([
             camera1.position.x,
@@ -1264,14 +1264,14 @@ const Threejs = () => {
             camera1.position.z,
           ]),
           animation: JSON.stringify(
-            studio.createContentOfSaveFile("Demo Project")
+            studio.createContentOfSaveFile('Demo Project')
           ),
         };
         dd[index] = updatedScene;
         setAA(dd);
       },
       function (error) {
-        console.log("An error happened");
+        console.log('An error happened');
       },
       {}
     );
@@ -1281,11 +1281,11 @@ const Threejs = () => {
 
   async function saveList() {
     const options1 = {
-      suggestedName: "file1.txt",
+      suggestedName: 'file1.txt',
       types: [
         {
-          description: "Text file",
-          accept: { "text/plain": [".txt"] },
+          description: 'Text file',
+          accept: { 'text/plain': ['.txt'] },
         },
       ],
     };
@@ -1293,7 +1293,7 @@ const Threejs = () => {
     const aa1 = await window.showSaveFilePicker(options1);
 
     const writable1 = await aa1.createWritable();
-    var bb = "";
+    var bb = '';
     aa.forEach((val) => {
       bb +=
         JSON.stringify({
@@ -1301,9 +1301,9 @@ const Threejs = () => {
           gltf: val.gltf,
           cameraPosition: val.cameraPosition,
           animation: val.animation,
-        }) + "\r\n";
+        }) + '\r\n';
     });
-    const file1 = new Blob([bb], { type: "text/plain" });
+    const file1 = new Blob([bb], { type: 'text/plain' });
 
     await writable1.write(file1);
     await writable1.close();
@@ -1317,7 +1317,7 @@ const Threejs = () => {
   }
   const handleFileRead2 = (e) => {
     const content = fileReader.result;
-    var aa1 = content.split("\r\n");
+    var aa1 = content.split('\r\n');
     aa1.splice(-1);
     var aa2 = [];
     aa1.forEach((element) => {
@@ -1363,19 +1363,19 @@ const Threejs = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", border: "1px solid red" }}>
+      <div style={{ display: 'flex', border: '1px solid red' }}>
         <div
           style={{
             minWidth: 200,
-            backgroundColor: "darkgrey",
-            border: "1px solid red",
+            backgroundColor: 'darkgrey',
+            border: '1px solid red',
           }}
         >
-          {" "}
+          {' '}
         </div>
-        <div style={{ border: "1px solid red" }}>
-          <div style={{ border: "1px solid red" }}>
-            <div style={{ border: "1px solid red" }}>
+        <div style={{ border: '1px solid red' }}>
+          <div style={{ border: '1px solid red' }}>
+            <div style={{ border: '1px solid red' }}>
               Caspar Control
               <button onClick={showToCasparcg}>Initialise casparcg</button>
               <button onClick={updatetoCaspar1}>Update to Caspar</button>
@@ -1398,17 +1398,17 @@ const Threejs = () => {
                 Toggle Animation Editor
               </button>
             </div>
-            <button onClick={addBox} data-shape={"box"}>
-              Box{" "}
+            <button onClick={addBox} data-shape={'box'}>
+              Box{' '}
             </button>
-            <button onClick={addShape} data-shape={"cylinder"}>
-              Cylinder{" "}
+            <button onClick={addShape} data-shape={'cylinder'}>
+              Cylinder{' '}
             </button>
-            <button onClick={addShape} data-shape={"donut"}>
-              Donut{" "}
+            <button onClick={addShape} data-shape={'donut'}>
+              Donut{' '}
             </button>
-            <button onClick={addShape} data-shape={"sphere"}>
-              sphere{" "}
+            <button onClick={addShape} data-shape={'sphere'}>
+              sphere{' '}
             </button>
             <button onClick={addCircle}>Circle</button>
             <button onClick={addCone}>Cone</button>
@@ -1425,7 +1425,7 @@ const Threejs = () => {
               value={f0}
               onChange={(e) => setF0(e.target.value)}
             />
-            <button onClick={addDreiText} data-shape={"text3D"}>
+            <button onClick={addDreiText} data-shape={'text3D'}>
               3D Text
             </button>
             <button onClick={() => addDreiText2()}>2D Text</button>
@@ -1435,7 +1435,7 @@ const Threejs = () => {
             <button onClick={() => copySelected()}>copy</button>
             <button onClick={() => DeselectAll()}>DeSelect All</button>
             Color: <input type="color" onChange={(e) => applyColor(e)} />
-            <span style={{ border: "2px solid red" }}>
+            <span style={{ border: '2px solid red' }}>
               Texture
               <input
                 id="importjson"
@@ -1445,7 +1445,7 @@ const Threejs = () => {
                 onChange={(e) => applyTexture(e.target.files[0])}
               />
               <button onClick={drawingFileSaveAsgltf}>Save As gltf</button>
-              Open gltf:{" "}
+              Open gltf:{' '}
               <input
                 id="importjson"
                 type="file"
@@ -1456,12 +1456,12 @@ const Threejs = () => {
                 }
               />
             </span>
-            <span style={{ border: "2px solid red" }}>
+            <span style={{ border: '2px solid red' }}>
               {transformMode.map((val, i) => (
                 <span key={i}>
-                  {" "}
+                  {' '}
                   <input
-                    defaultChecked={val === "translate" ? true : false}
+                    defaultChecked={val === 'translate' ? true : false}
                     onClick={(e) =>
                       reftransform.current.setMode(e.target.value)
                     }
@@ -1476,7 +1476,7 @@ const Threejs = () => {
               <label htmlFor="hhh">
                 <input
                   id="hhh"
-                  type={"checkbox"}
+                  type={'checkbox'}
                   checked={orbitcontrolenable}
                   onChange={() => setorbitcontrolenable(!orbitcontrolenable)}
                 />
@@ -1503,8 +1503,8 @@ const Threejs = () => {
           <div
             style={{
               height: 650,
-              backgroundColor: "grey",
-              border: "1px solid red",
+              backgroundColor: 'grey',
+              border: '1px solid red',
             }}
           >
             <Canvas
@@ -1543,21 +1543,21 @@ const Threejs = () => {
             </Canvas>
           </div>
         </div>
-        <div style={{ border: "1px solid red" }}>
+        <div style={{ border: '1px solid red' }}>
           <div
             style={{
               minWidth: 300,
-              backgroundColor: "darkgrey",
-              border: "1px solid red",
+              backgroundColor: 'darkgrey',
+              border: '1px solid red',
             }}
           >
-            {" "}
-            <h3>Props Area</h3>{" "}
+            {' '}
+            <h3>Props Area</h3>{' '}
           </div>
           <div
-            style={{ position: "absolute", top: 475, border: "1px solid red" }}
+            style={{ position: 'absolute', top: 475, border: '1px solid red' }}
           >
-            gltf file{" "}
+            gltf file{' '}
             <input
               id="importjson"
               type="file"
@@ -1573,18 +1573,18 @@ const Threejs = () => {
                   (gltf) => {
                     const inp = JSON.stringify(gltf);
                     const loader = new GLTFLoader();
-                    loader.parse(inp, "", (gltf2) => {
+                    loader.parse(inp, '', (gltf2) => {
                       setScene2(gltf2.scene);
                     });
                   },
                   (error) => {
-                    console.log("An error happened");
+                    console.log('An error happened');
                   },
                   {}
                 );
               }}
             >
-              {" "}
+              {' '}
               load above as gltf
             </button>
             <button onClick={updatetoCaspar2}>Update to Caspar</button>
@@ -1595,12 +1595,12 @@ const Threejs = () => {
           </div>
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 585,
               minWidth: 200,
               height: 150,
-              backgroundColor: "grey",
-              border: "1px solid red",
+              backgroundColor: 'grey',
+              border: '1px solid red',
             }}
           >
             <Canvas
@@ -1616,13 +1616,13 @@ const Threejs = () => {
       </div>
       <div
         style={{
-          textAlign: "center",
+          textAlign: 'center',
           minHeight: 220,
-          border: "1px solid red",
-          display: "flex",
+          border: '1px solid red',
+          display: 'flex',
         }}
       >
-        <div style={{ width: "80%", border: "1px solid red" }}>
+        <div style={{ width: '80%', border: '1px solid red' }}>
           <h1>Timeline Area</h1>
         </div>
         <div>
@@ -1641,8 +1641,8 @@ const Threejs = () => {
             style={{
               height: 690,
               width: 380,
-              overflow: "scroll",
-              border: "1px solid black",
+              overflow: 'scroll',
+              border: '1px solid black',
             }}
           >
             <DragDropContext onDragEnd={onDragEnd}>
@@ -1652,8 +1652,8 @@ const Threejs = () => {
                     ref={provided.innerRef}
                     style={{
                       backgroundColor: snapshot.isDraggingOver
-                        ? "yellow"
-                        : "yellowgreen",
+                        ? 'yellow'
+                        : 'yellowgreen',
                     }}
                     {...provided.droppableProps}
                   >
@@ -1662,7 +1662,7 @@ const Threejs = () => {
                         {aa.map((val, i) => {
                           return (
                             <Draggable
-                              draggableId={"draggable" + i}
+                              draggableId={'draggable' + i}
                               key={i}
                               index={i}
                             >
@@ -1673,11 +1673,11 @@ const Threejs = () => {
                                   style={{
                                     ...provided.draggableProps.style,
                                     backgroundColor: snapshot.isDragging
-                                      ? "red"
-                                      : "white",
+                                      ? 'red'
+                                      : 'white',
                                     boxShadow: snapshot.isDragging
-                                      ? "0 0 .4rem #666"
-                                      : "none",
+                                      ? '0 0 .4rem #666'
+                                      : 'none',
                                     // margin: '10px'
                                   }}
                                 >
@@ -1694,9 +1694,9 @@ const Threejs = () => {
                                       key1={i}
                                       onClick={(e) => deletePage(e)}
                                     >
-                                      {" "}
+                                      {' '}
                                       <VscTrash
-                                        style={{ pointerEvents: "none" }}
+                                        style={{ pointerEvents: 'none' }}
                                       />
                                     </button>
                                   </td>
@@ -1704,7 +1704,7 @@ const Threejs = () => {
                                     <input
                                       type="text"
                                       style={{
-                                        border: "none",
+                                        border: 'none',
                                         borderWidth: 0,
                                         minWidth: 245,
                                       }}
@@ -1713,7 +1713,7 @@ const Threejs = () => {
                                         setCurrentPage(i);
                                       }}
                                       key1={i}
-                                      key2={"vimlesh"}
+                                      key2={'vimlesh'}
                                       onDoubleClick={(e) =>
                                         e.target.setSelectionRange(
                                           0,
