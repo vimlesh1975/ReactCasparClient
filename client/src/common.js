@@ -1,8 +1,8 @@
-import axios from "axios";
-import { animation } from "./animation.js";
-import { fabric } from "fabric";
+import axios from 'axios';
+import { animation } from './animation.js';
+import { fabric } from 'fabric';
 
-export const buildDate = "300723_1";
+export const buildDate = '040823_1';
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -11,7 +11,7 @@ export const lockUnlock = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 };
 
 export const visibleInVisible = (canvas, i, dispatch) => {
@@ -21,7 +21,7 @@ export const visibleInVisible = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 };
 
 export const saveFile = async (options, data, fileHandle = null) => {
@@ -30,40 +30,40 @@ export const saveFile = async (options, data, fileHandle = null) => {
     const writable = await handle.createWritable();
     await writable.write(data);
     await writable.close();
-    console.log("File saved successfully!", handle.name);
+    console.log('File saved successfully!', handle.name);
     return handle; // Return the FileHandle object
   } catch (error) {
-    console.error("Error saving the file:", error);
+    console.error('Error saving the file:', error);
     throw error; // Throw the error to be caught by the caller
   }
 };
 export const generalFileName = () => {
-  return new Date().toLocaleTimeString("en-US", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
+  return new Date().toLocaleTimeString('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
     hour12: false,
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
   });
 };
 
 export const listglobalCompositeOperation = [
-  "source-over",
-  "source-atop",
-  "source-in",
-  "source-out",
-  "destination-over",
-  "destination-atop",
-  "destination-in",
-  "destination-out",
-  "lighter",
-  "copy",
-  "xor",
-  "darker",
-  "multiply",
-  "screen",
+  'source-over',
+  'source-atop',
+  'source-in',
+  'source-out',
+  'destination-over',
+  'destination-atop',
+  'destination-in',
+  'destination-out',
+  'lighter',
+  'copy',
+  'xor',
+  'darker',
+  'multiply',
+  'screen',
 ];
 
 export const moveElement = (
@@ -75,7 +75,7 @@ export const moveElement = (
 ) => {
   const updatedkf = [...kf];
   updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-  dispatch({ type: "CHANGE_KF", payload: updatedkf });
+  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
 
   const updatedxpositions = [...xpositions];
   updatedxpositions.splice(
@@ -83,7 +83,7 @@ export const moveElement = (
     0,
     updatedxpositions.splice(sourceIndex, 1)[0]
   );
-  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
+  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
 };
 
 export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
@@ -95,8 +95,8 @@ export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
     updatedkf.splice(index1, 1);
     updatedxpositions.splice(index1, 1);
   });
-  dispatch({ type: "CHANGE_KF", payload: updatedkf });
-  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
+  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
   window.editor.canvas?.discardActiveObject();
   window.editor.canvas?.requestRenderAll();
 };
@@ -152,7 +152,7 @@ export const findElementWithId = (group, id) => {
   const objects = group.getObjects();
   for (let i = 0; i < objects.length; i++) {
     const element = objects[i];
-    if (element.type === "group") {
+    if (element.type === 'group') {
       const result = findElementWithId(element, id);
       if (result) {
         return result;
@@ -173,14 +173,14 @@ export const hexToRGB = (hex) => {
 export const rgbaObjectToHex = (rgba) => {
   let r = Math.round(rgba.r * 255)
     .toString(16)
-    .padStart(2, "0");
+    .padStart(2, '0');
   let g = Math.round(rgba.g * 255)
     .toString(16)
-    .padStart(2, "0");
+    .padStart(2, '0');
   let b = Math.round(rgba.b * 255)
     .toString(16)
-    .padStart(2, "0");
-  let hex = "#" + r + g + b;
+    .padStart(2, '0');
+  let hex = '#' + r + g + b;
   return hex;
 };
 
@@ -198,17 +198,17 @@ export const checkIdUniqueness = (canvas) => {
   return true;
 };
 export const rgbaCol = (color, opacity) =>
-  "rgba(" +
+  'rgba(' +
   parseInt(color.slice(-6, -4), 16) +
-  "," +
+  ',' +
   parseInt(color.slice(-4, -2), 16) +
-  "," +
+  ',' +
   parseInt(color.slice(-2), 16) +
-  "," +
+  ',' +
   opacity +
-  ")";
+  ')';
 
-export var address1 = "http://" + window.location.host.split(":")[0] + ":9000";
+export var address1 = 'http://' + window.location.host.split(':')[0] + ':9000';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const videoLayers = [1, 2, 3, 10000, 5];
@@ -267,42 +267,42 @@ export const stopAllTheatreLayes = () => {
 export const endpoint = (string) => {
   const data = { string: string };
   axios
-    .post(address1 + "/endpoint", data)
-    .then((aa) => { })
+    .post(address1 + '/endpoint', data)
+    .then((aa) => {})
     .catch((aa) => {
-      console.log("Error", aa);
+      console.log('Error', aa);
     });
 };
 
 export const htmlAddress = () => {
-  if (window.location.origin === "https://vimlesh1975.github.io") {
-    return "https://octopus-app-gzws3.ondigitalocean.app/html";
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
+    return 'https://octopus-app-gzws3.ondigitalocean.app/html';
   } else {
-    return "http://localhost:9000/html";
+    return 'http://localhost:9000/html';
   }
 };
 
 export const openaiAddress = () => {
-  if (window.location.origin === "https://vimlesh1975.github.io") {
-    return "https://octopus-app-gzws3.ondigitalocean.app/";
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
+    return 'https://octopus-app-gzws3.ondigitalocean.app/';
   } else {
-    return "http://localhost:9000/";
+    return 'http://localhost:9000/';
   }
 };
 
 export const socketAddress = () => {
-  if (window.location.origin === "https://vimlesh1975.github.io") {
-    return "https://octopus-app-gzws3.ondigitalocean.app";
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
+    return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
-    return "http://localhost:9000";
+    return 'http://localhost:9000';
   }
 };
 
 export const streamingAddress = () => {
-  if (window.location.origin === "https://vimlesh1975.github.io") {
-    return "https://octopus-app-gzws3.ondigitalocean.app";
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
+    return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
-    return "http://localhost:8000";
+    return 'http://localhost:8000';
   }
 };
 export const sendtohtml = (canvas, layerNumber) => {
@@ -311,9 +311,9 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
-      console.log("Error", aa);
+      console.log('Error', aa);
     });
 };
 export const clearHtml = (layerNumber) => {
@@ -323,32 +323,32 @@ export const clearHtml = (layerNumber) => {
 };
 
 export const executeScript = (str) => {
-  if (window.location.origin === "https://vimlesh1975.github.io") {
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
     axios
-      .post("https://octopus-app-gzws3.ondigitalocean.app/executeScript", {
+      .post('https://octopus-app-gzws3.ondigitalocean.app/executeScript', {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log("Error", aa);
+        console.log('Error', aa);
       });
   } else {
     axios
-      .post("http://localhost:9000/executeScript", {
+      .post('http://localhost:9000/executeScript', {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log("Error", aa);
+        console.log('Error', aa);
       });
   }
 };
 
 export function tempAlert(msg, duration, style) {
-  var el = document.createElement("div");
-  el.setAttribute("style", style);
+  var el = document.createElement('div');
+  el.setAttribute('style', style);
   el.innerHTML = msg;
   setTimeout(function () {
     el.parentNode.removeChild(el);
@@ -384,18 +384,18 @@ export const stopGraphics = (layerNumber) => {
   }, 1500);
 };
 export const options = {
-  currentMode: "",
-  currentColor: "#ffffff",
-  currentFont: "Arial",
+  currentMode: '',
+  currentColor: '#ffffff',
+  currentFont: 'Arial',
   currentFontSize: 45,
-  backgroundColor: "#50037c",
+  backgroundColor: '#50037c',
   // currentWidth: 5,
   group: {},
-  stroke: "#ffffff",
+  stroke: '#ffffff',
   strokeWidth: 1,
 };
 export const shadowOptions = {
-  color: "#000000",
+  color: '#000000',
   blur: 30,
   offsetX: 0,
   offsetY: 0,
@@ -458,7 +458,7 @@ export const recallPage = (
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === "text") {
+              if (data2.type === 'text') {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -470,7 +470,7 @@ export const recallPage = (
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === "image") {
+              } else if (data2.type === 'image') {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -480,34 +480,34 @@ export const recallPage = (
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === "image") {
+                  if (element.type === 'image') {
                     element.setSrc(data2.value);
-                  } else if (element.type === "rect") {
+                  } else if (element.type === 'rect') {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: "no-repeat",
+                        repeat: 'no-repeat',
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === "shadow") {
+              } else if (data2.type === 'shadow') {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
       sendToCasparcg(layerNumber, canvas, currentscreenSize);
     });
   } else {
-    tempAlert("Pagename not avalaible", 1000);
+    tempAlert('Pagename not avalaible', 1000);
   }
 };
 export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
@@ -561,7 +561,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === "text") {
+              if (data2.type === 'text') {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -573,7 +573,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === "image") {
+              } else if (data2.type === 'image') {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -583,27 +583,27 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === "image") {
+                  if (element.type === 'image') {
                     element.setSrc(data2.value);
-                  } else if (element.type === "rect") {
+                  } else if (element.type === 'rect') {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: "no-repeat",
+                        repeat: 'no-repeat',
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === "shadow") {
+              } else if (data2.type === 'shadow') {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 
@@ -616,683 +616,683 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
 };
 
 export const fontLists = [
-  "Madhubala",
-  "Dhurjati",
-  "Aaradhana",
-  "Ajantha",
-  "GowthamiBold",
-  "Suranna",
-  "Gidugu",
-  "Gurajada",
-  "Mallanna",
-  "Mandali",
-  "NATS",
-  "NTR",
-  "Peddana",
-  "Potti Sreeramulu",
-  "Ramabhadra",
-  "Ramaraja",
-  "Sree Krushnadevaraya",
-  "Suranna",
-  "Suravaram",
-  "Syamala Ramana",
-  "TenaliRamakrishna",
-  "Timmana",
-  "AADevAksharReg",
-  "AADevApsBil",
-  "AADevApsReg",
-  "AADevChitralekhaReg",
-  "AADevIndicaReg",
-  "AADevIsfocBil",
-  "AADevIsfocReg",
-  "AADevKrutiReg",
-  "AADevShreeLipiBil",
-  "AADevShreeLipiReg",
-  "AADevSulipiReg",
-  "AADevSushaReg",
-  "AADevWinKeyBil",
-  "AADevWinKeyReg",
-  "AclAksharELight",
-  "Agency FB",
-  "AkrutiDevAbhijit",
-  "AkrutiDevAditi",
-  "AkrutiDevAditya",
-  "AkrutiDevAjit",
-  "AkrutiDevAkanksha",
-  "AkrutiDevAkankshaMedium",
-  "AkrutiDevAkhila",
-  "AkrutiDevAkshardhara",
-  "AkrutiDevAkshardharaExtBold",
-  "AkrutiDevAkshay",
-  "AkrutiDevAnand",
-  "AkrutiDevAnil",
-  "AkrutiDevAnjali",
-  "AkrutiDevArjun",
-  "AkrutiDevAshvin",
-  "AkrutiDevAsmita",
-  "AkrutiDevBela",
-  "AkrutiDevBhagya",
-  "AkrutiDevBharani",
-  "AkrutiDevBharati",
-  "AkrutiDevBhaskar",
-  "AkrutiDevBrahma",
-  "AkrutiDevCactus",
-  "AkrutiDevChakra",
-  "AkrutiDevChakraNormal",
-  "AkrutiDevChampa",
-  "AkrutiDevChandrika",
-  "AkrutiDevCharu",
-  "AkrutiDevDeepa",
-  "AkrutiDevGanesh",
-  "AkrutiDevHansa",
-  "AkrutiDevHarsha",
-  "AkrutiDevHarshaMedium",
-  "AkrutiDevHema",
-  "AkrutiDevIndu",
-  "AkrutiDevIshwar",
-  "AkrutiDevJanhavi",
-  "AkrutiDevKailas",
-  "AkrutiDevKailasMedium",
-  "AkrutiDevKalidas",
-  "AkrutiDevKusum",
-  "AkrutiDevMadhura",
-  "AkrutiDevMalavika",
-  "AkrutiDevMallika",
-  "AkrutiDevMandara",
-  "AkrutiDevMangal",
-  "AkrutiDevManisha",
-  "AkrutiDevManoj",
-  "AkrutiDevManorama",
-  "AkrutiDevMaya",
-  "AkrutiDevMayur",
-  "AkrutiDevMeera",
-  "AkrutiDevMegha",
-  "AkrutiDevMenaka",
-  "AkrutiDevMitra",
-  "AkrutiDevMogara",
-  "AkrutiDevMogaraMedium",
-  "AkrutiDevMouj",
-  "AkrutiDevMoujLight",
-  "AkrutiDevMukund",
-  "AkrutiDevNandi",
-  "AkrutiDevNarmada",
-  "AkrutiDevNartaki",
-  "AkrutiDevNatraj",
-  "AkrutiDevNatrajLight",
-  "AkrutiDevNavaneet",
-  "AkrutiDevNavin",
-  "AkrutiDevNewPriya",
-  "AkrutiDevNewPriyaExpand",
-  "AkrutiDevNewPriyaNormal",
-  "AkrutiDevOmkar",
-  "AkrutiDevParimala",
-  "AkrutiDevPataliputra",
-  "AkrutiDevPayal",
-  "AkrutiDevPooja",
-  "AkrutiDevPrakash",
-  "AkrutiDevPratap",
-  "AkrutiDevPratik",
-  "AkrutiDevPraveen",
-  "AkrutiDevPreeti",
-  "AkrutiDevPreetiLight",
-  "AkrutiDevPrema",
-  "AkrutiDevPriya",
-  "AkrutiDevPriyaExpanded",
-  "AkrutiDevPriyanka",
-  "AkrutiDevPushpa",
-  "AkrutiDevRahul",
-  "AkrutiDevRaksha",
-  "AkrutiDevRakshaExtBold",
-  "AkrutiDevRekha",
-  "AkrutiDevRishi",
-  "AkrutiDevRohini",
-  "AkrutiDevRoshan",
-  "AkrutiDevSavita",
-  "AkrutiDevSeetha",
-  "AkrutiDevShantala",
-  "AkrutiDevShivaji",
-  "AkrutiDevShradda",
-  "AkrutiDevShridhar",
-  "AkrutiDevShridharLight",
-  "AkrutiDevShruti",
-  "AkrutiDevSindhu",
-  "AkrutiDevSita",
-  "AkrutiDevSneha",
-  "AkrutiDevSulekh",
-  "AkrutiDevSunil",
-  "AkrutiDevSushma",
-  "AkrutiDevSwati",
-  "AkrutiDevTilak",
-  "AkrutiDevTriveni",
-  "AkrutiDevUpendra",
-  "AkrutiDevVaishali",
-  "AkrutiDevValmiki",
-  "AkrutiDevVandana",
-  "AkrutiDevVarsha",
-  "AkrutiDevVarun",
-  "AkrutiDevVedik",
-  "AkrutiDevVichitra",
-  "AkrutiDevVidya",
-  "AkrutiDevVijay",
-  "AkrutiDevVinod",
-  "AkrutiDevVivek",
-  "AkrutiDevXPYogini",
-  "AkrutiDevYamuna",
-  "AkrutiDevYogini",
-  "AkrutiOfficeAditi",
-  "AkrutiOfficeAditi01",
-  "AkrutiOfficeAjit",
-  "AkrutiOfficeAjit01",
-  "AkrutiOfficeAkanksha",
-  "AkrutiOfficeAkanksha01",
-  "AkrutiOfficeAkansha",
-  "AkrutiOfficeAkshardhara",
-  "AkrutiOfficeAkshardhara01",
-  "AkrutiOfficeAkshay",
-  "AkrutiOfficeAkshay01",
-  "AkrutiOfficeChakra",
-  "AkrutiOfficeChakra01",
-  "AkrutiOfficeChampa",
-  "AkrutiOfficeChampa01",
-  "AkrutiOfficeDeepa",
-  "AkrutiOfficeDeepa01",
-  "AkrutiOfficeHansa",
-  "AkrutiOfficeHansa01",
-  "AkrutiOfficeHinPriya",
-  "AkrutiOfficeHinPriya01",
-  "AkrutiOfficeManorama",
-  "AkrutiOfficeManorama01",
-  "AkrutiOfficeMogara",
-  "AkrutiOfficeMogara01",
-  "AkrutiOfficeMouj",
-  "AkrutiOfficeMouj01",
-  "AkrutiOfficePriya",
-  "AkrutiOfficePriya01",
-  "AkrutiOfficePriyaExpand",
-  "AkrutiOfficePriyaExpand01",
-  "AkrutiOfficeShruti",
-  "AkrutiOfficeShruti01",
-  "AkrutiOfficeSulekh",
-  "AkrutiOfficeSulekh01",
-  "AkrutiOfficeSwati",
-  "AkrutiOfficeSwati01",
-  "AkrutiOfficeTriveni",
-  "AkrutiOfficeTriveni01",
-  "AkrutiOfficeVijay",
-  "AkrutiOfficeVijay01",
-  "AkrutiOfficeYogini",
-  "AkrutiOfficeYogini-S",
-  "AkrutiOfficeYogini01",
-  "AkrutiOfficeYoginiLight",
-  "AkrutiOfficeYoginiLight01",
-  "Algerian",
-  "Aparajita",
-  "Arial",
-  "Arial Black",
-  "Arial Narrow",
-  "Arial Rounded MT Bold",
-  "Arial Unicode MS",
-  "Bahnschrift",
-  "Bahnschrift Condensed",
-  "Bahnschrift Light",
-  "Bahnschrift Light",
-  "Bahnschrift Light Condensed",
-  "Bahnschrift SemiBold",
-  "Bahnschrift SemiBold Condensed",
-  "Bahnschrift SemiCondensed",
-  "Bahnschrift SemiLight",
-  "Baskerville Old Face",
-  "Bauhaus 93",
-  "Bell MT",
-  "Berlin Sans FB",
-  "Berlin Sans FB Demi",
-  "Bernard MT Condensed",
-  "Blackadder ITC",
-  "Bodoni MT",
-  "Bodoni MT Black",
-  "Bodoni MT Condensed",
-  "Bodoni MT Poster Compressed",
-  "Book Antiqua",
-  "Bookman Old Style",
-  "Bookshelf Symbol 7",
-  "Bradley Hand ITC",
-  "Britannic Bold",
-  "Broadway",
-  "Brush Script MT",
-  "Calibri",
-  "Calibri Light",
-  "Californian FB",
-  "Calisto MT",
-  "Cambria",
-  "Cambria Math",
-  "Candara",
-  "Candara Light",
-  "Cascadia Code",
-  "Cascadia Code ExtraLight",
-  "Cascadia Code Light",
-  "Cascadia Code SemiBold",
-  "Cascadia Code SemiLight",
-  "Cascadia Mono",
-  "Cascadia Mono ExtraLight",
-  "Cascadia Mono Light",
-  "Cascadia Mono SemiBold",
-  "Cascadia Mono SemiLight",
-  "Castellar",
-  "Centaur",
-  "Century",
-  "Century Gothic",
-  "Century Schoolbook",
-  "Chiller",
-  "Colonna MT",
-  "Comic Sans MS",
-  "Consolas",
-  "Constantia",
-  "Cooper Black",
-  "Copperplate Gothic Bold",
-  "Copperplate Gothic Light",
-  "Corbel",
-  "Corbel Light",
-  "Courier New",
-  "Curlz MT",
-  "DVOT-Bhima",
-  "DVOT-Surekh",
-  "Ebrima",
-  "Edwardian Script ITC",
-  "Ek Mukta",
-  "Elephant",
-  "Engravers MT",
-  "Eras Bold ITC",
-  "Eras Demi ITC",
-  "Eras Light ITC",
-  "Eras Medium ITC",
-  "Felix Titling",
-  "Footlight MT Light",
-  "Forte",
-  "Franklin Gothic Book",
-  "Franklin Gothic Demi",
-  "Franklin Gothic Demi Cond",
-  "Franklin Gothic Heavy",
-  "Franklin Gothic Medium",
-  "Franklin Gothic Medium Cond",
-  "Freestyle Script",
-  "French Script MT",
-  "Gabriola",
-  "Gadugi",
-  "Garamond",
-  "Georgia",
-  "Gigi",
-  "Gill Sans MT",
-  "Gill Sans MT Condensed",
-  "Gill Sans MT Ext Condensed",
-  "Gill Sans Ultra Bold",
-  "Gill Sans Ultra Bold Condensed",
-  "Gloucester MT Extra Condensed",
-  "Goudy Old Style",
-  "Goudy Stout",
-  "Haettenschweiler",
-  "Harlow Solid Italic",
-  "Harrington",
-  "High Tower Text",
-  "HoloLens MDL2 Assets",
-  "Impact",
-  "Imprint MT Shadow",
-  "Informal Roman",
-  "Ink Free",
-  "ISCIIDev",
-  "Javanese Text",
-  "Jokerman",
-  "Juice ITC",
-  "Kokila",
-  "Kristen ITC",
-  "Kunstler Script",
-  "Leelawadee UI",
-  "Leelawadee UI Semilight",
-  "Lucida Bright",
-  "Lucida Calligraphy",
-  "Lucida Console",
-  "Lucida Fax",
-  "Lucida Handwriting",
-  "Lucida Sans",
-  "Lucida Sans Typewriter",
-  "Lucida Sans Unicode",
-  "Magneto",
-  "Maiandra GD",
-  "Malgun Gothic",
-  "Malgun Gothic Semilight",
-  "Mangal",
-  "Marat1",
-  "Marat2",
-  "Marlett",
-  "Matura MT Script Capitals",
-  "Microsoft Himalaya",
-  "Microsoft JhengHei",
-  "Microsoft JhengHei Light",
-  "Microsoft JhengHei UI",
-  "Microsoft JhengHei UI Light",
-  "Microsoft New Tai Lue",
-  "Microsoft PhagsPa",
-  "Microsoft Sans Serif",
-  "Microsoft Tai Le",
-  "Microsoft YaHei",
-  "Microsoft YaHei Light",
-  "Microsoft YaHei UI",
-  "Microsoft YaHei UI Light",
-  "Microsoft Yi Baiti",
-  "MingLiU-ExtB",
-  "MingLiU_HKSCS-ExtB",
-  "Mistral",
-  "Modern No. 20",
-  "Mongolian Baiti",
-  "Monotype Corsiva",
-  "MS Gothic",
-  "MS Mincho",
-  "MS Outlook",
-  "MS PGothic",
-  "MS Reference Sans Serif",
-  "MS Reference Specialty",
-  "MS UI Gothic",
-  "MT Extra",
-  "MV Boli",
-  "Myanmar Text",
-  "Niagara Engraved",
-  "Niagara Solid",
-  "Nirmala UI",
-  "Nirmala UI Semilight",
-  "NSimSun",
-  "OCR A Extended",
-  "Old English Text MT",
-  "Onyx",
-  "Palace Script MT",
-  "Palatino Linotype",
-  "Papyrus",
-  "Parchment",
-  "Perpetua",
-  "Perpetua Titling MT",
-  "Playbill",
-  "PMingLiU-ExtB",
-  "Poor Richard",
-  "Pristina",
-  "Rage Italic",
-  "Ravie",
-  "Rockwell",
-  "Rockwell Condensed",
-  "Rockwell Extra Bold",
-  "Sakal Marathi",
-  "SakalBharati",
-  "Sanskrit Text",
-  "Script MT Bold",
-  "Segoe Fluent Icons",
-  "Segoe MDL2 Assets",
-  "Segoe Print",
-  "Segoe Script",
-  "Segoe UI",
-  "Segoe UI Black",
-  "Segoe UI Emoji",
-  "Segoe UI Historic",
-  "Segoe UI Light",
-  "Segoe UI Semibold",
-  "Segoe UI Semilight",
-  "Segoe UI Symbol",
-  "Segoe UI Variable Display",
-  "Segoe UI Variable Display",
-  "Segoe UI Variable Display",
-  "Segoe UI Variable Display",
-  "Segoe UI Variable Small",
-  "Segoe UI Variable Small",
-  "Segoe UI Variable Small",
-  "Segoe UI Variable Small Light",
-  "Segoe UI Variable Text",
-  "Segoe UI Variable Text",
-  "Segoe UI Variable Text",
-  "Segoe UI Variable Text Light",
-  "Showcard Gothic",
-  "SimSun",
-  "SimSun-ExtB",
-  "Sitka Banner",
-  "Sitka Banner Semibold",
-  "Sitka Display",
-  "Sitka Display Semibold",
-  "Sitka Heading",
-  "Sitka Heading Semibold",
-  "Sitka Small",
-  "Sitka Small Semibold",
-  "Sitka Subheading",
-  "Sitka Subheading Semibold",
-  "Sitka Text",
-  "Sitka Text Semibold",
-  "Snap ITC",
-  "Stencil",
-  "Sylfaen",
-  "Symbol",
-  "Tahoma",
-  "Tempus Sans ITC",
-  "Times New Roman",
-  "Trebuchet MS",
-  "Tw Cen MT",
-  "Tw Cen MT Condensed",
-  "Tw Cen MT Condensed Extra Bold",
-  "Utsaah",
-  "Verdana",
-  "Viner Hand ITC",
-  "Vivaldi",
-  "Vladimir Script",
-  "Webdings",
-  "Wide Latin",
-  "Wingdings",
-  "Wingdings 2",
-  "Wingdings 3",
-  "Yu Gothic",
-  "Yu Gothic Light",
-  "Yu Gothic Medium",
-  "Yu Gothic UI",
-  "Yu Gothic UI Light",
-  "Yu Gothic UI Semibold",
-  "Yu Gothic UI Semilight",
+  'Madhubala',
+  'Dhurjati',
+  'Aaradhana',
+  'Ajantha',
+  'GowthamiBold',
+  'Suranna',
+  'Gidugu',
+  'Gurajada',
+  'Mallanna',
+  'Mandali',
+  'NATS',
+  'NTR',
+  'Peddana',
+  'Potti Sreeramulu',
+  'Ramabhadra',
+  'Ramaraja',
+  'Sree Krushnadevaraya',
+  'Suranna',
+  'Suravaram',
+  'Syamala Ramana',
+  'TenaliRamakrishna',
+  'Timmana',
+  'AADevAksharReg',
+  'AADevApsBil',
+  'AADevApsReg',
+  'AADevChitralekhaReg',
+  'AADevIndicaReg',
+  'AADevIsfocBil',
+  'AADevIsfocReg',
+  'AADevKrutiReg',
+  'AADevShreeLipiBil',
+  'AADevShreeLipiReg',
+  'AADevSulipiReg',
+  'AADevSushaReg',
+  'AADevWinKeyBil',
+  'AADevWinKeyReg',
+  'AclAksharELight',
+  'Agency FB',
+  'AkrutiDevAbhijit',
+  'AkrutiDevAditi',
+  'AkrutiDevAditya',
+  'AkrutiDevAjit',
+  'AkrutiDevAkanksha',
+  'AkrutiDevAkankshaMedium',
+  'AkrutiDevAkhila',
+  'AkrutiDevAkshardhara',
+  'AkrutiDevAkshardharaExtBold',
+  'AkrutiDevAkshay',
+  'AkrutiDevAnand',
+  'AkrutiDevAnil',
+  'AkrutiDevAnjali',
+  'AkrutiDevArjun',
+  'AkrutiDevAshvin',
+  'AkrutiDevAsmita',
+  'AkrutiDevBela',
+  'AkrutiDevBhagya',
+  'AkrutiDevBharani',
+  'AkrutiDevBharati',
+  'AkrutiDevBhaskar',
+  'AkrutiDevBrahma',
+  'AkrutiDevCactus',
+  'AkrutiDevChakra',
+  'AkrutiDevChakraNormal',
+  'AkrutiDevChampa',
+  'AkrutiDevChandrika',
+  'AkrutiDevCharu',
+  'AkrutiDevDeepa',
+  'AkrutiDevGanesh',
+  'AkrutiDevHansa',
+  'AkrutiDevHarsha',
+  'AkrutiDevHarshaMedium',
+  'AkrutiDevHema',
+  'AkrutiDevIndu',
+  'AkrutiDevIshwar',
+  'AkrutiDevJanhavi',
+  'AkrutiDevKailas',
+  'AkrutiDevKailasMedium',
+  'AkrutiDevKalidas',
+  'AkrutiDevKusum',
+  'AkrutiDevMadhura',
+  'AkrutiDevMalavika',
+  'AkrutiDevMallika',
+  'AkrutiDevMandara',
+  'AkrutiDevMangal',
+  'AkrutiDevManisha',
+  'AkrutiDevManoj',
+  'AkrutiDevManorama',
+  'AkrutiDevMaya',
+  'AkrutiDevMayur',
+  'AkrutiDevMeera',
+  'AkrutiDevMegha',
+  'AkrutiDevMenaka',
+  'AkrutiDevMitra',
+  'AkrutiDevMogara',
+  'AkrutiDevMogaraMedium',
+  'AkrutiDevMouj',
+  'AkrutiDevMoujLight',
+  'AkrutiDevMukund',
+  'AkrutiDevNandi',
+  'AkrutiDevNarmada',
+  'AkrutiDevNartaki',
+  'AkrutiDevNatraj',
+  'AkrutiDevNatrajLight',
+  'AkrutiDevNavaneet',
+  'AkrutiDevNavin',
+  'AkrutiDevNewPriya',
+  'AkrutiDevNewPriyaExpand',
+  'AkrutiDevNewPriyaNormal',
+  'AkrutiDevOmkar',
+  'AkrutiDevParimala',
+  'AkrutiDevPataliputra',
+  'AkrutiDevPayal',
+  'AkrutiDevPooja',
+  'AkrutiDevPrakash',
+  'AkrutiDevPratap',
+  'AkrutiDevPratik',
+  'AkrutiDevPraveen',
+  'AkrutiDevPreeti',
+  'AkrutiDevPreetiLight',
+  'AkrutiDevPrema',
+  'AkrutiDevPriya',
+  'AkrutiDevPriyaExpanded',
+  'AkrutiDevPriyanka',
+  'AkrutiDevPushpa',
+  'AkrutiDevRahul',
+  'AkrutiDevRaksha',
+  'AkrutiDevRakshaExtBold',
+  'AkrutiDevRekha',
+  'AkrutiDevRishi',
+  'AkrutiDevRohini',
+  'AkrutiDevRoshan',
+  'AkrutiDevSavita',
+  'AkrutiDevSeetha',
+  'AkrutiDevShantala',
+  'AkrutiDevShivaji',
+  'AkrutiDevShradda',
+  'AkrutiDevShridhar',
+  'AkrutiDevShridharLight',
+  'AkrutiDevShruti',
+  'AkrutiDevSindhu',
+  'AkrutiDevSita',
+  'AkrutiDevSneha',
+  'AkrutiDevSulekh',
+  'AkrutiDevSunil',
+  'AkrutiDevSushma',
+  'AkrutiDevSwati',
+  'AkrutiDevTilak',
+  'AkrutiDevTriveni',
+  'AkrutiDevUpendra',
+  'AkrutiDevVaishali',
+  'AkrutiDevValmiki',
+  'AkrutiDevVandana',
+  'AkrutiDevVarsha',
+  'AkrutiDevVarun',
+  'AkrutiDevVedik',
+  'AkrutiDevVichitra',
+  'AkrutiDevVidya',
+  'AkrutiDevVijay',
+  'AkrutiDevVinod',
+  'AkrutiDevVivek',
+  'AkrutiDevXPYogini',
+  'AkrutiDevYamuna',
+  'AkrutiDevYogini',
+  'AkrutiOfficeAditi',
+  'AkrutiOfficeAditi01',
+  'AkrutiOfficeAjit',
+  'AkrutiOfficeAjit01',
+  'AkrutiOfficeAkanksha',
+  'AkrutiOfficeAkanksha01',
+  'AkrutiOfficeAkansha',
+  'AkrutiOfficeAkshardhara',
+  'AkrutiOfficeAkshardhara01',
+  'AkrutiOfficeAkshay',
+  'AkrutiOfficeAkshay01',
+  'AkrutiOfficeChakra',
+  'AkrutiOfficeChakra01',
+  'AkrutiOfficeChampa',
+  'AkrutiOfficeChampa01',
+  'AkrutiOfficeDeepa',
+  'AkrutiOfficeDeepa01',
+  'AkrutiOfficeHansa',
+  'AkrutiOfficeHansa01',
+  'AkrutiOfficeHinPriya',
+  'AkrutiOfficeHinPriya01',
+  'AkrutiOfficeManorama',
+  'AkrutiOfficeManorama01',
+  'AkrutiOfficeMogara',
+  'AkrutiOfficeMogara01',
+  'AkrutiOfficeMouj',
+  'AkrutiOfficeMouj01',
+  'AkrutiOfficePriya',
+  'AkrutiOfficePriya01',
+  'AkrutiOfficePriyaExpand',
+  'AkrutiOfficePriyaExpand01',
+  'AkrutiOfficeShruti',
+  'AkrutiOfficeShruti01',
+  'AkrutiOfficeSulekh',
+  'AkrutiOfficeSulekh01',
+  'AkrutiOfficeSwati',
+  'AkrutiOfficeSwati01',
+  'AkrutiOfficeTriveni',
+  'AkrutiOfficeTriveni01',
+  'AkrutiOfficeVijay',
+  'AkrutiOfficeVijay01',
+  'AkrutiOfficeYogini',
+  'AkrutiOfficeYogini-S',
+  'AkrutiOfficeYogini01',
+  'AkrutiOfficeYoginiLight',
+  'AkrutiOfficeYoginiLight01',
+  'Algerian',
+  'Aparajita',
+  'Arial',
+  'Arial Black',
+  'Arial Narrow',
+  'Arial Rounded MT Bold',
+  'Arial Unicode MS',
+  'Bahnschrift',
+  'Bahnschrift Condensed',
+  'Bahnschrift Light',
+  'Bahnschrift Light',
+  'Bahnschrift Light Condensed',
+  'Bahnschrift SemiBold',
+  'Bahnschrift SemiBold Condensed',
+  'Bahnschrift SemiCondensed',
+  'Bahnschrift SemiLight',
+  'Baskerville Old Face',
+  'Bauhaus 93',
+  'Bell MT',
+  'Berlin Sans FB',
+  'Berlin Sans FB Demi',
+  'Bernard MT Condensed',
+  'Blackadder ITC',
+  'Bodoni MT',
+  'Bodoni MT Black',
+  'Bodoni MT Condensed',
+  'Bodoni MT Poster Compressed',
+  'Book Antiqua',
+  'Bookman Old Style',
+  'Bookshelf Symbol 7',
+  'Bradley Hand ITC',
+  'Britannic Bold',
+  'Broadway',
+  'Brush Script MT',
+  'Calibri',
+  'Calibri Light',
+  'Californian FB',
+  'Calisto MT',
+  'Cambria',
+  'Cambria Math',
+  'Candara',
+  'Candara Light',
+  'Cascadia Code',
+  'Cascadia Code ExtraLight',
+  'Cascadia Code Light',
+  'Cascadia Code SemiBold',
+  'Cascadia Code SemiLight',
+  'Cascadia Mono',
+  'Cascadia Mono ExtraLight',
+  'Cascadia Mono Light',
+  'Cascadia Mono SemiBold',
+  'Cascadia Mono SemiLight',
+  'Castellar',
+  'Centaur',
+  'Century',
+  'Century Gothic',
+  'Century Schoolbook',
+  'Chiller',
+  'Colonna MT',
+  'Comic Sans MS',
+  'Consolas',
+  'Constantia',
+  'Cooper Black',
+  'Copperplate Gothic Bold',
+  'Copperplate Gothic Light',
+  'Corbel',
+  'Corbel Light',
+  'Courier New',
+  'Curlz MT',
+  'DVOT-Bhima',
+  'DVOT-Surekh',
+  'Ebrima',
+  'Edwardian Script ITC',
+  'Ek Mukta',
+  'Elephant',
+  'Engravers MT',
+  'Eras Bold ITC',
+  'Eras Demi ITC',
+  'Eras Light ITC',
+  'Eras Medium ITC',
+  'Felix Titling',
+  'Footlight MT Light',
+  'Forte',
+  'Franklin Gothic Book',
+  'Franklin Gothic Demi',
+  'Franklin Gothic Demi Cond',
+  'Franklin Gothic Heavy',
+  'Franklin Gothic Medium',
+  'Franklin Gothic Medium Cond',
+  'Freestyle Script',
+  'French Script MT',
+  'Gabriola',
+  'Gadugi',
+  'Garamond',
+  'Georgia',
+  'Gigi',
+  'Gill Sans MT',
+  'Gill Sans MT Condensed',
+  'Gill Sans MT Ext Condensed',
+  'Gill Sans Ultra Bold',
+  'Gill Sans Ultra Bold Condensed',
+  'Gloucester MT Extra Condensed',
+  'Goudy Old Style',
+  'Goudy Stout',
+  'Haettenschweiler',
+  'Harlow Solid Italic',
+  'Harrington',
+  'High Tower Text',
+  'HoloLens MDL2 Assets',
+  'Impact',
+  'Imprint MT Shadow',
+  'Informal Roman',
+  'Ink Free',
+  'ISCIIDev',
+  'Javanese Text',
+  'Jokerman',
+  'Juice ITC',
+  'Kokila',
+  'Kristen ITC',
+  'Kunstler Script',
+  'Leelawadee UI',
+  'Leelawadee UI Semilight',
+  'Lucida Bright',
+  'Lucida Calligraphy',
+  'Lucida Console',
+  'Lucida Fax',
+  'Lucida Handwriting',
+  'Lucida Sans',
+  'Lucida Sans Typewriter',
+  'Lucida Sans Unicode',
+  'Magneto',
+  'Maiandra GD',
+  'Malgun Gothic',
+  'Malgun Gothic Semilight',
+  'Mangal',
+  'Marat1',
+  'Marat2',
+  'Marlett',
+  'Matura MT Script Capitals',
+  'Microsoft Himalaya',
+  'Microsoft JhengHei',
+  'Microsoft JhengHei Light',
+  'Microsoft JhengHei UI',
+  'Microsoft JhengHei UI Light',
+  'Microsoft New Tai Lue',
+  'Microsoft PhagsPa',
+  'Microsoft Sans Serif',
+  'Microsoft Tai Le',
+  'Microsoft YaHei',
+  'Microsoft YaHei Light',
+  'Microsoft YaHei UI',
+  'Microsoft YaHei UI Light',
+  'Microsoft Yi Baiti',
+  'MingLiU-ExtB',
+  'MingLiU_HKSCS-ExtB',
+  'Mistral',
+  'Modern No. 20',
+  'Mongolian Baiti',
+  'Monotype Corsiva',
+  'MS Gothic',
+  'MS Mincho',
+  'MS Outlook',
+  'MS PGothic',
+  'MS Reference Sans Serif',
+  'MS Reference Specialty',
+  'MS UI Gothic',
+  'MT Extra',
+  'MV Boli',
+  'Myanmar Text',
+  'Niagara Engraved',
+  'Niagara Solid',
+  'Nirmala UI',
+  'Nirmala UI Semilight',
+  'NSimSun',
+  'OCR A Extended',
+  'Old English Text MT',
+  'Onyx',
+  'Palace Script MT',
+  'Palatino Linotype',
+  'Papyrus',
+  'Parchment',
+  'Perpetua',
+  'Perpetua Titling MT',
+  'Playbill',
+  'PMingLiU-ExtB',
+  'Poor Richard',
+  'Pristina',
+  'Rage Italic',
+  'Ravie',
+  'Rockwell',
+  'Rockwell Condensed',
+  'Rockwell Extra Bold',
+  'Sakal Marathi',
+  'SakalBharati',
+  'Sanskrit Text',
+  'Script MT Bold',
+  'Segoe Fluent Icons',
+  'Segoe MDL2 Assets',
+  'Segoe Print',
+  'Segoe Script',
+  'Segoe UI',
+  'Segoe UI Black',
+  'Segoe UI Emoji',
+  'Segoe UI Historic',
+  'Segoe UI Light',
+  'Segoe UI Semibold',
+  'Segoe UI Semilight',
+  'Segoe UI Symbol',
+  'Segoe UI Variable Display',
+  'Segoe UI Variable Display',
+  'Segoe UI Variable Display',
+  'Segoe UI Variable Display',
+  'Segoe UI Variable Small',
+  'Segoe UI Variable Small',
+  'Segoe UI Variable Small',
+  'Segoe UI Variable Small Light',
+  'Segoe UI Variable Text',
+  'Segoe UI Variable Text',
+  'Segoe UI Variable Text',
+  'Segoe UI Variable Text Light',
+  'Showcard Gothic',
+  'SimSun',
+  'SimSun-ExtB',
+  'Sitka Banner',
+  'Sitka Banner Semibold',
+  'Sitka Display',
+  'Sitka Display Semibold',
+  'Sitka Heading',
+  'Sitka Heading Semibold',
+  'Sitka Small',
+  'Sitka Small Semibold',
+  'Sitka Subheading',
+  'Sitka Subheading Semibold',
+  'Sitka Text',
+  'Sitka Text Semibold',
+  'Snap ITC',
+  'Stencil',
+  'Sylfaen',
+  'Symbol',
+  'Tahoma',
+  'Tempus Sans ITC',
+  'Times New Roman',
+  'Trebuchet MS',
+  'Tw Cen MT',
+  'Tw Cen MT Condensed',
+  'Tw Cen MT Condensed Extra Bold',
+  'Utsaah',
+  'Verdana',
+  'Viner Hand ITC',
+  'Vivaldi',
+  'Vladimir Script',
+  'Webdings',
+  'Wide Latin',
+  'Wingdings',
+  'Wingdings 2',
+  'Wingdings 3',
+  'Yu Gothic',
+  'Yu Gothic Light',
+  'Yu Gothic Medium',
+  'Yu Gothic UI',
+  'Yu Gothic UI Light',
+  'Yu Gothic UI Semibold',
+  'Yu Gothic UI Semilight',
 ];
 export const chNumbers = [1, 2, 3, 4];
 export const inAnimationMethods = [
   ...animation.map((val) => val.name),
-  "lefttoright",
-  "mix",
+  'lefttoright',
+  'mix',
 ];
 
 export const animationMethods = [
-  "linear",
-  "easenone",
-  "easeinquad",
-  "easeoutquad",
-  "easeinoutquad",
-  "easeoutinquad",
-  "easeincubic",
-  "easeoutcubic",
-  "easeinoutcubic",
-  "easeoutincubic",
-  "easeinquart",
-  "easeoutquart",
-  "easeinoutquart",
-  "easeoutinquart",
-  "easeinquint",
-  "easeoutquint",
-  "easeinoutquint",
-  "easeoutinquint",
-  "easeinsine",
-  "easeoutsine",
-  "easeinoutsine",
-  "easeoutinsine",
-  "easeinexpo",
-  "easeoutexpo",
-  "easeinoutexpo",
-  "easeoutinexpo",
-  "easeincirc",
-  "easeoutcirc",
-  "easeinoutcirc",
-  "easeoutincirc",
-  "easeinelastic",
-  "easeoutelastic",
-  "easeinoutelastic",
-  "easeoutinelastic",
-  "easeinback",
-  "easeoutback",
-  "easeinoutback",
-  "easeoutintback",
-  "easeoutbounce",
-  "easeinbounce",
-  "easeinoutbounce",
-  "easeoutinbounce",
+  'linear',
+  'easenone',
+  'easeinquad',
+  'easeoutquad',
+  'easeinoutquad',
+  'easeoutinquad',
+  'easeincubic',
+  'easeoutcubic',
+  'easeinoutcubic',
+  'easeoutincubic',
+  'easeinquart',
+  'easeoutquart',
+  'easeinoutquart',
+  'easeoutinquart',
+  'easeinquint',
+  'easeoutquint',
+  'easeinoutquint',
+  'easeoutinquint',
+  'easeinsine',
+  'easeoutsine',
+  'easeinoutsine',
+  'easeoutinsine',
+  'easeinexpo',
+  'easeoutexpo',
+  'easeinoutexpo',
+  'easeoutinexpo',
+  'easeincirc',
+  'easeoutcirc',
+  'easeinoutcirc',
+  'easeoutincirc',
+  'easeinelastic',
+  'easeoutelastic',
+  'easeinoutelastic',
+  'easeoutinelastic',
+  'easeinback',
+  'easeoutback',
+  'easeinoutback',
+  'easeoutintback',
+  'easeoutbounce',
+  'easeinbounce',
+  'easeinoutbounce',
+  'easeoutinbounce',
 ];
 export const languages = [
-  "en-US",
-  "hi-IN",
-  "te-IN",
-  "ta-IN",
-  "mr-IN",
-  "gu-IN",
-  "	kn-IN",
-  "ml-IN",
-  "pa-Guru-IN",
-  "ur-IN",
-  "ar-SA",
-  "bn-BD",
-  "bn-IN",
-  "cs-CZ",
-  "da-DK",
-  "de-AT",
-  "de-CH",
-  "de-DE",
-  "el-GR",
-  "en-AU",
-  "en-CA",
-  "en-GB",
-  "en-IE",
-  "en-IN",
-  "en-NZ",
-  "en-US",
-  "en-ZA",
-  "es-AR",
-  "es-CL",
-  "es-CO",
-  "es-ES",
-  "es-MX",
-  "es-US",
-  "fi-FI",
-  "fr-BE",
-  "fr-CA",
-  "fr-CH",
-  "fr-FR",
-  "he-IL",
-  "hi-IN",
-  "hu-HU",
-  "id-ID",
-  "it-CH",
-  "it-IT",
-  "jp-JP",
-  "ko-KR",
-  "nl-BE",
-  "nl-NL",
-  "no-NO",
-  "pl-PL",
-  "pt-BR",
-  "pt-PT",
-  "ro-RO",
-  "ru-RU",
-  "sk-SK",
-  "sv-SE",
-  "ta-IN",
-  "ta-LK",
-  "th-TH",
-  "tr-TR",
-  "ur_PK",
-  "zh-CN",
-  "zh-HK",
-  "zh-TW",
-  "bh-IN",
+  'en-US',
+  'hi-IN',
+  'te-IN',
+  'ta-IN',
+  'mr-IN',
+  'gu-IN',
+  '	kn-IN',
+  'ml-IN',
+  'pa-Guru-IN',
+  'ur-IN',
+  'ar-SA',
+  'bn-BD',
+  'bn-IN',
+  'cs-CZ',
+  'da-DK',
+  'de-AT',
+  'de-CH',
+  'de-DE',
+  'el-GR',
+  'en-AU',
+  'en-CA',
+  'en-GB',
+  'en-IE',
+  'en-IN',
+  'en-NZ',
+  'en-US',
+  'en-ZA',
+  'es-AR',
+  'es-CL',
+  'es-CO',
+  'es-ES',
+  'es-MX',
+  'es-US',
+  'fi-FI',
+  'fr-BE',
+  'fr-CA',
+  'fr-CH',
+  'fr-FR',
+  'he-IL',
+  'hi-IN',
+  'hu-HU',
+  'id-ID',
+  'it-CH',
+  'it-IT',
+  'jp-JP',
+  'ko-KR',
+  'nl-BE',
+  'nl-NL',
+  'no-NO',
+  'pl-PL',
+  'pt-BR',
+  'pt-PT',
+  'ro-RO',
+  'ru-RU',
+  'sk-SK',
+  'sv-SE',
+  'ta-IN',
+  'ta-LK',
+  'th-TH',
+  'tr-TR',
+  'ur_PK',
+  'zh-CN',
+  'zh-HK',
+  'zh-TW',
+  'bh-IN',
 ];
 export const easeTypes = [
-  "none",
-  "power1.in",
-  "power1.out",
-  "power1.inOut",
-  "power2.in",
-  "power2.out",
-  "power2.inOut",
-  "power3.in",
-  "power3.out",
-  "power3.inOut",
-  "power4.in",
-  "power4.out",
-  "power4.inOut",
-  "linear",
-  "back.in",
-  "back.out",
-  "back.inOut",
-  "bounce.in",
-  "bounce.out",
-  "bounce.inOut",
-  "elastic.in",
-  "elastic.out",
-  "elastic.inOut",
-  "rough",
-  "slow",
-  "stepped",
-  "circ.in",
-  "circ.out",
-  "circ.inOut",
-  "expo.in",
-  "expo.out",
-  "expo.inOut",
-  "sine.in",
-  "sine.out",
-  "sine.inOut",
+  'none',
+  'power1.in',
+  'power1.out',
+  'power1.inOut',
+  'power2.in',
+  'power2.out',
+  'power2.inOut',
+  'power3.in',
+  'power3.out',
+  'power3.inOut',
+  'power4.in',
+  'power4.out',
+  'power4.inOut',
+  'linear',
+  'back.in',
+  'back.out',
+  'back.inOut',
+  'bounce.in',
+  'bounce.out',
+  'bounce.inOut',
+  'elastic.in',
+  'elastic.out',
+  'elastic.inOut',
+  'rough',
+  'slow',
+  'stepped',
+  'circ.in',
+  'circ.out',
+  'circ.inOut',
+  'expo.in',
+  'expo.out',
+  'expo.inOut',
+  'sine.in',
+  'sine.out',
+  'sine.inOut',
 ];
 export const colors = [
-  "#1b648f",
-  "#a14e89",
-  "#af6b1c",
-  "#797362",
-  "#c8d23b",
-  "#7d45b6",
-  "#c8459e",
-  "#45c1a1",
-  "#c45d4b",
-  "#4f7390",
-  "#b95d9d",
-  "#2c907a",
-  "#946757",
-  "#8d3a4a",
-  "#44a764",
-  "#9c6da1",
-  "#4e6a2f",
-  "#8c438f",
-  "#a25e37",
-  "#536b8f",
-  "#a85357",
-  "#5b7e5f",
-  "#c97d91",
-  "#5c5d5d",
-  "#c2623b",
-  "#5e7c8d",
-  "#b94c74",
-  "#9d6e43",
-  "#b84e38",
-  "#7b8d4b",
-  "#c85f4c",
-  "#9a6f8d",
-  "#46685d",
-  "#c3478f",
-  "#7a5d6f",
-  "#c85e9a",
-  "#7a985d",
-  "#b64d38",
-  "#567c8e",
-  "#b64c7a",
-  "#5b7d5f",
-  "#c9496f",
-  "#5e748f",
-  "#c8643b",
-  "#637d5d",
-  "#b34e9d",
-  "#5e6a8d",
-  "#c65d7a",
-  "#9d6f43",
-  "#b34d38",
+  '#1b648f',
+  '#a14e89',
+  '#af6b1c',
+  '#797362',
+  '#c8d23b',
+  '#7d45b6',
+  '#c8459e',
+  '#45c1a1',
+  '#c45d4b',
+  '#4f7390',
+  '#b95d9d',
+  '#2c907a',
+  '#946757',
+  '#8d3a4a',
+  '#44a764',
+  '#9c6da1',
+  '#4e6a2f',
+  '#8c438f',
+  '#a25e37',
+  '#536b8f',
+  '#a85357',
+  '#5b7e5f',
+  '#c97d91',
+  '#5c5d5d',
+  '#c2623b',
+  '#5e7c8d',
+  '#b94c74',
+  '#9d6e43',
+  '#b84e38',
+  '#7b8d4b',
+  '#c85f4c',
+  '#9a6f8d',
+  '#46685d',
+  '#c3478f',
+  '#7a5d6f',
+  '#c85e9a',
+  '#7a985d',
+  '#b64d38',
+  '#567c8e',
+  '#b64c7a',
+  '#5b7d5f',
+  '#c9496f',
+  '#5e748f',
+  '#c8643b',
+  '#637d5d',
+  '#b34e9d',
+  '#5e6a8d',
+  '#c65d7a',
+  '#9d6f43',
+  '#b34d38',
 ];

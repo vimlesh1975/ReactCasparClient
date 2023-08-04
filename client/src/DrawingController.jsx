@@ -2166,16 +2166,37 @@ const DrawingController = () => {
       // eslint-disable-next-line
       await new Promise((resolve) => {
         canvas.loadFromJSON(val.pageValue, () => {
+          selectAll(canvas);
+          var ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
+          var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
+          // Modify the viewBox before converting to SVG
+          canvas.setDimensions({ width: ww > 1920 ? ww : 1920, height: hh > 1080 ? hh : 1080 }); // Change the canvas dimensions
+          canvas.renderAll(); // Render the canvas with the new dimensions
+
+
           aa += `<div> ${canvas.toSVG()}</div> `;
+          if (ww > 1920 || hh > 1080) {
+            // reset the viewBox after converting to SVG
+            canvas.setDimensions({ width: 1920, height: 1080 }); // Change the canvas dimensions
+            canvas.renderAll(); // Render the canvas with the new dimensions
+          }
+
           canvas.renderAll();
           resolve();
         });
       });
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    canvas.discardActiveObject()
+    canvas.requestRenderAll();
+
+
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
     myWindow.document.body.innerHTML = aa;
+
+
   };
 
 
