@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual } from "lodash";
+// import { isEqual } from "lodash";
 
 var iii = 0;
 const OnelinerAndBreakingNews = () => {
@@ -20,7 +20,7 @@ const OnelinerAndBreakingNews = () => {
     const [pageName, setPageName] = useState('BreakingNews');
     const [timeInterval, setTimeInterval] = useState(4000);
 
-    const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
+    // const [newplayerList1, setNewplayerList1] = useState([...playerList1]);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -61,16 +61,16 @@ const OnelinerAndBreakingNews = () => {
         // eslint-disable-next-line
     }, [generalayer, pageName, variableName, playerList1, timeInterval])
 
-    const updateplayerList1 = () => {
-        setPlayerList1([...newplayerList1])
-    }
+    // const updateplayerList1 = () => {
+    //     setPlayerList1([...newplayerList1])
+    // }
 
     const onDragEnd1 = (result) => {
         const aa = [...playerList1]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
             setPlayerList1(aa);
-            setNewplayerList1(aa)
+            // setNewplayerList1(aa)
         }
     }
 
@@ -164,13 +164,13 @@ const OnelinerAndBreakingNews = () => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')), 1);
         setPlayerList1(aa);
-        setNewplayerList1(aa)
+        // setNewplayerList1(aa)
     }
     const addPage = e => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, { id: uuidv4(), data1: '', use1: false });
         setPlayerList1(aa);
-        setNewplayerList1(aa)
+        // setNewplayerList1(aa)
 
     }
 
@@ -215,7 +215,7 @@ const OnelinerAndBreakingNews = () => {
             updatedcanvasList.push({ id: cc.id, data1: cc.data1, use1: cc.use1 })
         });
         setPlayerList1(updatedcanvasList)
-        setNewplayerList1(updatedcanvasList)
+        // setNewplayerList1(updatedcanvasList)
     };
 
     const updateData = (layerNumber, data) => {
@@ -259,8 +259,8 @@ const OnelinerAndBreakingNews = () => {
             <div style={{ border: '1px solid red' }}>
                 <table border='1'>
                     <tbody >
-                        <tr><td>Page Name</td><td><input size="10" type='text' defaultValue={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' defaultValue={variableName} onChange={e => setVariableName(e.target.value)} /></td>
-                            <td>Layer No.</td><td><input size="2" type='text' defaultValue={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' defaultValue={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
+                        <tr><td>Page Name</td><td><input size="10" type='text' value={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' value={variableName} onChange={e => setVariableName(e.target.value)} /></td>
+                            <td>Layer No.</td><td><input size="2" type='text' value={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' value={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
                             <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                                 if (e.target.checked === true) {
                                     startBreakingNews();
@@ -295,7 +295,7 @@ const OnelinerAndBreakingNews = () => {
                 </table>
             </div>
 
-            <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button>
+            {/* <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button> */}
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 650, width: 850, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
@@ -324,17 +324,26 @@ const OnelinerAndBreakingNews = () => {
                                                             >
                                                                 <td style={{ textAlign: 'center' }}>{i}</td>
                                                                 <td {...provided.dragHandleProps}><VscMove /></td>
-                                                                <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', borderWidth: 0, minWidth: 620 }} type='text' defaultValue={val.data1}
+                                                                <td style={{ minWidth: 300 }}><input style={{ backgroundColor: (currentRow === i) ? 'green' : '', border: 'none', minWidth: 620 }} type='text' value={val.data1}
                                                                     onChange={e => {
-                                                                        newplayerList1[i] = { ...newplayerList1[i], data1: e.target.value };
-                                                                        setNewplayerList1([...newplayerList1])
+                                                                        const updatednewplayerList1 = [...playerList1]
+                                                                        updatednewplayerList1[i] = { ...updatednewplayerList1[i], data1: e.target.value };
+                                                                        // setNewplayerList1(updatednewplayerList1)
+                                                                        setPlayerList1(updatednewplayerList1)
+                                                                        // setNewplayerList1([...newplayerList1])
                                                                     }}
                                                                 />
                                                                 </td>
-                                                                <td><input defaultChecked={val.use1} type='checkbox' onChange={(e) => {
-                                                                    newplayerList1[i] = { ...newplayerList1[i], use1: e.target.checked };
-                                                                    setNewplayerList1([...newplayerList1]);
-                                                                    setPlayerList1([...newplayerList1]);
+                                                                <td><input checked={val.use1} type='checkbox' onChange={(e) => {
+                                                                    // newplayerList1[i] = { ...newplayerList1[i], use1: e.target.checked };
+                                                                    // setNewplayerList1([...newplayerList1]);
+                                                                    // setPlayerList1([...newplayerList1]);
+
+                                                                    const updatednewplayerList1 = [...playerList1]
+                                                                    updatednewplayerList1[i] = { ...updatednewplayerList1[i], use1: e.target.checked };
+                                                                    // setNewplayerList1(updatednewplayerList1)
+                                                                    setPlayerList1(updatednewplayerList1)
+
                                                                 }
                                                                 } /></td>
                                                                 <td><button onClick={() => recallPage(generalayer, pageName, [{ key: variableName, value: val.data1, type: 'text' }])}> <FaPlay /></button></td>
