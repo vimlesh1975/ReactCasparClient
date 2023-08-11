@@ -1059,7 +1059,7 @@ const Threejs = () => {
     const closed = false;
 
     const mesh = new THREE.Mesh(
-      new THREE.TubeBufferGeometry(
+      new THREE.TubeGeometry(
         path,
         tubularSegments,
         radius,

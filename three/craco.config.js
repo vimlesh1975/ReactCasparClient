@@ -12,9 +12,6 @@
 module.exports = {
   reactScriptsVersion: 'react-scripts' /* (default value) */,
   webpack: {
-    alias: {
-      fs: 'css/lib/stringify',
-    },
     mode: 'extends',
     configure: {
       module: {

@@ -325,7 +325,14 @@ const SavePannel = () => {
             var updatedcanvasList = []
             aa1.forEach(element => {
                 var cc = JSON.parse(element)
-                updatedcanvasList.push(cc)
+                const lastFourLetters = (cc.pageName).substring(cc.pageName.length - 4);
+                if (lastFourLetters === '.txt') {
+                    const cc1 = { ...cc, pageName: cc.pageName.slice(0, -4) }
+                    updatedcanvasList.push(cc1)
+                }
+                else {
+                    updatedcanvasList.push(cc)
+                }
             });
             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
         }
