@@ -1,33 +1,27 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const fs = require('fs');
-const cors = require('cors');
-const https = require('https');
+const fs = require("fs");
+const cors = require("cors");
+const https = require("https");
 const corsOptions = {
   // "Access-Control-Allow-Origin": "*",
 };
 
-// Load SSL certificates
-const ssloptions = {
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert'),
-};
-
-const mos1 = require('./mos1.js');
-const nms1 = require('./nms.js');
+const mos1 = require("./mos1.js");
+const nms1 = require("./nms.js");
 
 app.use(cors(corsOptions));
-var serveStatic = require('serve-static');
-app.use('/media', serveStatic('c:\\casparcg\\_media'));
+var serveStatic = require("serve-static");
+app.use("/media", serveStatic("c:\\casparcg\\_media"));
 
 const {
   CasparCG,
   CasparCGSocket,
   Options,
   AMCP,
-} = require('casparcg-connection');
+} = require("casparcg-connection");
 
-const fontList = require('font-list');
+const fontList = require("font-list");
 var myFontList;
 
 fontList
@@ -43,27 +37,27 @@ fontList
 // app.use(bodyParser({limit: '50mb'}));
 // const jsonParser = bodyParser.json();
 
-app.use(express.json({ limit: '50mb' }));
+app.use(express.json({ limit: "50mb" }));
 app.use(
-  express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 })
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 
 //open Ai Starts --------------------------------------------------------------------------
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
-const { Configuration, OpenAIApi } = require('openai');
+const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-app.get('/openai', async (req, res) => {
+app.get("/openai", async (req, res) => {
   res.status(200).send({
-    message: 'Hello from vimlesh1975!',
+    message: "Hello from vimlesh1975!",
   });
 });
 
-app.post('/openai', async (req, res) => {
+app.post("/openai", async (req, res) => {
   try {
     const prompt = req.body.prompt;
     const model = req.body.model;
@@ -86,58 +80,58 @@ app.post('/openai', async (req, res) => {
     });
   } catch (error) {
     // console.log(JSON.stringify(error.message))
-    res.status(500).send(error.message || 'Something went wrong');
+    res.status(500).send(error.message || "Something went wrong");
   }
 });
 
-app.post('/openaiimage', async (req, res) => {
+app.post("/openaiimage", async (req, res) => {
   // console.log(req)
   try {
     const prompt = req.body.prompt;
     const response = await openai.createImage({
       prompt: `${prompt}`,
       n: 1,
-      size: '256x256',
+      size: "256x256",
     });
     // console.log(response['data'].data[0].url)
 
     res.status(200).send({
-      bot: response['data'].data[0].url,
+      bot: response["data"].data[0].url,
     });
   } catch (error) {
     // console.log(JSON.stringify(error.message))
-    res.status(500).send(error.message || 'Something went wrong');
+    res.status(500).send(error.message || "Something went wrong");
   }
 });
 
-app.post('/openaiimagebase64', async (req, res) => {
+app.post("/openaiimagebase64", async (req, res) => {
   // console.log(req)
   try {
     const prompt = req.body.prompt;
     const response = await openai.createImage({
       prompt: `${prompt}`,
       n: 1,
-      size: '256x256',
+      size: "256x256",
     });
     // console.log(response['data'].data[0].url)
 
     https
-      .get(response['data'].data[0].url, (resnode) => {
-        let data = '';
+      .get(response["data"].data[0].url, (resnode) => {
+        let data = "";
 
-        resnode.on('data', (chunk) => {
+        resnode.on("data", (chunk) => {
           data += chunk;
         });
 
-        resnode.on('end', () => {
-          const base64 = Buffer.from(data).toString('base64');
+        resnode.on("end", () => {
+          const base64 = Buffer.from(data).toString("base64");
           // console.log(base64);
           res.status(200).send({
             bot: base64,
           });
         });
       })
-      .on('error', (err) => {
+      .on("error", (err) => {
         console.error(err);
       });
 
@@ -156,11 +150,11 @@ app.post('/openaiimagebase64', async (req, res) => {
     //     });
   } catch (error) {
     // console.log(JSON.stringify(error.message))
-    res.status(500).send(error.message || 'Something went wrong');
+    res.status(500).send(error.message || "Something went wrong");
   }
 });
 
-app.post('/openai/models', async (req, res) => {
+app.post("/openai/models", async (req, res) => {
   try {
     const response = await openai.listEngines();
     res.status(200).send({
@@ -168,7 +162,7 @@ app.post('/openai/models', async (req, res) => {
     });
   } catch (error) {
     // console.error(error)
-    res.status(500).send(error || 'Something went wrong');
+    res.status(500).send(error || "Something went wrong");
   }
 });
 //open ai end ------------------------------------------------------------------------------------------
@@ -177,32 +171,25 @@ app.post('/openai/models', async (req, res) => {
 
 const port = process.env.PORT || 9000;
 const options = { cors: true };
-const http = require('http').Server(app);
+const http = require("http").Server(app);
 
-// http.listen(port, () => {
-//   console.log(`node Server is liestemnig on ${port}`);
-// });
-// Create HTTPS server
-const server1 = https.createServer(ssloptions, app);
-// Start the server
-server1.listen(port, () => {
-  console.log(`Server is running on HTTPS at port ${port}`);
+http.listen(port, () => {
+  console.log(`node Server is liestemnig on ${port}`);
 });
-
-var aa = new CasparCG('127.0.0.1', 5250);
+var aa = new CasparCG("127.0.0.1", 5250);
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
 aa.onConnectionChanged = () => {
   console.log(aa.connected);
-  io.emit('connectionStatus', aa.connected.toString());
+  io.emit("connectionStatus", aa.connected.toString());
 };
 
-var mediaPath = 'c:/casparcg/_media';
+var mediaPath = "c:/casparcg/_media";
 var templatePath;
 var logPath;
 
 // const PATH = require('path');
 
-const dirTree = require('directory-tree');
+const dirTree = require("directory-tree");
 var media = [];
 
 const refreshMedia = () => {
@@ -226,28 +213,28 @@ aa.onConnected = () => {
   refreshMedia();
   aa.getCasparCGVersion()
     .then((aa1) => {
-      console.log('version', aa1);
+      console.log("version", aa1);
     })
     .catch((aa2) => console.log(aa2));
 
-  io.emit('connectionStatus', aa.connected.toString());
+  io.emit("connectionStatus", aa.connected.toString());
 };
 
-app.post('/connect', (req, res) => {
+app.post("/connect", (req, res) => {
   aa.connect();
   res.end();
 });
-app.post('/disconnect', (req, res) => {
+app.post("/disconnect", (req, res) => {
   aa.disconnect();
   res.end();
 });
 
-app.post('/getfonts', (req, res) => {
+app.post("/getfonts", (req, res) => {
   res.send(myFontList);
   res.end();
 });
 
-app.post('/getmedia', (req, res) => {
+app.post("/getmedia", (req, res) => {
   refreshMedia();
   setTimeout(() => {
     res.send(media);
@@ -255,7 +242,7 @@ app.post('/getmedia', (req, res) => {
   }, 2000);
 });
 
-app.post('/endpoint', (req, res) => {
+app.post("/endpoint", (req, res) => {
   // console.log(req.headers.referer);
   aa.do(new AMCP.CustomCommand(req.body.string))
     .then((aa1) => {
@@ -267,18 +254,18 @@ app.post('/endpoint', (req, res) => {
   res.end();
 });
 
-app.get('/cgupdate', (req, res) => {
-  const aa1 = { oneliner: 'vimlesh' };
+app.get("/cgupdate", (req, res) => {
+  const aa1 = { oneliner: "vimlesh" };
   aa.cgUpdate(1, 101, 0, aa1);
   res.end();
 });
 
-app.post('/getPaths', (req, res) => {
+app.post("/getPaths", (req, res) => {
   res.send(mediaPath);
 });
 
-const io = require('socket.io')(server1, options);
-const ccgsocket = new CasparCGSocket('localhost', 5250);
+const io = require("socket.io")(http, options);
+const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 // udpPort.on("message", function (oscMessage, info) {
 
@@ -301,79 +288,79 @@ const ccgsocket = new CasparCGSocket('localhost', 5250);
 
 global.app = app;
 
-io.on('connection', (socket) => {
-  console.log('New Web Socket client connected');
-  socket.emit('connectionStatus', aa.connected.toString());
-  socket.on('disconnect', () => {
-    console.log('client disconnected');
+io.on("connection", (socket) => {
+  console.log("New Web Socket client connected");
+  socket.emit("connectionStatus", aa.connected.toString());
+  socket.on("disconnect", () => {
+    console.log("client disconnected");
   });
 });
 
-const path = require('path');
-app.use(express.static(path.join(__dirname, '..', 'client/public'))); //client folder build
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'client/public', 'index.html'));
+const path = require("path");
+app.use(express.static(path.join(__dirname, "..", "client/public"))); //client folder build
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "..", "client/public", "index.html"));
 });
 
-app.post('/startGameTimer', (req, res) => {
+app.post("/startGameTimer", (req, res) => {
   const data = req.body;
   console.log(data);
-  io.emit('startGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
+  io.emit("startGameTimer", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
 
-app.post('/pauseGameTimer', (req, res) => {
+app.post("/pauseGameTimer", (req, res) => {
   const data = req.body;
   console.log(data);
-  io.emit('pauseGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
+  io.emit("pauseGameTimer", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
-app.post('/resumeGameTimer', (req, res) => {
+app.post("/resumeGameTimer", (req, res) => {
   const data = req.body;
   console.log(data);
-  io.emit('resumeGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
+  io.emit("resumeGameTimer", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
 
-app.post('/recallPage', (req, res) => {
+app.post("/recallPage", (req, res) => {
   const data = req.body;
   // console.log(data)
-  io.emit('recallPage', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
+  io.emit("recallPage", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
 
-app.post('/updateData', (req, res) => {
+app.post("/updateData", (req, res) => {
   const data = req.body;
   // console.log(data)
-  io.emit('updateData', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
+  io.emit("updateData", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
-app.post('/stopGraphics', (req, res) => {
+app.post("/stopGraphics", (req, res) => {
   const data = req.body;
   // console.log(data)
-  io.emit('stopGraphics', req.body);
-  res.end('Sent The Commands' + JSON.stringify(req.body));
+  io.emit("stopGraphics", req.body);
+  res.end("Sent The Commands" + JSON.stringify(req.body));
 });
-app.post('/getCurrentCanvas', (req, res) => {
+app.post("/getCurrentCanvas", (req, res) => {
   const data = req.body;
-  io.emit('getCurrentCanvas', data);
+  io.emit("getCurrentCanvas", data);
   res.end(JSON.stringify(data));
 });
-app.post('/setCurrentCanvas', (req, res) => {
+app.post("/setCurrentCanvas", (req, res) => {
   const data = req.body;
-  io.emit('setCurrentCanvas', req.body);
+  io.emit("setCurrentCanvas", req.body);
   res.end(JSON.stringify(req.body));
 });
 
 var server;
 function startUdp() {
-  var udp = require('dgram');
-  server = udp.createSocket('udp4');
-  server.on('error', function (error) {
-    console.log('Error: ' + error);
+  var udp = require("dgram");
+  server = udp.createSocket("udp4");
+  server.on("error", function (error) {
+    console.log("Error: " + error);
     server.close();
   });
-  server.on('message', function (msg, info) {
+  server.on("message", function (msg, info) {
     aa.do(
       new AMCP.CustomCommand(
         `call 1-96 "document.getElementById('clock').getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML='${msg
@@ -385,33 +372,33 @@ function startUdp() {
       .catch((aa2) => console.log(aa2));
     // console.log(msg);
   });
-  server.on('listening', function () {
+  server.on("listening", function () {
     var address = server.address();
     var port = address.port;
     var family = address.family;
     var ipaddr = address.address;
-    console.log('Server is listening at port' + port);
-    console.log('Server ip :' + ipaddr);
-    console.log('Server is IP4/IP6 : ' + family);
+    console.log("Server is listening at port" + port);
+    console.log("Server ip :" + ipaddr);
+    console.log("Server is IP4/IP6 : " + family);
   });
 
   //emits after the socket is closed using socket.close();
-  server.on('close', function () {
-    console.log('Socket is closed !');
+  server.on("close", function () {
+    console.log("Socket is closed !");
   });
 
   server.bind(2222);
 }
-app.post('/stopUdpClock', (req, res) => {
+app.post("/stopUdpClock", (req, res) => {
   server.close();
 });
-app.post('/showUdpClock', (req, res) => {
+app.post("/showUdpClock", (req, res) => {
   startUdp();
   aa.do(
     new AMCP.CustomCommand(
       `play 1-96 [html] "${
-        'file:///' +
-        path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')
+        "file:///" +
+        path.join(__dirname, ".", "clock.html").replaceAll("\\", "/")
       }"`
     )
   )
@@ -419,36 +406,36 @@ app.post('/showUdpClock', (req, res) => {
     .catch((aa2) => console.log(aa2));
 });
 
-app.post('/html', (req, res) => {
-  io.emit('html', req.body);
+app.post("/html", (req, res) => {
+  io.emit("html", req.body);
   res.end(JSON.stringify(req.body));
 });
 
-app.post('/updateHtml', (req, res) => {
-  io.emit('updateHtml', { data: req.body.data });
-  res.end('');
+app.post("/updateHtml", (req, res) => {
+  io.emit("updateHtml", { data: req.body.data });
+  res.end("");
 });
 
-app.post('/loadHtml', (req, res) => {
-  fs.readFile(req.body.pageName, 'utf8', function (error, html) {
+app.post("/loadHtml", (req, res) => {
+  fs.readFile(req.body.pageName, "utf8", function (error, html) {
     if (error) {
       console.log(error);
     }
-    io.emit('loadHtml', {
+    io.emit("loadHtml", {
       html: html,
       data: req.body.data,
       clientId: req.body.clientId,
     });
-    res.end('');
+    res.end("");
   });
 });
 
-app.post('/callScript', (req, res) => {
-  io.emit('callScript', req.body);
-  res.end('');
+app.post("/callScript", (req, res) => {
+  io.emit("callScript", req.body);
+  res.end("");
 });
 
-app.post('/executeScript', (req, res) => {
-  io.emit('executeScript', req.body);
-  res.end('');
+app.post("/executeScript", (req, res) => {
+  io.emit("executeScript", req.body);
+  res.end("");
 });

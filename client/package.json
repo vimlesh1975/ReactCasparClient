@@ -65,7 +65,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "deploy2": "gh-pages-clean gh-pages -d build",
-    "start": "set PORT=10000 && set HTTPS=true&&set SSL_CRT_FILE=server.cert&&set SSL_KEY_FILE=server.key&&craco start",
+    "start": "set PORT=10000 && craco start",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
