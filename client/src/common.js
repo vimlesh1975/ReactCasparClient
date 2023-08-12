@@ -25,16 +25,35 @@ export const visibleInVisible = (canvas, i, dispatch) => {
 };
 
 export const saveFile = async (options, data, fileHandle = null) => {
-  try {
-    const handle = fileHandle || (await window.showSaveFilePicker(options));
-    const writable = await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-    console.log('File saved successfully!', handle.name);
-    return handle; // Return the FileHandle object
-  } catch (error) {
-    console.error('Error saving the file:', error);
-    throw error; // Throw the error to be caught by the caller
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = fileHandle || (await window.showSaveFilePicker(options));
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      console.log('File saved successfully!', handle.name);
+      return handle; // Return the FileHandle object
+    } catch (error) {
+      console.error('Error saving the file:', error);
+    }
+  } else {
+    const element = document.createElement('a');
+    element.href = URL.createObjectURL(data);
+    var ss = new Date().toLocaleTimeString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour12: false,
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    });
+    var retVal = prompt('Enter  file name to save : ', ss + '_FileName');
+    if (retVal !== null) {
+      element.download = retVal + (options.fileExtension ?? '.txt');
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
   }
 };
 export const generalFileName = () => {
@@ -208,7 +227,7 @@ export const rgbaCol = (color, opacity) =>
   opacity +
   ')';
 
-export var address1 = 'http://' + window.location.host.split(':')[0] + ':9000';
+export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const videoLayers = [1, 2, 3, 10000, 5];
@@ -278,7 +297,7 @@ export const htmlAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app/html';
   } else {
-    return 'http://localhost:9000/html';
+    return `${address1}/html`;
   }
 };
 
@@ -286,7 +305,7 @@ export const openaiAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app/';
   } else {
-    return 'http://localhost:9000/';
+    return `${address1}/`;
   }
 };
 
@@ -294,7 +313,7 @@ export const socketAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
-    return 'http://localhost:9000';
+    return `${address1}`;
   }
 };
 
@@ -335,7 +354,7 @@ export const executeScript = (str) => {
       });
   } else {
     axios
-      .post('http://localhost:9000/executeScript', {
+      .post(`${address1}/executeScript`, {
         data1: str,
         clientId: window.clientId,
       })

@@ -276,6 +276,7 @@ const SavePannel = () => {
             ss = currentFileName?.name;
         }
         const options = {
+            fileExtension: '.txt',
             suggestedName: ss,
             types: [{
                 description: 'text file',
