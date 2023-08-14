@@ -276,6 +276,7 @@ const SavePannel = () => {
             ss = currentFileName?.name;
         }
         const options = {
+            fileExtension: '.txt',
             suggestedName: ss,
             types: [{
                 description: 'text file',
@@ -312,31 +313,55 @@ const SavePannel = () => {
     }
 
     async function importCanvaslist() {
-        const [aa] = await window.showOpenFilePicker();
-        setCurrentFileName(aa);
-        currentFile = aa.name
-        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-        console.log(aa)
-        if (aa) {
+        var content;
+        if (window.showOpenFilePicker) {
+            const [aa] = await window.showOpenFilePicker();
+            setCurrentFileName(aa);
+            currentFile = aa.name
+            dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
             const file = await aa.getFile();
-            const content = await file.text();
-            var aa1 = content.split('\r\n')
-            aa1.splice(-1)
-            var updatedcanvasList = []
-            aa1.forEach(element => {
-                var cc = JSON.parse(element)
-                const lastFourLetters = (cc.pageName).substring(cc.pageName.length - 4);
-                if (lastFourLetters === '.txt') {
-                    const cc1 = { ...cc, pageName: cc.pageName.slice(0, -4) }
-                    updatedcanvasList.push(cc1)
-                }
-                else {
-                    updatedcanvasList.push(cc)
-                }
-            });
-            dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+            content = await file.text();
+            processContent(content)
         }
+        else {
+            var fInput = document.createElement("input"); //hidden input to open filedialog
+            fInput.setAttribute("type", "file"); //opens files
+            fInput.setAttribute("accept", ".txt"); ////only useful for inspector debugging
+            fInput.setAttribute("multiple", false); ////only useful for inspector debugging
+
+            fInput.click();
+            fInput.onchange = (e) => {
+                const file = e.target.files[0]
+                if (file) {
+                    fileReader = new FileReader();
+                    fileReader.onloadend = () => {
+                        content = fileReader.result;
+                        processContent(content)
+                    }
+                    fileReader.readAsText(file);
+                }
+            };
+        }
+
     }
+    const processContent = (content) => {
+        var aa1 = content.split('\r\n')
+        aa1.splice(-1)
+        var updatedcanvasList = []
+        aa1.forEach(element => {
+            var cc = JSON.parse(element)
+            const lastFourLetters = (cc.pageName).substring(cc.pageName.length - 4);
+            if (lastFourLetters === '.txt') {
+                const cc1 = { ...cc, pageName: cc.pageName.slice(0, -4) }
+                updatedcanvasList.push(cc1)
+            }
+            else {
+                updatedcanvasList.push(cc)
+            }
+        });
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+    }
+
 
     return (
         <div >

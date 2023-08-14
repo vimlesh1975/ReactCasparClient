@@ -68,6 +68,7 @@ const Scroll = () => {
         const data = new Blob([aa], { type: 'text/plain' });
 
         const options = {
+            fileExtension: '.txt',
             suggestedName: 'Scroll_' + generalFileName(),
             types: [
                 {

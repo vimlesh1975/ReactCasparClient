@@ -182,6 +182,7 @@ const OnelinerAndBreakingNews = () => {
         const data = new Blob([aa], { type: 'text/plain' });
 
         const options = {
+            fileExtension: '.txt',
             suggestedName: 'Oneliner_' + generalFileName(),
             types: [
                 {

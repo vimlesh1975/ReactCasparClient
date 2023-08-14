@@ -184,6 +184,7 @@ const Hockey = () => {
         });
         const data = new Blob([aa], { type: 'text/plain' });
         const options = {
+            fileExtension: '.txt',
             suggestedName: 'Team_' + generalFileName(),
             types: [
                 {

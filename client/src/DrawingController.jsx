@@ -1985,6 +1985,7 @@ const DrawingController = () => {
   };
   const exportSVG = (canvas) => {
     const options = {
+      fileExtension: '.svg',
       suggestedName: generalFileName(),
       types: [{
         description: 'svg file',
@@ -1997,6 +1998,7 @@ const DrawingController = () => {
 
   const exportJSON = (canvas) => {
     const options = {
+      fileExtension: '.json',
       suggestedName: generalFileName(),
       types: [
         {
@@ -2471,6 +2473,7 @@ const DrawingController = () => {
     var br = canvas.getActiveObject()?.getBoundingRect();
     var ss = generalFileName();
     const options = {
+      fileExtension: '.png',
       suggestedName: ss,
       types: [{
         description: 'png file',
@@ -2495,6 +2498,7 @@ const DrawingController = () => {
     selectAll(canvas);
     var ss = generalFileName();
     const options = {
+      fileExtension: '.png',
       suggestedName: ss,
       types: [{
         description: 'png file',

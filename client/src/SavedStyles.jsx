@@ -99,6 +99,7 @@ const SavedStyles = () => {
         });
         const data = new Blob([aa], { type: 'text/plain' });
         const options = {
+            fileExtension: '.style',
             suggestedName: 'Style_' + generalFileName(),
             types: [
                 {

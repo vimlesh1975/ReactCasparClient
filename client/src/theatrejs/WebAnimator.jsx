@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers } from '../common'
+import { findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -1760,9 +1760,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         const bb = aa.replaceAll('<//', '</')
         const file = new Blob([bb], { type: 'text/html' });
-        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
         const options = {
-            suggestedName: ss,
+            fileExtension: '.html',
+            suggestedName: generalFileName(),
             excludeAcceptAllOption: true,
             types: [{
                 description: 'Html file',
@@ -1772,14 +1772,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         var aa1;
         if (overRide) {
             aa1 = htmlfileHandle;
+            sethtmlfileHandle(aa1)
         }
         else {
-            aa1 = await window.showSaveFilePicker(options);
+            sethtmlfileHandle(await saveFile(options, file));
         }
-        sethtmlfileHandle(aa1)
-        const writable = await aa1.createWritable();
-        await writable.write(file);
-        await writable.close();
     }
 
     const importHtml = async (canvasContent1, animationContetent1) => {
@@ -1815,31 +1812,58 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     },
                 ],
             };
-            const [aa] = await window.showOpenFilePicker(pickerOpts);
-            if (aa) {
-                sethtmlfileHandle(aa);
-                deleteAllObjects();
-                const file = await aa.getFile();
-                const content = await file.text();
-                var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
-                var animationContetent = content.split('{state:')[1].split('});')[0];
-                if ((content.split("<script src='").length > 1) && (content.split("<script src='")[1].split('.')).length > 1) {
-                    const jsfilename1 = content.split("<script src='")[1].split('.')[0];
-                    setJsfilename(jsfilename1);
+
+            if (window.showOpenFilePicker) {
+                const [aa] = await window.showOpenFilePicker(pickerOpts);
+                if (aa) {
+                    sethtmlfileHandle(aa);
+                    deleteAllObjects();
+                    const file = await aa.getFile();
+                    const content = await file.text();
+                    processContent(content)
                 }
-                const pid = `project${fabric.Object.__uid++}`;
-                project = getProject(pid, { state: JSON.parse(animationContetent) });
-                setProjectId(pid)
+            } else {
+                var fInput = document.createElement("input"); //hidden input to open filedialog
+                fInput.setAttribute("type", "file"); //opens files
+                fInput.setAttribute("accept", ".html"); ////only useful for inspector debugging
+                fInput.setAttribute("multiple", false); ////only useful for inspector debugging
 
-                sheet = project.sheet('Sheet 1');
-                project.ready.then(() => {
-                    // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-                });
-
-                initialiseCore(canvasContent, true);
+                fInput.click();
+                fInput.onchange = (e) => {
+                    var fileReader;
+                    var content;
+                    const file = e.target.files[0]
+                    if (file) {
+                        fileReader = new FileReader();
+                        fileReader.onloadend = () => {
+                            content = fileReader.result;
+                            processContent(content)
+                        }
+                        fileReader.readAsText(file);
+                    }
+                };
             }
+
         }
 
+    }
+    const processContent = (content) => {
+        var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
+        var animationContetent = content.split('{state:')[1].split('});')[0];
+        if ((content.split("<script src='").length > 1) && (content.split("<script src='")[1].split('.')).length > 1) {
+            const jsfilename1 = content.split("<script src='")[1].split('.')[0];
+            setJsfilename(jsfilename1);
+        }
+        const pid = `project${fabric.Object.__uid++}`;
+        project = getProject(pid, { state: JSON.parse(animationContetent) });
+        setProjectId(pid)
+
+        sheet = project.sheet('Sheet 1');
+        project.ready.then(() => {
+            // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
+        });
+
+        initialiseCore(canvasContent, true);
     }
     const findElementWithId = (group, id) => {
         const objects = group.getObjects();

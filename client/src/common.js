@@ -25,16 +25,30 @@ export const visibleInVisible = (canvas, i, dispatch) => {
 };
 
 export const saveFile = async (options, data, fileHandle = null) => {
-  try {
-    const handle = fileHandle || (await window.showSaveFilePicker(options));
-    const writable = await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-    console.log('File saved successfully!', handle.name);
-    return handle; // Return the FileHandle object
-  } catch (error) {
-    console.error('Error saving the file:', error);
-    throw error; // Throw the error to be caught by the caller
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = fileHandle || (await window.showSaveFilePicker(options));
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      console.log('File saved successfully!', handle.name);
+      return handle; // Return the FileHandle object
+    } catch (error) {
+      console.error('Error saving the file:', error);
+    }
+  } else {
+    const element = document.createElement('a');
+    element.href = URL.createObjectURL(data);
+
+    var retVal = prompt(
+      'Enter  file name to save : ',
+      generalFileName() + '_FileName'
+    );
+    if (retVal !== null) {
+      element.download = retVal + (options.fileExtension ?? '.txt');
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
   }
 };
 export const generalFileName = () => {

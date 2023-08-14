@@ -15,7 +15,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 import React, { useEffect } from 'react';
 
-import { endpoint } from './common';
+import { endpoint, generalFileName, saveFile } from './common';
 import { useRef, Suspense, useState } from 'react';
 import * as STDLIB from 'three-stdlib';
 
@@ -737,32 +737,6 @@ const Threejs = () => {
     }
   }
 
-  // function importScenefromdatagltf(inp) {
-  //     const loader = new GLTFLoader();
-  //     loader.parse(inp, function (gltf) {
-  //         setScene1(gltf.scene);
-  //     });
-  // }
-
-  // async function drawingFileSaveAsjson() {
-  //     const element = document.createElement("a");
-  //     var aa = JSON.stringify(scene1.toJSON());
-  //     const file = new Blob([aa], { type: 'text/plain' });
-  //     element.href = URL.createObjectURL(file);
-  //     var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-  //     const options = {
-  //         suggestedName: ss,
-  //         types: [{
-  //             description: 'json file',
-  //             accept: { 'application/json': ['.json'] },
-  //         }],
-  //     };
-  //     const aa1 = await window.showSaveFilePicker(options);
-  //     const writable = await aa1.createWritable();
-  //     await writable.write(file);
-  //     await writable.close();
-
-  // }
   async function drawingFileSaveAsgltf() {
     const dd = scene1;
     dd.children.splice(3, 1); // remove transfer control from export
@@ -773,7 +747,7 @@ const Threejs = () => {
         downloadJSON(gltf);
       },
       function (error) {
-        console.log('An error happened');
+        console.log('An error happened', error);
       },
       {}
     );
@@ -793,21 +767,12 @@ const Threejs = () => {
   window.studio = studio;
 
   async function downloadJSON(gltf) {
-    const element = document.createElement('a');
     var aa = JSON.stringify(gltf);
     const file = new Blob([aa], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    var ss = new Date().toLocaleTimeString('en-US', {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour12: false,
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    });
+
     const options = {
-      suggestedName: ss,
+      fileExtension: '.gltf',
+      suggestedName: generalFileName(),
       types: [
         {
           description: 'gltf file',
@@ -815,10 +780,8 @@ const Threejs = () => {
         },
       ],
     };
-    const aa1 = await window.showSaveFilePicker(options);
-    const writable = await aa1.createWritable();
-    await writable.write(file);
-    await writable.close();
+
+    saveFile(options, file);
   }
   const [f0, setF0] = useState('Vimlesh Kumar');
 
@@ -1281,6 +1244,7 @@ const Threejs = () => {
 
   async function saveList() {
     const options1 = {
+      fileExtension: '.txt',
       suggestedName: 'file1.txt',
       types: [
         {
@@ -1290,9 +1254,9 @@ const Threejs = () => {
       ],
     };
 
-    const aa1 = await window.showSaveFilePicker(options1);
+    // const aa1 = await window.showSaveFilePicker(options1);
 
-    const writable1 = await aa1.createWritable();
+    // const writable1 = await aa1.createWritable();
     var bb = '';
     aa.forEach((val) => {
       bb +=
@@ -1305,8 +1269,9 @@ const Threejs = () => {
     });
     const file1 = new Blob([bb], { type: 'text/plain' });
 
-    await writable1.write(file1);
-    await writable1.close();
+    // await writable1.write(file1);
+    // await writable1.close();
+    saveFile(options1, file1);
   }
   async function openList(file) {
     if (file) {
