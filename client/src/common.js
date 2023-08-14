@@ -292,7 +292,7 @@ export const htmlAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app/html';
   } else {
-    return 'http://localhost:9000/html';
+    return address1 + '/html';
   }
 };
 
@@ -300,15 +300,16 @@ export const openaiAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app/';
   } else {
-    return 'http://localhost:9000/';
+    return address1;
   }
 };
 
 export const socketAddress = () => {
+  console.log(address1);
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
-    return 'http://localhost:9000';
+    return address1;
   }
 };
 
@@ -316,7 +317,7 @@ export const streamingAddress = () => {
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
-    return 'http://localhost:8000';
+    return 'http://' + window.location.host.split(':')[0] + ':8000';
   }
 };
 export const sendtohtml = (canvas, layerNumber) => {
@@ -349,7 +350,7 @@ export const executeScript = (str) => {
       });
   } else {
     axios
-      .post('http://localhost:9000/executeScript', {
+      .post(address1 + '/executeScript', {
         data1: str,
         clientId: window.clientId,
       })
