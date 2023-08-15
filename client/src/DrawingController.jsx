@@ -64,6 +64,7 @@ var html;
 
 fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
+fabric.disableStyleCopyPaste = true;
 
 // Extend Fabric.js objects to include visibility property
 // fabric.Object.prototype.visible = true;
