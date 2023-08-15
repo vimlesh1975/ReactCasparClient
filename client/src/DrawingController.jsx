@@ -1362,55 +1362,58 @@ const DrawingController = () => {
 
 
   const handleKeyDown = useCallback((event) => {
+
     const { key, keyCode, ctrlKey } = event;
     const activeObjects = window.editor.canvas?.getActiveObjects();
+    if (document.activeElement === window.editor.canvas.wrapperEl) {
+      switch (keyCode) {
+        case 37: // Left arrow key
+          moveSelected(Direction.LEFT);
+          break;
+        case 38: // Up arrow key
+          moveSelected(Direction.UP);
+          break;
+        case 39: // Right arrow key
+          moveSelected(Direction.RIGHT);
+          break;
+        case 40: // Down arrow key
+          moveSelected(Direction.DOWN);
+          break;
+        default:
+          break;
+      }
 
-    switch (keyCode) {
-      case 37: // Left arrow key
-        moveSelected(Direction.LEFT);
-        break;
-      case 38: // Up arrow key
-        moveSelected(Direction.UP);
-        break;
-      case 39: // Right arrow key
-        moveSelected(Direction.RIGHT);
-        break;
-      case 40: // Down arrow key
-        moveSelected(Direction.DOWN);
-        break;
-      default:
-        break;
-    }
-
-    if (key === 'Delete') {
-      activeObjects.forEach((item) => {
-        if (!(item.type === 'textbox' && item.isEditing)) {
-          deleteItemfromtimeline(kf, xpositions, dispatch);
+      if (key === 'Delete') {
+        activeObjects.forEach((item) => {
+          if (!(item.type === 'textbox' && item.isEditing)) {
+            deleteItemfromtimeline(kf, xpositions, dispatch);
+          }
+        });
+      } else if (ctrlKey) {
+        if (key.toLowerCase() === 'c') {
+          const item = activeObjects[0];
+          if (!(item?.type === 'textbox' && item?.isEditing)) {
+            copy(window.editor.canvas);
+          }
+        } else if (key.toLowerCase() === 'v') {
+          const item = activeObjects[0];
+          if (!(item?.type === 'textbox' && item?.isEditing)) {
+            paste(window.editor.canvas);
+          }
+        } else if (key.toLowerCase() === 'z') {
+          window.editor.canvas && undo(window.editor.canvas);
+        } else if (key.toLowerCase() === 'r') {
+          event.preventDefault();
+          window.editor.canvas && redo(window.editor.canvas);
+        } else if (key.toLowerCase() === 'a') {
+          event.preventDefault();
+          selectAll(window.editor.canvas);
+        } else if (key === 'Enter') {
+          previewHtml(window.editor.canvas);
         }
-      });
-    } else if (ctrlKey) {
-      if (key.toLowerCase() === 'c') {
-        const item = activeObjects[0];
-        if (!(item?.type === 'textbox' && item?.isEditing)) {
-          copy(window.editor.canvas);
-        }
-      } else if (key.toLowerCase() === 'v') {
-        const item = activeObjects[0];
-        if (!(item?.type === 'textbox' && item?.isEditing)) {
-          paste(window.editor.canvas);
-        }
-      } else if (key.toLowerCase() === 'z') {
-        window.editor.canvas && undo(window.editor.canvas);
-      } else if (key.toLowerCase() === 'r') {
-        event.preventDefault();
-        window.editor.canvas && redo(window.editor.canvas);
-      } else if (key.toLowerCase() === 'a') {
-        event.preventDefault();
-        selectAll(window.editor.canvas);
-      } else if (key === 'Enter') {
-        previewHtml(window.editor.canvas);
       }
     }
+
   }, [kf, xpositions, dispatch]);
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);

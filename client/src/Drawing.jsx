@@ -70,8 +70,15 @@ function handleDrop(e, canvas) {
   }
 }
 
+
 const Drawing = ({ canvasOutput }) => {
   const { editor, onReady } = useFabricJSEditor();
+
+  const onReady2 = (canvas1) => {
+    onReady(canvas1)
+    canvas1.wrapperEl.setAttribute('tabindex', '1'); // Set the tabindex attribute to make it focusable
+  }
+
   const dispatch = useDispatch();
 
   const [dlgText, setDlgText] = useState("");
@@ -237,7 +244,7 @@ const Drawing = ({ canvasOutput }) => {
     <div>
       <FabricJSCanvas
         className={canvasOutput ? "canvasOutput" : "canvas"}
-        onReady={onReady}
+        onReady={(dd) => onReady2(dd)}
       />
       {/* <div style={{ zoom: zoom }}> <svg width={1920 * 0.533} height={1080 * 0.533}> <rect x='100' y='100' width="800" height="400" style={{ fill: 'transparent', stroke: "red", strokeWidth: 2 }} /></svg></div> */}
       <ContextMenu
