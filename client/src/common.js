@@ -850,7 +850,6 @@ export const fontLists = [
   'Bahnschrift',
   'Bahnschrift Condensed',
   'Bahnschrift Light',
-  'Bahnschrift Light',
   'Bahnschrift Light Condensed',
   'Bahnschrift SemiBold',
   'Bahnschrift SemiBold Condensed',
