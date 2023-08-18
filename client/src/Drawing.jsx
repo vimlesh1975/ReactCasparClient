@@ -1,13 +1,25 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from "./ContextMenu";
-import { useEffect } from "react";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fabric } from "fabric";
 import {
   Uploaddropedfile,
   createTextBoxforDragedText,
 } from "./DrawingController";
 import { useSelector, useDispatch } from "react-redux";
+
+const allelements = [
+  "Line",
+  "Circle",
+  "Triangle",
+  "Ellipse",
+  "Rect",
+  "Polygon",
+  "Group",
+  "Textbox",
+  "Image",
+  "Path",
+];
 
 export const mousedownandmousemoveevent = (canvas) => {
   canvas.on("mouse:down", function (opt) {
@@ -31,18 +43,7 @@ export const mousedownandmousemoveevent = (canvas) => {
     }
   });
 };
-const allelements = [
-  "Line",
-  "Circle",
-  "Triangle",
-  "Ellipse",
-  "Rect",
-  "Polygon",
-  "Group",
-  "Textbox",
-  "Image",
-  "Path",
-];
+
 
 function handleDrop(e, canvas) {
   e.preventDefault();
@@ -74,11 +75,6 @@ function handleDrop(e, canvas) {
 const Drawing = ({ canvasOutput }) => {
   const { editor, onReady } = useFabricJSEditor();
 
-  const onReady2 = (canvas1) => {
-    onReady(canvas1)
-    canvas1.wrapperEl.setAttribute('tabindex', '1'); // Set the tabindex attribute to make it focusable
-  }
-
   const dispatch = useDispatch();
 
   const [dlgText, setDlgText] = useState("");
@@ -88,10 +84,10 @@ const Drawing = ({ canvasOutput }) => {
   const showIdRef = useRef(showId);
   window.editor = editor;
   function cancelZoomAndPan(canvas) {
-    canvas.on("mouse:wheel", null);
-    canvas.on("mouse:down", null);
-    canvas.on("mouse:move", null);
-    canvas.on("mouse:up", null);
+    canvas.off("mouse:wheel");
+    canvas.off("mouse:down");
+    canvas.off("mouse:move");
+    canvas.off("mouse:up");
   }
   function xyz(canvas) {
     canvas.on({
@@ -244,13 +240,16 @@ const Drawing = ({ canvasOutput }) => {
     <div>
       <FabricJSCanvas
         className={canvasOutput ? "canvasOutput" : "canvas"}
-        onReady={(dd) => onReady2(dd)}
+        onReady={(canvas) => {
+          onReady(canvas);
+          canvas.wrapperEl.setAttribute("tabindex", "1");
+        }}
       />
       {/* <div style={{ zoom: zoom }}> <svg width={1920 * 0.533} height={1080 * 0.533}> <rect x='100' y='100' width="800" height="400" style={{ fill: 'transparent', stroke: "red", strokeWidth: 2 }} /></svg></div> */}
       <ContextMenu
         canvas={editor?.canvas}
       />
-      {
+      {showId &&
         <span
           style={{
             backgroundColor: "black",

@@ -34,6 +34,7 @@ function getKeyframes(sheet, tracks, objectKey) {
 }
 
 
+
 studio.initialize();
 studio.ui.hide();
 
@@ -108,6 +109,74 @@ const DrawingforTheatrejs = () => {
 
     window.dispatch = dispatch;
     window.editor = editor;
+
+    // const extensionConfig = {
+    //     id: "hello-world-extension",
+    //     toolbars: {
+    //         global(set, studio) {
+    //             set([
+    //                 {
+    //                     type: "Icon",
+    //                     title: "Example Icon",
+    //                     svgSource: "👁",
+    //                     onClick: () => studio.createPane("example")
+    //                 }
+    //             ])
+    //         },
+    //         exampleToolbar(set, studio) {
+    //             const toolsetConfig = editor?.canvas.getObjects().flatMap((obj) => {
+    //                 return [
+    //                     {
+    //                         type: "Icon",
+    //                         title: "Example Icon",
+    //                         svgSource: obj.visible,
+    //                         onClick: () => {
+    //                             obj.set({ visible: !obj.visible });
+    //                             editor.canvas.requestRenderAll();
+    //                         }
+    //                     },
+    //                     {
+    //                         type: "Icon",
+    //                         title: "Example Icon",
+    //                         svgSource: obj.left,
+    //                         onClick: () => {
+    //                             obj.set({ left: 500 });
+    //                             editor.canvas.requestRenderAll();
+    //                         }
+    //                     },
+    //                     {
+    //                         type: "Icon",
+    //                         title: "Example Icon",
+    //                         svgSource: obj.top,
+    //                         onClick: () => {
+    //                             obj.set({ top: 500 });
+    //                             editor.canvas.requestRenderAll();
+    //                         },
+    //                     }
+    //                 ];
+    //             });
+
+    //             set(toolsetConfig);
+    //             return () => console.log("toolbar removed!");
+    //         }
+    //     },
+    //     panes: [
+    //         {
+    //             class: "example",
+    //             mount: ({ paneId, node }) => {
+    //                 node.innerHTML = <button>Heloo Sir</button>
+    //                 studio.ui.renderToolset("exampleToolbar", node);
+    //                 return () => console.log("pane closed!");
+    //             }
+    //         }
+    //     ]
+    // };
+
+    // studio.extend(extensionConfig, { __experimental_reconfigure: true });
+
+
+
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -223,8 +292,10 @@ const WebAnimator = () => {
                 const aa = canvas.getObjects().find((item) => {
                     return newSelection[0]?.address?.objectKey === item.id;
                 })
-                canvas.setActiveObject(aa);
-                canvas.requestRenderAll()
+                if (aa) {
+                    canvas.setActiveObject(aa);
+                    canvas.requestRenderAll()
+                }
             }
         })
         return () => {

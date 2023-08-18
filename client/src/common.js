@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '160823_1';
+export const buildDate = '180823_1';
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -163,18 +163,21 @@ export const sendBackward = (canvas, kf, xpositions, dispatch) => {
 };
 
 export const findElementWithId = (group, id) => {
-  const objects = group.getObjects();
-  for (let i = 0; i < objects.length; i++) {
-    const element = objects[i];
-    if (element.type === 'group') {
-      const result = findElementWithId(element, id);
-      if (result) {
-        return result;
+  if (group) {
+    const objects = group.getObjects();
+    for (let i = 0; i < objects.length; i++) {
+      const element = objects[i];
+      if (element.type === 'group') {
+        const result = findElementWithId(element, id);
+        if (result) {
+          return result;
+        }
+      } else if (element.id === id) {
+        return element;
       }
-    } else if (element.id === id) {
-      return element;
     }
   }
+
   return null;
 };
 export const hexToRGB = (hex) => {
