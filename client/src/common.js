@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '180823_1';
+export const buildDate = '190823_1';
 
 export const lockUnlock = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
+import { createRoot } from 'react-dom/client'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
@@ -21,6 +21,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import Papa from "papaparse";
+import ExtensionPannel from './ExtensionPannel';
+
+import { Provider } from 'react-redux'
+
+import store from '../store'
 
 function getKeyframes(sheet, tracks, objectKey) {
     const json = studio.createContentOfSaveFile(sheet.address.projectId);
@@ -110,69 +115,42 @@ const DrawingforTheatrejs = () => {
     window.dispatch = dispatch;
     window.editor = editor;
 
-    // const extensionConfig = {
-    //     id: "hello-world-extension",
-    //     toolbars: {
-    //         global(set, studio) {
-    //             set([
-    //                 {
-    //                     type: "Icon",
-    //                     title: "Example Icon",
-    //                     svgSource: "👁",
-    //                     onClick: () => studio.createPane("example")
-    //                 }
-    //             ])
-    //         },
-    //         exampleToolbar(set, studio) {
-    //             const toolsetConfig = editor?.canvas.getObjects().flatMap((obj) => {
-    //                 return [
-    //                     {
-    //                         type: "Icon",
-    //                         title: "Example Icon",
-    //                         svgSource: obj.visible,
-    //                         onClick: () => {
-    //                             obj.set({ visible: !obj.visible });
-    //                             editor.canvas.requestRenderAll();
-    //                         }
-    //                     },
-    //                     {
-    //                         type: "Icon",
-    //                         title: "Example Icon",
-    //                         svgSource: obj.left,
-    //                         onClick: () => {
-    //                             obj.set({ left: 500 });
-    //                             editor.canvas.requestRenderAll();
-    //                         }
-    //                     },
-    //                     {
-    //                         type: "Icon",
-    //                         title: "Example Icon",
-    //                         svgSource: obj.top,
-    //                         onClick: () => {
-    //                             obj.set({ top: 500 });
-    //                             editor.canvas.requestRenderAll();
-    //                         },
-    //                     }
-    //                 ];
-    //             });
+    const extensionConfig = {
+        id: "hello-world-extension",
+        toolbars: {
+            global(set, studio) {
+                set([
+                    {
+                        type: "Icon",
+                        title: "Extension",
+                        svgSource: "👁",
+                        onClick: () => {
+                            studio.createPane("Basic");
+                        }
+                    }
+                ])
+            },
 
-    //             set(toolsetConfig);
-    //             return () => console.log("toolbar removed!");
-    //         }
-    //     },
-    //     panes: [
-    //         {
-    //             class: "example",
-    //             mount: ({ paneId, node }) => {
-    //                 node.innerHTML = <button>Heloo Sir</button>
-    //                 studio.ui.renderToolset("exampleToolbar", node);
-    //                 return () => console.log("pane closed!");
-    //             }
-    //         }
-    //     ]
-    // };
+        },
+        panes: [
+            {
+                class: 'Basic',
+                mount: ({ node }) => {
+                    const root = createRoot(node)
+                    root.render(
+                        <Provider store={store}>
+                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} />
+                        </Provider>
+                    )
+                    return () => {
+                        root.unmount();
+                    }
+                }
+            }
+        ],
+    };
 
-    // studio.extend(extensionConfig, { __experimental_reconfigure: true });
+    studio.extend(extensionConfig, { __experimental_reconfigure: true });
 
 
 
