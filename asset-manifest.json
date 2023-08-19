@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/ReactCasparClient/static/css/main.1d9431df.css",
-    "main.js": "/ReactCasparClient/static/js/main.5ded62d0.js",
+    "main.css": "/ReactCasparClient/static/css/main.4ab6373e.css",
+    "main.js": "/ReactCasparClient/static/js/main.fb90def9.js",
     "static/js/725.606a1226.chunk.js": "/ReactCasparClient/static/js/725.606a1226.chunk.js",
     "index.html": "/ReactCasparClient/index.html",
     "static/media/canvasBg.svg": "/ReactCasparClient/static/media/canvasBg.318f03422b7360431e95.svg",
-    "main.1d9431df.css.map": "/ReactCasparClient/static/css/main.1d9431df.css.map",
-    "main.5ded62d0.js.map": "/ReactCasparClient/static/js/main.5ded62d0.js.map",
+    "main.4ab6373e.css.map": "/ReactCasparClient/static/css/main.4ab6373e.css.map",
+    "main.fb90def9.js.map": "/ReactCasparClient/static/js/main.fb90def9.js.map",
     "725.606a1226.chunk.js.map": "/ReactCasparClient/static/js/725.606a1226.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1d9431df.css",
-    "static/js/main.5ded62d0.js"
+    "static/css/main.4ab6373e.css",
+    "static/js/main.fb90def9.js"
   ]
 }
