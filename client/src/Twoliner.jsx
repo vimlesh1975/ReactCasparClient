@@ -3,7 +3,7 @@ import { stopGraphics, recallPage, templateLayers } from './common'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { iniTwoLiner } from './hockeyData'
 import { useSelector } from 'react-redux'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 
 

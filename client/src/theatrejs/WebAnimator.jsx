@@ -135,7 +135,8 @@ const DrawingforTheatrejs = () => {
         panes: [
             {
                 class: 'Basic',
-                mount: ({ node }) => {
+                mount({ node }) {
+                    console.log(node)
                     const root = createRoot(node)
                     root.render(
                         <Provider store={store}>

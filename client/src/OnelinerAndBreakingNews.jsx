@@ -3,7 +3,7 @@ import { endpoint, stopGraphics, updateGraphics, executeScript, generalFileName,
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';

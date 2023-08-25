@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { FiFile } from "react-icons/fi";
 import { FaSave } from "react-icons/fa";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnailTheatrejs from './DrawingThumbnailTheatrejs'

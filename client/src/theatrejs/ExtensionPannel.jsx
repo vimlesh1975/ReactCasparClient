@@ -2,7 +2,7 @@ import React from 'react'
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const ExtensionPannel = ({ sheet, arrObject, studio }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
