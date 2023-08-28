@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
@@ -182,7 +182,7 @@ const DrawingforTheatrejs = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor])
 
-    return (<div >
+    return (<div id='aaa' >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
     </div>);
 };
@@ -190,6 +190,8 @@ const DrawingforTheatrejs = () => {
 const arrObject = [];
 
 const WebAnimator = () => {
+
+    const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
     const [fps, setFps] = useState(25);
@@ -400,6 +402,7 @@ const WebAnimator = () => {
                 <ul>
                     <li>Add<ul >
                         <li onClick={() => addItem(addImage)}>Image</li>
+                        <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
                         <li onClick={() => addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
                         <li onClick={() => addItem(createTextBox)}>Text T</li>
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
@@ -1930,6 +1933,24 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
         return null;
     };
+    const addWebCam = canvas => {
+        var video1 = new fabric.Image(video1El.current, {
+            // width: 1920,
+            // height: 1080
+        });
+        canvas.add(video1).setActiveObject(video1);;
+
+        fabric.util.requestAnimFrame(function render() {
+            canvas.renderAll();
+            fabric.util.requestAnimFrame(render);
+        });
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
+            video1El.current.srcObject = stream;
+            // console.log(stream)
+            video1El.current.play();
+        });
+    }
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
@@ -2138,7 +2159,15 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     // }
 
     return (<>
+        <video
+            ref={video1El}
+            loop
+            // muted
+            width="1920"
+            height="1080"
+            style={{ display: 'none' }}        >
 
+        </video>
         <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
             <button title='ReactCasparClient Save to localstorage button' onClick={() => {
                 deleteAllObjects();
@@ -2187,10 +2216,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }}>Overwrite</button>}
             {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import</button>
-
-            {/* <button onClick={() => goto()}>goto</button> */}
-            {/* <button onClick={() => changePropOfObject(studio.selection[0]?.address?.objectKey, 'top', 100)}>changePropOfObject</button> */}
-
             Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
