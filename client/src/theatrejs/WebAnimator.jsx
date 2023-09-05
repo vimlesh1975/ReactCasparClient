@@ -1092,6 +1092,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                       stroke: core.types.rgba(element.stroke),
                   };
               }
+              if (element.type === 'path') {
+                const pathProps = {};
+                element.path.forEach((element, i) => {
+                    pathProps['Point' + i] = { ...element };
+                });
+                obj1 = { ...obj1, ...pathProps }
+            }
               arrObject[i] = sheet_${layerNumber}.object(element.id, {
                     left: element.left,
                     top: element.top,

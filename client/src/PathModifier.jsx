@@ -159,10 +159,10 @@ const eventHandlerMouseMove = e => {
         temprect = new fabric.Path(currentValue, {
             shadow: shadowOptions,
             opacity: 1,
-            fill: 'red',
+            fill: '#ff0000',
             hasRotatingPoint: true,
             objectCaching: false,
-            stroke: 'yellow',
+            stroke: '#ffff00',
             strokeWidth: 2,
         });
         currentValue.pop();
@@ -189,9 +189,9 @@ const eventHandlerMouseDown = (e) => {
         }
         temprect = new fabric.Path(currentValue, {
             shadow: { ...shadowOptions, blur: 0 },
-            fill: 'red',
+            fill: '#ff0000',
             objectCaching: false,
-            stroke: 'yellow',
+            stroke: '#ffff00',
             strokeWidth: 2,
         });
         window.editor.canvas.add(temprect);
@@ -303,9 +303,9 @@ const PathModifier = () => {
                 class: 'class_' + fabric.Object.__uid,
                 shadow: shadowOptions,
                 opacity: 1,
-                fill: 'red',
+                fill: '#ff0000',
                 objectCaching: false,
-                stroke: 'yellow',
+                stroke: '#ffff00',
                 strokeWidth: 2,
 
             });
