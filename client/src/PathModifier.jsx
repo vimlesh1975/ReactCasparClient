@@ -63,17 +63,46 @@ const eventHandlerMouseDown = (e) => {
 
 
 
-function renderIcon(icon) {
+function renderIcon(icon, point) {
     return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
-        // var size = this.cornerSize;
         ctx.save();
-        //   ctx.translate(left, top);
-        //   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
         ctx.font = "35px Georgia";
 
         ctx.textAlign = "center";
         ctx.fillText(icon, left, top)
         ctx.restore();
+
+        if (point[0] === 'C' && icon % 10 === 1) {
+            ctx.beginPath();
+            ctx.moveTo(left, top);
+        } else {
+            ctx.lineTo(left, top);
+            ctx.stroke();
+        }
+
+        if (
+            (point[0] !== 'M' && point[0] === 'C' && icon % 10 !== 2) ||
+            (point[0] === 'Q' && icon % 10 !== 1)
+        ) {
+            // Draw the circle
+            ctx.save();
+
+            ctx.beginPath(); // Begin a new path
+            ctx.arc(left, top, 5, 0, 2 * Math.PI); // Define the circle
+            ctx.fillStyle = 'black'; // Set the fill color
+            ctx.fill(); // Fill the circle with the specified color
+            ctx.closePath(); // Close the path (optional, but good practice)
+            ctx.restore();
+        } else {
+            // Draw the circle
+            ctx.save();
+            ctx.beginPath(); // Begin a new path
+            ctx.arc(left, top, 5, 0, 2 * Math.PI); // Define the circle
+            ctx.fillStyle = 'white'; // Set the fill color
+            ctx.fill(); // Fill the circle with the specified color
+            ctx.closePath(); // Close the path (optional, but good practice)
+            ctx.restore();
+        }
     }
 }
 
@@ -220,7 +249,7 @@ const PathModifier = () => {
                             actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
                             actionName: 'modifyPolygon',
                             pointIndex: index,
-                            render: renderIcon(`${index + 1}0`)
+                            render: renderIcon(`${index + 1}0`, point)
 
                         });
                         if ((point[0] === 'Q') || (point[0] === 'C')) {
@@ -229,7 +258,7 @@ const PathModifier = () => {
                                 actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler2),
                                 actionName: 'modifyPolygon2',
                                 pointIndex: index,
-                                render: renderIcon(`${index + 1}1`)
+                                render: renderIcon(`${index + 1}1`, point)
                             });
                         }
                         if (point[0] === 'C') {
@@ -238,7 +267,7 @@ const PathModifier = () => {
                                 actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler3),
                                 actionName: 'modifyPolygon3',
                                 pointIndex: index,
-                                render: renderIcon(`${index + 1}2`)
+                                render: renderIcon(`${index + 1}2`, point)
                             });
                         }
                     }
