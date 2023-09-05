@@ -1219,7 +1219,7 @@ export const paste = (canvas) => {
         _clipboard.left += 10;
         canvas?.setActiveObject(clonedObj);
         clonedObj.on("mousedblclick", () => {
-          window.edit();
+          window.edit(window.dispatch);
         });
         canvas?.requestRenderAll();
       },
@@ -1246,7 +1246,7 @@ export const createShape = (canvas, shape, size = 0.4) => {
   });
   canvas.add(rect).setActiveObject(rect);
   rect.on("mousedblclick", () => {
-    window.edit();
+    window.edit(window.dispatch);
   });
   canvas.requestRenderAll();
   rect.animate("top", Math.random() * 500, {

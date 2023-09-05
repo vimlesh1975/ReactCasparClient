@@ -26,6 +26,7 @@ import ExtensionPannel from './ExtensionPannel';
 import { Provider } from 'react-redux'
 
 import store from '../store'
+import { edit } from '../PathModifier'
 
 function getKeyframes(sheet, tracks, objectKey) {
     const json = studio.createContentOfSaveFile(sheet.address.projectId);
@@ -47,6 +48,17 @@ studio.ui.hide();
 var project = getProject('Fabricjs Object Animation');
 var sheet;
 
+export const syncProps = (mypath, myObj) => {
+    studio.transaction(({ set }) => {
+        mypath.path.forEach((val, i) => {
+            val.forEach((val1, ii) => {
+                set(myObj.props['Point' + i][ii], val1);
+            });
+        });
+    });
+};
+
+
 var mouseDown = 0;
 document.body.onmousedown = function () {
     mouseDown = 1;
@@ -55,7 +67,7 @@ document.body.onmouseup = function () {
     mouseDown = 0;
 }
 
-const getObjectbyId = id => {
+export const getObjectbyId = id => {
     return arrObject.find(object => object.address.objectKey === id)
 }
 // const findElementWithId = (group, id) => {
@@ -152,9 +164,6 @@ const DrawingforTheatrejs = () => {
     };
 
     studio.extend(extensionConfig, { __experimental_reconfigure: true });
-
-
-
 
 
     useEffect(() => {
@@ -720,14 +729,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach((element, i) => {
                 console.log(element);
-                // console.log(element.id);
-                // console.log(element.fill);
-                // console.log(element.stroke);
-                // console.log(element.shadow?.color);
-
-                // console.log((new fabric.Color(element.fill)).getSource());
-                // console.log((new fabric.Color(element.stroke)).getSource());
-                // console.log((new fabric.Color(element.shadow.color)).getSource());
 
                 if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
@@ -752,7 +753,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     else if (isColorObjectfill) {
                         obj1 = {
                             ...obj1,
-                            // fill: ((element.fill).toString().startsWith("#")) ? types.rgba(hexToRGB(element.fill)) : types.rgba(element.fill),
                             fill: (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) ? types.rgba(element.fill) : types.rgba(rgbaArrayToObject(element.fill)),
                         };
                     }
@@ -760,7 +760,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         const colorStops = element.fill.colorStops.map((colorStop) => {
                             return {
                                 offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
-                                // color: types.rgba(hexToRGB(colorStop.color)),
                                 color: ((colorStop.color).toString().startsWith("rgb")) ? types.rgba(rgbaArrayToObject(colorStop.color)) : types.rgba(hexToRGB(colorStop.color)),
                                 opacity: types.number(colorStop.opacity ? parseFloat(colorStop.opacity) : 1, { range: [0, 1] })
                             };
@@ -780,13 +779,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     if (isColorObjectStroke) {
                         obj1 = {
                             ...obj1,
-                            // stroke: ((element.stroke).toString().startsWith("#")) ? types.rgba(hexToRGB(element.stroke)) : types.rgba(element.stroke),
                             stroke: (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) ? types.rgba(element.stroke) : types.rgba(rgbaArrayToObject(element.stroke)),
                         };
                     }
                     obj1 = {
                         ...obj1,
-                        // shadow: { ...element.shadow, color: ((element.shadow.color).toString().startsWith("#")) ? types.rgba(hexToRGB(element.shadow.color)) : types.rgba(element.shadow.color) },
                         shadow: { ...element.shadow, color: (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) ? types.rgba(element.shadow.color) : types.rgba(rgbaArrayToObject(element.shadow.color)) },
                     };
 
@@ -836,6 +833,14 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         shadow: { ...shadowOptions, color: types.rgba(hexToRGB(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
                     };
 
+                }
+
+                if (element.type === 'path') {
+                    const pathProps = {};
+                    element.path.forEach((element, i) => {
+                        pathProps['Point' + i] = { ...element };
+                    });
+                    obj1 = { ...obj1, ...pathProps }
                 }
 
                 arrObject[i] = sheet.object(element.id, {
@@ -919,6 +924,22 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         skewX: val.skewX,
                         skewY: val.skewY,
                     });
+                    if (element.type === 'path') {
+                        const newPath = [...element.path];
+                        newPath.forEach((_, i) => {
+                            const ss = [];
+                            if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
+                            if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
+                            if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
+                            if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
+                            if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
+                            if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
+                            if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                            newPath[i] = ss;
+                        });
+                        element.set({ path: newPath, objectCaching: false, })
+                    }
+
                     element.setCoords();
                     canvas.requestRenderAll();
                 });
@@ -941,9 +962,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
                 element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
                 element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+                element.on('mousedblclick', () => edit(dispatch), false)
+
             })
         })
     }
+
     const reset = () => {
         localStorage.removeItem('theatre-0.4.persistent');
         window.location.reload();
