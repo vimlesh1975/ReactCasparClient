@@ -1554,6 +1554,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     stroke: core.types.rgba(element.stroke),
                 };
             }
+            if (element.type === 'path') {
+                const pathProps = {};
+                element.path.forEach((element, i) => {
+                    pathProps['Point' + i] = { ...element };
+                });
+                obj1 = { ...obj1, ...pathProps }
+            }
             arrObject[i] = sheet.object(element.id, {
                 left: element.left,
                 left: element.left,
@@ -1635,6 +1642,21 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                             skewX: val.skewX,
                             skewY: val.skewY,
                 });
+                if (element.type === 'path') {
+                    const newPath = [...element.path];
+                    newPath.forEach((_, i) => {
+                        const ss = [];
+                        if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
+                        if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
+                        if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
+                        if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
+                        if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
+                        if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
+                        if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                        newPath[i] = ss;
+                    });
+                    element.set({ path: newPath, objectCaching: false, })
+                }
                 element.setCoords();
                 canvas.requestRenderAll();
             });
