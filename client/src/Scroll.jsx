@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 // import { isEqual } from "lodash";
-import { shadowOptions, options, generalFileName, saveFile } from './common'
+import { uid, shadowOptions, options, generalFileName, saveFile } from './common'
 import { createRect } from './DrawingController'
 
 const Scroll = () => {
@@ -124,8 +124,8 @@ const Scroll = () => {
             if (element.use1 === true) {
                 aa = ` ${delemeter} ` + element.data1;
                 const text = new fabric.IText(aa, {
-                    id: 'id_' + fabric.Object.__uid,
-                    class: 'class_' + fabric.Object.__uid,
+                    id: 'id_' + uid(),
+                    class: 'class_' + uid(),
                     left: left1,
                     ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                 });
@@ -152,8 +152,8 @@ const Scroll = () => {
                         myImg.scaleToHeight(45);
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: 'id_' + uid(),
+                            class: 'class_' + uid(),
                             left: left1,
                             top: scrollTextProperties.top,
                             crossOrigin: 'anonymous'
@@ -163,8 +163,8 @@ const Scroll = () => {
                         left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: 'id_' + uid(),
+                            class: 'class_' + uid(),
                             left: left1,
                             ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                         });
