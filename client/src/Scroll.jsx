@@ -30,16 +30,11 @@ const Scroll = () => {
         strokeWidth: options.strokeWidth,
     })
 
-    // const updateplayerList1 = () => {
-    //     setPlayerList1([...newplayerList1])
-    // }
-
     const onDragEnd1 = (result) => {
         const aa = [...playerList1]
         if (result.destination != null) {
             aa.splice(result.destination?.index, 0, aa.splice(result.source?.index, 1)[0])
             setPlayerList1(aa);
-            // setNewplayerList1(aa)
         }
     }
 
@@ -50,13 +45,11 @@ const Scroll = () => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')), 1);
         setPlayerList1(aa);
-        // setNewplayerList1(aa)
     }
     const addPage = e => {
         const aa = [...playerList1]
         aa.splice(parseInt(e.target.getAttribute('key1')) + 1, 0, { id: uuidv4(), data1: '', use1: false });
         setPlayerList1(aa);
-        // setNewplayerList1(aa)
 
     }
 
@@ -92,19 +85,6 @@ const Scroll = () => {
     }
     const handleFileRead = async () => {
 
-        // const content = fileReader.result;
-        // var aa = content.split('\r\n')
-        // aa.splice(-1)
-        // var updatedcanvasList = []
-        // aa.forEach(element => {
-        //     var cc = JSON.parse(element)
-        //     updatedcanvasList.push({ id: cc.id, data1: cc.data1, use1: cc.use1, delemeterLogo: cc.delemeterLogo })
-        // });
-        // console.log(updatedcanvasList)
-
-        // setPlayerList1(updatedcanvasList)
-        // setNewplayerList1(updatedcanvasList)
-
         const content = fileReader.result;
         const aa = content.split('\r\n');
         aa.splice(-1);
@@ -114,7 +94,6 @@ const Scroll = () => {
         });
 
         setPlayerList1(updatedcanvasList);
-        // setNewplayerList1(updatedcanvasList);
     };
 
     const setAsScrollText = () => {
@@ -147,8 +126,6 @@ const Scroll = () => {
                     if (myImg == null) {
                         alert("Error!");
                     } else {
-                        // myImg.scaleToWidth(25);
-                        // myImg.setAttribute('crossorigin', 'anonymous')
                         myImg.scaleToHeight(45);
                         canvas.add(myImg).setActiveObject(myImg);
                         myImg.set({
@@ -159,7 +136,6 @@ const Scroll = () => {
                             crossOrigin: 'anonymous'
                         })
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
                         left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
@@ -170,7 +146,6 @@ const Scroll = () => {
                         });
                         canvas.add(text).setActiveObject(text);
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width;
                         left1 += 25 + canvas.getActiveObjects()[0].width;
                     }
                 });
@@ -250,7 +225,6 @@ const Scroll = () => {
                                                 const aa = [...playerList1];
                                                 aa[0] = { ...aa[0], delemeterLogo: reader.result };
                                                 setPlayerList1(aa);
-                                                // setNewplayerList1(aa)
                                             }
                                             reader.readAsDataURL(e.target.files[0]);
                                         }} style={{ display: 'none' }} />
@@ -259,8 +233,6 @@ const Scroll = () => {
                                 <td> <button onClick={() => {
                                     const updateddelemeterlogo = playerList1.map((val, i) => ({ ...val, delemeterLogo: playerList1[0].delemeterLogo }));
                                     setPlayerList1(updateddelemeterlogo);
-                                    // setNewplayerList1(updateddelemeterlogo)
-
 
                                 }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
                                     <button onClick={addStrip}>Add Strip with id scroll1_strip</button>
@@ -271,7 +243,6 @@ const Scroll = () => {
                     </table>
                 </div>
             </div>
-            {/* <button style={{ display: (isEqual(newplayerList1, playerList1)) ? 'none' : 'inline', backgroundColor: 'red' }} onClick={updateplayerList1}>Update Data</button> */}
             <div style={{ display: 'flex', minwidth: 650, margin: 20 }}>
                 <div style={{ backgroundColor: 'grey', height: 700, width: 800, overflow: 'auto' }}>
                     <DragDropContext onDragEnd={onDragEnd1}>
@@ -295,7 +266,6 @@ const Scroll = () => {
                                                                     ...provided.draggableProps.style,
                                                                     backgroundColor: snapshot.isDragging ? 'red' : 'white',
                                                                     boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
-                                                                    // margin: '10px'
                                                                 }}
                                                             >
                                                                 <td style={{ textAlign: 'center' }}>{i}</td>
@@ -310,7 +280,6 @@ const Scroll = () => {
                                                                                 const aa = [...playerList1];
                                                                                 aa[i] = { ...aa[i], delemeterLogo: reader.result };
                                                                                 setPlayerList1(aa);
-                                                                                // setNewplayerList1(aa)
                                                                             }
                                                                             reader.readAsDataURL(e.target.files[0]);
                                                                         }} style={{ display: 'none' }} />
@@ -320,21 +289,14 @@ const Scroll = () => {
                                                                     onChange={e => {
                                                                         const updatednewplayerList1 = [...playerList1]
                                                                         updatednewplayerList1[i] = { ...updatednewplayerList1[i], data1: e.target.value };
-                                                                        // setNewplayerList1(updatednewplayerList1)
                                                                         setPlayerList1(updatednewplayerList1)
-                                                                        // newplayerList1[i] = { ...newplayerList1[i], data1: e.target.value };
-                                                                        // setNewplayerList1([...newplayerList1])
                                                                     }}
                                                                 />
                                                                 </td>
                                                                 <td><input checked={val.use1} type='checkbox' onChange={(e) => {
-                                                                    // newplayerList1[i] = { ...newplayerList1[i], use1: e.target.checked };
-                                                                    // setNewplayerList1([...newplayerList1]);
-                                                                    // setPlayerList1([...newplayerList1]);
 
                                                                     const updatednewplayerList1 = [...playerList1]
                                                                     updatednewplayerList1[i] = { ...updatednewplayerList1[i], use1: e.target.checked };
-                                                                    // setNewplayerList1(updatednewplayerList1)
                                                                     setPlayerList1(updatednewplayerList1)
                                                                 }
                                                                 } /></td>

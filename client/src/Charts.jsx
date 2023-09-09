@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3';
 import * as fabric from "fabric";
 import { useSelector } from 'react-redux'
-import { shadowOptions } from './common'
+import { uid, shadowOptions } from './common'
 import { deleteAll } from './DrawingController';
 import { useState } from 'react';
 import faker from 'faker'
@@ -84,22 +84,15 @@ const Charts = () => {
 
 
         var SVGstring = refd3.current.innerHTML;
-        fabric.loadSVGFromString(SVGstring, (objects, options) => {
+        fabric.loadSVGFromString(SVGstring).then(({ objects }) => {
+            const dd = []
             objects.forEach(element => {
-                element.set({ id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, objectCaching: false, shadow: { ...shadowOptions, blur: 30 } });
-                if (element.type === 'text') {
-                    element.set({ type: 'i-text' })
-                    var textobj = element.toObject();
-                    var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                    var aa = new fabric.IText(element.text, clonedtextobj);
-                    aa.set({ id: 'ccg_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid });
-                    var bb = objects.indexOf(element);
-                    objects.splice(bb, 1, aa);
-                }
-                // canvas.add(element)
+                element.set({ id: 'id_' + uid(), class: 'class_' + uid(), objectCaching: false })
+                dd.push(element)
             });
-            var svgGroups = fabric.util.groupSVGElements(objects, options);
-            svgGroups.set({ id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid });
+            console.log(dd)
+            var svgGroups = fabric.util.groupSVGElements(dd);
+            svgGroups.set({ id: 'id_' + uid(), class: 'class_' + uid() });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
@@ -199,8 +192,8 @@ const Charts = () => {
         fabric.loadSVGFromString(SVGstring, (objects, options) => {
             objects.forEach(element => {
                 element.set({
-                    id: 'id_' + fabric.Object.__uid,
-                    class: 'class_' + fabric.Object.__uid,
+                    id: 'id_' + uid(),
+                    class: 'class_' + uid(),
                     objectCaching: false,
                     shadow: { ...shadowOptions, blur: 10 }
                 });
@@ -209,14 +202,14 @@ const Charts = () => {
                     var textobj = element.toObject();
                     var clonedtextobj = JSON.parse(JSON.stringify(textobj));
                     var aa = new fabric.IText(element.text, clonedtextobj);
-                    aa.set({ id: 'ccg_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+                    aa.set({ id: 'ccg_' + uid(), class: 'class_' + uid(), });
                     var bb = objects.indexOf(element);
                     objects.splice(bb, 1, aa);
                 }
                 // canvas.add(element)
             });
             var svgGroups = fabric.util.groupSVGElements(objects, options);
-            svgGroups.set({ id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid });
+            svgGroups.set({ id: 'id_' + uid(), class: 'class_' + uid() });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
