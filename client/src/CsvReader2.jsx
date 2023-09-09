@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Papa from "papaparse";
 
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { sendToCasparcg, templateLayers, findElementWithId } from './common'
 import { createTextBox, addImage } from './DrawingController'
 // import GsapPlayer from './GsapPlayer';

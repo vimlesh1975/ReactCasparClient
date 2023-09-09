@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { endpoint } from './common'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 
 var currentRow = 1;
 

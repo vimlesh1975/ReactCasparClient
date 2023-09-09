@@ -1,6 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3';
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { useSelector } from 'react-redux'
 import { shadowOptions } from './common'
 import { deleteAll } from './DrawingController';

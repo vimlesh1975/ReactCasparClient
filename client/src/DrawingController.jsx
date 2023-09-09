@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import {
   endpoint,
   fontLists,
@@ -44,6 +44,7 @@ import SavedStyles from "./SavedStyles";
 import { animation } from "./animation.js";
 
 import {
+  uid,
   options,
   shadowOptions,
   changeCurrentColor,
@@ -64,7 +65,8 @@ var html;
 
 fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
-fabric.disableStyleCopyPaste = true;
+// fabric.disableStyleCopyPaste = true;
+fabric.config.configure({ disableStyleCopyPaste: true });
 
 // Extend Fabric.js objects to include visibility property
 // fabric.Object.prototype.visible = true;
@@ -535,8 +537,8 @@ export const gradient2 = () => {
 };
 export const createRect = (canvas) => {
   const rect = new fabric.Rect({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: "id_" + uid(),
+    class: "class_" + uid(),
     shadow: shadowOptions,
     top: -100 * 1.87,
     left: 90 * 1.87,
@@ -554,7 +556,7 @@ export const createRect = (canvas) => {
   });
   canvas.add(rect).setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
+  rect.animate({ "top": 750 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 export const createEllipse = (canvas) => {
   const rect = new fabric.Ellipse({
@@ -575,7 +577,7 @@ export const createEllipse = (canvas) => {
   });
   canvas.add(rect).setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
+  rect.animate({ "top": 330 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createPentagon = (canvas) => {
@@ -606,7 +608,7 @@ export const createPentagon = (canvas) => {
   );
   canvas.add(rect).setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
+  rect.animate({ "top": 330 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createVLine = (canvas) => {
@@ -624,7 +626,7 @@ export const createVLine = (canvas) => {
   });
   canvas.add(rect).setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
+  rect.animate({ "top": 50 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 export const createHLine = (canvas) => {
   const rect = new fabric.Path("M 0 0 L 500 1", {
@@ -641,7 +643,7 @@ export const createHLine = (canvas) => {
   });
   canvas.add(rect).setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 550, { onChange: canvas.renderAll.bind(canvas) });
+  rect.animate({ "top": 550 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createCircle = (canvas) => {
@@ -661,7 +663,7 @@ export const createCircle = (canvas) => {
 
   canvas.add(circle).setActiveObject(circle);
   canvas.requestRenderAll();
-  circle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
+  circle.animate({ "left": 150 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createTriangle = (canvas) => {
@@ -685,7 +687,7 @@ export const createTriangle = (canvas) => {
 
   canvas.add(triangle).setActiveObject(triangle);
   canvas.requestRenderAll();
-  triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
+  triangle.animate({ "left": 150 }, { onChange: canvas.renderAll.bind(canvas) });
 };
 export const alignLeft = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -897,7 +899,7 @@ export const unlockAll = (canvas) => {
   canvas.forEachObject((element) => (element.selectable = true));
 };
 
-const ErasedGroup = fabric.util.createClass(fabric.Group, {
+const ErasedGroup = fabric.util.createCanvasElement(fabric.Group, {
   original: null,
   ErasedPath: null,
   initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
@@ -929,7 +931,7 @@ const ErasedGroup = fabric.util.createClass(fabric.Group, {
     this._getBounds(aX, aY, onlyWidthHeight);
   },
 });
-const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+const EraserBrush = fabric.util.createCanvasElement(fabric.PencilBrush, {
   /**
    * On mouseup after drawing the path on contextTop canvas
    * we use the points captured to create an new fabric path object

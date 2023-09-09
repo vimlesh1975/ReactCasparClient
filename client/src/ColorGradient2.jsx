@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Rnd } from "react-rnd";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { useSelector } from 'react-redux';
 import { rgbaCol } from './common'
 import ColorPattern from './ColorPattern'

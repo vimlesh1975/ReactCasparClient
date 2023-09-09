@@ -1,7 +1,7 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import {
   Uploaddropedfile,
   createTextBoxforDragedText,
@@ -187,7 +187,7 @@ const Drawing = ({ canvasOutput }) => {
   useEffect(() => {
     setTimeout(() => {
       window.editor.canvas.extraProps = ["id", "selectable", "class"];
-      fabric.SHARED_ATTRIBUTES.push("class");
+      // fabric.SHARED_ATTRIBUTES.push("class");
       extendproperty();
 
       setZoomAndPan(window.editor.canvas);

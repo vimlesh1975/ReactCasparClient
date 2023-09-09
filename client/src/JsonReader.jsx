@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import CsvReader from './CsvReader';

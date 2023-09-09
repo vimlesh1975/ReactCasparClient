@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import GeoPattern from "geopattern";
 import { useState } from "react";
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 
 const GeoPattern1 = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);

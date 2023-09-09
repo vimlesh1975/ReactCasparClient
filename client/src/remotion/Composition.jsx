@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useCurrentFrame, useVideoConfig } from 'remotion'
-import { fabric } from 'fabric';
+import * as fabric from 'fabric'
 
 const MyComposition = () => {
     const frame = useCurrentFrame();
