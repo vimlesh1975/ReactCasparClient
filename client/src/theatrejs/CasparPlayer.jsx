@@ -9,7 +9,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
     const [duration, setDuration] = useState(1);
     const [outDuration, setOutDuration] = useState(0.5);
-    const [loopcount, setLoopcount] = useState(1);
+    const [loopcount, setLoopcount] = useState(0);
     const [mypage, setMypage] = useState('');
 
     const play = (layerNumber) => {
@@ -75,18 +75,18 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
         <div style={{ border: '1px solid red', margin: 5, padding: 5 }}>
             <div>
                 <button onClick={() => play(layerNumber)}><FaPlay /></button>
-            <button onClick={() => pause(layerNumber)}><FaPause /></button>
-            <button title='Resume' onClick={() => resume(layerNumber)}><FaPause /><FaPlay /></button>
+                <button onClick={() => pause(layerNumber)}><FaPause /></button>
+                <button title='Resume' onClick={() => resume(layerNumber)}><FaPause /><FaPlay /></button>
                 <button title='Reverse Play and Remove' onClick={() => stopGraphics1(layerNumber)}><FaStop /></button>
                 <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
                 <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             </div>
             {(mypage !== '') && <div>
-            <div >
+                <div >
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, false, false)}>GotoAndPlay</button>
-                <span title='outDuration'>D:</span><input title='Time in second' type="number" value={outDuration} style={{ width: 40 }} onChange={e => setOutDuration(e.target.value)} />
+                    <span title='outDuration'>D:</span><input title='Time in second' type="number" value={outDuration} style={{ width: 40 }} onChange={e => setOutDuration(e.target.value)} />
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, false, true)}>GotoAndReversePlay</button>
-            </div>
+                </div>
                 <div >
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, false)}>GotoAndPlay + Stop</button>
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, true)}>GotoAndReversePlay + Stop</button>

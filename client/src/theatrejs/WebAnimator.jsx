@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -47,12 +47,22 @@ studio.ui.hide();
 
 var project = getProject('Fabricjs Object Animation');
 var sheet;
-
+const getNewII = (newi, ii) => {
+    if (ii === 0) return 0;
+    if (ii === 1) return newi * 10 + 'x';
+    if (ii === 2) return newi * 10 + 'y';
+    if (ii === 3) return newi * 10 + 1 + 'x';
+    if (ii === 4) return newi * 10 + 1 + 'y';
+    if (ii === 5) return newi * 10 + 2 + 'x';
+    if (ii === 6) return newi * 10 + 2 + 'y';
+};
 export const syncProps = (mypath, myObj) => {
     studio.transaction(({ set }) => {
         mypath.path.forEach((val, i) => {
+            const newi = i + 1;
             val.forEach((val1, ii) => {
-                set(myObj.props['Point' + i][ii], val1);
+                const newii = getNewII(newi, ii);
+                if (newii !== 0) set(myObj.props['Point' + newi][newii], val1);
             });
         });
     });
@@ -207,8 +217,8 @@ const WebAnimator = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
-    const [duration, setDuration] = useState(10);
-    const [loopcount, setLoopcount] = useState(1);
+    const [duration, setDuration] = useState(2);
+    const [loopcount, setLoopcount] = useState(0);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
@@ -836,10 +846,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
 
                 if (element.type === 'path') {
-                    const pathProps = {};
-                    element.path.forEach((element, i) => {
-                        pathProps['Point' + i] = { ...element };
-                    });
+                    const pathProps = getModifiedObject(element)
                     obj1 = { ...obj1, ...pathProps }
                 }
 
@@ -927,14 +934,21 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     if (element.type === 'path') {
                         const newPath = [...element.path];
                         newPath.forEach((_, i) => {
+                            const newi = i + 1;
                             const ss = [];
-                            if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
-                            if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
-                            if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
-                            if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
-                            if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
-                            if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
-                            if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                            if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                            if (val['Point' + newi][newi * 10 + 'x'])
+                                ss.push(val['Point' + newi][newi * 10 + 'x']);
+                            if (val['Point' + newi][newi * 10 + 'y'])
+                                ss.push(val['Point' + newi][newi * 10 + 'y']);
+                            if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                                ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                            if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                                ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                            if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                                ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                            if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                                ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
                             newPath[i] = ss;
                         });
                         element.set({ path: newPath, objectCaching: false, })
@@ -1093,12 +1107,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                   };
               }
               if (element.type === 'path') {
-                const pathProps = {};
-                element.path.forEach((element, i) => {
-                    pathProps['Point' + i] = { ...element };
-                });
+                const pathProps = getModifiedObject(element)
                 obj1 = { ...obj1, ...pathProps }
-            }
+              }
               arrObject[i] = sheet_${layerNumber}.object(element.id, {
                     left: element.left,
                     top: element.top,
@@ -1182,19 +1193,25 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         if (element.type === 'path') {
                             const newPath = [...element.path];
                             newPath.forEach((_, i) => {
+                                const newi = i + 1;
                                 const ss = [];
-                                if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
-                                if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
-                                if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
-                                if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
-                                if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
-                                if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
-                                if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                                if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                                if (val['Point' + newi][newi * 10 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 'y']);
+                                if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                                if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
                                 newPath[i] = ss;
                             });
                             element.set({ path: newPath, objectCaching: false, })
                         }
-
                         element.setCoords();
                         canvas_${layerNumber}.requestRenderAll();
                 });
@@ -1229,7 +1246,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         // endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`)
         endpoint(`call ${window.chNumber}-${layerNumber} "
         localStorage.removeItem('theatre-0.4.persistent');
-       
+      
         var mouseDown = 0;
         document.body.onmousedown = function () {
             mouseDown = 1;
@@ -1329,12 +1346,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     };
                 }
                 if (element.type === 'path') {
-                    const pathProps = {};
-                    element.path.forEach((element, i) => {
-                        pathProps['Point' + i] = { ...element };
-                    });
-                    obj1 = { ...obj1, ...pathProps }
-                }
+                    const pathProps = getModifiedObject(element);
+                    obj1 = { ...obj1, ...pathProps };
+                };
                 arrObject[i] = sheet.object(element.id, {
                     left: element.left,
                     top: element.top,
@@ -1418,18 +1432,25 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                         if (element.type === 'path') {
                             const newPath = [...element.path];
                             newPath.forEach((_, i) => {
+                                const newi = i + 1;
                                 const ss = [];
-                                if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
-                                if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
-                                if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
-                                if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
-                                if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
-                                if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
-                                if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                                if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                                if (val['Point' + newi][newi * 10 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 'y']);
+                                if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                                if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                                    ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                                if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                                    ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
                                 newPath[i] = ss;
                             });
-                            element.set({ path: newPath, objectCaching: false, })
-                        }
+                            element.set({ path: newPath, objectCaching: false, });
+                        };
                         element.setCoords();
                         canvas.requestRenderAll();
                 });
@@ -1466,7 +1487,38 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const exportHtml = async (overRide = false) => {
         const xx4 = `
-        
+        const getModifiedObject = (path1) => {
+            const aa = {};
+            path1.path.forEach((element, i) => {
+              const newi = i + 1;
+          
+              const originalArray = element;
+              const myObject = { ...originalArray };
+          
+              // Create a new object with modified keys
+              const modifiedObject = {};
+              for (const key in myObject) {
+                if (key === '1') {
+                  modifiedObject[newi * 10 + 'x'] = myObject[key];
+                } else if (key === '2') {
+                  modifiedObject[newi * 10 + 'y'] = myObject[key];
+                } else if (key === '3') {
+                  modifiedObject[newi * 10 + 1 + 'x'] = myObject[key];
+                } else if (key === '4') {
+                  modifiedObject[newi * 10 + 1 + 'y'] = myObject[key];
+                } else if (key === '5') {
+                  modifiedObject[newi * 10 + 2 + 'x'] = myObject[key];
+                } else if (key === '6') {
+                  modifiedObject[newi * 10 + 2 + 'y'] = myObject[key];
+                } else {
+                  modifiedObject[key] = myObject[key];
+                }
+              }
+          
+              aa['Point' + newi] = modifiedObject;
+            });
+            return aa;
+          };
         window.changePropOfObject = (id, str1, str2) => {
             const objs = arrObject.find(object => {
                 return (object.address.objectKey === id)
@@ -1555,10 +1607,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 };
             }
             if (element.type === 'path') {
-                const pathProps = {};
-                element.path.forEach((element, i) => {
-                    pathProps['Point' + i] = { ...element };
-                });
+                const pathProps = getModifiedObject(element)
                 obj1 = { ...obj1, ...pathProps }
             }
             arrObject[i] = sheet.object(element.id, {
@@ -1645,14 +1694,21 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 if (element.type === 'path') {
                     const newPath = [...element.path];
                     newPath.forEach((_, i) => {
+                        const newi = i + 1;
                         const ss = [];
-                        if (val['Point' + i][0]) ss.push(val['Point' + i][0]);
-                        if (val['Point' + i][1]) ss.push(val['Point' + i][1]);
-                        if (val['Point' + i][2]) ss.push(val['Point' + i][2]);
-                        if (val['Point' + i][3]) ss.push(val['Point' + i][3]);
-                        if (val['Point' + i][4]) ss.push(val['Point' + i][4]);
-                        if (val['Point' + i][5]) ss.push(val['Point' + i][5]);
-                        if (val['Point' + i][6]) ss.push(val['Point' + i][6]);
+                        if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                        if (val['Point' + newi][newi * 10 + 'x'])
+                            ss.push(val['Point' + newi][newi * 10 + 'x']);
+                        if (val['Point' + newi][newi * 10 + 'y'])
+                            ss.push(val['Point' + newi][newi * 10 + 'y']);
+                        if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                            ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                        if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                            ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                        if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                            ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                        if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                            ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
                         newPath[i] = ss;
                     });
                     element.set({ path: newPath, objectCaching: false, })

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import { socketAddress } from '../common'
+import { socketAddress, getModifiedObject } from '../common'
 import socketIOClient from "socket.io-client";
 import Tsparticles2 from '../tsparticles/Tsparticles2';
 
+window.getModifiedObject = getModifiedObject;
 window.hexToRGB = hex => {
     const red = parseInt(hex.slice(1, 3), 16)
     const green = parseInt(hex.slice(3, 5), 16)
