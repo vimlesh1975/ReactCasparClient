@@ -28,21 +28,16 @@ import { Provider } from 'react-redux'
 import store from '../store'
 import { edit } from '../PathModifier'
 
-
 function getKeyframes(sheet, tracks, objectKey) {
     const json = studio.createContentOfSaveFile(sheet.address.projectId);
     const { trackData, trackIdByPropPath } = json.sheetsById[sheet.address.sheetId].sequence.tracksByObject[objectKey];
     const keyframes = tracks.reduce((result, track) => {
-        // console.log(track)
-
         if (Array.isArray(track)) {
-            // Handle the ["shadow","color"] property
             const [prop1, prop2] = track;
             result[`${prop1},${prop2}`] = trackData[trackIdByPropPath[`["${prop1}","${prop2}"]`]]?.keyframes?.map(k => {
                 return { position: k.position, value: k.value };
             });
         } else {
-            // Handle the "left" property
             result[track] = trackData[trackIdByPropPath[`["${track}"]`]]?.keyframes?.map(k => {
                 return { position: k.position, value: k.value };
             });
@@ -53,18 +48,18 @@ function getKeyframes(sheet, tracks, objectKey) {
 }
 
 const deletrTracks = (tracks) => {
-    const shadowVars = ['color', "blur", "offsetX", "offsetY", "affectStr"]
-    if (tracks.includes("shadow")) {
-        shadowVars.forEach((val) => {
-            tracks.push(["shadow", val]);
+
+    const tracksModified = [...tracks]
+    tracks.forEach((track) => {
+        getObjectbyId(studio.selection[0].address.objectKey).value[track] && Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value[track])?.forEach((val) => {
+            tracksModified.push([track, val]);
         })
-    }
-    const keyframes = getKeyframes(sheet, tracks, studio.selection[0].address.objectKey);
-    console.log(keyframes)
+    })
+    console.log(tracksModified)
+    const keyframes = getKeyframes(sheet, tracksModified, studio.selection[0].address.objectKey);
     studio.transaction((api) => {
-        tracks.forEach((track) => {
+        tracksModified.forEach((track) => {
             if (Array.isArray(track)) {
-                // track = "shadow,color"
                 const trackforPosition = track.join(',')
                 const [prop1, prop2] = track;
 
@@ -485,7 +480,13 @@ const WebAnimator = () => {
 
                     <li>Delete KeyFrames<ul>
                         <li onClick={() => {
-                            const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value)
+                            const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
+                            // const trackVlaues = Object.values(getObjectbyId(studio.selection[0].address.objectKey).value);
+                            // trackVlaues.forEach((val) => {
+                            //     if (val[0]) {
+                            //         console.log(val)
+                            //     }
+                            // })
                             deletrTracks(tracks)
                         }}>All</li>
                         {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map(((val1, index) => {
@@ -763,7 +764,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
             canvas.getObjects().forEach((element, i) => {
-                console.log(element);
+                // console.log(element);
 
                 if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
