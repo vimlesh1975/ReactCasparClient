@@ -1996,10 +1996,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 accept: { 'text/html': ['.html'] },
             }],
         };
-        var aa1;
+        // var aa1;
         if (overRide) {
-            aa1 = htmlfileHandle;
-            sethtmlfileHandle(aa1)
+            // aa1 = htmlfileHandle;
+            // sethtmlfileHandle(aa1)
+            saveFile(null, file, htmlfileHandle)
         }
         else {
             sethtmlfileHandle(await saveFile(options, file));
