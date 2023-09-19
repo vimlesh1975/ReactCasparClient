@@ -239,7 +239,10 @@ const DrawingforTheatrejs = () => {
     }, [editor])
 
     return (<div id='aaa' >
-        <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={onReady} />
+        <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={(aa) => {
+            onReady(aa);
+            aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
+        }} />
     </div>);
 };
 
@@ -298,14 +301,20 @@ const WebAnimator = () => {
         if (canvas) {
             fabric.util.addListener(document.body, 'keydown', function (options) {
                 if (options.key === 'Delete') {
-                    deleteItem();
+                    if (document.activeElement === window.editor.canvas.wrapperEl) {
+                        deleteItem();
+
+                    }
                 }
             })
         }
         return () => {
             fabric.util.removeListener(document.body, 'keydown', function (options) {
                 if (options.key === 'Delete') {
-                    deleteItem();
+                    if (document.activeElement === window.editor.canvas.wrapperEl) {
+                        deleteItem();
+
+                    }
                 }
             })
         }
