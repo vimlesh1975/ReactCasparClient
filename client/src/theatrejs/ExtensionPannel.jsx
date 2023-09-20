@@ -10,7 +10,6 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
 
-
     const dispatch = useDispatch();
 
     const selectObject = (e) => {
@@ -40,7 +39,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
                 dispatch);
         }
     }
-    return (
+
+    return (<>
         <div style={{ height: 240, maxHeight: 240, width: 200, overflowY: 'scroll1', overflowX: 'hidden1' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
@@ -81,7 +81,11 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
                                                         sheet.detachObject(element.id);
 
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div><label>{element.id}</label></div>
+                                                    <div style={{ minWidth: 100 }}><label>{arrObject[i].address.objectKey}</label></div>
+                                                    <div><input type='text' value={element.id} onChange={e => {
+                                                        element.set({ id: e.target.value });
+                                                        canvas.requestRenderAll()
+                                                    }} /></div>
                                                 </div>
                                             </div>
                                         )
@@ -94,7 +98,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
                     )}
                 </Droppable>
             </DragDropContext>
-        </div>)
+        </div>
+    </>)
 }
 
 export default ExtensionPannel

@@ -28,6 +28,16 @@ import { Provider } from 'react-redux'
 import store from '../store'
 import { edit } from '../PathModifier'
 
+export const deleteItem = (canvas) => {
+    const aa = canvas.getActiveObjects();
+    aa.forEach(element => {
+        canvas.remove(element);
+        sheet.detachObject(element.id);
+    });
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+}
+
 function getKeyframes(sheet, tracks, objectKey) {
     const json = studio.createContentOfSaveFile(sheet.address.projectId);
     const { trackData, trackIdByPropPath } = json.sheetsById[sheet.address.sheetId].sequence.tracksByObject[objectKey];
@@ -171,6 +181,8 @@ const DrawingforTheatrejs = () => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
+
+
     window.dispatch = dispatch;
     window.editor = editor;
 
@@ -195,7 +207,7 @@ const DrawingforTheatrejs = () => {
             {
                 class: 'Basic',
                 mount({ node }) {
-                    console.log(node)
+                    // console.log(node)
                     const root = createRoot(node)
                     root.render(
                         <Provider store={store}>
@@ -243,6 +255,7 @@ const DrawingforTheatrejs = () => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
+        {/* <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} /> */}
     </div>);
 };
 
@@ -302,7 +315,7 @@ const WebAnimator = () => {
             fabric.util.addListener(document.body, 'keydown', function (options) {
                 if (options.key === 'Delete') {
                     if (document.activeElement === window.editor.canvas.wrapperEl) {
-                        deleteItem();
+                        deleteItem(canvas);
 
                     }
                 }
@@ -312,7 +325,7 @@ const WebAnimator = () => {
             fabric.util.removeListener(document.body, 'keydown', function (options) {
                 if (options.key === 'Delete') {
                     if (document.activeElement === window.editor.canvas.wrapperEl) {
-                        deleteItem();
+                        deleteItem(canvas);
 
                     }
                 }
@@ -421,6 +434,18 @@ const WebAnimator = () => {
                 }
             })
         }
+
+        const changeId = () => {
+            const newid = window.prompt('Please enter New Id:');
+            const oldId = studio.selection[0].address.objectKey
+            if (newid !== null) {
+                const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
+                const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
+                importHtml(modifiedcanvasContent, modifiedAnimationContent)
+            } else {
+                console.log('User cancelled the input.');
+            }
+        }
         // const allInScreen = () => {
         //     canvas.getObjects().forEach((element, i) => {
         //         // studio.transaction((api) => {
@@ -462,8 +487,9 @@ const WebAnimator = () => {
 
         return (
             <div className='rightClickMenu'
-                style={{ position: 'fixed', left: (x > 1595) ? 1595 : x, top: (y > 685) ? 685 : y, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
+                style={{ position: 'fixed', left: 1230, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
             >
+
                 <ul>
                     <li>Add<ul >
                         <li onClick={() => addItem(addImage)}>Image</li>
@@ -473,29 +499,10 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                     </ul></li>
-                    <li onClick={() => {
-                        studio.transaction((api) => {
-                            const aa = canvas.getActiveObjects();
-                            if (aa.length === 1) {
-                                api.unset(getObjectbyId(aa[0].id).props);
-                            }
-                        })
-                    }}>Reset All to Default</li>
-
-                    <li onClick={deleteItem}>Delete Object</li>
-                    <li onClick={() => lockUnlock1(window.editor.canvas)}>LockUnlock Object</li>
-                    <li onClick={() => visibleInVisible1(window.editor.canvas)}>Visibility of Object</li>
-
-
+                    <li onClick={changeId}>Change Id</li>
                     <li>Delete KeyFrames<ul>
                         <li onClick={() => {
                             const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
-                            // const trackVlaues = Object.values(getObjectbyId(studio.selection[0].address.objectKey).value);
-                            // trackVlaues.forEach((val) => {
-                            //     if (val[0]) {
-                            //         console.log(val)
-                            //     }
-                            // })
                             deletrTracks(tracks)
                         }}>All</li>
                         {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map(((val1, index) => {
@@ -506,6 +513,21 @@ const WebAnimator = () => {
                             }>{val1}</li>
                         }))}
                     </ul></li>
+                    <li onClick={() => {
+                        studio.transaction((api) => {
+                            const aa = canvas.getActiveObjects();
+                            if (aa.length === 1) {
+                                api.unset(getObjectbyId(aa[0].id).props);
+                            }
+                        })
+                    }}>Reset All to Default</li>
+
+                    <li onClick={() => deleteItem(canvas)}>Delete Object</li>
+                    <li onClick={() => lockUnlock1(canvas)}>LockUnlock Object</li>
+                    <li onClick={() => visibleInVisible1(canvas)}>Visibility of Object</li>
+
+
+
                     <li>Text Align<ul >
                         <li onClick={() => alignLeft(canvas)}>Left</li>
                         <li onClick={() => alignRight(canvas)}>Right</li>
@@ -2216,15 +2238,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
     }
-    const deleteItem = () => {
-        const aa = canvas.getActiveObjects();
-        aa.forEach(element => {
-            canvas.remove(element);
-            sheet.detachObject(element.id);
-        });
-        canvas.discardActiveObject();
-        canvas.requestRenderAll();
-    }
+
 
     const saveToLocalStorage = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
