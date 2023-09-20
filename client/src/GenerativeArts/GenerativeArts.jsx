@@ -233,11 +233,7 @@ const GenerativeArts = () => {
             <button onClick={() => sendcode(templateLayers.GenerativeArts)}> Send</button>
             <button onClick={() => stopGraphics(templateLayers.GenerativeArts)}> Stop</button>
         </div>
-        <div>
-            Remotion
-            <button onClick={() => endpoint(`play ${window.chNumber}-${templateLayers.GenerativeArts} [HTML] http://localhost:10000/ReactCasparClient/Player1`)}> Send</button>
-            <button onClick={() => endpoint(`stop ${window.chNumber}-${templateLayers.GenerativeArts}`)}> Stop</button>
-        </div>
+
     </>)
 }
 

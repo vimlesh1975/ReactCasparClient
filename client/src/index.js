@@ -16,8 +16,6 @@ import Theatrejs2 from './theatrejs/Theatrejs2';
 import CanvasPlayer from './CanvasPlayer';
 import Tsparticles2 from './tsparticles/Tsparticles2';
 
-import { Player1 } from './remotion/Player1';
-
 window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -37,7 +35,6 @@ root.render(
         <Route exact path="/Theatrejs2" element={<Theatrejs2 />} />
         <Route exact path="/CanvasPlayer" element={<CanvasPlayer />} />
         <Route exact path="/Tsparticles2" element={<Tsparticles2 />} />
-        <Route exact path="/Player1" element={<Player1 />} />
       </Routes>
     </Router>
   </Provider>

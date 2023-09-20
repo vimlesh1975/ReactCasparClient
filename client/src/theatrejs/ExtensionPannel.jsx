@@ -81,6 +81,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
                                                         sheet.detachObject(element.id);
 
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
+                                                    <div><label>{element.id}</label></div>
                                                 </div>
                                             </div>
                                         )
