@@ -489,7 +489,7 @@ const WebAnimator = () => {
 
         return (
             <div className='rightClickMenu'
-                style={{ position: 'fixed', left: 1230, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
+                style={{ zIndex: 200, position: 'fixed', left: 120, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
             >
 
                 <ul>
@@ -504,6 +504,7 @@ const WebAnimator = () => {
                     <li onClick={changeId}>Change Id</li>
                     <li onClick={clearAllAnimation}>Clear All Animations</li>
                     <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
+
                     <li>Delete KeyFrames<ul>
                         <li onClick={() => {
                             const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
@@ -2432,6 +2433,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) })
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+            <button onClick={() => {
+                // console.log(arrObject[0])
+                // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
+            }}>.</button>
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
                 <Tabs forceRenderTabPanel={true} >
                     <TabList>
