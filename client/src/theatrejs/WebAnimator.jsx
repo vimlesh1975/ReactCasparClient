@@ -446,17 +446,16 @@ const WebAnimator = () => {
                 console.log('User cancelled the input.');
             }
         }
-        // const allInScreen = () => {
-        //     canvas.getObjects().forEach((element, i) => {
-        //         // studio.transaction((api) => {
-        //         //     api.unset(getObjectbyId(element.id).props.left);
-        //         // })
-        //         studio.transaction((api) => {
-        //             api.set(getObjectbyId(element.id).props.left, 0);
-        //         })
-        //     })
-        // }
-
+        const clearAllAnimation = () => {
+            studio.transaction((api) => {
+                api.__experimental_forgetSheet(project.sheet('Sheet 1'))
+            })
+        }
+        const clearObjectsAllAnimation = () => {
+            studio.transaction((api) => {
+                api.__experimental_forgetObject(getObjectbyId(studio.selection[0].address.objectKey))
+            })
+        }
 
         const lockUnlock1 = (canvas) => {
             canvas.getActiveObjects().forEach((element) => {
@@ -500,6 +499,8 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                     </ul></li>
                     <li onClick={changeId}>Change Id</li>
+                    <li onClick={clearAllAnimation}>Clear All Animations</li>
+                    <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
                     <li>Delete KeyFrames<ul>
                         <li onClick={() => {
                             const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
