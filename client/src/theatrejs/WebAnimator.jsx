@@ -436,9 +436,12 @@ const WebAnimator = () => {
         }
 
         const changeId = () => {
-            const newid = window.prompt('Please enter New Id:');
+            var newid = window.prompt('Please enter New Id:');
             const oldId = studio.selection[0].address.objectKey
             if (newid !== null) {
+                // console.log(oldId, newid)
+                newid = newid.replace(/\s*\/\s*/g, ' / ')
+                console.log(newid)
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
@@ -2380,7 +2383,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             </select>
 
             <span>Id:</span>
-            <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement(e.target.value)} />
+            <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement((e.target.value).replace(/\s*\/\s*/g, ' / '))} />
             <button onClick={() => reset()}>Reset</button>
 
 
