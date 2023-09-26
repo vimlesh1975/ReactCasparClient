@@ -66,10 +66,13 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                 xpositions,
                 dispatch);
         }
+        const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable'])))
+        const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
+        importHtml(modifiedcanvasContent, modifiedAnimationContent)
     }
 
     return (<>
-        <div style={{ height: 240, maxHeight: 240, width: 200, overflowY: 'scroll1', overflowX: 'hidden1' }}>
+        <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -94,7 +97,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                 }}
                                             >
                                                 <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 40 }}> <span >{element.type}</span></div>
+                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 60, textAlign: 'left' }}> <span>{element.type}</span></div>
                                                     <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>
                                                     <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
                                                     <div> <button title='Lock selected' onClick={() => {

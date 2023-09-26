@@ -180,6 +180,7 @@ const changePropOfObject = (id, str1, str2) => {
 const DrawingforTheatrejs = ({ importHtml }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
+    const [showExtensionPanel, setShowExtensionPanel] = useState(false);
 
 
 
@@ -196,7 +197,10 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         title: "Extension",
                         svgSource: "👁",
                         onClick: () => {
-                            studio.createPane("Basic");
+                            // studio.createPane("Basic");
+                            // document.body.style.zoom = showExtensionPanel ? 1 : 0.9;
+                            setShowExtensionPanel(val => !val);
+
                         }
                     }
                 ])
@@ -255,7 +259,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
-        {/* <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} /> */}
+        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
     </div>);
 };
 
@@ -408,16 +412,24 @@ const WebAnimator = () => {
             canvas.getActiveObjects().forEach(element => {
                 canvas.sendToBack(element);
             });
-            canvas.discardActiveObject();
-            canvas.requestRenderAll();
+            // canvas.discardActiveObject();
+            // canvas.requestRenderAll();
+            reloadPage()
         }
 
         const bringToFront = canvas => {
             canvas.getActiveObjects().forEach(element => {
                 canvas.bringToFront(element);
             });
-            canvas.discardActiveObject();
-            canvas.requestRenderAll();
+            // canvas.discardActiveObject();
+            // canvas.requestRenderAll();
+            reloadPage()
+        }
+
+        const reloadPage = () => {
+            const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable'])))
+            const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
+            importHtml(modifiedcanvasContent, modifiedAnimationContent)
         }
 
         const allOutofScreen = () => {
@@ -443,7 +455,7 @@ const WebAnimator = () => {
             if (newid !== null) {
                 // console.log(oldId, newid)
                 newid = newid.replace(/\s*\/\s*/g, ' / ')
-                console.log(newid)
+                // console.log(newid)
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
@@ -2436,7 +2448,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
             }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
             <button onClick={() => {
-                // console.log(arrObject[0])
+                console.log(arrObject[0])
+                console.log(canvas.getActiveObjects()[0])
                 // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
             }}>.</button>
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
