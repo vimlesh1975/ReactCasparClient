@@ -40,11 +40,11 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
 
     }
 
-    const selectObject = (e) => {
+    const selectObject = (i) => {
         try {
-            var aa = canvas.item(e.target.getAttribute('key1'));
+            var aa = canvas.item(i);
             canvas.setActiveObject(aa);
-            studio.setSelection([arrObject[e.target.getAttribute('key1')]])
+            studio.setSelection([arrObject[i]])
             canvas.requestRenderAll();
         } catch (error) {
             //dummy
@@ -94,8 +94,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                 }}
                                             >
                                                 <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                                                    <div style={{ minWidth: 40 }}> <span >{element.type}</span></div>
-                                                    <div {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
+                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 40 }}> <span >{element.type}</span></div>
+                                                    <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>
                                                     <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
                                                     <div> <button title='Lock selected' onClick={() => {
                                                         canvas.discardActiveObject();
@@ -103,14 +103,14 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                     }}
                                                     >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
 
-                                                    <div> <button key1={i} onClick={(e) => {
-                                                        selectObject(e);
+                                                    <div> <button onClick={() => {
+                                                        selectObject(i);
                                                         deleteItemfromtimeline(kf, xpositions, dispatch);
                                                         sheet.detachObject(element.id);
 
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div style={{ minWidth: 100 }}><label>{element.id}</label></div>
-                                                    <div><input type='text' defaultValue={element.id} onChange={e => {
+                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 100 }}><label >{element.id}</label></div>
+                                                    <div onClick={() => selectObject(i)}><input type='text' defaultValue={element.id} onChange={e => {
                                                         handleChange(e, element);
                                                     }} /></div>
                                                 </div>
