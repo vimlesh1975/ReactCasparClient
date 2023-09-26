@@ -109,7 +109,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                         sheet.detachObject(element.id);
 
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 100 }}><label >{element.id}</label></div>
+                                                    {/* <div onClick={() => selectObject(i)} style={{ minWidth: 100 }}><label >{element.id}</label></div> */}
                                                     <div onClick={() => selectObject(i)}><input type='text' defaultValue={element.id} onChange={e => {
                                                         handleChange(e, element);
                                                     }} /></div>
