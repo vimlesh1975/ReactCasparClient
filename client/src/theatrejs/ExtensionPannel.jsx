@@ -1,16 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const ExtensionPannel = ({ sheet, arrObject, studio }) => {
+const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
+
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const kf = useSelector(state => state.kfReducer.kf);
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
-
     const dispatch = useDispatch();
+
+    const [timeoutId, setTimeoutId] = useState(null); // Store the timeout ID
+    const handleChange = (e) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        const newTimeoutId = setTimeout(() => {
+            changeId(e.target.value)
+        }, 1000);
+        setTimeoutId(newTimeoutId);
+    };
+    const changeId = async (newid) => {
+        try {
+            const oldId = studio.selection[0].address.objectKey
+            if (newid !== null) {
+                // console.log(oldId, newid)
+                newid = newid.replace(/\s*\/\s*/g, ' / ')
+                console.log(newid)
+                const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
+                const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
+                await importHtml.importHtml(modifiedcanvasContent, modifiedAnimationContent)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 
     const selectObject = (e) => {
         try {
@@ -81,10 +109,9 @@ const ExtensionPannel = ({ sheet, arrObject, studio }) => {
                                                         sheet.detachObject(element.id);
 
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div style={{ minWidth: 100 }}><label>{arrObject[i].address.objectKey}</label></div>
-                                                    <div><input type='text' value={element.id} onChange={e => {
-                                                        element.set({ id: e.target.value });
-                                                        canvas.requestRenderAll()
+                                                    <div style={{ minWidth: 100 }}><label>{element.id}</label></div>
+                                                    <div><input type='text' defaultValue={element.id} onChange={e => {
+                                                        handleChange(e, element);
                                                     }} /></div>
                                                 </div>
                                             </div>

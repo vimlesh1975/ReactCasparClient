@@ -177,7 +177,7 @@ const changePropOfObject = (id, str1, str2) => {
     }
 };
 
-const DrawingforTheatrejs = () => {
+const DrawingforTheatrejs = (importHtml) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
@@ -211,7 +211,7 @@ const DrawingforTheatrejs = () => {
                     const root = createRoot(node)
                     root.render(
                         <Provider store={store}>
-                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} />
+                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
                         </Provider>
                     )
                     return () => {
@@ -255,7 +255,7 @@ const DrawingforTheatrejs = () => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
-        {/* <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} /> */}
+        {/* <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} /> */}
     </div>);
 };
 
@@ -436,8 +436,9 @@ const WebAnimator = () => {
             })
         }
 
-        const changeId = () => {
-            var newid = window.prompt('Please enter New Id:');
+        const changeId = (newValue) => {
+            // console.log(newValue)
+            var newid = window.prompt('Please enter New Id:', newValue);
             const oldId = studio.selection[0].address.objectKey
             if (newid !== null) {
                 // console.log(oldId, newid)
@@ -502,7 +503,7 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                     </ul></li>
-                    <li onClick={changeId}>Change Id</li>
+                    <li onClick={() => changeId((studio?.selection?.[0]?.address?.objectKey))}>Change Id</li>
                     <li onClick={clearAllAnimation}>Clear All Animations</li>
                     <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
 
@@ -2454,7 +2455,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 </Tabs >
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
-            <DrawingforTheatrejs />
+            <DrawingforTheatrejs importHtml={importHtml} />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>
     </>)
