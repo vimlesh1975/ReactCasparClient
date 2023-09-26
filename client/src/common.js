@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '230923_1';
+export const buildDate = '260923_1';
 
 export const getModifiedObject = (path1) => {
   const aa = {};

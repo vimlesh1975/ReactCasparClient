@@ -260,6 +260,7 @@ const DrawingforTheatrejs = () => {
 };
 
 const arrObject = [];
+window.arrObject = arrObject;
 
 const WebAnimator = () => {
 
