@@ -31,7 +31,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                 console.log(newid)
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
-                await importHtml.importHtml(modifiedcanvasContent, modifiedAnimationContent)
+                await importHtml(modifiedcanvasContent, modifiedAnimationContent)
             }
 
         } catch (error) {

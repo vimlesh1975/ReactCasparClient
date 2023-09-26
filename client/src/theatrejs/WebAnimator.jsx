@@ -177,7 +177,7 @@ const changePropOfObject = (id, str1, str2) => {
     }
 };
 
-const DrawingforTheatrejs = (importHtml) => {
+const DrawingforTheatrejs = ({ importHtml }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
 
