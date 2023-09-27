@@ -1056,6 +1056,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
             })
         })
+
+        // dispatch({ type: 'CHANGE_CANVAS', payload: window.editor.canvas });
+
     }
 
     const reset = () => {

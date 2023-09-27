@@ -344,7 +344,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                                                                         </div>
                                                                         <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                             recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs);
-                                                                        }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                        }} key1={i} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                         />
                                                                     </td></>}
                                                         </tr>
