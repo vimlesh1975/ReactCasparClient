@@ -72,7 +72,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
     }
 
     return (<>
-        <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white', height: 900, overflowY: 'auto' }}>
+        <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white', maxHeight: 900, overflowY: 'auto' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
