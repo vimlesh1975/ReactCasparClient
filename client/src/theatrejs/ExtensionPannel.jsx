@@ -4,16 +4,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
+const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensionPanel }) => {
 
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const kf = useSelector(state => state.kfReducer.kf);
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
-    const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
     const dispatch = useDispatch();
 
     const [timeoutId, setTimeoutId] = useState(null); // Store the timeout ID
-    const handleChange = (e) => {
+    const handleChange = (e, element) => {
+        element.set({ id: e.target.value });
+        canvas.requestRenderAll();
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
@@ -22,22 +23,14 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
         }, 1000);
         setTimeoutId(newTimeoutId);
     };
-    const changeId = async (newid) => {
-        try {
-            const oldId = studio.selection[0].address.objectKey
-            if (newid !== null) {
-                // console.log(oldId, newid)
-                newid = newid.replace(/\s*\/\s*/g, ' / ')
-                console.log(newid)
-                const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
-                const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
-                await importHtml(modifiedcanvasContent, modifiedAnimationContent)
-            }
-
-        } catch (error) {
-            console.log(error)
+    const changeId = (newid) => {
+        const oldId = studio.selection[0].address.objectKey
+        if (newid !== null) {
+            newid = newid.replace(/\s*\/\s*/g, ' / ')
+            const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
+            const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
+            importHtml(modifiedcanvasContent, modifiedAnimationContent)
         }
-
     }
 
     const selectObject = (i) => {
@@ -73,6 +66,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
 
     return (<>
         <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white', maxHeight: 900, overflowY: 'auto' }}>
+            <div><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => setShowExtensionPanel(false)}>X</button></div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -90,14 +84,14 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                 {...provided.draggableProps}
                                                 style={{
                                                     ...provided.draggableProps.style,
-                                                    backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'darkgray' : 'white',
+                                                    backgroundColor: snapshot.isDragging ? 'red' : (canvas?.getActiveObjects().includes(element)) ? 'darkgray' : 'white',
                                                     boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                                                     verticalAlign: 'top',
                                                     marginTop: 1
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 60, textAlign: 'left' }}> <span>{element.type}</span></div>
+                                                <div style={{ display: 'flex', backgroundColor: (canvas?.getActiveObjects().includes(element)) ? 'grey' : 'darkgray', }}>
+                                                    <div onClick={() => selectObject(i)} style={{ minWidth: 60, textAlign: 'left', marginLeft: 2 }}> <span> {element.type}</span></div>
                                                     <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>
                                                     <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
                                                     <div> <button title='Lock selected' onClick={() => {
@@ -105,15 +99,12 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                         lockUnlock(canvas, i, dispatch);
                                                     }}
                                                     >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
-
                                                     <div> <button onClick={() => {
                                                         selectObject(i);
                                                         deleteItemfromtimeline(kf, xpositions, dispatch);
                                                         sheet.detachObject(element.id);
-
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    {/* <div onClick={() => selectObject(i)} style={{ minWidth: 100 }}><label >{element.id}</label></div> */}
-                                                    <div onClick={() => selectObject(i)}><input type='text' defaultValue={element.id} onChange={e => {
+                                                    <div onClick={() => selectObject(i)}><input type='text' value={element.id} onChange={e => {
                                                         handleChange(e, element);
                                                     }} /></div>
                                                 </div>

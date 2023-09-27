@@ -198,9 +198,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         svgSource: "👁",
                         onClick: () => {
                             // studio.createPane("Basic");
-                            // document.body.style.zoom = showExtensionPanel ? 1 : 0.9;
                             setShowExtensionPanel(val => !val);
-
                         }
                     }
                 ])
@@ -215,7 +213,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                     const root = createRoot(node)
                     root.render(
                         <Provider store={store}>
-                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
+                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} setShowExtensionPanel={setShowExtensionPanel} />
                         </Provider>
                     )
                     return () => {
@@ -251,15 +249,14 @@ const DrawingforTheatrejs = ({ importHtml }) => {
 
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [editor])
+    }, [editor, dispatch])
 
     return (<div id='aaa' >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={(aa) => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
-        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
+        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} setShowExtensionPanel={setShowExtensionPanel} />}
     </div>);
 };
 
@@ -2259,6 +2256,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+
     }
 
 
