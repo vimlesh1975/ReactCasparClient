@@ -43,9 +43,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
             const destinationIndex = result.destination?.index;
 
             canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
-
+            // canvas.requestRenderAll();
+            // dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
             moveElement(sourceIndex, destinationIndex,
                 kf,
                 xpositions,
@@ -55,11 +54,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
             const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
             importHtml(modifiedcanvasContent, modifiedAnimationContent)
             studio.setSelection([arrObject[destinationIndex]])
-
         }
-
-
-
     }
 
     return (<>
