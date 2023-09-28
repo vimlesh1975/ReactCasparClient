@@ -23,6 +23,8 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
     const [currentFileName, setCurrentFileName] = useState()
+    // const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -93,6 +95,10 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
         importHtml(json, animationTheatrejs)
+
+        dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false });
+        // dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: showExtensionPanel });
+
     }
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {

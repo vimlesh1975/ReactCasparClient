@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensionPanel }) => {
+const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
 
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const kf = useSelector(state => state.kfReducer.kf);
@@ -64,7 +64,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
 
     return (<>
         <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white', maxHeight: 900, overflowY: 'auto' }}>
-            <div><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => setShowExtensionPanel(false)}>X</button></div>
+            <div><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button></div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (

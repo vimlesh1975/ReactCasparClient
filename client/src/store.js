@@ -233,6 +233,21 @@ const pannelEnableReducer = (state = initialPannelEnable, action) => {
       return state;
   }
 };
+
+const initialshowExtensionPanel = { showExtensionPanel: false };
+const showExtensionPanelReducer = (state = initialshowExtensionPanel, action) => {
+  switch (action.type) {
+    case "SHOW_EXTENSIONPANNEL":
+      return {
+        ...state,
+        showExtensionPanel: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
 const initialShowId = { showId: true };
 const showIdReducer = (state = initialShowId, action) => {
   switch (action.type) {
@@ -245,6 +260,8 @@ const showIdReducer = (state = initialShowId, action) => {
       return state;
   }
 };
+
+
 const initialKf = {
   kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]),
 };
@@ -362,6 +379,7 @@ const rootReducer = combineReducers({
   cssfilenameReducer2,
   pannelEnableReducer,
   showIdReducer,
+  showExtensionPanelReducer,
   kfReducer,
   xpositionsReducer,
   speechRecognitionReducer,

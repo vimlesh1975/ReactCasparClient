@@ -180,7 +180,9 @@ const changePropOfObject = (id, str1, str2) => {
 const DrawingforTheatrejs = ({ importHtml }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
-    const [showExtensionPanel, setShowExtensionPanel] = useState(false);
+    // const [showExtensionPanel, setShowExtensionPanel] = useState(false);
+    const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
+
 
 
 
@@ -198,7 +200,9 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         svgSource: "👁",
                         onClick: () => {
                             // studio.createPane("Basic");
-                            setShowExtensionPanel(val => !val);
+                            // setShowExtensionPanel(val => !val);
+                            dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: !showExtensionPanel });
+
                         }
                     }
                 ])
@@ -213,7 +217,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                     const root = createRoot(node)
                     root.render(
                         <Provider store={store}>
-                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} setShowExtensionPanel={setShowExtensionPanel} />
+                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
                         </Provider>
                     )
                     return () => {
@@ -256,7 +260,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
-        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} setShowExtensionPanel={setShowExtensionPanel} />}
+        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
     </div>);
 };
 
