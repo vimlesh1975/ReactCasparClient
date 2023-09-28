@@ -11,25 +11,16 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const dispatch = useDispatch();
 
-    const [timeoutId, setTimeoutId] = useState(null); // Store the timeout ID
-    const handleChange = (e, element) => {
-        element.set({ id: e.target.value });
-        canvas.requestRenderAll();
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        const newTimeoutId = setTimeout(() => {
-            changeId(e.target.value)
-        }, 1000);
-        setTimeoutId(newTimeoutId);
-    };
-    const changeId = (newid) => {
+    const onDoubleClickLabel = (newValue) => {
+        var newid = window.prompt('Please enter New Id:', newValue);
         const oldId = studio.selection[0].address.objectKey
         if (newid !== null) {
             newid = newid.replace(/\s*\/\s*/g, ' / ')
             const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
             const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
             importHtml(modifiedcanvasContent, modifiedAnimationContent)
+        } else {
+            console.log('User cancelled the input.');
         }
     }
 
@@ -104,9 +95,10 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
                                                         deleteItemfromtimeline(kf, xpositions, dispatch);
                                                         sheet.detachObject(element.id);
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div onClick={() => selectObject(i)}><input type='text' value={element.id} onChange={e => {
-                                                        handleChange(e, element);
-                                                    }} /></div>
+                                                    <div title='Double Click to Change' onClick={() => selectObject(i)} onDoubleClick={() => onDoubleClickLabel(element.id)} style={{ width: 150, textAlign: 'left', marginLeft: 2 }}>{element.id}</div>
+                                                    {/* <div onClick={() => selectObject(i)}><input style={{ width: 150, textAlign: 'left', marginLeft: 2 }} type='text' defaultValue={element.id} onChange={e => {
+                                                        handleChange(e, element, i);
+                                                    }} /></div> */}
                                                 </div>
                                             </div>
                                         )
