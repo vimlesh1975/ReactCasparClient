@@ -46,7 +46,20 @@ export const lockUnlock = (canvas, i, dispatch) => {
   canvas.requestRenderAll();
   dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 };
+export const lockUnlock1 = (canvas, i, dispatch) => {
+  const element = canvas.item(i);
+  element.set({
+    lockMovementX: !element.lockMovementX,
+    lockMovementY: !element.lockMovementY,
 
+    lockScalingX: !element.lockScalingX,
+    lockScalingY: !element.lockScalingY,
+    lockRotation: !element.lockRotation,
+  })
+  element.selectable = !element.selectable
+  canvas.requestRenderAll();
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
+}
 export const visibleInVisible = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
     if (i === ii) {

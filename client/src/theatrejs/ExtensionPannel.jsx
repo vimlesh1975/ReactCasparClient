@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux'
-import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
+import { visibleInVisible, moveElement, deleteItemfromtimeline, lockUnlock1 } from '../common'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Rnd } from 'react-rnd';
 
 const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
 
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
+
     const kf = useSelector(state => state.kfReducer.kf);
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const dispatch = useDispatch();
@@ -61,6 +63,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
         }
     }
 
+
+
     return (<>
         <Rnd enableResizing={{}}
             style={{ zIndex: 201, }}
@@ -84,7 +88,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                             style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                             {...provided.droppableProps}
                         >
-                            {(canvas?.getObjects())?.map((element, i) => {
+                            {layers?.map((element, i) => {
                                 return (
                                     <Draggable draggableId={"draggable" + i} key={element + i} index={i}>
                                         {(provided, snapshot) => (
@@ -105,7 +109,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                     <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
                                                     <div> <button title='Lock selected' onClick={() => {
                                                         canvas.discardActiveObject();
-                                                        lockUnlock(canvas, i, dispatch);
+                                                        lockUnlock1(canvas, i, dispatch);
                                                     }}
                                                     >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
                                                     <div> <button onClick={() => {

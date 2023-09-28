@@ -97,7 +97,6 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         importHtml(json, animationTheatrejs)
 
         dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false });
-        // dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: showExtensionPanel });
 
     }
     const updatePage = () => {
