@@ -2185,6 +2185,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         const element = canvas.getActiveObjects()[0];
         element.set({ id: id.toString(), text: id.toString() });
 
+
+
         setIdofElement('id_' + fabric.Object.__uid++);
 
         const obj1 = {
@@ -2253,6 +2255,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
         element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+
+        studio.setSelection([arrObject[i]])
 
     }
 

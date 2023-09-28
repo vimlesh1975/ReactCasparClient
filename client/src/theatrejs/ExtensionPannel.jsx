@@ -50,10 +50,16 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
                 kf,
                 xpositions,
                 dispatch);
+
+            const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable'])))
+            const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
+            importHtml(modifiedcanvasContent, modifiedAnimationContent)
+            studio.setSelection([arrObject[destinationIndex]])
+
         }
-        const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable'])))
-        const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
-        importHtml(modifiedcanvasContent, modifiedAnimationContent)
+
+
+
     }
 
     return (<>
