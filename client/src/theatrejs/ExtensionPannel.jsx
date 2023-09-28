@@ -1,8 +1,9 @@
-import React, { } from 'react'
+import React, { useState } from 'react'
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Rnd } from 'react-rnd';
 
 const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
 
@@ -10,6 +11,9 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
     const kf = useSelector(state => state.kfReducer.kf);
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const dispatch = useDispatch();
+
+    const [x, setX] = useState(500)
+    const [y, setY] = useState(70)
 
     const onDoubleClickLabel = (newValue, i) => {
         var newid = window.prompt('Please enter New Id:', newValue);
@@ -58,8 +62,20 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
     }
 
     return (<>
-        <div style={{ zIndex: 201, position: 'absolute', left: 500, top: 30, border: '2px solid white', maxHeight: 900, overflowY: 'auto' }}>
-            <div><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button></div>
+        <Rnd enableResizing={{}}
+            style={{ zIndex: 201, }}
+            default={{
+                x: 500,
+                y: 20,
+
+            }}
+            onDrag={(e, d) => {
+                setX(d.x);
+                setY(d.y)
+            }}> <div style={{ border: '2px solid grey', backgroundColor: 'white' }}><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button></div>
+        </Rnd>
+
+        <div style={{ zIndex: 201, position: 'absolute', left: x, top: y, border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -114,6 +130,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                 </Droppable>
             </DragDropContext>
         </div>
+
     </>)
 }
 
