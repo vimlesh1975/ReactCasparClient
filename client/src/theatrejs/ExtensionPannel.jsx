@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { } from 'react'
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux'
 import { visibleInVisible, lockUnlock, moveElement, deleteItemfromtimeline } from '../common'
@@ -11,14 +11,15 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const dispatch = useDispatch();
 
-    const onDoubleClickLabel = (newValue) => {
+    const onDoubleClickLabel = (newValue, i) => {
         var newid = window.prompt('Please enter New Id:', newValue);
         const oldId = studio.selection[0].address.objectKey
-        if (newid !== null) {
+        if (newid !== null && newid !== "") {
             newid = newid.replace(/\s*\/\s*/g, ' / ')
             const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
             const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
             importHtml(modifiedcanvasContent, modifiedAnimationContent)
+            selectObject(i);
         } else {
             console.log('User cancelled the input.');
         }
@@ -95,7 +96,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml, setShowExtensio
                                                         deleteItemfromtimeline(kf, xpositions, dispatch);
                                                         sheet.detachObject(element.id);
                                                     }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                    <div title='Double Click to Change' onClick={() => selectObject(i)} onDoubleClick={() => onDoubleClickLabel(element.id)} style={{ width: 150, textAlign: 'left', marginLeft: 2 }}>{element.id}</div>
+                                                    <div title='Double Click to Change' onClick={() => selectObject(i)} onDoubleClick={() => onDoubleClickLabel(element.id, i)} style={{ width: 150, textAlign: 'left', marginLeft: 2 }}>{element.id}</div>
                                                     {/* <div onClick={() => selectObject(i)}><input style={{ width: 150, textAlign: 'left', marginLeft: 2 }} type='text' defaultValue={element.id} onChange={e => {
                                                         handleChange(e, element, i);
                                                     }} /></div> */}

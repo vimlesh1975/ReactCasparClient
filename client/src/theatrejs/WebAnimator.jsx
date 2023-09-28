@@ -446,13 +446,10 @@ const WebAnimator = () => {
         }
 
         const changeId = (newValue) => {
-            // console.log(newValue)
             var newid = window.prompt('Please enter New Id:', newValue);
             const oldId = studio.selection[0].address.objectKey
-            if (newid !== null) {
-                // console.log(oldId, newid)
+            if (newid !== null && newid !== "") {
                 newid = newid.replace(/\s*\/\s*/g, ' / ')
-                // console.log(newid)
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
