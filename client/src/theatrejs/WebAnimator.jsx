@@ -33,6 +33,11 @@ export const deleteItem = (canvas) => {
     aa.forEach(element => {
         canvas.remove(element);
         sheet.detachObject(element.id);
+
+        // clearObjectsAllAnimation
+        studio.transaction((api) => {
+            api.__experimental_forgetObject(getObjectbyId(element.id));
+        })
     });
     canvas.discardActiveObject();
     canvas.requestRenderAll();
@@ -463,13 +468,15 @@ const WebAnimator = () => {
         }
         const clearAllAnimation = () => {
             studio.transaction((api) => {
-                api.__experimental_forgetSheet(project.sheet('Sheet 1'))
+                api.__experimental_forgetSheet(sheet);
             })
         }
         const clearObjectsAllAnimation = () => {
-            studio.transaction((api) => {
-                api.__experimental_forgetObject(getObjectbyId(studio.selection[0].address.objectKey))
-            })
+            if (studio.selection[0]?.type === 'Theatre_SheetObject_PublicAPI') {
+                studio.transaction((api) => {
+                    api.__experimental_forgetObject(studio.selection[0]);
+                })
+            }
         }
 
         const lockUnlock1 = (canvas) => {
