@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '20923_2';
+export const buildDate = '251023_1';
 
 export const getModifiedObject = (path1) => {
   const aa = {};
@@ -55,11 +55,11 @@ export const lockUnlock1 = (canvas, i, dispatch) => {
     lockScalingX: !element.lockScalingX,
     lockScalingY: !element.lockScalingY,
     lockRotation: !element.lockRotation,
-  })
-  element.selectable = !element.selectable
+  });
+  element.selectable = !element.selectable;
   canvas.requestRenderAll();
-  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
-}
+  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+};
 export const visibleInVisible = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
     if (i === ii) {
@@ -331,7 +331,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + '/endpoint', data)
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log('Error', aa);
     });
@@ -375,7 +375,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log('Error', aa);
     });
@@ -393,7 +393,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log('Error', aa);
       });
@@ -403,7 +403,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log('Error', aa);
       });
@@ -564,7 +564,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
@@ -667,7 +667,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 

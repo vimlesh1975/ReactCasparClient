@@ -7,9 +7,9 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
-    const [duration, setDuration] = useState(1);
-    const [outDuration, setOutDuration] = useState(0.5);
-    const [loopcount, setLoopcount] = useState(0);
+    const [duration, setDuration] = useState(2);
+    const [outDuration, setOutDuration] = useState(1);
+    const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
 
     const play = (layerNumber) => {
@@ -19,6 +19,25 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
         setTimeout(() => {
             playtoCasparcg(layerNumber, loopcount, duration);
         }, 100);
+
+        setTimeout(() => {
+            endpoint(`call ${window.chNumber}-${layerNumber} 
+            project.ready.then(() => {
+                window.sheet.sequence.play({range:[0,1]}).then(window.sheet.sequence.play({range:[1,2],iterationCount: Infinity,direction: 'alternateReverse'}));
+            })
+            `);
+        }, 3100);
+
+        setTimeout(() => {
+            executeScript(`
+            project.ready.then(() => {
+                window.sheet_${layerNumber}.sequence.play({range:[0,1]}).then(window.sheet_${layerNumber}.sequence.play({range:[1,2],iterationCount: Infinity,direction: 'alternateReverse'}));
+            })
+            `);
+        }, 2200);
+
+
+
     }
     const pause = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.pause()`);
