@@ -11,6 +11,9 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const [outDuration, setOutDuration] = useState(1);
     const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
+    const [loopAnimationStart, setLoopAnimationStart] = useState(1);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(2);
+    const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
 
     const play = (layerNumber) => {
         setMypage(canvasList[currentPage]?.pageName);
@@ -20,23 +23,23 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             playtoCasparcg(layerNumber, loopcount, duration);
         }, 100);
 
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} 
-            project.ready.then(() => {
-                window.sheet.sequence.play({range:[0,1]}).then(window.sheet.sequence.play({range:[1,2],iterationCount: Infinity,direction: 'alternateReverse'}));
-            })
-            `);
-        }, 3100);
+        if (enableLoopAnimation) {
+            setTimeout(() => {
+                endpoint(`call ${window.chNumber}-${layerNumber} 
+                project.ready.then(() => {
+                    window.sheet.sequence.play({range:[0,${duration}]}).then(window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: 'alternateReverse'}));
+                })
+                `);
+            }, 3100);
 
-        setTimeout(() => {
-            executeScript(`
-            project.ready.then(() => {
-                window.sheet_${layerNumber}.sequence.play({range:[0,1]}).then(window.sheet_${layerNumber}.sequence.play({range:[1,2],iterationCount: Infinity,direction: 'alternateReverse'}));
-            })
-            `);
-        }, 2200);
-
-
+            setTimeout(() => {
+                executeScript(`
+                project.ready.then(() => {
+                    window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: 'alternateReverse'}));
+                })
+                `);
+            }, 2200);
+        }
 
     }
     const pause = layerNumber => {
@@ -100,6 +103,11 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                 <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
                 <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             </div>
+            <div>
+                <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
+                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+            </div>
             {(mypage !== '') && <div>
                 <div >
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, false, false)}>GotoAndPlay</button>
@@ -110,6 +118,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, false)}>GotoAndPlay + Stop</button>
                     <button onClick={() => gotoAndReversePlayAndStop(layerNumber, true, true)}>GotoAndReversePlay + Stop</button>
                 </div>
+
             </div>}
             <div style={{ fontSize: 20, fontWeight: 'bold' }}>{mypage}</div>
         </div>
