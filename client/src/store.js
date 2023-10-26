@@ -1,25 +1,25 @@
-import { applyMiddleware } from "redux";
-import { legacy_createStore as createStore } from "redux";
+import { applyMiddleware } from 'redux';
+import { legacy_createStore as createStore } from 'redux';
 // import { configureStore} from  '@reduxjs/toolkit'
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunk from "redux-thunk";
-import { combineReducers } from "redux";
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import { combineReducers } from 'redux';
 
 const initialStateCanvasList = {
   canvasList: [
     {
-      pageName: "untitled_page",
-      pageValue: "",
-      animation: "",
-      animationTheatrejs: "",
-      jsfilename: "main",
-      cssfilename: "main",
+      pageName: 'untitled_page',
+      pageValue: '',
+      animation: '',
+      animationTheatrejs: '',
+      jsfilename: 'main',
+      cssfilename: 'main',
     },
   ],
 };
 const canvasListReducer = (state = initialStateCanvasList, action) => {
   switch (action.type) {
-    case "CHANGE_CANVAS_LIST":
+    case 'CHANGE_CANVAS_LIST':
       return {
         ...state,
         canvasList: action.payload,
@@ -31,14 +31,14 @@ const canvasListReducer = (state = initialStateCanvasList, action) => {
 
 const initialPlaylist = {
   playlist: [
-    { fileName: "amb.mp4" },
-    { fileName: "go1080p25.mp4" },
-    { fileName: "anchor.png" },
+    { fileName: 'amb.mp4' },
+    { fileName: 'go1080p25.mp4' },
+    { fileName: 'anchor.png' },
   ],
 };
 const playlistReducer = (state = initialPlaylist, action) => {
   switch (action.type) {
-    case "CHANGE_PLAYLIST":
+    case 'CHANGE_PLAYLIST':
       return {
         ...state,
         playlist: action.payload,
@@ -50,7 +50,7 @@ const playlistReducer = (state = initialPlaylist, action) => {
 const initialCurrentFile = { currentFile: 0 };
 const currentFileReducer = (state = initialCurrentFile, action) => {
   switch (action.type) {
-    case "CHANGE_CURRENT_FILE":
+    case 'CHANGE_CURRENT_FILE':
       return {
         ...state,
         currentFile: action.payload,
@@ -63,7 +63,7 @@ const currentFileReducer = (state = initialCurrentFile, action) => {
 const initialCurrentPage = { currentPage: 0 };
 const currentPageReducer = (state = initialCurrentPage, action) => {
   switch (action.type) {
-    case "CHANGE_CURRENT_PAGE":
+    case 'CHANGE_CURRENT_PAGE':
       return {
         ...state,
         currentPage: action.payload,
@@ -76,7 +76,7 @@ const currentPageReducer = (state = initialCurrentPage, action) => {
 const initialMedia = { media: [] };
 const mediaReducer = (state = initialMedia, action) => {
   switch (action.type) {
-    case "CHANGE_MEDIA":
+    case 'CHANGE_MEDIA':
       return {
         ...state,
         media: action.payload,
@@ -91,7 +91,7 @@ const initialImageName = {
 };
 const imageNameReducer = (state = initialImageName, action) => {
   switch (action.type) {
-    case "CHANGE_IMAGENAME":
+    case 'CHANGE_IMAGENAME':
       return {
         ...state,
         imageName: action.payload,
@@ -103,11 +103,11 @@ const imageNameReducer = (state = initialImageName, action) => {
 
 const initialOnlineImageUrl = {
   onlineImageUrl:
-    "https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg",
+    'https://fixthephoto.com/images/content/shirt-fabric-texture-471614080378.jpg',
 };
 const onlineImageUrleReducer = (state = initialOnlineImageUrl, action) => {
   switch (action.type) {
-    case "CHANGE_ONLINEIMAGE_URL":
+    case 'CHANGE_ONLINEIMAGE_URL':
       return {
         ...state,
         onlineImageUrl: action.payload,
@@ -120,7 +120,7 @@ const onlineImageUrleReducer = (state = initialOnlineImageUrl, action) => {
 const initialCanvas = { canvas: null };
 const canvasReducer = (state = initialCanvas, action) => {
   switch (action.type) {
-    case "CHANGE_CANVAS":
+    case 'CHANGE_CANVAS':
       return {
         ...state,
         canvas: action.payload,
@@ -133,7 +133,7 @@ const canvasReducer = (state = initialCanvas, action) => {
 const initialCanvaszoom = { zoom: 1 };
 const canvaszoomReducer = (state = initialCanvaszoom, action) => {
   switch (action.type) {
-    case "CHANGE_CANVAS_ZOOM":
+    case 'CHANGE_CANVAS_ZOOM':
       return {
         ...state,
         zoom: action.payload,
@@ -146,7 +146,7 @@ const canvaszoomReducer = (state = initialCanvaszoom, action) => {
 const initialcurrentscreenSize = { currentscreenSize: 1920 };
 const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
   switch (action.type) {
-    case "CHANGE_CURRENTSCREENSIZE":
+    case 'CHANGE_CURRENTSCREENSIZE':
       return {
         ...state,
         currentscreenSize: action.payload,
@@ -156,10 +156,10 @@ const currentscreenSizeReducer = (state = initialcurrentscreenSize, action) => {
   }
 };
 
-const initialjsfilename = { jsfilename: "main" };
+const initialjsfilename = { jsfilename: 'main' };
 const jsfilenameReducer = (state = initialjsfilename, action) => {
   switch (action.type) {
-    case "CHANGE_JSFILENAME":
+    case 'CHANGE_JSFILENAME':
       return {
         ...state,
         jsfilename: action.payload,
@@ -169,10 +169,10 @@ const jsfilenameReducer = (state = initialjsfilename, action) => {
   }
 };
 
-const initialcssfilename = { cssfilename: "main" };
+const initialcssfilename = { cssfilename: 'main' };
 const cssfilenameReducer = (state = initialcssfilename, action) => {
   switch (action.type) {
-    case "CHANGE_CSSFILENAME":
+    case 'CHANGE_CSSFILENAME':
       return {
         ...state,
         cssfilename: action.payload,
@@ -182,10 +182,10 @@ const cssfilenameReducer = (state = initialcssfilename, action) => {
   }
 };
 
-const initialjsfilename2 = { jsfilename2: "main2" };
+const initialjsfilename2 = { jsfilename2: 'main2' };
 const jsfilenameReducer2 = (state = initialjsfilename2, action) => {
   switch (action.type) {
-    case "CHANGE_JSFILENAME2":
+    case 'CHANGE_JSFILENAME2':
       return {
         ...state,
         jsfilename2: action.payload,
@@ -195,10 +195,10 @@ const jsfilenameReducer2 = (state = initialjsfilename2, action) => {
   }
 };
 
-const initialcssfilename2 = { cssfilename2: "main2" };
+const initialcssfilename2 = { cssfilename2: 'main2' };
 const cssfilenameReducer2 = (state = initialcssfilename2, action) => {
   switch (action.type) {
-    case "CHANGE_CSSFILENAME2":
+    case 'CHANGE_CSSFILENAME2':
       return {
         ...state,
         cssfilename2: action.payload,
@@ -211,7 +211,7 @@ const cssfilenameReducer2 = (state = initialcssfilename2, action) => {
 const initialPath1 = { path1: [] };
 const path1Reducer = (state = initialPath1, action) => {
   switch (action.type) {
-    case "CHANGE_PATH1":
+    case 'CHANGE_PATH1':
       return {
         ...state,
         path1: action.payload,
@@ -224,7 +224,7 @@ const path1Reducer = (state = initialPath1, action) => {
 const initialPannelEnable = { pannelEnable: true };
 const pannelEnableReducer = (state = initialPannelEnable, action) => {
   switch (action.type) {
-    case "CHANGE_PANNEL_ENABLED":
+    case 'CHANGE_PANNEL_ENABLED':
       return {
         ...state,
         pannelEnable: action.payload,
@@ -235,9 +235,12 @@ const pannelEnableReducer = (state = initialPannelEnable, action) => {
 };
 
 const initialshowExtensionPanel = { showExtensionPanel: false };
-const showExtensionPanelReducer = (state = initialshowExtensionPanel, action) => {
+const showExtensionPanelReducer = (
+  state = initialshowExtensionPanel,
+  action
+) => {
   switch (action.type) {
-    case "SHOW_EXTENSIONPANNEL":
+    case 'SHOW_EXTENSIONPANNEL':
       return {
         ...state,
         showExtensionPanel: action.payload,
@@ -247,11 +250,23 @@ const showExtensionPanelReducer = (state = initialshowExtensionPanel, action) =>
   }
 };
 
+const initialshowsavePanel = { showSavePanel: false };
+const showSavePanelReducer = (state = initialshowsavePanel, action) => {
+  switch (action.type) {
+    case 'SHOW_SAVEPANEL':
+      return {
+        ...state,
+        showSavePanel: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
 const initialShowId = { showId: true };
 const showIdReducer = (state = initialShowId, action) => {
   switch (action.type) {
-    case "SHOW_ID":
+    case 'SHOW_ID':
       return {
         ...state,
         showId: action.payload,
@@ -261,13 +276,12 @@ const showIdReducer = (state = initialShowId, action) => {
   }
 };
 
-
 const initialKf = {
   kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]),
 };
 const kfReducer = (state = initialKf, action) => {
   switch (action.type) {
-    case "CHANGE_KF":
+    case 'CHANGE_KF':
       return {
         ...state,
         kf: action.payload,
@@ -307,17 +321,17 @@ const initialxpositions = {
     finalOpacity: 1,
     finalOpacity2: 1,
 
-    initialMatrix: "matrix(1,0,0,1,0,500)",
-    finalMatrix: "matrix(1,0,0,1,100,250)",
-    finalMatrix2: "matrix(1,0,0,1,150,250)",
-    outMatrix: "matrix(1,0,0,1,700,400)",
+    initialMatrix: 'matrix(1,0,0,1,0,500)',
+    finalMatrix: 'matrix(1,0,0,1,100,250)',
+    finalMatrix2: 'matrix(1,0,0,1,150,250)',
+    outMatrix: 'matrix(1,0,0,1,700,400)',
     loop: 1,
   })),
 };
 
 const xpositionsReducer = (state = initialxpositions, action) => {
   switch (action.type) {
-    case "CHANGE_XPOSITIONS":
+    case 'CHANGE_XPOSITIONS':
       return {
         ...state,
         xpositions: action.payload,
@@ -328,17 +342,17 @@ const xpositionsReducer = (state = initialxpositions, action) => {
 };
 
 const initialSpeechRecognition = {
-  currentLanguage: "en-US",
+  currentLanguage: 'en-US',
   continuous1: false,
 };
 const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
   switch (action.type) {
-    case "CHANGE_CURRENTLANGUAGE":
+    case 'CHANGE_CURRENTLANGUAGE':
       return {
         ...state,
         currentLanguage: action.payload,
       };
-    case "CHANGE_CONTINUOUS1":
+    case 'CHANGE_CONTINUOUS1':
       return {
         ...state,
         continuous1: action.payload,
@@ -348,10 +362,10 @@ const speechRecognitionReducer = (state = initialSpeechRecognition, action) => {
   }
 };
 
-const initialClientId = { clientId: "1234" };
+const initialClientId = { clientId: '1234' };
 const clientIdReducer = (state = initialClientId, action) => {
   switch (action.type) {
-    case "CHANGE_CLIENTID":
+    case 'CHANGE_CLIENTID':
       return {
         ...state,
         clientId: action.payload,
@@ -380,6 +394,7 @@ const rootReducer = combineReducers({
   pannelEnableReducer,
   showIdReducer,
   showExtensionPanelReducer,
+  showSavePanelReducer,
   kfReducer,
   xpositionsReducer,
   speechRecognitionReducer,

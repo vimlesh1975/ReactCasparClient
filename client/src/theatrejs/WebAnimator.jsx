@@ -185,11 +185,8 @@ const changePropOfObject = (id, str1, str2) => {
 const DrawingforTheatrejs = ({ importHtml }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
-    // const [showExtensionPanel, setShowExtensionPanel] = useState(false);
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
-
-
-
+    const showSavePanel = useSelector(state => state.showSavePanelReducer.showSavePanel);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -201,13 +198,18 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                 set([
                     {
                         type: "Icon",
-                        title: "Extension",
-                        svgSource: "👁",
+                        title: `Element List`,
+                        svgSource: `E L`,
                         onClick: () => {
-                            // studio.createPane("Basic");
-                            // setShowExtensionPanel(val => !val);
                             dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: !showExtensionPanel });
-
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "Save Panel",
+                        svgSource: `S P`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_SAVEPANEL', payload: !showSavePanel });
                         }
                     }
                 ])
@@ -272,6 +274,9 @@ const DrawingforTheatrejs = ({ importHtml }) => {
 const arrObject = [];
 window.arrObject = arrObject;
 
+const loopDirection = [{ direction: 'normal', notation: 'N' }, { direction: 'reverse', notation: 'R' }, { direction: 'alternate', notation: 'A' }, { direction: 'alternateReverse', notation: 'AR' }]
+
+
 const WebAnimator = () => {
 
     const video1El = useRef(null);
@@ -281,8 +286,8 @@ const WebAnimator = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
-    const [duration, setDuration] = useState(2);
-    const [loopcount, setLoopcount] = useState(0);
+    const [duration, setDuration] = useState(1);
+    const [loopcount, setLoopcount] = useState(1);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
@@ -294,7 +299,9 @@ const WebAnimator = () => {
     const [y, setY] = useState(0);
 
     const [jsfilename, setJsfilename] = useState('main');
-    const [showSavePannel, setShowSavePannel] = useState(false);
+    // const [showSavePannel, setShowSavePannel] = useState(false);
+    const showSavePanel = useSelector(state => state.showSavePanelReducer.showSavePanel);
+
 
     const [chNumber, setChNumber] = useState(1);
 
@@ -568,8 +575,8 @@ const WebAnimator = () => {
                     <li onClick={() => sendToBack(canvas)}>Send To Back</li>
                     <li onClick={record}>Record</li>
                     <li onClick={() => {
-                        setShowSavePannel(val => !val);
-                    }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
+                        dispatch({ type: 'SHOW_SAVEPANNEL', payload: !showSavePanel });
+                    }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
                     {/* <li onClick={allInScreen}>All on Screen</li> */}
 
@@ -1076,11 +1083,19 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         executeScript(`sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        if (enableLoopAnimation) {
+            endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: Infinity, range: [${loopAnimationStart},${loopAnimationEnd}] ,direction: '${selectedOption}' });
         `)
-        executeScript(`sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+            executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: Infinity, range: [${loopAnimationStart},${loopAnimationEnd}] ,direction: '${selectedOption}'})`);
+
+        }
+        else {
+            endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        `)
+            executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+        }
     }
-    const playtoCasparcg = (layerNumber, loopcount, duration) => {
+    const playtoCasparcg = (layerNumber, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
@@ -1150,7 +1165,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+                window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
            
             canvas_${layerNumber}.getObjects().forEach((element,i) => {
@@ -1390,7 +1405,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+                window.sheet.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
             canvas.getObjects().forEach((element,i) => {
                 var obj1 = {};
@@ -1565,12 +1580,16 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
 
     const stopGraphics1 = (layerNumber) => {
-        endpoint(`stop ${window.chNumber}-${layerNumber}`);
-        executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
+        endpoint(` call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }).then(()=>stop ${window.chNumber}-${layerNumber}); `);
+        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`);
     }
 
     const exportHtml = async (overRide = false) => {
         const xx4 = `
+
+        document.body.addEventListener('keypress', function(e) {
+            if(e.key.toUpperCase() === "S") { stop(); }
+          });
         const getModifiedObject = (path1) => {
             const aa = {};
             path1.path.forEach((element, i) => {
@@ -1891,8 +1910,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         })
         });
         project.ready.then(() => {
-            sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
-        })
+            window.sheet.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+        });
          <//script>
          <script>
          var dataCaspar = {};
@@ -1967,7 +1986,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
              dataInsert(dataCaspar); // Insert data
          }
          function stop() {
-             document.body.innerHTML = '';
+            window.sheet.sequence.play({ direction: 'reverse' }).then(()=>document.body.innerHTML = '');
          }
          const findElementWithId = (group, id) => {
             const objects = group.getObjects();
@@ -2387,6 +2406,14 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     //         }
     //     })
     // }
+    const [loopAnimationStart, setLoopAnimationStart] = useState(1);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(6);
+    const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
+    const [selectedOption, setSelectedOption] = useState('alternate');
+
+    const handleOptionChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
 
     return (<>
         <video
@@ -2405,13 +2432,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }}>Data from LocalStorage</button>
             {/* <button onClick={test}>test</button> */}
             <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
-            <b>Channel:</b>
+            <b>Ch:</b>
             <select onChange={e => changeChannelNumber(e)} value={chNumber}>
                 {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
             </select>
 
             <span>Id:</span>
-            <input style={{ width: 100 }} value={idofElement} onChange={e => setIdofElement((e.target.value).replace(/\s*\/\s*/g, ' / '))} />
+            <input style={{ width: 75 }} value={idofElement} onChange={e => setIdofElement((e.target.value).replace(/\s*\/\s*/g, ' / '))} />
             <button onClick={() => reset()}>Reset</button>
 
 
@@ -2420,15 +2447,32 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             <button onClick={() => {
                 sheet.sequence.position = 0;
                 setTimeout(() => {
-                    playtoCasparcg(templateLayers.theatrejs, loopcount, duration);
+                    playtoCasparcg(templateLayers.theatrejs, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption);
                 }, 100);
             }}><FaPlay /></button>
             <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
             <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
-            <span>Duration:</span><input type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
-            <span title="Put 0 for Infinity">Loop:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+            <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+
+
+            <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
+            <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+            <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+
+            {loopDirection.map((option, index) => (
+                <label key={index} title={option.direction}>
+                    <input
+                        type="radio"
+                        value={option.direction}
+                        checked={selectedOption === option.direction}
+                        onChange={handleOptionChange}
+                    />
+                    {option.notation}
+                </label>
+            ))}
 
             Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
             Html:
@@ -2446,12 +2490,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }}>Overwrite</button>}
             {htmlfileHandle?.name}
             <button onClick={() => importHtml()}>Import</button>
-            Client Id<input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 100 }} type={'text'} value={clientId} onChange={e => {
+            <span title='Html Client Id for html outPut'>Client Id</span><input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 50 }} type={'text'} value={clientId} onChange={e => {
                 dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
             }} />
-            <button onClick={() => {
+            {/* <button onClick={() => {
                 setShowSavePannel(val => !val);
-            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button>
+            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button> */}
             <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
             FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
 
@@ -2465,7 +2509,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 console.log(canvas.getActiveObjects()[0])
                 // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
             }}>.</button>
-            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePannel ? 'none' : '' }}>
+            <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePanel ? 'none' : '' }}>
                 <Tabs forceRenderTabPanel={true} >
                     <TabList>
                         <Tab>Save Pannel</Tab>

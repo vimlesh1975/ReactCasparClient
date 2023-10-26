@@ -9,7 +9,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
-    const [duration, setDuration] = useState(6);
+    const [duration, setDuration] = useState(1);
     const [outDuration, setOutDuration] = useState(1);
     const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
@@ -28,26 +28,27 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
         window.sheet.sequence.position = 0;
         setTimeout(() => {
-            playtoCasparcg(layerNumber, loopcount, duration);
+            // playtoCasparcg(layerNumber, loopcount, duration);
+            playtoCasparcg(layerNumber, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption);
         }, 100);
 
-        if (enableLoopAnimation) {
-            setTimeout(() => {
-                endpoint(`call ${window.chNumber}-${layerNumber} 
-                project.ready.then(() => {
-                    window.sheet.sequence.play({range:[0,${duration}]}).then(window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
-                })
-                `);
-            }, 3100);
+        // if (enableLoopAnimation) {
+        //     setTimeout(() => {
+        //         endpoint(`call ${window.chNumber}-${layerNumber} 
+        //         project.ready.then(() => {
+        //             window.sheet.sequence.play({range:[0,${duration}]}).then(()=>window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+        //         })
+        //         `);
+        //     }, 200);
 
-            setTimeout(() => {
-                executeScript(`
-                project.ready.then(() => {
-                    window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
-                })
-                `);
-            }, 2200);
-        }
+        //     setTimeout(() => {
+        //         executeScript(`
+        //         project.ready.then(() => {
+        //             window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(()=>window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+        //         })
+        //         `);
+        //     }, 200);
+        // }
 
     }
     const pause = layerNumber => {
@@ -55,23 +56,22 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
         executeScript(`window.sheet_${layerNumber}.sequence.pause()`);
     }
     const resume = layerNumber => {
-        endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        if (enableLoopAnimation) {
+            endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: Infinity, range: [${loopAnimationStart},${loopAnimationEnd}] ,direction: '${selectedOption}' });
         `)
-        executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+            executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: Infinity, range: [${loopAnimationStart},${loopAnimationEnd}] ,direction: '${selectedOption}'})`);
+
+        }
+        else {
+            endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] });
+        `)
+            executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
+        }
     }
     const stopGraphics1 = (layerNumber) => {
         setMypage('');
-
-        endpoint(` call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }); `);
-        setTimeout(() => {
-            endpoint(`stop ${window.chNumber}-${layerNumber}`);
-        }, duration * 1000);
-
-        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' });`);
-        setTimeout(() => {
-            executeScript(` document.getElementById('divid_${layerNumber}')?.remove(); `);
-        }, duration * 1000);
-
+        endpoint(` call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }).then(()=>stop ${window.chNumber}-${layerNumber}); `);
+        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`);
     }
 
     // const stopAll = () => {
@@ -112,7 +112,11 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                 <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
             </div>
             <div>
-
+                <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
+                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+            </div>
+            <div>
                 {loopDirection.map((option, index) => (
                     <label key={index}>
                         <input
@@ -124,13 +128,6 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                         {option}
                     </label>
                 ))}
-
-
-            </div>
-            <div>
-                <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
-                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
-                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
             </div>
             {(mypage !== '') && <div>
                 <div >
