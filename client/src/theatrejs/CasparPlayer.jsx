@@ -3,17 +3,25 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { endpoint, executeScript } from '../common'
 import { useSelector } from 'react-redux'
 
+const loopDirection = ['normal', 'reverse', 'alternate', 'alternateReverse']
+
 const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
 
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentPage = useSelector(state => state.currentPageReducer.currentPage);
-    const [duration, setDuration] = useState(2);
+    const [duration, setDuration] = useState(6);
     const [outDuration, setOutDuration] = useState(1);
     const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
     const [loopAnimationStart, setLoopAnimationStart] = useState(1);
-    const [loopAnimationEnd, setLoopAnimationEnd] = useState(2);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(6);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
+
+    const [selectedOption, setSelectedOption] = useState('alternate');
+
+    const handleOptionChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
 
     const play = (layerNumber) => {
         setMypage(canvasList[currentPage]?.pageName);
@@ -27,7 +35,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             setTimeout(() => {
                 endpoint(`call ${window.chNumber}-${layerNumber} 
                 project.ready.then(() => {
-                    window.sheet.sequence.play({range:[0,${duration}]}).then(window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: 'alternateReverse'}));
+                    window.sheet.sequence.play({range:[0,${duration}]}).then(window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
                 })
                 `);
             }, 3100);
@@ -35,7 +43,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             setTimeout(() => {
                 executeScript(`
                 project.ready.then(() => {
-                    window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: 'alternateReverse'}));
+                    window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
                 })
                 `);
             }, 2200);
@@ -102,6 +110,22 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
                 <button title='Reverse Play and Remove' onClick={() => stopGraphics1(layerNumber)}><FaStop /></button>
                 <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
                 <span title="Loop">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            </div>
+            <div>
+
+                {loopDirection.map((option, index) => (
+                    <label key={index}>
+                        <input
+                            type="radio"
+                            value={option}
+                            checked={selectedOption === option}
+                            onChange={handleOptionChange}
+                        />
+                        {option}
+                    </label>
+                ))}
+
+
             </div>
             <div>
                 <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
