@@ -28,6 +28,8 @@ import { Provider } from 'react-redux'
 import store from '../store'
 import { edit } from '../PathModifier'
 
+const loopcount = 1;
+
 export const deleteItem = (canvas) => {
     const aa = canvas.getActiveObjects();
     aa.forEach(element => {
@@ -287,7 +289,7 @@ const WebAnimator = () => {
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const [duration, setDuration] = useState(1);
-    const [loopcount, setLoopcount] = useState(1);
+    // const [loopcount, setLoopcount] = useState(1);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
@@ -2100,8 +2102,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             initialiseCore(canvasContent1, true);
 
             project.ready.then(() => {
-                // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
-                sheet.sequence.play({ iterationCount: (parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount), range: [0, parseFloat(duration)] })
+                sheet.sequence.play({ range: [0, parseFloat(duration)] }).then(() => sheet.sequence.play({ iterationCount: enableLoopAnimation ? Infinity : 1, range: [parseFloat(duration), 6], direction: selectedOption }));
             });
         }
         else {
@@ -2455,7 +2456,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
             <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
             <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
-            <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} />
+            {/* <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} /> */}
 
 
             <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
