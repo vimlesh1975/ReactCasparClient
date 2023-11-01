@@ -2417,99 +2417,102 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     };
 
     return (<>
-        <video
-            ref={video1El}
-            loop
-            // muted
-            width="1920"
-            height="1080"
-            style={{ display: 'none' }}        >
+        <div style={{}} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
+            <video
+                ref={video1El}
+                loop
+                // muted
+                width="1920"
+                height="1080"
+                style={{ display: 'none' }}        >
 
-        </video>
-        <div style={{ textAlign: 'center' }} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
-            <button title='ReactCasparClient Save to localstorage button' onClick={() => {
-                deleteAllObjects();
-                initialiseCore(localStorage.getItem('RCCpageData'));
-            }}>Data from LocalStorage</button>
-            {/* <button onClick={test}>test</button> */}
-            <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
-            <b>Ch:</b>
-            <select onChange={e => changeChannelNumber(e)} value={chNumber}>
-                {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
-            </select>
+            </video>
+            <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 49, backgroundColor: 'white', height: 25, width: 1920 }}></div>
+            <div style={{ position: 'absolute', left: 120, top: 0, zIndex: 50, textAlign: 'center' }}>
+                <button title='ReactCasparClient Save to localstorage button' onClick={() => {
+                    deleteAllObjects();
+                    initialiseCore(localStorage.getItem('RCCpageData'));
+                }}>Data from LocalStorage</button>
+                {/* <button onClick={test}>test</button> */}
+                <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
+                <b>Ch:</b>
+                <select onChange={e => changeChannelNumber(e)} value={chNumber}>
+                    {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
+                </select>
 
-            <span>Id:</span>
-            <input style={{ width: 75 }} value={idofElement} onChange={e => setIdofElement((e.target.value).replace(/\s*\/\s*/g, ' / '))} />
-            <button onClick={() => reset()}>Reset</button>
-
-
-            <span>Caspar:</span>
-
-            <button onClick={() => {
-                sheet.sequence.position = 0;
-                setTimeout(() => {
-                    playtoCasparcg(templateLayers.theatrejs, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption);
-                }, 100);
-            }}><FaPlay /></button>
-            <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
-            <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
-
-            <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
-            <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
-            {/* <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} /> */}
+                <span>Id:</span>
+                <input style={{ width: 75 }} value={idofElement} onChange={e => setIdofElement((e.target.value).replace(/\s*\/\s*/g, ' / '))} />
+                <button onClick={() => reset()}>Reset</button>
 
 
-            <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
-            <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
-            <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+                <span>Caspar:</span>
 
-            {loopDirection.map((option, index) => (
-                <label key={index} title={option.direction}>
-                    <input
-                        type="radio"
-                        value={option.direction}
-                        checked={selectedOption === option.direction}
-                        onChange={handleOptionChange}
-                    />
-                    {option.notation}
-                </label>
-            ))}
+                <button onClick={() => {
+                    sheet.sequence.position = 0;
+                    setTimeout(() => {
+                        playtoCasparcg(templateLayers.theatrejs, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption);
+                    }, 100);
+                }}><FaPlay /></button>
+                <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
+                <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
 
-            Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
-            Html:
-            <button onClick={() => {
-                sheet.sequence.position = 0;
-                setTimeout(() => {
-                    exportHtml();
-                }, 1000);
-            }}>Export</button>
-            {htmlfileHandle && <button onClick={() => {
-                sheet.sequence.position = 0;
-                setTimeout(() => {
-                    exportHtml(true);
-                }, 1000);
-            }}>Overwrite</button>}
-            {htmlfileHandle?.name}
-            <button onClick={() => importHtml()}>Import</button>
-            <span title='Html Client Id for html outPut'>Client Id</span><input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 50 }} type={'text'} value={clientId} onChange={e => {
-                dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
-            }} />
-            {/* <button onClick={() => {
+                <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
+                <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+                {/* <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} /> */}
+
+
+                <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
+                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+
+                {loopDirection.map((option, index) => (
+                    <label key={index} title={option.direction}>
+                        <input
+                            type="radio"
+                            value={option.direction}
+                            checked={selectedOption === option.direction}
+                            onChange={handleOptionChange}
+                        />
+                        {option.notation}
+                    </label>
+                ))}
+
+                Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
+                Html:
+                <button onClick={() => {
+                    sheet.sequence.position = 0;
+                    setTimeout(() => {
+                        exportHtml();
+                    }, 1000);
+                }}>Export</button>
+                {htmlfileHandle && <button onClick={() => {
+                    sheet.sequence.position = 0;
+                    setTimeout(() => {
+                        exportHtml(true);
+                    }, 1000);
+                }}>Overwrite</button>}
+                {htmlfileHandle?.name}
+                <button onClick={() => importHtml()}>Import</button>
+                <span title='Html Client Id for html outPut'>Client Id</span><input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 50 }} type={'text'} value={clientId} onChange={e => {
+                    dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
+                }} />
+                {/* <button onClick={() => {
                 setShowSavePannel(val => !val);
             }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button> */}
-            <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
-            FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
+                <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
+                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
 
-            Size: <select value={currentscreenSize} onChange={e => {
-                localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))
-                dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) })
-            }
-            }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
-            <button onClick={() => {
-                console.log(arrObject[0])
-                console.log(canvas.getActiveObjects()[0])
-                // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
-            }}>.</button>
+                Size: <select value={currentscreenSize} onChange={e => {
+                    localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))
+                    dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(e.target.value) })
+                }
+                }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
+                <button onClick={() => {
+                    console.log(arrObject[0])
+                    console.log(canvas.getActiveObjects()[0])
+                    // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
+                }}>.</button>
+            </div>
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePanel ? 'none' : '' }}>
                 <Tabs forceRenderTabPanel={true} >
                     <TabList>

@@ -69,8 +69,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
         <Rnd enableResizing={{}}
             style={{ zIndex: 201, }}
             default={{
-                x: 500,
-                y: 20,
+                x: x,
+                y: y,
 
             }}
             onDrag={(e, d) => {
@@ -80,7 +80,7 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                 <input style={{ marginLeft: 50, width: 150 }} placeholder='Search Id' type='text' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /></div>
         </Rnd>
 
-        <div style={{ zIndex: 201, position: 'absolute', left: x, top: y, border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
+        <div style={{ zIndex: 201, position: 'absolute', left: x, top: y + 23, border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
