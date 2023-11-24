@@ -2455,6 +2455,18 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }}><FaPlay /></button>
                 <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
                 <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
+                <button title='Update Text' onClick={() => {
+                    canvas.getObjects().forEach((element, i) => {
+                        console.log(element.type)
+                        if (element.type === 'textbox') {
+                            endpoint(`call 1-166 console.log(canvas.getObjects()[${i}].set({text:'${element.text}'}));`);
+                            endpoint(`call 1-166 canvas.requestRenderAll()`);
+                            executeScript(`canvas_166.getObjects()[${i}].set({text:'${element.text}'});
+                            canvas_166.requestRenderAll();
+                            `)
+                        }
+                    })
+                }}>Update</button>
 
                 <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
                 <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
@@ -2508,9 +2520,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
                 }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 <button onClick={() => {
-                    console.log(arrObject[0])
-                    console.log(canvas.getActiveObjects()[0])
-                    // project.sheet('Sheet 1', "kk").object(arrObject[0].address.objectKey, arrObject[0])
+                    // console.log(arrObject[0])
+                    // console.log(canvas.getActiveObjects()[0])
+
                 }}>.</button>
             </div>
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePanel ? 'none' : '' }}>
