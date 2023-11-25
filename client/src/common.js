@@ -2,7 +2,24 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '241123_1';
+export const buildDate = '251123_1';
+
+export const updateText = (canvas, layerNumber) => {
+  canvas.getObjects().forEach((element, i) => {
+    console.log(element.type);
+    if (element.type === 'textbox') {
+      endpoint(
+        `call ${window.chNumber}-${layerNumber} console.log(canvas.getObjects()[${i}].set({text:'${element.text}'}));`
+      );
+      endpoint(
+        `call ${window.chNumber}-${layerNumber} canvas.requestRenderAll()`
+      );
+      executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:'${element.text}'});
+      canvas_${layerNumber}.requestRenderAll();
+      `);
+    }
+  });
+};
 
 export const getModifiedObject = (path1) => {
   const aa = {};
@@ -331,7 +348,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + '/endpoint', data)
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log('Error', aa);
     });
@@ -375,7 +392,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log('Error', aa);
     });
@@ -393,7 +410,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log('Error', aa);
       });
@@ -403,7 +420,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log('Error', aa);
       });
@@ -431,6 +448,15 @@ export const updateGraphics = (canvas, layerNumber) => {
   endpoint(`call ${window.chNumber}-${layerNumber} "
     aa.innerHTML='${canvas.toSVG().replaceAll('"', '\\"')}';
         "`);
+};
+
+export const stopGraphics1 = (layerNumber) => {
+  endpoint(
+    ` call ${window.chNumber}-${layerNumber} "window.sheet.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());" `
+  );
+  executeScript(
+    `window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`
+  );
 };
 
 export const stopGraphics = (layerNumber) => {
@@ -564,7 +590,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
@@ -667,7 +693,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 

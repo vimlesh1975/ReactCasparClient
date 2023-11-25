@@ -8,7 +8,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -1097,6 +1097,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             executeScript(`window.sheet_${layerNumber}.sequence.play({ iterationCount: ${(parseInt(loopcount) === 0) ? Infinity : parseInt(loopcount)}, range: [0, ${duration}] })`);
         }
     }
+
+
     const playtoCasparcg = (layerNumber, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
@@ -1581,10 +1583,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         "`)
     }
 
-    const stopGraphics1 = (layerNumber) => {
-        endpoint(` call ${window.chNumber}-${layerNumber} window.sheet.sequence.play({ direction: 'reverse' }).then(()=>stop ${window.chNumber}-${layerNumber}); `);
-        executeScript(`window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`);
-    }
+
 
     const exportHtml = async (overRide = false) => {
         const xx4 = `
@@ -2456,23 +2455,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 <button onClick={() => pause(templateLayers.theatrejs)}><FaPause /></button>
                 <button title='Resume' onClick={() => resume(templateLayers.theatrejs)}><FaPause /><FaPlay /></button>
                 <button title='Update Text' onClick={() => {
-                    canvas.getObjects().forEach((element, i) => {
-                        console.log(element.type)
-                        if (element.type === 'textbox') {
-                            endpoint(`call 1-166 console.log(canvas.getObjects()[${i}].set({text:'${element.text}'}));`);
-                            endpoint(`call 1-166 canvas.requestRenderAll()`);
-                            executeScript(`canvas_166.getObjects()[${i}].set({text:'${element.text}'});
-                            canvas_166.requestRenderAll();
-                            `)
-                        }
-                    })
+                    updateText(canvas, templateLayers.theatrejs)
                 }}>Update</button>
 
                 <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
                 <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
-                {/* <span title="Put 0 for Infinity">L:</span><input title="Put 0 for Infinity" type="number" value={loopcount} style={{ width: 30 }} onChange={e => setLoopcount(e.target.value)} /> */}
-
-
                 <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
                 <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
                 <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
@@ -2489,7 +2476,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     </label>
                 ))}
 
-                Js:<input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
+                <span style={{ marginLeft: 5 }}>js:</span><input type='text' style={{ width: 60 }} value={jsfilename} onChange={e => setJsfilename(e.target.value)} />
                 Html:
                 <button onClick={() => {
                     sheet.sequence.position = 0;
