@@ -263,6 +263,22 @@ const showSavePanelReducer = (state = initialshowsavePanel, action) => {
   }
 };
 
+const initialshowDataUpdatePanel = { showDataUpdatePanel: false };
+const showDataUpdatePanelReducer = (
+  state = initialshowDataUpdatePanel,
+  action
+) => {
+  switch (action.type) {
+    case 'SHOW_DATA_UPDATE':
+      return {
+        ...state,
+        showDataUpdatePanel: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
 const initialShowId = { showId: true };
 const showIdReducer = (state = initialShowId, action) => {
   switch (action.type) {
@@ -395,6 +411,7 @@ const rootReducer = combineReducers({
   showIdReducer,
   showExtensionPanelReducer,
   showSavePanelReducer,
+  showDataUpdatePanelReducer,
   kfReducer,
   xpositionsReducer,
   speechRecognitionReducer,

@@ -2,11 +2,10 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '251123_1';
+export const buildDate = '011223_1';
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
-    console.log(element.type);
     if (element.type === 'textbox') {
       endpoint(
         `call ${window.chNumber}-${layerNumber} console.log(canvas.getObjects()[${i}].set({text:'${element.text}'}));`

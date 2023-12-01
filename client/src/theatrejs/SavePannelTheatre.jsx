@@ -97,8 +97,8 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         importHtml(json, animationTheatrejs)
 
         dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false });
-
     }
+
     const updatePage = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), animationTheatrejs: JSON.stringify(window.studio.createContentOfSaveFile(window.projectId)) } : val;

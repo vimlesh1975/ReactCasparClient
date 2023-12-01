@@ -22,6 +22,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import Papa from "papaparse";
 import ExtensionPannel from './ExtensionPannel';
+import DataUpdatePanel from './DataUpdatePanel';
+
 
 import { Provider } from 'react-redux'
 
@@ -189,6 +191,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
     const dispatch = useDispatch();
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
     const showSavePanel = useSelector(state => state.showSavePanelReducer.showSavePanel);
+    const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -212,6 +215,14 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         svgSource: `S P`,
                         onClick: () => {
                             dispatch({ type: 'SHOW_SAVEPANEL', payload: !showSavePanel });
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "Data Update Panel",
+                        svgSource: `D U`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_DATA_UPDATE', payload: !showDataUpdatePanel });
                         }
                     }
                 ])
@@ -270,6 +281,9 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
         {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
+        <div style={{ position: 'absolute', left: 500, top: 50, backgroundColor: 'grey', display: showDataUpdatePanel ? '' : 'none' }}>
+            <DataUpdatePanel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
+        </div>
     </div>);
 };
 
@@ -2427,13 +2441,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
             </video>
             <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 49, backgroundColor: 'white', height: 25, width: 1920 }}></div>
-            <div style={{ position: 'absolute', left: 120, top: 0, zIndex: 50, textAlign: 'center' }}>
-                <button title='ReactCasparClient Save to localstorage button' onClick={() => {
+            <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 50, textAlign: 'center' }}>
+                <button title='Data from Local Storage' onClick={() => {
                     deleteAllObjects();
                     initialiseCore(localStorage.getItem('RCCpageData'));
-                }}>Data from LocalStorage</button>
+                }}>DataFrom Lo.Strg</button>
                 {/* <button onClick={test}>test</button> */}
-                <button onClick={() => saveToLocalStorage(canvas)}>Save To LocalStorage</button>
+                <button title='Save to Local Storage' onClick={() => saveToLocalStorage(canvas)}>SaveTo Lo.Strg</button>
                 <b>Ch:</b>
                 <select onChange={e => changeChannelNumber(e)} value={chNumber}>
                     {chNumbers.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
