@@ -1867,7 +1867,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 <script>${coreAndStudio1}<//script>
         </head>
 
-        <body style='overflow:hidden'>
+        <body style='overflow:hidden; margin:0;'>
 
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script>
