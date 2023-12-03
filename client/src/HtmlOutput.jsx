@@ -1,11 +1,11 @@
 import React from 'react'
 import { useSelector } from "react-redux";
 
-const HtmlOutput = () => {
+const HtmlOutput = ({ scale }) => {
     const clientId = useSelector((state) => state.clientIdReducer.clientId);
 
     return (
-        <div style={{ position: 'absolute', width: 1920, height: 1080, transform: 'scale(.28)', transformOrigin: '0 0' }}>
+        <div style={{ position: 'absolute', width: 1920, height: 1080, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
             <iframe style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} src={"/ReactCasparClient/html/" + clientId} title='HtmlOutput'></iframe>
 
         </div>

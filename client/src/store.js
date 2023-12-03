@@ -292,6 +292,21 @@ const showIdReducer = (state = initialShowId, action) => {
   }
 };
 
+
+const initialShowHtmlOutput = { showHtmlOutput: false };
+const showHtmlOutputReducer = (state = initialShowHtmlOutput, action) => {
+  switch (action.type) {
+    case 'SHOW_HTML_OUTPUT':
+      return {
+        ...state,
+        showHtmlOutput: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
 const initialKf = {
   kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]),
 };
@@ -409,6 +424,7 @@ const rootReducer = combineReducers({
   cssfilenameReducer2,
   pannelEnableReducer,
   showIdReducer,
+  showHtmlOutputReducer,
   showExtensionPanelReducer,
   showSavePanelReducer,
   showDataUpdatePanelReducer,

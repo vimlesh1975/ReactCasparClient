@@ -621,7 +621,7 @@ const App = () => {
                   </div>
                 </TabPanel>
                 <TabPanel>
-                  <HtmlOutput />
+                  <HtmlOutput scale={0.28} />
                 </TabPanel>
               </Tabs>
             </div>

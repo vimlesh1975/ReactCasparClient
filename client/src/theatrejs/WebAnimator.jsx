@@ -29,6 +29,8 @@ import { Provider } from 'react-redux'
 
 import store from '../store'
 import { edit } from '../PathModifier'
+import HtmlOutput from '../HtmlOutput'
+import { Rnd } from 'react-rnd';
 
 const loopcount = 1;
 
@@ -192,6 +194,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
     const showSavePanel = useSelector(state => state.showSavePanelReducer.showSavePanel);
     const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
+    const showHtmlOutput = useSelector(state => state.showHtmlOutputReducer.showHtmlOutput);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -223,6 +226,14 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         svgSource: `D U`,
                         onClick: () => {
                             dispatch({ type: 'SHOW_DATA_UPDATE', payload: !showDataUpdatePanel });
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "Html Output",
+                        svgSource: `H O`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_HTML_OUTPUT', payload: !showHtmlOutput });
                         }
                     }
                 ])
@@ -281,10 +292,44 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
         {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
-        <div style={{ position: 'absolute', left: 500, top: 50, backgroundColor: 'grey', display: showDataUpdatePanel ? '' : 'none' }}>
-            <DataUpdatePanel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
-        </div>
-    </div>);
+
+        <Rnd enableResizing={{}}
+            default={{
+                x: 1070,
+                y: 50,
+
+            }}
+            dragHandleClassName="my-drag-handle2"
+        >
+
+            <div style={{ backgroundColor: 'grey', display: showDataUpdatePanel ? '' : 'none' }}>
+                <div className='my-drag-handle2' style={{ width: 450, height: 20, backgroundColor: 'white' }} >
+                    Drag me
+                    <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_DATA_UPDATE', payload: !showDataUpdatePanel })}>X</button>
+                </div>
+                <DataUpdatePanel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
+            </div>
+        </Rnd >
+
+
+        <Rnd enableResizing={{}}
+            default={{
+                x: 0,
+                y: 300,
+
+            }}
+            dragHandleClassName="my-drag-handle"
+        >
+            <div style={{ backgroundColor: 'grey', display: showHtmlOutput ? '' : 'none' }}>
+                <div className='my-drag-handle' style={{ width: 1056, height: 20, backgroundColor: 'white' }} >
+                    Drag me
+                    <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_HTML_OUTPUT', payload: !showHtmlOutput })}>X</button>
+                </div>
+                <HtmlOutput scale={0.55} />
+            </div>
+        </Rnd >
+
+    </div >);
 };
 
 const arrObject = [];

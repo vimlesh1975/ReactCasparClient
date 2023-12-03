@@ -10,7 +10,7 @@ const playLayers = [templateLayers.theatrejs, ...theatreLayers]
 const CustomClient = ({ importHtml }) => {
 
     const [selectedOption, setSelectedOption] = useState(166);
-    const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
+    // const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
 
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
@@ -269,7 +269,7 @@ const CustomClient = ({ importHtml }) => {
                             {canvasList.map((val, i) => { return <option key={uuidv4()} value={val.pageName}>{val.pageName}</option> })}
                         </select>
                         <button onClick={getAllKeyValue}>getAllKeyValue</button>
-                        <button onClick={() => { dispatch({ type: 'SHOW_DATA_UPDATE', payload: !showDataUpdatePanel }); }}>X</button>
+                        {/* <button onClick={() => { dispatch({ type: 'SHOW_DATA_UPDATE', payload: !showDataUpdatePanel }); }}>X</button> */}
 
                     </div>
                     {/* <button onClick={saveList}>Save List</button>  */}
@@ -312,12 +312,12 @@ const CustomClient = ({ importHtml }) => {
                                             settextNodes(updatedKeyframe)
                                         }}
                                     /></td><td>=
-                                        {(isNaN(val.value - 1)) ? <input style={{ width: 200, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
+                                        {(isNaN(val.value) || (val.value === '')) ? <input style={{ width: 200, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
                                             const updatednodes = textNodes.map((val, index) => {
                                                 return (i === index) ? { ...val, value: e.target.value } : val;
                                             });
                                             settextNodes(updatednodes)
-                                        }} /> : <><input style={{ width: 50, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
+                                        }} /> : <><input style={{ width: 70, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
                                             const updatednodes = textNodes.map((val, index) => {
                                                 return (i === index) ? { ...val, value: e.target.value } : val;
                                             });

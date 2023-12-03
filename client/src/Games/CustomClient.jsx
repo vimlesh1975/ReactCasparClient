@@ -256,34 +256,59 @@ const CustomClient = () => {
                     <table border='0'><tbody>
                         {textNodes.map((val, i) => {
                             if (val.type === 'text') {
-                                return (<tr key={i}>
-                                    <td><input disabled type='text' style={{ width: 260 }} value={val.key}
-                                        onChange={e => {
-                                            const updatedKeyframe = textNodes.map((val, index) => {
-                                                return (i === index) ? { ...val, key: e.target.value } : val;
-                                            });
-                                            settextNodes(updatedKeyframe)
-                                        }}
-                                    /></td><td>=
-                                        {(isNaN(val.value - 1)) ? <input style={{ width: 300, fontFamily: val.fontFamily }} type='text' value={val.value} onChange={e => {
-                                            const updatednodes = textNodes.map((val, index) => {
-                                                return (i === index) ? { ...val, value: e.target.value } : val;
-                                            });
-                                            settextNodes(updatednodes)
-                                        }} /> : <><input style={{ width: 50, fontFamily: val.fontFamily }} type='number' value={val.value} onChange={e => {
-                                            const updatednodes = textNodes.map((val, index) => {
-                                                return (i === index) ? { ...val, value: e.target.value } : val;
-                                            });
-                                            settextNodes(updatednodes);
-                                        }} /><button onClick={() => {
-                                            const updatednodes = textNodes.map((val, index) => {
-                                                return (i === index) ? { ...val, value: parseFloat(val.value) + 1 } : val;
-                                            });
-                                            settextNodes(updatednodes);
-                                        }
-                                        }>+</button></>}
-                                    </td>
-                                </tr>)
+                                return (
+                                    <tr key={i}>
+                                        <td>
+                                            <input
+                                                disabled
+                                                type='text'
+                                                style={{ width: 260 }}
+                                                value={val.key}
+                                            />
+                                        </td>
+                                        <td>
+                                            {
+                                                (isNaN(val.value) || (val.value === '')) ? (
+                                                    <input
+                                                        style={{ width: 300, fontFamily: val.fontFamily }}
+                                                        type='text'
+                                                        value={val.value}
+                                                        onChange={e => {
+                                                            const updatednodes = textNodes.map((node, index) => (
+                                                                (i === index) ? { ...node, value: e.target.value } : node
+                                                            ));
+                                                            settextNodes(updatednodes);
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <input
+                                                            style={{ width: 50, fontFamily: val.fontFamily }}
+                                                            type='number'
+                                                            value={val.value}
+                                                            onChange={e => {
+                                                                const updatednodes = textNodes.map((node, index) => (
+                                                                    (i === index) ? { ...node, value: e.target.value } : node
+                                                                ));
+                                                                settextNodes(updatednodes);
+                                                            }}
+                                                        />
+                                                        <button onClick={() => {
+                                                            const updatednodes = textNodes.map((node, index) => (
+                                                                (i === index) ? { ...node, value: parseFloat(node.value) + 1 } : node
+                                                            ));
+                                                            settextNodes(updatednodes);
+                                                        }}>
+                                                            +
+                                                        </button>
+                                                    </>
+                                                )
+                                            }
+                                        </td>
+                                    </tr>
+
+
+                                )
                             }
                             else if (val.type === 'image') {
                                 return (<tr key={i}>
