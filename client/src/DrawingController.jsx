@@ -1195,7 +1195,7 @@ export const paste = (canvas) => {
         if (clonedObj.type === "activeSelection") {
           // active selection needs a reference to the canvas.
           clonedObj.canvas = canvas;
-          clonedObj.forEachObject((obj) => {
+          clonedObj.forEachObject((obj, i) => {
             canvas?.add(obj);
             obj.set({
               evented: true,
@@ -1204,9 +1204,9 @@ export const paste = (canvas) => {
                 obj.type === "i-text" ||
                   obj.type === "textbox" ||
                   obj.type === "text"
-                  ? "ccg_" + fabric.Object.__uid
-                  : "id_" + fabric.Object.__uid,
-              class: "class_" + fabric.Object.__uid,
+                  ? "ccg_" + fabric.Object.__uid + i
+                  : "id_" + fabric.Object.__uid + i,
+              class: "class_" + fabric.Object.__uid + i,
             });
           });
           // this should solve the unselectability
