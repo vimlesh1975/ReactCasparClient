@@ -395,7 +395,6 @@ const WebAnimator = () => {
 
     useEffect(() => {
         if (localStorage.getItem('RCC_currentscreenSize')) { dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: parseInt(localStorage.getItem('RCC_currentscreenSize')) }) }
-        document.title = "RCC Web Animator"
         studio.ui.restore();
         return () => {
             // second  
