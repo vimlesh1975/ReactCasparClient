@@ -55,7 +55,6 @@ const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
         }
     }
     const [searchQuery, setSearchQuery] = useState('')
-    const searchLayer = layers.filter((layer) => layer.id.includes(searchQuery))
 
     return (<>
         <Rnd enableResizing={{}}
@@ -65,8 +64,10 @@ const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
             }}
             dragHandleClassName='ggg'
         >
-            <div className='ggg' style={{ border: '2px solid grey', backgroundColor: 'white' }}><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button>
-                <input style={{ marginLeft: 50, width: 150 }} placeholder='Search Id' type='text' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /></div>
+            <div style={{ display: 'flex' }}>
+                <div className='ggg' style={{ border: '2px solid grey', backgroundColor: 'white', }}><span>Objects List_________</span></div>
+                <input style={{ width: 150 }} placeholder='Search Id' type='text' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /><button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button>
+            </div>
             <div style={{ border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
@@ -76,7 +77,7 @@ const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
                                 style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
                                 {...provided.droppableProps}
                             >
-                                {searchLayer?.map((element, i) => {
+                                {layers?.map((element, i) => {
                                     return (
                                         <Draggable draggableId={"draggable" + i} key={element + i} index={i}>
                                             {(provided, snapshot) => (
@@ -94,21 +95,22 @@ const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
                                                     }}
                                                 >
                                                     <div style={{ display: 'flex', backgroundColor: (canvas?.getActiveObjects().includes(element)) ? 'grey' : 'darkgray', }}>
-                                                        <div onClick={() => selectObject(i)} style={{ minWidth: 60, textAlign: 'left', marginLeft: 2 }}> <span> {element.type}</span></div>
-                                                        <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>
-                                                        <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
-                                                        <div> <button title='Lock selected' onClick={() => {
-                                                            canvas.discardActiveObject();
-                                                            lockUnlock1(canvas, i, dispatch);
-                                                        }}
-                                                        >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
-                                                        <div> <button onClick={() => {
-                                                            selectObject(i);
-                                                            deleteItemfromtimeline(kf, xpositions, dispatch);
-                                                            sheet.detachObject(element.id);
-                                                        }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                                                        <div title='Double Click to Change' onClick={() => selectObject(i)} onDoubleClick={() => onDoubleClickLabel(element.id, i)} style={{ width: 150, textAlign: 'left', marginLeft: 2 }}>{element.id}</div>
-
+                                                        {element.id.includes(searchQuery) ? <div style={{ display: 'flex', }}>
+                                                            <div onClick={() => selectObject(i)} style={{ minWidth: 60, textAlign: 'left', marginLeft: 2 }}> <span> {element.type}</span></div>
+                                                            <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>
+                                                            <div>  <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}> {element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.1 }} />}</button></div>
+                                                            <div> <button title='Lock selected' onClick={() => {
+                                                                canvas.discardActiveObject();
+                                                                lockUnlock1(canvas, i, dispatch);
+                                                            }}
+                                                            >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
+                                                            <div> <button onClick={() => {
+                                                                selectObject(i);
+                                                                deleteItemfromtimeline(kf, xpositions, dispatch);
+                                                                sheet.detachObject(element.id);
+                                                            }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
+                                                            <div title='Double Click to Change' onClick={() => selectObject(i)} onDoubleClick={() => onDoubleClickLabel(element.id, i)} style={{ width: 150, textAlign: 'left', marginLeft: 2 }}>{element.id}</div>
+                                                        </div> : <div {...provided.dragHandleProps}><VscMove onClick={() => selectObject(i)} /> </div>}
                                                     </div>
                                                 </div>
                                             )
