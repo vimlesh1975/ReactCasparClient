@@ -5,18 +5,12 @@ import { visibleInVisible, moveElement, deleteItemfromtimeline, lockUnlock1 } fr
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { Rnd } from 'react-rnd';
 
-const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
-
+const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
-
     const kf = useSelector(state => state.kfReducer.kf);
     const xpositions = useSelector(state => state.xpositionsReducer.xpositions);
     const dispatch = useDispatch();
-
-    const [x, setX] = useState(500)
-    const [y, setY] = useState(70)
-
     const onDoubleClickLabel = (newValue, i) => {
         var newid = window.prompt('Please enter New Id:', newValue);
         const oldId = studio.selection[0].address.objectKey
@@ -49,8 +43,6 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
             const destinationIndex = result.destination?.index;
 
             canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
-            // canvas.requestRenderAll();
-            // dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
             moveElement(sourceIndex, destinationIndex,
                 kf,
                 xpositions,
@@ -63,34 +55,28 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
         }
     }
     const [searchQuery, setSearchQuery] = useState('')
-
+    const searchLayer = layers.filter((layer) => layer.id.includes(searchQuery))
 
     return (<>
         <Rnd enableResizing={{}}
-            style={{ zIndex: 201, }}
             default={{
-                x: x,
-                y: y,
-
+                x: 500,
+                y: 70,
             }}
-            onDrag={(e, d) => {
-                setX(d.x);
-                setY(d.y)
-            }}> <div style={{ border: '2px solid grey', backgroundColor: 'white' }}><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button>
+            dragHandleClassName='ggg'
+        >
+            <div className='ggg' style={{ border: '2px solid grey', backgroundColor: 'white' }}><span>Objects List</span> <button style={{ textAlign: 'right' }} onClick={() => dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false })}>X</button>
                 <input style={{ marginLeft: 50, width: 150 }} placeholder='Search Id' type='text' value={searchQuery} onChange={e => setSearchQuery(e.target.value)} /></div>
-        </Rnd>
-
-        <div style={{ zIndex: 201, position: 'absolute', left: x, top: y + 23, border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable-1" type="PERSON">
-                    {(provided, snapshot) => (
-                        <div
-                            ref={provided.innerRef}
-                            style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
-                            {...provided.droppableProps}
-                        >
-                            {layers?.map((element, i) => {
-                                if (element.id.includes(searchQuery))
+            <div style={{ border: '2px solid white', maxHeight: 870, overflowY: 'auto' }}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable-1" type="PERSON">
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                style={{ backgroundColor: snapshot.isDraggingOver ? 'yellow' : 'yellowgreen' }}
+                                {...provided.droppableProps}
+                            >
+                                {searchLayer?.map((element, i) => {
                                     return (
                                         <Draggable draggableId={"draggable" + i} key={element + i} index={i}>
                                             {(provided, snapshot) => (
@@ -99,6 +85,8 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                                     {...provided.draggableProps}
                                                     style={{
                                                         ...provided.draggableProps.style,
+                                                        left: 0,
+                                                        top: i * 24 + 24,
                                                         backgroundColor: snapshot.isDragging ? 'red' : (canvas?.getActiveObjects().includes(element)) ? 'darkgray' : 'white',
                                                         boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                                                         verticalAlign: 'top',
@@ -127,16 +115,15 @@ const ExtensionPannel = ({ sheet, arrObject, studio, importHtml }) => {
                                             }
                                         </Draggable>
                                     )
-                                else { return (null) }
-                            })}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-        </div>
-
+                                })}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
+        </Rnd>
     </>)
 }
 
-export default ExtensionPannel
+export default ElementList

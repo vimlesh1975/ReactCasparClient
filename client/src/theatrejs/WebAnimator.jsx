@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { createRoot } from 'react-dom/client'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
@@ -21,13 +20,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import Papa from "papaparse";
-import ExtensionPannel from './ExtensionPannel';
+import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
 
-
-import { Provider } from 'react-redux'
-
-import store from '../store'
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
 import { Rnd } from 'react-rnd';
@@ -240,23 +235,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             },
 
         },
-        panes: [
-            {
-                class: 'Basic',
-                mount({ node }) {
-                    // console.log(node)
-                    const root = createRoot(node)
-                    root.render(
-                        <Provider store={store}>
-                            <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />
-                        </Provider>
-                    )
-                    return () => {
-                        root.unmount();
-                    }
-                }
-            }
-        ],
+        panes: [],
     };
 
     studio.extend(extensionConfig, { __experimental_reconfigure: true });
@@ -291,7 +270,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
             onReady(aa);
             aa.wrapperEl.setAttribute("tabindex", "1"); //for canvas to accept focus for keydown delete
         }} />
-        {showExtensionPanel && <ExtensionPannel sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
+        {showExtensionPanel && <ElementList sheet={sheet} studio={studio} arrObject={arrObject} importHtml={importHtml} />}
 
         <Rnd enableResizing={{}}
             default={{
