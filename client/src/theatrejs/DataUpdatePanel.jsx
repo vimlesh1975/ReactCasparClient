@@ -1,13 +1,15 @@
 import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-// import { fabric } from "fabric";
-import { updateText, templateLayers, theatreLayers } from '../common'
+import { fabric } from "fabric";
+import { templateLayers, theatreLayers, endpoint, executeScript } from '../common'
 import { v4 as uuidv4 } from 'uuid';
+import { changePropOfObject, getPropOfObject } from './WebAnimator'
+
 
 const playLayers = [templateLayers.theatrejs, ...theatreLayers]
 
-const CustomClient = ({ importHtml }) => {
+const DataUpdatePanel = ({ importHtml }) => {
 
     const [selectedOption, setSelectedOption] = useState(166);
     // const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
@@ -219,9 +221,9 @@ const CustomClient = ({ importHtml }) => {
             if (type === 'text') {
                 aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily })
             }
-            // if (type === 'image') {
-            //     aa.push({ key: element.id, value: element.src, type: 'image' })
-            // }
+            if (type === 'image') {
+                aa.push({ key: element.id, value: element.src, type: 'image' })
+            }
         });
         settextNodes(aa)
     }
@@ -242,13 +244,62 @@ const CustomClient = ({ importHtml }) => {
 
     const updateText2 = (canvas, layerNumber) => {
         textNodes.forEach((val) => {
-            const aa = layers.find((item) => {
+            const element = layers.find((item) => {
                 return item.id === val.key
             })
-            aa.set({ text: (val.value).toString() })
+            if (val.type === 'text') {
+                element.set({ text: (val.value).toString() })
+            }
+            if (val.type === 'image') {
+                fabric.Image.fromURL(val.value, img => {
+                    img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
+                    img.cloneAsImage(img1 => {
+                        element.setSrc(img1.getSrc(), () => {
+                            element.set({ visible: true });
+                            setTimeout(() => {
+                                changePropOfObject(val.key, 'scaleX', getPropOfObject(val.key, 'scaleX') + 0.00001);
+                            }, 10);
+                            canvas.requestRenderAll();
+                        })
+                    })
+                })
+            }
         })
-        canvas.requestRenderAll()
-        updateText(canvas, layerNumber)
+        canvas.requestRenderAll();
+
+        // updateText(canvas, layerNumber)
+
+        canvas.getObjects().forEach((element, i) => {
+            if (element.type === 'textbox') {
+                endpoint(
+                    `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:'${element.text}'});canvas.requestRenderAll()";`
+                );
+                executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:'${element.text}'});
+              canvas_${layerNumber}.requestRenderAll();
+              `);
+            }
+
+
+            if (element.type === 'image') {
+                const bb = textNodes.find((textNode) => textNode.key === element.id);
+                const ff = bb.value;
+                endpoint(
+                    `call ${window.chNumber}-${layerNumber} "fabric.Image.fromURL('${ff}', img => {
+                        img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
+                        img.cloneAsImage(img1 => {
+                            canvas.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                                canvas.getObjects()[${i}].set({ visible: true });
+                                setTimeout(() => {
+                                    changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
+                                }, 10);
+                                canvas.requestRenderAll();
+                            })
+                        })
+                    })";`
+                );
+            }
+        });
+
 
     };
     const handleSelectionChange = (e) => {
@@ -277,10 +328,26 @@ const CustomClient = ({ importHtml }) => {
                     {/* <button onClick={() => { recallPage(templateLayers.customClient, pageName, textNodes) }}><FaPlay /></button> */}
                     <button title='Update Desinger only' onClick={() => {
                         textNodes.forEach((val) => {
-                            const aa = layers.find((item) => {
+                            const element = layers.find((item) => {
                                 return item.id === val.key
                             })
-                            aa.set({ text: (val.value).toString() })
+                            if (val.type === 'text') {
+                                element.set({ text: (val.value).toString() })
+                            }
+                            if (val.type === 'image') {
+                                fabric.Image.fromURL(val.value, img => {
+                                    img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
+                                    img.cloneAsImage(img1 => {
+                                        element.setSrc(img1.getSrc(), () => {
+                                            element.set({ visible: true });
+                                            setTimeout(() => {
+                                                changePropOfObject(val.key, 'scaleX', getPropOfObject(val.key, 'scaleX') + 0.00001);
+                                            }, 10);
+                                            canvas.requestRenderAll();
+                                        })
+                                    })
+                                })
+                            }
                         })
                         canvas.requestRenderAll()
                     }}>Update Desinger only</button>
@@ -435,4 +502,4 @@ const CustomClient = ({ importHtml }) => {
     )
 }
 
-export default CustomClient
+export default DataUpdatePanel

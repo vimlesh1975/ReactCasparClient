@@ -164,7 +164,7 @@ const findElementWithIdoriginalCanvas = (group, id) => {
     }
     return null;
 };
-const changePropOfObject = (id, str1, str2) => {
+export const changePropOfObject = (id, str1, str2) => {
     const objs = arrObject.find(object => {
         return (object.address.objectKey === id)
     });
@@ -179,6 +179,22 @@ const changePropOfObject = (id, str1, str2) => {
         if (aa) {
             aa.set({ str1: str2 })
             window.canvas.requestRenderAll();
+        }
+    }
+};
+
+export const getPropOfObject = (id, str1) => {
+    const objs = arrObject.find(object => {
+        return (object.address.objectKey === id)
+    });
+    if (objs) {
+        const obj = objs;
+        return obj.value[str1];
+    }
+    else {
+        const aa = findElementWithId(window.canvas, id);
+        if (aa) {
+            return aa[str1];
         }
     }
 };
@@ -1436,6 +1452,21 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 window.studio.transaction(({ set }) => {
                     set(obj.props[str1], str2);
                 });
+            }
+        };
+        window.getPropOfObject = (id, str1) => {
+            const objs = arrObject.find(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs) {
+                const obj = objs;
+                return obj.value[str1];
+            }
+            else{
+                const aa = findElementWithId(window.canvas, id);
+                if (aa) {
+                    return aa[str1];
+                }
             }
         };
         canvas.loadFromJSON(content,()=>{
