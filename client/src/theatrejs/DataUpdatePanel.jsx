@@ -401,7 +401,7 @@ const DataUpdatePanel = ({ importHtml }) => {
                             }
                             else if (val.type === 'image') {
                                 return (<tr key={i}>
-                                    <td><input disabled type='text' style={{ width: 260 }} value={val.key}
+                                    <td><input disabled type='text' style={{ width: 170 }} value={val.key}
                                         onChange={e => {
                                             const updatedKeyframe = textNodes.map((val, index) => {
                                                 return (i === index) ? { ...val, key: e.target.value } : val;
