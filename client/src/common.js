@@ -8,12 +8,9 @@ export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
     if (element.type === 'textbox') {
       endpoint(
-        `call ${window.chNumber}-${layerNumber} console.log(canvas.getObjects()[${i}].set({text:'${element.text}'}));`
+        `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:\\"${element.text}\\"});canvas.requestRenderAll();"`
       );
-      endpoint(
-        `call ${window.chNumber}-${layerNumber} canvas.requestRenderAll()`
-      );
-      executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:'${element.text}'});
+      executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:"${element.text}"});
       canvas_${layerNumber}.requestRenderAll();
       `);
     }

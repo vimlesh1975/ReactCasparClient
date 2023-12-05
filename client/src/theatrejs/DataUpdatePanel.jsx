@@ -272,11 +272,11 @@ const DataUpdatePanel = ({ importHtml }) => {
         canvas.getObjects().forEach((element, i) => {
             if (element.type === 'textbox') {
                 endpoint(
-                    `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:'${element.text}'});canvas.requestRenderAll()";`
+                    `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:\\"${element.text}\\"});canvas.requestRenderAll();"`
                 );
-                executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:'${element.text}'});
-              canvas_${layerNumber}.requestRenderAll();
-              `);
+                executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:"${element.text}"});
+                canvas_${layerNumber}.requestRenderAll();
+                `);
             }
 
 
