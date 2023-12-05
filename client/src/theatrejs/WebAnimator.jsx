@@ -1214,6 +1214,21 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 });
             }
         };
+        window.getPropOfObject = (id, str1) => {
+            const objs = arrObject.find(object => {
+                return (object.address.objectKey === id)
+            });
+            if (objs) {
+                const obj = objs;
+                return obj.value[str1];
+            }
+            else{
+                const aa = findElementWithId(window.canvas, id);
+                if (aa) {
+                    return aa[str1];
+                }
+            }
+        };
         canvas_${layerNumber}.loadFromJSON(content,()=>{
             const { core } = __TheatreJS_StudioBundle._studio;
             const { _studio } = __TheatreJS_StudioBundle;

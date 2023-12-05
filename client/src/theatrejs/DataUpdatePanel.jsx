@@ -283,20 +283,22 @@ const DataUpdatePanel = ({ importHtml }) => {
             if (element.type === 'image') {
                 const bb = textNodes.find((textNode) => textNode.key === element.id);
                 const ff = bb.value;
-                endpoint(
-                    `call ${window.chNumber}-${layerNumber} "fabric.Image.fromURL('${ff}', img => {
-                        img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
-                        img.cloneAsImage(img1 => {
-                            canvas.getObjects()[${i}].setSrc(img1.getSrc(), () => {
-                                canvas.getObjects()[${i}].set({ visible: true });
-                                setTimeout(() => {
-                                    changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
-                                }, 10);
-                                canvas.requestRenderAll();
-                            })
+                const script = `fabric.Image.fromURL('${ff}', img => {
+                    img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
+                    img.cloneAsImage(img1 => {
+                        canvas_${layerNumber}.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                            canvas_${layerNumber}.getObjects()[${i}].set({ visible: true });
+                            setTimeout(() => {
+                                changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
+                            }, 10);
+                            canvas_${layerNumber}.requestRenderAll();
                         })
-                    })";`
+                    })
+                })`
+                endpoint(
+                    `call ${window.chNumber}-${layerNumber} "${script}";`
                 );
+                executeScript(script);
             }
         });
 
