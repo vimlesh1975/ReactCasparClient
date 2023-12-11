@@ -11,7 +11,7 @@ import {
   base64EncodeBlob,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName
+  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 import "fabric-history";
@@ -3356,7 +3356,7 @@ const DrawingController = () => {
 
     if (window.location.origin !== "https://vimlesh1975.github.io") {
       axios
-        .post("http://localhost:9000/getfonts")
+        .post(address1 + "/getfonts")
         .then((aa) => {
           setFontList(aa.data);
         })
