@@ -284,7 +284,7 @@ export const rgbaCol = (color, opacity) =>
   opacity +
   ')';
 
-export var address1 = 'http://' + window.location.host.split(':')[0] + ':9000';
+export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const videoLayers = [1, 2, 3, 10000, 5];

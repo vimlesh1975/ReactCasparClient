@@ -32,8 +32,11 @@ const Hockey = () => {
     const [currentPlayer2, setCurrentPlayer2] = useState('Vimlesh Kumar 2')
     const [team1, setTeam1] = useState('Mumbai')
     const [team1Goal, setTeam1Goal] = useState(88)
-    const [team1Logo, setTeam1Logo] = useState('http://localhost:9000/media/anchor.png')
-    const [team2Logo, setTeam2Logo] = useState('http://localhost:9000/media/hd_frame.png')
+    // const [team1Logo, setTeam1Logo] = useState(address1 + '/media/anchor.png')
+    // const [team2Logo, setTeam2Logo] = useState(address1 + '/media/hd_frame.png')
+
+    const [team1Logo, setTeam1Logo] = useState('')
+    const [team2Logo, setTeam2Logo] = useState('')
 
     const [team2, setTeam2] = useState('Delhi')
     const [team2Goal, setTeam2Goal] = useState(77)
