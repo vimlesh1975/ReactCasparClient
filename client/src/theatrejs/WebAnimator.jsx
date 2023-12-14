@@ -1417,7 +1417,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         `
 
         executeScript(scriptforHTML);
-        endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Theatrejs2"`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/Theatrejs2"`);
         // endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`)
         endpoint(`call ${window.chNumber}-${layerNumber} "
         localStorage.removeItem('theatre-0.4.persistent');
