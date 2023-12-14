@@ -178,8 +178,8 @@ const options = { cors: true };
 // });
 
 const options2 = {
-  key: fs.readFileSync('localhost-privateKey.key'),
-  cert: fs.readFileSync('localhost.crt'),
+  key: fs.readFileSync('cert.key'),
+  cert: fs.readFileSync('cert.crt'),
 };
 
 const server2 = https.createServer(options2, app);

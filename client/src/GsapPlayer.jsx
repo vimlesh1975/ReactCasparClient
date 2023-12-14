@@ -25,7 +25,7 @@ const GsapPlayer = () => {
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
         const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
 
-        endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/CanvasPlayer"`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`);
         const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';

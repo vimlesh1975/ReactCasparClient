@@ -36,8 +36,8 @@ const Tsparticles1 = () => {
   }, []);
 
   const initialise = (layerNumber) => {
-    endpoint(`play 1-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/Tsparticles2"`);
-    endpoint(`call 1-${layerNumber} "document.getElementById('tsparticles')?.remove()"`);
+    endpoint(`play 1-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/Tsparticles2"`);
+    // endpoint(`call 1-${layerNumber} "document.getElementById('tsparticles')?.remove()"`);
 
   }
 
