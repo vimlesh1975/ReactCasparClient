@@ -10,6 +10,26 @@ const corsOptions = {
 const mos1 = require('./mos1.js');
 const nms1 = require('./nms.js');
 
+const { exec } = require('child_process');
+
+const certificatePath = 'C:\\Users\\Administrator\\Desktop\\sslreact\\ca.crt';
+
+const command = `certutil -f -addstore Root "${certificatePath}"`;
+
+exec(command, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing command: ${error.message}`);
+    return;
+  }
+
+  if (stderr) {
+    console.error(`stderr: ${stderr}`);
+    return;
+  }
+
+  console.log(`stdout: ${stdout}`);
+});
+
 app.use(cors(corsOptions));
 var serveStatic = require('serve-static');
 app.use('/media', serveStatic('c:\\casparcg\\_media'));

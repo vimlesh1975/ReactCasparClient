@@ -1,1 +1,2 @@
-Text Shrink to fit
+certutil -f -addstore Root ca.crt
+certutil -delstore Root c0a4426a104b6d35424473f6219c7961d2fd5c59
