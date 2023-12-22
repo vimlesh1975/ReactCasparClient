@@ -2026,6 +2026,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
              return data;
          }
          function dataInsert(dataCaspar) {
+            setTimeout(() => {
              for (var idCaspar in dataCaspar) {
                  const aa =findElementWithId(canvas,idCaspar);
                  if (aa){
@@ -2062,6 +2063,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     canvas.requestRenderAll()
                  }
             }
+        }, 10);
          }
  
          function update(str) {

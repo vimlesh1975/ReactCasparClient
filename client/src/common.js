@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '141223_1';
+export const buildDate = '221223_1';
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
