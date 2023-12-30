@@ -2620,10 +2620,12 @@ const DrawingController = () => {
 
 			const newDiv = document.createElement('div');
 			newDiv.setAttribute('id', 'div_${templateLayers.scroll1_strip}');
+      newDiv.style.zoom=(${currentscreenSize * 100}/1920)+'%';
 			newDiv.appendChild(clonedSvg);
 			document.body.appendChild(newDiv);
 
 			elementToRemove.remove();
+
 		}                                               
         </script>
                                                         `;
@@ -2700,10 +2702,12 @@ const DrawingController = () => {
     
           const newDiv = document.createElement('div');
           newDiv.setAttribute('id', 'div_${templateLayers.scroll2_strip}');
+          newDiv.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv.appendChild(clonedSvg);
           document.body.appendChild(newDiv);
     
           elementToRemove.remove();
+       
         }             
                                                                     </script>
                                                                     `;
@@ -2938,10 +2942,9 @@ const DrawingController = () => {
           const newDiv1 = document.createElement('div');
           newDiv1.style.position='absolute';
           newDiv1.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
-
+			    newDiv1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv1.appendChild(clonedSvg1);
           document.body.appendChild(newDiv1);
-    
           elementToRemove1.remove();
         }             
                                                                                     `;
@@ -3014,6 +3017,7 @@ const DrawingController = () => {
     
           const newDiv2 = document.createElement('div');
           newDiv2.style.position='absolute';
+          newDiv2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv2.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
 
           newDiv2.appendChild(clonedSvg2);
