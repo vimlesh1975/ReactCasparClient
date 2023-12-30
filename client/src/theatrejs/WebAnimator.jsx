@@ -2178,8 +2178,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         localStorage.removeItem('theatre-0.4.persistent');
         if (canvasContent1) {
             deleteAllObjects();
-
-            const pid = `project${fabric.Object.__uid++}`;
+            const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
+            const pid = `project${randomNumber}`;
             if (animationContetent1 === undefined) {
                 animationContetent1 = "{\"sheetsById\":{},\"definitionVersion\":\"0.4.0\",\"revisionHistory\":[\"gjjL6UEXDCUdpAe_\",\"nMdlSYh15PYUGb14\"]}";
             }

@@ -311,7 +311,6 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                                                             </td>
                                                                 <td>
                                                                     <input type='text' style={{ border: 'none', borderWidth: 0, minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
-                                                                        localStorage.clear();
                                                                         recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs);
                                                                     }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
                                                                     />
@@ -328,20 +327,6 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
                                                                         <div>
                                                                             <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
-                                                                        {/* <div>
-                                                                            <button key1={i} onClick={() => {
-                                                                                recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2, val.animationTheatrejs)
-                                                                                setTimeout(() => {
-                                                                                    window.sheet.sequence.position = 0;
-                                                                                }, 1000);
-                                                                                setTimeout(() => {
-                                                                                    playtoCasparcg(templateLayers.theatrejs);
-                                                                                }, 2000);
-                                                                            }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
-                                                                        </div>
-                                                                        <div>
-                                                                            <button key1={i} onClick={() => stopGraphics1(templateLayers.theatrejs)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
-                                                                        </div> */}
                                                                     </div>
                                                                 </td>
                                                                     <td>
