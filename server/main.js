@@ -7,9 +7,6 @@ const corsOptions = {
   // "Access-Control-Allow-Origin": "*",
 };
 
-const mos1 = require('./mos1.js');
-const nms1 = require('./nms.js');
-
 app.use(cors(corsOptions));
 var serveStatic = require('serve-static');
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
@@ -380,7 +377,7 @@ function startUdp() {
           .substring(8)}'"`
       )
     )
-      .then((aa1) => {})
+      .then((aa1) => { })
       .catch((aa2) => console.log(aa2));
     // console.log(msg);
   });
@@ -408,13 +405,12 @@ app.post('/showUdpClock', (req, res) => {
   startUdp();
   aa.do(
     new AMCP.CustomCommand(
-      `play 1-96 [html] "${
-        'file:///' +
-        path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')
+      `play 1-96 [html] "${'file:///' +
+      path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')
       }"`
     )
   )
-    .then((aa1) => {})
+    .then((aa1) => { })
     .catch((aa2) => console.log(aa2));
 });
 

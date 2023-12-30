@@ -4,7 +4,6 @@ import React from "react";
 import { templateLayers } from "./common";
 import { v4 as uuidv4 } from "uuid";
 
-import Streaming from "./streaming/Streaming";
 
 // dispatch({ type:'CHANGE_CANVAS',payload:${'canvas'}});
 const Help = () => {
@@ -99,9 +98,7 @@ const Help = () => {
             <li>Emoji is not supported in server2.07 and 2.1 </li>
             <li>Dont use double space in folder or file name. </li>
           </ol>
-          <div>
-            <Streaming />
-          </div>
+
         </div>
         <div>
           <table border="1">
