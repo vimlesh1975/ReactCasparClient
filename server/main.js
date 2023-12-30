@@ -132,19 +132,7 @@ app.post('/openaiimagebase64', async (req, res) => {
         console.error(err);
       });
 
-    // fetch(response['data'].data[0].url)
-    //     .then(response => response.blob())
-    //     .then(blob => {
-    //         // Convert the blob to a base64-encoded data URL
-    //         const reader = new FileReader();
-    //         reader.readAsDataURL(blob);
-    //         reader.onloadend = () => {
-    //             const base64data = reader.result;
-    //             res.status(200).send({
-    //                 bot: base64data
-    //             });
-    //         };
-    //     });
+
   } catch (error) {
     // console.log(JSON.stringify(error.message))
     res.status(500).send(error.message || 'Something went wrong');
@@ -168,11 +156,6 @@ app.post('/openai/models', async (req, res) => {
 
 const port = process.env.PORT || 9000;
 const options = { cors: true };
-// const http = require("http").Server(app);
-
-// http.listen(port, () => {
-//   console.log(`node Server is liestemnig on ${port}`);
-// });
 
 const options2 = {
   key: fs.readFileSync('cert.key'),
@@ -196,8 +179,6 @@ var mediaPath = 'c:/casparcg/_media';
 var templatePath;
 var logPath;
 
-// const PATH = require('path');
-
 const dirTree = require('directory-tree');
 var media = [];
 
@@ -209,8 +190,7 @@ const refreshMedia = () => {
       logPath = aa1.absoluteLog;
       media = [];
       var tree = dirTree(mediaPath, {}, (item, PATH, stats) => {
-        // console.log(item.path, item.name)
-        // console.log(item)
+
         var aa = item.path.substring(mediaPath.length);
         media.push(aa);
       });
@@ -276,25 +256,6 @@ app.post('/getPaths', (req, res) => {
 const io = require('socket.io')(server2, options);
 const ccgsocket = new CasparCGSocket('localhost', 5250);
 
-// udpPort.on("message", function (oscMessage, info) {
-
-//     if (oscMessage.address === '/channel/1/stage/layer/1/file/time') {
-//         ccgsocket.emit('Fromccgsocket', oscMessage.args[0].value);
-//         io.emit("FromAPI", oscMessage.args[0].value);
-//     }
-//     else if (oscMessage.address === '/channel/1/stage/layer/1/foreground/file/time') {
-//         ccgsocket.emit('Fromccgsocket', oscMessage.args[0].value);
-//         io.emit("FromAPI", oscMessage.args[0].value);
-//     }
-// });
-// var osc = require('osc')
-// var udpPort = new osc.UDPPort({
-//     localAddress: "127.0.0.1",
-//     localPort: 6250,
-//     metadata: true
-// });
-// udpPort.open();
-
 global.app = app;
 
 io.on('connection', (socket) => {
@@ -311,25 +272,25 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'client/public', 'index.html'));
 });
 
-app.post('/startGameTimer', (req, res) => {
-  const data = req.body;
-  console.log(data);
-  io.emit('startGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
-});
+// app.post('/startGameTimer', (req, res) => {
+//   const data = req.body;
+//   console.log(data);
+//   io.emit('startGameTimer', req.body);
+//   res.end('Sent The Commands:' + JSON.stringify(req.body));
+// });
 
-app.post('/pauseGameTimer', (req, res) => {
-  const data = req.body;
-  console.log(data);
-  io.emit('pauseGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
-});
-app.post('/resumeGameTimer', (req, res) => {
-  const data = req.body;
-  console.log(data);
-  io.emit('resumeGameTimer', req.body);
-  res.end('Sent The Commands:' + JSON.stringify(req.body));
-});
+// app.post('/pauseGameTimer', (req, res) => {
+//   const data = req.body;
+//   console.log(data);
+//   io.emit('pauseGameTimer', req.body);
+//   res.end('Sent The Commands:' + JSON.stringify(req.body));
+// });
+// app.post('/resumeGameTimer', (req, res) => {
+//   const data = req.body;
+//   console.log(data);
+//   io.emit('resumeGameTimer', req.body);
+//   res.end('Sent The Commands:' + JSON.stringify(req.body));
+// });
 
 app.post('/recallPage', (req, res) => {
   const data = req.body;
@@ -361,58 +322,58 @@ app.post('/setCurrentCanvas', (req, res) => {
   res.end(JSON.stringify(req.body));
 });
 
-var server;
-function startUdp() {
-  var udp = require('dgram');
-  server = udp.createSocket('udp4');
-  server.on('error', function (error) {
-    console.log('Error: ' + error);
-    server.close();
-  });
-  server.on('message', function (msg, info) {
-    aa.do(
-      new AMCP.CustomCommand(
-        `call 1-96 "document.getElementById('clock').getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML='${msg
-          .toString()
-          .substring(8)}'"`
-      )
-    )
-      .then((aa1) => { })
-      .catch((aa2) => console.log(aa2));
-    // console.log(msg);
-  });
-  server.on('listening', function () {
-    var address = server.address();
-    var port = address.port;
-    var family = address.family;
-    var ipaddr = address.address;
-    console.log('Server is listening at port' + port);
-    console.log('Server ip :' + ipaddr);
-    console.log('Server is IP4/IP6 : ' + family);
-  });
+// var server;
+// function startUdp() {
+//   var udp = require('dgram');
+//   server = udp.createSocket('udp4');
+//   server.on('error', function (error) {
+//     console.log('Error: ' + error);
+//     server.close();
+//   });
+//   server.on('message', function (msg, info) {
+//     aa.do(
+//       new AMCP.CustomCommand(
+//         `call 1-96 "document.getElementById('clock').getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML='${msg
+//           .toString()
+//           .substring(8)}'"`
+//       )
+//     )
+//       .then((aa1) => { })
+//       .catch((aa2) => console.log(aa2));
+//     // console.log(msg);
+//   });
+//   server.on('listening', function () {
+//     var address = server.address();
+//     var port = address.port;
+//     var family = address.family;
+//     var ipaddr = address.address;
+//     console.log('Server is listening at port' + port);
+//     console.log('Server ip :' + ipaddr);
+//     console.log('Server is IP4/IP6 : ' + family);
+//   });
 
-  //emits after the socket is closed using socket.close();
-  server.on('close', function () {
-    console.log('Socket is closed !');
-  });
+//   //emits after the socket is closed using socket.close();
+//   server.on('close', function () {
+//     console.log('Socket is closed !');
+//   });
 
-  server.bind(2222);
-}
-app.post('/stopUdpClock', (req, res) => {
-  server.close();
-});
-app.post('/showUdpClock', (req, res) => {
-  startUdp();
-  aa.do(
-    new AMCP.CustomCommand(
-      `play 1-96 [html] "${'file:///' +
-      path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')
-      }"`
-    )
-  )
-    .then((aa1) => { })
-    .catch((aa2) => console.log(aa2));
-});
+//   server.bind(2222);
+// }
+// app.post('/stopUdpClock', (req, res) => {
+//   server.close();
+// });
+// app.post('/showUdpClock', (req, res) => {
+//   startUdp();
+//   aa.do(
+//     new AMCP.CustomCommand(
+//       `play 1-96 [html] "${'file:///' +
+//       path.join(__dirname, '.', 'clock.html').replaceAll('\\', '/')
+//       }"`
+//     )
+//   )
+//     .then((aa1) => { })
+//     .catch((aa2) => console.log(aa2));
+// });
 
 app.post('/html', (req, res) => {
   io.emit('html', req.body);
