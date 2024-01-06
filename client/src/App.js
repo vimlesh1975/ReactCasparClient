@@ -321,6 +321,14 @@ const App = () => {
     }
   };
 
+  const onTabChangevdo = (index, prevIndex) => {
+    if (index === 0) {
+      setCurrentTab("Video");
+    } else {
+      setCurrentTab("Drawing");
+    }
+  };
+
   const changeAnimationMethod = (e) => {
     setAnimationMethod(e.target.value);
   };
@@ -665,27 +673,69 @@ const App = () => {
               </div>
             </TabPanel>
             <TabPanel>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  width: 900,
-                  marginBottom: 50,
-                }}
+              <Tabs
+                // selectedIndex={tabIndexVideo}
+                selectedTabClassName="selectedTab"
+                forceRenderTabPanel={true}
+                onSelect={(index, prevIndex) => onTabChangevdo(index, prevIndex)}
               >
-                <VideoController layerNumber={videoLayers[0]} />
-                <VideoController layerNumber={videoLayers[1]} />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  width: 900,
-                }}
-              >
-                <VideoController layerNumber={videoLayers[2]} />
-                <VideoController layerNumber={videoLayers[3]} />
-              </div>
+                <TabList>
+                  <Tab>Single Channel Mutiple Layers</Tab>
+                  <Tab>Four Channel</Tab>
+                </TabList>
+                <TabPanel>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      width: 900,
+                      marginBottom: 20,
+                    }}
+                  >
+                    <VideoController layerNumber={videoLayers[0]} />
+                    <VideoController layerNumber={videoLayers[1]} />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      width: 900,
+                    }}
+                  >
+                    <VideoController layerNumber={videoLayers[2]} />
+                    <VideoController layerNumber={videoLayers[3]} />
+                  </div>
+                </TabPanel>
+
+                <TabPanel>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      width: 900,
+                      marginBottom: 20,
+                    }}
+                  >
+                    <VideoController layerNumber={videoLayers[0]} channelNumber={1} />
+                    <VideoController layerNumber={videoLayers[0]} channelNumber={2} />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      width: 900,
+                    }}
+                  >
+                    <VideoController layerNumber={videoLayers[0]} channelNumber={3} />
+                    <VideoController layerNumber={videoLayers[0]} channelNumber={4} />
+                  </div>
+                </TabPanel>
+
+              </Tabs>
+
+
             </TabPanel>
             <TabPanel>
               <VideoPlaylist />
