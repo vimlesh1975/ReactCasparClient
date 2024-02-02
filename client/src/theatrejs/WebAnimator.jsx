@@ -520,6 +520,80 @@ const WebAnimator = () => {
             })
         }
 
+        const addPngSequence = async () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.webkitdirectory = true;
+            input.multiple = true;
+            input.style.display = 'none';
+
+            input.addEventListener('change', function (event) {
+                const files = event.target.files;
+                const images = [];
+                const prefix = 'pngseq / '
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        loadImage(file, function (fabricImage) {
+                            fabricImage.set({ left: 0, top: 0, scaleX: 1, scaleY: 1, id: prefix + i.toString(), opacity: 0 });
+
+                            images.push(fabricImage);
+
+                            const id_1 = sheet.object(fabricImage.id, { opacity: false });
+                            arrObject.push(id_1);
+                            id_1.onValuesChange((val) => {
+                                fabricImage.set({ opacity: val.opacity ? 1 : 0 })
+                                canvas.requestRenderAll();
+                            })
+
+                            if (images.length === files.length) {
+                                const imageGroup = new fabric.Group(images, {
+                                    left: canvas.width / 2,
+                                    top: canvas.height / 2,
+                                    id: 'pngGroup'
+                                });
+
+                                canvas.add(imageGroup);
+                                const pngGroupObject = sheet.object(imageGroup.id, {})
+                                arrObject.push(pngGroupObject);
+
+                                // imageGroup.on('keydown', e => {
+                                //     console.log(e)
+                                //     if (e.key === 'Delete') {
+                                //         // arrObject=objects.filter(obj => obj.key !== propertyToRemove);
+                                //         sheet.detachObject('pngseq')
+
+
+                                //     }
+                                // });
+                                canvas.requestRenderAll();
+                            }
+                        });
+                    }
+                }
+            });
+
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
+            function loadImage(file, callback) {
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const fabricImage = new fabric.Image(img, {
+                        });
+
+                        callback(fabricImage);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         const changeId = (newValue) => {
             var newid = window.prompt('Please enter New Id:', newValue);
             const oldId = studio.selection[0].address.objectKey
@@ -637,6 +711,7 @@ const WebAnimator = () => {
                         dispatch({ type: 'SHOW_SAVEPANNEL', payload: !showSavePanel });
                     }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
+                    <li onClick={addPngSequence}>Add Png Sequence</li>
                     {/* <li onClick={allInScreen}>All on Screen</li> */}
 
                 </ul>
