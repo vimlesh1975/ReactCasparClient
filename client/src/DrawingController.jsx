@@ -409,12 +409,16 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
   }
 };
 
+
+
+
 export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
   return new Promise((resolve, reject) => {
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file"); //opens files
     fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
-    fInput.setAttribute("multiple", true); ////only useful for inspector debugging
+    // fInput.setAttribute("multiple", "false"); ////only useful for inspector debugging
+    fInput.removeAttribute("multiple");
 
     fInput.click();
     fInput.onchange = (e) => {
@@ -424,6 +428,8 @@ export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
     };
   });
 };
+
+
 
 export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
   return new Promise((resolve, reject) => {
