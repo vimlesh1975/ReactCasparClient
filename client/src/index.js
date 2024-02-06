@@ -11,6 +11,7 @@ import Drawing2 from './Drawing2';
 // import Threejs from './Threejs';
 import Threejs2 from './Threejs2';
 import HTML from './htmlrenderer/Html';
+import Chat from './chat/Chat';
 import WebAnimator from './theatrejs/WebAnimator';
 import Theatrejs2 from './theatrejs/Theatrejs2';
 import CanvasPlayer from './CanvasPlayer';
@@ -29,6 +30,7 @@ root.render(
           element={<Drawing2 canvasOutput={true} />}
         />
         <Route path="/html/*" element={<HTML />} />
+        <Route path="/chat/*" element={<Chat />} />
         {/* <Route exact path='/threejs' element={<Threejs />} /> */}
         <Route exact path="/threejs2" element={<Threejs2 />} />
         <Route exact path="/WebAnimator" element={<WebAnimator />} />
