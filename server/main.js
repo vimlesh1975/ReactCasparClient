@@ -328,6 +328,11 @@ app.post('/html', (req, res) => {
   res.end(JSON.stringify(req.body));
 });
 
+app.post('/chat', (req, res) => {
+  io.emit('chat', req.body);
+  res.end(JSON.stringify(req.body));
+});
+
 app.post('/updateHtml', (req, res) => {
   io.emit('updateHtml', { data: req.body.data });
   res.end('');

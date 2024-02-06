@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '060124_1';
+export const buildDate = '060224_1';
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
@@ -422,6 +422,32 @@ export const executeScript = (str) => {
       });
   }
 };
+
+export const chatScript = (str, clientId) => {
+  if (window.location.origin === 'https://vimlesh1975.github.io') {
+    axios
+      .post('https://octopus-app-gzws3.ondigitalocean.app/chat', {
+        data1: str,
+        clientId: clientId,
+      })
+      .then((aa) => { })
+      .catch((aa) => {
+        console.log('Error', aa);
+      });
+  } else {
+    axios
+      .post(address1 + '/chat', {
+        data1: str,
+        clientId: clientId,
+      })
+      .then((aa) => { })
+      .catch((aa) => {
+        console.log('Error', aa);
+      });
+  }
+};
+
+
 
 export function tempAlert(msg, duration, style) {
   var el = document.createElement('div');

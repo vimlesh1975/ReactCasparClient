@@ -520,6 +520,9 @@ const WebAnimator = () => {
             })
         }
 
+
+
+
         const changeId = (newValue) => {
             var newid = window.prompt('Please enter New Id:', newValue);
             const oldId = studio.selection[0].address.objectKey
@@ -637,6 +640,7 @@ const WebAnimator = () => {
                         dispatch({ type: 'SHOW_SAVEPANNEL', payload: !showSavePanel });
                     }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
+                    <li onClick={addPngSequence}>Add Png Sequence</li>
                     {/* <li onClick={allInScreen}>All on Screen</li> */}
 
                 </ul>
@@ -2292,6 +2296,185 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             video1El.current.play();
         });
     }
+    const gg = (totalFrames, prefix) => {
+        for (let i = 0; i <= totalFrames; i++) {
+            sheet.sequence.position = 0;;
+            studio.transaction((api) => {
+                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+            })
+        }
+
+        for (let i = 0; i <= totalFrames; i++) {
+            sheet.sequence.position = i * 0.04;
+            studio.transaction((api) => {
+                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+            })
+        }
+
+        for (let i = 0; i <= totalFrames; i++) {
+            sheet.sequence.position = (i + 1) * 0.04;
+            studio.transaction((api) => {
+                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 1);
+            })
+        }
+
+        for (let i = 0; i <= totalFrames; i++) {
+            sheet.sequence.position = (i + 2) * 0.04;
+            studio.transaction((api) => {
+                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+            })
+        }
+    }
+
+    const addPngSequence = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.webkitdirectory = true;
+        input.multiple = true;
+        input.style.display = 'none';
+
+        input.addEventListener('change', function (event) {
+            const files = event.target.files;
+            const prefix = 'pngseq / '
+
+            for (let j = 0; j < files.length; j++) {
+                const file = files[j];
+                if (file.type.startsWith('image/')) {
+                    loadImage(file, function (fabricImage, sheet) {
+                        fabricImage.set({
+                            left: 200, top: 200, scaleX: 1, scaleY: 1, id: prefix + j.toString(), opacity: 0,
+                            class: "class_" + fabric.Object.__uid,
+                            shadow: {
+                                color: '#000000',
+                                blur: 0,
+                                offsetX: 0,
+                                offsetY: 0,
+                                affectStroke: false,
+                            },
+                            strokeUniform: true,
+                            objectCaching: false,
+                            fill: "#ff0000",
+                            stroke: "#00ff00",
+                        });
+
+                        canvas.add(fabricImage).setActiveObject(fabricImage)
+                        canvas.requestRenderAll();
+
+                        const element = canvas.getActiveObjects()[0];
+                        const obj1 = {
+                            left: 500,
+                            top: 300,
+                            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
+                            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
+                            angle: 0,
+                            opacity: types.number(0, { range: [0, 1] }),
+                            rx: types.number(10, { range: [0, 100] }),
+                            ry: types.number(10, { range: [0, 100] }),
+                            strokeWidth: types.number(0, { range: [0, 100] }),
+                            fontSize: types.number(45, { range: [0, 100] }),
+                            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
+                            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
+                            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
+                            stroke: types.rgba(hexToRGB('#000000')),
+                            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(0), { range: [0, 100] }) },
+                            skewX: types.number(0, { range: [-88, 88] }),
+                            skewY: types.number(0, { range: [-60, 60] }),
+                        }
+                        const i = arrObject.length;
+                        arrObject[i] = sheet.object(element.id, obj1);
+                        arrObject[i].onValuesChange((val) => {
+                            element.set({
+                                left: val.left,
+                                top: val.top,
+                                opacity: val.opacity,
+                                scaleX: val.scaleX,
+                                scaleY: val.scaleY,
+                                angle: val.angle,
+                                rx: val.rx,
+                                ry: val.ry,
+                                strokeWidth: val.strokeWidth,
+                                fontSize: val.fontSize,
+                                strokeDashArray: [val.strkdsar, val.strkdsar],
+                                strokeDashOffset: val.strkDsOfst,
+                                shadow: val.shadow,
+                                fill: val.fill,
+                                stroke: val.stroke,
+                                skewX: val.skewX,
+                                skewY: val.skewY,
+                            });
+                            element.setCoords();
+                            canvas.requestRenderAll();
+                        })
+                        // const onMouseMove = (obj, event) => {
+                        //     if (mouseDown === 1) {
+                        //         studio.transaction(({ set }) => {
+                        //             set(obj.props.left, event.target.left);
+                        //             set(obj.props.top, event.target.top);
+                        //             set(obj.props.angle, event.target.angle);
+                        //         });
+                        //     }
+                        // };
+                        const onScaling = (obj, event) => {
+                            studio.transaction(({ set }) => {
+                                set(obj.props.scaleX, event.transform.target.scaleX);
+                                set(obj.props.scaleY, event.transform.target.scaleY);
+                            });
+                        };
+
+                        element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+                        element.on('mousemove', (e) => onMouseMove11(arrObject[i], e), false);
+                        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+
+                        studio.setSelection([arrObject[i]]);
+
+                        if (j === (files.length - 1)) {
+                            gg(files.length - 1, prefix)
+                        }
+
+                    });
+
+
+                }
+
+
+
+            }
+
+        });
+
+        const onMouseMove11 = (obj, event) => {
+            if (mouseDown === 1) {
+                studio.transaction(({ set }) => {
+                    set(obj.props.left, event.target.left);
+                    set(obj.props.top, event.target.top);
+                    set(obj.props.angle, event.target.angle);
+                });
+            }
+        };
+
+        document.body.appendChild(input);
+        input.click();
+        document.body.removeChild(input);
+        function loadImage(file, callback) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const img = new Image();
+                img.onload = function () {
+                    const fabricImage = new fabric.Image(img, {
+                    });
+
+                    callback(fabricImage, sheet);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+
+    }
+
+
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
@@ -2548,10 +2731,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }}>Update</button>
 
                 <button onClick={() => stopGraphics1(templateLayers.theatrejs)}><FaStop /></button>
-                <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 30 }} onChange={e => setDuration(e.target.value)} />
+                <span title='Duration in Second'>D:</span><input title='Duration in Second' type="number" value={duration} style={{ width: 40 }} onChange={e => setDuration(e.target.value)} />
                 <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Loop Anim</span>
-                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
-                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 40 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 40 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
 
                 {loopDirection.map((option, index) => (
                     <label key={index} title={option.direction}>
