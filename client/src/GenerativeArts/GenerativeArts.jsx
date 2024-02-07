@@ -3,7 +3,7 @@ import { endpoint, templateLayers, executeScript, stopGraphics } from '../common
 
 const GenerativeArts = () => {
     const sendcode = (layerNumber) => {
-        endpoint(`play ${window.chNumber}-${layerNumber} [html] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
         const script = `
         const gadiv=document.createElement('div');
         gadiv.style.position='absolute';
@@ -217,7 +217,7 @@ const GenerativeArts = () => {
         executeScript(script); //for html
 
         setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
         }, 250);
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "

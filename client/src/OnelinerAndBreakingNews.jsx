@@ -125,7 +125,7 @@ const OnelinerAndBreakingNews = () => {
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
         }, 250);
 
         window.automationeditor[0].canvas.set({ width: 309, height: 172, ViewBox: [0, 0, 1931.25, 1075] })

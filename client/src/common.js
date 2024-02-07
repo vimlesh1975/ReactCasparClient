@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '060224_1';
+export const buildDate = '070224_1';
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
@@ -631,7 +631,7 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
   );
   setTimeout(() => {
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
   }, 250);
   const script = `
     var aa = document.createElement('div');

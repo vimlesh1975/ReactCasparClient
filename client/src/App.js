@@ -124,7 +124,7 @@ const App = () => {
       );
 
       setTimeout(() => {
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
       }, 250);
 
       const script = `
@@ -169,7 +169,7 @@ const App = () => {
     }
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
     var bb = document.createElement('div');
     bb.style.perspective='1920px';

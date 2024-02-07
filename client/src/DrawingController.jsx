@@ -1478,7 +1478,7 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     }, 250);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -1552,7 +1552,7 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     }, 250);
     const script = `
         window.aaGameTimer2 = document.createElement('div');
@@ -2845,7 +2845,7 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
                                                                                     window.aaVertical = document.createElement('div');
                                                                                     aaVertical.style.position='absolute';
@@ -2891,7 +2891,7 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
                                                                                     window.aaHorizontal1 = document.createElement('div');
                                                                                     aaHorizontal1.style.position='absolute';
@@ -2967,7 +2967,7 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
                                                                                     window.aaHorizontal2 = document.createElement('div');
                                                                                     aaHorizontal2.style.position='absolute';
@@ -3043,7 +3043,7 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
 
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
                                                                                     window.aaClock = document.createElement('div');
                                                                                     aaClock.style.position='absolute';
@@ -3090,7 +3090,7 @@ const DrawingController = () => {
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
                                                                                     window.aaUpTimer = document.createElement('div');
                                                                                     aaUpTimer.style.position='absolute';
@@ -3181,7 +3181,7 @@ const DrawingController = () => {
       );
 
       setTimeout(() => {
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
       }, 250);
 
       const script = `
@@ -3235,7 +3235,7 @@ const DrawingController = () => {
     }
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
 
     const script = `
                                                                                     var bb = document.createElement('div');

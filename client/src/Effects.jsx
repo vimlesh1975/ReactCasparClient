@@ -106,7 +106,7 @@ const Effects = () => {
         executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
         const script = `
         var bb = document.createElement('div');
         bb.style.perspective='1920px';
@@ -151,7 +151,7 @@ const Effects = () => {
             endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
 
             setTimeout(() => {
-                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
             }, 250);
 
             const script = `
@@ -191,7 +191,7 @@ const Effects = () => {
         }
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
 
         const script = `
         var bb = document.createElement('div');
