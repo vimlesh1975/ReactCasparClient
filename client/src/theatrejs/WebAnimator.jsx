@@ -265,7 +265,7 @@ const DrawingforTheatrejs = ({ importHtml }) => {
         setTimeout(() => {
             window.editor.canvas.preserveObjectStacking = true;
             window.editor.canvas.on('selection:cleared', function (e) {
-                if (e.deselected) {
+                if (e.deselected && e.deselected.length > 1) {
                     e.deselected.forEach((element) => {
                         changePropOfObject(element.id, 'left', element.left);
                         changePropOfObject(element.id, 'top', element.top);
