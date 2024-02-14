@@ -573,8 +573,6 @@ const WebAnimator = () => {
             dispatch({ type: "CHANGE_CANVAS", payload: canvas });
         }
 
-
-
         return (
             <div className='rightClickMenu'
                 style={{ zIndex: 200, position: 'fixed', left: 120, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
@@ -589,6 +587,22 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                     </ul></li>
+                    <li>Set As Mask to
+                        <ul>
+                            {canvas && canvas.getObjects().map((element) => {
+                                return (
+                                    (canvas.getActiveObjects()[0] !== element) && <li onClick={() => {
+                                        if (canvas.getActiveObjects().length > 0) {
+                                            const clipPath = canvas.getActiveObjects()[0]
+                                            clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
+                                            canvas.sendToBack(clipPath);
+                                            element.set("clipPath", clipPath);
+                                        }
+                                    }}>{element.type}-{element.id}</li>
+                                )
+                            })}
+                        </ul>
+                    </li>
                     <li onClick={() => changeId((studio?.selection?.[0]?.address?.objectKey))}>Change Id</li>
                     <li onClick={clearAllAnimation}>Clear All Animations</li>
                     <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
@@ -641,6 +655,7 @@ const WebAnimator = () => {
                     }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
                     <li onClick={addPngSequence}>Add Png Sequence</li>
+
                     {/* <li onClick={allInScreen}>All on Screen</li> */}
 
                 </ul>

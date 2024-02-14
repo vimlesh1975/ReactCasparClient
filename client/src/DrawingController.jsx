@@ -1772,7 +1772,7 @@ const DrawingController = () => {
     setCurrentglobalCompositeOperation(e.target.value);
     canvas
       .getActiveObjects()
-      .forEach((item) => (item.globalCompositeOperation = e.target.value));
+      .forEach((item) => item.set({ globalCompositeOperation: e.target.value, strokeWidth: 0 }));
     canvas.requestRenderAll();
   };
 
@@ -1800,6 +1800,7 @@ const DrawingController = () => {
       content,
       canvas.renderAll.bind(canvas),
       function (o, object) {
+        console.log(object.clipPath?.id);
         object.set({
           id: object.id ? object.id : "id_" + fabric.Object.__uid,
           class: object.class ? object.class : "class_" + fabric.Object.__uid,
@@ -1807,6 +1808,13 @@ const DrawingController = () => {
         });
       }
     );
+    canvas.getObjects().forEach(function (obj) {
+      if (obj.clipPath) {
+        // Set clipPath explicitly, using the loop variable i
+        obj.set({ clipPath: obj.clipPath });
+        canvas.requestRenderAll()
+      }
+    });
     importSvgCode(preCanvas);
   };
   const importSvgCode = (ss) => {

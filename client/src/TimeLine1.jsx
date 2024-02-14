@@ -501,24 +501,7 @@ const TimeLine1 = () => {
     dispatch({ type: 'CHANGE_KF', payload: updatedkf });
   }
   const test = () => {
-    const findElementWithId = (group, id) => {
-      const objects = group.getObjects();
-      for (let i = 0; i < objects.length; i++) {
-        const element = objects[i];
-        if (element.type === 'group') {
-          const result = findElementWithId(element, id);
-          if (result) {
-            return result;
-          }
-        } else if (element.id === id) {
-          return element;
-        }
-      }
-      return null;
-    };
-
-    console.log(findElementWithId(canvas, 'f0'));
-
+    console.log(canvas.getActiveObjects()[0]);
   }
 
   const ResetAnimation = () => {

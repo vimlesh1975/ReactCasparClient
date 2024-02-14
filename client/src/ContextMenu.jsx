@@ -40,7 +40,7 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { sendToBack, bringToFront, sendBackward, bringForward } from "./common";
+import { sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 
 const ContextMenu = ({ canvas }) => {
@@ -91,6 +91,20 @@ const ContextMenu = ({ canvas }) => {
           <ul>
             <li onClick={() => dispatch({ type: "SHOW_ID", payload: !showId })}>
               Show Id on Hover :Toggle
+            </li>
+            <li>Set As Mask to
+              <ul>
+                {canvas.getObjects().map((element) => {
+                  return ((canvas.getActiveObjects()[0] !== element) && <li onClick={() => {
+                    if (canvas.getActiveObjects().length > 0) {
+                      const clipPath = canvas.getActiveObjects()[0]
+                      clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
+                      canvas.sendToBack(clipPath);
+                      element.set("clipPath", clipPath);
+                    }
+                  }}>{element.type}-{element.id}</li>)
+                })}
+              </ul>
             </li>
             <li>
               Add
@@ -217,6 +231,7 @@ const ContextMenu = ({ canvas }) => {
                 </li>
               </ul>
             </li>
+
           </ul>
         </div>
       ) : (
