@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '130224_2';
+export const buildDate = '150224_2';
 
 export const setclipPathWhileImporting = (canvas) => {
   var objects = canvas.getObjects();
@@ -14,7 +14,7 @@ export const setclipPathWhileImporting = (canvas) => {
       objectCaching: false,
     });
     if (object.clipPath) {
-      const clipPathObject = objects.find((element) => element.id = object.clipPath.id);
+      const clipPathObject = objects.find((element) => element.id === object.clipPath.id);
       clipPathObject.set({ absolutePositioned: true });
       object.set({ clipPath: clipPathObject });
     }

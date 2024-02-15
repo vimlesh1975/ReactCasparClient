@@ -7,7 +7,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile, setclipPathWhileImporting } from '../common'
+import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -32,11 +32,26 @@ fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
 
+const setclipPathWhileImportingWebAnimator = (canvas) => {
+    var objects = canvas.getObjects();
+    objects.forEach((object) => {
+        object.set({
+            objectCaching: false,
+        });
+        if (object.clipPath) {
+            const clipPathObject = objects.find((element) => element.id === object.clipPath.id);
+            clipPathObject.set({ absolutePositioned: true });
+            object.set({ clipPath: clipPathObject });
+        }
+    });
+    canvas.requestRenderAll();
+}
+
 const strinSetclipPathWhileImporting = (layerNumber) => {
     return `var objects = canvas${layerNumber}.getObjects();
     objects.forEach((object) => {
     if (object.clipPath) {
-    const clipPathObject = objects.find((element) => element.id = object.clipPath.id);
+    const clipPathObject = objects.find((element) => element.id === object.clipPath.id);
     clipPathObject.set({ absolutePositioned: true });
     object.set({ clipPath: clipPathObject });
     }
@@ -922,7 +937,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
-            setclipPathWhileImporting(canvas);
+            setclipPathWhileImportingWebAnimator(canvas);
             canvas.getObjects().forEach((element, i) => {
                 if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
