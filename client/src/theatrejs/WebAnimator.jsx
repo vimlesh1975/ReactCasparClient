@@ -7,7 +7,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile, setclipPathWhileImporting } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -31,6 +31,19 @@ import split from 'graphemesplit'
 fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
+
+const strinSetclipPathWhileImporting = (layerNumber) => {
+    return `var objects = canvas${layerNumber}.getObjects();
+    objects.forEach((object) => {
+    if (object.clipPath) {
+    const clipPathObject = objects.find((element) => element.id = object.clipPath.id);
+    clipPathObject.set({ absolutePositioned: true });
+    object.set({ clipPath: clipPathObject });
+    }
+    });
+    canvas${layerNumber}.requestRenderAll();`
+}
+
 
 
 export const deleteItem = (canvas) => {
@@ -486,7 +499,7 @@ const WebAnimator = () => {
             });
             // canvas.discardActiveObject();
             // canvas.requestRenderAll();
-            reloadPage()
+            reloadPage();
         }
 
         const bringToFront = canvas => {
@@ -495,7 +508,7 @@ const WebAnimator = () => {
             });
             // canvas.discardActiveObject();
             // canvas.requestRenderAll();
-            reloadPage()
+            reloadPage();
         }
 
         const reloadPage = () => {
@@ -591,12 +604,15 @@ const WebAnimator = () => {
                         <ul>
                             {canvas && canvas.getObjects().map((element) => {
                                 return (
-                                    (canvas.getActiveObjects()[0] !== element) && <li onClick={() => {
+                                    (canvas.getActiveObjects()[0] !== element) && <li key={element.id} onClick={() => {
                                         if (canvas.getActiveObjects().length > 0) {
-                                            const clipPath = canvas.getActiveObjects()[0]
+                                            const clipPath = canvas.getActiveObjects()[0];
                                             clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
                                             canvas.sendToBack(clipPath);
+                                            // sendToBack(canvas);
                                             element.set("clipPath", clipPath);
+                                            reloadPage();
+
                                         }
                                     }}>{element.type}-{element.id}</li>
                                 )
@@ -901,11 +917,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         return rgbaObject;
     }
 
+
+
+
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
+            setclipPathWhileImporting(canvas);
             canvas.getObjects().forEach((element, i) => {
-                // console.log(element);
-
                 if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
                 }
@@ -1196,7 +1214,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         document.body.onmouseup = function () {
             mouseDown = 0;
         };
-        
+
         document.getElementById('divid_${layerNumber}')?.remove();
         var aa = document.createElement('div');
         aa.style.position='absolute';
@@ -1253,6 +1271,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
         };
         canvas_${layerNumber}.loadFromJSON(content,()=>{
+            ${strinSetclipPathWhileImporting('_' + layerNumber)}
+
             const { core } = __TheatreJS_StudioBundle._studio;
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
@@ -1508,6 +1528,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
         };
         canvas.loadFromJSON(content,()=>{
+            ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
@@ -2009,6 +2030,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content, ()=> {
+            ${strinSetclipPathWhileImporting('')}
             canvas.forEachObject((obj)=>{
                 originalCanvas.push(fabric.util.object.clone(obj,true));
             });

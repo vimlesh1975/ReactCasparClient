@@ -95,12 +95,13 @@ const ContextMenu = ({ canvas }) => {
             <li>Set As Mask to
               <ul>
                 {canvas.getObjects().map((element) => {
-                  return ((canvas.getActiveObjects()[0] !== element) && <li onClick={() => {
+                  return ((canvas.getActiveObjects()[0] !== element) && <li key={element.id} onClick={() => {
                     if (canvas.getActiveObjects().length > 0) {
                       const clipPath = canvas.getActiveObjects()[0]
                       clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
                       canvas.sendToBack(clipPath);
-                      element.set("clipPath", clipPath);
+                      element.set({ clipPath: clipPath });
+                      canvas.requestRenderAll();
                     }
                   }}>{element.type}-{element.id}</li>)
                 })}

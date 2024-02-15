@@ -11,7 +11,7 @@ import {
   base64EncodeBlob,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1
+  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1, setclipPathWhileImporting
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 import "fabric-history";
@@ -1796,25 +1796,9 @@ const DrawingController = () => {
       .toSVG(["id", "class", "selectable"])
       .replaceAll('"', "'");
     const content = fileReader.result;
-    canvas.loadFromJSON(
-      content,
-      canvas.renderAll.bind(canvas),
-      function (o, object) {
-        console.log(object.clipPath?.id);
-        object.set({
-          id: object.id ? object.id : "id_" + fabric.Object.__uid,
-          class: object.class ? object.class : "class_" + fabric.Object.__uid,
-          shadow: object.shadow ? object.shadow : shadowOptions,
-        });
-      }
-    );
-    canvas.getObjects().forEach(function (obj) {
-      if (obj.clipPath) {
-        // Set clipPath explicitly, using the loop variable i
-        obj.set({ clipPath: obj.clipPath });
-        canvas.requestRenderAll()
-      }
-    });
+    canvas.loadFromJSON(content, () => {
+      setclipPathWhileImporting(canvas);
+    })
     importSvgCode(preCanvas);
   };
   const importSvgCode = (ss) => {
@@ -2052,16 +2036,11 @@ const DrawingController = () => {
   const getFromLocalStorage = (canvas) => {
     const aa1 = localStorage.getItem("TheatrepageData");
     canvas.loadFromJSON(aa1, () => {
+      setclipPathWhileImporting(canvas)
+
       const aa = canvas.getObjects();
       aa.forEach((element) => {
-        // console.log(element)
-        element.set({
-          id: element.id ? element.id : "id_" + fabric.Object.__uid++,
-          class: element.class
-            ? element.class
-            : "class_" + fabric.Object.__uid++,
-          objectCaching: false,
-        });
+
         if (
           typeof element.fill === "object" &&
           element.fill !== null &&

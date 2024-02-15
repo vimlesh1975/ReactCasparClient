@@ -4,6 +4,24 @@ import { fabric } from 'fabric';
 
 export const buildDate = '130224_2';
 
+export const setclipPathWhileImporting = (canvas) => {
+  var objects = canvas.getObjects();
+  objects.forEach((object) => {
+    object.set({
+      id: object.id ? object.id : "id_" + fabric.Object.__uid,
+      class: object.class ? object.class : "class_" + fabric.Object.__uid,
+      shadow: object.shadow ? object.shadow : shadowOptions,
+      objectCaching: false,
+    });
+    if (object.clipPath) {
+      const clipPathObject = objects.find((element) => element.id = object.clipPath.id);
+      clipPathObject.set({ absolutePositioned: true });
+      object.set({ clipPath: clipPathObject });
+    }
+  });
+  canvas.requestRenderAll();
+}
+
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
     if (element.type === 'textbox') {
