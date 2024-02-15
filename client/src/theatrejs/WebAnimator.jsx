@@ -2304,7 +2304,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             const jsfilename1 = content.split("<script src='")[1].split('.')[0];
             setJsfilename(jsfilename1);
         }
-        const pid = `project${fabric.Object.__uid++}`;
+        const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
+        const pid = `project${randomNumber}`;
         project = getProject(pid, { state: JSON.parse(animationContetent) });
         setProjectId(pid)
 
