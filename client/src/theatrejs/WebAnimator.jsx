@@ -1728,8 +1728,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
 
     const exportHtml = async (overRide = false) => {
+        const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
+        console.log(mainPageData);
         const xx4 = `
-
         document.body.addEventListener('keypress', function(e) {
             if(e.key.toUpperCase() === "S") { stop(); }
           });
@@ -1991,6 +1992,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
+                <script>const mainPageData=${mainPageData}<//script>
                 <script>${fabric1}<//script>
                 <script>${coreAndStudio1}<//script>
         </head>
@@ -2304,6 +2306,22 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             const jsfilename1 = content.split("<script src='")[1].split('.')[0];
             setJsfilename(jsfilename1);
         }
+
+        try {
+            const { duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize } = JSON.parse((content.split('const mainPageData=')[1]).split('</script>')[0]);
+            setDuration(duration);
+            setEnableLoopAnimation(enableLoopAnimation);
+            setLoopAnimationStart(loopAnimationStart);
+            setLoopAnimationEnd(loopAnimationEnd);
+            setSelectedOption(selectedOption);
+            setJsfilename(jsfilename);
+            setFps(fps);
+            dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: currentscreenSize })
+        } catch (error) {
+
+        }
+
+
         const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
         const pid = `project${randomNumber}`;
         project = getProject(pid, { state: JSON.parse(animationContetent) });
