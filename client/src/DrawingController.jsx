@@ -562,6 +562,61 @@ export const createRect = (canvas) => {
   canvas.requestRenderAll();
   rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
 };
+
+export const createRandomeStrip = (canvas) => {
+
+  function generateRandomStyledPathWithSpiral(width, height) {
+    const startX = Math.random() * (width - 1700);
+    const startY = Math.random() * (height - 200);
+    const endX = startX + 1700;
+    const endY = startY + 200;
+
+    // Control points for curves
+    const controlX1 = startX + Math.random() * 100;
+    const controlY1 = startY + Math.random() * 100;
+
+    const controlX2 = endX - Math.random() * 100;
+    const controlY2 = startY + Math.random() * 100;
+
+    const controlX3 = endX - Math.random() * 100;
+    const controlY3 = endY - Math.random() * 100;
+
+    const controlX4 = startX + Math.random() * 100;
+    const controlY4 = endY - Math.random() * 100;
+
+    return [
+      ["M", startX, startY],
+      ["C", controlX1, controlY1, startX + 200, startY + 50, startX + 200, startY + 50],
+      ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
+      ["C", controlX3, controlY3, endX - 200, endY - 50, endX - 200, endY - 50],
+      ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
+      ["Z"]
+    ];
+  }
+
+  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
+  var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    left: 200,
+    top: 300,
+    fill: "#ff00ff",
+    stroke: options.stroke,
+    hasRotatingPoint: true,
+    objectCaching: false,
+    strokeWidth: 5,
+    strokeUniform: true,
+  });
+
+  pathObject.on('mousedblclick', () => {
+    if (window.edit) {
+      window.edit(window.dispatch)
+    }
+  })
+  canvas.add(pathObject).setActiveObject(pathObject);;
+};
+
 export const createEllipse = (canvas) => {
   const rect = new fabric.Ellipse({
     id: "id_" + fabric.Object.__uid,
@@ -3499,11 +3554,14 @@ const DrawingController = () => {
               {" "}
               <VscPrimitiveSquare />
             </button>
+            <button title="Randome Size Strip" onClick={() => createRandomeStrip(canvas)}>
+              RS
+            </button>
             <button
               title="Multi Line Editable Text"
               onClick={() => createTextBox(canvas)}
             >
-              TB
+              T
             </button>
             {/* <button title="Single Line Editable Text" onClick={() => createIText(canvas)}>IT</button>
                         <button title="Single Line Non Editable Text" onClick={() => createText(canvas)}>T</button> */}
@@ -3511,9 +3569,9 @@ const DrawingController = () => {
               {" "}
               <VscCircleFilled />
             </button>
-            <button title="Ellipse" onClick={() => createEllipse(canvas)}>
+            {/* <button title="Ellipse" onClick={() => createEllipse(canvas)}>
               Ellipse
-            </button>
+            </button> */}
             <button title="Triangle" onClick={() => createTriangle(canvas)}>
               <VscTriangleUp />
             </button>

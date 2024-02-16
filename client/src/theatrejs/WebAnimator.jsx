@@ -4,7 +4,7 @@ import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
+import { createRandomeStrip, createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
 import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
@@ -611,6 +611,7 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(addImage)}>Image</li>
                         <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
                         <li onClick={() => addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
+                        <li onClick={() => addItem(createRandomeStrip)}>Randome Path Strip <VscPrimitiveSquare /></li>
                         <li onClick={() => addItem(createTextBox)}>Text T</li>
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
@@ -2558,11 +2559,13 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         const element = canvas.getActiveObjects()[0];
         element.set({ id: id.toString(), text: id.toString() });
 
-
+        if (element.type === 'path') {
+            element.on('mousedblclick', () => edit(dispatch), false)
+        }
 
         setIdofElement('id_' + fabric.Object.__uid++);
 
-        const obj1 = {
+        var obj1 = {
             left: 500,
             top: 300,
             opacity: types.number(1, { range: [0, 1] }),
@@ -2582,7 +2585,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             skewY: types.number(0, { range: [-60, 60] }),
         }
 
-
+        if (element.type === 'path') {
+            const pathProps = getModifiedObject(element)
+            obj1 = { ...obj1, ...pathProps }
+        }
 
         const i = arrObject.length;
         arrObject[i] = sheet.object(element.id, obj1);
@@ -2606,6 +2612,28 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 skewX: val.skewX,
                 skewY: val.skewY,
             });
+            if (element.type === 'path') {
+                const newPath = [...element.path];
+                newPath.forEach((_, i) => {
+                    const newi = i + 1;
+                    const ss = [];
+                    if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                    if (val['Point' + newi][newi * 10 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 'y']);
+                    if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                    if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
+                    newPath[i] = ss;
+                });
+                element.set({ path: newPath, objectCaching: false, })
+            }
             element.setCoords();
             canvas.requestRenderAll();
         })

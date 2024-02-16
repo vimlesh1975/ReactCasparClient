@@ -1,5 +1,6 @@
 import useContextMenu from "./useContextMenu";
 import {
+  createRandomeStrip,
   cloneAsImage,
   gradient,
   removeShadow,
@@ -114,6 +115,7 @@ const ContextMenu = ({ canvas }) => {
                 <li onClick={() => createRect(canvas)}>
                   Rectangle <VscPrimitiveSquare />
                 </li>
+                <li onClick={() => createRandomeStrip(canvas)}>Randome Path Strip <VscPrimitiveSquare /></li>
                 <li onClick={() => createTextBox(canvas)}>Text T</li>
                 <li onClick={() => createCircle(canvas)}>
                   Circle <VscCircleFilled />
