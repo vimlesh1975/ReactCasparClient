@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
@@ -31,6 +31,47 @@ import split from 'graphemesplit'
 fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
+var _clipboard;
+const copy = (canvas) => {
+    canvas?.getActiveObject()?.clone(
+        (cloned) => {
+            _clipboard = cloned;
+        },
+        ["id", "class", "selectable"]
+    );
+};
+
+const STEP = 5;
+var Direction = {
+    LEFT: 0,
+    UP: 1,
+    RIGHT: 2,
+    DOWN: 3,
+};
+
+function moveSelected(direction) {
+    var activeObject = window.editor.canvas.getActiveObject();
+    if (activeObject) {
+        switch (direction) {
+            case Direction.LEFT:
+                activeObject.set({ left: activeObject.left - STEP });
+                break;
+            case Direction.UP:
+                activeObject.set({ top: activeObject.top - STEP });
+                break;
+            case Direction.RIGHT:
+                activeObject.set({ left: activeObject.left + STEP });
+                break;
+            case Direction.DOWN:
+                activeObject.set({ top: activeObject.top + STEP });
+                break;
+            default:
+            //nothing
+        }
+        activeObject.setCoords();
+        window.editor.canvas.renderAll();
+    }
+}
 
 const setclipPathWhileImportingWebAnimator = (canvas) => {
     var objects = canvas.getObjects();
@@ -312,6 +353,10 @@ const DrawingforTheatrejs = ({ importHtml }) => {
     useEffect(() => {
         dispatch({ type: 'CHANGE_CANVAS', payload: editor?.canvas });
     }, [editor, dispatch])
+
+
+
+
 
     return (<div id='aaa' >
         <FabricJSCanvas className={'DrawingforTheatrejs'} onReady={(aa) => {
@@ -600,6 +645,116 @@ const WebAnimator = () => {
             canvas.requestRenderAll();
             dispatch({ type: "CHANGE_CANVAS", payload: canvas });
         }
+        async function delayPromise() {
+            return new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        const paste = (canvas) => {
+            try {
+                _clipboard?.clone(
+                    (clonedObj) => {
+                        canvas?.discardActiveObject();
+                        clonedObj.set({
+                            left: clonedObj.left + 10,
+                            top: clonedObj.top + 10,
+                            evented: true,
+                            objectCaching: false,
+                            id:
+                                clonedObj.type === "i-text" ||
+                                    clonedObj.type === "textbox" ||
+                                    clonedObj.type === "text"
+                                    ? "ccg_" + fabric.Object.__uid
+                                    : "id_" + fabric.Object.__uid,
+                            class: "class_" + fabric.Object.__uid,
+                        });
+                        if (clonedObj.type === "activeSelection") {
+                            // active selection needs a reference to the canvas.
+                            clonedObj.canvas = canvas;
+                            clonedObj.forEachObject(async (obj, i) => {
+                                canvas?.add(obj);
+                                obj.set({
+                                    evented: true,
+                                    objectCaching: false,
+                                    id:
+                                        obj.type === "i-text" ||
+                                            obj.type === "textbox" ||
+                                            obj.type === "text"
+                                            ? "ccg_" + fabric.Object.__uid + i
+                                            : "id_" + fabric.Object.__uid + i,
+                                    class: "class_" + fabric.Object.__uid + i,
+                                });
+                                canvas?.setActiveObject(obj);
+                                generateTheatreID("id_" + fabric.Object.__uid + i);
+                                await delayPromise()
+
+
+                            });
+
+                        } else {
+                            canvas?.add(clonedObj);
+                            canvas?.setActiveObject(clonedObj);
+                            canvas?.requestRenderAll();
+                            generateTheatreID();
+                        }
+                        _clipboard.top += 10;
+                        _clipboard.left += 10;
+
+                    },
+
+                    ["id", "class", "selectable"]
+                );
+
+            } catch (error) {
+                // alert(error)
+            }
+        };
+
+
+
+
+        const handleKeyDown = useCallback((event) => {
+
+            const { key, keyCode, ctrlKey } = event;
+            const activeObjects = window.editor.canvas?.getActiveObjects();
+            if (document.activeElement === window.editor.canvas.wrapperEl) {
+                switch (keyCode) {
+                    case 37: // Left arrow key
+                        moveSelected(Direction.LEFT);
+                        break;
+                    case 38: // Up arrow key
+                        moveSelected(Direction.UP);
+                        break;
+                    case 39: // Right arrow key
+                        moveSelected(Direction.RIGHT);
+                        break;
+                    case 40: // Down arrow key
+                        moveSelected(Direction.DOWN);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (ctrlKey) {
+                    if (key.toLowerCase() === 'c') {
+                        const item = activeObjects[0];
+                        if (!(item?.type === 'textbox' && item?.isEditing)) {
+                            copy(window.editor.canvas);
+                        }
+                    } else if (key.toLowerCase() === 'v') {
+                        const item = activeObjects[0];
+                        if (!(item?.type === 'textbox' && item?.isEditing)) {
+                            paste(window.editor.canvas);
+                        }
+                    }
+                }
+            }
+            // eslint-disable-next-line
+        }, []);
+        useEffect(() => {
+            document.body.addEventListener('keydown', handleKeyDown);
+            return () => {
+                document.body.removeEventListener('keydown', handleKeyDown);
+            };
+        }, [handleKeyDown]);
 
         return (
             <div className='rightClickMenu'
@@ -615,6 +770,16 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createTextBox)}>Text T</li>
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
+                    </ul></li>
+                    <li>Edit<ul >
+                        <li onClick={() => copy(canvas)}>Copy</li>
+                        <li onClick={() => {
+                            paste(canvas);
+                            // canvas?.requestRenderAll();
+                            // var objects = canvas.getObjects();
+                            // canvas?.setActiveObject(objects[objects.length - 1]);
+                            // generateTheatreID()
+                        }}>Paste</li>
                     </ul></li>
                     <li>Set As Mask to
                         <ul>
@@ -2249,7 +2414,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             initialiseCore(canvasContent1, true);
 
             project.ready.then(() => {
-                sheet.sequence.play({ range: [0, parseFloat(duration)] }).then(() => sheet.sequence.play({ iterationCount: enableLoopAnimation ? Infinity : 1, range: [parseFloat(duration), 6], direction: selectedOption }));
+                sheet.sequence.play({ range: [0, parseFloat(duration)] }).then(() => sheet.sequence.play({ iterationCount: enableLoopAnimation ? Infinity : 1, range: [parseFloat(loopAnimationStart), parseFloat(loopAnimationEnd)], direction: selectedOption }));
             });
         }
         else {
@@ -2546,7 +2711,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     }
 
-
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
@@ -2555,6 +2719,10 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
 
         await name(canvas);
+        generateTheatreID(id)
+    }
+
+    const generateTheatreID = (id = idofElement) => {
 
         const element = canvas.getActiveObjects()[0];
         element.set({ id: id.toString(), text: id.toString() });

@@ -570,13 +570,18 @@ export const createRandomeStrip = (canvas) => {
     const startY = Math.random() * (height - 200);
     const endX = startX + 1700;
     const endY = startY + 200;
-
     // Control points for curves
     const controlX1 = startX + Math.random() * 100;
     const controlY1 = startY + Math.random() * 100;
 
+    const topCurveX = startX + 850; // X-coordinate for the top middle curve
+    const topCurveY = startY - 50; // Y-coordinate for the top middle curve
+
     const controlX2 = endX - Math.random() * 100;
     const controlY2 = startY + Math.random() * 100;
+
+    const bottomCurveX = startX + 850; // X-coordinate for the bottom middle curve
+    const bottomCurveY = endY + 50; // Y-coordinate for the bottom middle curve
 
     const controlX3 = endX - Math.random() * 100;
     const controlY3 = endY - Math.random() * 100;
@@ -586,9 +591,9 @@ export const createRandomeStrip = (canvas) => {
 
     return [
       ["M", startX, startY],
-      ["C", controlX1, controlY1, startX + 200, startY + 50, startX + 200, startY + 50],
+      ["C", controlX1, controlY1, topCurveX, topCurveY, startX + 200, startY + 50],
       ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
-      ["C", controlX3, controlY3, endX - 200, endY - 50, endX - 200, endY - 50],
+      ["C", controlX3, controlY3, bottomCurveX, bottomCurveY, endX - 200, endY - 50],
       ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
       ["Z"]
     ];
