@@ -1487,13 +1487,19 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             ${strinSetclipPathWhileImporting('_' + layerNumber)}
 
             const { core } = __TheatreJS_StudioBundle._studio;
+
+            const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
+            setInterval(() => {
+            rafDriver.tick(performance.now());
+            }, ${1000 / fps});
+
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
             project.ready.then(() => {
-                window.sheet_${layerNumber}.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet_${layerNumber}.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+                window.sheet_${layerNumber}.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet_${layerNumber}.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
            
             canvas_${layerNumber}.getObjects().forEach((element,i) => {
@@ -1743,13 +1749,19 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         canvas.loadFromJSON(content,()=>{
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
+
+            const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
+            setInterval(() => {
+            rafDriver.tick(performance.now());
+            }, ${1000 / fps});
+
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
 
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
             project.ready.then(() => {
-                window.sheet.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+                window.sheet.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
             canvas.getObjects().forEach((element,i) => {
                 var obj1 = {};
@@ -2239,6 +2251,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
         const { core, studio } = Theatre;
+
+        const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
+        setInterval(() => {
+        rafDriver.tick(performance.now());
+        }, ${1000 / fps});
+
         studio.initialize();
         studio.ui.hide();
         window.studio=studio;
@@ -2254,7 +2272,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         })
         });
         project.ready.then(() => {
-            window.sheet.sequence.play({range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
+            window.sheet.sequence.play({rafDriver, range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({rafDriver, range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
         });
          <//script>
          <script>
