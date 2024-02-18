@@ -49,7 +49,7 @@ var Direction = {
     DOWN: 3,
 };
 
-function moveSelected(direction) {
+const moveSelected = (direction) => {
     var activeObject = window.editor.canvas.getActiveObject();
     if (activeObject) {
         switch (direction) {
@@ -719,15 +719,47 @@ const WebAnimator = () => {
                 switch (keyCode) {
                     case 37: // Left arrow key
                         moveSelected(Direction.LEFT);
+                        activeObjects.forEach(element => {
+                            const obj = getObjectbyId(element.id);
+                            console.log(val(obj.props.left))
+                            studio.transaction(({ set }) => {
+                                set(obj.props.left, element.left);
+                                set(obj.props.top, element.top);
+                            });
+                        })
                         break;
                     case 38: // Up arrow key
                         moveSelected(Direction.UP);
+                        activeObjects.forEach(element => {
+                            const obj = getObjectbyId(element.id);
+                            console.log(val(obj.props.left))
+                            studio.transaction(({ set }) => {
+                                set(obj.props.left, element.left);
+                                set(obj.props.top, element.top);
+                            });
+                        })
                         break;
                     case 39: // Right arrow key
                         moveSelected(Direction.RIGHT);
+                        activeObjects.forEach(element => {
+                            const obj = getObjectbyId(element.id);
+                            console.log(val(obj.props.left))
+                            studio.transaction(({ set }) => {
+                                set(obj.props.left, element.left);
+                                set(obj.props.top, element.top);
+                            });
+                        })
                         break;
                     case 40: // Down arrow key
                         moveSelected(Direction.DOWN);
+                        activeObjects.forEach(element => {
+                            const obj = getObjectbyId(element.id);
+                            console.log(val(obj.props.left))
+                            studio.transaction(({ set }) => {
+                                set(obj.props.left, element.left);
+                                set(obj.props.top, element.top);
+                            });
+                        })
                         break;
                     default:
                         break;
