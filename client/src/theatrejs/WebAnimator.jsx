@@ -405,7 +405,9 @@ const DrawingforTheatrejs = ({ importHtml }) => {
 };
 
 const arrObject = [];
+const arrObjectProps = [];
 window.arrObject = arrObject;
+window.arrObjectProps = arrObjectProps;
 
 const loopDirection = [{ direction: 'normal', notation: 'N' }, { direction: 'reverse', notation: 'R' }, { direction: 'alternate', notation: 'A' }, { direction: 'alternateReverse', notation: 'AR' }]
 
@@ -645,9 +647,9 @@ const WebAnimator = () => {
             canvas.requestRenderAll();
             dispatch({ type: "CHANGE_CANVAS", payload: canvas });
         }
-        async function delayPromise() {
-            return new Promise(resolve => setTimeout(resolve, 2000));
-        }
+        // async function delayPromise() {
+        //     return new Promise(resolve => setTimeout(resolve, 2000));
+        // }
         const paste = (canvas) => {
             try {
                 _clipboard?.clone(
@@ -683,17 +685,16 @@ const WebAnimator = () => {
                                     class: "class_" + fabric.Object.__uid + i,
                                 });
                                 canvas?.setActiveObject(obj);
-                                generateTheatreID("id_" + fabric.Object.__uid + i);
-                                await delayPromise()
-
-
+                                // generateTheatreID("id_" + fabric.Object.__uid + i);
+                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, obj);
                             });
 
                         } else {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
-                            canvas?.requestRenderAll();
-                            generateTheatreID();
+                            // canvas?.requestRenderAll();
+                            generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid, clonedObj);
+
                         }
                         _clipboard.top += 10;
                         _clipboard.left += 10;
@@ -1246,8 +1247,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     const pathProps = getModifiedObject(element)
                     obj1 = { ...obj1, ...pathProps }
                 }
-
-                arrObject[i] = sheet.object(element.id, {
+                arrObjectProps[i] = {
                     left: element.left,
                     top: element.top,
                     scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
@@ -1264,7 +1264,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
-                });
+                };
+                arrObject[i] = sheet.object(element.id, arrObjectProps[i])
 
                 arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
@@ -2761,6 +2762,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     }
 
+
+
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
@@ -2772,44 +2775,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         generateTheatreID(id)
     }
 
-    const generateTheatreID = (id = idofElement) => {
-
-        const element = canvas.getActiveObjects()[0];
-        element.set({ id: id.toString(), text: id.toString() });
-
-        if (element.type === 'path') {
-            element.on('mousedblclick', () => edit(dispatch), false)
-        }
-
-        setIdofElement('id_' + fabric.Object.__uid++);
-
-        var obj1 = {
-            left: 500,
-            top: 300,
-            opacity: types.number(1, { range: [0, 1] }),
-            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
-            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
-            angle: 0,
-            rx: types.number(10, { range: [0, 100] }),
-            ry: types.number(10, { range: [0, 100] }),
-            strokeWidth: types.number(0, { range: [0, 100] }),
-            fontSize: types.number(45, { range: [0, 100] }),
-            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
-            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
-            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
-            stroke: types.rgba(hexToRGB('#000000')),
-            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(30), { range: [0, 100] }) },
-            skewX: types.number(0, { range: [-88, 88] }),
-            skewY: types.number(0, { range: [-60, 60] }),
-        }
-
-        if (element.type === 'path') {
-            const pathProps = getModifiedObject(element)
-            obj1 = { ...obj1, ...pathProps }
-        }
-
-        const i = arrObject.length;
-        arrObject[i] = sheet.object(element.id, obj1);
+    const setOnValueChange = (element, i) => {
         arrObject[i].onValuesChange((val) => {
             element.set({
                 left: val.left,
@@ -2854,7 +2820,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }
             element.setCoords();
             canvas.requestRenderAll();
-        })
+        });
         const onMouseMove = (obj, event) => {
             if (mouseDown === 1) {
                 studio.transaction(({ set }) => {
@@ -2876,7 +2842,71 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         element.on('scaling', (e) => onScaling(arrObject[i], e), false);
 
         studio.setSelection([arrObject[i]])
+    }
 
+    const generateTheatreID = (id = idofElement) => {
+
+        const element = canvas.getActiveObjects()[0];
+        element.set({ id: id.toString(), text: id.toString() });
+
+        if (element.type === 'path') {
+            element.on('mousedblclick', () => edit(dispatch), false)
+        }
+
+        setIdofElement('id_' + fabric.Object.__uid++);
+
+        var obj1 = {
+            left: 500,
+            top: 300,
+            opacity: types.number(1, { range: [0, 1] }),
+            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
+            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
+            angle: 0,
+            rx: types.number(10, { range: [0, 100] }),
+            ry: types.number(10, { range: [0, 100] }),
+            strokeWidth: types.number(0, { range: [0, 100] }),
+            fontSize: types.number(45, { range: [0, 100] }),
+            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
+            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
+            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
+            stroke: types.rgba(hexToRGB('#000000')),
+            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(30), { range: [0, 100] }) },
+            skewX: types.number(0, { range: [-88, 88] }),
+            skewY: types.number(0, { range: [-60, 60] }),
+        }
+
+        if (element.type === 'path') {
+            const pathProps = getModifiedObject(element)
+            obj1 = { ...obj1, ...pathProps }
+        }
+
+        const i = arrObject.length;
+        arrObjectProps[i] = obj1;
+        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
+
+        setOnValueChange(element, i)
+
+    }
+    const generateTheatreIDforCopiedElement = (id, elementBeiengCopied) => {
+        const element = canvas.getActiveObjects()[0];
+
+        element.set({ id: id.toString(), text: id.toString() });
+
+        if (element.type === 'path') {
+            element.on('mousedblclick', () => edit(dispatch), false)
+        }
+
+        setIdofElement('id_' + fabric.Object.__uid++ + 1);
+
+
+        const i = arrObject.length;
+        console.log(_clipboard)
+        var indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
+        console.log(indexOfSelectedElement)
+
+        arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
+        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
+        setOnValueChange(element, i)
     }
 
 
