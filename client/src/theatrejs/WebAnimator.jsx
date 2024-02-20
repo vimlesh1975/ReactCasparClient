@@ -685,15 +685,18 @@ const WebAnimator = () => {
                                     class: "class_" + fabric.Object.__uid + i,
                                 });
                                 canvas?.setActiveObject(obj);
-                                // generateTheatreID("id_" + fabric.Object.__uid + i);
-                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, obj);
+                                console.log('active selection');
+
+                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, i);
+
                             });
 
                         } else {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
-                            // canvas?.requestRenderAll();
-                            generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid, clonedObj);
+                            console.log('not active selection')
+
+                            generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
 
                         }
                         _clipboard.top += 10;
@@ -2883,25 +2886,24 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         const i = arrObject.length;
         arrObjectProps[i] = obj1;
         arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
-
         setOnValueChange(element, i)
-
     }
-    const generateTheatreIDforCopiedElement = (id, elementBeiengCopied) => {
+    const generateTheatreIDforCopiedElement = (id, multiSelectedIndex = 0) => {
         const element = canvas.getActiveObjects()[0];
-
         element.set({ id: id.toString(), text: id.toString() });
-
         if (element.type === 'path') {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
-
         setIdofElement('id_' + fabric.Object.__uid++ + 1);
-
-
         const i = arrObject.length;
-        console.log(_clipboard)
-        var indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
+        console.log(_clipboard);
+        var indexOfSelectedElement;
+        if (_clipboard._objects) {
+            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard._objects[multiSelectedIndex].id);
+        }
+        else {
+            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
+        }
         console.log(indexOfSelectedElement)
 
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
