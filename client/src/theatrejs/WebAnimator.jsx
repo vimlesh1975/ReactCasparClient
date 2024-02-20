@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import studio from '@theatre/studio'
-import { getProject, types, val, onChange } from '@theatre/core'
+import { getProject, types } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -144,7 +144,6 @@ const deletrTracks = (tracks) => {
             tracksModified.push([track, val]);
         })
     })
-    console.log(tracksModified)
     const keyframes = getKeyframes(sheet, tracksModified, studio.selection[0].address.objectKey);
     studio.transaction((api) => {
         tracksModified.forEach((track) => {
@@ -405,7 +404,9 @@ const DrawingforTheatrejs = ({ importHtml }) => {
 };
 
 const arrObject = [];
+const arrObjectProps = [];
 window.arrObject = arrObject;
+window.arrObjectProps = arrObjectProps;
 
 const loopDirection = [{ direction: 'normal', notation: 'N' }, { direction: 'reverse', notation: 'R' }, { direction: 'alternate', notation: 'A' }, { direction: 'alternateReverse', notation: 'AR' }]
 
@@ -604,8 +605,6 @@ const WebAnimator = () => {
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
-            } else {
-                console.log('User cancelled the input.');
             }
         }
         const clearAllAnimation = () => {
@@ -645,9 +644,9 @@ const WebAnimator = () => {
             canvas.requestRenderAll();
             dispatch({ type: "CHANGE_CANVAS", payload: canvas });
         }
-        async function delayPromise() {
-            return new Promise(resolve => setTimeout(resolve, 2000));
-        }
+        // async function delayPromise() {
+        //     return new Promise(resolve => setTimeout(resolve, 2000));
+        // }
         const paste = (canvas) => {
             try {
                 _clipboard?.clone(
@@ -683,17 +682,13 @@ const WebAnimator = () => {
                                     class: "class_" + fabric.Object.__uid + i,
                                 });
                                 canvas?.setActiveObject(obj);
-                                generateTheatreID("id_" + fabric.Object.__uid + i);
-                                await delayPromise()
-
-
+                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, i);
                             });
-
                         } else {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
-                            canvas?.requestRenderAll();
-                            generateTheatreID();
+                            generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
+
                         }
                         _clipboard.top += 10;
                         _clipboard.left += 10;
@@ -721,7 +716,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.LEFT);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -732,7 +726,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.UP);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -743,7 +736,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.RIGHT);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -754,7 +746,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.DOWN);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -910,12 +901,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         const handleChange = e => {
             if (e.target.files[0]) {
-                console.log(e.target.files[0])
                 Papa.parse(e.target.files[0], {
                     header: true,
                     complete: responses => {
-                        console.log(responses);
-                        console.log(Object.keys(responses.data[0]));
                         setDatas(responses.data);
                         setHeaders(Object.keys(responses.data[0]))
                     }
@@ -949,11 +937,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }, 100);
         }
         const changeImage = (i, j) => {
-            // const updatedData = [...datas]
-            // // console.log(updatedData[i][headers[j]])
-            // // console.log(i, j)
-            // updatedData[i][headers[j]] = "vimlesh"
-            // setDatas(updatedData)
+
         }
 
         return (<div style={{ fontSize: 14 }}>
@@ -1113,7 +1097,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
 
     const rgbaArrayToObject = (fill) => {
-        console.log(fill)
         const color = new fabric.Color(fill);
         const rgbaArray = color.getSource();
         // Normalize the RGBA values to a range between 0 and 1
@@ -1246,8 +1229,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     const pathProps = getModifiedObject(element)
                     obj1 = { ...obj1, ...pathProps }
                 }
-
-                arrObject[i] = sheet.object(element.id, {
+                arrObjectProps[i] = {
                     left: element.left,
                     top: element.top,
                     scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
@@ -1264,7 +1246,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
-                });
+                };
+                arrObject[i] = sheet.object(element.id, arrObjectProps[i])
 
                 arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
@@ -1939,7 +1922,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const exportHtml = async (overRide = false) => {
         const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
-        console.log(mainPageData);
         const xx4 = `
         document.body.addEventListener('keypress', function(e) {
             if(e.key.toUpperCase() === "S") { stop(); }
@@ -2579,7 +2561,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
             video1El.current.srcObject = stream;
-            // console.log(stream)
             video1El.current.play();
         });
     }
@@ -2761,6 +2742,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     }
 
+
+
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
@@ -2770,6 +2753,129 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         await name(canvas);
         generateTheatreID(id)
+    }
+
+    const setOnValueChange = (element, i) => {
+        arrObject[i].onValuesChange((val) => {
+
+            var isColorObjectfill;
+            var isColorObjectStroke;
+            isColorObjectfill = (typeof (element.fill) !== 'object');
+            isColorObjectStroke = (typeof (element.stroke) !== 'object');
+
+            var obj2 = {};
+            if (element.fill.type === 'pattern') {
+                // do nothing
+            }
+
+            else if (isColorObjectfill) {
+                obj2 = {
+                    ...obj2,
+                    fill: val.fill,
+                };
+            }
+
+            else {
+                obj2 = {
+                    ...obj2,
+                    fill: new fabric.Gradient({
+                        type: element.fill.type,
+                        gradientUnits: element.fill.gradientUnits,
+                        coords: {
+                            x1: val.coords.x1,
+                            y1: val.coords.y1,
+                            x2: val.coords.x2,
+                            y2: val.coords.y2
+                        },
+                        colorStops: Array.from({
+                            length: element.fill.colorStops.length
+                        }).map((_, i) => {
+                            return {
+                                offset: val[i].offset,
+                                color: rgbaObjectToHex(val[i].color),
+                                opacity: val[i].opacity
+                            };
+                        }),
+                        id: element.fill.id
+                    })
+                };
+            }
+            if (isColorObjectStroke) {
+                obj2 = {
+                    ...obj2,
+                    stroke: val.stroke,
+                };
+            }
+
+
+
+
+            element.set({
+                left: val.left,
+                top: val.top,
+                opacity: val.opacity,
+                scaleX: val.scaleX,
+                scaleY: val.scaleY,
+                angle: val.angle,
+                rx: val.rx,
+                ry: val.ry,
+                strokeWidth: val.strokeWidth,
+                fontSize: val.fontSize,
+                strokeDashArray: [val.strkdsar, val.strkdsar],
+                strokeDashOffset: val.strkDsOfst,
+                shadow: val.shadow,
+                // fill: val.fill,
+                // stroke: val.stroke,
+                ...obj2,
+                skewX: val.skewX,
+                skewY: val.skewY,
+            });
+            if (element.type === 'path') {
+                const newPath = [...element.path];
+                newPath.forEach((_, i) => {
+                    const newi = i + 1;
+                    const ss = [];
+                    if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
+                    if (val['Point' + newi][newi * 10 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 'y']);
+                    if (val['Point' + newi][newi * 10 + 1 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 1 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
+                    if (val['Point' + newi][newi * 10 + 2 + 'x'])
+                        ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
+                    if (val['Point' + newi][newi * 10 + 2 + 'y'])
+                        ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
+                    newPath[i] = ss;
+                });
+                element.set({ path: newPath, objectCaching: false, })
+            }
+            element.setCoords();
+            canvas.requestRenderAll();
+        });
+        const onMouseMove = (obj, event) => {
+            if (mouseDown === 1) {
+                studio.transaction(({ set }) => {
+                    set(obj.props.left, event.target.left);
+                    set(obj.props.top, event.target.top);
+                    set(obj.props.angle, event.target.angle);
+                });
+            }
+        };
+        const onScaling = (obj, event) => {
+            studio.transaction(({ set }) => {
+                set(obj.props.scaleX, event.transform.target.scaleX);
+                set(obj.props.scaleY, event.transform.target.scaleY);
+            });
+        };
+
+        element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+        element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
+        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+
+        studio.setSelection([arrObject[i]])
     }
 
     const generateTheatreID = (id = idofElement) => {
@@ -2809,74 +2915,29 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
 
         const i = arrObject.length;
-        arrObject[i] = sheet.object(element.id, obj1);
-        arrObject[i].onValuesChange((val) => {
-            element.set({
-                left: val.left,
-                top: val.top,
-                opacity: val.opacity,
-                scaleX: val.scaleX,
-                scaleY: val.scaleY,
-                angle: val.angle,
-                rx: val.rx,
-                ry: val.ry,
-                strokeWidth: val.strokeWidth,
-                fontSize: val.fontSize,
-                strokeDashArray: [val.strkdsar, val.strkdsar],
-                strokeDashOffset: val.strkDsOfst,
-                shadow: val.shadow,
-                fill: val.fill,
-                stroke: val.stroke,
-                skewX: val.skewX,
-                skewY: val.skewY,
-            });
-            if (element.type === 'path') {
-                const newPath = [...element.path];
-                newPath.forEach((_, i) => {
-                    const newi = i + 1;
-                    const ss = [];
-                    if (val['Point' + newi][0]) ss.push(val['Point' + newi][0]);
-                    if (val['Point' + newi][newi * 10 + 'x'])
-                        ss.push(val['Point' + newi][newi * 10 + 'x']);
-                    if (val['Point' + newi][newi * 10 + 'y'])
-                        ss.push(val['Point' + newi][newi * 10 + 'y']);
-                    if (val['Point' + newi][newi * 10 + 1 + 'x'])
-                        ss.push(val['Point' + newi][newi * 10 + 1 + 'x']);
-                    if (val['Point' + newi][newi * 10 + 1 + 'y'])
-                        ss.push(val['Point' + newi][newi * 10 + 1 + 'y']);
-                    if (val['Point' + newi][newi * 10 + 2 + 'x'])
-                        ss.push(val['Point' + newi][newi * 10 + 2 + 'x']);
-                    if (val['Point' + newi][newi * 10 + 2 + 'y'])
-                        ss.push(val['Point' + newi][newi * 10 + 2 + 'y']);
-                    newPath[i] = ss;
-                });
-                element.set({ path: newPath, objectCaching: false, })
-            }
-            element.setCoords();
-            canvas.requestRenderAll();
-        })
-        const onMouseMove = (obj, event) => {
-            if (mouseDown === 1) {
-                studio.transaction(({ set }) => {
-                    set(obj.props.left, event.target.left);
-                    set(obj.props.top, event.target.top);
-                    set(obj.props.angle, event.target.angle);
-                });
-            }
-        };
-        const onScaling = (obj, event) => {
-            studio.transaction(({ set }) => {
-                set(obj.props.scaleX, event.transform.target.scaleX);
-                set(obj.props.scaleY, event.transform.target.scaleY);
-            });
-        };
+        arrObjectProps[i] = obj1;
+        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
+        setOnValueChange(element, i)
+    }
+    const generateTheatreIDforCopiedElement = (id, multiSelectedIndex = 0) => {
+        const element = canvas.getActiveObjects()[0];
+        element.set({ id: id.toString(), text: id.toString() });
+        if (element.type === 'path') {
+            element.on('mousedblclick', () => edit(dispatch), false)
+        }
+        setIdofElement('id_' + fabric.Object.__uid++ + 1);
+        const i = arrObject.length;
+        var indexOfSelectedElement;
+        if (_clipboard._objects) {
+            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard._objects[multiSelectedIndex].id);
+        }
+        else {
+            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
+        }
 
-        element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
-        element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
-        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-
-        studio.setSelection([arrObject[i]])
-
+        arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
+        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
+        setOnValueChange(element, i)
     }
 
 
@@ -2884,26 +2945,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         localStorage.setItem("TheatrepageData", aa1);
     }
-    // eslint-disable-next-line 
-    const goto = () => {
-        sheet.sequence.position = 0.5
-        studio.transaction(({ set }) => {
-            set(arrObject[0].props.scaleX, 0.5)
-        })
-        sheet.sequence.play();
-        console.log(arrObject[0].value.left)
-        onChange(arrObject[0].props.left, (left) => {
-            console.log(left)
-        })
-        console.log('current left is', val(arrObject[0].props.left))
-        studio.setSelection([arrObject[1], arrObject[0]])
-        canvas.forEachObject((element, i) => {
-            studio.transaction(({ set }) => {
-                set(arrObject[i].props.left, 50.5)
-            })
-        })
 
-    }
     const handleClick = e => {
         e.preventDefault();
         setVisibility(true);
@@ -2995,8 +3037,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     //         }
     //     })
     // }
-    const [loopAnimationStart, setLoopAnimationStart] = useState(1);
-    const [loopAnimationEnd, setLoopAnimationEnd] = useState(6);
+    const [loopAnimationStart, setLoopAnimationStart] = useState(0);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
     const [selectedOption, setSelectedOption] = useState('alternate');
 
@@ -3096,8 +3138,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
                 }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 <button onClick={() => {
-                    // console.log(arrObject[0])
-                    // console.log(canvas.getActiveObjects()[0])
+                    console.log(arrObject[0]);
+                    console.log(canvas.getActiveObjects()[0]);
 
                 }}>.</button>
             </div>
