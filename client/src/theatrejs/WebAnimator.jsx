@@ -2757,6 +2757,36 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const setOnValueChange = (element, i) => {
         arrObject[i].onValuesChange((val) => {
+            var obj2 = {};
+
+            if (element.fill && element.fill.type === 'linear') {
+                obj2 = {
+                    ...obj2,
+                    fill: new fabric.Gradient({
+                        type: element.fill.type,
+                        gradientUnits: element.fill.gradientUnits,
+                        coords: {
+                            x1: val.coords.x1,
+                            y1: val.coords.y1,
+                            x2: val.coords.x2,
+                            y2: val.coords.y2
+                        },
+                        colorStops: Array.from({
+                            length: element.fill.colorStops.length
+                        }).map((_, i) => {
+                            return {
+                                offset: val[i].offset,
+                                color: rgbaObjectToHex(val[i].color),
+                                opacity: val[i].opacity
+                            };
+                        }),
+                        id: element.fill.id
+                    })
+                };
+            }
+            else {
+                obj2 = { fill: val.fill }
+            }
 
             element.set({
                 left: val.left,
@@ -2772,7 +2802,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 strokeDashArray: [val.strkdsar, val.strkdsar],
                 strokeDashOffset: val.strkDsOfst,
                 shadow: val.shadow,
-                fill: val.fill,
+                ...obj2,
                 stroke: val.stroke,
                 skewX: val.skewX,
                 skewY: val.skewY,
@@ -2983,6 +3013,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         else {
             indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
         }
+        console.log(element.fill);
+        console.log(arrObjectProps[indexOfSelectedElement]);
 
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
         arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
