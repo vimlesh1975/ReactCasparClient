@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import studio from '@theatre/studio'
-import { getProject, types, val, onChange } from '@theatre/core'
+import { getProject, types } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -144,7 +144,6 @@ const deletrTracks = (tracks) => {
             tracksModified.push([track, val]);
         })
     })
-    console.log(tracksModified)
     const keyframes = getKeyframes(sheet, tracksModified, studio.selection[0].address.objectKey);
     studio.transaction((api) => {
         tracksModified.forEach((track) => {
@@ -606,8 +605,6 @@ const WebAnimator = () => {
                 const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))).replaceAll(oldId, newid)
                 const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId))).replaceAll(oldId, newid)
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
-            } else {
-                console.log('User cancelled the input.');
             }
         }
         const clearAllAnimation = () => {
@@ -685,17 +682,11 @@ const WebAnimator = () => {
                                     class: "class_" + fabric.Object.__uid + i,
                                 });
                                 canvas?.setActiveObject(obj);
-                                console.log('active selection');
-
                                 generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, i);
-
                             });
-
                         } else {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
-                            console.log('not active selection')
-
                             generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
 
                         }
@@ -725,7 +716,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.LEFT);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -736,7 +726,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.UP);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -747,7 +736,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.RIGHT);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -758,7 +746,6 @@ const WebAnimator = () => {
                         moveSelected(Direction.DOWN);
                         activeObjects.forEach(element => {
                             const obj = getObjectbyId(element.id);
-                            console.log(val(obj.props.left))
                             studio.transaction(({ set }) => {
                                 set(obj.props.left, element.left);
                                 set(obj.props.top, element.top);
@@ -914,12 +901,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         const handleChange = e => {
             if (e.target.files[0]) {
-                console.log(e.target.files[0])
                 Papa.parse(e.target.files[0], {
                     header: true,
                     complete: responses => {
-                        console.log(responses);
-                        console.log(Object.keys(responses.data[0]));
                         setDatas(responses.data);
                         setHeaders(Object.keys(responses.data[0]))
                     }
@@ -953,11 +937,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             }, 100);
         }
         const changeImage = (i, j) => {
-            // const updatedData = [...datas]
-            // // console.log(updatedData[i][headers[j]])
-            // // console.log(i, j)
-            // updatedData[i][headers[j]] = "vimlesh"
-            // setDatas(updatedData)
+
         }
 
         return (<div style={{ fontSize: 14 }}>
@@ -1117,7 +1097,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
 
     const rgbaArrayToObject = (fill) => {
-        console.log(fill)
         const color = new fabric.Color(fill);
         const rgbaArray = color.getSource();
         // Normalize the RGBA values to a range between 0 and 1
@@ -1943,7 +1922,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const exportHtml = async (overRide = false) => {
         const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
-        console.log(mainPageData);
         const xx4 = `
         document.body.addEventListener('keypress', function(e) {
             if(e.key.toUpperCase() === "S") { stop(); }
@@ -2583,7 +2561,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
             video1El.current.srcObject = stream;
-            // console.log(stream)
             video1El.current.play();
         });
     }
@@ -2780,6 +2757,59 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const setOnValueChange = (element, i) => {
         arrObject[i].onValuesChange((val) => {
+
+            var isColorObjectfill;
+            var isColorObjectStroke;
+            isColorObjectfill = (typeof (element.fill) !== 'object');
+            isColorObjectStroke = (typeof (element.stroke) !== 'object');
+
+            var obj2 = {};
+            if (element.fill.type === 'pattern') {
+                // do nothing
+            }
+
+            else if (isColorObjectfill) {
+                obj2 = {
+                    ...obj2,
+                    fill: val.fill,
+                };
+            }
+
+            else {
+                obj2 = {
+                    ...obj2,
+                    fill: new fabric.Gradient({
+                        type: element.fill.type,
+                        gradientUnits: element.fill.gradientUnits,
+                        coords: {
+                            x1: val.coords.x1,
+                            y1: val.coords.y1,
+                            x2: val.coords.x2,
+                            y2: val.coords.y2
+                        },
+                        colorStops: Array.from({
+                            length: element.fill.colorStops.length
+                        }).map((_, i) => {
+                            return {
+                                offset: val[i].offset,
+                                color: rgbaObjectToHex(val[i].color),
+                                opacity: val[i].opacity
+                            };
+                        }),
+                        id: element.fill.id
+                    })
+                };
+            }
+            if (isColorObjectStroke) {
+                obj2 = {
+                    ...obj2,
+                    stroke: val.stroke,
+                };
+            }
+
+
+
+
             element.set({
                 left: val.left,
                 top: val.top,
@@ -2794,8 +2824,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 strokeDashArray: [val.strkdsar, val.strkdsar],
                 strokeDashOffset: val.strkDsOfst,
                 shadow: val.shadow,
-                fill: val.fill,
-                stroke: val.stroke,
+                // fill: val.fill,
+                // stroke: val.stroke,
+                ...obj2,
                 skewX: val.skewX,
                 skewY: val.skewY,
             });
@@ -2896,7 +2927,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
         setIdofElement('id_' + fabric.Object.__uid++ + 1);
         const i = arrObject.length;
-        console.log(_clipboard);
         var indexOfSelectedElement;
         if (_clipboard._objects) {
             indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard._objects[multiSelectedIndex].id);
@@ -2904,7 +2934,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         else {
             indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
         }
-        console.log(indexOfSelectedElement)
 
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
         arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
@@ -2916,26 +2945,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
         localStorage.setItem("TheatrepageData", aa1);
     }
-    // eslint-disable-next-line 
-    const goto = () => {
-        sheet.sequence.position = 0.5
-        studio.transaction(({ set }) => {
-            set(arrObject[0].props.scaleX, 0.5)
-        })
-        sheet.sequence.play();
-        console.log(arrObject[0].value.left)
-        onChange(arrObject[0].props.left, (left) => {
-            console.log(left)
-        })
-        console.log('current left is', val(arrObject[0].props.left))
-        studio.setSelection([arrObject[1], arrObject[0]])
-        canvas.forEachObject((element, i) => {
-            studio.transaction(({ set }) => {
-                set(arrObject[i].props.left, 50.5)
-            })
-        })
 
-    }
     const handleClick = e => {
         e.preventDefault();
         setVisibility(true);
@@ -3128,8 +3138,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
                 }>  {screenSizes.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })} </select>
                 <button onClick={() => {
-                    // console.log(arrObject[0])
-                    // console.log(canvas.getActiveObjects()[0])
+                    console.log(arrObject[0]);
+                    console.log(canvas.getActiveObjects()[0]);
 
                 }}>.</button>
             </div>
