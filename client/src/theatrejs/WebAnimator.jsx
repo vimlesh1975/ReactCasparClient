@@ -3037,8 +3037,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     //         }
     //     })
     // }
-    const [loopAnimationStart, setLoopAnimationStart] = useState(1);
-    const [loopAnimationEnd, setLoopAnimationEnd] = useState(6);
+    const [loopAnimationStart, setLoopAnimationStart] = useState(0);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
     const [selectedOption, setSelectedOption] = useState('alternate');
 
