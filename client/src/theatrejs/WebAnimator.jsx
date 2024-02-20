@@ -2758,58 +2758,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     const setOnValueChange = (element, i) => {
         arrObject[i].onValuesChange((val) => {
 
-            var isColorObjectfill;
-            var isColorObjectStroke;
-            isColorObjectfill = (typeof (element.fill) !== 'object');
-            isColorObjectStroke = (typeof (element.stroke) !== 'object');
-
-            var obj2 = {};
-            if (element.fill.type === 'pattern') {
-                // do nothing
-            }
-
-            else if (isColorObjectfill) {
-                obj2 = {
-                    ...obj2,
-                    fill: val.fill,
-                };
-            }
-
-            else {
-                obj2 = {
-                    ...obj2,
-                    fill: new fabric.Gradient({
-                        type: element.fill.type,
-                        gradientUnits: element.fill.gradientUnits,
-                        coords: {
-                            x1: val.coords.x1,
-                            y1: val.coords.y1,
-                            x2: val.coords.x2,
-                            y2: val.coords.y2
-                        },
-                        colorStops: Array.from({
-                            length: element.fill.colorStops.length
-                        }).map((_, i) => {
-                            return {
-                                offset: val[i].offset,
-                                color: rgbaObjectToHex(val[i].color),
-                                opacity: val[i].opacity
-                            };
-                        }),
-                        id: element.fill.id
-                    })
-                };
-            }
-            if (isColorObjectStroke) {
-                obj2 = {
-                    ...obj2,
-                    stroke: val.stroke,
-                };
-            }
-
-
-
-
             element.set({
                 left: val.left,
                 top: val.top,
@@ -2824,9 +2772,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 strokeDashArray: [val.strkdsar, val.strkdsar],
                 strokeDashOffset: val.strkDsOfst,
                 shadow: val.shadow,
-                // fill: val.fill,
-                // stroke: val.stroke,
-                ...obj2,
+                fill: val.fill,
+                stroke: val.stroke,
                 skewX: val.skewX,
                 skewY: val.skewY,
             });
@@ -2889,24 +2836,109 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
         setIdofElement('id_' + fabric.Object.__uid++);
 
-        var obj1 = {
-            left: 500,
-            top: 300,
-            opacity: types.number(1, { range: [0, 1] }),
-            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
-            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
-            angle: 0,
-            rx: types.number(10, { range: [0, 100] }),
-            ry: types.number(10, { range: [0, 100] }),
-            strokeWidth: types.number(0, { range: [0, 100] }),
-            fontSize: types.number(45, { range: [0, 100] }),
-            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
-            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
-            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
-            stroke: types.rgba(hexToRGB('#000000')),
-            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(30), { range: [0, 100] }) },
-            skewX: types.number(0, { range: [-88, 88] }),
-            skewY: types.number(0, { range: [-60, 60] }),
+        if ((element.fill === null)) {
+            element.set({ fill: '#555252' })
+        }
+
+        if (element.stroke === null) {
+            element.set({ stroke: '#000000' })
+        }
+
+        var obj1 = {};
+        var isColorObjectfill;
+        var isColorObjectStroke;
+
+        if (4 !== 5) {
+            isColorObjectfill = (element.fill.type !== 'linear');
+            isColorObjectStroke = (element.stroke.type !== 'linear');
+
+            if (element.fill.type === 'pattern') {
+                // do nothing
+            }
+
+            else if (isColorObjectfill) {
+                obj1 = {
+                    ...obj1,
+                    fill: (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) ? types.rgba(element.fill) : types.rgba(rgbaArrayToObject(element.fill)),
+                };
+            }
+            else {
+                const colorStops = element.fill.colorStops.map((colorStop) => {
+                    return {
+                        offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
+                        color: ((colorStop.color).toString().startsWith("rgb")) ? types.rgba(rgbaArrayToObject(colorStop.color)) : types.rgba(hexToRGB(colorStop.color)),
+                        opacity: types.number(colorStop.opacity ? parseFloat(colorStop.opacity) : 1, { range: [0, 1] })
+                    };
+                });
+                obj1 = {
+                    ...obj1,
+                    ...colorStops,
+                    coords: {
+                        x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                        y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                        x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                        y2: types.number(element.fill.coords.y2, { range: [0, 1] })
+                    }
+                };
+            }
+
+            if (isColorObjectStroke) {
+                obj1 = {
+                    ...obj1,
+                    stroke: (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) ? types.rgba(element.stroke) : types.rgba(rgbaArrayToObject(element.stroke)),
+                };
+            }
+            obj1 = {
+                ...obj1,
+                shadow: { ...element.shadow, color: (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) ? types.rgba(element.shadow.color) : types.rgba(rgbaArrayToObject(element.shadow.color)) },
+            };
+
+        }
+        else {
+            if (!element.shadow?.color.toString().startsWith("#")) {
+                element.set({ shadow: { ...element.shadow, color: '#000000' } })
+            }
+            isColorObjectfill = (typeof (element.fill) !== 'object');
+            isColorObjectStroke = (typeof (element.stroke) !== 'object');
+            if (isColorObjectfill) {
+                obj1 = {
+                    ...obj1,
+                    fill: types.rgba(hexToRGB(element.fill ? element.fill : '#ff0000')),
+                };
+            }
+            else if (element.fill.type === 'pattern') {
+            }
+            else {
+                const colorStops = element.fill.colorStops.map((colorStop) => {
+                    return {
+                        offset: types.number(parseFloat(colorStop.offset), { range: [0, 1] }),
+                        color: ((colorStop.color).toString().startsWith("rgb")) ? types.rgba(rgbaArrayToObject(colorStop.color)) : types.rgba(hexToRGB(colorStop.color)),
+                        opacity: types.number(parseFloat((colorStop.opacity === undefined) ? 1 : colorStop.opacity), { range: [0, 1] })
+                    };
+                });
+                obj1 = {
+                    ...obj1,
+                    ...colorStops,
+                    coords: {
+                        x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                        y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                        x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                        y2: types.number(element.fill.coords.y2, { range: [0, 1] })
+                    }
+                };
+            }
+
+            if (isColorObjectStroke) {
+                obj1 = {
+                    ...obj1,
+                    stroke: types.rgba(hexToRGB(element.stroke ? element.stroke : '#000000')),
+                };
+            }
+            obj1 = {
+                ...obj1,
+                shadow: { ...shadowOptions, color: types.rgba(hexToRGB(element.shadow.color)), blur: types.number(parseInt(element.shadow.blur), { range: [0, 100] }) },
+            };
+
         }
 
         if (element.type === 'path') {
@@ -2915,7 +2947,24 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         }
 
         const i = arrObject.length;
-        arrObjectProps[i] = obj1;
+        arrObjectProps[i] = {
+            left: element.left,
+            top: element.top,
+            scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+            scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+            opacity: types.number(element.opacity, { range: [0, 1] }),
+            angle: element.angle,
+            rx: types.number(element.rx ? parseInt(element.rx) : 10, { range: [-360, 360] }),
+            ry: types.number(element.ry ? parseInt(element.rx) : 10, { range: [-360, 360] }),
+            strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
+            fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
+            strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
+            strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
+            ...obj1,
+
+            skewX: types.number(element.skewX, { range: [-88, 88] }),
+            skewY: types.number(element.skewY, { range: [-60, 60] }),
+        };
         arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
         setOnValueChange(element, i)
     }
