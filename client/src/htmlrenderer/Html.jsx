@@ -168,7 +168,7 @@ const Html = () => {
 
     const executeScript = (str) => {
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-            console.log(str);
+            // console.log(str);
         }
         // eslint-disable-next-line
         eval(str)

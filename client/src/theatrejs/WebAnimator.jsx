@@ -668,8 +668,7 @@ const WebAnimator = () => {
                         if (clonedObj.type === "activeSelection") {
                             // active selection needs a reference to the canvas.
                             clonedObj.canvas = canvas;
-                            clonedObj.forEachObject(async (obj, i) => {
-                                canvas?.add(obj);
+                            clonedObj.forEachObject((obj, i) => {
                                 obj.set({
                                     evented: true,
                                     objectCaching: false,
@@ -681,6 +680,7 @@ const WebAnimator = () => {
                                             : "id_" + fabric.Object.__uid + i,
                                     class: "class_" + fabric.Object.__uid + i,
                                 });
+                                canvas?.add(obj);
                                 canvas?.setActiveObject(obj);
                                 generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, i);
                             });
@@ -688,18 +688,17 @@ const WebAnimator = () => {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
                             generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
-
                         }
                         _clipboard.top += 10;
                         _clipboard.left += 10;
-
+                        canvas?.setActiveObject(clonedObj); // this is important
                     },
 
                     ["id", "class", "selectable"]
                 );
 
             } catch (error) {
-                // alert(error)
+                console.log(error)
             }
         };
 
@@ -806,9 +805,9 @@ const WebAnimator = () => {
                     </ul></li>
                     <li>Set As Mask to
                         <ul>
-                            {canvas && canvas.getObjects().map((element) => {
+                            {canvas && canvas.getObjects().map((element, i) => {
                                 return (
-                                    (canvas.getActiveObjects()[0] !== element) && <li key={element.id} onClick={() => {
+                                    (canvas.getActiveObjects()[0] !== element) && <li key={i} onClick={() => {
                                         if (canvas.getActiveObjects().length > 0) {
                                             const clipPath = canvas.getActiveObjects()[0];
                                             clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });

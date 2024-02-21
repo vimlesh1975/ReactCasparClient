@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '200224_1';
+export const buildDate = '210224_1';
 
 export const setclipPathWhileImporting = (canvas) => {
   var objects = canvas.getObjects();
@@ -385,7 +385,6 @@ export const openaiAddress = () => {
 };
 
 export const socketAddress = () => {
-  console.log(address1);
   if (window.location.origin === 'https://vimlesh1975.github.io') {
     return 'https://octopus-app-gzws3.ondigitalocean.app';
   } else {
