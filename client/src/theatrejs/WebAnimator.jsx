@@ -655,12 +655,6 @@ const WebAnimator = () => {
                         clonedObj.set({
                             evented: true,
                             objectCaching: false,
-                            id:
-                                clonedObj.type === "i-text" ||
-                                    clonedObj.type === "textbox" ||
-                                    clonedObj.type === "text"
-                                    ? "ccg_" + fabric.Object.__uid
-                                    : "id_" + fabric.Object.__uid,
                             class: "class_" + fabric.Object.__uid,
                         });
                         if (clonedObj.type === "activeSelection") {
@@ -670,22 +664,23 @@ const WebAnimator = () => {
                                 obj.set({
                                     evented: true,
                                     objectCaching: false,
-                                    id:
-                                        obj.type === "i-text" ||
-                                            obj.type === "textbox" ||
-                                            obj.type === "text"
-                                            ? "ccg_" + fabric.Object.__uid + i
-                                            : "id_" + fabric.Object.__uid + i,
-                                    class: "class_" + fabric.Object.__uid + i,
+                                    class: "class_" + (fabric.Object.__uid + i),
                                 });
                                 canvas?.add(obj);
                                 canvas?.setActiveObject(obj);
-                                generateTheatreIDforCopiedElement("id_" + (fabric.Object.__uid) + i, i);
+                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid, i);
                             });
                         } else {
+                            const idAlreadyExists = findElementWithId(canvas, idofElement);
+
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
-                            generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
+                            if (idAlreadyExists) {
+                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
+                            }
+                            else {
+                                generateTheatreIDforCopiedElement(idofElement);
+                            }
                         }
                         canvas?.setActiveObject(clonedObj); // this is important
                     },
@@ -3000,7 +2995,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         if (element.type === 'path') {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
-        setIdofElement('id_' + fabric.Object.__uid++ + 2);
+        setIdofElement('id_' + (fabric.Object.__uid + 10));
         const i = arrObject.length;
         var indexOfSelectedElement;
         if (_clipboard._objects) {
@@ -3009,8 +3004,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         else {
             indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
         }
-        console.log(element.fill);
-        console.log(arrObjectProps[indexOfSelectedElement]);
 
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
         arrObject[i] = sheet.object(element.id, { ...arrObjectProps[i], left: Math.floor(Math.random() * (700)) + 200, top: Math.floor(Math.random() * (200)) + 200 });
