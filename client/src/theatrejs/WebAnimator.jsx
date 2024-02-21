@@ -653,8 +653,6 @@ const WebAnimator = () => {
                     (clonedObj) => {
                         canvas?.discardActiveObject();
                         clonedObj.set({
-                            left: clonedObj.left + 10,
-                            top: clonedObj.top + 10,
                             evented: true,
                             objectCaching: false,
                             id:
@@ -682,15 +680,13 @@ const WebAnimator = () => {
                                 });
                                 canvas?.add(obj);
                                 canvas?.setActiveObject(obj);
-                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid + i, i);
+                                generateTheatreIDforCopiedElement("id_" + (fabric.Object.__uid) + i, i);
                             });
                         } else {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
                             generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
                         }
-                        _clipboard.top += 10;
-                        _clipboard.left += 10;
                         canvas?.setActiveObject(clonedObj); // this is important
                     },
 
@@ -2999,11 +2995,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     }
     const generateTheatreIDforCopiedElement = (id, multiSelectedIndex = 0) => {
         const element = canvas.getActiveObjects()[0];
-        element.set({ id: id.toString(), text: id.toString() });
+        element.set({ id: id.toString(), text: id.toString(), });
+        canvas.requestRenderAll();
         if (element.type === 'path') {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
-        setIdofElement('id_' + fabric.Object.__uid++ + 1);
+        setIdofElement('id_' + fabric.Object.__uid++ + 2);
         const i = arrObject.length;
         var indexOfSelectedElement;
         if (_clipboard._objects) {
@@ -3016,7 +3013,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         console.log(arrObjectProps[indexOfSelectedElement]);
 
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
-        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
+        arrObject[i] = sheet.object(element.id, { ...arrObjectProps[i], left: Math.floor(Math.random() * (700)) + 200, top: Math.floor(Math.random() * (200)) + 200 });
         setOnValueChange(element, i)
     }
 
