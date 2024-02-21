@@ -1241,7 +1241,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
                 arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
-                    if (element.fill.type === 'pattern') {
+                    if (element.fill?.type === 'pattern') {
                         // do nothing
                     }
 
