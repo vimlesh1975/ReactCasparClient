@@ -295,3 +295,7 @@ textarea[data-fabric-hiddentextarea] {
   background-color: rgba(14, 15, 15, 0.596);
   background-image: url('canvasBg.svg');
 }
+
+#theatrejs-studio-root {
+  inset: 12px !important;
+}
