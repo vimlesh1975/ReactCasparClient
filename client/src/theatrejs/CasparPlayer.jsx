@@ -3,7 +3,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { stopGraphics1, updateText, endpoint, executeScript } from '../common'
 import { useSelector } from 'react-redux'
 
-const loopDirection = ['normal', 'reverse', 'alternate', 'alternateReverse']
+const loopDirection = ['normal', 'reverse', 'alternate', 'AR']
 const loopcount = 1;
 
 
@@ -15,8 +15,8 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const [outDuration, setOutDuration] = useState(1);
     // const [loopcount, setLoopcount] = useState(1);
     const [mypage, setMypage] = useState('');
-    const [loopAnimationStart, setLoopAnimationStart] = useState(1);
-    const [loopAnimationEnd, setLoopAnimationEnd] = useState(6);
+    const [loopAnimationStart, setLoopAnimationStart] = useState(0);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
 
     const [selectedOption, setSelectedOption] = useState('alternate');
@@ -91,7 +91,7 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
             <div>
                 <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
                 <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 30 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
-                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 30 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 35 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
             </div>
             <div>
                 {loopDirection.map((option, index) => (
