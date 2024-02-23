@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '210224_1';
+export const buildDate = '230224_1';
 
 export const setclipPathWhileImporting = (canvas) => {
   var objects = canvas.getObjects();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import studio from '@theatre/studio'
-import { getProject, types } from '@theatre/core'
+import { getProject, types, val } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -2998,18 +2998,37 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         setIdofElement('id_' + (fabric.Object.__uid + 10));
         const i = arrObject.length;
         var indexOfSelectedElement;
+        var elementBeingCopied;
         if (_clipboard._objects) {
-            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard._objects[multiSelectedIndex].id);
+            elementBeingCopied = _clipboard._objects[multiSelectedIndex];
         }
         else {
-            indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === _clipboard.id);
+            elementBeingCopied = _clipboard;
         }
 
+        indexOfSelectedElement = (canvas.getObjects()).findIndex(obj => obj.id === elementBeingCopied.id);
         arrObjectProps[i] = arrObjectProps[indexOfSelectedElement];
-        arrObject[i] = sheet.object(element.id, { ...arrObjectProps[i], left: Math.floor(Math.random() * (700)) + 200, top: Math.floor(Math.random() * (200)) + 200 });
+        var objectBeingCopied = val(arrObject[indexOfSelectedElement].props);
+
+        console.log(objectBeingCopied);
+        arrObject[i] = sheet.object(element.id, {
+            ...arrObjectProps[i],
+            left: Math.min(objectBeingCopied.left + 100, 1700),
+            top: Math.max(objectBeingCopied.top - 100, 50),
+            opacity: types.number(objectBeingCopied.opacity, { range: [0, 1] }),
+            scaleX: types.number(objectBeingCopied.scaleX, { nudgeMultiplier: 0.01 }),
+            scaleY: types.number(objectBeingCopied.scaleY, { nudgeMultiplier: 0.01 }),
+            angle: objectBeingCopied.angle,
+            rx: types.number(objectBeingCopied.rx, { range: [-360, 360] }),
+            ry: types.number(objectBeingCopied.ry, { range: [-360, 360] }),
+            strokeWidth: types.number(objectBeingCopied.strokeWidth, { range: [0, 100] }),
+            fontSize: types.number(objectBeingCopied.fontSize, { range: [0, 100] }),
+            strkDsOfst: types.number(parseInt(objectBeingCopied.strkDsOfst), { range: [-1000, 1000] }),
+            skewX: types.number(parseInt(objectBeingCopied.skewX), { range: [-88, 88] }),
+            skewY: types.number(parseInt(objectBeingCopied.skewY), { range: [-88, 88] }),
+        });
         setOnValueChange(element, i)
     }
-
 
     const saveToLocalStorage = canvas => {
         var aa1 = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
