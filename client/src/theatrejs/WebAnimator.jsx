@@ -1228,12 +1228,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     angle: element.angle,
                     rx: types.number(element.rx ? parseInt(element.rx) : 10, { range: [-360, 360] }),
                     ry: types.number(element.ry ? parseInt(element.rx) : 10, { range: [-360, 360] }),
-                    strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
                     fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
                     strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
                     strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
                     ...obj1,
-
+                    strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
                     skewX: types.number(element.skewX, { range: [-88, 88] }),
                     skewY: types.number(element.skewY, { range: [-60, 60] }),
                 };
@@ -2976,12 +2975,11 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             angle: element.angle,
             rx: types.number(element.rx ? parseInt(element.rx) : 10, { range: [-360, 360] }),
             ry: types.number(element.ry ? parseInt(element.rx) : 10, { range: [-360, 360] }),
-            strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
             fontSize: types.number(element.fontSize ? parseInt(element.fontSize) : 30, { range: [0, 100] }),
             strkdsar: types.number(element.strokeDashArray ? parseInt(element.strokeDashArray) : 0, { range: [0, 1000] }),
             strkDsOfst: types.number(element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0, { range: [-1000, 1000] }),
             ...obj1,
-
+            strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
             skewX: types.number(element.skewX, { range: [-88, 88] }),
             skewY: types.number(element.skewY, { range: [-60, 60] }),
         };
@@ -3021,11 +3019,15 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             angle: objectBeingCopied.angle,
             rx: types.number(objectBeingCopied.rx, { range: [-360, 360] }),
             ry: types.number(objectBeingCopied.ry, { range: [-360, 360] }),
-            strokeWidth: types.number(objectBeingCopied.strokeWidth, { range: [0, 100] }),
             fontSize: types.number(objectBeingCopied.fontSize, { range: [0, 100] }),
             strkDsOfst: types.number(parseInt(objectBeingCopied.strkDsOfst), { range: [-1000, 1000] }),
+
+            stroke: types.rgba({ r: objectBeingCopied.stroke.r, g: objectBeingCopied.stroke.g, b: objectBeingCopied.stroke.b, a: objectBeingCopied.stroke.a }),
+            strokeWidth: types.number(objectBeingCopied.strokeWidth, { range: [0, 100] }),
             skewX: types.number(parseInt(objectBeingCopied.skewX), { range: [-88, 88] }),
             skewY: types.number(parseInt(objectBeingCopied.skewY), { range: [-88, 88] }),
+            shadow: { ...shadowOptions, color: types.rgba({ r: objectBeingCopied.shadow.color.r, g: objectBeingCopied.shadow.color.g, b: objectBeingCopied.shadow.color.b, a: objectBeingCopied.shadow.color.a }), blur: types.number(parseInt(objectBeingCopied.shadow.blur), { range: [0, 100] }), offsetX: types.number(parseInt(objectBeingCopied.shadow.offsetX)), offsetY: types.number(parseInt(objectBeingCopied.shadow.offsetY)), affectStroke: objectBeingCopied.shadow.affectStroke },
+
         });
         setOnValueChange(element, i)
     }
