@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '240224_1';
+export const buildDate = '240224_2';
 
 export const getGdd = (canvas) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
@@ -16,7 +16,7 @@ export const getGdd = (canvas) => {
         default1 = object.text;
       } else if (object.type === "image") {
         gddType = "file-path/image-path";
-        default1 = object.src;
+        default1 = "object.src";
       }
       acc[object.id] = {
         type: "string",
