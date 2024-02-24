@@ -31,14 +31,19 @@ export const getGdd = (canvas) => {
   }, {});
 
   return `<script name="graphics-data-definition" type="application/json+gdd">
-  {
-    "$schema": "https://superflytv.github.io/GraphicsDataDefinition/gdd-meta-schema/v1/schema.json",
+    {"$schema": "https://superflytv.github.io/GraphicsDataDefinition/gdd-meta-schema/v1/schema.json",
     "title": "template title",
     "description": "Template description",
     "type": "object",
-    "properties": ${JSON.stringify(allObjects)},
+    "properties": ${JSON.stringify(allObjects)}
   }
-  </script>`
+  </script>
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.gddSchema = JSON.parse(document.querySelector('head > script[name="graphics-data-definition"]').innerHTML);
+  });
+</script>
+`
 };
 
 export const setclipPathWhileImporting = (canvas) => {

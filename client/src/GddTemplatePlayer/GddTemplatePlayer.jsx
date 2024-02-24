@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     validateData,
     getDefaultDataFromSchema,
@@ -56,47 +56,49 @@ const aa = async () => {
 // aa()
 
 const GddTemplatePlayer = () => {
-    const drawGUIComponentSingleLine = (innerProps) => {
-        return <input type='text' value={innerProps} />;
+    const [aa, setAa] = useState('')
+
+    async function opentemplateFile() {
+        var content;
+        var fileReader;
+
+        var fInput = document.createElement("input"); //hidden input to open filedialog
+        fInput.setAttribute("type", "file"); //opens files
+        fInput.setAttribute("accept", ".html"); ////only useful for inspector debugging
+        fInput.setAttribute("multiple", false); ////only useful for inspector debugging
+
+        fInput.click();
+        fInput.onchange = (e) => {
+            const file = e.target.files[0]
+            if (file) {
+                fileReader = new FileReader();
+                fileReader.onloadend = () => {
+                    content = fileReader.result;
+                    processContent(content)
+                }
+                fileReader.readAsText(file);
+            }
+        };
     }
 
-    // function drawGUIComponent(schema, innerProps) {
-    //     const gddSchema = schema;
-    //     // if (gddSchema.gddType === 'single-line') return drawGUIComponentSingleLine(innerProps)
-    //     // Handle GDD Types:
-    //     // if (gddSchema.type === 'string') {
-    //     //     if (gddSchema.gddType === 'single-line') return drawGUIComponentSingleLine(innerProps)
-    //     //     else if (gddSchema.gddType === 'multi-line') return drawGUIComponentMultiLine(innerProps)
-    //     //     // etc ...
-    //     // } else if (gddSchema.type === 'integer') {
-    //     //     if (gddSchema.gddType === 'select') return drawGUIComponentSelect(innerProps)
-    //     //     // etc ...
-    //     // } // else if () etc ...
+    const processContent = (htmlContent) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
 
-    //     // // Handle basic types:
-
-    //     // const basicType = getBasicType(schema.type)
-
-    //     // if (basicType === 'boolean') return drawGUIComponentBoolean(innerProps)
-    //     // if (basicType === 'string') return drawGUIComponentString(innerProps)
-    //     // if (basicType === 'number') return drawGUIComponentNumber(innerProps)
-    //     // if (basicType === 'integer') return drawGUIComponentInteger(innerProps)
-    //     // if (basicType === 'array') return drawGUIComponentArray(innerProps)
-    //     // if (basicType === 'object') return drawGUIComponentObject(innerProps)
-
-    //     // // Fallback:
-    //     // return drawGUIComponentUnknown({ ...innerProps, basicType })
-    // }
-    const handleClick = () => {
-        drawGUIComponentSingleLine('vimlesh');
+        const scriptElement = doc.querySelector('script[name="graphics-data-definition"]');
+        setAa(scriptElement.innerHTML)
+        console.log(scriptElement)
+        return scriptElement ? scriptElement.innerHTML : null;
     }
+
     return (
         <div>
             <h1>Hi</h1>
-            {drawGUIComponentSingleLine('vimlesh1111')}
-            <button onClick={handleClick}>click</button>
+            <button onClick={opentemplateFile}>click</button>
+            {JSON.stringify(aa)}
         </div>
     )
 }
+
 
 export default GddTemplatePlayer
