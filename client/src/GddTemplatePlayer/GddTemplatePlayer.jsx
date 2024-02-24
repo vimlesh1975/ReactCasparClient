@@ -56,7 +56,7 @@ const aa = async () => {
 // aa()
 
 const GddTemplatePlayer = () => {
-    const [aa, setAa] = useState('')
+    const [aa, setAa] = useState([])
 
     async function opentemplateFile() {
         var content;
@@ -80,22 +80,65 @@ const GddTemplatePlayer = () => {
             }
         };
     }
-
     const processContent = (htmlContent) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
-
         const scriptElement = doc.querySelector('script[name="graphics-data-definition"]');
-        setAa(scriptElement.innerHTML)
-        console.log(scriptElement)
-        return scriptElement ? scriptElement.innerHTML : null;
+        const bb = JSON.parse(scriptElement.innerHTML)
+        const properties = [];
+        for (const key in bb.properties) {
+            if (bb.properties.hasOwnProperty(key)) {
+                properties.push({ key, value: bb.properties[key] });
+            }
+        }
+        setAa(properties)
     }
 
+    const modifiyProperties = (e, i) => {
+        const updatedAA = [...aa]; // Create a shallow copy of the state array
+        updatedAA[i].value.default = e.target.value; // Update the 'default' property based on the input value
+        setAa(updatedAA); // Update the state with the modified array
+    }
+    function handleImageClick(index) {
+        // Programmatically trigger the input file click
+        const input = document.getElementById(`inputFile_${index}`);
+        if (input) {
+            input.click();
+        }
+    }
+    function handleFileChange(e, index) {
+        const updatedAA = [...aa];
+        const file = e.target.files[0];
+
+        if (file) {
+            // Assuming you want to set the image source directly to the base64 representation
+            const reader = new FileReader();
+            reader.onload = function (readerEvent) {
+                updatedAA[index].value.default = readerEvent.target.result;
+                setAa(updatedAA);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
     return (
         <div>
             <h1>Hi</h1>
             <button onClick={opentemplateFile}>click</button>
-            {JSON.stringify(aa)}
+            {aa.map((val, i) => {
+                return (<div key={i} style={{ border: '2px solid red', width: 300, height: 50 }}>
+                    <span>{val.key}</span>
+                    {(val.value.gddType === 'file-path/image-path') ? <> <img onClick={() => handleImageClick(i)} src={val.value.default} alt='image1' style={{ border: '1px solid blue', maxWidth: 40, maxHeight: 30 }} /><input
+                        id={`inputFile_${i}`}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={e => handleFileChange(e, i)}
+                    /> </> : <input onChange={e => modifiyProperties(e, i)} style={{ display: 'inline' }} type='text' value={val.value.default} />
+                    }
+                </div>)
+            })
+            }
         </div>
     )
 }

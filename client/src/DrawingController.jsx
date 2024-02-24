@@ -2086,6 +2086,10 @@ const DrawingController = () => {
       alert("All elements must have unique id");
     }
   };
+
+  const openGdd = () => {
+    window.open("/ReactCasparClient/GddTemplatePlayer");
+  }
   const saveToLocalStorage = (canvas) => {
     if (checkIdUniqueness(canvas)) {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
@@ -3842,6 +3846,9 @@ const DrawingController = () => {
             </button>
             <button onClick={() => exportJSONforTheatrejs(canvas)}>
               Web Animator
+            </button>
+            <button onClick={openGdd}>
+              Gdd Template Player
             </button>
           </div>
           <div className="drawingToolsRow">
