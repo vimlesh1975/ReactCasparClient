@@ -16,6 +16,9 @@ import WebAnimator from './theatrejs/WebAnimator';
 import Theatrejs2 from './theatrejs/Theatrejs2';
 import CanvasPlayer from './CanvasPlayer';
 import Tsparticles2 from './tsparticles/Tsparticles2';
+import GddTemplatePlayer from './GddTemplatePlayer/GddTemplatePlayer';
+
+
 
 window.store = store;
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -37,6 +40,7 @@ root.render(
         <Route exact path="/Theatrejs2" element={<Theatrejs2 />} />
         <Route exact path="/CanvasPlayer" element={<CanvasPlayer />} />
         <Route exact path="/Tsparticles2" element={<Tsparticles2 />} />
+        <Route exact path="/GddTemplatePlayer" element={<GddTemplatePlayer />} />
       </Routes>
     </Router>
   </Provider>

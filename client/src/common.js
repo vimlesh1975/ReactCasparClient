@@ -2,7 +2,44 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '230224_1';
+export const buildDate = '240224_1';
+
+export const getGdd = (canvas) => {
+  const allObjects = canvas.getObjects().reduce((acc, object) => {
+    // Check if the object type is "textbox" or "image"
+    if (object.type === "textbox" || object.type === "image") {
+      let gddType = "single-line"; // Default value for gddType
+      let default1 = "default"; // Default value for default
+
+      if (object.type === "textbox") {
+        gddType = "single-line";
+        default1 = object.text;
+      } else if (object.type === "image") {
+        gddType = "file-path/image-path";
+        default1 = object.src;
+      }
+      acc[object.id] = {
+        type: "string",
+        label: "label",
+        description: object.type,
+        default: default1,
+        gddType: gddType,
+        pattern: ""
+      };
+    }
+    return acc;
+  }, {});
+
+  return `<script name="graphics-data-definition" type="application/json+gdd">
+  {
+    "$schema": "https://superflytv.github.io/GraphicsDataDefinition/gdd-meta-schema/v1/schema.json",
+    "title": "template title",
+    "description": "Template description",
+    "type": "object",
+    "properties": ${JSON.stringify(allObjects)},
+  }
+  </script>`
+};
 
 export const setclipPathWhileImporting = (canvas) => {
   var objects = canvas.getObjects();

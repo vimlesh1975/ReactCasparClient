@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  getGdd,
   endpoint,
   fontLists,
   stopGraphics,
@@ -451,6 +452,7 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
               objectCaching: false,
               fill: "#ff0000",
               stroke: "#00ff00",
+              src: imgObj.src
             });
             // .scale(0.5);
             canvas.add(image).setActiveObject(image);
@@ -2260,6 +2262,7 @@ const DrawingController = () => {
 
 
   const setHtmlString = () => {
+    const gdd = getGdd(canvas);
     html = `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -2267,6 +2270,7 @@ const DrawingController = () => {
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                             <title>Document</title>
+                            ${gdd}
                             <link rel="stylesheet" href="${cssfilename}.css">
                                 <link rel="stylesheet" href="${cssfilename2}.css">
                                 </head>

@@ -7,7 +7,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRandomeStrip, createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -769,6 +769,38 @@ const WebAnimator = () => {
             };
         }, [handleKeyDown]);
 
+        // const addSequnce = () => {
+        //     const aa = {
+        //         "sheetsById": {
+        //             "Sheet 1": {
+        //                 "staticOverrides": {},
+        //                 "sequence": {
+        //                     "subUnitsPerUnit": 30,
+        //                     "length": 10,
+        //                     "type": "PositionalSequence",
+        //                     "tracksByObject": {
+        //                         "ccg_1": {
+        //                             "trackData": {
+        //                                 "idB_IoP7qU": {
+        //                                     "type": "BasicKeyframedTrack",
+        //                                     "__debugName": "ccg_1:[\"left\"]",
+        //                                     "keyframes": []
+        //                                 }
+        //                             },
+        //                             "trackIdByPropPath": {
+        //                                 "[\"left\"]": "idB_IoP7qU"
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         },
+        //         "definitionVersion": "0.4.0",
+        //         "revisionHistory": []
+        //     }
+        //     const dd = getProject('ccg_1', { state: aa }).sheet('Sheet 1').object('ccg_1', { left: 10 })
+        // }
+
         return (
             <div className='rightClickMenu'
                 style={{ zIndex: 200, position: 'fixed', left: 120, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
@@ -788,10 +820,6 @@ const WebAnimator = () => {
                         <li onClick={() => copy(canvas)}>Copy</li>
                         <li onClick={() => {
                             paste(canvas);
-                            // canvas?.requestRenderAll();
-                            // var objects = canvas.getObjects();
-                            // canvas?.setActiveObject(objects[objects.length - 1]);
-                            // generateTheatreID()
                         }}>Paste</li>
                     </ul></li>
                     <li>Set As Mask to
@@ -864,7 +892,8 @@ const WebAnimator = () => {
                         dispatch({ type: 'SHOW_SAVEPANNEL', payload: !showSavePanel });
                     }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
-                    <li onClick={addPngSequence}>Add Png Sequence</li>
+                    {/* <li onClick={addPngSequence}>Add Png Sequence</li>
+                    <li onClick={addSequnce}>try addind sequnce</li> */}
 
                     {/* <li onClick={allInScreen}>All on Screen</li> */}
 
@@ -1911,6 +1940,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
     const exportHtml = async (overRide = false) => {
         const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
+
+        const gdd = getGdd(canvas);
+
         const xx4 = `
         document.body.addEventListener('keypress', function(e) {
             if(e.key.toUpperCase() === "S") { stop(); }
@@ -2173,6 +2205,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
+                ${gdd}
                 <script>const mainPageData=${mainPageData}<//script>
                 <script>${fabric1}<//script>
                 <script>${coreAndStudio1}<//script>
@@ -2553,183 +2586,183 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             video1El.current.play();
         });
     }
-    const gg = (totalFrames, prefix) => {
-        for (let i = 0; i <= totalFrames; i++) {
-            sheet.sequence.position = 0;;
-            studio.transaction((api) => {
-                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-            })
-        }
+    // const gg = (totalFrames, prefix) => {
+    //     for (let i = 0; i <= totalFrames; i++) {
+    //         sheet.sequence.position = 0;;
+    //         studio.transaction((api) => {
+    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+    //         })
+    //     }
 
-        for (let i = 0; i <= totalFrames; i++) {
-            sheet.sequence.position = i * 0.04;
-            studio.transaction((api) => {
-                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-            })
-        }
+    //     for (let i = 0; i <= totalFrames; i++) {
+    //         sheet.sequence.position = i * 0.04;
+    //         studio.transaction((api) => {
+    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+    //         })
+    //     }
 
-        for (let i = 0; i <= totalFrames; i++) {
-            sheet.sequence.position = (i + 1) * 0.04;
-            studio.transaction((api) => {
-                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 1);
-            })
-        }
+    //     for (let i = 0; i <= totalFrames; i++) {
+    //         sheet.sequence.position = (i + 1) * 0.04;
+    //         studio.transaction((api) => {
+    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 1);
+    //         })
+    //     }
 
-        for (let i = 0; i <= totalFrames; i++) {
-            sheet.sequence.position = (i + 2) * 0.04;
-            studio.transaction((api) => {
-                api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-            })
-        }
-    }
+    //     for (let i = 0; i <= totalFrames; i++) {
+    //         sheet.sequence.position = (i + 2) * 0.04;
+    //         studio.transaction((api) => {
+    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
+    //         })
+    //     }
+    // }
 
-    const addPngSequence = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.webkitdirectory = true;
-        input.multiple = true;
-        input.style.display = 'none';
+    // const addPngSequence = () => {
+    //     const input = document.createElement('input');
+    //     input.type = 'file';
+    //     input.webkitdirectory = true;
+    //     input.multiple = true;
+    //     input.style.display = 'none';
 
-        input.addEventListener('change', function (event) {
-            const files = event.target.files;
-            const prefix = 'pngseq / '
+    //     input.addEventListener('change', function (event) {
+    //         const files = event.target.files;
+    //         const prefix = 'pngseq / '
 
-            for (let j = 0; j < files.length; j++) {
-                const file = files[j];
-                if (file.type.startsWith('image/')) {
-                    loadImage(file, function (fabricImage, sheet) {
-                        fabricImage.set({
-                            left: 200, top: 200, scaleX: 1, scaleY: 1, id: prefix + j.toString(), opacity: 0,
-                            class: "class_" + fabric.Object.__uid,
-                            shadow: {
-                                color: '#000000',
-                                blur: 0,
-                                offsetX: 0,
-                                offsetY: 0,
-                                affectStroke: false,
-                            },
-                            strokeUniform: true,
-                            objectCaching: false,
-                            fill: "#ff0000",
-                            stroke: "#00ff00",
-                        });
+    //         for (let j = 0; j < files.length; j++) {
+    //             const file = files[j];
+    //             if (file.type.startsWith('image/')) {
+    //                 loadImage(file, function (fabricImage, sheet) {
+    //                     fabricImage.set({
+    //                         left: 200, top: 200, scaleX: 1, scaleY: 1, id: prefix + j.toString(), opacity: 0,
+    //                         class: "class_" + fabric.Object.__uid,
+    //                         shadow: {
+    //                             color: '#000000',
+    //                             blur: 0,
+    //                             offsetX: 0,
+    //                             offsetY: 0,
+    //                             affectStroke: false,
+    //                         },
+    //                         strokeUniform: true,
+    //                         objectCaching: false,
+    //                         fill: "#ff0000",
+    //                         stroke: "#00ff00",
+    //                     });
 
-                        canvas.add(fabricImage).setActiveObject(fabricImage)
-                        canvas.requestRenderAll();
+    //                     canvas.add(fabricImage).setActiveObject(fabricImage)
+    //                     canvas.requestRenderAll();
 
-                        const element = canvas.getActiveObjects()[0];
-                        const obj1 = {
-                            left: 500,
-                            top: 300,
-                            scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
-                            scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
-                            angle: 0,
-                            opacity: types.number(0, { range: [0, 1] }),
-                            rx: types.number(10, { range: [0, 100] }),
-                            ry: types.number(10, { range: [0, 100] }),
-                            strokeWidth: types.number(0, { range: [0, 100] }),
-                            fontSize: types.number(45, { range: [0, 100] }),
-                            strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
-                            strkDsOfst: types.number(0, { range: [-1000, 1000] }),
-                            fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
-                            stroke: types.rgba(hexToRGB('#000000')),
-                            shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(0), { range: [0, 100] }) },
-                            skewX: types.number(0, { range: [-88, 88] }),
-                            skewY: types.number(0, { range: [-60, 60] }),
-                        }
-                        const i = arrObject.length;
-                        arrObject[i] = sheet.object(element.id, obj1);
-                        arrObject[i].onValuesChange((val) => {
-                            element.set({
-                                left: val.left,
-                                top: val.top,
-                                opacity: val.opacity,
-                                scaleX: val.scaleX,
-                                scaleY: val.scaleY,
-                                angle: val.angle,
-                                rx: val.rx,
-                                ry: val.ry,
-                                strokeWidth: val.strokeWidth,
-                                fontSize: val.fontSize,
-                                strokeDashArray: [val.strkdsar, val.strkdsar],
-                                strokeDashOffset: val.strkDsOfst,
-                                shadow: val.shadow,
-                                fill: val.fill,
-                                stroke: val.stroke,
-                                skewX: val.skewX,
-                                skewY: val.skewY,
-                            });
-                            element.setCoords();
-                            canvas.requestRenderAll();
-                        })
-                        // const onMouseMove = (obj, event) => {
-                        //     if (mouseDown === 1) {
-                        //         studio.transaction(({ set }) => {
-                        //             set(obj.props.left, event.target.left);
-                        //             set(obj.props.top, event.target.top);
-                        //             set(obj.props.angle, event.target.angle);
-                        //         });
-                        //     }
-                        // };
-                        const onScaling = (obj, event) => {
-                            studio.transaction(({ set }) => {
-                                set(obj.props.scaleX, event.transform.target.scaleX);
-                                set(obj.props.scaleY, event.transform.target.scaleY);
-                            });
-                        };
+    //                     const element = canvas.getActiveObjects()[0];
+    //                     const obj1 = {
+    //                         left: 500,
+    //                         top: 300,
+    //                         scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
+    //                         scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
+    //                         angle: 0,
+    //                         opacity: types.number(0, { range: [0, 1] }),
+    //                         rx: types.number(10, { range: [0, 100] }),
+    //                         ry: types.number(10, { range: [0, 100] }),
+    //                         strokeWidth: types.number(0, { range: [0, 100] }),
+    //                         fontSize: types.number(45, { range: [0, 100] }),
+    //                         strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
+    //                         strkDsOfst: types.number(0, { range: [-1000, 1000] }),
+    //                         fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
+    //                         stroke: types.rgba(hexToRGB('#000000')),
+    //                         shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(0), { range: [0, 100] }) },
+    //                         skewX: types.number(0, { range: [-88, 88] }),
+    //                         skewY: types.number(0, { range: [-60, 60] }),
+    //                     }
+    //                     const i = arrObject.length;
+    //                     arrObject[i] = sheet.object(element.id, obj1);
+    //                     arrObject[i].onValuesChange((val) => {
+    //                         element.set({
+    //                             left: val.left,
+    //                             top: val.top,
+    //                             opacity: val.opacity,
+    //                             scaleX: val.scaleX,
+    //                             scaleY: val.scaleY,
+    //                             angle: val.angle,
+    //                             rx: val.rx,
+    //                             ry: val.ry,
+    //                             strokeWidth: val.strokeWidth,
+    //                             fontSize: val.fontSize,
+    //                             strokeDashArray: [val.strkdsar, val.strkdsar],
+    //                             strokeDashOffset: val.strkDsOfst,
+    //                             shadow: val.shadow,
+    //                             fill: val.fill,
+    //                             stroke: val.stroke,
+    //                             skewX: val.skewX,
+    //                             skewY: val.skewY,
+    //                         });
+    //                         element.setCoords();
+    //                         canvas.requestRenderAll();
+    //                     })
+    //                     // const onMouseMove = (obj, event) => {
+    //                     //     if (mouseDown === 1) {
+    //                     //         studio.transaction(({ set }) => {
+    //                     //             set(obj.props.left, event.target.left);
+    //                     //             set(obj.props.top, event.target.top);
+    //                     //             set(obj.props.angle, event.target.angle);
+    //                     //         });
+    //                     //     }
+    //                     // };
+    //                     const onScaling = (obj, event) => {
+    //                         studio.transaction(({ set }) => {
+    //                             set(obj.props.scaleX, event.transform.target.scaleX);
+    //                             set(obj.props.scaleY, event.transform.target.scaleY);
+    //                         });
+    //                     };
 
-                        element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
-                        element.on('mousemove', (e) => onMouseMove11(arrObject[i], e), false);
-                        element.on('scaling', (e) => onScaling(arrObject[i], e), false);
+    //                     element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
+    //                     element.on('mousemove', (e) => onMouseMove11(arrObject[i], e), false);
+    //                     element.on('scaling', (e) => onScaling(arrObject[i], e), false);
 
-                        studio.setSelection([arrObject[i]]);
+    //                     studio.setSelection([arrObject[i]]);
 
-                        if (j === (files.length - 1)) {
-                            gg(files.length - 1, prefix)
-                        }
+    //                     if (j === (files.length - 1)) {
+    //                         gg(files.length - 1, prefix)
+    //                     }
 
-                    });
-
-
-                }
+    //                 });
 
 
-
-            }
-
-        });
-
-        const onMouseMove11 = (obj, event) => {
-            if (mouseDown === 1) {
-                studio.transaction(({ set }) => {
-                    set(obj.props.left, event.target.left);
-                    set(obj.props.top, event.target.top);
-                    set(obj.props.angle, event.target.angle);
-                });
-            }
-        };
-
-        document.body.appendChild(input);
-        input.click();
-        document.body.removeChild(input);
-        function loadImage(file, callback) {
-            const reader = new FileReader();
-
-            reader.onload = function (event) {
-                const img = new Image();
-                img.onload = function () {
-                    const fabricImage = new fabric.Image(img, {
-                    });
-
-                    callback(fabricImage, sheet);
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+    //             }
 
 
-    }
+
+    //         }
+
+    //     });
+
+    //     const onMouseMove11 = (obj, event) => {
+    //         if (mouseDown === 1) {
+    //             studio.transaction(({ set }) => {
+    //                 set(obj.props.left, event.target.left);
+    //                 set(obj.props.top, event.target.top);
+    //                 set(obj.props.angle, event.target.angle);
+    //             });
+    //         }
+    //     };
+
+    //     document.body.appendChild(input);
+    //     input.click();
+    //     document.body.removeChild(input);
+    //     function loadImage(file, callback) {
+    //         const reader = new FileReader();
+
+    //         reader.onload = function (event) {
+    //             const img = new Image();
+    //             img.onload = function () {
+    //                 const fabricImage = new fabric.Image(img, {
+    //                 });
+
+    //                 callback(fabricImage, sheet);
+    //             };
+    //             img.src = event.target.result;
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+
+
+    // }
 
 
 
