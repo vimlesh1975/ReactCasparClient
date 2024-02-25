@@ -7,7 +7,7 @@ import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { createRandomeStrip, createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 
-import { getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 
@@ -812,7 +812,7 @@ const WebAnimator = () => {
                 const matchingOldObject = oldData.objects.find(oldObject => oldObject.id === newObject.id);
                 if (matchingOldObject) {
                     // If ID already exists, assign a new ID
-                    newObject.id = 'id_' + fabric.Object.__uid; // Implement a function to generate a new unique ID
+                    newObject.id = generateUniqueId(newObject) // Implement a function to generate a new unique ID
                 }
             });
 

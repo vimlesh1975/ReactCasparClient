@@ -3,6 +3,9 @@ import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
 export const buildDate = '250224_1';
+export const generateUniqueId = (object) => {
+  return object.type + '_' + Math.random().toString(36).substr(2, 9); // Generate a random alphanumeric ID
+}
 
 export const getGdd = (canvas) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
