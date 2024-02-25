@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '240224_2';
+export const buildDate = '250224_1';
 
 export const getGdd = (canvas) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {

@@ -801,6 +801,26 @@ const WebAnimator = () => {
         //     const dd = getProject('ccg_1', { state: aa }).sheet('Sheet 1').object('ccg_1', { left: 10 })
         // }
 
+        const appendDatafromLocalStorage = () => {
+            const oldData = canvas.toJSON(['id', 'class', 'selectable']);//'importing true
+            deleteAllObjects();
+            initialiseCore(localStorage.getItem('RCCpageData'));
+            const newData = canvas.toJSON(['id', 'class', 'selectable']);//'importing true
+
+            // Check and update IDs in newData if they already exist in oldData
+            newData.objects.forEach(newObject => {
+                const matchingOldObject = oldData.objects.find(oldObject => oldObject.id === newObject.id);
+                if (matchingOldObject) {
+                    // If ID already exists, assign a new ID
+                    newObject.id = 'id_' + fabric.Object.__uid; // Implement a function to generate a new unique ID
+                }
+            });
+
+            oldData.objects = oldData.objects.concat(newData.objects);
+            deleteAllObjects();
+            initialiseCore(JSON.stringify(oldData), true);
+        }
+
         return (
             <div className='rightClickMenu'
                 style={{ zIndex: 200, position: 'fixed', left: 120, top: 15, color: 'white', display: visibility ? "block" : "none", textAlign: 'left' }}
@@ -809,12 +829,14 @@ const WebAnimator = () => {
                 <ul>
                     <li>Add<ul >
                         <li onClick={() => addItem(addImage)}>Image</li>
-                        <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
                         <li onClick={() => addItem(createRect)}>Rectangle <VscPrimitiveSquare /></li>
                         <li onClick={() => addItem(createRandomeStrip)}>Randome Path Strip <VscPrimitiveSquare /></li>
                         <li onClick={() => addItem(createTextBox)}>Text T</li>
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
+                        <li onClick={appendDatafromLocalStorage}>Append Data from LocalStorage <VscTriangleUp /></li>
+                        <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
+
                     </ul></li>
                     <li>Edit<ul >
                         <li onClick={() => copy(canvas)}>Copy</li>
