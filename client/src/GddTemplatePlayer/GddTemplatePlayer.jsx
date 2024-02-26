@@ -1,62 +1,15 @@
-import React, { useState } from 'react'
-import {
-    validateData,
-    getDefaultDataFromSchema,
-    setupSchemaValidator,
-    // GDDSchema,
-    // GDDTypes
-} from 'graphics-data-definition'
-import fetch from 'node-fetch';
+import React, { useState, useRef } from 'react'
+import { endpoint } from '../common';
+import sha256 from 'crypto-js/sha256';
 
-// eslint-disable-next-line
-const aa = async () => {
-    // This object represents a GDD Schema that have been read from a graphics template:
-    const mySchema = {
-        "$schema": "https://superflytv.github.io/GraphicsDataDefinition/gdd-meta-schema/v1/schema.json",
-        "title": "One-Line GFX Template",
-        "type": "object",
-        "properties": {
-            "text0": {
-                "type": "string",
-                "gddType": "single-line",
-            },
-            "color": {
-                "type": "string",
-                "gddType": "color-rrggbb",
-                "pattern": '^#[0-9a-f]{6}$',
-                "default": "#000000"
-            }
-        },
-    }
-    // This object represents the data that comes from the user input form:
-    const myData = {
-        text0: "This is the text!"
-    }
 
-    // Verify that the schema is valid: -------------------------------------------
-    const schemaValidator = await setupSchemaValidator({
-        fetch: async (url) => {
-            return await (await fetch(url)).json()
-        }
-    })
-    const schemaValidateResult = schemaValidator.validate(mySchema)
-    if (schemaValidateResult === null) console.log('Schema is valid!')
-    else console.log('Schema is not valid: ' + schemaValidateResult)
 
-    // Validate that the data is correct: -----------------------------------------
-    const dataValidateResult = validateData(mySchema, myData)
-    if (dataValidateResult === null) console.log('Data is valid!')
-    else console.log('Data is not valid: ' + schemaValidateResult)
-
-    // Generate a default data-object, to use for prefilling: ---------------------
-    const defaultData = getDefaultDataFromSchema(mySchema)
-    console.log('Default Data from schema: ' + JSON.stringify(defaultData))
-
-}
-// aa()
 
 const GddTemplatePlayer = () => {
-    const [aa, setAa] = useState([])
+    const [aa, setAa] = useState([]);
+
+    const [htmlContent1, setHtmlContent1] = useState([]);
+    const iframeRef = useRef(null);
 
     async function opentemplateFile() {
         var content;
@@ -70,6 +23,7 @@ const GddTemplatePlayer = () => {
         fInput.click();
         fInput.onchange = (e) => {
             const file = e.target.files[0]
+
             if (file) {
                 fileReader = new FileReader();
                 fileReader.onloadend = () => {
@@ -81,6 +35,10 @@ const GddTemplatePlayer = () => {
         };
     }
     const processContent = (htmlContent) => {
+
+
+
+        setHtmlContent1(htmlContent);
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const scriptElement = doc.querySelector('script[name="graphics-data-definition"]');
@@ -121,24 +79,109 @@ const GddTemplatePlayer = () => {
             reader.readAsDataURL(file);
         }
     }
+
+
+    const callFunctionInIframe = () => {
+        const iframeWindow = iframeRef.current.contentWindow;
+        aa.forEach(val => {
+            if (val.value.gddType === 'file-path/image-path') {
+                iframeWindow.updateimage(val.key, val.value.default)
+            }
+            else {
+                iframeWindow.updatestring(val.key, val.value.default)
+            }
+        })
+        // let xml = '';
+        // aa.forEach(val => {
+        //     xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+        // })
+        // xml = `'<templateData>${xml}</templateData>'`
+        // console.log(xml)
+        // iframeWindow.update(xml);
+
+
+
+    };
+    // eslint-disable-next-line
+    const palytocaspar = () => {
+        let xml = '';
+        aa.forEach(val => {
+            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+        })
+        xml = `<templateData>${xml}</templateData>`
+
+        // Create a Blob with the HTML content
+        const blob = new Blob([htmlContent1], { type: 'text/html' });
+
+        // Create a data URL from the Blob
+        const dataUrl = URL.createObjectURL(blob);
+
+        // Open the data URL in a new tab or window
+        window.open(dataUrl, '_blank');
+
+        // Generate a unique hash based on the content
+        const hash = sha256(htmlContent1).toString();
+
+        // Use the hash as part of the virtual file address
+        const virtualFileAddress = `/files/${hash}/file.html`;
+
+        endpoint(`play 1-96 [html] "${'https://localhost:10000/ReactCasparClient' + virtualFileAddress}"`);
+        endpoint(`play 1-96 [html] "${dataUrl}"`);
+        endpoint(`call 1-96 update('${xml}')`);
+    }
     return (
         <div>
-            <h1>Hi</h1>
-            <button onClick={opentemplateFile}>click</button>
-            {aa.map((val, i) => {
-                return (<div key={i} style={{ border: '2px solid red', width: 300, height: 50 }}>
-                    <span>{val.key}</span>
-                    {(val.value.gddType === 'file-path/image-path') ? <> <img onClick={() => handleImageClick(i)} src={val.value.default} alt='image1' style={{ border: '1px solid blue', maxWidth: 40, maxHeight: 30 }} /><input
-                        id={`inputFile_${i}`}
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={e => handleFileChange(e, i)}
-                    /> </> : <input onChange={e => modifiyProperties(e, i)} style={{ display: 'inline' }} type='text' value={val.value.default} />
-                    }
-                </div>)
-            })
-            }
+            <h1>GddTemplate Preview</h1>
+            <div style={{ display: 'flex' }}>
+                <div style={{ position: 'absolute', left: 350, top: 50, width: 1920, height: 1080, transform: `scale(${0.8})`, transformOrigin: '0 0' }}>
+                    <iframe ref={iframeRef} style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} srcDoc={htmlContent1} title='HtmlOutput'></iframe>
+                </div>
+                <div>
+                    <button onClick={opentemplateFile}>Open a html Template</button>
+                    <div>
+                        <button onClick={callFunctionInIframe}>PreView with New data</button>
+                        {/* <button onClick={palytocaspar}>Play to caspar with New data</button> */}
+                    </div>
+                    <div style={{ height: 800, overflow: 'scroll' }}>
+                        {aa.map((val, i) => (
+                            <div key={i} style={{ border: '2px solid red', width: 300, height: 50, margin: 20 }}>
+                                <span style={{ fontSize: 20 }}>{val.key}</span>
+                                {val.value.gddType === 'file-path/image-path' ? (
+                                    <>
+                                        <img
+                                            onClick={() => handleImageClick(i)}
+                                            src={val.value.default}
+                                            alt='image1'
+                                            style={{ border: '2px solid blue', maxWidth: 40, maxHeight: 30, minWidth: 40, minHeight: 30 }}
+                                        />
+                                        <input
+                                            id={`inputFile_${i}`}
+                                            type="file"
+                                            accept="image/*"
+                                            style={{ display: 'none' }}
+                                            onChange={e => handleFileChange(e, i)}
+                                        />
+                                    </>
+                                ) : val.value.gddType === 'single-line' ? (
+                                    <input
+                                        onChange={e => modifiyProperties(e, i)}
+                                        style={{ display: 'inline' }}
+                                        type='text'
+                                        value={val.value.default}
+                                    />
+                                ) : val.value.gddType === 'multi-line' ? (
+                                    <textarea
+                                        onChange={e => modifiyProperties(e, i)}
+                                        style={{ display: 'inline', width: '100%' }}
+                                        value={val.value.default}
+                                    />
+                                ) : null}
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            </div>
         </div>
     )
 }

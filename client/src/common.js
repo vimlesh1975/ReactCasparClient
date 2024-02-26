@@ -3,6 +3,7 @@ import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
 export const buildDate = '20224_1';
+export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
@@ -24,7 +25,7 @@ export const getGdd = (canvas, designerSoftware) => {
           default1 = object.text;
         } else if (object.type === "image") {
           gddType = "file-path/image-path";
-          default1 = "object.src";
+          default1 = defaultImageSrc;
         }
         acc[object.id] = {
           type: "string",

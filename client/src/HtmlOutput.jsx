@@ -7,7 +7,6 @@ const HtmlOutput = ({ scale }) => {
     return (
         <div style={{ position: 'absolute', width: 1920, height: 1080, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
             <iframe style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} src={"/ReactCasparClient/html/" + clientId} title='HtmlOutput'></iframe>
-
         </div>
     )
 }
