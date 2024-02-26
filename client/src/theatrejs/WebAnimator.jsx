@@ -1963,7 +1963,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
     const exportHtml = async (overRide = false) => {
         const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
 
-        const gdd = getGdd(canvas);
+        const gdd = getGdd(canvas, 'RCCWebAnimator');
 
         const xx4 = `
         document.body.addEventListener('keypress', function(e) {

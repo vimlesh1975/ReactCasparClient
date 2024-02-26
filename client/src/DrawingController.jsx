@@ -2253,20 +2253,13 @@ const DrawingController = () => {
     }
     canvas.discardActiveObject()
     canvas.requestRenderAll();
-
-
-
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
     myWindow.document.body.innerHTML = aa;
-
-
   };
 
-
   const setHtmlString = () => {
-    const gdd = getGdd(canvas);
+    const gdd = getGdd(canvas, 'RCC');
     html = `<!DOCTYPE html>
         <html lang="en">
             <head>
