@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '250224_1';
+export const buildDate = '20224_1';
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9); // Generate a random alphanumeric ID
 }
@@ -15,7 +15,13 @@ export const getGdd = (canvas) => {
       let default1 = "default"; // Default value for default
 
       if (object.type === "textbox") {
-        gddType = "single-line";
+        console.log(object.textLines)
+        if (object.textLines.length > 1) {
+          gddType = "multi-line";
+        }
+        else {
+          gddType = "single-line";
+        }
         default1 = object.text;
       } else if (object.type === "image") {
         gddType = "file-path/image-path";
