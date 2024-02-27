@@ -1,12 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { endpoint } from '../common';
-import sha256 from 'crypto-js/sha256';
-
-
-
+import { defaultImageSrc } from '../common';
+// import { endpoint } from '../common';
 
 const GddTemplatePlayer = () => {
     const [aa, setAa] = useState([]);
+    const [fileName, setFileName] = useState('');
 
     const [htmlContent1, setHtmlContent1] = useState([]);
     const iframeRef = useRef(null);
@@ -23,6 +21,7 @@ const GddTemplatePlayer = () => {
         fInput.click();
         fInput.onchange = (e) => {
             const file = e.target.files[0]
+            setFileName(file.name)
 
             if (file) {
                 fileReader = new FileReader();
@@ -39,6 +38,11 @@ const GddTemplatePlayer = () => {
 
 
         setHtmlContent1(htmlContent);
+        const iframeWindow = iframeRef.current.contentWindow;
+        setTimeout(() => {
+            iframeWindow.play();//for loopic
+        }, 1000);
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const scriptElement = doc.querySelector('script[name="graphics-data-definition"]');
@@ -80,77 +84,67 @@ const GddTemplatePlayer = () => {
         }
     }
 
-
     const callFunctionInIframe = () => {
+
         const iframeWindow = iframeRef.current.contentWindow;
+        let xml = '';
         aa.forEach(val => {
-            if (val.value.gddType === 'file-path/image-path') {
-                iframeWindow.updateimage(val.key, val.value.default)
-            }
-            else {
-                iframeWindow.updatestring(val.key, val.value.default)
-            }
-        })
+            xml += `<componentData id="${val.key}"><data id="text" value="${val.value.default}" /></componentData>`;
+        });
+        xml = `<templateData>${xml}</templateData>`;
+        iframeWindow.update(xml);
+    };
+    // eslint-disable-next-line
+    const palytocaspar = () => {
         // let xml = '';
         // aa.forEach(val => {
         //     xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
         // })
-        // xml = `'<templateData>${xml}</templateData>'`
-        // console.log(xml)
-        // iframeWindow.update(xml);
+        // xml = `<templateData>${xml}</templateData>`
+
+        // const iframeWindow = iframeRef.current;
+        // console.log(iframeWindow.srcdoc.replaceAll('"', '\\"'))
+
+        // endpoint(`play 1-96 [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+        // const script = `
+        // const newIframe = document.createElement('iframe');
+        // newIframe.width = 1920;
+        // newIframe.height = 1080;
+        // newIframe.srcdoc = \`${iframeWindow.srcdoc.replaceAll('"', '\\"')}\`;
+        // document.body.appendChild(newIframe);
+        // `
+        // setTimeout(() => {
+        //     endpoint(`call 1-96 "
+        //              ${script}
+        //               "`);
+        // }, 300);
 
 
-
-    };
-    // eslint-disable-next-line
-    const palytocaspar = () => {
-        let xml = '';
-        aa.forEach(val => {
-            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
-        })
-        xml = `<templateData>${xml}</templateData>`
-
-        // Create a Blob with the HTML content
-        const blob = new Blob([htmlContent1], { type: 'text/html' });
-
-        // Create a data URL from the Blob
-        const dataUrl = URL.createObjectURL(blob);
-
-        // Open the data URL in a new tab or window
-        window.open(dataUrl, '_blank');
-
-        // Generate a unique hash based on the content
-        const hash = sha256(htmlContent1).toString();
-
-        // Use the hash as part of the virtual file address
-        const virtualFileAddress = `/files/${hash}/file.html`;
-
-        endpoint(`play 1-96 [html] "${'https://localhost:10000/ReactCasparClient' + virtualFileAddress}"`);
-        endpoint(`play 1-96 [html] "${dataUrl}"`);
-        endpoint(`call 1-96 update('${xml}')`);
     }
     return (
         <div>
-            <h1>GddTemplate Preview</h1>
+            <h3>GddTemplate Preview</h3>
+            <h4>{fileName}</h4>
+
             <div style={{ display: 'flex' }}>
                 <div style={{ position: 'absolute', left: 350, top: 50, width: 1920, height: 1080, transform: `scale(${0.8})`, transformOrigin: '0 0' }}>
                     <iframe ref={iframeRef} style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} srcDoc={htmlContent1} title='HtmlOutput'></iframe>
                 </div>
                 <div>
                     <button onClick={opentemplateFile}>Open a html Template</button>
-                    <div>
-                        <button onClick={callFunctionInIframe}>PreView with New data</button>
-                        {/* <button onClick={palytocaspar}>Play to caspar with New data</button> */}
-                    </div>
+
+                    <button onClick={callFunctionInIframe}>PreView with New data</button>
+                    {/* <button onClick={palytocaspar}>Play to caspar with New data</button> */}
+
                     <div style={{ height: 800, overflow: 'scroll' }}>
                         {aa.map((val, i) => (
-                            <div key={i} style={{ border: '2px solid red', width: 300, height: 50, margin: 20 }}>
-                                <span style={{ fontSize: 20 }}>{val.key}</span>
+                            <div key={i} style={{ border: '2px solid red', width: 300, margin: 20 }}>
+                                <div style={{ fontSize: 20, fontWeight: 'bolder' }}>{val.key}</div>
                                 {val.value.gddType === 'file-path/image-path' ? (
                                     <>
                                         <img
                                             onClick={() => handleImageClick(i)}
-                                            src={val.value.default}
+                                            src={val.value.default ? val.value.default : defaultImageSrc}
                                             alt='image1'
                                             style={{ border: '2px solid blue', maxWidth: 40, maxHeight: 30, minWidth: 40, minHeight: 30 }}
                                         />
@@ -172,7 +166,7 @@ const GddTemplatePlayer = () => {
                                 ) : val.value.gddType === 'multi-line' ? (
                                     <textarea
                                         onChange={e => modifiyProperties(e, i)}
-                                        style={{ display: 'inline', width: '100%' }}
+                                        style={{ height: 150, width: '95%' }}
                                         value={val.value.default}
                                     />
                                 ) : null}

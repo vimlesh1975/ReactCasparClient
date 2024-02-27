@@ -2346,19 +2346,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                        })
                    }
                     else {
-                        const bb =  findElementWithIdoriginalCanvas(originalCanvas,idCaspar);
-                       const originalWidth = bb.width;
-                       const originalscaleX = bb.scaleX;
-                       element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width:originalWidth });
-                       changePropOfObject(idCaspar, 'scaleX', originalscaleX);
-   
-                       if (element.textLines.length > 1) {
-                       do {
-                           element.set({ width: element.width + 5 });
-                       }
-                       while (element.textLines.length > 1);
-                       changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
-                       }
+                        element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true,});
                     }
                     canvas.requestRenderAll()
                  }
@@ -2411,22 +2399,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
  
          function updatestring(str1, str2) {
             const aa = findElementWithId(canvas,str1);
-            if (aa){
+            if (aa)
+            {
                 const element = aa;
-                const bb =findElementWithIdoriginalCanvas(originalCanvas,str1);
-                const originalWidth = bb.width;
-                const originalscaleX = bb.scaleX;
-                element.set({ objectCaching: false, text: str2, visible: true, width:originalWidth });
-                changePropOfObject(str1, 'scaleX', originalscaleX);
-                if (element.textLines.length > 1) {
-                  do {
-                    element.set({ width: element.width + 5 });
-                  }
-                  while (element.textLines.length > 1);
-                  changePropOfObject(str1, 'scaleX', originalWidth / element.width);
-                }
-                canvas.requestRenderAll();
+                element.set({ objectCaching: false, text: str2, visible: true,});
             }
+                canvas.requestRenderAll();
         }
         function updateimage(str1, str2) {
             const aa = findElementWithId(canvas,str1);
