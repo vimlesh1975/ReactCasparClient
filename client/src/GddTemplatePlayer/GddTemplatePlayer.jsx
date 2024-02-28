@@ -131,7 +131,7 @@ const GddTemplatePlayer = () => {
                 <div>
                     <button onClick={opentemplateFile}>Open html from anywhere </button>
                     <button onClick={callFunctionInIframe}>PreView with New data</button>
-                    <div style={{ height: 800, overflow: 'scroll' }}>
+                    <div style={{ height: 650, overflow: 'scroll' }}>
                         {aa.map((val, i) => (
                             <div key={i} style={{ border: '2px solid red', width: 300, margin: 20 }}>
                                 <div style={{ fontSize: 20, fontWeight: 'bolder' }}>{val.key}</div>
