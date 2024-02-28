@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react'
 import { defaultImageSrc } from '../common';
-// import { endpoint } from '../common';
+import TemplateController from '../TemplateController';
+import { endpoint } from '../common';
 
 const GddTemplatePlayer = () => {
     const [aa, setAa] = useState([]);
     const [fileName, setFileName] = useState('');
+    const [templateName, setTemplateName] = useState('');
 
     const [htmlContent1, setHtmlContent1] = useState([]);
     const iframeRef = useRef(null);
@@ -35,8 +37,6 @@ const GddTemplatePlayer = () => {
     }
     const processContent = (htmlContent) => {
 
-
-
         setHtmlContent1(htmlContent);
         const iframeWindow = iframeRef.current.contentWindow;
         setTimeout(() => {
@@ -46,14 +46,17 @@ const GddTemplatePlayer = () => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         const scriptElement = doc.querySelector('script[name="graphics-data-definition"]');
-        const bb = JSON.parse(scriptElement.innerHTML)
         const properties = [];
-        for (const key in bb.properties) {
-            if (bb.properties.hasOwnProperty(key)) {
-                properties.push({ key, value: bb.properties[key] });
+
+        if (scriptElement) {
+            const bb = JSON.parse(scriptElement.innerHTML)
+            for (const key in bb.properties) {
+                if (bb.properties.hasOwnProperty(key)) {
+                    properties.push({ key, value: bb.properties[key] });
+                }
             }
         }
-        setAa(properties)
+        setAa(properties);
     }
 
     const modifiyProperties = (e, i) => {
@@ -62,7 +65,6 @@ const GddTemplatePlayer = () => {
         setAa(updatedAA); // Update the state with the modified array
     }
     function handleImageClick(index) {
-        // Programmatically trigger the input file click
         const input = document.getElementById(`inputFile_${index}`);
         if (input) {
             input.click();
@@ -73,7 +75,6 @@ const GddTemplatePlayer = () => {
         const file = e.target.files[0];
 
         if (file) {
-            // Assuming you want to set the image source directly to the base64 representation
             const reader = new FileReader();
             reader.onload = function (readerEvent) {
                 updatedAA[index].value.default = readerEvent.target.result;
@@ -96,46 +97,40 @@ const GddTemplatePlayer = () => {
     };
     // eslint-disable-next-line
     const palytocaspar = () => {
-        // let xml = '';
-        // aa.forEach(val => {
-        //     xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
-        // })
-        // xml = `<templateData>${xml}</templateData>`
-
-        // const iframeWindow = iframeRef.current;
-        // console.log(iframeWindow.srcdoc.replaceAll('"', '\\"'))
-
-        // endpoint(`play 1-96 [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
-        // const script = `
-        // const newIframe = document.createElement('iframe');
-        // newIframe.width = 1920;
-        // newIframe.height = 1080;
-        // newIframe.srcdoc = \`${iframeWindow.srcdoc.replaceAll('"', '\\"')}\`;
-        // document.body.appendChild(newIframe);
-        // `
-        // setTimeout(() => {
-        //     endpoint(`call 1-96 "
-        //              ${script}
-        //               "`);
-        // }, 300);
-
-
+        let xml = '';
+        aa.forEach(val => {
+            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+        })
+        xml = `"<templateData>${xml}</templateData>"`
+        endpoint(`cg 1-96 add 96 "${templateName}" 1 ${xml}`);
     }
+    const updateTocaspar = () => {
+        let xml = '';
+        aa.forEach(val => {
+            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+        })
+        xml = `"<templateData>${xml}</templateData>"`
+        endpoint(`cg 1-96 update 96 ${xml}`);
+    }
+
     return (
         <div>
-            <h3>GddTemplate Preview</h3>
+            <h3>Html Template with Graphics Display Data-GDD</h3>
+            <TemplateController layerNumber={96} channelNumber={1} processContent={processContent}
+                setTemplateName={setTemplateName}
+                palytocaspar={palytocaspar}
+                updateTocaspar={updateTocaspar}
+            />
+
             <h4>{fileName}</h4>
 
             <div style={{ display: 'flex' }}>
-                <div style={{ position: 'absolute', left: 350, top: 50, width: 1920, height: 1080, transform: `scale(${0.8})`, transformOrigin: '0 0' }}>
+                <div style={{ position: 'absolute', left: 380, top: 50, width: 1920, height: 1080, transform: `scale(${0.8})`, transformOrigin: '0 0' }}>
                     <iframe ref={iframeRef} style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} srcDoc={htmlContent1} title='HtmlOutput'></iframe>
                 </div>
                 <div>
-                    <button onClick={opentemplateFile}>Open a html Template</button>
-
+                    <button onClick={opentemplateFile}>Open html from anywhere </button>
                     <button onClick={callFunctionInIframe}>PreView with New data</button>
-                    {/* <button onClick={palytocaspar}>Play to caspar with New data</button> */}
-
                     <div style={{ height: 800, overflow: 'scroll' }}>
                         {aa.map((val, i) => (
                             <div key={i} style={{ border: '2px solid red', width: 300, margin: 20 }}>

@@ -86,6 +86,20 @@ const mediaReducer = (state = initialMedia, action) => {
   }
 };
 
+const initialTemplate = { template: [] };
+const templateReducer = (state = initialTemplate, action) => {
+  switch (action.type) {
+    case 'CHANGE_TEMPLATE':
+      return {
+        ...state,
+        template: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
 const initialImageName = {
   imageName: `http://${window.location.host}${process.env.PUBLIC_URL}/img/pine-wood-500x500.jpg`,
 };
@@ -410,6 +424,7 @@ const rootReducer = combineReducers({
   canvasListReducer,
   currentPageReducer,
   mediaReducer,
+  templateReducer,
   imageNameReducer,
   onlineImageUrleReducer,
   canvasReducer,

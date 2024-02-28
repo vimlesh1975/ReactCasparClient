@@ -176,11 +176,13 @@ aa.onConnectionChanged = () => {
 };
 
 var mediaPath = 'c:/casparcg/_media';
-var templatePath;
+var templatePath = 'c:/casparcg';
+// var templatePath;
 var logPath;
 
 const dirTree = require('directory-tree');
 var media = [];
+var template = [];
 
 const refreshMedia = () => {
   aa.getCasparCGPaths()
@@ -198,8 +200,28 @@ const refreshMedia = () => {
     })
     .catch((aa2) => console.log(aa2));
 };
+
+const refreshTemplate = () => {
+  aa.getCasparCGPaths()
+    .then((aa1) => {
+      templatePath = aa1.absoluteTemplate;
+      template = [];
+      var tree = dirTree(templatePath, {}, (item, PATH, stats) => {
+
+        var aa = item.path.substring(templatePath.length);
+        if (aa.endsWith(".html")) {
+          template.push(aa);
+        }
+        // template.push(aa);
+      });
+      console.log(template.length);
+    })
+    .catch((aa2) => console.log(aa2));
+};
+
 aa.onConnected = () => {
   refreshMedia();
+  refreshTemplate();
   aa.getCasparCGVersion()
     .then((aa1) => {
       console.log('version', aa1);
@@ -230,6 +252,16 @@ app.post('/getmedia', (req, res) => {
     res.end();
   }, 2000);
 });
+
+app.post('/gettemplate', (req, res) => {
+  refreshTemplate();
+  setTimeout(() => {
+    res.send(template);
+    res.end();
+  }, 2000);
+});
+
+
 
 app.post('/endpoint', (req, res) => {
   // console.log(req.headers.referer);
@@ -360,4 +392,15 @@ app.post('/callScript', (req, res) => {
 app.post('/executeScript', (req, res) => {
   io.emit('executeScript', req.body);
   res.end('');
+});
+
+app.post('/readfile', (req, res) => {
+  fs.readFile(templatePath + req.body.filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(`Error reading file: ${err}`);
+      return;
+    }
+    res.send(data);
+    res.end();
+  });
 });
