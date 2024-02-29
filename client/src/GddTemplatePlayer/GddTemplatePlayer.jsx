@@ -40,7 +40,7 @@ const GddTemplatePlayer = () => {
         setHtmlContent1(htmlContent);
         const iframeWindow = iframeRef.current.contentWindow;
         setTimeout(() => {
-            iframeWindow.play();//for loopic
+            iframeWindow.play && iframeWindow.play();//for loopic
         }, 1000);
 
         const parser = new DOMParser();
@@ -90,7 +90,11 @@ const GddTemplatePlayer = () => {
         const iframeWindow = iframeRef.current.contentWindow;
         let xml = '';
         aa.forEach(val => {
-            xml += `<componentData id="${val.key}"><data id="text" value="${val.value.default}" /></componentData>`;
+            var val1 = val.value.default;
+            if (val1.includes("\n")) {
+                val1 = val1.replace(/\n/g, 'CRLF');
+            }
+            xml += `<componentData id="${val.key}"><data id="text" value="${val1}" /></componentData>`;
         });
         xml = `<templateData>${xml}</templateData>`;
         iframeWindow.update(xml);
@@ -99,7 +103,11 @@ const GddTemplatePlayer = () => {
     const palytocaspar = () => {
         let xml = '';
         aa.forEach(val => {
-            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+            var val1 = val.value.default;
+            if (val1.includes("\n")) {
+                val1 = val1.replace(/\n/g, 'CRLF');
+            }
+            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val1}\\" /></componentData>`
         })
         xml = `"<templateData>${xml}</templateData>"`
         endpoint(`cg 1-96 add 96 "${templateName}" 1 ${xml}`);
@@ -107,7 +115,11 @@ const GddTemplatePlayer = () => {
     const updateTocaspar = () => {
         let xml = '';
         aa.forEach(val => {
-            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val.value.default}\\" /></componentData>`
+            var val1 = val.value.default;
+            if (val1.includes("\n")) {
+                val1 = val1.replace(/\n/g, 'CRLF');
+            }
+            xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val1}\\" /></componentData>`
         })
         xml = `"<templateData>${xml}</templateData>"`
         endpoint(`cg 1-96 update 96 ${xml}`);
