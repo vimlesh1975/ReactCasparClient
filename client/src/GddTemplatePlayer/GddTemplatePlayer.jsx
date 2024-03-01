@@ -91,9 +91,12 @@ const GddTemplatePlayer = () => {
         let xml = '';
         aa.forEach(val => {
             var val1 = val.value.default;
-            if (val1.includes("\n")) {
-                val1 = val1.replace(/\n/g, 'CRLF');
+            if (val1) {
+                if (val1.includes("\n")) {
+                    val1 = val1.replace(/\n/g, 'CRLF');
+                }
             }
+
             xml += `<componentData id="${val.key}"><data id="text" value="${val1}" /></componentData>`;
         });
         xml = `<templateData>${xml}</templateData>`;
@@ -104,8 +107,10 @@ const GddTemplatePlayer = () => {
         let xml = '';
         aa.forEach(val => {
             var val1 = val.value.default;
-            if (val1.includes("\n")) {
-                val1 = val1.replace(/\n/g, 'CRLF');
+            if (val1) {
+                if (val1.includes("\n")) {
+                    val1 = val1.replace(/\n/g, 'CRLF');
+                }
             }
             xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val1}\\" /></componentData>`
         })
@@ -116,8 +121,10 @@ const GddTemplatePlayer = () => {
         let xml = '';
         aa.forEach(val => {
             var val1 = val.value.default;
-            if (val1.includes("\n")) {
-                val1 = val1.replace(/\n/g, 'CRLF');
+            if (val1) {
+                if (val1.includes("\n")) {
+                    val1 = val1.replace(/\n/g, 'CRLF');
+                }
             }
             xml += `<componentData id=\\"${val.key}\\"><data id=\\"text\\" value=\\"${val1}\\" /></componentData>`
         })
