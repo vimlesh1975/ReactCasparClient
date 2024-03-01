@@ -2334,47 +2334,113 @@ const DrawingController = () => {
 
                                     // Main function to insert data
                                     function dataInsert(dataCaspar) {
-            for (var idCaspar in dataCaspar) {
-            var idTemplate = document.getElementById(idCaspar);
-                                    if (idTemplate != undefined) {
-            var idtext = idTemplate.getElementsByTagName('text')[0];
-                                    var idimage = idTemplate.getElementsByTagName('image')[0];
-                                    if (idtext != undefined) {
-                                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
-                                    idTemplate.style.display = "block";
-                                    if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
-                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
-                                    var originalFontSize =  idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
-                                    if (textalign1 == 'center') {
-                                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
-                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
-                    }
-                                    if (textalign1 == 'right') {
-                                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                    idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
-                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                                    idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
-                    }
-                                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-                                    do {
-                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
-                                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
-                                    var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
-                    } while (width2 > width1);
-                }
-
-            }
-                                    else if (idimage != undefined) {
-                                        idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
-                                    idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
-                                    idTemplate.style.display = "block";
-            }
-            }
-            }
-            }
+                                      for (var idCaspar in dataCaspar) {
+                                          var idTemplate = document.getElementById(idCaspar);
+                                          if (idTemplate != undefined) {
+                                              var idtext = idTemplate.getElementsByTagName('text')[0];
+                                              var idimage = idTemplate.getElementsByTagName('image')[0];
+                          
+                                              if (idtext != undefined) {
+                                                  const lines =idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+                                                  if (lines === '1') {
+                                                      idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                                                      idTemplate.style.display = "block";
+                                                      if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                                                          var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                                                          var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                          var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                                                          if (textalign1 == 'center') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                                                          }
+                                                          if (textalign1 == 'right') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                                                          }
+                                                          idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                                                          do {
+                                                              var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                                                              var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                                                          } while (width2 > width1);
+                                                      }
+                                                  }
+                                                  else {
+                                                    var textElement = idTemplate.getElementsByTagName('text')[0];
+                                                    var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                                                    var initialX = existingTspans[0].getAttribute('x');
+                                                    var initialY = existingTspans[0].getAttribute('y');
+                                                    var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                                                    var newData = escapeHtml(dataCaspar[idCaspar]);
+                                                    var dataSegments = newData.split('CRLF');
+                                                    var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                        
+                                                    function splitTextIntoLines(text, maxWidth) {
+                                                        var words = text.split(' ');
+                                                        var lines = [];
+                                                        var currentLine = '';
+                                                        words.forEach(function (word) {
+                                                            var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                                                            var testWidth = textElement.getSubStringLength(0, testLine.length);
+                        
+                                                            if (testWidth > maxWidth) {
+                                                                lines.push(currentLine);
+                                                                currentLine = word;
+                                                            } else {
+                                                                currentLine = testLine;
+                                                            }
+                                                        });
+                                                        lines.push(currentLine);
+                                                        return lines;
+                                                    }
+                        
+                                                    var tspans = [];
+                                                    var previoustxtlines = 0;
+                        
+                                                    dataSegments.forEach(function (segment, i) {
+                                                        if (segment.trim() === '') {
+                                                          segment=' ';
+                                                        }
+                                                        textElement.innerHTML = segment;
+                                                        var txtlines = splitTextIntoLines(segment, maxWidth);
+                                                        txtlines.forEach(function (line, j) {
+                                                            var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                            tspan.textContent = line;
+                                                            tspan.setAttribute('x', initialX);
+                                                            tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                                                            tspans.push(tspan);
+                                                        });
+                                                        previoustxtlines += txtlines.length;
+                                                    });
+                                                    textElement.innerHTML = '';
+                                                    if (tspans.length === 1) {
+                                                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                        tspan.textContent = ' ';
+                                                        tspan.setAttribute('x', initialX);
+                                                        tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                                                        tspans.push(tspan);
+                                                    }
+                        
+                                                    tspans.forEach(function (tspan) {
+                                                        textElement.appendChild(tspan);
+                                                    });
+                        
+                                                  }
+                                              }
+                          
+                          
+                                              else if (idimage != undefined) {
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                                  idTemplate.style.display = "block";
+                                              }
+                                          }
+                                      }
+                                  }
 
                                     // Call for a update of data from CasparCG client
                                     function update(str) {
@@ -3328,69 +3394,6 @@ const DrawingController = () => {
     }, 1200);
   };
 
-  // useEffect(() => {
-  //     fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-  //         return function () {
-  //             var svg = _toSVG.call(this);
-  //             if (this.textAlign) {
-  //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-  //             }
-  //             return svg;
-  //         }
-  //     })(fabric.Textbox.prototype._toSVG)
-
-  //     fabric.IText.prototype._toSVG = (function (_toSVG) {
-  //         return function () {
-  //             var svg = _toSVG.call(this);
-  //             if (this.textAlign) {
-  //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-  //             }
-  //             return svg;
-  //         }
-  //     })(fabric.IText.prototype._toSVG)
-
-  //     fabric.Text.prototype._toSVG = (function (_toSVG) {
-  //         return function () {
-  //             var svg = _toSVG.call(this);
-  //             if (this.textAlign) {
-  //                 svg.splice(1, 0, `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}"></extraproperty>\n`);
-  //             }
-  //             return svg;
-  //         }
-  //     })(fabric.Text.prototype._toSVG)
-
-  //     return () => {
-  //         fabric.Textbox.prototype._toSVG = (function (_toSVG) {
-  //             return function () {
-  //                 var svg = _toSVG.call(this);
-  //                 if (this.textAlign) {
-  //                     svg.splice(1, 1);
-  //                 }
-  //                 return svg;
-  //             }
-  //         })(fabric.Textbox.prototype._toSVG)
-
-  //         fabric.IText.prototype._toSVG = (function (_toSVG) {
-  //             return function () {
-  //                 var svg = _toSVG.call(this);
-  //                 if (this.textAlign) {
-  //                     svg.splice(1, 1);
-  //                 }
-  //                 return svg;
-  //             }
-  //         })(fabric.IText.prototype._toSVG)
-  //         fabric.Text.prototype._toSVG = (function (_toSVG) {
-  //             return function () {
-  //                 var svg = _toSVG.call(this);
-  //                 if (this.textAlign) {
-  //                     svg.splice(1, 1);
-  //                 }
-  //                 return svg;
-  //             }
-  //         })(fabric.Text.prototype._toSVG)
-  //     }
-  //     // eslint-disable-next-line
-  // }, [])
 
   useEffect(() => {
     if (localStorage.getItem("RCC_currentscreenSize")) {
