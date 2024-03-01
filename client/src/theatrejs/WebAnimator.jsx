@@ -2346,7 +2346,24 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                        })
                    }
                     else {
-                        element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true,});
+                        if (element.textLines.length === 1) {
+                            const bb = findElementWithIdoriginalCanvas(originalCanvas, idCaspar);
+                            const originalWidth = bb.width;
+                            const originalscaleX = bb.scaleX;
+                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width: originalWidth });
+                            changePropOfObject(idCaspar, 'scaleX', originalscaleX);
+            
+                            if (element.textLines.length > 1) {
+                              do {
+                                element.set({ width: element.width + 5 });
+                              }
+                              while (element.textLines.length > 1);
+                              changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
+                            }
+                          }
+                          else {
+                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true, });
+                          }
                     }
                     canvas.requestRenderAll()
                  }
@@ -2402,7 +2419,24 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             if (aa)
             {
                 const element = aa;
-                element.set({ objectCaching: false, text: str2.replace(/CRLF/g, '\\n'), visible: true,});
+                if (element.textLines.length === 1) {
+                    const bb = findElementWithIdoriginalCanvas(originalCanvas, idCaspar);
+                    const originalWidth = bb.width;
+                    const originalscaleX = bb.scaleX;
+                    element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width: originalWidth });
+                    changePropOfObject(idCaspar, 'scaleX', originalscaleX);
+    
+                    if (element.textLines.length > 1) {
+                      do {
+                        element.set({ width: element.width + 5 });
+                      }
+                      while (element.textLines.length > 1);
+                      changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
+                    }
+                  }
+                  else {
+                    element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true, });
+                  }
             }
                 canvas.requestRenderAll();
         }
