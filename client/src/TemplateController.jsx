@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux'
 
 
-const TemplateController = ({ layerNumber, channelNumber = null, processContent, setTemplateName, palytocaspar, updateTocaspar }) => {
+const TemplateController = ({ layerNumber, channelNumber = null, processContent, setTemplateName, palytocaspar, updateTocaspar, updateInPreview }) => {
     const dispatch = useDispatch()
     const template = useSelector(state => state.templateReducer.template)
     const [filename, setfilename] = useState('');
@@ -29,6 +29,9 @@ const TemplateController = ({ layerNumber, channelNumber = null, processContent,
                 <br />
                 <button className='palyButton' onClick={palytocaspar}> Play</button>
                 <button className='palyButton' onClick={updateTocaspar}> Update</button>
+                <button className='palyButton' onClick={updateInPreview}>update In Preview</button>
+
+
                 <button className='stopButton' onClick={() => endpoint(`pause ${channelNumber ? channelNumber : window.chNumber}-${layerNumber} sheet.sequence.pause()`)}>Pause</button>
                 <button className='stopButton' onClick={() => endpoint(`resume ${channelNumber ? channelNumber : window.chNumber}-${layerNumber} sheet.sequence.play()`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${channelNumber ? channelNumber : window.chNumber}-${layerNumber}`)}>Stop</button>

@@ -85,7 +85,7 @@ const GddTemplatePlayer = () => {
         }
     }
 
-    const callFunctionInIframe = () => {
+    const updateInPreview = () => {
 
         const iframeWindow = iframeRef.current.contentWindow;
         let xml = '';
@@ -139,6 +139,7 @@ const GddTemplatePlayer = () => {
                 setTemplateName={setTemplateName}
                 palytocaspar={palytocaspar}
                 updateTocaspar={updateTocaspar}
+                updateInPreview={updateInPreview}
             />
 
             <h4>{fileName}</h4>
@@ -149,7 +150,6 @@ const GddTemplatePlayer = () => {
                 </div>
                 <div>
                     <button onClick={opentemplateFile}>Open html from anywhere </button>
-                    <button onClick={callFunctionInIframe}>PreView with New data</button>
                     <div style={{ height: 650, overflow: 'scroll' }}>
                         {aa.map((val, i) => (
                             <div key={i} style={{ border: '2px solid red', width: 300, margin: 20 }}>
@@ -173,7 +173,7 @@ const GddTemplatePlayer = () => {
                                 ) : val.value.gddType === 'single-line' ? (
                                     <input
                                         onChange={e => modifiyProperties(e, i)}
-                                        style={{ display: 'inline' }}
+                                        style={{ display: 'inline', width: 290 }}
                                         type='text'
                                         value={val.value.default}
                                     />
