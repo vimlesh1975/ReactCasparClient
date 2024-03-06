@@ -2,10 +2,32 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '010324_1';
+export const buildDate = '060324_1';
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+export const importSvgCode = (ss, canvas) => {
+  if (ss) {
+    fabric.loadSVGFromString(ss, function (objects) {
+      objects?.forEach(element => {
+        canvas.add(element);
+        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+        if (element.type === 'text') {
+          // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
+          element.set({ type: 'textbox' })
+          var textobj = element.toObject();
+          var clonedtextobj = JSON.parse(JSON.stringify(textobj));
+          var aa = new fabric.Textbox(element.text, clonedtextobj);
+          aa.set({ id: element.id, class: element.class, objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, width: 1000 });
+          canvas.remove(element)
+          canvas.add(aa);
+        }
+      });
+    });
+    canvas.requestRenderAll();
+  }
 }
 
 export const getGdd = (canvas, designerSoftware) => {

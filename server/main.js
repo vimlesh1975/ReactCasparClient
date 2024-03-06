@@ -3,6 +3,7 @@ const app = express();
 const fs = require('fs');
 const cors = require('cors');
 const https = require('https');
+const axios = require('axios');
 const corsOptions = {
   // "Access-Control-Allow-Origin": "*",
 };
@@ -39,9 +40,47 @@ app.use(
   express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 })
 );
 
-//open Ai Starts --------------------------------------------------------------------------
 const dotenv = require('dotenv');
 dotenv.config();
+
+//iconfinderApiKey Starts ----
+
+
+const iconfinderApiKey = process.env.REACT_APP_ICONFINDER_API_KEY;
+
+app.get('/api/iconfinder', async (req, res) => {
+  try {
+    const response = await axios.get('https://api.iconfinder.com/v4/icons/search', {
+      headers: {
+        Authorization: `Bearer ${iconfinderApiKey}`,
+      },
+      params: req.query,
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching data from Iconfinder API:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/api/iconfinder/getSvg', async (req, res) => {
+  try {
+    const response = await axios.get(req.body.svgUrl, {
+      headers: {
+        Authorization: `Bearer ${iconfinderApiKey}`,
+      },
+    });
+    res.send(response.data);
+  } catch (error) {
+    console.error('Error fetching data from Iconfinder API:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+//iconfinderApiKey ends ----
+
+//open Ai Starts --------------------------------------------------------------------------
+
 const { Configuration, OpenAIApi } = require('openai');
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,

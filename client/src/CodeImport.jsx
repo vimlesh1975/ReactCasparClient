@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fabric } from "fabric";
-import { shadowOptions, openaiAddress } from './common'
+import { importSvgCode, shadowOptions, openaiAddress } from './common'
 
 const addcommand = `Always Assume window.editor.canvas is avalable as fabricjs canvas . While adding a new object always use color parameter as full 6 digit hexadecimal notation, objectCaching as false and  shadow properties as {color: '#000000',  blur: 30, offsetX: 0, offsetY: 0, affectStroke: false};in object properties. After every code use window.editor.canvas.requestRenderAll();. `
 const editCommand = `Assume window.editor.canvas is avalable as fabricjs canvas. Use color parameter as full 6 digit hexadecimal notation. After every code use window.editor.canvas.requestRenderAll();. Use find method of array of canvas.getObjects() to get object by id in canvas. `
@@ -34,28 +34,6 @@ const CodeImport = () => {
         ]}`)
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
-
-    const importSvgCode = (ss = svgcode) => {
-        if (ss) {
-            fabric.loadSVGFromString(ss, function (objects) {
-                objects?.forEach(element => {
-                    canvas.add(element);
-                    element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
-                    if (element.type === 'text') {
-                        // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-                        element.set({ type: 'textbox' })
-                        var textobj = element.toObject();
-                        var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-                        var aa = new fabric.Textbox(element.text, clonedtextobj);
-                        aa.set({ id: element.id, class: element.class, objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, width: 1000 });
-                        canvas.remove(element)
-                        canvas.add(aa);
-                    }
-                });
-            });
-            canvas.requestRenderAll();
-        }
-    }
     const importJsonCode = () => {
         const preCanvas = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\'');
         if (jsoncode) {
@@ -73,7 +51,7 @@ const CodeImport = () => {
             canvas.requestRenderAll();
         }
 
-        importSvgCode(preCanvas)
+        importSvgCode(preCanvas, canvas)
 
     }
 
@@ -234,7 +212,7 @@ const CodeImport = () => {
             <div style={{ display: 'flex' }}>
 
                 <textarea style={{ width: 750, height: 90 }} value={svgcode} onChange={e => setSvgCode(e.target.value)} />
-                <button onClick={() => importSvgCode()}>Import SVG</button>
+                <button onClick={() => importSvgCode(svgcode, canvas)}>Import SVG</button>
             </div>
 
             <div style={{ display: 'flex' }}>
