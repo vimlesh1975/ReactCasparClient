@@ -668,7 +668,7 @@ const WebAnimator = () => {
                                 });
                                 canvas?.add(obj);
                                 canvas?.setActiveObject(obj);
-                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid, i);
+                                generateTheatreIDforCopiedElement(obj.type + "_" + fabric.Object.__uid, i);
                             });
                         } else {
                             const idAlreadyExists = findElementWithId(canvas, idofElement);
@@ -676,7 +676,7 @@ const WebAnimator = () => {
                             canvas?.add(clonedObj);
                             canvas?.setActiveObject(clonedObj);
                             if (idAlreadyExists) {
-                                generateTheatreIDforCopiedElement("id_" + fabric.Object.__uid);
+                                generateTheatreIDforCopiedElement(clonedObj.type + "_" + fabric.Object.__uid);
                             }
                             else {
                                 generateTheatreIDforCopiedElement(idofElement);

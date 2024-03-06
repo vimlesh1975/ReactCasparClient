@@ -13,7 +13,7 @@ export const importSvgCode = (ss, canvas) => {
     fabric.loadSVGFromString(ss, function (objects) {
       objects?.forEach(element => {
         canvas.add(element);
-        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: element.type + '_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
         if (element.type === 'text') {
           // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
           element.set({ type: 'textbox' })

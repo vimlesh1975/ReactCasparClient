@@ -1299,7 +1299,7 @@ export const paste = (canvas) => {
 };
 export const createShape = (canvas, shape, size = 0.4) => {
   const rect = new fabric.Path(shape, {
-    id: "id_" + fabric.Object.__uid,
+    id: "path_" + fabric.Object.__uid,
     class: "class_" + fabric.Object.__uid,
     shadow: shadowOptions,
     top: -100,
