@@ -21,6 +21,9 @@ import { createShape, } from './DrawingController'
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux'
 import IconFinder from './IconFinderApi.jsx'
+import UnsplashSearch from './UnsplashSearch.jsx'
+
+
 
 
 const Shapes = () => {
@@ -29,6 +32,9 @@ const Shapes = () => {
     return (<div>
         <div>
             <IconFinder canvas={canvas} />
+        </div>
+        <div>
+            <UnsplashSearch canvas={canvas} />
         </div>
         <div style={{ width: 880, height: 850, overflow: 'scroll' }}>
 
