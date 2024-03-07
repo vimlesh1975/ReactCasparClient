@@ -47,6 +47,8 @@ dotenv.config();
 
 
 const iconfinderApiKey = process.env.REACT_APP_ICONFINDER_API_KEY;
+const unsplashAccessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+
 
 app.get('/api/iconfinder', async (req, res) => {
   try {
@@ -78,6 +80,27 @@ app.post('/api/iconfinder/getSvg', async (req, res) => {
   }
 });
 //iconfinderApiKey ends ----
+
+//unsplash starts ----
+
+app.get('/api/unsplash/search/photos', async (req, res) => {
+  try {
+    const response = await axios.get('https://api.unsplash.com/search/photos', {
+      params: {
+        query: req.query.query,
+        client_id: unsplashAccessKey,
+        page: req.query.page || 1,
+        per_page: req.query.per_page || 30,
+      },
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching photos from Unsplash API:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+//unsplash ends ----
 
 //open Ai Starts --------------------------------------------------------------------------
 
