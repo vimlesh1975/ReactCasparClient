@@ -36,7 +36,9 @@ const Shapes = () => {
         <div>
             <UnsplashSearch canvas={canvas} />
         </div>
-        <div style={{ width: 880, height: 850, overflow: 'scroll' }}>
+
+        <div style={{ fontSize: 15, fontWeight: 'bolder' }}>Shapes-- Click to add on Canvas</div>
+        <div style={{ width: 880, maxHeight: 350, overflow: 'scroll' }}>
 
             {index.lib.map((val, i) => <div key={uuidv4()}>
                 <h4 style={{ backgroundColor: 'yellow', textAlign: 'center' }} >{val.toUpperCase()}</h4>

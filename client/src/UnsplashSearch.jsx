@@ -67,22 +67,30 @@ const UnsplashSearch = ({ canvas }) => {
     setPage(prevPage + 1);
     searchPhotos(prevPage + 1);
   };
+
+  const handleSearchInputKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      searchPhotos();
+    }
+  }
+
   return (
     <div>
-      <h3>UnsplashSearch API- Search and Click to add on Canvas</h3>
+      <div style={{ fontSize: 15, fontWeight: 'bolder' }}>UnsplashSearch API- Search and Click to add on Canvas</div>
       <input
         value={searchQuery}
+        onKeyDown={handleSearchInputKeyDown}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Search for photos..."
       />
-      <button disabled={loading} onClick={searchPhotos}>
+      <button disabled={loading} onClick={searchPhotos} >
         {loading ? 'Searching...' : 'Search'}
       </button>
       {loading && <p>Loading...</p>}
       <button onClick={loadMorePhotos} disabled={loading}>
         Load More
       </button>
-      <div style={{ display: 'flex', flexWrap: 'wrap', maxHeight: 300, overflow: 'auto' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', width: 880, maxHeight: 200, overflow: 'auto' }}>
         {photos.map((photo, i) => (
           <img
             title={photo.alt_description}

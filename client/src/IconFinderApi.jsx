@@ -23,6 +23,7 @@ const IconFinder = ({ canvas }) => {
             const nonPremiumIcons = response.data.icons
                 .filter((icon) => !icon.is_premium)
                 .filter((icon) => icon.vector_sizes && icon.vector_sizes.length > 0); // Exclude icons without vector_sizes[0]
+            // console.log(nonPremiumIcons)
 
             // Fetch SVG content for each icon and add it to the icon object
             const iconsWithSvg = await Promise.all(
@@ -37,7 +38,7 @@ const IconFinder = ({ canvas }) => {
                 })
             );
 
-            setIcons(iconsWithSvg);
+            setIcons([...iconsWithSvg, ...icons]);
         } catch (error) {
             console.error('Error fetching icons:', error);
         } finally {
@@ -78,15 +79,15 @@ const IconFinder = ({ canvas }) => {
     };
     return (
         <div>
-            <h3>Iconfinder API- Search and Click to add on Canvas</h3>
+            <div style={{ fontSize: 15, fontWeight: 'bolder' }}>Iconfinder API- Search and Click to add on Canvas- Icons may be added as very small at left top corner</div>
             <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={handleSearchInputKeyDown} />
             <button disabled={loading} onClick={fetchIcons}>
                 {loading ? 'Searching...' : 'Search'}
             </button>
             {loading && <p>Loading...</p>}
-            <div>
+            <div style={{ width: 880, maxHeight: 150, overflow: 'auto' }}>
                 {icons.map((icon, i) => (
-                    <img src={`data:image/svg+xml,${encodeURIComponent(icon.svgContent)}`} style={{ maxWidth: 40, maxHeight: 40, cursor: 'pointer' }} id={icon.id} key={icon.id} alt={`Icon ${icon.id}`} onClick={() => handleIconClick(icon)} />
+                    <img src={`data:image/svg+xml,${encodeURIComponent(icon.svgContent)}`} style={{ maxWidth: 40, maxHeight: 40, cursor: 'pointer' }} id={icon.id} key={i} alt={`Icon ${icon.id}`} onClick={() => handleIconClick(icon)} />
                 ))}
             </div>
         </div>
