@@ -73,6 +73,9 @@ const CustomClient = () => {
                                         element.set({ scaleX: originalWidth / element.width });
                                     }
                                 }
+                                else if (data2.type === 'textarea') {
+                                    element.set({ objectCaching: false, text: data2.value.toString() })
+                                }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
                                     i.onload = function () {
@@ -168,6 +171,9 @@ const CustomClient = () => {
                                         element.set({ scaleX: originalWidth / element.width });
                                     }
                                 }
+                                else if (data2.type === 'textarea') {
+                                    element.set({ objectCaching: false, text: data2.value.toString() })
+                                }
                                 else if (data2.type === 'image') {
                                     var i = new Image();
                                     i.onload = function () {
@@ -210,10 +216,15 @@ const CustomClient = () => {
     // }
     const getAllKeyValue = () => {
         const aa = []
-        layers.forEach((element, i) => {
+        layers.forEach((element) => {
             var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
             if (type === 'text') {
-                aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily })
+                if (element.textLines.length > 1) {
+                    aa.push({ key: element.id, value: element.text, type: 'textarea', fontFamily: element.fontFamily });
+                }
+                else {
+                    aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily });
+                }
             }
             if (type === 'image') {
                 aa.push({ key: element.id, value: element.src, type: 'image' })
@@ -255,7 +266,7 @@ const CustomClient = () => {
 
                     <table border='0'><tbody>
                         {textNodes.map((val, i) => {
-                            if (val.type === 'text') {
+                            if (val.type === 'text' || val.type === 'textarea') {
                                 return (
                                     <tr key={i}>
                                         <td>
@@ -266,25 +277,24 @@ const CustomClient = () => {
                                                 value={val.key}
                                             />
                                         </td>
-                                        <td>
+                                        <td>=
                                             {
-                                                (isNaN(val.value) || (val.value === '')) ? (
-                                                    <input
-                                                        style={{ width: 300, fontFamily: val.fontFamily }}
-                                                        type='text'
-                                                        value={val.value}
-                                                        onChange={e => {
-                                                            const updatednodes = textNodes.map((node, index) => (
-                                                                (i === index) ? { ...node, value: e.target.value } : node
-                                                            ));
-                                                            settextNodes(updatednodes);
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <>
+                                                (isNaN(val.value) || (val.value === '')) ?
+                                                    ((val.type === 'text') ?
                                                         <input
-                                                            style={{ width: 50, fontFamily: val.fontFamily }}
-                                                            type='number'
+                                                            style={{ width: 300, fontFamily: val.fontFamily }}
+                                                            type='text'
+                                                            value={val.value}
+                                                            onChange={e => {
+                                                                const updatednodes = textNodes.map((node, index) => (
+                                                                    (i === index) ? { ...node, value: e.target.value } : node
+                                                                ));
+                                                                settextNodes(updatednodes);
+                                                            }}
+                                                        /> :
+                                                        <textarea
+                                                            style={{ width: 300, fontFamily: val.fontFamily }}
+                                                            type='text'
                                                             value={val.value}
                                                             onChange={e => {
                                                                 const updatednodes = textNodes.map((node, index) => (
@@ -293,16 +303,32 @@ const CustomClient = () => {
                                                                 settextNodes(updatednodes);
                                                             }}
                                                         />
-                                                        <button onClick={() => {
-                                                            const updatednodes = textNodes.map((node, index) => (
-                                                                (i === index) ? { ...node, value: parseFloat(node.value) + 1 } : node
-                                                            ));
-                                                            settextNodes(updatednodes);
-                                                        }}>
-                                                            +
-                                                        </button>
-                                                    </>
-                                                )
+
+                                                    )
+
+                                                    : (
+                                                        <>
+                                                            <input
+                                                                style={{ width: 50, fontFamily: val.fontFamily }}
+                                                                type='number'
+                                                                value={val.value}
+                                                                onChange={e => {
+                                                                    const updatednodes = textNodes.map((node, index) => (
+                                                                        (i === index) ? { ...node, value: e.target.value } : node
+                                                                    ));
+                                                                    settextNodes(updatednodes);
+                                                                }}
+                                                            />
+                                                            <button onClick={() => {
+                                                                const updatednodes = textNodes.map((node, index) => (
+                                                                    (i === index) ? { ...node, value: parseFloat(node.value) + 1 } : node
+                                                                ));
+                                                                settextNodes(updatednodes);
+                                                            }}>
+                                                                +
+                                                            </button>
+                                                        </>
+                                                    )
                                             }
                                         </td>
                                     </tr>
