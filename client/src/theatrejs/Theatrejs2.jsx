@@ -11,6 +11,10 @@ const Theatrejs2 = () => {
 
     window.rgbaObjectToHex = rgbaObjectToHex;
     window.getModifiedObject = getModifiedObject;
+    window.CRLFtobackslashn = (str) => {
+        return str.replace(/CRLF/g, '\n');
+    }
+
     return (
         <div></div>
     )

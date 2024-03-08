@@ -168,8 +168,9 @@ const Html = () => {
 
     const executeScript = (str) => {
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-            // console.log(str);
+            console.log(str);
         }
+        str = str.replace(/CRLF/g, '\\n');
         // eslint-disable-next-line
         eval(str)
     };

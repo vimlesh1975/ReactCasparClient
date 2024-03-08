@@ -1433,7 +1433,8 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+        // const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', 'CRLF');
 
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
 
@@ -1769,7 +1770,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }
             }
         };
-        canvas.loadFromJSON(content,()=>{
+        canvas.loadFromJSON((content),()=>{
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
 
@@ -1787,6 +1788,9 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 window.sheet.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
             canvas.getObjects().forEach((element,i) => {
+                if(element.type==='textbox'){
+                    element.set({text:CRLFtobackslashn(element.text)});
+                }
                 var obj1 = {};
                 const isnotGradientfill = (element.fill.type!=='linear');
                 if (element.fill.type === 'pattern') {
