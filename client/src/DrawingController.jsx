@@ -1432,7 +1432,7 @@ const DrawingController = () => {
 
   const handleKeyDown = useCallback((event) => {
 
-    const { key, keyCode, ctrlKey } = event;
+    const { key, keyCode, ctrlKey, altKey } = event;
     const activeObjects = window.editor.canvas?.getActiveObjects();
     if (document.activeElement === window.editor.canvas.wrapperEl) {
       switch (keyCode) {
@@ -1479,18 +1479,35 @@ const DrawingController = () => {
           selectAll(window.editor.canvas);
         } else if (key === 'Enter') {
           previewHtml(window.editor.canvas);
+        } else if (altKey) {
+          window.editor.canvas.getObjects().forEach((item) => {
+            item.set('centeredScaling', true);
+          });
         }
       }
     }
 
   }, [kf, xpositions, dispatch]);
+
+  const handleKeyUp = useCallback((event) => {
+    const { altKey } = event;
+    if (altKey) {
+      window.editor.canvas.getObjects().forEach((item) => {
+        item.set('centeredScaling', false);
+      });
+      window.editor.canvas.renderAll();
+    }
+  }, []);
+
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
-
+    document.body.addEventListener('keydown', handleKeyUp);
     return () => {
       document.body.removeEventListener('keydown', handleKeyDown);
+      document.body.removeEventListener('keydown', handleKeyUp);
+
     };
-  }, [handleKeyDown]);
+  }, [handleKeyDown, handleKeyUp]);
 
   const pauseClock = (layerNumber) => {
     clearInterval(intervalGameTimer1);

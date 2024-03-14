@@ -85,8 +85,8 @@ const Drawing = ({ canvasOutput }) => {
   window.editor = editor;
   function cancelZoomAndPan(canvas) {
     canvas.off("mouse:wheel");
-    canvas.off("mouse:down");
-    canvas.off("mouse:move");
+    // canvas.off("mouse:down");
+    // canvas.off("mouse:move");
     canvas.off("mouse:up");
   }
   function xyz(canvas) {
@@ -117,7 +117,7 @@ const Drawing = ({ canvasOutput }) => {
       opt.e.stopPropagation();
     });
 
-    mousedownandmousemoveevent(canvas);
+    // mousedownandmousemoveevent(canvas);
 
     canvas.on("mouse:up", function (opt) {
       // on mouse up we want to recalculate new interaction
