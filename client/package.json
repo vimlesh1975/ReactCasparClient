@@ -8,7 +8,6 @@
     "@ffmpeg/core": "^0.11.0",
     "@ffmpeg/ffmpeg": "^0.11.6",
     "@hello-pangea/dnd": "^16.3.0",
-    "@mediapipe/tasks-vision": "^0.10.3",
     "@react-three/drei": "^9.80.2",
     "@react-three/fiber": "^8.13.6",
     "@reduxjs/toolkit": "^1.8.2",
