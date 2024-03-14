@@ -767,6 +767,16 @@ const WebAnimator = () => {
             }
             // eslint-disable-next-line
         }, []);
+        const handleKeyUp = useCallback((event) => {
+            const { altKey } = event;
+            if (altKey) {
+                window.editor.canvas.getObjects().forEach((item) => {
+                    item.set('centeredScaling', false);
+                });
+                window.editor.canvas.renderAll();
+            }
+        }, []);
+
         useEffect(() => {
             document.body.addEventListener('keydown', handleKeyDown);
             document.body.addEventListener('keydown', handleKeyUp);
@@ -774,17 +784,9 @@ const WebAnimator = () => {
                 document.body.removeEventListener('keydown', handleKeyDown);
                 document.body.removeEventListener('keydown', handleKeyUp);
             };
-        }, [handleKeyDown]);
+        }, [handleKeyDown, handleKeyUp]);
 
-        const handleKeyUp = useCallback((event) => {
-            const { altKey } = event;
-            if (altKey) {
-                canvas.getObjects().forEach((item) => {
-                    item.set('centeredScaling', false);
-                });
-                window.editor.canvas.renderAll();
-            }
-        }, []);
+
         // const addSequnce = () => {
         //     const aa = {
         //         "sheetsById": {
