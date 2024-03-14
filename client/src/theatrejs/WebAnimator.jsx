@@ -698,7 +698,7 @@ const WebAnimator = () => {
 
         const handleKeyDown = useCallback((event) => {
 
-            const { key, keyCode, ctrlKey } = event;
+            const { key, keyCode, ctrlKey, altKey } = event;
             const activeObjects = window.editor.canvas?.getActiveObjects();
             if (document.activeElement === window.editor.canvas.wrapperEl) {
                 switch (keyCode) {
@@ -759,16 +759,32 @@ const WebAnimator = () => {
                         }
                     }
                 }
+                else if (altKey) {
+                    canvas.getObjects().forEach((item) => {
+                        item.set('centeredScaling', true);
+                    });
+                }
             }
             // eslint-disable-next-line
         }, []);
         useEffect(() => {
             document.body.addEventListener('keydown', handleKeyDown);
+            document.body.addEventListener('keydown', handleKeyUp);
             return () => {
                 document.body.removeEventListener('keydown', handleKeyDown);
+                document.body.removeEventListener('keydown', handleKeyUp);
             };
         }, [handleKeyDown]);
 
+        const handleKeyUp = useCallback((event) => {
+            const { altKey } = event;
+            if (altKey) {
+                canvas.getObjects().forEach((item) => {
+                    item.set('centeredScaling', false);
+                });
+                window.editor.canvas.renderAll();
+            }
+        }, []);
         // const addSequnce = () => {
         //     const aa = {
         //         "sheetsById": {
