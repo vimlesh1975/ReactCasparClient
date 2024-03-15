@@ -14,6 +14,16 @@ const Help = () => {
     <>
       <div style={{ display: "flex" }}>
         <div style={{ width: 600 }}>
+          <h3>How to setup</h3>
+          <ol>
+            <li>Unzip with 7z</li>
+            <li>Right Click and Run As Administrator the file in root folder  Right_Click_Run_As_Administrator.bat</li>
+            <li>Double click the file in root folder  Start_Both.bat</li>
+            <li>Use server <a href="https://drive.google.com/file/d/1V1LZWQmss2O4gqG5wVSHLuW2J9Y8SDoj/view?usp=drive_link">Server dated 23.11.23</a></li>
+
+
+
+          </ol>
           <ol>
             <li>Github Client will not connect to casparcg</li>
             <li>This works on every version of casparcg. But All features will work only on 2.3</li>
