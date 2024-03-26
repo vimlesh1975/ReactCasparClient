@@ -45,6 +45,7 @@ const TimeLine1 = () => {
 
   const [timelineScale, settimelineScale] = useState(1);
 
+  // eslint-disable-next-line
   const [showTimeline, setshowTimeline] = useState(false);
   const position = i => ({
     delay: kf[i][0] * 10 * timelineScale,
@@ -842,7 +843,7 @@ const TimeLine1 = () => {
     !pannelEnable && dispatch({ type: 'CHANGE_PANNEL_ENABLED', payload: true })
   }}>
     {pannelEnable && <div >
-      <label>Show Timeline <input type='checkbox' checked={showTimeline} onChange={() => setshowTimeline(val => !val)} /></label>
+      {/* <label>Show Timeline <input type='checkbox' checked={showTimeline} onChange={() => setshowTimeline(val => !val)} /></label> */}
       {showTimeline && <>
         <button onClick={() => startPoint()}>Set Start Point</button>
         <button onClick={finalPoint}>Set Final Point</button>
