@@ -27,6 +27,7 @@ import {
   textNormal,
   removeBg,
   addImage,
+  replaceWithImage,
   pasteClipboard,
 } from "./DrawingController";
 import {
@@ -112,6 +113,7 @@ const ContextMenu = ({ canvas }) => {
               Add
               <ul>
                 <li onClick={() => addImage(canvas)}>Image</li>
+                <li onClick={() => replaceWithImage(canvas)}>Replace with Image</li>
                 <li onClick={() => createRect(canvas)}>
                   Rectangle <VscPrimitiveSquare />
                 </li>

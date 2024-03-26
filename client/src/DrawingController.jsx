@@ -430,6 +430,48 @@ export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
   });
 };
 
+// Function to copy properties of a Fabric.js object (excluding .src)
+function copyFabricObjectProperties(object) {
+  var copiedProperties = {};
+  for (var prop in object) {
+    // Exclude Fabric.js internal properties and methods, as well as .src property
+    if (object.hasOwnProperty(prop) && typeof object[prop] !== 'function' && prop !== 'canvas' && prop !== 'group' && prop !== '_objects' && prop !== '_objects' && prop !== 'src') {
+      copiedProperties[prop] = object[prop];
+    }
+  }
+  return copiedProperties;
+}
+
+export const replaceWithImage = (canvas) => {
+  var fInput = document.createElement("input"); //hidden input to open filedialog
+  fInput.setAttribute("type", "file");
+  fInput.setAttribute("accept", "image/*");
+
+  fInput.click();
+  fInput.onchange = (e) => {
+    const oldElement = canvas.getActiveObjects()[0];
+    const index = canvas.getObjects().indexOf(oldElement);
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      var imgObj = new Image();
+      imgObj.src = event.target.result;
+      imgObj.onload = function () {
+        var image = new fabric.Image(imgObj);
+        // Copy properties of oldElement to the new image object (excluding .src)
+        Object.assign(image, copyFabricObjectProperties(oldElement));
+        image.setSrc(event.target.result, () => {
+          canvas.remove(oldElement);
+          canvas.insertAt(image, index);
+          canvas.setActiveObject(image);
+        });
+      };
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+};
+
+
+
 
 
 export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
@@ -2191,7 +2233,7 @@ const DrawingController = () => {
     canvas.requestRenderAll();
   };
 
-  const deleteSelectedItem = (canvas) => {
+  const deleteSelectedItem = () => {
     deleteItemfromtimeline(kf, xpositions, dispatch);
   };
 
