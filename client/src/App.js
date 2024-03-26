@@ -623,7 +623,7 @@ const App = () => {
                         &lt;height&gt;325&lt;/height&gt; &lt;/screen&gt;
                       </h5>
                     </div>
-                    <div>
+                    <div style={{ display: 'none' }}>
                       <Automation />
                     </div>
                   </div>
