@@ -50,6 +50,15 @@ const Kabaddi = () => {
         // eslint-disable-next-line
     }, [team1Status1, team2Status1, score1, score2, team1, team2])
 
+    // useEffect(() => {
+    //     if (team1Status1 > 7) {
+    //         team1Status1 = 7;
+    //     }
+    //     if (team2Status1 > 7) {
+    //         team2Status1 = 7;
+    //     }
+    // }, [team1Status1, team2Status1])
+
     return (<div>
         <div style={{ display: 'flex' }}>
             <div>
@@ -62,7 +71,8 @@ const Kabaddi = () => {
             <button onClick={() => {
                 if (team2Status1 > 1) {
                     setScore1(val => parseInt(val) + 1);
-                    setteam2Status1(val => val - 1)
+                    if (team1Status1 < 7) setteam1Status1(val => parseInt(val) + 1)
+                    setteam2Status1(val => parseInt(val) - 1)
                 }
                 else {
                     setScore1(val => parseInt(val) + 1 + 2);
@@ -73,6 +83,7 @@ const Kabaddi = () => {
             <button onClick={() => {
                 if (team1Status1 > 1) {
                     setScore2(val => parseInt(val) + 1);
+                    if (team2Status1 < 7) setteam2Status1(val => parseInt(val) + 1);
                     setteam1Status1(val => parseInt(val) - 1);
                 }
                 else {
@@ -89,7 +100,8 @@ const Kabaddi = () => {
             <button onClick={() => {
                 if (team1Status1 > 1) {
                     setScore2(val => parseInt(val) + 1);
-                    setteam1Status1(val => val - 1)
+                    if (team2Status1 < 7) setteam2Status1(val => parseInt(val) + 1)
+                    setteam1Status1(val => parseInt(val) - 1)
                 }
                 else {
                     setScore2(val => parseInt(val) + 1 + 2);
@@ -100,6 +112,7 @@ const Kabaddi = () => {
             <button onClick={() => {
                 if (team2Status1 > 1) {
                     setScore1(val => parseInt(val) + 1);
+                    if (team1Status1 < 7) setteam1Status1(val => parseInt(val) + 1);
                     setteam2Status1(val => parseInt(val) - 1);
                 }
                 else {
