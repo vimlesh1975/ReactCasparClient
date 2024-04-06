@@ -2406,18 +2406,15 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
             window.sheet.sequence.play({ direction: 'reverse' }).then(()=>document.body.innerHTML = '');
          }
          function next() {
-            console.log('cg next')
             window.sheet.sequence.play();
         }
         function hello() {
             console.log('invoked hello funtion')
         }
         function goto(framenumber) {
-            console.log('cg goto')
             window.sheet.sequence.position=framenumber/30;
         }
         function goToAndPlay(framenumber) {
-            console.log('cg goto')
             window.sheet.sequence.position=framenumber/30;
             window.sheet.sequence.play();
         }
