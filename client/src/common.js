@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '060424_1';
+export const buildDate = '100424_1';
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
@@ -573,9 +573,17 @@ export const stopGraphics1 = (layerNumber) => {
 
 export const stopGraphics = (layerNumber) => {
   clearHtml(layerNumber);
-  endpoint(
-    `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`
-  );
+  if (window.animationMethod === 'mix') {
+    endpoint(
+      `mixer ${window.chNumber}-${layerNumber} opacity 0 12`
+    );
+  }
+  else {
+    endpoint(
+      `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`
+    );
+  }
+
   setTimeout(() => {
     endpoint(
       `call ${window.chNumber}-${layerNumber} "document.getElementById('divid_${layerNumber}')\\?.remove()"`
@@ -1340,6 +1348,7 @@ export const animationMethods = [
   'easeinbounce',
   'easeinoutbounce',
   'easeoutinbounce',
+  'mix'
 ];
 export const languages = [
   'en-US',
