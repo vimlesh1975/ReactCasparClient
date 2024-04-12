@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '100424_1';
+export const buildDate = '120424_1';
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
@@ -1306,48 +1306,7 @@ export const inAnimationMethods = [
 ];
 
 export const animationMethods = [
-  'linear',
   'easenone',
-  'easeinquad',
-  'easeoutquad',
-  'easeinoutquad',
-  'easeoutinquad',
-  'easeincubic',
-  'easeoutcubic',
-  'easeinoutcubic',
-  'easeoutincubic',
-  'easeinquart',
-  'easeoutquart',
-  'easeinoutquart',
-  'easeoutinquart',
-  'easeinquint',
-  'easeoutquint',
-  'easeinoutquint',
-  'easeoutinquint',
-  'easeinsine',
-  'easeoutsine',
-  'easeinoutsine',
-  'easeoutinsine',
-  'easeinexpo',
-  'easeoutexpo',
-  'easeinoutexpo',
-  'easeoutinexpo',
-  'easeincirc',
-  'easeoutcirc',
-  'easeinoutcirc',
-  'easeoutincirc',
-  'easeinelastic',
-  'easeoutelastic',
-  'easeinoutelastic',
-  'easeoutinelastic',
-  'easeinback',
-  'easeoutback',
-  'easeinoutback',
-  'easeoutintback',
-  'easeoutbounce',
-  'easeinbounce',
-  'easeinoutbounce',
-  'easeoutinbounce',
   'mix'
 ];
 export const languages = [
