@@ -1316,7 +1316,7 @@ export const languages = [
   'ta-IN',
   'mr-IN',
   'gu-IN',
-  '	kn-IN',
+  'kn-IN',
   'ml-IN',
   'pa-Guru-IN',
   'ur-IN',
