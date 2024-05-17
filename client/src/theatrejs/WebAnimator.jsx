@@ -28,6 +28,10 @@ import HtmlOutput from '../HtmlOutput'
 import { Rnd } from 'react-rnd';
 
 import split from 'graphemesplit'
+
+import * as d from '@theatre/dataverse'
+
+
 fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
@@ -1148,11 +1152,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
 
     const deleteAllObjects = () => {
-        canvas.getObjects().forEach(element => {
-            if (getObjectbyId(element.id) !== undefined) {
-                sheet.detachObject(element.id);
-            }
-        })
+        // canvas.getObjects().forEach(element => {
+        //     if (getObjectbyId(element.id) !== undefined) {
+        //         sheet.detachObject(element.id);
+        //     }
+        // })
+        test(projectId);
     }
 
     const rgbaArrayToObject = (fill) => {
@@ -3223,14 +3228,18 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
         setRecording(false);
     };
 
-    // const test = () => {
-    //     studio.transaction((api) => {
-    //         for (let i = 0; i <= 10; i++) {
-    //             sheet.sequence.position = i;
-    //             api.set(getObjectbyId('name').props.left, i * 100);
-    //         }
-    //     })
-    // }
+    const test = (projectid) => {
+        // studio.transaction((api) => {
+        //     for (let i = 0; i <= 10; i++) {
+        //         sheet.sequence.position = i;
+        //         api.set(getObjectbyId('name').props.left, i * 100);
+        //     }
+        // })
+
+        const studioPrivate = window.__TheatreJS_StudioBundle._studio
+        const coreAtom = d.getPointerParts(studioPrivate._coreBits.projectsP).root
+        delete coreAtom._currentState.projects[projectid];
+    }
     const [loopAnimationStart, setLoopAnimationStart] = useState(0);
     const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
@@ -3257,7 +3266,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                     deleteAllObjects();
                     initialiseCore(localStorage.getItem('RCCpageData'));
                 }}>DataFrom Lo.Strg</button>
-                {/* <button onClick={test}>test</button> */}
+                <button onClick={test}>test</button>
                 <button title='Save to Local Storage' onClick={() => saveToLocalStorage(canvas)}>SaveTo Lo.Strg</button>
                 <b>Ch:</b>
                 <select onChange={e => changeChannelNumber(e)} value={chNumber}>
