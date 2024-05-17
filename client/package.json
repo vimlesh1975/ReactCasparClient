@@ -15,7 +15,7 @@
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
     "@theatre/core": "^0.7.0",
-    "@theatre/dataverse": "^0.7.1",
+    "@theatre/dataverse": "^0.7.0",
     "@theatre/r3f": "^0.7.0",
     "@theatre/studio": "^0.7.0",
     "axios": "^1.4.0",
