@@ -2429,6 +2429,7 @@ const DrawingController = () => {
                                                       }
                                                   }
                                                   else {
+                                                    idTemplate.style.display = "block";
                                                     var textElement = idTemplate.getElementsByTagName('text')[0];
                                                     var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
                                                     var initialX = existingTspans[0].getAttribute('x');
