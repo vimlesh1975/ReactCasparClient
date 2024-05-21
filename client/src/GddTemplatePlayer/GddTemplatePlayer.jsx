@@ -2,6 +2,14 @@ import React, { useState, useRef } from 'react'
 import { defaultImageSrc } from '../common';
 import TemplateController from '../TemplateController';
 import { endpoint } from '../common';
+import ExcelReader from './ExcelReader';
+
+const data = [
+    { "ccg_name": "Alice", "ccg_age": 30 },
+    { "ccg_name": "Bob", "ccg_age": 25 },
+    { "ccg_name": "Charlie", "ccg_age": 35 }
+]
+
 
 const GddTemplatePlayer = () => {
     const [aa, setAa] = useState([]);
@@ -141,11 +149,9 @@ const GddTemplatePlayer = () => {
                 updateTocaspar={updateTocaspar}
                 updateInPreview={updateInPreview}
             />
-
             <h4>{fileName}</h4>
-
             <div style={{ display: 'flex' }}>
-                <div style={{ position: 'absolute', left: 380, top: 50, width: 1920, height: 1080, transform: `scale(${0.8})`, transformOrigin: '0 0' }}>
+                <div style={{ position: 'absolute', left: 760, top: 50, width: 1920, height: 1080, transform: `scale(${0.6})`, transformOrigin: '0 0' }}>
                     <iframe ref={iframeRef} style={{ backgroundColor: 'grey', width: 1920, height: 1080, }} srcDoc={htmlContent1} title='HtmlOutput'></iframe>
                 </div>
                 <div>
@@ -187,7 +193,9 @@ const GddTemplatePlayer = () => {
                             </div>
                         ))}
                     </div>
-
+                </div>
+                <div>
+                    <ExcelReader data1={data} setAa={setAa} aa={aa} updateInPreview={updateInPreview} updateTocaspar={updateTocaspar} />
                 </div>
             </div>
         </div>
