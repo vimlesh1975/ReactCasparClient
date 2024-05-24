@@ -24,7 +24,7 @@ const allelements = [
 export const mousedownandmousemoveevent = (canvas) => {
   canvas.on("mouse:down", function (opt) {
     var evt = opt.e;
-    if (evt.altKey === true) {
+    if (evt.ctrlKey === true) {
       this.isDragging = true;
       this.selection = false;
       this.lastPosX = evt.clientX;
@@ -117,7 +117,7 @@ const Drawing = ({ canvasOutput }) => {
       opt.e.stopPropagation();
     });
 
-    // mousedownandmousemoveevent(canvas);
+    mousedownandmousemoveevent(canvas);
 
     canvas.on("mouse:up", function (opt) {
       // on mouse up we want to recalculate new interaction
