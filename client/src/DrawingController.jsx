@@ -1543,10 +1543,10 @@ const DrawingController = () => {
 
   useEffect(() => {
     document.body.addEventListener('keydown', handleKeyDown);
-    document.body.addEventListener('keydown', handleKeyUp);
+    document.body.addEventListener('keyup', handleKeyUp);
     return () => {
       document.body.removeEventListener('keydown', handleKeyDown);
-      document.body.removeEventListener('keydown', handleKeyUp);
+      document.body.removeEventListener('keyup', handleKeyUp);
 
     };
   }, [handleKeyDown, handleKeyUp]);
