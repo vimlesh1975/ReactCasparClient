@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '240524_1';
+export const buildDate = '280524_1';
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);

@@ -8,7 +8,7 @@ const corsOptions = {
   // "Access-Control-Allow-Origin": "*",
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 var serveStatic = require('serve-static');
 app.use('/media', serveStatic('c:\\casparcg\\_media'));
 
