@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '300524_1';
+export const buildDate = '310524_1';
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
@@ -407,6 +407,7 @@ export const templateLayers = {
   twoliner: 165,
   theatrejs: 166,
   gsap: 167,
+  data: 170
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 

@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { saveFile } from '../common'
+import { saveFile, sendToCasparcg, templateLayers, stopGraphics, updateGraphics } from '../common'
 import Papa from "papaparse";
+import {
+    FaPlay,
+    FaStop,
+} from "react-icons/fa";
 
 const EditableTable = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
+    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
     const dispatch = useDispatch();
     const [data1, setData1] = useState([]);
     const [headers, setHeaders] = useState([]);
+    const [dataLayer, setDataLayer] = useState(templateLayers.data);
 
     const handleChange = (e, key, rowIndex) => {
         const aa = [...data1];
@@ -99,22 +106,29 @@ const EditableTable = () => {
 
 
     return (<div>
-        <button onClick={createTable}>Create Table</button>
-        <button onClick={addRows}>Add Rows</button>
-        <button onClick={createCSV}>Create CSV</button>
-        <button onClick={openCSV}>Open CSV</button>
+        <div>
+            <button onClick={createTable}>Create Table</button>
+            <button onClick={addRows}>Add Rows</button>
+            <button onClick={createCSV}>Create CSV</button>
+            <button onClick={openCSV}>Open CSV</button>
+            Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
+            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={() => stopGraphics(dataLayer)}><FaStop /></button>
+
+        </div>
         <div style={{ maxWidth: 900, maxHeight: 600, overflow: 'auto' }}>
             <table>
                 <thead>
                     <tr>
+                        <th></th>
                         {headers?.map((val, i) => <th key={i}>{val}</th>)}
-                        <th>Set</th>
-                        <th>Delete</th>
+                        {/* <th>Set</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {data1.map((row, rowIndex) => (
+
                         <tr key={rowIndex}>
+                            <td><button onClick={() => deleteData(rowIndex)}>Delete</button></td>
                             {Object.entries(row).map(([key, value]) => (
                                 <td key={key}>
                                     <input
@@ -125,7 +139,17 @@ const EditableTable = () => {
                                 </td>
                             ))}
                             <td><button onClick={() => setText(rowIndex)}>Set</button></td>
-                            <td><button onClick={() => deleteData(rowIndex)}>Delete</button></td>
+                            <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
+                                setText(rowIndex);
+                                sendToCasparcg(dataLayer, canvas, currentscreenSize);
+                            }}><FaPlay /></button></td>
+                            <td><button onClick={() => {
+                                setText(rowIndex);
+                                setTimeout(() => {
+                                    updateGraphics(canvas, dataLayer);
+                                }, 1000);
+                            }}>Update</button></td>
+
                         </tr>
                     ))}
                 </tbody>

@@ -649,7 +649,7 @@ const App = () => {
               <Tab>Layers</Tab>
               <Tab>Gradient</Tab>
               <Tab>Oneliner/BreakingNews</Tab>
-              <Tab>Twoliner</Tab>
+              <Tab>2liner</Tab>
               <Tab>Scroll</Tab>
               <Tab>Shapes</Tab>
               <Tab>Games</Tab>
@@ -659,7 +659,7 @@ const App = () => {
               <Tab>JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Threejs</Tab>
-              <Tab>Code Import</Tab>
+              <Tab>CodeImport</Tab>
               <Tab>Tsparticles</Tab>
               <Tab>Data</Tab>
 

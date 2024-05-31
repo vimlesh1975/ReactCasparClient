@@ -1,9 +1,7 @@
 import React from 'react'
 import CsvReader2 from './CsvReader2'
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import DataTable from './DataTable';
-
-
+import EditableTable from './EditableTable';
 
 const Data = () => {
     const onTabChange = () => {
@@ -22,7 +20,7 @@ const Data = () => {
                     <Tab>CSV</Tab>
                 </TabList>
                 <TabPanel>
-                    <DataTable />
+                    <EditableTable />
                 </TabPanel>
                 <TabPanel>
                     <CsvReader2 />
