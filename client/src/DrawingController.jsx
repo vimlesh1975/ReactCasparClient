@@ -4709,8 +4709,8 @@ const DrawingController = () => {
             <span> LTR:</span>{" "}
             <input
               type="checkbox"
-              value={ltr}
-              onChange={(e) => setLtr((val) => !val)}
+              checked={ltr}
+              onChange={() => setLtr(val => !val)}
             />
             <span> {horizontalScroll} </span>
           </div>
@@ -4785,8 +4785,8 @@ const DrawingController = () => {
             <span> LTR:</span>{" "}
             <input
               type="checkbox"
-              value={ltr2}
-              onChange={(e) => setLtr2((val) => !val)}
+              checked={ltr2}
+              onChange={() => setLtr2(val => !val)}
             />
             <span> {horizontalScroll2} </span>
           </div>

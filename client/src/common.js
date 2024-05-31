@@ -132,6 +132,86 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   }, 1200);
 };
 
+export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
+  const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+
+  const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
+  const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+
+  endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`);
+  const script = `
+  var aa = document.createElement('div');
+  aa.style.position='absolute';
+  aa.setAttribute('id','divid_' + '${layerNumber}');
+  document.body.style.opacity = 0;
+  document.body.style.overflow='hidden';
+  document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+  aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
+  document.body.appendChild(aa);
+  var canvas = new fabric.Canvas('canvas');
+  window.canvas=canvas;
+  canvas.loadFromJSON(${contentforcasparcg},()=>{
+      window.sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
+      tl.pause();
+      tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
+          setTimeout(() => {
+              document.body.style.opacity = 1;
+              tl.play();
+          }, 100);
+  });
+  `
+  setTimeout(() => {
+    endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`)
+  }, 100);
+
+
+  const scriptforHtml = `
+  document.getElementById('divid_${layerNumber}')?.remove();
+  var aa = document.createElement('div');
+  aa.style.position='absolute';
+  aa.setAttribute('id','divid_' + '${layerNumber}');
+  document.body.style.opacity = 1;
+  document.body.style.overflow='hidden';
+  document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+  aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
+  document.body.appendChild(aa);
+  window.canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
+ 
+  var content =\`${contentforHtml}\`;
+  tl.pause();
+
+  canvas_${layerNumber}.loadFromJSON(content,()=>{
+      const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
+      tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
+      setTimeout(() => {
+          document.body.style.opacity = 1;
+          tl.play();
+      }, 100);
+  })
+  `
+  executeScript(scriptforHtml)
+}
+
+export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
+  const scriptforhtml = `
+  const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
+  tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
+      tl.play();
+  `;
+  executeScript(scriptforhtml);
+
+  const scriptforCasparcg = `
+  const sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
+  tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
+      tl.play();
+  `;
+
+  endpoint(`call ${window.chNumber}-${layerNumber} "
+  ${scriptforCasparcg}
+  "`)
+
+}
+
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics } from '../common'
+import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics, playtoGsapCaspar, stopGsapLayer } from '../common'
 import Papa from "papaparse";
 import { fabric } from "fabric";
 import Timer from './Timer';
+
 
 import {
     FaPlay,
     FaStop,
 } from "react-icons/fa";
-import GsapPlayer from "../GsapPlayer";
 
 
 const EditableTable = () => {
@@ -19,6 +19,7 @@ const EditableTable = () => {
     const dispatch = useDispatch();
     const [data1, setData1] = useState([]);
     const [headers, setHeaders] = useState([]);
+    const [useGspPlayer, setUseGspPlayer] = useState(true);
     const [dataLayer, setDataLayer] = useState(templateLayers.data);
 
     const handleChange = (e, key, rowIndex) => {
@@ -165,7 +166,12 @@ const EditableTable = () => {
     const setAndPlay = (rowIndex) => {
         setText(rowIndex);
         setTimeout(() => {
-            startGraphics(canvas, dataLayer, currentscreenSize);
+            if (useGspPlayer === true) {
+                playtoGsapCaspar(canvas, dataLayer, currentscreenSize)
+            }
+            else {
+                startGraphics(canvas, dataLayer, currentscreenSize);
+            }
         }, 1000);
     }
 
@@ -177,9 +183,20 @@ const EditableTable = () => {
             <button onClick={createCSV}>Create CSV</button>
             <button onClick={openCSV}>Open CSV</button>
             Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
-            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={() => stopGraphics(dataLayer)}><FaStop /></button>
+            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={() => {
+                if (useGspPlayer) {
+                    stopGsapLayer(dataLayer)
+                }
+                else {
+                    stopGraphics(dataLayer);
+                }
 
-
+            }}><FaStop /></button>
+            <input
+                type="checkbox"
+                checked={useGspPlayer}
+                onChange={() => setUseGspPlayer((val) => !val)}
+            /><label>Use Gsap Player</label>
         </div>
 
         <div style={{ maxWidth: 900, maxHeight: 600, height: 580, overflow: 'auto' }}>
@@ -245,9 +262,6 @@ const EditableTable = () => {
         </div>
         <div>
             <Timer setAndPlay={setAndPlay} dataLength={data1.length} />
-        </div>
-        <div style={{ border: '1px solid black', width: 680 }}>
-            <GsapPlayer layer1={dataLayer} inline={true} />
         </div>
 
     </div>);
