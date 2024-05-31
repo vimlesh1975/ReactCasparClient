@@ -1,11 +1,11 @@
 import React from 'react'
 import { gsap } from 'gsap';
 import { useSelector } from 'react-redux'
-import { endpoint, templateLayers, easeTypes, executeScript } from './common'
+import { endpoint, easeTypes, executeScript } from './common'
 import { useState } from 'react';
 import { FaPlay, FaStop } from "react-icons/fa";
 
-const GsapPlayer = () => {
+const GsapPlayer = ({ layer1, inline }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
     const [duration, setDuration] = useState(1);
@@ -132,11 +132,11 @@ const GsapPlayer = () => {
         <div>
             <b> GsapPlayer: </b>
             <button onClick={() => preview(canvas)}>Preview</button>
-            <button onClick={() => playtoGsapCaspar(canvas, templateLayers.gsap)}><FaPlay /></button>
-            <button onClick={() => updateCaspar(canvas, templateLayers.gsap)}>Update</button>
-            <button onClick={() => stopGsapLayer(templateLayers.gsap)}><FaStop /></button>
+            <button onClick={() => playtoGsapCaspar(canvas, layer1)}><FaPlay /></button>
+            <button onClick={() => updateCaspar(canvas, layer1)}>Update</button>
+            <button onClick={() => stopGsapLayer(layer1)}><FaStop /></button>
 
-            <div>
+            <div style={{ display: inline ? 'inline' : '' }}>
                 <span>Duration:</span><input type="number" value={duration} step={0.1} style={{ width: 45 }} onChange={e => setDuration(e.target.value)} />
                 <span>stagger:</span><input type="number" value={stagger} step={0.01} style={{ width: 45 }} onChange={e => setStagger(e.target.value)} />
                 <span> ease: </span> <select onChange={e => setEase(e.target.value)} value={ease}>

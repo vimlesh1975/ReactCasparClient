@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { saveFile, sendToCasparcg, templateLayers, stopGraphics, updateGraphics } from '../common'
+import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics } from '../common'
 import Papa from "papaparse";
 import { fabric } from "fabric";
+import Timer from './Timer';
 
 import {
     FaPlay,
@@ -161,6 +162,13 @@ const EditableTable = () => {
         document.getElementById(`fileInput-${rowIndex}-${key}`).click();
     };
 
+    const setAndPlay = (rowIndex) => {
+        setText(rowIndex);
+        setTimeout(() => {
+            startGraphics(canvas, dataLayer, currentscreenSize);
+        }, 1000);
+    }
+
 
     return (<div>
         <div>
@@ -174,10 +182,13 @@ const EditableTable = () => {
 
         </div>
 
-        <div style={{ maxWidth: 900, maxHeight: 600, overflow: 'auto' }}>
-            <table>
+        <div style={{ maxWidth: 900, maxHeight: 600, height: 580, overflow: 'auto' }}>
+            <table border='1' >
                 <thead>
                     <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                         <th></th>
                         {headers?.map((val, i) => <th key={i}>{val}</th>)}
                         {/* <th>Set</th> */}
@@ -187,6 +198,18 @@ const EditableTable = () => {
                     {data1.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             <td><button onClick={() => deleteData(rowIndex)}>Delete</button></td>
+                            <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
+                            <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
+
+                                setAndPlay(rowIndex, canvas, dataLayer, currentscreenSize);
+
+                            }}><FaPlay /></button></td>
+                            <td><button onClick={() => {
+                                setText(rowIndex);
+                                setTimeout(() => {
+                                    updateGraphics(canvas, dataLayer);
+                                }, 1000);
+                            }}>Update</button></td>
                             {Object.entries(row).map(([key, value]) => (
                                 <td key={key}>
                                     {typeof value === 'string' && value.startsWith('data:image/') ? (
@@ -213,27 +236,18 @@ const EditableTable = () => {
                                     )}
                                 </td>
                             ))}
-                            <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
-                            <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-                                setText(rowIndex);
-                                setTimeout(() => {
-                                    sendToCasparcg(dataLayer, canvas, currentscreenSize);
-                                }, 1000);
-                            }}><FaPlay /></button></td>
-                            <td><button onClick={() => {
-                                setText(rowIndex);
-                                setTimeout(() => {
-                                    updateGraphics(canvas, dataLayer);
-                                }, 1000);
-                            }}>Update</button></td>
+
 
                         </tr>
                     ))}
                 </tbody>
             </table >
         </div>
-        <div style={{ border: '1px solid red' }}>
-            <GsapPlayer />
+        <div>
+            <Timer setAndPlay={setAndPlay} dataLength={data1.length} />
+        </div>
+        <div style={{ border: '1px solid black', width: 680 }}>
+            <GsapPlayer layer1={dataLayer} inline={true} />
         </div>
 
     </div>);

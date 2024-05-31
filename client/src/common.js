@@ -8,6 +8,131 @@ export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
 
+export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
+  executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
+
+  var inAnimation;
+  if (window.inAnimationMethod === "mix") {
+    inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`;
+  } else if (
+    animation
+      .map((val) => val.name)
+      .findIndex((val) => val === window.inAnimationMethod) !== -1
+  ) {
+    inAnimation =
+      animation[
+        animation
+          .map((val) => val.name)
+          .findIndex((val) => val === window.inAnimationMethod)
+      ].value;
+  } else if (window.inAnimationMethod === "lefttoright") {
+    inAnimation = ``;
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    endpoint(
+      `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
+    );
+
+    setTimeout(() => {
+      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    }, 250);
+
+    const script = `
+                                                                                  var bb = document.createElement('div');
+                                                                                  bb.style.perspective='1920px';
+                                                                                  bb.style.transformStyle='preserve-3d';
+                                                                                  document.body.appendChild(bb);
+                                                                                  var aa = document.createElement('div');
+                                                                                  aa.style.position='absolute';
+                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aa.style.zIndex = ${layerNumber};
+                                                                                  aa.innerHTML=\`${canvas
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
+                                                                                  bb.appendChild(aa);
+                                                                                  document.body.style.margin='0';
+                                                                                  document.body.style.padding='0';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  var style = document.createElement('style');
+                                                                                  style.textContent = '${inAnimation}';
+                                                                                  document.head.appendChild(style);
+                                                                                  `;
+    executeScript(script);
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${layerNumber} "
+              ${script}
+          "`);
+    }, 300);
+
+    setTimeout(() => {
+      endpoint(
+        `mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`
+      );
+    }, 800);
+    setTimeout(() => {
+      updateGraphics(canvas, layerNumber);
+    }, 1100);
+    return;
+  }
+
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+
+  const script = `
+                                                                                  var bb = document.createElement('div');
+                                                                                  bb.style.perspective='1920px';
+                                                                                  bb.style.transformStyle='preserve-3d';
+                                                                                  document.body.appendChild(bb);
+                                                                                  var aa = document.createElement('div');
+                                                                                  aa.style.position='absolute';
+                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aa.style.zIndex = ${layerNumber};
+                                                                                  aa.innerHTML=\`${canvas
+      .toSVG(
+        [
+          "id",
+          "class",
+          "selectable",
+        ]
+      )
+      .replaceAll(
+        '"',
+        '\\"'
+      )}\`;
+                                                                                  bb.appendChild(aa);
+                                                                                  document.body.style.margin='0';
+                                                                                  document.body.style.padding='0';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  var style = document.createElement('style');
+                                                                                  style.textContent = '${inAnimation}';
+                                                                                  document.head.appendChild(style);
+                                                                                  `;
+  executeScript(script);
+  setTimeout(() => {
+    endpoint(`call ${window.chNumber}-${layerNumber} "
+     ${script}
+          "`);
+  }, 100);
+  setTimeout(() => {
+    updateGraphics(canvas, layerNumber);
+  }, 1200);
+};
+
+
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
     fabric.loadSVGFromString(ss, function (objects) {
