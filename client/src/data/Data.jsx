@@ -1,5 +1,5 @@
 import React from 'react'
-import CsvReader2 from './CsvReader2'
+// import CsvReader2 from './CsvReader2'
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import EditableTable from './EditableTable';
 
@@ -17,14 +17,14 @@ const Data = () => {
             >
                 <TabList>
                     <Tab>Data Table</Tab>
-                    <Tab>CSV</Tab>
+                    {/* <Tab>CSV</Tab> */}
                 </TabList>
                 <TabPanel>
                     <EditableTable />
                 </TabPanel>
-                <TabPanel>
+                {/* <TabPanel>
                     <CsvReader2 />
-                </TabPanel>
+                </TabPanel> */}
             </Tabs>
         </div>
     )

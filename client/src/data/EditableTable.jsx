@@ -31,7 +31,7 @@ const EditableTable = () => {
     const setText = (rowIndex) => {
         canvas.getObjects().forEach((element, i) => {
             if (element.type === 'textbox') {
-                element.text = data1[rowIndex][element.id];
+                element.text = (data1[rowIndex][element.id]).toString();
             }
             if (element.type === 'image') {
                 const myelement = element;
@@ -107,11 +107,11 @@ const EditableTable = () => {
         const ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
         const options = {
-            fileExtension: '.txt',
+            fileExtension: '.csv',
             suggestedName: ss,
             types: [{
-                description: 'text file',
-                accept: { 'text/plain': ['.txt'] },
+                description: 'csv file',
+                accept: { 'text/csv': ['.csv'] },
             }],
         };
         saveFile(options, data,)
@@ -123,9 +123,8 @@ const EditableTable = () => {
                 multiple: false,
                 types: [
                     {
-                        description: 'Text and CSV Files',
+                        description: 'CSV Files',
                         accept: {
-                            'text/plain': ['.txt'],
                             'text/csv': ['.csv'],
                         },
                     },
@@ -174,6 +173,13 @@ const EditableTable = () => {
             }
         }, 1000);
     }
+    const reArrangeColumns = () => {
+        setHeaders(
+            canvas.getObjects()
+                .filter((element) => (element.type === 'textbox' || element.type === 'image') && element.id != null)
+                .map((element) => element.id)
+        );
+    }
 
 
     return (<div>
@@ -182,6 +188,7 @@ const EditableTable = () => {
             <button onClick={addRows}>Add Rows</button>
             <button onClick={createCSV}>Create CSV</button>
             <button onClick={openCSV}>Open CSV</button>
+            <button onClick={reArrangeColumns}>Re Arrange Colums</button>
             Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
             <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={() => {
                 if (useGspPlayer) {
@@ -227,12 +234,12 @@ const EditableTable = () => {
                                     updateGraphics(canvas, dataLayer);
                                 }, 1000);
                             }}>Update</button></td>
-                            {Object.entries(row).map(([key, value]) => (
+                            {headers.map(key => (
                                 <td key={key}>
-                                    {typeof value === 'string' && value.startsWith('data:image/') ? (
+                                    {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
                                         <>
                                             <img
-                                                src={value}
+                                                src={row[key]}
                                                 alt="Profile"
                                                 style={{ width: 30, height: 25, cursor: 'pointer' }}
                                                 onClick={() => handleImageDoubleClick(rowIndex, key)}
@@ -245,15 +252,15 @@ const EditableTable = () => {
                                             />
                                         </>
                                     ) : (
-                                        <input
-                                            type="text"
-                                            value={value}
+                                        <textarea
+                                            cols={4}
+                                            rows={2}
+                                            value={row[key]}
                                             onChange={e => handleChange(e, key, rowIndex)}
                                         />
                                     )}
                                 </td>
                             ))}
-
 
                         </tr>
                     ))}
