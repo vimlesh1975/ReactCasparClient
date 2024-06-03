@@ -6,6 +6,7 @@ import { fabric } from "fabric";
 import Timer from './Timer';
 
 
+
 import {
     FaPlay,
     FaStop,
@@ -29,36 +30,47 @@ const EditableTable = () => {
     };
 
     const setText = (rowIndex) => {
-        canvas.getObjects().forEach((element, i) => {
+        const rowData = data1[rowIndex];
+
+        if (!rowData) return;
+
+        canvas.getObjects().forEach(element => {
+            const dataValue = rowData[element.id];
+
+            if (!dataValue) return;
+
             if (element.type === 'textbox') {
-                element.text = (data1[rowIndex][element.id]).toString();
-            }
-            if (element.type === 'image') {
-                const myelement = element;
-                fabric.Image.fromURL(data1[rowIndex][element.id], img => {
-                    img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
-                    img.cloneAsImage(img1 => {
-                        myelement.setSrc(img1.getSrc(), () => {
-                            myelement.set({ visible: true });
+                element.text = dataValue.toString();
+            } else if (element.type === 'image') {
+                fabric.Image.fromURL(dataValue, img => {
+                    img.set({
+                        scaleX: element.width / img.width,
+                        scaleY: element.height / img.height
+                    });
+                    img.cloneAsImage(clonedImg => {
+                        element.setSrc(clonedImg.getSrc(), () => {
+                            element.set({ visible: true });
                             canvas.requestRenderAll();
-                        })
-                    })
-                })
+                        });
+                    });
+                });
             }
         });
+
         canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-    }
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+    };
+
 
 
     const createTable = () => {
-        setHeaders(
-            canvas.getObjects()
-                .filter((element) => (element.type === 'textbox' || element.type === 'image') && element.id != null)
-                .map((element) => element.id)
-        );
+        const newHeaders = canvas.getObjects()
+            .filter(element => (element.type === 'textbox' || element.type === 'image') && element.id != null)
+            .map(element => element.id);
 
-        const aa = canvas.getObjects().reduce((acc, element) => {
+        setHeaders(newHeaders);
+
+        const initialData = canvas.getObjects().reduce((acc, element) => {
             if ((element.type === 'textbox' || element.type === 'image') && element.id != null) {
                 if (element.type === 'textbox') {
                     acc[element.id] = element.text + '0';
@@ -70,51 +82,47 @@ const EditableTable = () => {
             }
             return acc;
         }, {});
-        setData1([aa]);
+        setData1([initialData]);
     }
 
     const addRows = () => {
-        const aa = canvas.getObjects().reduce((acc, element) => {
-            if ((element.type === 'textbox' || element.type === 'image') && element.id != null) {
-                if (element.type === 'textbox') {
-                    acc[element.id] = element.text + data1.length;
-                }
-                if (element.type === 'image') {
-                    acc[element.id] = element.src;
-                }
-
+        const newRow = canvas.getObjects().reduce((acc, element) => {
+            if (element.type === 'textbox' && element.id != null) {
+                acc[element.id] = element.text + data1.length;
+            } else if (element.type === 'image' && element.id != null) {
+                acc[element.id] = element.src;
             }
             return acc;
         }, {});
-        setData1([...data1, aa]);
-    }
+
+        setData1([...data1, newRow]);
+    };
 
     const deleteData = (rowIndex) => {
-        const aa = [...data1];
-        aa.splice(rowIndex, 1);
-        setData1(aa);
-    }
+        const updatedData = [...data1];
+        updatedData.splice(rowIndex, 1);
+        setData1(updatedData);
+    };
+
     const createCSV = () => {
-        // const rows = data1.map(row => headers.map(header => row[header]).join(','));
         const rows = data1.map(row => {
             return headers.map(header => {
                 const value = row[header];
-                // Escape values containing commas by enclosing them in double quotes
                 return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
             }).join(',');
         });
-        const data = [headers.join(','), ...rows].join('\n')
-        const ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+        const csvData = [headers.join(','), ...rows].join('\n')
+        const timestamp = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
 
         const options = {
             fileExtension: '.csv',
-            suggestedName: ss,
+            suggestedName: timestamp,
             types: [{
                 description: 'csv file',
                 accept: { 'text/csv': ['.csv'] },
             }],
         };
-        saveFile(options, data,)
+        saveFile(options, csvData,)
     };
 
     const openCSV = async () => {
@@ -130,8 +138,8 @@ const EditableTable = () => {
                     },
                 ],
             };
-            const [aa] = await window.showOpenFilePicker(options);
-            const file = await aa.getFile();
+            const [fileHandle] = await window.showOpenFilePicker(options);
+            const file = await fileHandle.getFile();
             Papa.parse(file, {
                 header: true,
                 complete: responses => {
@@ -165,7 +173,7 @@ const EditableTable = () => {
     const setAndPlay = (rowIndex) => {
         setText(rowIndex);
         setTimeout(() => {
-            if (useGspPlayer === true) {
+            if (useGspPlayer) {
                 playtoGsapCaspar(canvas, dataLayer, currentscreenSize)
             }
             else {
@@ -174,12 +182,32 @@ const EditableTable = () => {
         }, 1000);
     }
     const reArrangeColumns = () => {
-        setHeaders(
-            canvas.getObjects()
-                .filter((element) => (element.type === 'textbox' || element.type === 'image') && element.id != null)
-                .map((element) => element.id)
-        );
-    }
+        const newHeaders = canvas.getObjects()
+            .filter(element => (element.type === 'textbox' || element.type === 'image') && element.id != null)
+            .map(element => element.id);
+
+        const updatedData = data1.map(row => {
+            const updatedRow = {};
+            newHeaders.forEach(header => {
+                const element = canvas.getObjects().find(element => element.id === header);
+                if (row[header] === undefined) {
+                    if (element.type === 'image') {
+                        updatedRow[header] = element.src;
+                    } else if (element.type === 'textbox') {
+                        updatedRow[header] = element.text; // Default value for text elements
+                    }
+                } else {
+                    updatedRow[header] = row[header];
+                }
+            });
+            return updatedRow;
+        });
+
+        setHeaders(newHeaders);
+        setData1(updatedData);
+    };
+
+
 
 
     return (<div>
