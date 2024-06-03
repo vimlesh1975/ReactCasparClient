@@ -320,6 +320,19 @@ const showHtmlOutputReducer = (state = initialShowHtmlOutput, action) => {
   }
 };
 
+const initialShowDataTable = { showDataTable: false };
+const showDataTableReducer = (state = initialShowDataTable, action) => {
+  switch (action.type) {
+    case 'SHOW_DATA_TABLE':
+      return {
+        ...state,
+        showDataTable: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
 
 const initialKf = {
   kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]),
@@ -440,6 +453,7 @@ const rootReducer = combineReducers({
   pannelEnableReducer,
   showIdReducer,
   showHtmlOutputReducer,
+  showDataTableReducer,
   showExtensionPanelReducer,
   showSavePanelReducer,
   showDataUpdatePanelReducer,
