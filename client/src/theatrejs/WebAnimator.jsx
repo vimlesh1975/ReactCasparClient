@@ -1152,12 +1152,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
 
 
     const deleteAllObjects = () => {
-        // canvas.getObjects().forEach(element => {
-        //     if (getObjectbyId(element.id) !== undefined) {
-        //         sheet.detachObject(element.id);
-        //     }
-        // })
-        test(projectId);
+        canvas.getObjects().forEach(element => {
+            if (getObjectbyId(element.id) !== undefined) {
+                sheet.detachObject(element.id);
+            }
+        })
+        // test(projectId);
     }
 
     const rgbaArrayToObject = (fill) => {
