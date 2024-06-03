@@ -4,14 +4,8 @@ import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics, 
 import Papa from "papaparse";
 import { fabric } from "fabric";
 import Timer from './Timer';
-
-
-
-import {
-    FaPlay,
-    FaStop,
-} from "react-icons/fa";
-
+import { VscTrash, } from "react-icons/vsc";
+import { FaPlay, FaStop, } from "react-icons/fa";
 
 const EditableTable = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -22,6 +16,8 @@ const EditableTable = () => {
     const [headers, setHeaders] = useState([]);
     const [useGspPlayer, setUseGspPlayer] = useState(true);
     const [dataLayer, setDataLayer] = useState(templateLayers.data);
+    const [counter, setCounter] = useState(0);
+
 
     const handleChange = (e, key, rowIndex) => {
         const aa = [...data1];
@@ -98,11 +94,19 @@ const EditableTable = () => {
         setData1([...data1, newRow]);
     };
 
+
     const deleteData = (rowIndex) => {
         const updatedData = [...data1];
         updatedData.splice(rowIndex, 1);
         setData1(updatedData);
+
+        // Check if counter exceeds the new maximum value
+        if (counter >= updatedData.length) {
+            // Adjust counter to the new maximum value
+            setCounter(updatedData.length - 1);
+        }
     };
+
 
     const createCSV = () => {
         const rows = data1.map(row => {
@@ -207,8 +211,23 @@ const EditableTable = () => {
         setData1(updatedData);
     };
 
+    const deleteColumn = (columnId) => {
+        setData1(data1.map(row => {
+            const newRow = { ...row };
+            delete newRow[columnId];
+            return newRow;
+        }).filter(row => Object.keys(row).length > 0)); // Remove rows without any data
+        setHeaders(headers.filter(header => header !== columnId));
+    };
 
-
+    const stop = () => {
+        if (useGspPlayer) {
+            stopGsapLayer(dataLayer)
+        }
+        else {
+            stopGraphics(dataLayer);
+        }
+    }
 
     return (<div>
         <div>
@@ -218,15 +237,7 @@ const EditableTable = () => {
             <button onClick={openCSV}>Open CSV</button>
             <button onClick={reArrangeColumns}>Re Arrange Colums</button>
             Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
-            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={() => {
-                if (useGspPlayer) {
-                    stopGsapLayer(dataLayer)
-                }
-                else {
-                    stopGraphics(dataLayer);
-                }
-
-            }}><FaStop /></button>
+            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={stop}><FaStop /></button>
             <input
                 type="checkbox"
                 checked={useGspPlayer}
@@ -238,23 +249,27 @@ const EditableTable = () => {
             <table border='1' >
                 <thead>
                     <tr>
+                        <th>sr</th>
                         <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
-                        {headers?.map((val, i) => <th key={i}>{val}</th>)}
+                        {headers?.map((val, i) => <th key={i}>
+                            {val} <br />
+                            <button onClick={() => deleteColumn(val)}><VscTrash /></button>
+                        </th>
+                        )}
                         {/* <th>Set</th> */}
                     </tr>
                 </thead>
                 <tbody>
                     {data1.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td><button onClick={() => deleteData(rowIndex)}>Delete</button></td>
+                        <tr key={rowIndex} style={{ backgroundColor: (counter === rowIndex) ? 'grey' : '' }}>
+                            <td>{rowIndex}</td>
+                            <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
                             <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
                             <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-
                                 setAndPlay(rowIndex, canvas, dataLayer, currentscreenSize);
-
                             }}><FaPlay /></button></td>
                             <td><button onClick={() => {
                                 setText(rowIndex);
@@ -269,7 +284,9 @@ const EditableTable = () => {
                                             <img
                                                 src={row[key]}
                                                 alt="Profile"
-                                                style={{ width: 30, height: 25, cursor: 'pointer' }}
+                                                style={{ width: 50, height: 30, cursor: 'pointer' }}
+                                                // style={{ width: `${() => headerWidth(key)}px`, height: 25, objectFit: 'cover', cursor: 'pointer' }}
+                                                // style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
                                                 onClick={() => handleImageDoubleClick(rowIndex, key)}
                                             />
                                             <input
@@ -289,14 +306,13 @@ const EditableTable = () => {
                                     )}
                                 </td>
                             ))}
-
                         </tr>
                     ))}
                 </tbody>
             </table >
         </div>
         <div>
-            <Timer setAndPlay={setAndPlay} dataLength={data1.length} />
+            <Timer setAndPlay={setAndPlay} dataLength={data1.length} stop={stop} counter={counter} setCounter={setCounter} />
         </div>
 
     </div>);
