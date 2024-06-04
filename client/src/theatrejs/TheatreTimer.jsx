@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const Timer = ({ setAndPlay, dataLength, stop, counter, setCounter }) => {
     const [isActive, setIsActive] = useState(false);
-    const [intervalDuration, setIntervalDuration] = useState(3000);
+    const [intervalDuration, setIntervalDuration] = useState(8000);
     const intervalId = useRef(null);
 
     useEffect(() => {

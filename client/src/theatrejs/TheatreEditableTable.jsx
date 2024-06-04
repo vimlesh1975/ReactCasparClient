@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics, playtoGsapCaspar, stopGsapLayer } from '../common'
+import { stopGraphics1, loopDirection, saveFile, templateLayers } from '../common'
 import Papa from "papaparse";
 import { fabric } from "fabric";
 import TheatreTimer from './TheatreTimer';
 import { VscTrash, } from "react-icons/vsc";
 import { FaPlay, FaStop, } from "react-icons/fa";
 
-const EditableTable = () => {
+
+
+const EditableTable = ({ playtoCasparcg }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const dispatch = useDispatch();
     const [data1, setData1] = useState([]);
     const [headers, setHeaders] = useState([]);
-    const [useGspPlayer, setUseGspPlayer] = useState(true);
     const [dataLayer, setDataLayer] = useState(templateLayers.data);
     const [counter, setCounter] = useState(0);
 
+    const [duration, setDuration] = useState(1);
+
+    const [loopAnimationStart, setLoopAnimationStart] = useState(0.7);
+    const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
+    const [enableLoopAnimation, setEnableLoopAnimation] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('alternate');
+
+    const handleOptionChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
 
     const handleChange = (e, key, rowIndex) => {
         const aa = [...data1];
@@ -177,12 +187,7 @@ const EditableTable = () => {
     const setAndPlay = (rowIndex) => {
         setText(rowIndex);
         setTimeout(() => {
-            if (useGspPlayer) {
-                playtoGsapCaspar(canvas, dataLayer, currentscreenSize)
-            }
-            else {
-                startGraphics(canvas, dataLayer, currentscreenSize);
-            }
+            playtoCasparcg(dataLayer, 1, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption)
         }, 1000);
     }
     const reArrangeColumns = () => {
@@ -221,12 +226,7 @@ const EditableTable = () => {
     };
 
     const stop = () => {
-        if (useGspPlayer) {
-            stopGsapLayer(dataLayer)
-        }
-        else {
-            stopGraphics(dataLayer);
-        }
+        stopGraphics1(dataLayer)
     }
 
     return (<div>
@@ -236,13 +236,30 @@ const EditableTable = () => {
             <button onClick={createCSV}>Create CSV</button>
             <button onClick={openCSV}>Open CSV</button>
             <button onClick={reArrangeColumns}>Re Arrange Colums</button>
+
+            <span title='Duration'>D:</span><input title='Time in second' type="number" value={duration} style={{ width: 50 }} onChange={e => setDuration(e.target.value)} />
             Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
-            <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={stop}><FaStop /></button>
-            <input
-                type="checkbox"
-                checked={useGspPlayer}
-                onChange={() => setUseGspPlayer((val) => !val)}
-            /><label>Use Gsap Player</label>
+            <button title='Reverse Play and Remove' onClick={() => stopGraphics1(dataLayer)}><FaStop /></button>
+            <div>
+                <input type='checkbox' checked={enableLoopAnimation} onChange={() => setEnableLoopAnimation(val => !val)} /><span>Enable Loop Anim</span>
+                <span >Start:</span><input title='Time in second' type="number" value={loopAnimationStart} style={{ width: 50 }} onChange={e => { if (e.target.value < loopAnimationEnd) setLoopAnimationStart(e.target.value) }} />
+                <span >End:</span><input title='Time in second' type="number" value={loopAnimationEnd} style={{ width: 50 }} onChange={e => { if (e.target.value > loopAnimationStart) setLoopAnimationEnd(e.target.value) }} />
+            </div>
+            <div>
+                {loopDirection.map((option, index) => (
+                    <label key={index}>
+                        <input
+                            type="radio"
+                            value={option}
+                            checked={selectedOption === option}
+                            onChange={handleOptionChange}
+                        />
+                        {option}
+                    </label>
+                ))}
+            </div>
+
+
         </div>
 
         <div style={{ maxWidth: 1700, maxHeight: 600, height: 580, overflow: 'auto' }}>
@@ -250,7 +267,6 @@ const EditableTable = () => {
                 <thead>
                     <tr>
                         <th>sr</th>
-                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -264,19 +280,14 @@ const EditableTable = () => {
                 </thead>
                 <tbody>
                     {data1.map((row, rowIndex) => (
-                        <tr key={rowIndex} style={{ backgroundColor: (counter === rowIndex) ? 'grey' : '' }}>
+                        <tr key={rowIndex} style={{ backgroundColor: (counter === rowIndex) ? 'red' : '' }}>
                             <td>{rowIndex}</td>
                             <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
                             <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
                             <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-                                setAndPlay(rowIndex, canvas, dataLayer, currentscreenSize);
+                                setAndPlay(rowIndex);
                             }}><FaPlay /></button></td>
-                            <td><button onClick={() => {
-                                setText(rowIndex);
-                                setTimeout(() => {
-                                    updateGraphics(canvas, dataLayer);
-                                }, 1000);
-                            }}>Update</button></td>
+
                             {headers.map(key => (
                                 <td key={key}>
                                     {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
