@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { stopGraphics1, updateText, endpoint, executeScript } from '../common'
+import { loopDirection, stopGraphics1, updateText, endpoint, executeScript } from '../common'
 import { useSelector } from 'react-redux'
 
-const loopDirection = ['normal', 'reverse', 'alternate', 'AR']
 const loopcount = 1;
 
 
@@ -18,7 +17,6 @@ const CasparPlayer = ({ playtoCasparcg, layerNumber }) => {
     const [loopAnimationStart, setLoopAnimationStart] = useState(0);
     const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
-
     const [selectedOption, setSelectedOption] = useState('alternate');
 
     const handleOptionChange = (e) => {

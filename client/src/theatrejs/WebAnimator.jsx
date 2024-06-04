@@ -22,6 +22,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Papa from "papaparse";
 import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
+import TheatreEditableTable from './TheatreEditableTable';
 
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
@@ -275,13 +276,14 @@ export const getPropOfObject = (id, str1) => {
     }
 };
 
-const DrawingforTheatrejs = ({ importHtml }) => {
+const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
     const showSavePanel = useSelector(state => state.showSavePanelReducer.showSavePanel);
     const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
     const showHtmlOutput = useSelector(state => state.showHtmlOutputReducer.showHtmlOutput);
+    const showDataTable = useSelector(state => state.showDataTableReducer.showDataTable);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -321,6 +323,14 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                         svgSource: `H O`,
                         onClick: () => {
                             dispatch({ type: 'SHOW_HTML_OUTPUT', payload: !showHtmlOutput });
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "Data Table",
+                        svgSource: `D T`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable });
                         }
                     }
                 ])
@@ -403,6 +413,24 @@ const DrawingforTheatrejs = ({ importHtml }) => {
                 <HtmlOutput scale={0.55} />
             </div>
         </Rnd >
+
+        <Rnd enableResizing={{}}
+            default={{
+                x: 0,
+                y: 300,
+
+            }}
+            dragHandleClassName="my-drag-handle"
+        >
+            <div style={{ backgroundColor: '#99c8d8', display: showDataTable ? '' : 'none' }}>
+                <div className='my-drag-handle' style={{ width: 1056, height: 20, backgroundColor: 'white' }} >
+                    Drag me
+                    <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable })}>X</button>
+                </div>
+                <TheatreEditableTable playtoCasparcg={playtoCasparcg} />
+            </div>
+        </Rnd >
+
 
     </div >);
 };
@@ -3362,7 +3390,7 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 </Tabs >
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
-            <DrawingforTheatrejs importHtml={importHtml} />
+            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>
     </>)
