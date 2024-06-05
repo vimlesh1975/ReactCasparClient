@@ -4,8 +4,9 @@ import { stopGraphics1, loopDirection, saveFile, templateLayers } from '../commo
 import Papa from "papaparse";
 import { fabric } from "fabric";
 import TheatreTimer from './TheatreTimer';
-import { VscTrash, } from "react-icons/vsc";
+import { VscMove, VscTrash, } from "react-icons/vsc";
 import { FaPlay, FaStop, } from "react-icons/fa";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 
 
@@ -228,6 +229,17 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
     const stop = () => {
         stopGraphics1(dataLayer)
     }
+    const onDragEnd = (result) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const reorderedData = Array.from(data1);
+        const [movedItem] = reorderedData.splice(result.source.index, 1);
+        reorderedData.splice(result.destination.index, 0, movedItem);
+
+        setData1(reorderedData);
+    };
 
     return (<div>
         <div>
@@ -262,66 +274,87 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
 
         </div>
 
-        <div style={{ maxWidth: 1700, maxHeight: 600, height: 580, overflow: 'auto' }}>
-            <table border='1' >
-                <thead>
-                    <tr>
-                        <th>sr</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        {headers?.map((val, i) => <th key={i}>
-                            {val} <br />
-                            <button onClick={() => deleteColumn(val)}><VscTrash /></button>
-                        </th>
-                        )}
-                        {/* <th>Set</th> */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data1.map((row, rowIndex) => (
-                        <tr key={rowIndex} style={{ backgroundColor: (counter === rowIndex) ? 'red' : '' }}>
-                            <td>{rowIndex}</td>
-                            <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
-                            <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
-                            <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-                                setAndPlay(rowIndex);
-                            }}><FaPlay /></button></td>
-
-                            {headers.map(key => (
-                                <td key={key}>
-                                    {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
-                                        <>
-                                            <img
-                                                src={row[key]}
-                                                alt="Profile"
-                                                style={{ width: 50, height: 30, cursor: 'pointer' }}
-                                                // style={{ width: `${() => headerWidth(key)}px`, height: 25, objectFit: 'cover', cursor: 'pointer' }}
-                                                // style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
-                                                onClick={() => handleImageDoubleClick(rowIndex, key)}
-                                            />
-                                            <input
-                                                type="file"
-                                                id={`fileInput-${rowIndex}-${key}`}
-                                                style={{ display: 'none' }}
-                                                onChange={(e) => handleImageChange(e, rowIndex, key)}
-                                            />
-                                        </>
-                                    ) : (
-                                        <textarea
-                                            cols={4}
-                                            rows={2}
-                                            value={row[key]}
-                                            onChange={e => handleChange(e, key, rowIndex)}
-                                        />
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+                {(provided) => (
+                    <div style={{ maxWidth: 1700, maxHeight: 600, height: 580, overflow: 'auto' }} {...provided.droppableProps} ref={provided.innerRef}>
+                        <table border='1'>
+                            <thead>
+                                <tr>
+                                    <th>sr</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    {headers?.map((val, i) => <th key={i}>
+                                        {val} <br />
+                                        <button onClick={() => deleteColumn(val)}><VscTrash /></button>
+                                    </th>
                                     )}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table >
-        </div>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data1.map((row, rowIndex) => (
+                                    <Draggable key={rowIndex} draggableId={String(rowIndex)} index={rowIndex}>
+                                        {(provided, snapshot) => (
+                                            <tr
+                                                key={rowIndex}
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                // style={{
+                                                //     ...provided.draggableProps.style, backgroundColor: (counter === rowIndex) ? 'grey' : '', transform: snapshot.isDragging ? `translate(${0}px, ${-300 + snapshot.draggingOverWith ? provided.draggableProps.style.y : 0}px)` : `translate(${0}px, ${0}px)`,
+                                                // }}
+                                                style={{
+                                                    ...provided.draggableProps.style, backgroundColor: (counter === rowIndex) ? 'grey' : '', left: "auto !important",
+                                                    top: "auto !important",
+                                                }}
+                                            >
+                                                <td>{rowIndex}</td>
+                                                <td title='Move' {...provided.dragHandleProps}><VscMove /></td>
+                                                <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
+                                                <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
+                                                <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
+                                                    setAndPlay(rowIndex);
+                                                }}><FaPlay /></button></td>
+
+                                                {headers.map(key => (
+                                                    <td key={key}>
+                                                        {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
+                                                            <>
+                                                                <img
+                                                                    src={row[key]}
+                                                                    alt="Profile"
+                                                                    style={{ width: 50, height: 30, cursor: 'pointer' }}
+                                                                    onClick={() => handleImageDoubleClick(rowIndex, key)}
+                                                                />
+                                                                <input
+                                                                    type="file"
+                                                                    id={`fileInput-${rowIndex}-${key}`}
+                                                                    style={{ display: 'none' }}
+                                                                    onChange={(e) => handleImageChange(e, rowIndex, key)}
+                                                                />
+                                                            </>
+                                                        ) : (
+                                                            <textarea
+                                                                cols={4}
+                                                                rows={2}
+                                                                value={row[key]}
+                                                                onChange={e => handleChange(e, key, rowIndex)}
+                                                            />
+                                                        )}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
         <div>
             <TheatreTimer setAndPlay={setAndPlay} dataLength={data1.length} stop={stop} counter={counter} setCounter={setCounter} />
         </div>

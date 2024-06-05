@@ -419,7 +419,7 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
             dragHandleClassName="my-drag-handle"
         >
             <div style={{ backgroundColor: '#99c8d8', display: showDataTable ? '' : 'none' }}>
-                <div className='my-drag-handle' style={{ width: 1056, height: 20, backgroundColor: 'white' }} >
+                <div className='my-drag-handle' style={{ width: 1700, height: 20, backgroundColor: 'white' }} >
                     Drag me
                     <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable })}>X</button>
                 </div>

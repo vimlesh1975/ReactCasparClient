@@ -290,7 +290,7 @@ const EditableTable = () => {
                                                     <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
                                                     <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
                                                     <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-                                                        setAndPlay(rowIndex, canvas, dataLayer, currentscreenSize);
+                                                        setAndPlay(rowIndex);
                                                     }}><FaPlay /></button></td>
                                                     <td><button onClick={() => {
                                                         setText(rowIndex);
