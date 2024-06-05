@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { fabric } from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
-import CsvReader from './CsvReader';
 import { resizeTextWidth } from './DrawingController'
 
 const JsonReader = () => {
@@ -11,26 +10,6 @@ const JsonReader = () => {
     const [dataJson, setDataJson] = useState('');
 
     const canvas = useSelector(state => state.canvasReducer.canvas);
-
-    // const loadJson = fileName1 => {
-    //     console.log(fileName1)
-    //     fetch(fileName1, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json'
-    //         }
-    //     }
-    //     )
-    //         .then(function (response) {
-    //             // console.log(response)
-    //             return response.json();
-
-    //         })
-    //         .then(function (myJson) {
-    //             // console.log(myJson);
-    //             setDataJson(myJson);
-    //         });
-    // }
 
     const loadJsonHeat = () => {
         fetch('/ReactCasparClient/swimming/heat/1_1.json', {
@@ -433,9 +412,7 @@ const JsonReader = () => {
             </table>
 
         </div>
-        <div style={{ border: '1px solid red' }}>
-            <CsvReader />
-        </div>
+
     </div>)
 }
 

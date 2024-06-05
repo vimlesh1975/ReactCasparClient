@@ -16,9 +16,6 @@ import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { v4 as uuidv4 } from 'uuid';
 
-
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
 import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
 import TheatreEditableTable from './TheatreEditableTable';
