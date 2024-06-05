@@ -9,7 +9,7 @@ import { FaPlay, FaStop, } from "react-icons/fa";
 
 
 
-const EditableTable = ({ playtoCasparcg }) => {
+const TheatreEditableTable = ({ playtoCasparcg }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const dispatch = useDispatch();
@@ -329,4 +329,4 @@ const EditableTable = ({ playtoCasparcg }) => {
     </div>);
 };
 
-export default EditableTable;
+export default TheatreEditableTable;
