@@ -19,7 +19,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-import Papa from "papaparse";
 import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
 import TheatreEditableTable from './TheatreEditableTable';
@@ -973,210 +972,6 @@ const WebAnimator = () => {
             </div>
         );
     }
-
-
-
-    // var initialTop = 100;
-
-    const CsvData = () => {
-        const data1 = `image,name,age,email
-img/flag/Albania.png,Milind Soman,30,john@example.com
-img/flag/Afghanistan.png,Ramaswami Aiyanger,25,jane@example.com
-img/flag/Belgium.png,Vimlesh Kumar,48,Vimlersh1975@gmail.com
-img/flag/Mauritania.png,Vilash Bhandare,56,vlbhandare@gmail.com
-img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
-        const canvas = useSelector(state => state.canvasReducer.canvas);
-
-        const [headers, setHeaders] = useState(Object.keys(Papa.parse(data1, { header: true }).data[0]))
-        const [datas, setDatas] = useState(Papa.parse(data1, { header: true }).data)
-
-        const handleChange = e => {
-            if (e.target.files[0]) {
-                Papa.parse(e.target.files[0], {
-                    header: true,
-                    complete: responses => {
-                        setDatas(responses.data);
-                        setHeaders(Object.keys(responses.data[0]))
-                    }
-                });
-            }
-
-        }
-
-        const updateData = (index) => {
-            headers.forEach((header,) => {
-                const myelement = canvas.getObjects().find(element => element.id === header)
-                if (header.includes('image')) {
-                    fabric.Image.fromURL('/ReactCasparClient/' + datas[index][header], img => {
-                        img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
-                        img.cloneAsImage(img1 => {
-                            myelement.setSrc(img1.getSrc(), () => {
-                                myelement.set({ visible: true });
-                                canvas.requestRenderAll();
-                            })
-                        })
-                    })
-                }
-                else {
-                    myelement.set({ text: datas[index][header] })
-                }
-            })
-            canvas.requestRenderAll();
-            window.sheet.sequence.position = 0;
-            setTimeout(() => {
-                playtoCasparcg(templateLayers.theatrejs, 1, 4);
-            }, 100);
-        }
-        const changeImage = (i, j) => {
-
-        }
-
-        return (<div style={{ fontSize: 14 }}>
-            <input type="file" onChange={handleChange} />
-            <table border='1'>
-                <tbody>
-                    <tr>
-                        {headers.map((row, i) => {
-                            return (<th key={i}   >{row}</th>)
-                        })}
-                        <th>Play</th>
-                    </tr>
-
-                    {datas.map((row, i) => {
-                        return (<tr key={i}  >{headers.map((header, ii) => {
-                            return (<td key={ii}>
-                                {(typeof row[header] === 'string' && row[header] !== undefined && row[header].includes('/')) ? <img onClick={() => changeImage(i, ii)} src={'/ReactCasparClient/' + row[header]} alt='dd' width={20} height={20} /> : row[header]}
-                            </td>
-                            )
-                        })}<td><button onClick={() => updateData(i)}>Play</button></td></tr>)
-                    })}
-                </tbody>
-            </table>
-
-            <button onClick={() => {
-                headers.forEach((header) => {
-                    setTimeout(() => {
-                        if (header.includes('image')) {
-                            addItem(addImage, header);
-                        }
-                        else {
-                            addItem(createTextBox, header);
-                        }
-                    }, 100);
-                })
-
-            }}>Create Temlplate</button>
-
-            <button onClick={() => {
-                headers.forEach((header) => {
-                    const myelement = canvas.getObjects().find(element => element.id === header)
-                    if (header.includes('image')) {
-                        fabric.Image.fromURL('/ReactCasparClient/' + datas[0][header], img => {
-                            img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) })
-                            img.cloneAsImage(img1 => {
-                                myelement.setSrc(img1.getSrc(), () => {
-                                    myelement.set({ visible: true });
-                                    canvas.requestRenderAll();
-                                })
-                            })
-                        })
-                    }
-                    else {
-                        myelement.set({ text: datas[0][header] })
-                    }
-                })
-
-                canvas.requestRenderAll();
-                playtoCasparcg(templateLayers.theatrejs, 1, 4);
-
-                // const newDatas = datas.map(item => {
-                //     return {
-                //         ...item,
-                //         image: '/ReactCasparClient/' + item.image
-                //     };
-                // });
-
-                const newDatas = datas.map(item => {
-                    const newItem = {};
-                    for (const [key, value] of Object.entries(item)) {
-                        if (key.includes("image")) {
-                            newItem[key] = '/ReactCasparClient/' + value;
-                        } else {
-                            newItem[key] = value;
-                        }
-                    }
-                    return newItem;
-                });
-
-                const scriptforhtml =
-                    "if(window.csvInterval){clearInterval(csvInterval)};" +
-                    "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
-                    "let i=1;" +
-                    "window.csvInterval=setInterval(() => {" +
-                    "sheet_" + templateLayers.theatrejs + ".sequence.position=0;" +
-                    "sheet_" + templateLayers.theatrejs + ".sequence.play();" +
-                    "headers.forEach(function(header) { " +
-                    "const myelement = canvas_" + templateLayers.theatrejs + ".getObjects().find(element => element.id === header); " +
-                    "if (header.includes('image')) {" +
-                    "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
-                    "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
-                    "img.cloneAsImage(img1 => {" +
-                    "myelement.setSrc(img1.getSrc(), () => {" +
-                    "myelement.set({ visible: true });" +
-                    "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
-                    "})" +
-                    "})" +
-                    "})" +
-                    "}" +
-                    "else{" +
-                    "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
-                    "}" +
-                    "canvas_" + templateLayers.theatrejs + ".requestRenderAll();" +
-                    "});" +
-                    " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                    " }, " + duration * 1000 + ");"
-
-
-                executeScript(`${scriptforhtml}`);
-
-                const scriptforCasparcg = "let csvInterval; " +
-                    "if(csvInterval){clearInterval(csvInterval)};" +
-                    "const headers=" + JSON.stringify(headers).replaceAll('"', "'") + "; " +
-                    "let i=1;" +
-                    "csvInterval=setInterval(() => {" +
-                    "sheet.sequence.position=0;" +
-                    "sheet.sequence.play();" +
-                    "headers.forEach(function(header) { " +
-                    "const myelement = canvas.getObjects().find(element => element.id === header); " +
-
-                    "if (header.includes('image')) {" +
-                    "fabric.Image.fromURL(" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header], img => {" +
-                    "img.set({ scaleX: myelement.width / img.width, scaleY: (myelement.height / img.height) });" +
-                    "img.cloneAsImage(img1 => {" +
-                    "myelement.setSrc(img1.getSrc(), () => {" +
-                    "myelement.set({ visible: true });" +
-                    "canvas.requestRenderAll();" +
-                    "})" +
-                    "})" +
-                    "})" +
-                    "}" +
-                    "else{" +
-                    "myelement.set({text:" + JSON.stringify(newDatas).replaceAll('"', "'") + "[i][header]});" +
-                    "}" +
-
-                    "canvas.requestRenderAll();" +
-                    "});" +
-                    " if (i < " + (newDatas.length - 1) + ") { i += 1; } else { i = 0; }" +
-                    " }, " + duration * 1000 + ");"
-
-                endpoint(`call ${window.chNumber}-${templateLayers.theatrejs} "${scriptforCasparcg}"`);
-
-
-            }}>Play All</button>
-
-        </div>)
-    }
-
 
 
     const deleteAllObjects = () => {
@@ -3357,9 +3152,6 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 <span title='Html Client Id for html outPut'>Client Id</span><input title='For Html Rendrer. Put Unique Id so that other may not interfere' style={{ width: 50 }} type={'text'} value={clientId} onChange={e => {
                     dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                 }} />
-                {/* <button onClick={() => {
-                setShowSavePannel(val => !val);
-            }}>{showSavePannel ? 'Hide Save Pannel' : 'Show Save Panel'}</button> */}
                 <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
                 FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
 
@@ -3375,19 +3167,12 @@ img/flag/Morocco.png,Viresh Kumar,50,Kviresh10@gmail.com`;
                 }}>.</button>
             </div>
             <div style={{ position: 'absolute', left: 1540, top: 25, zIndex: 101, backgroundColor: 'white', display: !showSavePanel ? 'none' : '' }}>
-                <Tabs forceRenderTabPanel={true} >
-                    <TabList>
-                        <Tab>Save Pannel</Tab>
-                        <Tab>Data Pannel</Tab>
-                    </TabList>
-                    <TabPanel > <SavePannelTheatre
-                        importHtml={importHtml}
-                        deleteAllObjects={deleteAllObjects}
-                        stopGraphics1={stopGraphics1}
-                        playtoCasparcg={playtoCasparcg}
-                    /></TabPanel>
-                    <TabPanel ><CsvData /></TabPanel>
-                </Tabs >
+                <SavePannelTheatre
+                    importHtml={importHtml}
+                    deleteAllObjects={deleteAllObjects}
+                    stopGraphics1={stopGraphics1}
+                    playtoCasparcg={playtoCasparcg}
+                />
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
             <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} />
