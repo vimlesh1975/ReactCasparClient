@@ -587,6 +587,8 @@ export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {
+  imgSequenceLayer1: 10,
+  imgSequenceLayer2: 15,
   GenerativeArts: 93,
   Tsparticles1: 94,
   patternLayer: 95,
@@ -615,8 +617,7 @@ export const templateLayers = {
   theatrejs: 166,
   gsap: 167,
   data: 170,
-  imgSequenceLayer1: 180,
-  imgSequenceLayer2: 185,
+
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 

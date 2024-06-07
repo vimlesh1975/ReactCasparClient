@@ -49,11 +49,15 @@ const ImageSequence = ({ layer }) => {
   const play = (layerNumber) => {
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
+    var bb = document.createElement('div');
+    bb.style.perspective='1920px';
+    bb.style.transformStyle='preserve-3d';
+    document.body.appendChild(bb);
     window.imgseq_${layerNumber} = document.createElement('img');
     imgseq_${layerNumber}.style.position = 'absolute';
     imgseq_${layerNumber}.setAttribute('id', 'divid_' + '${layerNumber}');
     imgseq_${layerNumber}.style.zIndex = ${layerNumber};
-    document.body.appendChild(imgseq_${layerNumber});
+    bb.appendChild(imgseq_${layerNumber});
     document.body.style.overflow = 'hidden';
     const base64Images = ${JSON.stringify(base64Images).replace(/"/g, "'")};
     let i = 0;
