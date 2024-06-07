@@ -42,23 +42,23 @@ const ImageSequence = ({ layer }) => {
   const stop = layerNumber => {
     endpoint(`stop ${window.chNumber}-${layerNumber}`);
     executeScript(`
-    if(window.intervalimgseq){clearInterval(intervalimgseq)};
+    if(window.intervalimgseq_${layerNumber}){clearInterval(intervalimgseq_${layerNumber})};
     document.getElementById('divid_${layerNumber}')?.remove();
     `);
   }
   const play = (layerNumber) => {
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
-    window.imgseq = document.createElement('img');
-    imgseq.style.position = 'absolute';
-    imgseq.setAttribute('id', 'divid_' + '${layerNumber}');
-    imgseq.style.zIndex = ${layerNumber};
-    document.body.appendChild(imgseq);
+    window.imgseq_${layerNumber} = document.createElement('img');
+    imgseq_${layerNumber}.style.position = 'absolute';
+    imgseq_${layerNumber}.setAttribute('id', 'divid_' + '${layerNumber}');
+    imgseq_${layerNumber}.style.zIndex = ${layerNumber};
+    document.body.appendChild(imgseq_${layerNumber});
     document.body.style.overflow = 'hidden';
     const base64Images = ${JSON.stringify(base64Images).replace(/"/g, "'")};
     let i = 0;
-    window.intervalimgseq=setInterval(() => {
-      imgseq.src = base64Images[i];
+    window.intervalimgseq_${layerNumber}=setInterval(() => {
+      imgseq_${layerNumber}.src = base64Images[i];
       i++;
       if (i >= base64Images.length) {
         i = 0;
@@ -70,7 +70,7 @@ const ImageSequence = ({ layer }) => {
     "`);
 
     executeScript(`
-    if(window.intervalimgseq){clearInterval(intervalimgseq)};
+    if(window.intervalimgseq_${layerNumber}){clearInterval(intervalimgseq_${layerNumber})};
     document.getElementById('divid_${layerNumber}')?.remove();
     `);
     executeScript(script);
