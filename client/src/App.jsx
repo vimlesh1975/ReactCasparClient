@@ -8,6 +8,8 @@ import axios from "axios";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DrawingController from "./DrawingController.jsx";
+import ImageSequence from './imagesequence/ImageSequence';
+
 
 
 import { v4 as uuidv4 } from "uuid";
@@ -31,7 +33,6 @@ import {
 } from "./common.js";
 import Layers from "./Layers.jsx";
 import VideoPlaylist from "./VideoPlaylist.jsx";
-import Twoliner from "./Twoliner.jsx";
 import Scroll from "./Scroll.jsx";
 import Automation from "./Automation.jsx";
 import { videoLayers } from "./common.js";
@@ -543,8 +544,8 @@ const App = () => {
               <Tab>VDO Playlist</Tab>
               <Tab>Layers</Tab>
               <Tab>Gradient</Tab>
-              <Tab>Oneliner/BreakingNews</Tab>
-              <Tab>2liner</Tab>
+              <Tab>BreakingNews</Tab>
+              <Tab>ImgSequence</Tab>
               <Tab>Scroll</Tab>
               <Tab>Shapes</Tab>
               <Tab>Games</Tab>
@@ -645,7 +646,10 @@ const App = () => {
               <OnelinerAndBreakingNews />
             </TabPanel>
             <TabPanel>
-              <Twoliner />
+              <ImageSequence layer={templateLayers.imgSequenceLayer1} />
+              <hr />
+              <ImageSequence layer={templateLayers.imgSequenceLayer2} />
+
             </TabPanel>
             <TabPanel>
               <Scroll />

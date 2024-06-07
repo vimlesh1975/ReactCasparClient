@@ -3,7 +3,6 @@ import { fabric } from "fabric";
 import { options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 import { resizeTextWidth } from './DrawingController'
-import ImageSequenceViewer from './imagesequence/ImageSequenceViewer';
 
 const JsonReader = () => {
     const [dataHeat, setdataHeat] = useState('');
@@ -411,11 +410,7 @@ const JsonReader = () => {
                     )}
                 </tbody>
             </table>
-
         </div>
-
-        <ImageSequenceViewer />
-
     </div>)
 }
 

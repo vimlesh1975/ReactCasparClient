@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '040624_1';
+export const buildDate = '070624_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
@@ -614,7 +614,9 @@ export const templateLayers = {
   twoliner: 165,
   theatrejs: 166,
   gsap: 167,
-  data: 170
+  data: 170,
+  imgSequenceLayer1: 180,
+  imgSequenceLayer2: 185,
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 
