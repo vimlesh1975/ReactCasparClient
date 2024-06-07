@@ -18,6 +18,7 @@ const Mixer = ({ layer, setLayer, layerVisisble }) => {
     }, [x, y, scaleX, scaleY, layer])
     return (
         <div style={{ border: '1px solid red', margin: 10 }}>
+            <label>Mixer fill: </label>
             <div style={{ display: layerVisisble ? '' : 'none' }}>
                 <label>layer: </label> <input style={{ width: 50 }} type='number' value={layer} onChange={e => {
                     setLayer(e.target.value);
