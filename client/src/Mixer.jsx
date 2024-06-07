@@ -12,6 +12,7 @@ const Mixer = ({ layer, setLayer, layerVisisble }) => {
         const script = `
 console.log('dd');
 const element = document.getElementById('divid_${layer}');
+element.style.transformOrigin = 'top left';
 element.style.transform = \`translate(${x * 1920}px, ${y * 1080}px) scale(${scaleX}, ${scaleY})\`;
         `
         executeScript(`${script}`)
