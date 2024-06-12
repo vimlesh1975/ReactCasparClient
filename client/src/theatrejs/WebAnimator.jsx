@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
 import TheatreEditableTable from './TheatreEditableTable';
+import TheatreImageSequence from './TheatreImageSequence';
 
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
@@ -272,7 +273,7 @@ export const getPropOfObject = (id, str1) => {
     }
 };
 
-const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
+const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
@@ -280,6 +281,7 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
     const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
     const showHtmlOutput = useSelector(state => state.showHtmlOutputReducer.showHtmlOutput);
     const showDataTable = useSelector(state => state.showDataTableReducer.showDataTable);
+    const showImgSeq = useSelector(state => state.showImgSeqReducer.showImgSeq);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -327,6 +329,14 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
                         svgSource: `D T`,
                         onClick: () => {
                             dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable });
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "iMG SEQ",
+                        svgSource: `I S`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq });
                         }
                     }
                 ])
@@ -424,6 +434,23 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
                     <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable })}>X</button>
                 </div>
                 <TheatreEditableTable playtoCasparcg={playtoCasparcg} />
+            </div>
+        </Rnd >
+
+        <Rnd enableResizing={{}}
+            default={{
+                x: 0,
+                y: 300,
+
+            }}
+            dragHandleClassName="my-drag-handle"
+        >
+            <div style={{ backgroundColor: '#99c8d8', display: showImgSeq ? '' : 'none' }}>
+                <div className='my-drag-handle' style={{ width: 800, height: 20, backgroundColor: 'white' }} >
+                    Drag me
+                    <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq })}>X</button>
+                </div>
+                <TheatreImageSequence layer={166} sheet={sheet} generateTheatreID={generateTheatreID} />
             </div>
         </Rnd >
 
@@ -881,7 +908,6 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                         <li onClick={appendDatafromLocalStorage}>Append Data from LocalStorage <VscTriangleUp /></li>
-                        <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
 
                     </ul></li>
                     <li>Edit<ul >
@@ -1616,6 +1642,7 @@ const WebAnimator = () => {
         canvas.loadFromJSON((content),()=>{
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
+        
 
             const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
             setInterval(() => {
@@ -1627,6 +1654,15 @@ const WebAnimator = () => {
 
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
+
+            core.onChange(sheet.sequence.pointer.position, (position) => {
+            const aa5=canvas.getObjects().find((element=>element.id==='id_${layerNumber}'));
+            aa5 && aa5.getObjects().forEach((image, index) => {
+                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+            });
+            canvas.requestRenderAll();
+           });
+
             project.ready.then(() => {
                 window.sheet.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
@@ -2464,23 +2500,25 @@ const WebAnimator = () => {
         }
         return null;
     };
-    const addWebCam = canvas => {
-        var video1 = new fabric.Image(video1El.current, {
-            // width: 1920,
-            // height: 1080
-        });
-        canvas.add(video1).setActiveObject(video1);;
+    // const addWebCam = canvas => {
+    //     var video1 = new fabric.Image(video1El.current, {
+    //         // width: 1920,
+    //         // height: 1080
+    //     });
+    //     canvas.add(video1).setActiveObject(video1);;
 
-        fabric.util.requestAnimFrame(function render() {
-            canvas.renderAll();
-            fabric.util.requestAnimFrame(render);
-        });
+    //     fabric.util.requestAnimFrame(function render() {
+    //         canvas.renderAll();
+    //         fabric.util.requestAnimFrame(render);
+    //     });
 
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
-            video1El.current.srcObject = stream;
-            video1El.current.play();
-        });
-    }
+    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
+    //         video1El.current.srcObject = stream;
+    //         video1El.current.play();
+    //     });
+    // }
+
+
     // const gg = (totalFrames, prefix) => {
     //     for (let i = 0; i <= totalFrames; i++) {
     //         sheet.sequence.position = 0;;
@@ -3172,7 +3210,7 @@ const WebAnimator = () => {
                 />
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
-            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} />
+            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} generateTheatreID={generateTheatreID} />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>
     </>)

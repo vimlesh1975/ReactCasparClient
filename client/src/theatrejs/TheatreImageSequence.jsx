@@ -1,15 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { shadowOptions, endpoint, executeScript } from '../common';
-import Mixer from '../Mixer';
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
 
-const ImageSequence = ({ layer }) => {
+const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
 
   const [base64Images, setBase64Images] = useState([]);
   const [imageObjects, setImageObjects] = useState([]);
-  const [frameRate, setFrameRate] = useState(60);
+  const [frameRate, setFrameRate] = useState(30);
   const [preview, setPreview] = useState(false);
   const [imgSequenceLayer, setImgSequenceLayer] = useState(layer);
 
@@ -71,27 +70,15 @@ const ImageSequence = ({ layer }) => {
     `);
   }
   const play = (layerNumber) => {
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    // endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
-    var bb = document.createElement('div');
-    bb.style.perspective='1920px';
-    bb.style.transformStyle='preserve-3d';
-    document.body.appendChild(bb);
-    window.imgseq_${layerNumber} = document.createElement('img');
-    imgseq_${layerNumber}.style.position = 'absolute';
-    imgseq_${layerNumber}.setAttribute('id', 'divid_' + '${layerNumber}');
-    imgseq_${layerNumber}.style.zIndex = ${layerNumber};
-    bb.appendChild(imgseq_${layerNumber});
-    document.body.style.overflow = 'hidden';
-    const base64Images = ${JSON.stringify(base64Images).replace(/"/g, "'")};
-    let i = 0;
-    window.intervalimgseq_${layerNumber}=setInterval(() => {
-      imgseq_${layerNumber}.src = base64Images[i];
-      i++;
-      if (i >= base64Images.length) {
-        i = 0;
-      }
-    }, ${1000 / frameRate});
+   __TheatreJS_StudioBundle._studio.core.onChange(sheet.sequence.pointer.position, (position) => {
+    const aa5=window.canvas.getObjects().find((element=>element.id==='id_166'));
+            aa5.getObjects().forEach((image, index) => {
+                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+            });
+            window.canvas.requestRenderAll();
+        });
   `;
     endpoint(`call ${window.chNumber}-${layerNumber} "
     ${script}
@@ -117,7 +104,24 @@ const ImageSequence = ({ layer }) => {
 
     canvas.add(imageGroup).setActiveObject(imageGroup);;
     canvas.requestRenderAll();
+
+    generateTheatreID('id_' + layer)
+
+    // const id_1 = sheet.object('imageGroup', { left: 0, top: 0 });
+    // id_1.onValuesChange((val) => {
+    //   imageGroup.set({ left: val.left, top: val.top });
+
+    //   imageGroup.getObjects().forEach((image, index) => {
+    //     image.set({ opacity: index === parseInt((sheet.sequence.position) * 30) ? 1 : 0 });
+    //   });
+
+    //   canvas.requestRenderAll();
+    // })
+
+    // arrObject.push(id_1);
+
   };
+
   const showFrame = (frameIndex) => {
     if (canvas.getObjects().some(image => image.id === `id_${layer}`)) {
       const group = canvas.getObjects().find(object => object.id === `id_${layer}`)
@@ -127,13 +131,16 @@ const ImageSequence = ({ layer }) => {
       canvas.requestRenderAll();
     }
   };
+
   const handleScrubberChange = (event) => {
     clearInterval(animationInterval.current);
     setIsScrubbing(true);
     const frameIndex = parseInt(event.target.value, 10);
     showFrame(frameIndex);
     setCurrentFrame(frameIndex);
+    sheet.sequence.position = frameIndex / frameRate
   };
+
   const handleScrubberRelease = (event) => {
     setIsScrubbing(false);
     const frameIndex = parseInt(event.target.value, 10);
@@ -143,6 +150,7 @@ const ImageSequence = ({ layer }) => {
   const handlePlayButtonClick = () => {
     playAnimation(currentFrame);
   };
+
   return (
     <div>
       <div style={{ display: 'flex' }}>
@@ -176,12 +184,11 @@ const ImageSequence = ({ layer }) => {
                 step="1"
                 onInput={handleScrubberChange}
                 onChange={handleScrubberRelease}
-              />
+              />{currentFrame}
               <button id="playButton" onClick={handlePlayButtonClick}>
                 Play Animation
               </button>
             </div>
-            <Mixer layer={imgSequenceLayer} setLayer={setImgSequenceLayer} layerVisisble={false} />
           </div>
         </div>
         <div>
