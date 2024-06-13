@@ -1,16 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { shadowOptions, endpoint, executeScript } from '../common';
+import { shadowOptions } from '../common';
 import { fabric } from "fabric";
 import { useSelector } from 'react-redux';
 
-const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
+const TheatreImageSequence = ({ layer, sheet, generateTheatreID, fps }) => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
 
   const [base64Images, setBase64Images] = useState([]);
   const [imageObjects, setImageObjects] = useState([]);
-  const [frameRate, setFrameRate] = useState(30);
   const [preview, setPreview] = useState(false);
-  const [imgSequenceLayer, setImgSequenceLayer] = useState(layer);
 
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -45,7 +43,7 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
         j = (j + 1) % (base64Images.length - 1);
         setCurrentFrame(j);
       }
-    }, 1000 / frameRate); // Adjust the frame rate as needed
+    }, 1000 / fps); // Adjust the frame rate as needed
   };
   const loadPNGSequence = async (aa) => {
     const loadedImages = [];
@@ -62,69 +60,28 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
   };
 
 
-  const stop = layerNumber => {
-    endpoint(`stop ${window.chNumber}-${layerNumber}`);
-    executeScript(`
-    if(window.intervalimgseq_${layerNumber}){clearInterval(intervalimgseq_${layerNumber})};
-    document.getElementById('divid_${layerNumber}')?.remove();
-    `);
-  }
-  const play = (layerNumber) => {
-    // endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
-    const script = `
-   __TheatreJS_StudioBundle._studio.core.onChange(sheet.sequence.pointer.position, (position) => {
-    const aa5=window.canvas.getObjects().find((element=>element.id==='id_166'));
-            aa5.getObjects().forEach((image, index) => {
-                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
-            });
-            window.canvas.requestRenderAll();
-        });
-  `;
-    endpoint(`call ${window.chNumber}-${layerNumber} "
-    ${script}
-    "`);
 
-    executeScript(`
-    if(window.intervalimgseq_${layerNumber}){clearInterval(intervalimgseq_${layerNumber})};
-    document.getElementById('divid_${layerNumber}')?.remove();
-    `);
-    executeScript(script);
-
-  }
-  const addToCanvas = (id = 'id_' + layer) => {
-    const imageGroup = new fabric.Group(imageObjects, {
-      shadow: shadowOptions,
-      id: id,
-      class: "class_" + fabric.Object.__uid,
-      fill: "#ffffff",
-      objectCaching: false,
-      stroke: "#000000",
-      strokeWidth: 0,
-    });
-
-    canvas.add(imageGroup).setActiveObject(imageGroup);;
-    canvas.requestRenderAll();
-
-    generateTheatreID('id_' + layer)
-
-    // const id_1 = sheet.object('imageGroup', { left: 0, top: 0 });
-    // id_1.onValuesChange((val) => {
-    //   imageGroup.set({ left: val.left, top: val.top });
-
-    //   imageGroup.getObjects().forEach((image, index) => {
-    //     image.set({ opacity: index === parseInt((sheet.sequence.position) * 30) ? 1 : 0 });
-    //   });
-
-    //   canvas.requestRenderAll();
-    // })
-
-    // arrObject.push(id_1);
-
+  const addToCanvas = () => {
+    const aa5 = canvas.getObjects().find((element => element.id === 'imgSeqGroup1'));
+    if (!aa5) {
+      const imageGroup = new fabric.Group(imageObjects, {
+        shadow: shadowOptions,
+        id: 'imgSeqGroup1',
+        class: "class_" + fabric.Object.__uid,
+        fill: "#ffffff",
+        objectCaching: false,
+        stroke: "#000000",
+        strokeWidth: 0,
+      });
+      canvas.add(imageGroup).setActiveObject(imageGroup);;
+      canvas.requestRenderAll();
+      generateTheatreID('imgSeqGroup1')
+    }
   };
 
   const showFrame = (frameIndex) => {
-    if (canvas.getObjects().some(image => image.id === `id_${layer}`)) {
-      const group = canvas.getObjects().find(object => object.id === `id_${layer}`)
+    const group = canvas.getObjects().find(object => object.id === `id_${layer}`);
+    if (group) {
       group.getObjects().forEach((image, index) => {
         image.set({ opacity: index === frameIndex ? 1 : 0 });
       });
@@ -138,7 +95,7 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
     const frameIndex = parseInt(event.target.value, 10);
     showFrame(frameIndex);
     setCurrentFrame(frameIndex);
-    sheet.sequence.position = frameIndex / frameRate
+    sheet.sequence.position = frameIndex / fps
   };
 
   const handleScrubberRelease = (event) => {
@@ -149,6 +106,7 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
   };
   const handlePlayButtonClick = () => {
     playAnimation(currentFrame);
+    // sheet.sequence.play();
   };
 
   return (
@@ -163,23 +121,16 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
               onChange={handleFolderSelect}
             />
           </div>
-          <div>
-            <label>Frame Rate: </label> <input style={{ width: 50 }} type='number' value={frameRate} onChange={e => setFrameRate(e.target.value)} />
-          </div>
-          <div>
-            <label>Layer : </label> <input style={{ width: 50 }} type='number' value={imgSequenceLayer} onChange={e => setImgSequenceLayer(e.target.value)} />
-          </div>
+
           <div>
             <button onClick={() => setPreview(val => !val)}>{preview ? 'Stop Preview' : 'Preview'}</button>
-            <button style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => play(imgSequenceLayer)}>Play to Caspar</button>
-            <button style={{ backgroundColor: 'darkred', color: 'white' }} onClick={() => stop(imgSequenceLayer)}>Stop to Caspar</button>
             <button onClick={() => addToCanvas()}>Add to canvas</button>
             <div>
               <input
                 type="range"
                 id="scrubber"
                 min="0"
-                max={base64Images.length - 2}
+                max={base64Images.length - 1}
                 value={currentFrame}
                 step="1"
                 onInput={handleScrubberChange}
@@ -209,4 +160,4 @@ const ImageSequence = ({ layer, sheet, generateTheatreID }) => {
   );
 };
 
-export default ImageSequence;
+export default TheatreImageSequence;
