@@ -88,22 +88,34 @@ const DataUpdatePanel = ({ importHtml }) => {
             if (element.type === 'image') {
                 const bb = textNodes.find((textNode) => textNode.key === element.id);
                 const ff = bb.value;
-                const script = `fabric.Image.fromURL('${ff}', img => {
+                const scriptforhtml = `fabric.Image.fromURL('${ff}', img => {
                     img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
                     img.cloneAsImage(img1 => {
                         canvas_${layerNumber}.getObjects()[${i}].setSrc(img1.getSrc(), () => {
                             canvas_${layerNumber}.getObjects()[${i}].set({ visible: true });
                             setTimeout(() => {
                                 changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
-                            }, 10);
+                            }, 100);
                             canvas_${layerNumber}.requestRenderAll();
                         })
                     })
-                })`
+                })`;
+                const scriptforcaspar = `fabric.Image.fromURL('${ff}', img => {
+                    img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
+                    img.cloneAsImage(img1 => {
+                        canvas.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                            canvas.getObjects()[${i}].set({ visible: true });
+                            setTimeout(() => {
+                                changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
+                            }, 100);
+                            canvas.requestRenderAll();
+                        })
+                    })
+                })`;
                 endpoint(
-                    `call ${window.chNumber}-${layerNumber} "${script}";`
+                    `call ${window.chNumber}-${layerNumber} "${scriptforcaspar}";`
                 );
-                executeScript(script);
+                executeScript(scriptforhtml);
             }
         });
 

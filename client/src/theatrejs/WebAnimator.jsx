@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import studio from '@theatre/studio'
-import { getProject, types, val } from '@theatre/core'
+import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ElementList from './ElementList';
 import DataUpdatePanel from './DataUpdatePanel';
 import TheatreEditableTable from './TheatreEditableTable';
+import TheatreImageSequence from './TheatreImageSequence';
 
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
@@ -272,7 +273,7 @@ export const getPropOfObject = (id, str1) => {
     }
 };
 
-const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
+const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID, fps }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
@@ -280,6 +281,7 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
     const showDataUpdatePanel = useSelector(state => state.showDataUpdatePanelReducer.showDataUpdatePanel);
     const showHtmlOutput = useSelector(state => state.showHtmlOutputReducer.showHtmlOutput);
     const showDataTable = useSelector(state => state.showDataTableReducer.showDataTable);
+    const showImgSeq = useSelector(state => state.showImgSeqReducer.showImgSeq);
 
     window.dispatch = dispatch;
     window.editor = editor;
@@ -327,6 +329,14 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
                         svgSource: `D T`,
                         onClick: () => {
                             dispatch({ type: 'SHOW_DATA_TABLE', payload: !showDataTable });
+                        }
+                    },
+                    {
+                        type: "Icon",
+                        title: "iMG SEQ",
+                        svgSource: `I S`,
+                        onClick: () => {
+                            dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq });
                         }
                     }
                 ])
@@ -427,6 +437,23 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg }) => {
             </div>
         </Rnd >
 
+        <Rnd enableResizing={{}}
+            default={{
+                x: 0,
+                y: 300,
+
+            }}
+            dragHandleClassName="my-drag-handle"
+        >
+            <div style={{ backgroundColor: '#99c8d8', display: showImgSeq ? '' : 'none' }}>
+                <div className='my-drag-handle' style={{ width: 800, height: 20, backgroundColor: 'white' }} >
+                    Drag me
+                    <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq })}>X</button>
+                </div>
+                <TheatreImageSequence sheet={sheet} generateTheatreID={generateTheatreID} fps={fps} />
+            </div>
+        </Rnd >
+
 
     </div >);
 };
@@ -444,7 +471,7 @@ const WebAnimator = () => {
     const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
-    const [fps, setFps] = useState(25);
+    const [fps, setFps] = useState(30);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -881,7 +908,6 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createCircle)}>Circle <VscCircleFilled /></li>
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                         <li onClick={appendDatafromLocalStorage}>Append Data from LocalStorage <VscTriangleUp /></li>
-                        <li title='only for Video Recording' onClick={() => addItem(addWebCam)}>WebCam</li>
 
                     </ul></li>
                     <li>Edit<ul >
@@ -1132,6 +1158,15 @@ const WebAnimator = () => {
                 };
                 arrObject[i] = sheet.object(element.id, arrObjectProps[i])
 
+                onChange(sheet.sequence.pointer.position, (position) => {
+                    if (element.id === 'imgSeqGroup1') {
+                        element.getObjects().forEach((image, index) => {
+                            image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                        });
+                        canvas.requestRenderAll();
+                    }
+                });
+
                 arrObject[i].onValuesChange((val) => {
                     var obj2 = {};
                     if (element.fill?.type === 'pattern') {
@@ -1365,6 +1400,15 @@ const WebAnimator = () => {
            
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
+
+            core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
+            const aa5=canvas_${layerNumber}.getObjects().find((element=>element.id==='imgSeqGroup1'));
+            aa5 && aa5.getObjects().forEach((image, index) => {
+                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+            });
+            canvas_${layerNumber}.requestRenderAll();
+           });
+
             project.ready.then(() => {
                 window.sheet_${layerNumber}.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet_${layerNumber}.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
@@ -1616,6 +1660,7 @@ const WebAnimator = () => {
         canvas.loadFromJSON((content),()=>{
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
+        
 
             const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
             setInterval(() => {
@@ -1627,6 +1672,15 @@ const WebAnimator = () => {
 
             window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
+
+            core.onChange(sheet.sequence.pointer.position, (position) => {
+            const aa5=canvas.getObjects().find((element=>element.id==='imgSeqGroup1'));
+            aa5 && aa5.getObjects().forEach((image, index) => {
+                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+            });
+            canvas.requestRenderAll();
+           });
+
             project.ready.then(() => {
                 window.sheet.sequence.play({rafDriver,range:[0,${duration}]}).then(()=>${enableLoopAnimation} && window.sheet.sequence.play({rafDriver,range:[${loopAnimationStart},${loopAnimationEnd}],iterationCount: Infinity,direction: '${selectedOption}'}));
             });
@@ -1881,18 +1935,18 @@ const WebAnimator = () => {
                 }
             }
         };
-        const setAllCcgInvisble=element=>{
-            if(window.caspar || window.casparcg || window.tickAnimations)  {
-              if (element.type==='group'){
-                element.getObjects().forEach((element1) => {
-                  setAllCcgInvisble(element1);
-                })
-              }
-              else{
-                if ((element.id).startsWith("ccg")){
-                    element.set({visible: false});
+        const setAllCcgInvisble = element => {
+            if (window.caspar || window.casparcg || window.tickAnimations) {
+                if ((element.id).startsWith("ccg")) {
+                    if (element.type === 'group') {
+                        element.getObjects().forEach((element1) => {
+                        setAllCcgInvisble(element1);
+                        })
+                    }
+                    else {
+                    element.set({ visible: false });
+                    }
                 }
-              }
             }
         }
         canvas.getObjects().forEach((element,i) => {
@@ -1961,7 +2015,16 @@ const WebAnimator = () => {
                 skewY: core.types.number(element.skewY, { range: [-60, 60] }),
             });`
 
-        const xx5 = ` arrObject[i].onValuesChange((val) => {
+        const xx5 = ` 
+         core.onChange(sheet.sequence.pointer.position, (position) => {
+            const aa5=canvas.getObjects().find((element=>element.id==='imgSeqGroup1'));
+            aa5 && aa5.getObjects().forEach((image, index) => {
+                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+            });
+            canvas.requestRenderAll();
+           });
+
+        arrObject[i].onValuesChange((val) => {
             var obj2 = {};
             if (element.fill.type === 'pattern') {
             }
@@ -2464,23 +2527,25 @@ const WebAnimator = () => {
         }
         return null;
     };
-    const addWebCam = canvas => {
-        var video1 = new fabric.Image(video1El.current, {
-            // width: 1920,
-            // height: 1080
-        });
-        canvas.add(video1).setActiveObject(video1);;
+    // const addWebCam = canvas => {
+    //     var video1 = new fabric.Image(video1El.current, {
+    //         // width: 1920,
+    //         // height: 1080
+    //     });
+    //     canvas.add(video1).setActiveObject(video1);;
 
-        fabric.util.requestAnimFrame(function render() {
-            canvas.renderAll();
-            fabric.util.requestAnimFrame(render);
-        });
+    //     fabric.util.requestAnimFrame(function render() {
+    //         canvas.renderAll();
+    //         fabric.util.requestAnimFrame(render);
+    //     });
 
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
-            video1El.current.srcObject = stream;
-            video1El.current.play();
-        });
-    }
+    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
+    //         video1El.current.srcObject = stream;
+    //         video1El.current.play();
+    //     });
+    // }
+
+
     // const gg = (totalFrames, prefix) => {
     //     for (let i = 0; i <= totalFrames; i++) {
     //         sheet.sequence.position = 0;;
@@ -2659,7 +2724,21 @@ const WebAnimator = () => {
 
     // }
 
-
+    // eslint-disable-next-line 
+    const setAllCcgInvisble = element => {
+        if (window.caspar || window.casparcg || window.tickAnimations) {
+            if ((element.id).startsWith("ccg")) {
+                if (element.type === 'group') {
+                    element.getObjects().forEach((element1) => {
+                        setAllCcgInvisble(element1);
+                    })
+                }
+                else {
+                    element.set({ visible: false });
+                }
+            }
+        }
+    }
 
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
@@ -2673,6 +2752,16 @@ const WebAnimator = () => {
     }
 
     const setOnValueChange = (element, i) => {
+
+        onChange(sheet.sequence.pointer.position, (position) => {
+            if (element.type === 'group') {
+                element.getObjects().forEach((image, index) => {
+                    image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                });
+                canvas.requestRenderAll();
+            }
+        });
+
         arrObject[i].onValuesChange((val) => {
             var obj2 = {};
 
@@ -3172,7 +3261,7 @@ const WebAnimator = () => {
                 />
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
-            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} />
+            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} generateTheatreID={generateTheatreID} fps={fps} />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>
     </>)

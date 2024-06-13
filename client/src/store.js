@@ -333,6 +333,20 @@ const showDataTableReducer = (state = initialShowDataTable, action) => {
   }
 };
 
+const initialShowImgSeq = { showImgSeq: false };
+const showImgSeqReducer = (state = initialShowImgSeq, action) => {
+  switch (action.type) {
+    case 'SHOW_IMG_SEQ':
+      return {
+        ...state,
+        showImgSeq: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
 
 const initialKf = {
   kf: Array.from(Array(200).keys()).map(() => [20, 60, 260, 300]),
@@ -454,6 +468,7 @@ const rootReducer = combineReducers({
   showIdReducer,
   showHtmlOutputReducer,
   showDataTableReducer,
+  showImgSeqReducer,
   showExtensionPanelReducer,
   showSavePanelReducer,
   showDataUpdatePanelReducer,
