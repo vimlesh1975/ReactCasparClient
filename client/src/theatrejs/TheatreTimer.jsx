@@ -1,16 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { endpoint, executeScript } from '../common';
 
-const Timer = ({ setAndPlay, dataLength, stop, counter, setCounter }) => {
+
+const Timer = ({ dataLayer, setText, updateText2, setAndPlay, dataLength, stop, counter, setCounter }) => {
     const [isActive, setIsActive] = useState(false);
     const [intervalDuration, setIntervalDuration] = useState(8000);
     const intervalId = useRef(null);
+
+    const canvas = useSelector(state => state.canvasReducer.canvas);
+
 
     useEffect(() => {
         if (isActive) {
             intervalId.current = setInterval(() => {
                 setCounter(prevCounter => {
                     const newCounter = (prevCounter < dataLength - 1) ? prevCounter + 1 : 0;
-                    setAndPlay(newCounter);
+                    // setAndPlay(newCounter);
+                    setText(newCounter);
+                    setTimeout(() => {
+                        endpoint(`call ${window.chNumber}-${dataLayer} window.sheet.sequence.position=0`);
+                        executeScript(`sheet_${dataLayer}.sequence.position=0`);
+
+                        endpoint(`call ${window.chNumber}-${dataLayer} window.sheet.sequence.play()`);
+                        executeScript(`sheet_${dataLayer}.sequence.play()`);
+
+                        updateText2(canvas, dataLayer)
+                    }, 1000);
+
                     return newCounter;
                 });
             }, intervalDuration);
@@ -19,7 +36,7 @@ const Timer = ({ setAndPlay, dataLength, stop, counter, setCounter }) => {
         }
 
         return () => clearInterval(intervalId.current);
-    }, [isActive, intervalDuration, setAndPlay, dataLength, setCounter]);
+    }, [isActive, intervalDuration, setAndPlay, dataLength, setCounter, canvas, dataLayer, setText, updateText2]);
 
     const handleStart = () => {
         setAndPlay(counter);

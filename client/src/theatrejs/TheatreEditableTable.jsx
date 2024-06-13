@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { stopGraphics1, loopDirection, saveFile, templateLayers } from '../common'
+import { executeScript, stopGraphics1, loopDirection, saveFile, templateLayers, endpoint } from '../common'
 import Papa from "papaparse";
 import { fabric } from "fabric";
 import TheatreTimer from './TheatreTimer';
@@ -36,6 +36,53 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
         setData1(aa);
     };
 
+    const updateText2 = (canvas, layerNumber) => {
+
+        canvas.getObjects().forEach((element, i) => {
+            if (element.type === 'textbox') {
+                endpoint(
+                    `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:CRLFtobackslashn(\\"${(element.text).replace(/\n/g, 'CRLF')}\\")});canvas.requestRenderAll();"`
+                );
+                executeScript(`canvas_${layerNumber}.getObjects()[${i}].set({text:"${(element.text).replace(/\n/g, 'CRLF')}"});
+                canvas_${layerNumber}.requestRenderAll();
+                `);
+            }
+
+            if (element.type === 'image') {
+                // const bb = textNodes.find((textNode) => textNode.key === element.id);
+                const ff = element.src;
+                const scriptforhtml = `fabric.Image.fromURL('${ff}', img => {
+                    img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
+                    img.cloneAsImage(img1 => {
+                        canvas_${layerNumber}.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                            canvas_${layerNumber}.getObjects()[${i}].set({ visible: true });
+                            setTimeout(() => {
+                                changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
+                            }, 100);
+                            canvas_${layerNumber}.requestRenderAll();
+                        })
+                    })
+                })`;
+                const scriptforcaspar = `fabric.Image.fromURL('${ff}', img => {
+                    img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
+                    img.cloneAsImage(img1 => {
+                        canvas.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                            canvas.getObjects()[${i}].set({ visible: true });
+                            setTimeout(() => {
+                                changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
+                            }, 100);
+                            canvas.requestRenderAll();
+                        })
+                    })
+                })`;
+                endpoint(
+                    `call ${window.chNumber}-${layerNumber} "${scriptforcaspar}";`
+                );
+                executeScript(scriptforhtml);
+            }
+        });
+
+    };
     const setText = (rowIndex) => {
         const rowData = data1[rowIndex];
 
@@ -56,7 +103,7 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
                     });
                     img.cloneAsImage(clonedImg => {
                         element.setSrc(clonedImg.getSrc(), () => {
-                            element.set({ visible: true });
+                            element.set({ visible: true, src: clonedImg.getSrc() });
                             canvas.requestRenderAll();
                         });
                     });
@@ -286,6 +333,7 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                     {headers?.map((val, i) => <th key={i}>
                                         {val} <br />
                                         <button onClick={() => deleteColumn(val)}><VscTrash /></button>
@@ -313,9 +361,16 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
                                                 <td title='Move' {...provided.dragHandleProps}><VscMove /></td>
                                                 <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
                                                 <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
+
                                                 <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
                                                     setAndPlay(rowIndex);
                                                 }}><FaPlay /></button></td>
+                                                <td><button title='Preview and Update' onClick={() => {
+                                                    setText(rowIndex);
+                                                    setTimeout(() => {
+                                                        updateText2(canvas, dataLayer);
+                                                    }, 1000);
+                                                }}>Update</button></td>
 
                                                 {headers.map(key => (
                                                     <td key={key}>
@@ -356,7 +411,7 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
             </Droppable>
         </DragDropContext>
         <div>
-            <TheatreTimer setAndPlay={setAndPlay} dataLength={data1.length} stop={stop} counter={counter} setCounter={setCounter} />
+            <TheatreTimer dataLayer={dataLayer} setText={setText} updateText2={updateText2} setAndPlay={setAndPlay} dataLength={data1.length} stop={stop} counter={counter} setCounter={setCounter} />
         </div>
 
     </div>);
