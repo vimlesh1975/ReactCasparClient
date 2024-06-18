@@ -9,6 +9,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DrawingController from "./DrawingController.jsx";
 import ImageSequence from './imagesequence/ImageSequence';
+import Graphics from "./NRCS/Graphics.jsx";
 
 
 
@@ -561,6 +562,7 @@ const App = () => {
 
               <Tab>Help</Tab>
               <Tab>GA</Tab>
+              <Tab>NRCS</Tab>
 
             </TabList>
             <TabPanel>
@@ -694,6 +696,9 @@ const App = () => {
             </TabPanel>
             <TabPanel>
               <GenerativeArts />
+            </TabPanel>
+            <TabPanel>
+              <Graphics />
             </TabPanel>
           </Tabs>
         </div>

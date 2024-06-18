@@ -488,3 +488,40 @@ app.post('/fetch-proxy', async (req, res) => {
 
 
 // rss feed code  ends
+
+//NRCS code starts-----------
+
+const mysql = require('mysql2/promise');
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'itmaint',
+  password: 'itddkchn',
+  database: 'c1news',
+});
+
+app.get('/getNewsID', async (req, res) => {
+  const [rows] = await pool.query('select title from newsid');
+  res.send(rows);
+});
+
+app.get('/show_runorder', async (req, res) => {
+  const param1 = req.query.param1;
+  const [rows] = await pool.query(`CALL show_runorder('${param1}')`);
+  res.send(rows[0]);
+});
+
+app.get('/getGraphics', async (req, res) => {
+  const ScriptID = req.query.ScriptID;
+  const [rows] = await pool.query(`SELECT * FROM graphics where ScriptID='${ScriptID}'`);
+  res.send(rows);
+});
+
+app.post('/setGraphics', async (req, res) => {
+  const { content, graphicsID } = req.body;
+  await pool.query(`UPDATE graphics SET GraphicsText1 = ?  where GraphicsID='${graphicsID}'`, [content]);
+  res.send('');
+});
+
+
+
+// NRCS code ends
