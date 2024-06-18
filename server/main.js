@@ -512,7 +512,7 @@ app.get('/show_runorder', async (req, res) => {
 
 app.get('/getGraphics', async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const [rows] = await pool.query(`SELECT * FROM graphics where ScriptID='${ScriptID}'`);
+  const [rows] = await pool.query(`SELECT * FROM graphics where ScriptID='${ScriptID}' order by GraphicsOrder`);
   res.send(rows);
 });
 
@@ -522,6 +522,12 @@ app.post('/setGraphics', async (req, res) => {
   res.send('');
 });
 
+app.post('/insertGraphics', async (req, res) => {
+  const { GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate } = req.body;
+  const values = [GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate];
+  await pool.query(`INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`, values);
+  res.send('');
+});
 
 
 // NRCS code ends

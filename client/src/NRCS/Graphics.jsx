@@ -2,6 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { address1 } from '../common'
 import { useSelector } from "react-redux";
 
+function getFormattedDatetimeNumber(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+}
+
+// const datetimeNumber = getFormattedDatetimeNumber();
+// console.log(datetimeNumber);
+
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
 
@@ -16,6 +30,8 @@ const Graphics = () => {
     const [currentGraphics, setCurrentGraphics] = useState(-1);
 
     const [graphicsID, setGraphicsID] = useState('');
+
+
 
     useEffect(() => {
         async function fetchData() {
@@ -82,6 +98,25 @@ const Graphics = () => {
             console.error('Error saving content:', error);
         }
     }
+    const addNew = async () => {
+        const newGrapphics = [...graphics, { GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: graphics.length + 1, ScriptID, GraphicsTemplate: 'vimlesh' }]
+        setGraphics(newGrapphics);
+
+        try {
+            await fetch(address1 + '/insertGraphics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: graphics.length + 1, ScriptID, GraphicsTemplate: 'vimlesh' + graphics.length + 1 }),
+            });
+
+        } catch (error) {
+            console.error('Error saving content:', error);
+        }
+    }
+
+
     return (<div>
         <div style={{ display: 'flex' }}>
             <div style={{ minWidth: 300, maxWidth: 300 }}>
@@ -123,7 +158,8 @@ const Graphics = () => {
                 })}
             </div>
             <div>
-                <button onClick={() => updateGraphicsToDatabase()}>Update</button>
+                <button onClick={updateGraphicsToDatabase}>Update</button>
+                <button onClick={addNew}>addNew</button>
             </div>
         </div>
     </div>)
