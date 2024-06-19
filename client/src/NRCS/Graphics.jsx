@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { address1 } from '../common'
 import { useSelector } from "react-redux";
+import GsapPlayer from '../GsapPlayer'
 
 function getFormattedDatetimeNumber(date = new Date()) {
     const year = date.getFullYear();
@@ -142,25 +143,34 @@ const Graphics = () => {
                 </div>
             </div>
             <div>
-                {graphics && graphics?.map((val, i) => {
-                    return (
-                        <div onClick={() => {
-                            setGraphicsID(val.GraphicsID);
-                            setCurrentGraphics(i);
+                <div style={{ border: '1px solid red', height: 50, padding: 5 }}>
+                    <GsapPlayer layer1={200} inline={false} />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <div>
+                        {graphics && graphics?.map((val, i) => {
+                            return (
+                                <div onClick={() => {
+                                    setGraphicsID(val.GraphicsID);
+                                    setCurrentGraphics(i);
 
-                            const parsedJSON = JSON.parse(val.Graphicstext1);
-                            canvas.loadFromJSON(parsedJSON.pageValue);
+                                    const parsedJSON = JSON.parse(val.Graphicstext1);
+                                    canvas.loadFromJSON(parsedJSON.pageValue);
 
-                        }} key={i} style={{ backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8', margin: 10 }}>
-                            {val.GraphicsOrder} <label style={{ cursor: 'pointer' }}>{val.GraphicsTemplate} </label> <br />
-                        </div>
-                    )
-                })}
+                                }} key={i} style={{ backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8', margin: 10 }}>
+                                    {val.GraphicsOrder} <label style={{ cursor: 'pointer' }}>{val.GraphicsTemplate} </label> <br />
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <div>
+                        <button onClick={updateGraphicsToDatabase}>Update</button>
+                        <button onClick={addNew}>addNew</button>
+                    </div>
+                </div>
+
             </div>
-            <div>
-                <button onClick={updateGraphicsToDatabase}>Update</button>
-                <button onClick={addNew}>addNew</button>
-            </div>
+
         </div>
     </div>)
 }
