@@ -584,6 +584,20 @@ app.post('/updateGraphicTemplate', async (req, res) => {
   }
 });
 
+app.post('/deleteGraphics', async (req, res) => {
+  const { GraphicsID } = req.body;
+  if (!GraphicsID) {
+    return res.status(400).send('GraphicsID is required');
+  }
+  try {
+    await pool.query(`delete from  graphics where GraphicsID='${GraphicsID}'`);
+    res.send('Graphic deleted successfully');
+  } catch (error) {
+    console.error('Error deleting graphic:', error);
+    res.status(500).send('An error occurred while deleting the graphic');
+  }
+});
+
 
 app.get('/getContent', async (req, res) => {
   const ScriptID = req.query.ScriptID;
