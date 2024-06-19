@@ -49,7 +49,7 @@ export default function Home({ ScriptID, title }) {
 
     return (
         <div>
-            <div>
+            <div style={{ backgroundColor: 'red' }}>
                 {title}
             </div>
             <div>

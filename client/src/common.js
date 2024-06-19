@@ -587,13 +587,15 @@ export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+  const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const seconds = String(date.getSeconds()).padStart(2, '0');
-  return `${year}${month}${day}${hours}${minutes}${seconds}`;
-}
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+  return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+};
+
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {

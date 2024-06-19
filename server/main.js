@@ -500,39 +500,74 @@ const pool = mysql.createPool({
 });
 
 app.get('/getNewsID', async (req, res) => {
-  const [rows] = await pool.query('select title from newsid');
-  res.send(rows);
+  try {
+    const [rows] = await pool.query('select title from newsid');
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+
+  }
+
 });
 
 app.get('/show_runorder', async (req, res) => {
   const param1 = req.query.param1;
-  const [rows] = await pool.query(`CALL show_runorder('${param1}')`);
-  res.send(rows[0]);
+  try {
+    const [rows] = await pool.query(`CALL show_runorder('${param1}')`);
+    res.send(rows[0]);
+  } catch (error) {
+    console.log(error);
+  }
+
 });
 
 app.get('/getGraphics', async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const [rows] = await pool.query(`SELECT * FROM graphics where ScriptID='${ScriptID}' order by GraphicsOrder`);
-  res.send(rows);
+  try {
+    const [rows] = await pool.query(`SELECT * FROM graphics where ScriptID='${ScriptID}' order by GraphicsOrder`);
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+
+  }
+
 });
 
 app.post('/setGraphics', async (req, res) => {
   const { content, graphicsID } = req.body;
-  await pool.query(`UPDATE graphics SET GraphicsText1 = ?  where GraphicsID='${graphicsID}'`, [content]);
-  res.send('');
+  try {
+    await pool.query(`UPDATE graphics SET GraphicsText1 = ?  where GraphicsID='${graphicsID}'`, [content]);
+    res.send('');
+  } catch (error) {
+    console.log(error);
+
+  }
+
 });
 
 app.post('/insertGraphics', async (req, res) => {
   const { GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate } = req.body;
   const values = [GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate];
-  await pool.query(`INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`, values);
-  res.send('');
+  try {
+    await pool.query(`INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`, values);
+    res.send('');
+  } catch (error) {
+    console.log(error);
+
+  }
+
 });
 
 app.post('/updateGraphicsOrder', async (req, res) => {
   const { GraphicsID, GraphicsOrder } = req.body;
-  await pool.query(`update  graphics  SET GraphicsOrder = ?  where GraphicsID='${GraphicsID}'`, [GraphicsOrder]);
-  res.send('');
+  try {
+    await pool.query(`update  graphics  SET GraphicsOrder = ?  where GraphicsID='${GraphicsID}'`, [GraphicsOrder]);
+    res.send('');
+  } catch (error) {
+    console.log(error);
+
+  }
+
 });
 
 app.post('/updateGraphicTemplate', async (req, res) => {
@@ -540,10 +575,8 @@ app.post('/updateGraphicTemplate', async (req, res) => {
   if (!GraphicsID) {
     return res.status(400).send('GraphicsID is required');
   }
-
   try {
     await pool.query(`update  graphics  SET GraphicsTemplate = ?  where GraphicsID='${GraphicsID}'`, [GraphicsTemplate]);
-
     res.send('Graphic updated successfully');
   } catch (error) {
     console.error('Error deleting graphic:', error);
@@ -554,8 +587,11 @@ app.post('/updateGraphicTemplate', async (req, res) => {
 
 app.get('/getContent', async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const [rows] = await pool.query(`SELECT Script FROM script where ScriptID='${ScriptID}' LIMIT 1`);
-  res.send(rows[0]);
+  try {
+    const [rows] = await pool.query(`SELECT Script FROM script where ScriptID='${ScriptID}' LIMIT 1`);
+    res.send(rows[0]);
+  } catch (error) {
+  }
 })
 
 // NRCS code ends
