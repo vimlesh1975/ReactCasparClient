@@ -162,6 +162,26 @@ const Graphics = () => {
         await updateGraphicsOrder(reorderedItemsWithNewOrder);
     };
 
+    const updateGraphicTemplate = async (GraphicsID, newTemplate) => {
+        const updatedGraphics = graphics.map(graphic =>
+            graphic.GraphicsID === GraphicsID ?
+                { ...graphic, GraphicsTemplate: newTemplate } :
+                graphic
+        );
+        setGraphics(updatedGraphics);
+        try {
+            await fetch(address1 + '/updateGraphicTemplate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ GraphicsID, GraphicsTemplate: newTemplate }),
+            });
+        } catch (error) {
+            console.error('Error updating template:', error);
+        }
+    };
+
     return (
         <div>
             <div style={{ display: 'flex' }}>
@@ -221,7 +241,13 @@ const Graphics = () => {
                                                                 <td>
                                                                     <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic(val.GraphicsID)}><VscTrash /></button>
                                                                 </td>
-                                                                <td style={{ cursor: 'pointer' }}>{val.GraphicsTemplate}</td>
+                                                                <td>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={val.GraphicsTemplate}
+                                                                        onChange={(e) => updateGraphicTemplate(val.GraphicsID, e.target.value)}
+                                                                    />
+                                                                </td>
 
                                                             </tr>
                                                         )}

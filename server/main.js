@@ -535,16 +535,16 @@ app.post('/updateGraphicsOrder', async (req, res) => {
   res.send('');
 });
 
-app.post('/deleteGraphics', async (req, res) => {
-  const { GraphicsID } = req.body;
-
+app.post('/updateGraphicTemplate', async (req, res) => {
+  const { GraphicsID, GraphicsTemplate } = req.body;
   if (!GraphicsID) {
     return res.status(400).send('GraphicsID is required');
   }
 
   try {
-    await pool.query('DELETE FROM graphics WHERE GraphicsID = ?', [GraphicsID]);
-    res.send('Graphic deleted successfully');
+    await pool.query(`update  graphics  SET GraphicsTemplate = ?  where GraphicsID='${GraphicsID}'`, [GraphicsTemplate]);
+
+    res.send('Graphic updated successfully');
   } catch (error) {
     console.error('Error deleting graphic:', error);
     res.status(500).send('An error occurred while deleting the graphic');
