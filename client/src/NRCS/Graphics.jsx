@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { getFormattedDatetimeNumber, address1 } from '../common'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
 import Script from './Script'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 
+
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
+    const canvasList = useSelector(state => state.canvasListReducer.canvasList);
+    const [pageName, setPageName] = useState([]);
+    const dispatch = useDispatch();
+    const refPageName = useRef();
+
+
     const [runOrderTitles, setRunOrderTitles] = useState([]);
     const [selectedRunOrderTitle, setSelectedRunOrderTitle] = useState('');
     const [slugs, setSlugs] = useState([]);
@@ -84,7 +91,7 @@ const Graphics = () => {
     };
 
     const addNew = async () => {
-        const newGraphics = [...graphics, { GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: 'New Graphics ' + (graphics.length + 1) }];
+        const newGraphics = [...graphics, { GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: pageName }];
         setGraphics(newGraphics);
 
         try {
@@ -93,7 +100,7 @@ const Graphics = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: 'New Graphics ' + (graphics.length + 1) }),
+                body: JSON.stringify({ GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: pageName }),
             });
 
         } catch (error) {
@@ -263,7 +270,30 @@ const Graphics = () => {
                         </div>
                         <div>
                             <button onClick={updateGraphicsToDatabase}>Update Graphics</button>
-                            <button onClick={addNew}>addNew</button>
+                            <div>
+                                <button onClick={addNew}>addNew</button>
+                                <span>Template:</span> <select ref={refPageName} onChange={e => {
+                                    setPageName(canvasList[e.target.selectedIndex].pageName);
+                                    dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: e.target.selectedIndex });
+                                    window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue, () => {
+                                        const aa = window.editor.canvas.getObjects();
+                                        aa.forEach(element => {
+                                            try {
+                                                element.set({ objectCaching: false })
+                                            } catch (error) {
+                                                alert(error);
+                                                return;
+                                            }
+                                        });
+                                        window.editor.canvas.requestRenderAll();
+                                    });
+
+                                }} value={pageName}>
+                                    {canvasList.map((val, i) => { return <option key={i} value={val.pageName}>{val.pageName}</option> })}
+                                </select>
+                            </div>
+
+
                         </div>
                     </div>
                     <div>
