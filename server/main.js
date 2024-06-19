@@ -529,5 +529,29 @@ app.post('/insertGraphics', async (req, res) => {
   res.send('');
 });
 
+app.post('/updateGraphicsOrder', async (req, res) => {
+  const { GraphicsID, GraphicsOrder } = req.body;
+  await pool.query(`update  graphics  SET GraphicsOrder = ?  where GraphicsID='${GraphicsID}'`, [GraphicsOrder]);
+  res.send('');
+});
+
+app.post('/deleteGraphics', async (req, res) => {
+  const { GraphicsID } = req.body;
+
+  if (!GraphicsID) {
+    return res.status(400).send('GraphicsID is required');
+  }
+
+  try {
+    await pool.query('DELETE FROM graphics WHERE GraphicsID = ?', [GraphicsID]);
+    res.send('Graphic deleted successfully');
+  } catch (error) {
+    console.error('Error deleting graphic:', error);
+    res.status(500).send('An error occurred while deleting the graphic');
+  }
+});
+
+
+
 
 // NRCS code ends
