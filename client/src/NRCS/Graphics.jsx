@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { address1 } from '../common'
+import { getFormattedDatetimeNumber, address1 } from '../common'
 import { useSelector } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { VscTrash, VscMove } from "react-icons/vsc";
 
-function getFormattedDatetimeNumber(date = new Date()) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-based index, so add 1
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}${month}${day}${hours}${minutes}${seconds}`;
-}
+
+
 
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -90,7 +84,7 @@ const Graphics = () => {
     };
 
     const addNew = async () => {
-        const newGraphics = [...graphics, { GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: graphics.length + 1, ScriptID, GraphicsTemplate: 'vimlesh' }];
+        const newGraphics = [...graphics, { GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: 'New Graphics ' + (graphics.length + 1) }];
         setGraphics(newGraphics);
 
         try {
@@ -99,7 +93,7 @@ const Graphics = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: graphics.length + 1, ScriptID, GraphicsTemplate: 'vimlesh' + graphics.length + 1 }),
+                body: JSON.stringify({ GraphicsID: getFormattedDatetimeNumber(), Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }), GraphicsOrder: (graphics.length + 1), ScriptID, GraphicsTemplate: 'New Graphics ' + (graphics.length + 1) }),
             });
 
         } catch (error) {
@@ -185,7 +179,7 @@ const Graphics = () => {
                             <div onClick={() => {
                                 setScriptID(val.ScriptID);
                                 setCurrentSlug(i);
-                            }} key={i} style={{ backgroundColor: currentSlug === i ? 'green' : '#E7DBD8', margin: 10 }}>
+                            }} key={i} style={{ color: currentSlug === i ? 'white' : 'black', backgroundColor: currentSlug === i ? 'green' : '#E7DBD8', margin: 10 }}>
                                 {i} <label style={{ cursor: 'pointer' }}>{val.SlugName}</label> <br />
                             </div>
                         ))}
@@ -208,7 +202,7 @@ const Graphics = () => {
                                                             <tr
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
+
                                                                 onClick={() => {
                                                                     setGraphicsID(val.GraphicsID);
                                                                     setCurrentGraphics(i);
@@ -217,15 +211,18 @@ const Graphics = () => {
                                                                 }}
                                                                 style={{
                                                                     backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8',
+                                                                    color: currentGraphics === i ? 'white' : 'black',
                                                                     margin: 10,
                                                                     ...provided.draggableProps.style,
                                                                 }}
                                                             >
                                                                 <td>{i}</td>
-                                                                <td style={{ cursor: 'pointer' }}>{val.GraphicsTemplate}</td>
+                                                                <td  {...provided.dragHandleProps}><VscMove /></td>
                                                                 <td>
-                                                                    <button onClick={() => deleteGraphic(val.GraphicsID)}>Delete</button>
+                                                                    <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic(val.GraphicsID)}><VscTrash /></button>
                                                                 </td>
+                                                                <td style={{ cursor: 'pointer' }}>{val.GraphicsTemplate}</td>
+
                                                             </tr>
                                                         )}
                                                     </Draggable>

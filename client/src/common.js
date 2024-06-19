@@ -585,6 +585,16 @@ export const rgbaCol = (color, opacity) =>
 export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
+export const getFormattedDatetimeNumber = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}${month}${day}${hours}${minutes}${seconds}`;
+}
+
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {
   imgSequenceLayer1: 10,
