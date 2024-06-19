@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { getFormattedDatetimeNumber, address1 } from '../common'
 import { useSelector } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
+import Script from './Script'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
-
-
-
 
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -18,6 +16,7 @@ const Graphics = () => {
     const [graphics, setGraphics] = useState([]);
     const [currentGraphics, setCurrentGraphics] = useState(-1);
     const [graphicsID, setGraphicsID] = useState('');
+    const [currentSlugSlugName, setCurrentSlugSlugName] = useState('');
 
     useEffect(() => {
         async function fetchData() {
@@ -64,6 +63,7 @@ const Graphics = () => {
         setSelectedRunOrderTitle(e.target.value);
         setCurrentSlug(-1);
         setScriptID('');
+        setCurrentSlugSlugName('');
     };
 
     const updateGraphicsToDatabase = async () => {
@@ -199,6 +199,7 @@ const Graphics = () => {
                             <div onClick={() => {
                                 setScriptID(val.ScriptID);
                                 setCurrentSlug(i);
+                                setCurrentSlugSlugName(val.SlugName);
                             }} key={i} style={{ color: currentSlug === i ? 'white' : 'black', backgroundColor: currentSlug === i ? 'green' : '#E7DBD8', margin: 10 }}>
                                 {i} <label style={{ cursor: 'pointer' }}>{val.SlugName}</label> <br />
                             </div>
@@ -261,9 +262,12 @@ const Graphics = () => {
                             </DragDropContext>
                         </div>
                         <div>
-                            <button onClick={updateGraphicsToDatabase}>Update</button>
+                            <button onClick={updateGraphicsToDatabase}>Update Graphics</button>
                             <button onClick={addNew}>addNew</button>
                         </div>
+                    </div>
+                    <div>
+                        <Script ScriptID={ScriptID} title={selectedRunOrderTitle + ' ' + currentSlugSlugName} />
                     </div>
                 </div>
             </div>

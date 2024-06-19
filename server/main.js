@@ -552,6 +552,10 @@ app.post('/updateGraphicTemplate', async (req, res) => {
 });
 
 
-
+app.get('/getContent', async (req, res) => {
+  const ScriptID = req.query.ScriptID;
+  const [rows] = await pool.query(`SELECT Script FROM script where ScriptID='${ScriptID}' LIMIT 1`);
+  res.send(rows[0]);
+})
 
 // NRCS code ends
