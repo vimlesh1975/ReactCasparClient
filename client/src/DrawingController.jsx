@@ -45,6 +45,7 @@ import Images from "./Images";
 import SavedStyles from "./SavedStyles";
 
 import {
+  startVerticalScroll,
   options,
   shadowOptions,
   changeCurrentColor,
@@ -3011,50 +3012,50 @@ const DrawingController = () => {
     saveFile(options, data)
   };
 
-  const startVerticalScroll = (layerNumber) => {
-    executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
-        document.getElementById('divid_${layerNumber}')?.remove();
-        `);
+  // const startVerticalScroll = (layerNumber) => {
+  //   executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
+  //       document.getElementById('divid_${layerNumber}')?.remove();
+  //       `);
 
-    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    selectAll(canvas);
-    var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
-    const script = `
-                                                                                    window.aaVertical = document.createElement('div');
-                                                                                    aaVertical.style.position='absolute';
-                                                                                    aaVertical.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                    aaVertical.style.zIndex = ${layerNumber};
-                                                                                    aaVertical.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
-                                                                                    document.body.appendChild(aaVertical);
-                                                                                    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
-                                                                                    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-                                                                                    aaVertical.style.top='100%';
-                                                                                    aaVertical.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
-                                                                                    document.body.style.overflow='hidden';
-                                                                                    window.verticalSpeed=${verticalSpeed};
-        window.intervalVerticalScroll= setInterval(()=>{
-                                                                                        aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
-        }, 1);
-                                                                                    `;
+  //   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  //   selectAll(canvas);
+  //   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
+  //   endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  //   const script = `
+  //                                                                                   window.aaVertical = document.createElement('div');
+  //                                                                                   aaVertical.style.position='absolute';
+  //                                                                                   aaVertical.setAttribute('id','divid_' + '${layerNumber}');
+  //                                                                                   aaVertical.style.zIndex = ${layerNumber};
+  //                                                                                   aaVertical.innerHTML=\`${canvas
+  //       .toSVG(
+  //         [
+  //           "id",
+  //           "class",
+  //           "selectable",
+  //         ]
+  //       )
+  //       .replaceAll(
+  //         '"',
+  //         '\\"'
+  //       )}\`;
+  //                                                                                   document.body.appendChild(aaVertical);
+  //                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
+  //                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+  //                                                                                   aaVertical.style.top='100%';
+  //                                                                                   aaVertical.style.zoom=(${currentscreenSize *
+  //     100
+  //     }/1920)+'%';
+  //                                                                                   document.body.style.overflow='hidden';
+  //                                                                                   window.verticalSpeed=${verticalSpeed};
+  //       window.intervalVerticalScroll= setInterval(()=>{
+  //                                                                                       aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
+  //       }, 1);
+  //                                                                                   `;
 
-    endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
+  //   endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
 
-    executeScript(script); //for html
-  };
+  //   executeScript(script); //for html
+  // };
 
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
@@ -4571,7 +4572,7 @@ const DrawingController = () => {
             <b> V Scroll: </b>{" "}
             <button
               onClick={() => {
-                startVerticalScroll(templateLayers.verticalScroll);
+                startVerticalScroll(templateLayers.verticalScroll, canvas, selectAll, currentscreenSize, verticalSpeed);
                 setVerticalScroll(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_verticalScroll",

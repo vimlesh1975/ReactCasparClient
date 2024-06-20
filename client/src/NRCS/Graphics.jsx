@@ -1,11 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { getFormattedDatetimeNumber, address1 } from '../common'
+import { startVerticalScroll, endpoint, executeScript, templateLayers, shadowOptions, getFormattedDatetimeNumber, address1 } from '../common'
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
 import Script from './Script'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
-
+import { fabric } from "fabric";
+import {
+    FaPlay,
+    FaPause,
+    FaStop,
+} from "react-icons/fa";
+import { GrResume } from "react-icons/gr";
 
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -189,6 +195,51 @@ const Graphics = () => {
         }
     };
 
+    const fetchAllContent = async () => {
+        const data1 = [];
+        const fetchPromises = slugs.map(async (slug, i) => {
+            try {
+                const res = await fetch(`${address1}/getContent?ScriptID=${slug.ScriptID}`);
+                const data = await res.json();
+                data1.push(`${i + 1} ${slug.SlugName}\n\n${data.Script}\n`);
+            } catch (error) {
+                console.error('Error fetching content:', error);
+            }
+        });
+
+        // Await all fetch promises to complete
+        await Promise.all(fetchPromises);
+
+        return data1;
+    };
+
+    const addToCanvas = async () => {
+        const allContent = await fetchAllContent();
+        console.log('All content:', allContent);
+        const text = new fabric.Textbox(allContent.join('\n'),
+            {
+                id: "ccg_" + fabric.Object.__uid,
+                class: "class_" + fabric.Object.__uid,
+                shadow: { ...shadowOptions, blur: 0 },
+                left: 100,
+                top: 500,
+                width: 1700,
+                fill: '#ffff00',
+                fontFamily: 'Arial',
+                fontWeight: "bold",
+                fontSize: 90,
+                editable: true,
+                objectCaching: false,
+                textAlign: "left",
+                stroke: '#000000',
+                strokeWidth: 2,
+            }
+        );
+        canvas.add(text).setActiveObject(text);
+        canvas.requestRenderAll();
+
+
+    }
     return (
         <div>
             <div style={{ display: 'flex' }}>
@@ -201,6 +252,7 @@ const Graphics = () => {
                             ))}
                         </select>
                     </div>
+
                     <div style={{ maxHeight: 700, overflow: 'auto' }}>
                         {slugs && slugs?.map((val, i) => (
                             <div onClick={() => {
@@ -211,6 +263,10 @@ const Graphics = () => {
                                 {i} <label style={{ cursor: 'pointer' }}>{val.SlugName}</label> <br />
                             </div>
                         ))}
+                    </div>
+                    <div style={{ border: '1px solid red' }}>
+                        <button onClick={addToCanvas}>Add to canvas</button>
+
                     </div>
                 </div>
                 <div>
@@ -267,7 +323,9 @@ const Graphics = () => {
                                     )}
                                 </Droppable>
                             </DragDropContext>
+
                         </div>
+
                         <div>
                             <button onClick={updateGraphicsToDatabase}>Update Graphics</button>
                             <div>
@@ -292,7 +350,6 @@ const Graphics = () => {
                                     {canvasList.map((val, i) => { return <option key={i} value={val.pageName}>{val.pageName}</option> })}
                                 </select>
                             </div>
-
 
                         </div>
                     </div>
