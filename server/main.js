@@ -501,7 +501,7 @@ const pool = mysql.createPool({
 
 app.get('/getNewsID', async (req, res) => {
   try {
-    const [rows] = await pool.query('select title from newsid');
+    const [rows] = await pool.query(`SELECT distinct title FROM newsid where title != '' order by title asc`);
     res.send(rows);
   } catch (error) {
     console.log(error);
