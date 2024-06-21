@@ -5,7 +5,7 @@ import { selectAll } from './DrawingController'
 import { FaPlay, FaPause, FaStop, } from "react-icons/fa";
 import { GrResume } from "react-icons/gr";
 
-const VerticalScrollPlayer = () => {
+const VerticalScrollPlayer = ({ showTemplate = false }) => {
 
     const canvas = useSelector((state) => state.canvasReducer.canvas);
     const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
@@ -13,7 +13,7 @@ const VerticalScrollPlayer = () => {
     const currentPage = useSelector((state) => state.currentPageReducer.currentPage);
 
     const [verticalSpeed, setVerticalSpeed] = useState(0.7)
-    // const [verticalScroll, setVerticalScroll] = useState("");
+    const [verticalScroll, setVerticalScroll] = useState("");
 
     const onVerticalSpeedChange = (e) => {
         setVerticalSpeed(e.target.value);
@@ -80,7 +80,7 @@ const VerticalScrollPlayer = () => {
             <button
                 onClick={() => {
                     startVerticalScroll(templateLayers.verticalScroll, canvas, selectAll, currentscreenSize, verticalSpeed);
-                    // setVerticalScroll(canvasList[currentPage]?.pageName);
+                    setVerticalScroll(canvasList[currentPage]?.pageName);
                     localStorage.setItem(
                         "RCC_verticalScroll",
                         canvasList[currentPage]?.pageName
@@ -125,7 +125,7 @@ const VerticalScrollPlayer = () => {
                         `document.getElementById('divid_${templateLayers.verticalScroll}')?.remove()`
                     );
 
-                    // setVerticalScroll("");
+                    setVerticalScroll("");
                     localStorage.setItem("RCC_verticalScroll", "");
                 }}
             >
@@ -144,7 +144,7 @@ const VerticalScrollPlayer = () => {
             <button onClick={() => exportVerticalScrollAsHTML(canvas)}>
                 To HTML
             </button>
-            {/* <span> {verticalScroll} </span> */}
+            <span> {showTemplate && verticalScroll} </span>
         </div>
 
     </div>)

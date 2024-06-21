@@ -45,7 +45,6 @@ import Images from "./Images";
 import SavedStyles from "./SavedStyles";
 
 import {
-  startVerticalScroll,
   options,
   shadowOptions,
   changeCurrentColor,
@@ -58,6 +57,9 @@ import CasparcgTools from "./CasparcgTools";
 
 import { rgbaCol, listglobalCompositeOperation } from "./common";
 import GsapPlayer from "./GsapPlayer";
+import VerticalScrollPlayer from './VerticalScrollPlayer'
+
+
 // import { dispatch } from "d3";
 
 var intervalGameTimer1;
@@ -1404,7 +1406,6 @@ const DrawingController = () => {
     (state) => state.cssfilenameReducer2.cssfilename2
   );
 
-  const [verticalSpeed, setVerticalSpeed] = useState(1.0);
   const [horizontalSpeed, setHorizontalSpeed] = useState(1.0);
   const [horizontalSpeed2, setHorizontalSpeed2] = useState(1.0);
   const [ltr, setLtr] = useState(false);
@@ -1418,7 +1419,6 @@ const DrawingController = () => {
   const [logo, setLogo] = useState("");
   const [locationBand, setLocationBand] = useState("");
 
-  const [verticalScroll, setVerticalScroll] = useState("");
   const [horizontalScroll, setHorizontalScroll] = useState("");
   const [horizontalScroll2, setHorizontalScroll2] = useState("");
   const [clock, setClock] = useState("");
@@ -2082,15 +2082,7 @@ const DrawingController = () => {
     canvas.requestRenderAll();
   };
 
-  const onVerticalSpeedChange = (e) => {
-    setVerticalSpeed(e.target.value);
-    localStorage.setItem("RCC_verticalSpeed", e.target.value);
 
-    endpoint(
-      `call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=${e.target.value}"`
-    );
-    executeScript(`verticalSpeed=${e.target.value}`);
-  };
   const onHorizontalSpeedChange = (e) => {
     setHorizontalSpeed(e.target.value);
     localStorage.setItem("RCC_horizontalSpeed", e.target.value);
@@ -2697,54 +2689,6 @@ const DrawingController = () => {
     })
   };
 
-  const exportVerticalScrollAsHTML = (canvas) => {
-    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    selectAll(canvas);
-    var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
-    var aa = `<!DOCTYPE html>
-                        <html lang="en">
-                            <head>
-                                <meta charset="UTF-8">
-                                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                            <title>Document</title>
-                                        </head>
-                                        <body>
-                                            `;
-    aa += "<div>" + canvas.toSVG(["id", "class", "selectable"]) + "</div>";
-    aa += `
-                                            <script>
-                                                var aa = document.getElementsByTagName('div')[0];
-                                                aa.style.position='absolute';
-                                                document.getElementsByTagName('svg')[0].style.height='${hh}';
-                                                document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-                                                aa.style.top='100%';
-                                                aa.style.zoom=(${currentscreenSize * 100
-      }/1920)+'%';
-                                                document.body.style.overflow='hidden';
-                                                var speed=${verticalSpeed};
-                                                setInterval(function(){
-                                                    aa.style.top = (aa.getBoundingClientRect().top - speed) + 'px';
-             }, 1);
-                                            </script>
-                                            `;
-    aa += `
-                                        </body>
-                                    </html>`;
-    const data = new Blob([aa], { type: "text/html" });
-    const options = {
-      suggestedName: generalFileName(),
-      types: [
-        {
-          description: 'HTML Files',
-          accept: {
-            'text/html': ['.html'],
-          },
-        },
-      ],
-    };
-    saveFile(options, data)
-  };
   const exportHorizontalScrollAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
@@ -3011,51 +2955,6 @@ const DrawingController = () => {
     };
     saveFile(options, data)
   };
-
-  // const startVerticalScroll = (layerNumber) => {
-  //   executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
-  //       document.getElementById('divid_${layerNumber}')?.remove();
-  //       `);
-
-  //   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  //   selectAll(canvas);
-  //   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-  //   endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
-  //   const script = `
-  //                                                                                   window.aaVertical = document.createElement('div');
-  //                                                                                   aaVertical.style.position='absolute';
-  //                                                                                   aaVertical.setAttribute('id','divid_' + '${layerNumber}');
-  //                                                                                   aaVertical.style.zIndex = ${layerNumber};
-  //                                                                                   aaVertical.innerHTML=\`${canvas
-  //       .toSVG(
-  //         [
-  //           "id",
-  //           "class",
-  //           "selectable",
-  //         ]
-  //       )
-  //       .replaceAll(
-  //         '"',
-  //         '\\"'
-  //       )}\`;
-  //                                                                                   document.body.appendChild(aaVertical);
-  //                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
-  //                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-  //                                                                                   aaVertical.style.top='100%';
-  //                                                                                   aaVertical.style.zoom=(${currentscreenSize *
-  //     100
-  //     }/1920)+'%';
-  //                                                                                   document.body.style.overflow='hidden';
-  //                                                                                   window.verticalSpeed=${verticalSpeed};
-  //       window.intervalVerticalScroll= setInterval(()=>{
-  //                                                                                       aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
-  //       }, 1);
-  //                                                                                   `;
-
-  //   endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
-
-  //   executeScript(script); //for html
-  // };
 
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
@@ -3344,13 +3243,12 @@ const DrawingController = () => {
     setLogo(localStorage.getItem("RCC_logo"));
     setLocationBand(localStorage.getItem("RCC_locationBand"));
     setClock(localStorage.getItem("RCC_clock"));
-    setVerticalScroll(localStorage.getItem("RCC_verticalScroll"));
+    // setVerticalScroll(localStorage.getItem("RCC_verticalScroll"));
     setHorizontalScroll(localStorage.getItem("RCC_horizontalScroll"));
     setHorizontalSpeed(localStorage.getItem("RCC_horizontalSpeed"));
     setHorizontalScroll2(localStorage.getItem("RCC_horizontalScroll2"));
     setHorizontalSpeed2(localStorage.getItem("RCC_horizontalSpeed2"));
 
-    setVerticalSpeed(localStorage.getItem("RCC_verticalSpeed"));
 
     if (window.location.origin !== "https://vimlesh1975.github.io") {
       axios
@@ -4567,78 +4465,9 @@ const DrawingController = () => {
             </button>
             <span> {locationBand} </span>
           </div>
+          <VerticalScrollPlayer showTemplate={true} />
 
-          <div className="drawingToolsRow">
-            <b> V Scroll: </b>{" "}
-            <button
-              onClick={() => {
-                startVerticalScroll(templateLayers.verticalScroll, canvas, selectAll, currentscreenSize, verticalSpeed);
-                setVerticalScroll(canvasList[currentPage]?.pageName);
-                localStorage.setItem(
-                  "RCC_verticalScroll",
-                  canvasList[currentPage]?.pageName
-                );
-              }}
-            >
-              <FaPlay />{" "}
-            </button>
-            <button
-              onClick={() => {
-                endpoint(
-                  `call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=0"`
-                );
-                executeScript(`
-                            verticalSpeed=0;
-                            `);
-              }}
-            >
-              <FaPause />
-            </button>
-            <button
-              onClick={() => {
-                endpoint(
-                  `call ${window.chNumber}-${templateLayers.verticalScroll} "verticalSpeed=${verticalSpeed}"`
-                );
-                executeScript(`verticalSpeed=${verticalSpeed};`);
-              }}
-            >
-              {" "}
-              <GrResume />
-            </button>
-            <button
-              onClick={() => {
-                endpoint(
-                  `stop ${window.chNumber}-${templateLayers.verticalScroll}`
-                );
 
-                executeScript(
-                  `if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)}`
-                );
-                executeScript(
-                  `document.getElementById('divid_${templateLayers.verticalScroll}')?.remove()`
-                );
-
-                setVerticalScroll("");
-                localStorage.setItem("RCC_verticalScroll", "");
-              }}
-            >
-              <FaStop />
-            </button>
-            S:
-            <input
-              style={{ width: "40px" }}
-              onChange={(e) => onVerticalSpeedChange(e)}
-              type="number"
-              min="0"
-              max="5"
-              step="0.01"
-              value={verticalSpeed}
-            />
-            <button onClick={() => exportVerticalScrollAsHTML(canvas)}>
-              To HTML
-            </button>
-            <span> {verticalScroll} </span>
-          </div>
           <div className="drawingToolsRow">
             <b> H Scroll: </b>
             <button
