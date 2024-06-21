@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { startVerticalScroll, endpoint, executeScript, templateLayers, shadowOptions, getFormattedDatetimeNumber, address1 } from '../common'
+import { shadowOptions, getFormattedDatetimeNumber, address1 } from '../common'
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
 import Script from './Script'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
 import { fabric } from "fabric";
-import {
-    FaPlay,
-    FaPause,
-    FaStop,
-} from "react-icons/fa";
-import { GrResume } from "react-icons/gr";
+import VerticalScrollPlayer from '../VerticalScrollPlayer'
 
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -201,7 +196,8 @@ const Graphics = () => {
             try {
                 const res = await fetch(`${address1}/getContent?ScriptID=${slug.ScriptID}`);
                 const data = await res.json();
-                data1.push(`${i + 1} ${slug.SlugName}\n\n${data.Script}\n`);
+                data1.push(`${i + 1} ${slug.SlugName}`);
+                data1.push(`${data.Script}\n`);
             } catch (error) {
                 console.error('Error fetching content:', error);
             }
@@ -215,16 +211,21 @@ const Graphics = () => {
 
     const addToCanvas = async () => {
         const allContent = await fetchAllContent();
-        console.log('All content:', allContent);
-        const text = new fabric.Textbox(allContent.join('\n'),
-            {
+
+
+        let currentTop = 500; // Initial top position
+        for (let i = 0; i < allContent.length; i++) {
+            const fillColor = i % 2 === 0 ? '#ffff00' : '#ffffff';
+            const backgroundColor = i % 2 === 0 ? '#0000ff' : ''; // Alternate background color
+            const textbox = new fabric.Textbox(allContent[i], {
                 id: "ccg_" + fabric.Object.__uid,
                 class: "class_" + fabric.Object.__uid,
                 shadow: { ...shadowOptions, blur: 0 },
                 left: 100,
-                top: 500,
+                top: currentTop,
                 width: 1700,
-                fill: '#ffff00',
+                fill: fillColor,
+                backgroundColor,
                 fontFamily: 'Arial',
                 fontWeight: "bold",
                 fontSize: 90,
@@ -233,17 +234,24 @@ const Graphics = () => {
                 textAlign: "left",
                 stroke: '#000000',
                 strokeWidth: 2,
-            }
-        );
-        canvas.add(text).setActiveObject(text);
-        canvas.requestRenderAll();
+            });
+
+            // Add textbox to canvas
+            canvas.add(textbox);
+
+            // Render the canvas to ensure the textbox is drawn and dimensions are available
+            canvas.requestRenderAll();
+
+            // Calculate the next top position based on the height of the current textbox
+            currentTop += textbox.getBoundingRect().height + 10; // 10 is the spacing between textboxes
+        }
+    };
 
 
-    }
     return (
         <div>
             <div style={{ display: 'flex' }}>
-                <div style={{ minWidth: 300, maxWidth: 300 }}>
+                <div style={{ minWidth: 320, maxWidth: 320 }}>
                     <div>
                         Run Orders:<select value={selectedRunOrderTitle} onChange={handleSelectionChange}>
                             <option value="" disabled>Select a Run Order</option>
@@ -266,6 +274,9 @@ const Graphics = () => {
                     </div>
                     <div style={{ border: '1px solid red' }}>
                         <button onClick={addToCanvas}>Add to canvas</button>
+                        <div>
+                            < VerticalScrollPlayer />
+                        </div>
 
                     </div>
                 </div>
