@@ -75,7 +75,7 @@ const VerticalScrollPlayer = ({ showTemplate = false }) => {
 
     return (<div>
 
-        <div className="drawingToolsRow">
+        <div className="drawingToolsRow1">
             <b> V Scroll: </b>{" "}
             <button
                 onClick={() => {
