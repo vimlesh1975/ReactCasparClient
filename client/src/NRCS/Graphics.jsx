@@ -217,39 +217,78 @@ const Graphics = () => {
     const handleOnDragEnd = async (result) => {
         if (!result.destination) return;
 
-        const updatedItems = Array.from(graphics);
-        const [reorderedItem] = updatedItems.splice(result.source.index, 1);
-        updatedItems.splice(result.destination.index, 0, reorderedItem);
+        const sourceDroppableId = result.source.droppableId;
+        const destinationDroppableId = result.destination.droppableId;
 
-        // Update the GraphicsOrder based on the new position
-        const reorderedItemsWithNewOrder = updatedItems.map((item, index) => ({
-            ...item,
-            GraphicsOrder: index + 1,
-        }));
+        if (sourceDroppableId === destinationDroppableId) {
+            // Reordering within the same list
+            const updatedItems = Array.from(sourceDroppableId === 'graphics1' ? graphics : graphics2);
+            const [reorderedItem] = updatedItems.splice(result.source.index, 1);
+            updatedItems.splice(result.destination.index, 0, reorderedItem);
 
-        setGraphics(reorderedItemsWithNewOrder);
+            const reorderedItemsWithNewOrder = updatedItems.map((item, index) => ({
+                ...item,
+                GraphicsOrder: index + 1,
+            }));
 
-        // Call the update function
-        await updateGraphicsOrder(reorderedItemsWithNewOrder);
+            if (sourceDroppableId === 'graphics1') {
+                setGraphics(reorderedItemsWithNewOrder);
+            } else {
+                setGraphics2(reorderedItemsWithNewOrder);
+            }
+
+            await updateGraphicsOrder(reorderedItemsWithNewOrder);
+        } else {
+            // Copying between lists
+            const sourceList = Array.from(sourceDroppableId === 'graphics1' ? graphics : graphics2);
+            const destinationList = Array.from(destinationDroppableId === 'graphics1' ? graphics : graphics2);
+
+            const [copiedItem] = sourceList.slice(result.source.index, result.source.index + 1);
+            const newItem = {
+                ...copiedItem,
+                GraphicsID: getFormattedDatetimeNumber(), // Generate a new unique ID
+                ScriptID: destinationDroppableId === 'graphics1' ? ScriptID : ScriptID2// Change ScriptID based on the destination list
+            };
+
+            destinationList.splice(result.destination.index, 0, newItem);
+
+            const reorderedSourceList = sourceList.map((item, index) => ({
+                ...item,
+                GraphicsOrder: index + 1,
+            }));
+
+            const reorderedDestinationList = destinationList.map((item, index) => ({
+                ...item,
+                GraphicsOrder: index + 1,
+            }));
+
+            if (sourceDroppableId === 'graphics1') {
+                setGraphics(reorderedSourceList);
+                setGraphics2(reorderedDestinationList);
+            } else {
+                setGraphics(reorderedDestinationList);
+                setGraphics2(reorderedSourceList);
+            }
+
+            await updateGraphicsOrder(reorderedSourceList);
+            await updateGraphicsOrder(reorderedDestinationList);
+
+            // Optionally, save the copied item to the database
+            try {
+                await fetch(`${address1}/insertGraphics`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newItem),
+                });
+            } catch (error) {
+                console.error('Error saving copied item:', error);
+            }
+        }
     };
-    const handleOnDragEnd2 = async (result) => {
-        if (!result.destination) return;
 
-        const updatedItems = Array.from(graphics2);
-        const [reorderedItem] = updatedItems.splice(result.source.index, 1);
-        updatedItems.splice(result.destination.index, 0, reorderedItem);
 
-        // Update the GraphicsOrder based on the new position
-        const reorderedItemsWithNewOrder = updatedItems.map((item, index) => ({
-            ...item,
-            GraphicsOrder: index + 1,
-        }));
-
-        setGraphics2(reorderedItemsWithNewOrder);
-
-        // Call the update function
-        await updateGraphicsOrder(reorderedItemsWithNewOrder);
-    };
 
     const updateGraphicTemplate = async (GraphicsID, newTemplate) => {
         const updatedGraphics = graphics.map(graphic =>
@@ -353,7 +392,7 @@ const Graphics = () => {
     };
 
 
-    return (
+    return (<DragDropContext onDragEnd={handleOnDragEnd}>
         <div>
             <div style={{ display: 'flex' }}>
                 <div style={{ minWidth: 320, maxWidth: 320 }}>
@@ -409,54 +448,54 @@ const Graphics = () => {
 
                     </div>
                     <div style={{ maxHeight: 250, minHeight: 250, overflow: 'auto' }}>
-                        <DragDropContext onDragEnd={handleOnDragEnd}>
-                            <Droppable droppableId="graphics">
-                                {(provided) => (
-                                    <table {...provided.droppableProps} ref={provided.innerRef}>
-                                        <tbody>
-                                            {graphics.map((val, i) => (
-                                                <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
-                                                    {(provided, snapshot) => (
-                                                        <tr
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
 
-                                                            onClick={() => {
-                                                                setGraphicsID(val.GraphicsID);
-                                                                setCurrentGraphics(i);
-                                                                const parsedJSON = JSON.parse(val.Graphicstext1);
-                                                                canvas.loadFromJSON(parsedJSON.pageValue);
-                                                            }}
-                                                            style={{
-                                                                backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8',
-                                                                color: currentGraphics === i ? 'white' : 'black',
-                                                                margin: 10,
-                                                                ...provided.draggableProps.style,
-                                                            }}
-                                                        >
-                                                            <td>{i}</td>
-                                                            <td  {...provided.dragHandleProps}><VscMove /></td>
-                                                            <td>
-                                                                <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic(val.GraphicsID)}><VscTrash /></button>
-                                                            </td>
-                                                            <td>
-                                                                <input
-                                                                    type="text"
-                                                                    value={val.GraphicsTemplate}
-                                                                    onChange={(e) => updateGraphicTemplate(val.GraphicsID, e.target.value)}
-                                                                />
-                                                            </td>
+                        <Droppable droppableId="graphics1">
+                            {(provided) => (
+                                <table {...provided.droppableProps} ref={provided.innerRef}>
+                                    <tbody>
+                                        {graphics.map((val, i) => (
+                                            <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
+                                                {(provided, snapshot) => (
+                                                    <tr
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
 
-                                                        </tr>
-                                                    )}
-                                                </Draggable>
-                                            ))}
-                                            {provided.placeholder}
-                                        </tbody>
-                                    </table>
-                                )}
-                            </Droppable>
-                        </DragDropContext>
+                                                        onClick={() => {
+                                                            setGraphicsID(val.GraphicsID);
+                                                            setCurrentGraphics(i);
+                                                            const parsedJSON = JSON.parse(val.Graphicstext1);
+                                                            canvas.loadFromJSON(parsedJSON.pageValue);
+                                                        }}
+                                                        style={{
+                                                            backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8',
+                                                            color: currentGraphics === i ? 'white' : 'black',
+                                                            margin: 10,
+                                                            ...provided.draggableProps.style,
+                                                        }}
+                                                    >
+                                                        <td>{i}</td>
+                                                        <td  {...provided.dragHandleProps}><VscMove /></td>
+                                                        <td>
+                                                            <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic(val.GraphicsID)}><VscTrash /></button>
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                value={val.GraphicsTemplate}
+                                                                onChange={(e) => updateGraphicTemplate(val.GraphicsID, e.target.value)}
+                                                            />
+                                                        </td>
+
+                                                    </tr>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </tbody>
+                                </table>
+                            )}
+                        </Droppable>
+
                     </div>
                     <div style={{ border: '1px solid red' }}>
                         <button onClick={addToCanvas}>Add Sripts to canvas for Teleprompting</button>
@@ -496,52 +535,52 @@ const Graphics = () => {
                                 ))}
                             </div>
                             <div style={{ maxHeight: 250, minHeight: 250, overflow: 'auto' }}>
-                                <DragDropContext onDragEnd={handleOnDragEnd2}>
-                                    <Droppable droppableId="graphics">
-                                        {(provided) => (
-                                            <table {...provided.droppableProps} ref={provided.innerRef}>
-                                                <tbody>
-                                                    {graphics2.map((val, i) => (
-                                                        <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
-                                                            {(provided, snapshot) => (
-                                                                <tr
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
 
-                                                                    onClick={() => {
-                                                                        setCurrentGraphics2(i);
-                                                                        const parsedJSON = JSON.parse(val.Graphicstext1);
-                                                                        canvas.loadFromJSON(parsedJSON.pageValue);
-                                                                    }}
-                                                                    style={{
-                                                                        backgroundColor: currentGraphics2 === i ? 'green' : '#E7DBD8',
-                                                                        color: currentGraphics2 === i ? 'white' : 'black',
-                                                                        margin: 10,
-                                                                        ...provided.draggableProps.style,
-                                                                    }}
-                                                                >
-                                                                    <td>{i}</td>
-                                                                    <td  {...provided.dragHandleProps}><VscMove /></td>
-                                                                    <td>
-                                                                        <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic2(val.GraphicsID)}><VscTrash /></button>
-                                                                    </td>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            value={val.GraphicsTemplate}
-                                                                            onChange={(e) => updateGraphicTemplate2(val.GraphicsID, e.target.value)}
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            )}
-                                                        </Draggable>
-                                                    ))}
-                                                    {provided.placeholder}
-                                                </tbody>
-                                            </table>
-                                        )}
-                                    </Droppable>
-                                </DragDropContext>
+                                <Droppable droppableId="graphics2">
+                                    {(provided) => (
+                                        <table {...provided.droppableProps} ref={provided.innerRef}>
+                                            <tbody>
+                                                {graphics2.map((val, i) => (
+                                                    <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
+                                                        {(provided, snapshot) => (
+                                                            <tr
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+
+                                                                onClick={() => {
+                                                                    setCurrentGraphics2(i);
+                                                                    const parsedJSON = JSON.parse(val.Graphicstext1);
+                                                                    canvas.loadFromJSON(parsedJSON.pageValue);
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: currentGraphics2 === i ? 'green' : '#E7DBD8',
+                                                                    color: currentGraphics2 === i ? 'white' : 'black',
+                                                                    margin: 10,
+                                                                    ...provided.draggableProps.style,
+                                                                }}
+                                                            >
+                                                                <td>{i}</td>
+                                                                <td  {...provided.dragHandleProps}><VscMove /></td>
+                                                                <td>
+                                                                    <button style={{ cursor: 'pointer' }} onClick={() => deleteGraphic2(val.GraphicsID)}><VscTrash /></button>
+                                                                </td>
+                                                                <td>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={val.GraphicsTemplate}
+                                                                        onChange={(e) => updateGraphicTemplate2(val.GraphicsID, e.target.value)}
+                                                                    />
+                                                                </td>
+                                                            </tr>
+                                                        )}
+                                                    </Draggable>
+                                                ))}
+                                                {provided.placeholder}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </Droppable>
+
                             </div>
                         </TabPanel>
                         <TabPanel>
@@ -553,7 +592,7 @@ const Graphics = () => {
                 </div>
             </div>
         </div >
-    );
+    </DragDropContext>);
 }
 
 export default Graphics;
