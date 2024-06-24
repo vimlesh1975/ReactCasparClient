@@ -453,7 +453,7 @@ const Graphics = () => {
                             {(provided) => (
                                 <table {...provided.droppableProps} ref={provided.innerRef}>
                                     <tbody>
-                                        {graphics.map((val, i) => (
+                                        {graphics.length ? graphics.map((val, i) => (
                                             <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
                                                 {(provided, snapshot) => (
                                                     <tr
@@ -470,6 +470,7 @@ const Graphics = () => {
                                                             backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8',
                                                             color: currentGraphics === i ? 'white' : 'black',
                                                             margin: 10,
+                                                            padding: 10,
                                                             ...provided.draggableProps.style,
                                                         }}
                                                     >
@@ -489,7 +490,7 @@ const Graphics = () => {
                                                     </tr>
                                                 )}
                                             </Draggable>
-                                        ))}
+                                        )) : <tr><td>No Graphics</td></tr>}
                                         {provided.placeholder}
                                     </tbody>
                                 </table>
@@ -540,7 +541,8 @@ const Graphics = () => {
                                     {(provided) => (
                                         <table {...provided.droppableProps} ref={provided.innerRef}>
                                             <tbody>
-                                                {graphics2.map((val, i) => (
+                                                {graphics2.length ? graphics2.map((val, i) => (
+
                                                     <Draggable key={val.GraphicsID} draggableId={val.GraphicsID.toString()} index={i}>
                                                         {(provided, snapshot) => (
                                                             <tr
@@ -556,6 +558,7 @@ const Graphics = () => {
                                                                     backgroundColor: currentGraphics2 === i ? 'green' : '#E7DBD8',
                                                                     color: currentGraphics2 === i ? 'white' : 'black',
                                                                     margin: 10,
+                                                                    padding: 10,
                                                                     ...provided.draggableProps.style,
                                                                 }}
                                                             >
@@ -574,7 +577,8 @@ const Graphics = () => {
                                                             </tr>
                                                         )}
                                                     </Draggable>
-                                                ))}
+                                                )) : <tr><td>No Graphics</td></tr>}
+
                                                 {provided.placeholder}
                                             </tbody>
                                         </table>
