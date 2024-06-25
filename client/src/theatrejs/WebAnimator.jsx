@@ -471,7 +471,7 @@ const WebAnimator = () => {
     const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
-    const [fps, setFps] = useState(30);
+    const [fps, setFps] = useState(60);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -662,6 +662,15 @@ const WebAnimator = () => {
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
             }
         }
+        const setSequenceLength = () => {
+            var newid = window.prompt('Please enter New length:', val(sheet.sequence.pointer.length));
+            if (newid !== null && newid !== "") {
+                studio.transaction((api) => {
+                    api.set(sheet.sequence.pointer.length, parseFloat(newid));
+                })
+            }
+        }
+
         const clearAllAnimation = () => {
             studio.transaction((api) => {
                 api.__experimental_forgetSheet(sheet);
@@ -904,6 +913,7 @@ const WebAnimator = () => {
                         </ul>
                     </li>
                     <li onClick={() => changeId((studio?.selection?.[0]?.address?.objectKey))}>Change Id</li>
+                    <li onClick={setSequenceLength}>Set sequence length</li>
                     <li onClick={clearAllAnimation}>Clear All Animations</li>
                     <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
 
@@ -3188,7 +3198,12 @@ const WebAnimator = () => {
                     dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                 }} />
                 <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
-                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
+                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => {
+                    setFps(e.target.value);
+                    studio.transaction((api) => {
+                        api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(e.target.value)) // make it 30fps
+                    })
+                }} />
 
                 Size: <select value={currentscreenSize} onChange={e => {
                     localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))
