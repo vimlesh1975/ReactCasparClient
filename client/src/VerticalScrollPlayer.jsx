@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { saveFile, generalFileName, executeScript, endpoint, startVerticalScroll, templateLayers } from './common'
 import { useSelector } from "react-redux";
-import { selectAll } from './DrawingController'
+import { selectAll } from './common'
 import { FaPlay, FaPause, FaStop, } from "react-icons/fa";
 import { GrResume } from "react-icons/gr";
 

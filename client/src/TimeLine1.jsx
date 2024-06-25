@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
 import { fabric } from "fabric";
-import { deSelectAll, selectAll } from './DrawingController';
+import { deSelectAll, selectAll } from './common';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement, lockUnlock, visibleInVisible } from './common'

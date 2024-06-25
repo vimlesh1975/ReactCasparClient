@@ -840,9 +840,61 @@ export const paste = (canvas) => {
   }
 };
 
+export const createShape = (canvas, shape, size = 0.4) => {
+  const rect = new fabric.Path(shape, {
+    id: "path_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    top: -100,
+    left: Math.random() * 1000,
+    scaleX: size,
+    scaleY: size,
+    opacity: 0.9,
+    fill: "#051b7d",
+    objectCaching: false,
+    stroke: options.stroke,
+    strokeWidth: 2,
+  });
+  canvas.add(rect).setActiveObject(rect);
+  rect.on("mousedblclick", () => {
+    window.edit(window.dispatch);
+  });
+  canvas.requestRenderAll();
+  rect.animate("top", Math.random() * 500, {
+    onChange: canvas.renderAll.bind(canvas),
+  });
+};
 
+export const selectAll = (canvas) => {
+  canvas.discardActiveObject();
+  var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+    canvas: canvas,
+  });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
+};
+export const deSelectAll = (canvas) => {
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
 
-
+var clipPath1 = null;
+export const setasClipPath = (canvas) => {
+  clipPath1 = canvas.getActiveObjects();
+};
+export const cliptoPath = (canvas) => {
+  var img = canvas.getActiveObjects();
+  if (clipPath1.length > 0 && img.length > 0) {
+    clipPath1[0].set({
+      shadow: { ...shadowOptions, blur: 0 },
+      absolutePositioned: true,
+    });
+    canvas.sendToBack(clipPath1[0]);
+    img[0].set("clipPath", clipPath1[0]);
+    clipPath1 = null;
+    canvas.requestRenderAll();
+  }
+};
 
 
 

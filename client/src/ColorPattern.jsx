@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { endpoint, stopGraphics, templateLayers, executeScript } from "./common";
 import { useSelector } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid';
-import { selectAll } from './DrawingController';
+import { selectAll } from './common';
 import "pattern.css";
 
 const ColorPattern = () => {
