@@ -467,6 +467,7 @@ const WebAnimator = () => {
 
     sheet = project.sheet('Sheet 1');
 
+
     window.studio = studio;
     window.projectId = projectId;
     window.sheet = sheet;
@@ -476,6 +477,14 @@ const WebAnimator = () => {
     const changeChannelNumber = e => {
         setChNumber(e.target.value);
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            studio.transaction((api) => {
+                api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(fps)) // make it 30fps
+            })
+        }, 2000);
+    }, [fps])
 
     useEffect(() => {
         window.chNumber = chNumber;
@@ -2356,6 +2365,10 @@ const WebAnimator = () => {
     }
 
     const importHtml = async (canvasContent1, animationContetent1) => {
+
+        // const subUnitsPerUnit = (JSON.parse(animationContetent1)).sheetsById["Sheet 1"].sequence.subUnitsPerUnit;
+        // console.log(subUnitsPerUnit);
+
         localStorage.removeItem('theatre-0.4.persistent');
         if (canvasContent1) {
             deleteAllObjects();
@@ -2442,6 +2455,7 @@ const WebAnimator = () => {
             setSelectedOption(selectedOption);
             setJsfilename(jsfilename);
             setFps(fps);
+
             dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: currentscreenSize })
         } catch (error) {
 

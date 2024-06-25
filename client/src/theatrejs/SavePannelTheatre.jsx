@@ -94,6 +94,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
+
         importHtml(json, animationTheatrejs)
 
         dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false });
