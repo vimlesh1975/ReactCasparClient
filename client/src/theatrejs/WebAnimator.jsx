@@ -842,38 +842,6 @@ const WebAnimator = () => {
         }, [handleKeyDown, handleKeyUp]);
 
 
-        // const addSequnce = () => {
-        //     const aa = {
-        //         "sheetsById": {
-        //             "Sheet 1": {
-        //                 "staticOverrides": {},
-        //                 "sequence": {
-        //                     "subUnitsPerUnit": 30,
-        //                     "length": 10,
-        //                     "type": "PositionalSequence",
-        //                     "tracksByObject": {
-        //                         "ccg_1": {
-        //                             "trackData": {
-        //                                 "idB_IoP7qU": {
-        //                                     "type": "BasicKeyframedTrack",
-        //                                     "__debugName": "ccg_1:[\"left\"]",
-        //                                     "keyframes": []
-        //                                 }
-        //                             },
-        //                             "trackIdByPropPath": {
-        //                                 "[\"left\"]": "idB_IoP7qU"
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //         "definitionVersion": "0.4.0",
-        //         "revisionHistory": []
-        //     }
-        //     const dd = getProject('ccg_1', { state: aa }).sheet('Sheet 1').object('ccg_1', { left: 10 })
-        // }
-
         const appendDatafromLocalStorage = () => {
             const oldData = canvas.toJSON(['id', 'class', 'selectable']);//'importing true
             deleteAllObjects();
@@ -1000,10 +968,9 @@ const WebAnimator = () => {
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             if (getObjectbyId(element.id) !== undefined) {
-                sheet.detachObject(element.id);
+                sheet.detachObject(element.id);// this is nessecarry to delete
             }
         })
-        // test(projectId);
     }
 
     const rgbaArrayToObject = (fill) => {
@@ -2414,6 +2381,7 @@ const WebAnimator = () => {
         localStorage.removeItem('theatre-0.4.persistent');
         if (canvasContent1) {
             deleteAllObjects();
+            deleteProject(projectId);
             const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
             const pid = `project${randomNumber}`;
             if (animationContetent1 === undefined) {
@@ -2448,6 +2416,8 @@ const WebAnimator = () => {
                 if (aa) {
                     sethtmlfileHandle(aa);
                     deleteAllObjects();
+                    deleteProject(projectId);
+
                     const file = await aa.getFile();
                     const content = await file.text();
                     processContent(content)
@@ -2499,7 +2469,6 @@ const WebAnimator = () => {
 
         }
 
-
         const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
         const pid = `project${randomNumber}`;
         project = getProject(pid, { state: JSON.parse(animationContetent) });
@@ -2527,7 +2496,7 @@ const WebAnimator = () => {
         }
         return null;
     };
-    // const addWebCam = canvas => {
+
     //     var video1 = new fabric.Image(video1El.current, {
     //         // width: 1920,
     //         // height: 1080
@@ -2725,20 +2694,6 @@ const WebAnimator = () => {
     // }
 
     // eslint-disable-next-line 
-    const setAllCcgInvisble = element => {
-        if (window.caspar || window.casparcg || window.tickAnimations) {
-            if ((element.id).startsWith("ccg")) {
-                if (element.type === 'group') {
-                    element.getObjects().forEach((element1) => {
-                        setAllCcgInvisble(element1);
-                    })
-                }
-                else {
-                    element.set({ visible: false });
-                }
-            }
-        }
-    }
 
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
@@ -3137,18 +3092,12 @@ const WebAnimator = () => {
         setRecording(false);
     };
 
-    const test = (projectid) => {
-        // studio.transaction((api) => {
-        //     for (let i = 0; i <= 10; i++) {
-        //         sheet.sequence.position = i;
-        //         api.set(getObjectbyId('name').props.left, i * 100);
-        //     }
-        // })
-
+    const deleteProject = (projectid) => {
         const studioPrivate = window.__TheatreJS_StudioBundle._studio
         const coreAtom = d.getPointerParts(studioPrivate._coreBits.projectsP).root
         delete coreAtom._currentState.projects[projectid];
     }
+
     const [loopAnimationStart, setLoopAnimationStart] = useState(0);
     const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
@@ -3175,7 +3124,7 @@ const WebAnimator = () => {
                     deleteAllObjects();
                     initialiseCore(localStorage.getItem('RCCpageData'));
                 }}>DataFrom Lo.Strg</button>
-                <button onClick={test}>test</button>
+
                 <button title='Save to Local Storage' onClick={() => saveToLocalStorage(canvas)}>SaveTo Lo.Strg</button>
                 <b>Ch:</b>
                 <select onChange={e => changeChannelNumber(e)} value={chNumber}>
