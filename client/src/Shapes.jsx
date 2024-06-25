@@ -17,7 +17,7 @@ import { raphael_2 } from './shapelib/raphael_2.js'
 import { symbol } from './shapelib/symbol.js'
 
 
-import { createShape, } from './DrawingController'
+import { createShape, } from './common'
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux'
 import IconFinder from './IconFinderApi.jsx'

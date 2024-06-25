@@ -11,6 +11,10 @@ import DrawingController from "./DrawingController.jsx";
 import ImageSequence from './imagesequence/ImageSequence';
 
 
+// eslint-disable-next-line
+import Graphics from "./NRCS/Graphics.jsx";
+
+
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -561,6 +565,7 @@ const App = () => {
 
               <Tab>Help</Tab>
               <Tab>GA</Tab>
+              {/* <Tab>NRCS</Tab> */}
 
             </TabList>
             <TabPanel>
@@ -673,9 +678,6 @@ const App = () => {
             <TabPanel>
               <JsonReader />
             </TabPanel>
-            {/* <TabPanel >
-            <UdpClock />
-          </TabPanel> */}
             <TabPanel>
               <Threejs />
             </TabPanel>
@@ -695,6 +697,9 @@ const App = () => {
             <TabPanel>
               <GenerativeArts />
             </TabPanel>
+            {/* <TabPanel>
+              <Graphics />
+            </TabPanel> */}
           </Tabs>
         </div>
       </div>

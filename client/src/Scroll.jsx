@@ -6,8 +6,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 // import { isEqual } from "lodash";
-import { shadowOptions, options, generalFileName, saveFile } from './common'
-import { createRect } from './DrawingController'
+import { createRect, shadowOptions, options, generalFileName, saveFile } from './common'
 
 const Scroll = () => {
 

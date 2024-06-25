@@ -4,13 +4,11 @@ import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { createRandomeStrip, createRect, createTextBox, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
+
+import { alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
-
-import { generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
-
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
-
 import SavePannelTheatre from './SavePannelTheatre';
 import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
@@ -43,37 +41,7 @@ const copy = (canvas) => {
     );
 };
 
-const STEP = 5;
-var Direction = {
-    LEFT: 0,
-    UP: 1,
-    RIGHT: 2,
-    DOWN: 3,
-};
 
-const moveSelected = (direction) => {
-    var activeObject = window.editor.canvas.getActiveObject();
-    if (activeObject) {
-        switch (direction) {
-            case Direction.LEFT:
-                activeObject.set({ left: activeObject.left - STEP });
-                break;
-            case Direction.UP:
-                activeObject.set({ top: activeObject.top - STEP });
-                break;
-            case Direction.RIGHT:
-                activeObject.set({ left: activeObject.left + STEP });
-                break;
-            case Direction.DOWN:
-                activeObject.set({ top: activeObject.top + STEP });
-                break;
-            default:
-            //nothing
-        }
-        activeObject.setCoords();
-        window.editor.canvas.renderAll();
-    }
-}
 
 const setclipPathWhileImportingWebAnimator = (canvas) => {
     var objects = canvas.getObjects();
@@ -471,7 +439,7 @@ const WebAnimator = () => {
     const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
-    const [fps, setFps] = useState(30);
+    const [fps, setFps] = useState(60);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -662,6 +630,15 @@ const WebAnimator = () => {
                 importHtml(modifiedcanvasContent, modifiedAnimationContent)
             }
         }
+        const setSequenceLength = () => {
+            var newid = window.prompt('Please enter New length:', val(sheet.sequence.pointer.length));
+            if (newid !== null && newid !== "") {
+                studio.transaction((api) => {
+                    api.set(sheet.sequence.pointer.length, parseFloat(newid));
+                })
+            }
+        }
+
         const clearAllAnimation = () => {
             studio.transaction((api) => {
                 api.__experimental_forgetSheet(sheet);
@@ -842,38 +819,6 @@ const WebAnimator = () => {
         }, [handleKeyDown, handleKeyUp]);
 
 
-        // const addSequnce = () => {
-        //     const aa = {
-        //         "sheetsById": {
-        //             "Sheet 1": {
-        //                 "staticOverrides": {},
-        //                 "sequence": {
-        //                     "subUnitsPerUnit": 30,
-        //                     "length": 10,
-        //                     "type": "PositionalSequence",
-        //                     "tracksByObject": {
-        //                         "ccg_1": {
-        //                             "trackData": {
-        //                                 "idB_IoP7qU": {
-        //                                     "type": "BasicKeyframedTrack",
-        //                                     "__debugName": "ccg_1:[\"left\"]",
-        //                                     "keyframes": []
-        //                                 }
-        //                             },
-        //                             "trackIdByPropPath": {
-        //                                 "[\"left\"]": "idB_IoP7qU"
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //         "definitionVersion": "0.4.0",
-        //         "revisionHistory": []
-        //     }
-        //     const dd = getProject('ccg_1', { state: aa }).sheet('Sheet 1').object('ccg_1', { left: 10 })
-        // }
-
         const appendDatafromLocalStorage = () => {
             const oldData = canvas.toJSON(['id', 'class', 'selectable']);//'importing true
             deleteAllObjects();
@@ -936,6 +881,7 @@ const WebAnimator = () => {
                         </ul>
                     </li>
                     <li onClick={() => changeId((studio?.selection?.[0]?.address?.objectKey))}>Change Id</li>
+                    <li onClick={setSequenceLength}>Set sequence length</li>
                     <li onClick={clearAllAnimation}>Clear All Animations</li>
                     <li onClick={clearObjectsAllAnimation}>Clear Objects All Animations</li>
 
@@ -1000,10 +946,9 @@ const WebAnimator = () => {
     const deleteAllObjects = () => {
         canvas.getObjects().forEach(element => {
             if (getObjectbyId(element.id) !== undefined) {
-                sheet.detachObject(element.id);
+                sheet.detachObject(element.id);// this is nessecarry to delete
             }
         })
-        // test(projectId);
     }
 
     const rgbaArrayToObject = (fill) => {
@@ -2414,6 +2359,7 @@ const WebAnimator = () => {
         localStorage.removeItem('theatre-0.4.persistent');
         if (canvasContent1) {
             deleteAllObjects();
+            deleteProject(projectId);
             const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
             const pid = `project${randomNumber}`;
             if (animationContetent1 === undefined) {
@@ -2448,6 +2394,8 @@ const WebAnimator = () => {
                 if (aa) {
                     sethtmlfileHandle(aa);
                     deleteAllObjects();
+                    deleteProject(projectId);
+
                     const file = await aa.getFile();
                     const content = await file.text();
                     processContent(content)
@@ -2499,7 +2447,6 @@ const WebAnimator = () => {
 
         }
 
-
         const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
         const pid = `project${randomNumber}`;
         project = getProject(pid, { state: JSON.parse(animationContetent) });
@@ -2527,7 +2474,7 @@ const WebAnimator = () => {
         }
         return null;
     };
-    // const addWebCam = canvas => {
+
     //     var video1 = new fabric.Image(video1El.current, {
     //         // width: 1920,
     //         // height: 1080
@@ -2725,20 +2672,6 @@ const WebAnimator = () => {
     // }
 
     // eslint-disable-next-line 
-    const setAllCcgInvisble = element => {
-        if (window.caspar || window.casparcg || window.tickAnimations) {
-            if ((element.id).startsWith("ccg")) {
-                if (element.type === 'group') {
-                    element.getObjects().forEach((element1) => {
-                        setAllCcgInvisble(element1);
-                    })
-                }
-                else {
-                    element.set({ visible: false });
-                }
-            }
-        }
-    }
 
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
@@ -3137,18 +3070,12 @@ const WebAnimator = () => {
         setRecording(false);
     };
 
-    const test = (projectid) => {
-        // studio.transaction((api) => {
-        //     for (let i = 0; i <= 10; i++) {
-        //         sheet.sequence.position = i;
-        //         api.set(getObjectbyId('name').props.left, i * 100);
-        //     }
-        // })
-
+    const deleteProject = (projectid) => {
         const studioPrivate = window.__TheatreJS_StudioBundle._studio
         const coreAtom = d.getPointerParts(studioPrivate._coreBits.projectsP).root
         delete coreAtom._currentState.projects[projectid];
     }
+
     const [loopAnimationStart, setLoopAnimationStart] = useState(0);
     const [loopAnimationEnd, setLoopAnimationEnd] = useState(1.5);
     const [enableLoopAnimation, setEnableLoopAnimation] = useState(true);
@@ -3175,7 +3102,7 @@ const WebAnimator = () => {
                     deleteAllObjects();
                     initialiseCore(localStorage.getItem('RCCpageData'));
                 }}>DataFrom Lo.Strg</button>
-                <button onClick={test}>test</button>
+
                 <button title='Save to Local Storage' onClick={() => saveToLocalStorage(canvas)}>SaveTo Lo.Strg</button>
                 <b>Ch:</b>
                 <select onChange={e => changeChannelNumber(e)} value={chNumber}>
@@ -3239,7 +3166,12 @@ const WebAnimator = () => {
                     dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                 }} />
                 <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
-                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => setFps(e.target.value)} />
+                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => {
+                    setFps(e.target.value);
+                    studio.transaction((api) => {
+                        api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(e.target.value)) // make it 30fps
+                    })
+                }} />
 
                 Size: <select value={currentscreenSize} onChange={e => {
                     localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))

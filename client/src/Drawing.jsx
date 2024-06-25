@@ -3,9 +3,14 @@ import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
 import { fabric } from "fabric";
 import {
+
+} from "./DrawingController";
+
+import {
   Uploaddropedfile,
   createTextBoxforDragedText,
-} from "./DrawingController";
+} from "./common";
+
 import { useSelector, useDispatch } from "react-redux";
 
 const allelements = [

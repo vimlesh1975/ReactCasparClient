@@ -2,13 +2,1146 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '130624_1';
+export const buildDate = '250624_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
+
+export const animate = (canvas, sss) => {
+  var ss1 = new Date().toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+  sss.set({
+    text: ss1,
+  });
+  canvas.requestRenderAll();
+}
+
+
+export const addRoundedCornerImage = (canvas, imageName1) => {
+  fabric.util.loadImage(imageName1, (myImg) => {
+    // fabric.Image.fromURL(imageName1,  myImg => {
+    console.log(myImg);
+    if (myImg == null) {
+      alert("Error!");
+    } else {
+      var rect = new fabric.Rect({
+        id: "ccg_" + fabric.Object.__uid,
+        class: "class_" + fabric.Object.__uid,
+        left: 10,
+        top: 10,
+        stroke: "#000000",
+        strokeWidth: 3,
+        rx: 30,
+        objectCaching: false,
+        shadow: shadowOptions,
+        ry: 30,
+      });
+      canvas.add(rect).setActiveObject(rect);
+
+      rect.set({
+        width: myImg.width,
+        height: myImg.height,
+        fill: new fabric.Pattern({ source: myImg, repeat: "no-repeat" }),
+      });
+      // rect.set({ scaleX: 0.5, scaleY: 0.5 })
+      canvas.renderAll();
+    }
+  });
+};
+
+export const Uploaddropedfile = (file0, canvas, x, y) => {
+  if (file0) {
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      var imgObj = new Image();
+      imgObj.src = event.target.result;
+      imgObj.onload = function () {
+        var image = new fabric.Image(imgObj);
+        image.set({
+          id: "ccg_" + fabric.Object.__uid,
+          class: "class_" + fabric.Object.__uid,
+          shadow: shadowOptions,
+          strokeUniform: true,
+          objectCaching: false,
+          left: x,
+          top: y,
+          fill: "#ff0000",
+          stroke: "#00ff00",
+        });
+        // .scale(0.5);
+        canvas.add(image).setActiveObject(image);
+      };
+    };
+    reader.readAsDataURL(file0);
+  }
+};
+
+export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
+  return new Promise((resolve, reject) => {
+    if (e.target.files) {
+      Array.from(e.target.files).forEach((element) => {
+        var reader = new FileReader();
+        reader.onload = function (event) {
+          var imgObj = new Image();
+          imgObj.src = event.target.result;
+          imgObj.onload = function () {
+            var image = new fabric.Image(imgObj);
+            image.set({
+              left: 300,
+              top: 300,
+              id: id,
+              class: "class_" + fabric.Object.__uid,
+              shadow: shadowOptions,
+              strokeUniform: true,
+              objectCaching: false,
+              fill: "#ff0000",
+              stroke: "#00ff00",
+              src: imgObj.src
+            });
+            // .scale(0.5);
+            canvas.add(image).setActiveObject(image);
+            resolve();
+          };
+        };
+        reader.readAsDataURL(element);
+      });
+    }
+  });
+};
+
+export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
+  return new Promise((resolve, reject) => {
+    var fInput = document.createElement("input"); //hidden input to open filedialog
+    fInput.setAttribute("type", "file"); //opens files
+    fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
+    // fInput.setAttribute("multiple", "false"); ////only useful for inspector debugging
+    fInput.removeAttribute("multiple");
+
+    fInput.click();
+    fInput.onchange = (e) => {
+      Upload(e, canvas, id).then(() => {
+        resolve();
+      });
+    };
+  });
+};
+
+export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
+  const text = new fabric.Textbox(id, {
+    shadow: shadowOptions,
+    id: id,
+    class: "class_" + fabric.Object.__uid,
+    left: 103 * 1.87,
+    top: 762,
+    width: 480 * 1.87,
+    fill: "#ffffff",
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "left",
+    stroke: "#000000",
+    strokeWidth: 0,
+  });
+  canvas.add(text).setActiveObject(text);
+  canvas.requestRenderAll();
+};
+
+export const createIText = (canvas) => {
+  const text = new fabric.IText(
+    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
+    {
+      shadow: shadowOptions,
+      id: "ccg_" + fabric.Object.__uid,
+      class: "class_" + fabric.Object.__uid,
+      left: 100,
+      top: 0,
+      width: 480,
+      fill: options.currentColor,
+      fontFamily: options.currentFont,
+      fontWeight: "bold",
+      fontSize: options.currentFontSize,
+      editable: true,
+      objectCaching: false,
+      textAlign: "left",
+      stroke: options.stroke,
+      strokeWidth: options.strokeWidth,
+    }
+  );
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+  text.animate("top", 343, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const createText = (canvas) => {
+  const text = new fabric.Text(
+    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
+    {
+      id: "ccg_" + fabric.Object.__uid,
+      class: "class_" + fabric.Object.__uid,
+      shadow: shadowOptions,
+      left: 100 * 1.87,
+      top: 0,
+      width: 480 * 1.87,
+      fill: options.currentColor,
+      fontFamily: options.currentFont,
+      fontWeight: "bold",
+      fontSize: options.currentFontSize,
+      editable: true,
+      objectCaching: false,
+      textAlign: "left",
+      stroke: options.stroke,
+      strokeWidth: options.strokeWidth,
+    }
+  );
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+  text.animate("top", 243 * 1.87, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const addUpTimer = (canvas) => {
+  const sss = new fabric.Textbox("", {
+    shadow: shadowOptions,
+    left: 10 * 1.87,
+    top: 530 * 1.87,
+    width: 100 * 1.87,
+    fill: "#ffffff",
+    backgroundColor: options.backgroundColor,
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "center",
+    stroke: "#000000",
+    strokeWidth: 0,
+    id: "uptimer1",
+    class: "class_" + fabric.Object.__uid,
+  });
+  canvas.add(sss).setActiveObject(sss);
+  canvas.requestRenderAll();
+  var startTime = new Date();
+  setInterval(() => {
+    var diff = new Date().getTime() - startTime.getTime();
+    var date_diff = new Date(diff - 30 * 60 * 1000);
+    var ss1 =
+      date_diff.toLocaleString("en-US", {
+        minute: "2-digit",
+        second: "2-digit",
+      }) +
+      ":" +
+      String(date_diff.getMilliseconds()).padStart(3, "0");
+    sss.set({
+      text: ss1,
+    });
+    canvas.requestRenderAll();
+  }, 40);
+};
+
+export const addClock = (canvas) => {
+  const sss = new fabric.Textbox("", {
+    shadow: shadowOptions,
+    left: 10 * 1.87,
+    top: 530 * 1.87,
+    width: 100 * 1.87,
+    fill: "#ffffff",
+    backgroundColor: options.backgroundColor,
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "center",
+    stroke: "#000000",
+    strokeWidth: 0,
+    id: "clock1",
+    class: "class_" + fabric.Object.__uid,
+  });
+  canvas.add(sss).setActiveObject(sss);
+  canvas.requestRenderAll();
+  setInterval(() => {
+    animate(canvas, sss);
+  }, 1000);
+};
+
+export const gradient = new fabric.Gradient({
+  type: "linear",
+  // gradientUnits: 'pixels', // or 'percentage'
+  gradientUnits: "percentage", // or 'percentage'
+  coords: { x1: 0, y1: 0, x2: 1, y2: 0 },
+  colorStops: [
+    { offset: 0, color: "red" },
+    { offset: 0.2, color: "orange" },
+    { offset: 0.4, color: "yellow" },
+    { offset: 0.6, color: "green" },
+    { offset: 0.8, color: "blue" },
+    { offset: 1, color: "purple" },
+  ],
+});
+
+export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
+  const text = new fabric.Textbox(dragedText, {
+    shadow: shadowOptions,
+    id: "ccg_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    left: x,
+    top: y,
+    width: 480 * 1.87,
+    fill: "#ffffff",
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "left",
+    stroke: "#000000",
+    strokeWidth: 0,
+  });
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+};
+
+export const pasteClipboard = async (canvas) => {
+  try {
+    const clipboardContents = await navigator.clipboard.read();
+    if (clipboardContents) {
+      for (const item of clipboardContents) {
+        if (item.types.includes("text/plain")) {
+          createTextBoxforDragedText(
+            canvas,
+            await navigator.clipboard.readText(),
+            Math.random() * 1920,
+            Math.random() * 1080
+          );
+        }
+        if (item.types.includes("image/png")) {
+          const blob = await item.getType("image/png");
+          base64EncodeBlob(blob).then((base64) => {
+            fabric.Image.fromURL("data:image/png;base64," + base64, (image) => {
+              image.set({
+                id: "ccg_" + fabric.Object.__uid,
+                class: "class_" + fabric.Object.__uid,
+                shadow: shadowOptions,
+                strokeUniform: true,
+                objectCaching: false,
+                fill: "#ff0000",
+                stroke: "#00ff00",
+              });
+              canvas.add(image);
+            });
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const STEP = 5;
+export const Direction = {
+  LEFT: 0,
+  UP: 1,
+  RIGHT: 2,
+  DOWN: 3,
+};
+
+export const moveSelected = (direction) => {
+  var activeObject = window.editor.canvas.getActiveObject();
+  if (activeObject) {
+    switch (direction) {
+      case Direction.LEFT:
+        activeObject.set({ left: activeObject.left - STEP });
+        break;
+      case Direction.UP:
+        activeObject.set({ top: activeObject.top - STEP });
+        break;
+      case Direction.RIGHT:
+        activeObject.set({ left: activeObject.left + STEP });
+        break;
+      case Direction.DOWN:
+        activeObject.set({ top: activeObject.top + STEP });
+        break;
+      default:
+      //nothing
+    }
+    activeObject.setCoords();
+    window.editor.canvas.renderAll();
+  }
+}
+
+// Function to copy properties of a Fabric.js object (excluding .src)
+function copyFabricObjectProperties(object) {
+  var copiedProperties = {};
+  for (var prop in object) {
+    // Exclude Fabric.js internal properties and methods, as well as .src property
+    if (object.hasOwnProperty(prop) && typeof object[prop] !== 'function' && prop !== 'canvas' && prop !== 'group' && prop !== '_objects' && prop !== '_objects' && prop !== 'src') {
+      copiedProperties[prop] = object[prop];
+    }
+  }
+  return copiedProperties;
+}
+
+export const replaceWithImage = (canvas) => {
+  var fInput = document.createElement("input"); //hidden input to open filedialog
+  fInput.setAttribute("type", "file");
+  fInput.setAttribute("accept", "image/*");
+
+  fInput.click();
+  fInput.onchange = (e) => {
+    const oldElement = canvas.getActiveObjects()[0];
+    const index = canvas.getObjects().indexOf(oldElement);
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      var imgObj = new Image();
+      imgObj.src = event.target.result;
+      imgObj.onload = function () {
+        var image = new fabric.Image(imgObj);
+        // Copy properties of oldElement to the new image object (excluding .src)
+        Object.assign(image, copyFabricObjectProperties(oldElement));
+        image.setSrc(event.target.result, () => {
+          canvas.remove(oldElement);
+          canvas.insertAt(image, index);
+          canvas.setActiveObject(image);
+        });
+      };
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+};
+const finalPosition = (element, canvas) => {
+  if (canvas.getActiveObjects().length > 1) {
+    var activeSelection = canvas.getActiveObject();
+    var matrix = activeSelection.calcTransformMatrix();
+    var objectPosition = { x: element.left, y: element.top };
+    var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
+    return finalPosition;
+  } else {
+    finalPosition = { x: element.left, y: element.top };
+    return finalPosition;
+  }
+};
+export const cloneAsImage = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    const preshadow = element.shadow;
+    if (
+      (element.type === "i-text" ||
+        element.type === "textbox" ||
+        element.type === "text") &&
+      element.shadow.blur < 5
+    ) {
+      element.shadow.blur = 5;
+    }
+    element.cloneAsImage(function (clone) {
+      clone.set({
+        left: finalPosition(element, canvas).x + 10,
+        top: finalPosition(element, canvas).y + 10,
+        id: "id_" + fabric.Object.__uid,
+        class: "class_" + fabric.Object.__uid,
+        shadow: {
+          color: "black",
+          blur: 0,
+          offsetX: 0,
+          offsetY: 0,
+          affectStroke: false,
+        },
+      });
+      canvas.add(clone);
+    });
+    element.shadow = preshadow;
+  });
+  canvas.requestRenderAll();
+};
+export const createRandomeStrip = (canvas) => {
+
+  function generateRandomStyledPathWithSpiral(width, height) {
+    const startX = Math.random() * (width - 1700);
+    const startY = Math.random() * (height - 200);
+    const endX = startX + 1700;
+    const endY = startY + 200;
+    // Control points for curves
+    const controlX1 = startX + Math.random() * 100;
+    const controlY1 = startY + Math.random() * 100;
+
+    const topCurveX = startX + 850; // X-coordinate for the top middle curve
+    const topCurveY = startY - 50; // Y-coordinate for the top middle curve
+
+    const controlX2 = endX - Math.random() * 100;
+    const controlY2 = startY + Math.random() * 100;
+
+    const bottomCurveX = startX + 850; // X-coordinate for the bottom middle curve
+    const bottomCurveY = endY + 50; // Y-coordinate for the bottom middle curve
+
+    const controlX3 = endX - Math.random() * 100;
+    const controlY3 = endY - Math.random() * 100;
+
+    const controlX4 = startX + Math.random() * 100;
+    const controlY4 = endY - Math.random() * 100;
+
+    return [
+      ["M", startX, startY],
+      ["C", controlX1, controlY1, topCurveX, topCurveY, startX + 200, startY + 50],
+      ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
+      ["C", controlX3, controlY3, bottomCurveX, bottomCurveY, endX - 200, endY - 50],
+      ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
+      ["Z"]
+    ];
+  }
+
+  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
+  var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    left: 200,
+    top: 300,
+    fill: "#ff00ff",
+    stroke: options.stroke,
+    hasRotatingPoint: true,
+    objectCaching: false,
+    strokeWidth: 5,
+    strokeUniform: true,
+  });
+
+  pathObject.on('mousedblclick', () => {
+    if (window.edit) {
+      window.edit(window.dispatch)
+    }
+  })
+  canvas.add(pathObject).setActiveObject(pathObject);;
+};
+
+export const createPentagon = (canvas) => {
+  const rect = new fabric.Polygon(
+    [
+      { x: 290, y: 124 },
+      { x: 390, y: 190 },
+      { x: 354, y: 297 },
+      { x: 226, y: 297 },
+      { x: 192, y: 190 },
+    ],
+    {
+      id: "id_" + fabric.Object.__uid,
+      class: "class_" + fabric.Object.__uid,
+      shadow: shadowOptions,
+      top: -100,
+      left: 80,
+      rx: 50,
+      ry: 80,
+      opacity: 0.9,
+      fill: "#0000ff",
+      hasRotatingPoint: true,
+      objectCaching: false,
+      stroke: options.stroke,
+      strokeWidth: 3,
+      strokeUniform: true,
+    }
+  );
+  canvas.add(rect).setActiveObject(rect);
+  canvas.requestRenderAll();
+  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const createRect = (canvas) => {
+  const rect = new fabric.Rect({
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    top: -100 * 1.87,
+    left: 90 * 1.87,
+    width: 500 * 1.87,
+    height: 40 * 1.87,
+    opacity: 0.9,
+    fill: "#051b7d",
+    hasRotatingPoint: true,
+    objectCaching: false,
+    stroke: options.stroke,
+    strokeWidth: 1,
+    strokeUniform: true,
+    rx: 10,
+    ry: 10,
+  });
+  canvas.add(rect).setActiveObject(rect);
+  canvas.requestRenderAll();
+  rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+
+export const removeShadow = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("shadow", { ...shadowOptions, blur: 0 });
+  });
+  canvas.requestRenderAll();
+};
+
+export const removeFill = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("fill", "");
+  });
+  canvas.requestRenderAll();
+};
+
+
+export const removeStroke = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("strokeWidth", 0);
+    element.set("stroke", "");
+  });
+  canvas.requestRenderAll();
+};
+
+export const createCircle = (canvas) => {
+  const circle = new fabric.Circle({
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    top: 0,
+    left: 200,
+    radius: 50,
+    fill: "#0000ff",
+    objectCaching: false,
+    stroke: options.stroke,
+    strokeWidth: 3,
+    strokeUniform: true,
+  });
+  canvas.add(circle).setActiveObject(circle);
+  canvas.requestRenderAll();
+  circle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const createHLine = (canvas) => {
+  const rect = new fabric.Path("M 0 0 L 500 1", {
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: { ...shadowOptions, Blur: 10 },
+    top: -100,
+    left: 90,
+    fill: "#0000ff",
+    objectCaching: false,
+    stroke: "#ff0000",
+    strokeWidth: 3,
+    strokeUniform: true,
+  });
+  canvas.add(rect).setActiveObject(rect);
+  canvas.requestRenderAll();
+  rect.animate("top", 550, { onChange: canvas.renderAll.bind(canvas) });
+};
+export const createTriangle = (canvas) => {
+  canvas.isDrawingMode = false;
+  const triangle = new fabric.Triangle({
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    top: 50,
+    left: -100,
+    width: 100,
+    height: 100,
+    fill: "#ff00ff",
+    cornerSize: 7,
+    objectCaching: false,
+    hasRotatingPoint: true,
+    stroke: options.stroke,
+    strokeWidth: 3,
+    strokeUniform: true,
+  });
+
+  canvas.add(triangle).setActiveObject(triangle);
+  canvas.requestRenderAll();
+  triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const groupObjects = (canvas, shouldGroup) => {
+  if (shouldGroup) {
+    if (!canvas.getActiveObject()) {
+      return;
+    }
+    if (canvas.getActiveObject().type !== "activeSelection") {
+      return;
+    }
+    canvas
+      .getActiveObject()
+      .toGroup()
+      .set({
+        shadow: shadowOptions,
+        id: "ccg_" + fabric.Object.__uid,
+        class: "class_" + fabric.Object.__uid,
+        fill: "#ff0000",
+      });
+  } else {
+    if (!canvas.getActiveObject()) {
+      return;
+    }
+    if (canvas.getActiveObject().type !== "group") {
+      return;
+    }
+    canvas.getActiveObject().toActiveSelection(); //ungroup
+    canvas.forEachObject((element) =>
+      element.set({ objectCaching: false, shadow: shadowOptions })
+    );
+  }
+  canvas.requestRenderAll();
+};
+
+export const removeBg = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("backgroundColor", "");
+  });
+  canvas.requestRenderAll();
+};
+export const textNormal = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("fontWeight", "normal");
+  });
+}
+export const txtBold = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set(
+      "fontWeight",
+      element.fontWeight === "normal" ? "bold" : "normal"
+    );
+  });
+  canvas.requestRenderAll();
+};
+export const textItalic = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("fontStyle", element.fontStyle === "italic" ? "" : "italic");
+  });
+  canvas.requestRenderAll();
+};
+
+export const textLineThrough = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("linethrough", !element.linethrough);
+  });
+  canvas.requestRenderAll();
+};
+export const textUnderline = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("underline", !element.underline);
+  });
+  canvas.requestRenderAll();
+};
+
+export const alignCenter = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "center");
+  });
+  canvas.requestRenderAll();
+};
+export const alignRight = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "right");
+  });
+  canvas.requestRenderAll();
+}
+export const alignLeft = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "left");
+  });
+  canvas.requestRenderAll();
+};
+export const unlockAll = (canvas) => {
+  canvas.forEachObject((element) => (element.selectable = true));
+};
+
+export const lock = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => (element.selectable = false));
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+export const undo = (canvas) => {
+  canvas.undo();
+  canvas.getObjects().forEach((element) => {
+    element.set({ objectCaching: false });
+  });
+  canvas.requestRenderAll();
+};
+export const redo = (canvas) => {
+  canvas.redo();
+  canvas.getObjects().forEach((element) => {
+    element.set({ objectCaching: false });
+  });
+  canvas.requestRenderAll();
+};
+
+
+export var _clipboard;
+export const copy = (canvas) => {
+  canvas?.getActiveObject()?.clone(
+    (cloned) => {
+      _clipboard = cloned;
+    },
+    ["id", "class", "selectable"]
+  );
+};
+
+export const paste = (canvas) => {
+  try {
+    _clipboard?.clone(
+      (clonedObj) => {
+        canvas?.discardActiveObject();
+        clonedObj.set({
+          left: clonedObj.left + 10,
+          top: clonedObj.top + 10,
+          evented: true,
+          objectCaching: false,
+          id:
+            clonedObj.type === "i-text" ||
+              clonedObj.type === "textbox" ||
+              clonedObj.type === "text"
+              ? "ccg_" + fabric.Object.__uid
+              : "id_" + fabric.Object.__uid,
+          class: "class_" + fabric.Object.__uid,
+        });
+        if (clonedObj.type === "activeSelection") {
+          // active selection needs a reference to the canvas.
+          clonedObj.canvas = canvas;
+          clonedObj.forEachObject((obj, i) => {
+            canvas?.add(obj);
+            obj.set({
+              evented: true,
+              objectCaching: false,
+              id:
+                obj.type === "i-text" ||
+                  obj.type === "textbox" ||
+                  obj.type === "text"
+                  ? "ccg_" + fabric.Object.__uid + i
+                  : "id_" + fabric.Object.__uid + i,
+              class: "class_" + fabric.Object.__uid + i,
+            });
+          });
+          // this should solve the unselectability
+          clonedObj.setCoords();
+        } else {
+          canvas?.add(clonedObj);
+        }
+
+        _clipboard.top += 10;
+        _clipboard.left += 10;
+        canvas?.setActiveObject(clonedObj);
+        clonedObj.on("mousedblclick", () => {
+          window.edit(window.dispatch);
+        });
+        canvas?.requestRenderAll();
+      },
+      ["id", "class", "selectable"]
+    );
+  } catch (error) {
+    // alert(error)
+  }
+};
+
+export const createShape = (canvas, shape, size = 0.4) => {
+  const rect = new fabric.Path(shape, {
+    id: "path_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: shadowOptions,
+    top: -100,
+    left: Math.random() * 1000,
+    scaleX: size,
+    scaleY: size,
+    opacity: 0.9,
+    fill: "#051b7d",
+    objectCaching: false,
+    stroke: options.stroke,
+    strokeWidth: 2,
+  });
+  canvas.add(rect).setActiveObject(rect);
+  rect.on("mousedblclick", () => {
+    window.edit(window.dispatch);
+  });
+  canvas.requestRenderAll();
+  rect.animate("top", Math.random() * 500, {
+    onChange: canvas.renderAll.bind(canvas),
+  });
+};
+
+export const selectAll = (canvas) => {
+  canvas.discardActiveObject();
+  var sel = new fabric.ActiveSelection(canvas.getObjects(), {
+    canvas: canvas,
+  });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
+};
+export const deSelectAll = (canvas) => {
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
+var clipPath1 = null;
+export const setasClipPath = (canvas) => {
+  clipPath1 = canvas.getActiveObjects();
+};
+export const cliptoPath = (canvas) => {
+  var img = canvas.getActiveObjects();
+  if (clipPath1.length > 0 && img.length > 0) {
+    clipPath1[0].set({
+      shadow: { ...shadowOptions, blur: 0 },
+      absolutePositioned: true,
+    });
+    canvas.sendToBack(clipPath1[0]);
+    img[0].set("clipPath", clipPath1[0]);
+    clipPath1 = null;
+    canvas.requestRenderAll();
+  }
+};
+
+export const setGradientColor = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => (element.fill = gradient));
+  canvas.requestRenderAll();
+};
+export const gradient2 = () => {
+  return new fabric.Gradient({
+    type: "linear",
+    gradientUnits: "percentage",
+    coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
+    colorStops: [
+      {
+        offset: 0,
+        color:
+          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
+        opacity: 0.2,
+      },
+      {
+        offset: 0.5,
+        color:
+          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
+        opacity: 1,
+      },
+      {
+        offset: 1,
+        color:
+          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
+        opacity: 0.2,
+      },
+    ],
+  });
+};
+export const createVLine = (canvas) => {
+  const rect = new fabric.Path("M 0 0 L 1 500", {
+    id: "id_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    shadow: { ...shadowOptions, Blur: 10 },
+    top: -100,
+    left: 90,
+    fill: "#0000ff",
+    objectCaching: false,
+    stroke: "#ffff00",
+    strokeWidth: 3,
+    strokeUniform: true,
+  });
+  canvas.add(rect).setActiveObject(rect);
+  canvas.requestRenderAll();
+  rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const resizeTextWidth = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    if (
+      element.type === "text" ||
+      element.type === "i-text" ||
+      element.type === "textbox"
+    ) {
+      element.set({ width: element.__lineWidths[0] + 10 });
+    }
+  });
+  canvas.requestRenderAll();
+};
+
+export const sameWidth = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((element) => {
+    arr.push(element.width);
+  });
+
+  const max = Math.max(...arr);
+
+  canvas.getActiveObjects().forEach((element) => {
+    if (
+      element.type === "text" ||
+      element.type === "i-text" ||
+      element.type === "textbox"
+    ) {
+      element.set({ width: max });
+    }
+  });
+  canvas.requestRenderAll();
+};
+export const sameWidthIMG = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((element) => {
+    arr.push(element.width * element.scaleX);
+  });
+  const max = Math.max(...arr);
+  canvas.getActiveObjects().forEach((element) => {
+    if (element.type === "rect" || element.type === "image") {
+      element.set({ scaleX: max / element.width });
+    }
+  });
+  canvas.requestRenderAll();
+};
+export const sameHeightIMG = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((element) => {
+    arr.push(element.height * element.scaleY);
+  });
+  const max = Math.max(...arr);
+  canvas.getActiveObjects().forEach((element) => {
+    if (element.type === "rect" || element.type === "image") {
+      element.set({ scaleY: max / element.height });
+    }
+  });
+  canvas.requestRenderAll();
+};
+export const sameSizeIMG = (canvas) => {
+  sameWidthIMG(canvas);
+  sameHeightIMG(canvas);
+};
+export const swapFaceandStrokeColors = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    var oldFill = element.fill;
+    var oldStroke = element.stroke;
+    element.fill = oldStroke;
+    element.stroke = oldFill;
+  });
+  canvas.requestRenderAll();
+};
+export const deleteAll = (canvas) => {
+  const aa = canvas.getObjects();
+  aa.forEach((element) => {
+    canvas.remove(element);
+  });
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+
+export const putatCenter = (canvas) => {
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  selectAll(canvas);
+  canvas.centerObject(canvas.getActiveObject());
+  canvas.requestRenderAll();
+};
+export const selectedatCenter = (canvas) => {
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  const selectedItems = canvas.getActiveObjects();
+  canvas.discardActiveObject();
+  selectedItems.forEach((item) => item.center());
+  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
+};
+export const selectedatCenterH = (canvas) => {
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  const selectedItems = canvas.getActiveObjects();
+  canvas.discardActiveObject();
+  selectedItems.forEach((item) => item.centerH());
+  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
+};
+
+export const selectedatCenterV = (canvas) => {
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  const selectedItems = canvas.getActiveObjects();
+  canvas.discardActiveObject();
+  selectedItems.forEach((item) => item.centerV());
+  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+  canvas.setActiveObject(sel);
+  canvas.requestRenderAll();
+};
+export const alignAllLeft = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.left);
+  });
+  const min = Math.min(...arr);
+  canvas.getActiveObjects().forEach((item) => {
+    item.left = min;
+  });
+  canvas.requestRenderAll();
+};
+export const alignAllTop = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.top);
+  });
+  const min = Math.min(...arr);
+  canvas.getActiveObjects().forEach((item) => {
+    item.top = min;
+  });
+  canvas.requestRenderAll();
+};
+
+export const alignAllRight = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.left + item.width * item.scaleX);
+  });
+  const max = Math.max(...arr);
+  canvas.getActiveObjects().forEach((item) => {
+    item.left = max - item.width * item.scaleX;
+  });
+  canvas.requestRenderAll();
+};
+export const alignAllButtom = (canvas) => {
+  const arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.top + item.height * item.scaleY);
+  });
+  const max = Math.max(...arr);
+  canvas.getActiveObjects().forEach((item) => {
+    item.top = max - item.height * item.scaleY;
+  });
+  canvas.requestRenderAll();
+};
+export const makeVerticalEquidistant = (canvas) => {
+  var arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.top);
+  });
+  arr = arr.sort((a, b) => {
+    return a - b;
+  });
+  const difference1 = arr[1] - arr[0];
+  canvas.getActiveObjects().forEach((item, i) => {
+    if (i < 2) {
+      item.top = arr[i];
+    } else {
+      item.top = arr[1] + difference1 * (i - 1);
+    }
+  });
+  canvas.requestRenderAll();
+};
+
+export const makeHorizontalEquidistant = (canvas) => {
+  var arr = [];
+  canvas.getActiveObjects().forEach((item) => {
+    arr.push(item.left);
+  });
+  arr = arr.sort((a, b) => {
+    return a - b;
+  });
+  const difference1 = arr[1] - arr[0];
+  canvas.getActiveObjects().forEach((item, i) => {
+    if (i < 2) {
+      item.left = arr[i];
+    } else {
+      item.left = arr[1] + difference1 * (i - 1);
+    }
+  });
+  canvas.requestRenderAll();
+};
+
 
 export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
@@ -584,6 +1717,18 @@ export const rgbaCol = (color, opacity) =>
 
 export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
+
+export const getFormattedDatetimeNumber = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+  return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
+};
+
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {
@@ -1676,3 +2821,48 @@ export const colors = [
   '#9d6f43',
   '#b34d38',
 ];
+
+export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscreenSize, verticalSpeed) => {
+  executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
+      document.getElementById('divid_${layerNumber}')?.remove();
+      `);
+
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  selectAll(canvas);
+  var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
+  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  const script = `
+                                                                                  window.aaVertical = document.createElement('div');
+                                                                                  aaVertical.style.position='absolute';
+                                                                                  aaVertical.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aaVertical.style.zIndex = ${layerNumber};
+                                                                                  aaVertical.innerHTML=\`${canvas
+      .toSVG(
+        [
+          "id",
+          "class",
+          "selectable",
+        ]
+      )
+      .replaceAll(
+        '"',
+        '\\"'
+      )}\`;
+                                                                                  document.body.appendChild(aaVertical);
+                                                                                  document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
+                                                                                  document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+                                                                                  aaVertical.style.top='100%';
+                                                                                  aaVertical.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  window.verticalSpeed=${verticalSpeed};
+      window.intervalVerticalScroll= setInterval(()=>{
+                                                                                      aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
+      }, 1);
+                                                                                  `;
+
+  endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
+
+  executeScript(script); //for html
+};
