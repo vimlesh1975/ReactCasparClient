@@ -659,11 +659,186 @@ export const createTriangle = (canvas) => {
   triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
 };
 
+export const groupObjects = (canvas, shouldGroup) => {
+  if (shouldGroup) {
+    if (!canvas.getActiveObject()) {
+      return;
+    }
+    if (canvas.getActiveObject().type !== "activeSelection") {
+      return;
+    }
+    canvas
+      .getActiveObject()
+      .toGroup()
+      .set({
+        shadow: shadowOptions,
+        id: "ccg_" + fabric.Object.__uid,
+        class: "class_" + fabric.Object.__uid,
+        fill: "#ff0000",
+      });
+  } else {
+    if (!canvas.getActiveObject()) {
+      return;
+    }
+    if (canvas.getActiveObject().type !== "group") {
+      return;
+    }
+    canvas.getActiveObject().toActiveSelection(); //ungroup
+    canvas.forEachObject((element) =>
+      element.set({ objectCaching: false, shadow: shadowOptions })
+    );
+  }
+  canvas.requestRenderAll();
+};
+
+export const removeBg = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("backgroundColor", "");
+  });
+  canvas.requestRenderAll();
+};
+export const textNormal = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("fontWeight", "normal");
+  });
+}
+export const txtBold = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set(
+      "fontWeight",
+      element.fontWeight === "normal" ? "bold" : "normal"
+    );
+  });
+  canvas.requestRenderAll();
+};
+export const textItalic = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("fontStyle", element.fontStyle === "italic" ? "" : "italic");
+  });
+  canvas.requestRenderAll();
+};
+
+export const textLineThrough = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("linethrough", !element.linethrough);
+  });
+  canvas.requestRenderAll();
+};
+export const textUnderline = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("underline", !element.underline);
+  });
+  canvas.requestRenderAll();
+};
+
+export const alignCenter = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "center");
+  });
+  canvas.requestRenderAll();
+};
+export const alignRight = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "right");
+  });
+  canvas.requestRenderAll();
+}
+export const alignLeft = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => {
+    element.set("textAlign", "left");
+  });
+  canvas.requestRenderAll();
+};
+export const unlockAll = (canvas) => {
+  canvas.forEachObject((element) => (element.selectable = true));
+};
+
+export const lock = (canvas) => {
+  canvas.getActiveObjects().forEach((element) => (element.selectable = false));
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
+};
+export const undo = (canvas) => {
+  canvas.undo();
+  canvas.getObjects().forEach((element) => {
+    element.set({ objectCaching: false });
+  });
+  canvas.requestRenderAll();
+};
+export const redo = (canvas) => {
+  canvas.redo();
+  canvas.getObjects().forEach((element) => {
+    element.set({ objectCaching: false });
+  });
+  canvas.requestRenderAll();
+};
 
 
+export var _clipboard;
+export const copy = (canvas) => {
+  canvas?.getActiveObject()?.clone(
+    (cloned) => {
+      _clipboard = cloned;
+    },
+    ["id", "class", "selectable"]
+  );
+};
 
+export const paste = (canvas) => {
+  try {
+    _clipboard?.clone(
+      (clonedObj) => {
+        canvas?.discardActiveObject();
+        clonedObj.set({
+          left: clonedObj.left + 10,
+          top: clonedObj.top + 10,
+          evented: true,
+          objectCaching: false,
+          id:
+            clonedObj.type === "i-text" ||
+              clonedObj.type === "textbox" ||
+              clonedObj.type === "text"
+              ? "ccg_" + fabric.Object.__uid
+              : "id_" + fabric.Object.__uid,
+          class: "class_" + fabric.Object.__uid,
+        });
+        if (clonedObj.type === "activeSelection") {
+          // active selection needs a reference to the canvas.
+          clonedObj.canvas = canvas;
+          clonedObj.forEachObject((obj, i) => {
+            canvas?.add(obj);
+            obj.set({
+              evented: true,
+              objectCaching: false,
+              id:
+                obj.type === "i-text" ||
+                  obj.type === "textbox" ||
+                  obj.type === "text"
+                  ? "ccg_" + fabric.Object.__uid + i
+                  : "id_" + fabric.Object.__uid + i,
+              class: "class_" + fabric.Object.__uid + i,
+            });
+          });
+          // this should solve the unselectability
+          clonedObj.setCoords();
+        } else {
+          canvas?.add(clonedObj);
+        }
 
-
+        _clipboard.top += 10;
+        _clipboard.left += 10;
+        canvas?.setActiveObject(clonedObj);
+        clonedObj.on("mousedblclick", () => {
+          window.edit(window.dispatch);
+        });
+        canvas?.requestRenderAll();
+      },
+      ["id", "class", "selectable"]
+    );
+  } catch (error) {
+    // alert(error)
+  }
+};
 
 
 

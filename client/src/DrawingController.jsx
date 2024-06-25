@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  copy, paste,
   createTriangle,
   createHLine,
   createCircle,
@@ -577,37 +578,6 @@ const makeHorizontalEquidistant = (canvas) => {
   canvas.requestRenderAll();
 };
 
-export const groupObjects = (canvas, shouldGroup) => {
-  if (shouldGroup) {
-    if (!canvas.getActiveObject()) {
-      return;
-    }
-    if (canvas.getActiveObject().type !== "activeSelection") {
-      return;
-    }
-    canvas
-      .getActiveObject()
-      .toGroup()
-      .set({
-        shadow: shadowOptions,
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        fill: "#ff0000",
-      });
-  } else {
-    if (!canvas.getActiveObject()) {
-      return;
-    }
-    if (canvas.getActiveObject().type !== "group") {
-      return;
-    }
-    canvas.getActiveObject().toActiveSelection(); //ungroup
-    canvas.forEachObject((element) =>
-      element.set({ objectCaching: false, shadow: shadowOptions })
-    );
-  }
-  canvas.requestRenderAll();
-};
 
 export const selectAll = (canvas) => {
   canvas.discardActiveObject();
@@ -622,71 +592,7 @@ export const deSelectAll = (canvas) => {
   canvas.requestRenderAll();
 };
 
-var _clipboard;
-export const copy = (canvas) => {
-  canvas?.getActiveObject()?.clone(
-    (cloned) => {
-      _clipboard = cloned;
-    },
-    ["id", "class", "selectable"]
-  );
-};
 
-export const paste = (canvas) => {
-  try {
-    _clipboard?.clone(
-      (clonedObj) => {
-        canvas?.discardActiveObject();
-        clonedObj.set({
-          left: clonedObj.left + 10,
-          top: clonedObj.top + 10,
-          evented: true,
-          objectCaching: false,
-          id:
-            clonedObj.type === "i-text" ||
-              clonedObj.type === "textbox" ||
-              clonedObj.type === "text"
-              ? "ccg_" + fabric.Object.__uid
-              : "id_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
-        });
-        if (clonedObj.type === "activeSelection") {
-          // active selection needs a reference to the canvas.
-          clonedObj.canvas = canvas;
-          clonedObj.forEachObject((obj, i) => {
-            canvas?.add(obj);
-            obj.set({
-              evented: true,
-              objectCaching: false,
-              id:
-                obj.type === "i-text" ||
-                  obj.type === "textbox" ||
-                  obj.type === "text"
-                  ? "ccg_" + fabric.Object.__uid + i
-                  : "id_" + fabric.Object.__uid + i,
-              class: "class_" + fabric.Object.__uid + i,
-            });
-          });
-          // this should solve the unselectability
-          clonedObj.setCoords();
-        } else {
-          canvas?.add(clonedObj);
-        }
-
-        _clipboard.top += 10;
-        _clipboard.left += 10;
-        canvas?.setActiveObject(clonedObj);
-        clonedObj.on("mousedblclick", () => {
-          window.edit(window.dispatch);
-        });
-        canvas?.requestRenderAll();
-      },
-      ["id", "class", "selectable"]
-    );
-  } catch (error) {
-    // alert(error)
-  }
-};
 export const createShape = (canvas, shape, size = 0.4) => {
   const rect = new fabric.Path(shape, {
     id: "path_" + fabric.Object.__uid,

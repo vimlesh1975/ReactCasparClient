@@ -1,24 +1,6 @@
 import useContextMenu from "./useContextMenu";
-import {
-  undo,
-  redo,
-  lock,
-  unlockAll,
-  groupObjects,
-  copy,
-  paste,
-  alignLeft,
-  alignRight,
-  alignCenter,
-  textUnderline,
-  textLineThrough,
-  textItalic,
-  txtBold,
-  textNormal,
-  removeBg,
 
-} from "./DrawingController";
-import { createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import { copy, paste, redo, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 import {
   VscPrimitiveSquare,
