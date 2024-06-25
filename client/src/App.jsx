@@ -9,6 +9,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import DrawingController from "./DrawingController.jsx";
 import ImageSequence from './imagesequence/ImageSequence';
+
+
+// eslint-disable-next-line
 import Graphics from "./NRCS/Graphics.jsx";
 
 
@@ -562,7 +565,7 @@ const App = () => {
 
               <Tab>Help</Tab>
               <Tab>GA</Tab>
-              <Tab>NRCS</Tab>
+              {/* <Tab>NRCS</Tab> */}
 
             </TabList>
             <TabPanel>
@@ -675,9 +678,6 @@ const App = () => {
             <TabPanel>
               <JsonReader />
             </TabPanel>
-            {/* <TabPanel >
-            <UdpClock />
-          </TabPanel> */}
             <TabPanel>
               <Threejs />
             </TabPanel>
@@ -697,9 +697,9 @@ const App = () => {
             <TabPanel>
               <GenerativeArts />
             </TabPanel>
-            <TabPanel>
+            {/* <TabPanel>
               <Graphics />
-            </TabPanel>
+            </TabPanel> */}
           </Tabs>
         </div>
       </div>
