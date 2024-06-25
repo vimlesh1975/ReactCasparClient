@@ -9,6 +9,22 @@ export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
+
+export const gradient = new fabric.Gradient({
+  type: "linear",
+  // gradientUnits: 'pixels', // or 'percentage'
+  gradientUnits: "percentage", // or 'percentage'
+  coords: { x1: 0, y1: 0, x2: 1, y2: 0 },
+  colorStops: [
+    { offset: 0, color: "red" },
+    { offset: 0.2, color: "orange" },
+    { offset: 0.4, color: "yellow" },
+    { offset: 0.6, color: "green" },
+    { offset: 0.8, color: "blue" },
+    { offset: 1, color: "purple" },
+  ],
+});
+
 export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
   const text = new fabric.Textbox(dragedText, {
     shadow: shadowOptions,

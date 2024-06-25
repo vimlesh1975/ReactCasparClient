@@ -2,7 +2,6 @@ import useContextMenu from "./useContextMenu";
 import {
   createRandomeStrip,
   cloneAsImage,
-  gradient,
   removeShadow,
   removeFill,
   removeStroke,
@@ -42,7 +41,7 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import { gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 
 const ContextMenu = ({ canvas }) => {

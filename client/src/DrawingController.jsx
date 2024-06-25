@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  gradient,
   Direction, rgbaCol, listglobalCompositeOperation,
   getGdd,
   endpoint,
@@ -68,20 +69,20 @@ fabric.Object.prototype.cornerSize = 18;
 fabric.disableStyleCopyPaste = true;
 
 
-export var gradient = new fabric.Gradient({
-  type: "linear",
-  // gradientUnits: 'pixels', // or 'percentage'
-  gradientUnits: "percentage", // or 'percentage'
-  coords: { x1: 0, y1: 0, x2: 1, y2: 0 },
-  colorStops: [
-    { offset: 0, color: "red" },
-    { offset: 0.2, color: "orange" },
-    { offset: 0.4, color: "yellow" },
-    { offset: 0.6, color: "green" },
-    { offset: 0.8, color: "blue" },
-    { offset: 1, color: "purple" },
-  ],
-});
+// export var gradient = new fabric.Gradient({
+//   type: "linear",
+//   // gradientUnits: 'pixels', // or 'percentage'
+//   gradientUnits: "percentage", // or 'percentage'
+//   coords: { x1: 0, y1: 0, x2: 1, y2: 0 },
+//   colorStops: [
+//     { offset: 0, color: "red" },
+//     { offset: 0.2, color: "orange" },
+//     { offset: 0.4, color: "yellow" },
+//     { offset: 0.6, color: "green" },
+//     { offset: 0.8, color: "blue" },
+//     { offset: 1, color: "purple" },
+//   ],
+// });
 
 var clipPath1 = null;
 export const setasClipPath = (canvas) => {
