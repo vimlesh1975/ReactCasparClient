@@ -2,9 +2,19 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  resizeTextWidth, deleteAll, lock, undo, unlockAll, redo, swapFaceandStrokeColors, sameSizeIMG, sameWidth, sameWidthIMG, sameHeightIMG,
+  txtBold, textItalic, textUnderline, textLineThrough,
+  createVLine, putatCenter, selectedatCenter,
+  moveSelected, selectedatCenterH,
+  options, selectedatCenterV,
+  shadowOptions, alignAllRight, alignAllButtom, alignAllLeft, alignAllTop,
+  changeCurrentColor,
+  changeBackGroundColor,
+  changeStrokeCurrentColor,
+  changeShadowCurrentColor,
   setasClipPath, cliptoPath,
   selectAll, deSelectAll,
-  copy, paste,
+  copy, paste, makeHorizontalEquidistant, makeVerticalEquidistant,
   createTriangle,
   createHLine,
   createCircle,
@@ -15,7 +25,6 @@ import {
   createTextBox,
   addUpTimer,
   addClock,
-  gradient,
   Direction, rgbaCol, listglobalCompositeOperation,
   getGdd,
   endpoint,
@@ -52,21 +61,11 @@ import {
   AiOutlineVerticalAlignBottom,
 } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
-// import { saveAs } from "file-saver";
 import SavePannel from "./SavePannel";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Images from "./Images";
 import SavedStyles from "./SavedStyles";
 
-import {
-  moveSelected,
-  options,
-  shadowOptions,
-  changeCurrentColor,
-  changeBackGroundColor,
-  changeStrokeCurrentColor,
-  changeShadowCurrentColor,
-} from "./common";
 import Layers2 from "./Layers2";
 import CasparcgTools from "./CasparcgTools";
 
@@ -81,265 +80,6 @@ fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
 fabric.disableStyleCopyPaste = true;
 
-
-
-
-
-
-
-export const setGradientColor = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => (element.fill = gradient));
-  canvas.requestRenderAll();
-};
-export const gradient2 = () => {
-  return new fabric.Gradient({
-    type: "linear",
-    gradientUnits: "percentage",
-    coords: { x1: 0, y1: 0, x2: 0, y2: 1 },
-    colorStops: [
-      {
-        offset: 0,
-        color:
-          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
-        opacity: 0.2,
-      },
-      {
-        offset: 0.5,
-        color:
-          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
-        opacity: 1,
-      },
-      {
-        offset: 1,
-        color:
-          "#" + (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
-        opacity: 0.2,
-      },
-    ],
-  });
-};
-
-
-
-
-
-
-
-export const createVLine = (canvas) => {
-  const rect = new fabric.Path("M 0 0 L 1 500", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
-    left: 90,
-    fill: "#0000ff",
-    objectCaching: false,
-    stroke: "#ffff00",
-    strokeWidth: 3,
-    strokeUniform: true,
-  });
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
-};
-
-
-
-
-
-
-export const alignLeft = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("textAlign", "left");
-  });
-  canvas.requestRenderAll();
-};
-export const alignRight = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("textAlign", "right");
-  });
-  canvas.requestRenderAll();
-};
-export const alignCenter = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("textAlign", "center");
-  });
-  canvas.requestRenderAll();
-};
-
-export const textUnderline = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("underline", !element.underline);
-  });
-  canvas.requestRenderAll();
-};
-
-export const textLineThrough = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("linethrough", !element.linethrough);
-  });
-  canvas.requestRenderAll();
-};
-export const textItalic = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("fontStyle", element.fontStyle === "italic" ? "" : "italic");
-  });
-  canvas.requestRenderAll();
-};
-export const txtBold = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set(
-      "fontWeight",
-      element.fontWeight === "normal" ? "bold" : "normal"
-    );
-  });
-  canvas.requestRenderAll();
-};
-
-export const textNormal = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("fontWeight", "normal");
-  });
-  canvas.requestRenderAll();
-};
-
-export const removeBg = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("backgroundColor", "");
-  });
-  canvas.requestRenderAll();
-};
-
-
-
-export const gradientFill = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("fill", gradient);
-  });
-  canvas.requestRenderAll();
-};
-
-export const gradientStroke = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("stroke", gradient);
-  });
-  canvas.requestRenderAll();
-};
-
-export const resizeTextWidth = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    if (
-      element.type === "text" ||
-      element.type === "i-text" ||
-      element.type === "textbox"
-    ) {
-      element.set({ width: element.__lineWidths[0] + 10 });
-    }
-  });
-  canvas.requestRenderAll();
-};
-
-export const sameWidth = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((element) => {
-    arr.push(element.width);
-  });
-
-  const max = Math.max(...arr);
-
-  canvas.getActiveObjects().forEach((element) => {
-    if (
-      element.type === "text" ||
-      element.type === "i-text" ||
-      element.type === "textbox"
-    ) {
-      element.set({ width: max });
-    }
-  });
-  canvas.requestRenderAll();
-};
-export const sameWidthIMG = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((element) => {
-    arr.push(element.width * element.scaleX);
-  });
-  const max = Math.max(...arr);
-  canvas.getActiveObjects().forEach((element) => {
-    if (element.type === "rect" || element.type === "image") {
-      element.set({ scaleX: max / element.width });
-    }
-  });
-  canvas.requestRenderAll();
-};
-
-export const sameHeightIMG = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((element) => {
-    arr.push(element.height * element.scaleY);
-  });
-  const max = Math.max(...arr);
-  canvas.getActiveObjects().forEach((element) => {
-    if (element.type === "rect" || element.type === "image") {
-      element.set({ scaleY: max / element.height });
-    }
-  });
-  canvas.requestRenderAll();
-};
-
-export const sameSizeIMG = (canvas) => {
-  sameWidthIMG(canvas);
-  sameHeightIMG(canvas);
-};
-
-
-
-export const swapFaceandStrokeColors = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    var oldFill = element.fill;
-    var oldStroke = element.stroke;
-    element.fill = oldStroke;
-    element.stroke = oldFill;
-  });
-  canvas.requestRenderAll();
-};
-export const deleteAll = (canvas) => {
-  const aa = canvas.getObjects();
-  aa.forEach((element) => {
-    canvas.remove(element);
-  });
-  canvas.discardActiveObject();
-  canvas.requestRenderAll();
-};
-
-export const undo = (canvas) => {
-  canvas.undo();
-  canvas.getObjects().forEach((element) => {
-    element.set({ objectCaching: false });
-  });
-  canvas.requestRenderAll();
-};
-
-export const redo = (canvas) => {
-  canvas.redo();
-  canvas.getObjects().forEach((element) => {
-    element.set({ objectCaching: false });
-  });
-  canvas.requestRenderAll();
-};
-
-export const setOpacity = (canvas, val = 0.5) => {
-  canvas.getActiveObjects().forEach((element) => element.set({ opacity: val }));
-  canvas.requestRenderAll();
-};
-
-export const lock = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => (element.selectable = false));
-  canvas.discardActiveObject();
-  canvas.requestRenderAll();
-};
-export const unlockAll = (canvas) => {
-  canvas.forEachObject((element) => (element.selectable = true));
-};
 
 const ErasedGroup = fabric.util.createClass(fabric.Group, {
   original: null,
@@ -442,131 +182,6 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     this._resetShadow();
   },
 });
-
-const putatCenter = (canvas) => {
-  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  selectAll(canvas);
-  canvas.centerObject(canvas.getActiveObject());
-  canvas.requestRenderAll();
-};
-const selectedatCenter = (canvas) => {
-  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  const selectedItems = canvas.getActiveObjects();
-  canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.center());
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
-  canvas.requestRenderAll();
-};
-const selectedatCenterH = (canvas) => {
-  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  const selectedItems = canvas.getActiveObjects();
-  canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerH());
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
-  canvas.requestRenderAll();
-};
-
-const selectedatCenterV = (canvas) => {
-  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  const selectedItems = canvas.getActiveObjects();
-  canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerV());
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
-  canvas.requestRenderAll();
-};
-
-const alignAllLeft = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.left);
-  });
-  const min = Math.min(...arr);
-  canvas.getActiveObjects().forEach((item) => {
-    item.left = min;
-  });
-  canvas.requestRenderAll();
-};
-
-const alignAllTop = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.top);
-  });
-  const min = Math.min(...arr);
-  canvas.getActiveObjects().forEach((item) => {
-    item.top = min;
-  });
-  canvas.requestRenderAll();
-};
-
-const alignAllRight = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.left + item.width * item.scaleX);
-  });
-  const max = Math.max(...arr);
-  canvas.getActiveObjects().forEach((item) => {
-    item.left = max - item.width * item.scaleX;
-  });
-  canvas.requestRenderAll();
-};
-const alignAllButtom = (canvas) => {
-  const arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.top + item.height * item.scaleY);
-  });
-  const max = Math.max(...arr);
-  canvas.getActiveObjects().forEach((item) => {
-    item.top = max - item.height * item.scaleY;
-  });
-  canvas.requestRenderAll();
-};
-
-const makeVerticalEquidistant = (canvas) => {
-  var arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.top);
-  });
-  arr = arr.sort((a, b) => {
-    return a - b;
-  });
-  const difference1 = arr[1] - arr[0];
-  canvas.getActiveObjects().forEach((item, i) => {
-    if (i < 2) {
-      item.top = arr[i];
-    } else {
-      item.top = arr[1] + difference1 * (i - 1);
-    }
-  });
-  canvas.requestRenderAll();
-};
-
-const makeHorizontalEquidistant = (canvas) => {
-  var arr = [];
-  canvas.getActiveObjects().forEach((item) => {
-    arr.push(item.left);
-  });
-  arr = arr.sort((a, b) => {
-    return a - b;
-  });
-  const difference1 = arr[1] - arr[0];
-  canvas.getActiveObjects().forEach((item, i) => {
-    if (i < 2) {
-      item.left = arr[i];
-    } else {
-      item.left = arr[1] + difference1 * (i - 1);
-    }
-  });
-  canvas.requestRenderAll();
-};
-
-
-
-
-
 
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
