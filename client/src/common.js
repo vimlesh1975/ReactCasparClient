@@ -23,6 +23,45 @@ export const animate = (canvas, sss) => {
   canvas.requestRenderAll();
 }
 
+export const addUpTimer = (canvas) => {
+  const sss = new fabric.Textbox("", {
+    shadow: shadowOptions,
+    left: 10 * 1.87,
+    top: 530 * 1.87,
+    width: 100 * 1.87,
+    fill: "#ffffff",
+    backgroundColor: options.backgroundColor,
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "center",
+    stroke: "#000000",
+    strokeWidth: 0,
+    id: "uptimer1",
+    class: "class_" + fabric.Object.__uid,
+  });
+  canvas.add(sss).setActiveObject(sss);
+  canvas.requestRenderAll();
+  var startTime = new Date();
+  setInterval(() => {
+    var diff = new Date().getTime() - startTime.getTime();
+    var date_diff = new Date(diff - 30 * 60 * 1000);
+    var ss1 =
+      date_diff.toLocaleString("en-US", {
+        minute: "2-digit",
+        second: "2-digit",
+      }) +
+      ":" +
+      String(date_diff.getMilliseconds()).padStart(3, "0");
+    sss.set({
+      text: ss1,
+    });
+    canvas.requestRenderAll();
+  }, 40);
+};
+
 export const addClock = (canvas) => {
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
