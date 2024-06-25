@@ -4,8 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import { fabric } from "fabric";
 import {
   Uploaddropedfile,
-  createTextBoxforDragedText,
 } from "./DrawingController";
+
+import {
+  createTextBoxforDragedText,
+} from "./common";
+
 import { useSelector, useDispatch } from "react-redux";
 
 const allelements = [

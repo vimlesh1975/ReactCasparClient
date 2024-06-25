@@ -9,6 +9,97 @@ export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA
 export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
+export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
+  const text = new fabric.Textbox(dragedText, {
+    shadow: shadowOptions,
+    id: "ccg_" + fabric.Object.__uid,
+    class: "class_" + fabric.Object.__uid,
+    left: x,
+    top: y,
+    width: 480 * 1.87,
+    fill: "#ffffff",
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "left",
+    stroke: "#000000",
+    strokeWidth: 0,
+  });
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+};
+
+export const pasteClipboard = async (canvas) => {
+  try {
+    const clipboardContents = await navigator.clipboard.read();
+    if (clipboardContents) {
+      for (const item of clipboardContents) {
+        if (item.types.includes("text/plain")) {
+          createTextBoxforDragedText(
+            canvas,
+            await navigator.clipboard.readText(),
+            Math.random() * 1920,
+            Math.random() * 1080
+          );
+        }
+        if (item.types.includes("image/png")) {
+          const blob = await item.getType("image/png");
+          base64EncodeBlob(blob).then((base64) => {
+            fabric.Image.fromURL("data:image/png;base64," + base64, (image) => {
+              image.set({
+                id: "ccg_" + fabric.Object.__uid,
+                class: "class_" + fabric.Object.__uid,
+                shadow: shadowOptions,
+                strokeUniform: true,
+                objectCaching: false,
+                fill: "#ff0000",
+                stroke: "#00ff00",
+              });
+              canvas.add(image);
+            });
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const STEP = 5;
+export const Direction = {
+  LEFT: 0,
+  UP: 1,
+  RIGHT: 2,
+  DOWN: 3,
+};
+
+export const moveSelected = (direction) => {
+  var activeObject = window.editor.canvas.getActiveObject();
+  if (activeObject) {
+    switch (direction) {
+      case Direction.LEFT:
+        activeObject.set({ left: activeObject.left - STEP });
+        break;
+      case Direction.UP:
+        activeObject.set({ top: activeObject.top - STEP });
+        break;
+      case Direction.RIGHT:
+        activeObject.set({ left: activeObject.left + STEP });
+        break;
+      case Direction.DOWN:
+        activeObject.set({ top: activeObject.top + STEP });
+        break;
+      default:
+      //nothing
+    }
+    activeObject.setCoords();
+    window.editor.canvas.renderAll();
+  }
+}
 
 export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);

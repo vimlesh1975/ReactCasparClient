@@ -28,7 +28,7 @@ import {
   removeBg,
   addImage,
   replaceWithImage,
-  pasteClipboard,
+
 } from "./DrawingController";
 import {
   VscPrimitiveSquare,
@@ -42,7 +42,7 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import { pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 
 const ContextMenu = ({ canvas }) => {
