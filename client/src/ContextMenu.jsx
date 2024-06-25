@@ -1,13 +1,5 @@
 import useContextMenu from "./useContextMenu";
 import {
-  createRandomeStrip,
-  cloneAsImage,
-  removeShadow,
-  removeFill,
-  removeStroke,
-  createRect,
-  createCircle,
-  createTriangle,
   undo,
   redo,
   lock,
@@ -24,10 +16,10 @@ import {
   txtBold,
   textNormal,
   removeBg,
-  addImage,
-  replaceWithImage,
 
 } from "./DrawingController";
+import { createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+
 import {
   VscPrimitiveSquare,
   VscCircleFilled,
@@ -40,7 +32,6 @@ import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 
 const ContextMenu = ({ canvas }) => {

@@ -4,13 +4,12 @@ import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
-import { createRandomeStrip, createRect, createCircle, addImage, createTriangle, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
+
+import { alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal } from '../DrawingController'
+import { createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
-
-import { createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
-
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
-
 import SavePannelTheatre from './SavePannelTheatre';
 import RecordRTC from 'recordrtc';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
@@ -43,37 +42,7 @@ const copy = (canvas) => {
     );
 };
 
-const STEP = 5;
-var Direction = {
-    LEFT: 0,
-    UP: 1,
-    RIGHT: 2,
-    DOWN: 3,
-};
 
-const moveSelected = (direction) => {
-    var activeObject = window.editor.canvas.getActiveObject();
-    if (activeObject) {
-        switch (direction) {
-            case Direction.LEFT:
-                activeObject.set({ left: activeObject.left - STEP });
-                break;
-            case Direction.UP:
-                activeObject.set({ top: activeObject.top - STEP });
-                break;
-            case Direction.RIGHT:
-                activeObject.set({ left: activeObject.left + STEP });
-                break;
-            case Direction.DOWN:
-                activeObject.set({ top: activeObject.top + STEP });
-                break;
-            default:
-            //nothing
-        }
-        activeObject.setCoords();
-        window.editor.canvas.renderAll();
-    }
-}
 
 const setclipPathWhileImportingWebAnimator = (canvas) => {
     var objects = canvas.getObjects();

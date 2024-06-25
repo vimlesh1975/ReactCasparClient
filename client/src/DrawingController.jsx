@@ -2,6 +2,13 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  createTriangle,
+  createHLine,
+  createCircle,
+  createRect,
+  createRandomeStrip,
+  createPentagon,
+  cloneAsImage,
   createTextBox,
   addUpTimer,
   addClock,
@@ -94,208 +101,6 @@ export const cliptoPath = (canvas) => {
 
 
 
-
-export const addRoundedCornerImage = (canvas, imageName1) => {
-  fabric.util.loadImage(imageName1, (myImg) => {
-    // fabric.Image.fromURL(imageName1,  myImg => {
-    console.log(myImg);
-    if (myImg == null) {
-      alert("Error!");
-    } else {
-      var rect = new fabric.Rect({
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        left: 10,
-        top: 10,
-        stroke: "#000000",
-        strokeWidth: 3,
-        rx: 30,
-        objectCaching: false,
-        shadow: shadowOptions,
-        ry: 30,
-      });
-      canvas.add(rect).setActiveObject(rect);
-
-      rect.set({
-        width: myImg.width,
-        height: myImg.height,
-        fill: new fabric.Pattern({ source: myImg, repeat: "no-repeat" }),
-      });
-      // rect.set({ scaleX: 0.5, scaleY: 0.5 })
-      canvas.renderAll();
-    }
-  });
-};
-
-export const Uploaddropedfile = (file0, canvas, x, y) => {
-  if (file0) {
-    var reader = new FileReader();
-    reader.onload = function (event) {
-      var imgObj = new Image();
-      imgObj.src = event.target.result;
-      imgObj.onload = function () {
-        var image = new fabric.Image(imgObj);
-        image.set({
-          id: "ccg_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
-          shadow: shadowOptions,
-          strokeUniform: true,
-          objectCaching: false,
-          left: x,
-          top: y,
-          fill: "#ff0000",
-          stroke: "#00ff00",
-        });
-        // .scale(0.5);
-        canvas.add(image).setActiveObject(image);
-      };
-    };
-    reader.readAsDataURL(file0);
-  }
-};
-
-
-
-
-export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
-  return new Promise((resolve, reject) => {
-    var fInput = document.createElement("input"); //hidden input to open filedialog
-    fInput.setAttribute("type", "file"); //opens files
-    fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
-    // fInput.setAttribute("multiple", "false"); ////only useful for inspector debugging
-    fInput.removeAttribute("multiple");
-
-    fInput.click();
-    fInput.onchange = (e) => {
-      Upload(e, canvas, id).then(() => {
-        resolve();
-      });
-    };
-  });
-};
-
-// Function to copy properties of a Fabric.js object (excluding .src)
-function copyFabricObjectProperties(object) {
-  var copiedProperties = {};
-  for (var prop in object) {
-    // Exclude Fabric.js internal properties and methods, as well as .src property
-    if (object.hasOwnProperty(prop) && typeof object[prop] !== 'function' && prop !== 'canvas' && prop !== 'group' && prop !== '_objects' && prop !== '_objects' && prop !== 'src') {
-      copiedProperties[prop] = object[prop];
-    }
-  }
-  return copiedProperties;
-}
-
-export const replaceWithImage = (canvas) => {
-  var fInput = document.createElement("input"); //hidden input to open filedialog
-  fInput.setAttribute("type", "file");
-  fInput.setAttribute("accept", "image/*");
-
-  fInput.click();
-  fInput.onchange = (e) => {
-    const oldElement = canvas.getActiveObjects()[0];
-    const index = canvas.getObjects().indexOf(oldElement);
-    var reader = new FileReader();
-    reader.onload = function (event) {
-      var imgObj = new Image();
-      imgObj.src = event.target.result;
-      imgObj.onload = function () {
-        var image = new fabric.Image(imgObj);
-        // Copy properties of oldElement to the new image object (excluding .src)
-        Object.assign(image, copyFabricObjectProperties(oldElement));
-        image.setSrc(event.target.result, () => {
-          canvas.remove(oldElement);
-          canvas.insertAt(image, index);
-          canvas.setActiveObject(image);
-        });
-      };
-    };
-    reader.readAsDataURL(e.target.files[0]);
-  };
-};
-
-
-
-
-
-export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
-  return new Promise((resolve, reject) => {
-    if (e.target.files) {
-      Array.from(e.target.files).forEach((element) => {
-        var reader = new FileReader();
-        reader.onload = function (event) {
-          var imgObj = new Image();
-          imgObj.src = event.target.result;
-          imgObj.onload = function () {
-            var image = new fabric.Image(imgObj);
-            image.set({
-              left: 300,
-              top: 300,
-              id: id,
-              class: "class_" + fabric.Object.__uid,
-              shadow: shadowOptions,
-              strokeUniform: true,
-              objectCaching: false,
-              fill: "#ff0000",
-              stroke: "#00ff00",
-              src: imgObj.src
-            });
-            // .scale(0.5);
-            canvas.add(image).setActiveObject(image);
-            resolve();
-          };
-        };
-        reader.readAsDataURL(element);
-      });
-    }
-  });
-};
-
-const finalPosition = (element, canvas) => {
-  if (canvas.getActiveObjects().length > 1) {
-    var activeSelection = canvas.getActiveObject();
-    var matrix = activeSelection.calcTransformMatrix();
-    var objectPosition = { x: element.left, y: element.top };
-    var finalPosition = fabric.util.transformPoint(objectPosition, matrix);
-    return finalPosition;
-  } else {
-    finalPosition = { x: element.left, y: element.top };
-    return finalPosition;
-  }
-};
-
-export const cloneAsImage = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    const preshadow = element.shadow;
-    if (
-      (element.type === "i-text" ||
-        element.type === "textbox" ||
-        element.type === "text") &&
-      element.shadow.blur < 5
-    ) {
-      element.shadow.blur = 5;
-    }
-    element.cloneAsImage(function (clone) {
-      clone.set({
-        left: finalPosition(element, canvas).x + 10,
-        top: finalPosition(element, canvas).y + 10,
-        id: "id_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        shadow: {
-          color: "black",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-        },
-      });
-      canvas.add(clone);
-    });
-    element.shadow = preshadow;
-  });
-  canvas.requestRenderAll();
-};
-
 export const setGradientColor = (canvas) => {
   canvas.getActiveObjects().forEach((element) => (element.fill = gradient));
   canvas.requestRenderAll();
@@ -327,141 +132,12 @@ export const gradient2 = () => {
     ],
   });
 };
-export const createRect = (canvas) => {
-  const rect = new fabric.Rect({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: shadowOptions,
-    top: -100 * 1.87,
-    left: 90 * 1.87,
-    width: 500 * 1.87,
-    height: 40 * 1.87,
-    opacity: 0.9,
-    fill: "#051b7d",
-    hasRotatingPoint: true,
-    objectCaching: false,
-    stroke: options.stroke,
-    strokeWidth: 1,
-    strokeUniform: true,
-    rx: 10,
-    ry: 10,
-  });
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
-};
 
-export const createRandomeStrip = (canvas) => {
 
-  function generateRandomStyledPathWithSpiral(width, height) {
-    const startX = Math.random() * (width - 1700);
-    const startY = Math.random() * (height - 200);
-    const endX = startX + 1700;
-    const endY = startY + 200;
-    // Control points for curves
-    const controlX1 = startX + Math.random() * 100;
-    const controlY1 = startY + Math.random() * 100;
 
-    const topCurveX = startX + 850; // X-coordinate for the top middle curve
-    const topCurveY = startY - 50; // Y-coordinate for the top middle curve
 
-    const controlX2 = endX - Math.random() * 100;
-    const controlY2 = startY + Math.random() * 100;
 
-    const bottomCurveX = startX + 850; // X-coordinate for the bottom middle curve
-    const bottomCurveY = endY + 50; // Y-coordinate for the bottom middle curve
 
-    const controlX3 = endX - Math.random() * 100;
-    const controlY3 = endY - Math.random() * 100;
-
-    const controlX4 = startX + Math.random() * 100;
-    const controlY4 = endY - Math.random() * 100;
-
-    return [
-      ["M", startX, startY],
-      ["C", controlX1, controlY1, topCurveX, topCurveY, startX + 200, startY + 50],
-      ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
-      ["C", controlX3, controlY3, bottomCurveX, bottomCurveY, endX - 200, endY - 50],
-      ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
-      ["Z"]
-    ];
-  }
-
-  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
-  var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: shadowOptions,
-    left: 200,
-    top: 300,
-    fill: "#ff00ff",
-    stroke: options.stroke,
-    hasRotatingPoint: true,
-    objectCaching: false,
-    strokeWidth: 5,
-    strokeUniform: true,
-  });
-
-  pathObject.on('mousedblclick', () => {
-    if (window.edit) {
-      window.edit(window.dispatch)
-    }
-  })
-  canvas.add(pathObject).setActiveObject(pathObject);;
-};
-
-export const createEllipse = (canvas) => {
-  const rect = new fabric.Ellipse({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: shadowOptions,
-    top: -100,
-    left: 180,
-    rx: 50,
-    ry: 80,
-    opacity: 0.9,
-    fill: "#0000ff",
-    hasRotatingPoint: true,
-    objectCaching: false,
-    stroke: options.stroke,
-    strokeWidth: 3,
-    strokeUniform: true,
-  });
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
-};
-
-export const createPentagon = (canvas) => {
-  const rect = new fabric.Polygon(
-    [
-      { x: 290, y: 124 },
-      { x: 390, y: 190 },
-      { x: 354, y: 297 },
-      { x: 226, y: 297 },
-      { x: 192, y: 190 },
-    ],
-    {
-      id: "id_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
-      shadow: shadowOptions,
-      top: -100,
-      left: 80,
-      rx: 50,
-      ry: 80,
-      opacity: 0.9,
-      fill: "#0000ff",
-      hasRotatingPoint: true,
-      objectCaching: false,
-      stroke: options.stroke,
-      strokeWidth: 3,
-      strokeUniform: true,
-    }
-  );
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
-};
 
 export const createVLine = (canvas) => {
   const rect = new fabric.Path("M 0 0 L 1 500", {
@@ -480,67 +156,12 @@ export const createVLine = (canvas) => {
   canvas.requestRenderAll();
   rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
 };
-export const createHLine = (canvas) => {
-  const rect = new fabric.Path("M 0 0 L 500 1", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
-    left: 90,
-    fill: "#0000ff",
-    objectCaching: false,
-    stroke: "#ff0000",
-    strokeWidth: 3,
-    strokeUniform: true,
-  });
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 550, { onChange: canvas.renderAll.bind(canvas) });
-};
 
-export const createCircle = (canvas) => {
-  const circle = new fabric.Circle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: shadowOptions,
-    top: 0,
-    left: 200,
-    radius: 50,
-    fill: "#0000ff",
-    objectCaching: false,
-    stroke: options.stroke,
-    strokeWidth: 3,
-    strokeUniform: true,
-  });
 
-  canvas.add(circle).setActiveObject(circle);
-  canvas.requestRenderAll();
-  circle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
-};
 
-export const createTriangle = (canvas) => {
-  canvas.isDrawingMode = false;
-  const triangle = new fabric.Triangle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
-    shadow: shadowOptions,
-    top: 50,
-    left: -100,
-    width: 100,
-    height: 100,
-    fill: "#ff00ff",
-    cornerSize: 7,
-    objectCaching: false,
-    hasRotatingPoint: true,
-    stroke: options.stroke,
-    strokeWidth: 3,
-    strokeUniform: true,
-  });
 
-  canvas.add(triangle).setActiveObject(triangle);
-  canvas.requestRenderAll();
-  triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
-};
+
+
 export const alignLeft = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("textAlign", "left");
@@ -603,25 +224,8 @@ export const removeBg = (canvas) => {
   canvas.requestRenderAll();
 };
 
-export const removeFill = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("fill", "");
-  });
-  canvas.requestRenderAll();
-};
-export const removeStroke = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("strokeWidth", 0);
-    element.set("stroke", "");
-  });
-  canvas.requestRenderAll();
-};
-export const removeShadow = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
-    element.set("shadow", { ...shadowOptions, blur: 0 });
-  });
-  canvas.requestRenderAll();
-};
+
+
 export const gradientFill = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("fill", gradient);
