@@ -10,6 +10,45 @@ export const generateUniqueId = (object) => {
   return object.type + '_' + Math.random().toString(36).substr(2, 9);
 }
 
+export const animate = (canvas, sss) => {
+  var ss1 = new Date().toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+  sss.set({
+    text: ss1,
+  });
+  canvas.requestRenderAll();
+}
+
+export const addClock = (canvas) => {
+  const sss = new fabric.Textbox("", {
+    shadow: shadowOptions,
+    left: 10 * 1.87,
+    top: 530 * 1.87,
+    width: 100 * 1.87,
+    fill: "#ffffff",
+    backgroundColor: options.backgroundColor,
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "center",
+    stroke: "#000000",
+    strokeWidth: 0,
+    id: "clock1",
+    class: "class_" + fabric.Object.__uid,
+  });
+  canvas.add(sss).setActiveObject(sss);
+  canvas.requestRenderAll();
+  setInterval(() => {
+    animate(canvas, sss);
+  }, 1000);
+};
+
 export const gradient = new fabric.Gradient({
   type: "linear",
   // gradientUnits: 'pixels', // or 'percentage'

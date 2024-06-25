@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { fabric } from "fabric";
 import {
+  addClock,
   gradient,
   Direction, rgbaCol, listglobalCompositeOperation,
   getGdd,
@@ -69,21 +70,6 @@ fabric.Object.prototype.cornerSize = 18;
 fabric.disableStyleCopyPaste = true;
 
 
-// export var gradient = new fabric.Gradient({
-//   type: "linear",
-//   // gradientUnits: 'pixels', // or 'percentage'
-//   gradientUnits: "percentage", // or 'percentage'
-//   coords: { x1: 0, y1: 0, x2: 1, y2: 0 },
-//   colorStops: [
-//     { offset: 0, color: "red" },
-//     { offset: 0.2, color: "orange" },
-//     { offset: 0.4, color: "yellow" },
-//     { offset: 0.6, color: "green" },
-//     { offset: 0.8, color: "blue" },
-//     { offset: 1, color: "purple" },
-//   ],
-// });
-
 var clipPath1 = null;
 export const setasClipPath = (canvas) => {
   clipPath1 = canvas.getActiveObjects();
@@ -100,32 +86,6 @@ export const cliptoPath = (canvas) => {
     clipPath1 = null;
     canvas.requestRenderAll();
   }
-};
-
-export const addClock = (canvas) => {
-  const sss = new fabric.Textbox("", {
-    shadow: shadowOptions,
-    left: 10 * 1.87,
-    top: 530 * 1.87,
-    width: 100 * 1.87,
-    fill: "#ffffff",
-    backgroundColor: options.backgroundColor,
-    fontFamily: options.currentFont,
-    fontWeight: "bold",
-    fontSize: options.currentFontSize,
-    editable: true,
-    objectCaching: false,
-    textAlign: "center",
-    stroke: "#000000",
-    strokeWidth: 0,
-    id: "clock1",
-    class: "class_" + fabric.Object.__uid,
-  });
-  canvas.add(sss).setActiveObject(sss);
-  canvas.requestRenderAll();
-  setInterval(() => {
-    animate(canvas, sss);
-  }, 1000);
 };
 
 export const addUpTimer = (canvas) => {
@@ -167,18 +127,7 @@ export const addUpTimer = (canvas) => {
   }, 40);
 };
 
-function animate(canvas, sss) {
-  var ss1 = new Date().toLocaleTimeString("en-US", {
-    hour12: false,
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  });
-  sss.set({
-    text: ss1,
-  });
-  canvas.requestRenderAll();
-}
+
 export const createText = (canvas) => {
   const text = new fabric.Text(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
