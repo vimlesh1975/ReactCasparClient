@@ -23,6 +23,81 @@ export const animate = (canvas, sss) => {
   canvas.requestRenderAll();
 }
 
+
+export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
+  const text = new fabric.Textbox(id, {
+    shadow: shadowOptions,
+    id: id,
+    class: "class_" + fabric.Object.__uid,
+    left: 103 * 1.87,
+    top: 762,
+    width: 480 * 1.87,
+    fill: "#ffffff",
+    fontFamily: options.currentFont,
+    fontWeight: "bold",
+    fontSize: options.currentFontSize,
+    editable: true,
+    objectCaching: false,
+    textAlign: "left",
+    stroke: "#000000",
+    strokeWidth: 0,
+  });
+  canvas.add(text).setActiveObject(text);
+  canvas.requestRenderAll();
+};
+
+export const createIText = (canvas) => {
+  const text = new fabric.IText(
+    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
+    {
+      shadow: shadowOptions,
+      id: "ccg_" + fabric.Object.__uid,
+      class: "class_" + fabric.Object.__uid,
+      left: 100,
+      top: 0,
+      width: 480,
+      fill: options.currentColor,
+      fontFamily: options.currentFont,
+      fontWeight: "bold",
+      fontSize: options.currentFontSize,
+      editable: true,
+      objectCaching: false,
+      textAlign: "left",
+      stroke: options.stroke,
+      strokeWidth: options.strokeWidth,
+    }
+  );
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+  text.animate("top", 343, { onChange: canvas.renderAll.bind(canvas) });
+};
+
+export const createText = (canvas) => {
+  const text = new fabric.Text(
+    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
+    {
+      id: "ccg_" + fabric.Object.__uid,
+      class: "class_" + fabric.Object.__uid,
+      shadow: shadowOptions,
+      left: 100 * 1.87,
+      top: 0,
+      width: 480 * 1.87,
+      fill: options.currentColor,
+      fontFamily: options.currentFont,
+      fontWeight: "bold",
+      fontSize: options.currentFontSize,
+      editable: true,
+      objectCaching: false,
+      textAlign: "left",
+      stroke: options.stroke,
+      strokeWidth: options.strokeWidth,
+    }
+  );
+  canvas.add(text).setActiveObject(text);
+  canvas.renderAll();
+  text.animate("top", 243 * 1.87, { onChange: canvas.renderAll.bind(canvas) });
+};
+
 export const addUpTimer = (canvas) => {
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
