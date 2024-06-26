@@ -418,7 +418,7 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID, FP
                     Drag me
                     <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq })}>X</button>
                 </div>
-                <TheatreImageSequence sheet={sheet} generateTheatreID={generateTheatreID} FPS={FPS} />
+                <TheatreImageSequence sheet={sheet} generateTheatreID={generateTheatreID} fps={FPS} />
             </div>
         </Rnd >
 
@@ -1264,7 +1264,7 @@ const WebAnimator = () => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-        // const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+        // console.log(contentforHtml)        // const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
         const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', 'CRLF');
 
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
@@ -1357,7 +1357,7 @@ const WebAnimator = () => {
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
             const aa5=canvas_${layerNumber}.getObjects().find((element=>element.id==='imgSeqGroup1'));
             aa5 && aa5.getObjects().forEach((image, index) => {
-                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                image.set({ opacity: index === parseInt((position) * ${FPS}) ? 1 : 0 });
             });
             canvas_${layerNumber}.requestRenderAll();
            });
@@ -1629,7 +1629,7 @@ const WebAnimator = () => {
             core.onChange(sheet.sequence.pointer.position, (position) => {
             const aa5=canvas.getObjects().find((element=>element.id==='imgSeqGroup1'));
             aa5 && aa5.getObjects().forEach((image, index) => {
-                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                image.set({ opacity: index === parseInt((position) * ${FPS}) ? 1 : 0 });
             });
             canvas.requestRenderAll();
            });
@@ -1972,7 +1972,7 @@ const WebAnimator = () => {
          core.onChange(sheet.sequence.pointer.position, (position) => {
             const aa5=canvas.getObjects().find((element=>element.id==='imgSeqGroup1'));
             aa5 && aa5.getObjects().forEach((image, index) => {
-                image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                image.set({ opacity: index === parseInt((position) * ${FPS}) ? 1 : 0 });
             });
             canvas.requestRenderAll();
            });
@@ -2493,7 +2493,7 @@ const WebAnimator = () => {
         onChange(sheet.sequence.pointer.position, (position) => {
             if (element.type === 'group') {
                 element.getObjects().forEach((image, index) => {
-                    image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                    image.set({ opacity: index === parseInt((position) * FPS) ? 1 : 0 });
                 });
                 canvas.requestRenderAll();
             }
