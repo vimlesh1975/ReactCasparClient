@@ -496,27 +496,21 @@ const WebAnimator = () => {
 
     useEffect(() => {
         if (canvas) {
-            fabric.util.addListener(document.body, 'keydown', function (options) {
-                if (options.key === 'Delete') {
-                    if (document.activeElement === window.editor.canvas.wrapperEl) {
-                        deleteItem(canvas);
-
-                    }
+            const handleKeyDown = (options) => {
+                if (options.key === 'Delete' && document.activeElement === window.editor.canvas.wrapperEl) {
+                    deleteItem(canvas);
                 }
-            })
-        }
-        return () => {
-            fabric.util.removeListener(document.body, 'keydown', function (options) {
-                if (options.key === 'Delete') {
-                    if (document.activeElement === window.editor.canvas.wrapperEl) {
-                        deleteItem(canvas);
+            };
 
-                    }
-                }
-            })
+            fabric.util.addListener(document.body, 'keydown', handleKeyDown);
+
+            return () => {
+                fabric.util.removeListener(document.body, 'keydown', handleKeyDown);
+            };
         }
         // eslint-disable-next-line 
-    }, [canvas])
+    }, [canvas]);
+
 
 
     useEffect(() => {
@@ -529,21 +523,26 @@ const WebAnimator = () => {
     }, [])
 
     useEffect(() => {
-        studio.onSelectionChange((newSelection) => {
-            if ((newSelection.length > 0) && canvas && (newSelection[0].type === 'Theatre_SheetObject_PublicAPI')) {
-                const aa = canvas.getObjects().find((item) => {
-                    return newSelection[0]?.address?.objectKey === item.id;
-                })
-                if (aa) {
-                    canvas.setActiveObject(aa);
-                    canvas.requestRenderAll()
+        const handleSelectionChange = (newSelection) => {
+            if (newSelection.length > 0 && canvas && newSelection[0]?.type === 'Theatre_SheetObject_PublicAPI') {
+                const selectedObject = canvas.getObjects().find(item => newSelection[0]?.address?.objectKey === item.id);
+                if (selectedObject) {
+                    canvas.setActiveObject(selectedObject);
+                    canvas.requestRenderAll();
                 }
             }
-        })
+        };
+
+        // Add event listener
+        studio.onSelectionChange(handleSelectionChange);
+
+        // Cleanup function
         return () => {
-            // second
-        }
-    }, [canvas])
+            // Use a workaround for removing the event listener if there is no `offSelectionChange` method
+            studio.onSelectionChange(() => { });
+        };
+    }, [canvas]);
+
 
 
     useEffect(() => {
