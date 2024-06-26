@@ -73,6 +73,19 @@ const currentPageReducer = (state = initialCurrentPage, action) => {
   }
 };
 
+const initialFPS = { FPS: 60 };
+const FPSReducer = (state = initialFPS, action) => {
+  switch (action.type) {
+    case 'CHANGE_FPS':
+      return {
+        ...state,
+        FPS: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
 const initialMedia = { media: [] };
 const mediaReducer = (state = initialMedia, action) => {
   switch (action.type) {
@@ -476,6 +489,7 @@ const rootReducer = combineReducers({
   xpositionsReducer,
   speechRecognitionReducer,
   clientIdReducer,
+  FPSReducer
 });
 const store = createStore(
   rootReducer,

@@ -22,7 +22,9 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
     const cssfilename2 = useSelector(state => state.cssfilenameReducer2.cssfilename2);
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
-    const [currentFileName, setCurrentFileName] = useState()
+    const [currentFileName, setCurrentFileName] = useState();
+    // const FPS = useSelector(state => state.FPSReducer.FPS);
+
     // const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
 
 
@@ -94,6 +96,8 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
+        const subUnitsPerUnit = (JSON.parse(animationTheatrejs)).sheetsById["Sheet 1"].sequence.subUnitsPerUnit;
+        dispatch({ type: 'CHANGE_FPS', payload: subUnitsPerUnit });
 
         importHtml(json, animationTheatrejs)
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '250624_1';
+export const buildDate = '260624_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
@@ -26,8 +26,6 @@ export const animate = (canvas, sss) => {
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
   fabric.util.loadImage(imageName1, (myImg) => {
-    // fabric.Image.fromURL(imageName1,  myImg => {
-    console.log(myImg);
     if (myImg == null) {
       alert("Error!");
     } else {
@@ -50,7 +48,6 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
         height: myImg.height,
         fill: new fabric.Pattern({ source: myImg, repeat: "no-repeat" }),
       });
-      // rect.set({ scaleX: 0.5, scaleY: 0.5 })
       canvas.renderAll();
     }
   });

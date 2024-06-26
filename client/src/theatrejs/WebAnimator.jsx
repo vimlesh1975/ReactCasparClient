@@ -241,7 +241,7 @@ export const getPropOfObject = (id, str1) => {
     }
 };
 
-const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID, fps }) => {
+const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID, FPS }) => {
     const { editor, onReady } = useFabricJSEditor();
     const dispatch = useDispatch();
     const showExtensionPanel = useSelector(state => state.showExtensionPanelReducer.showExtensionPanel);
@@ -418,7 +418,7 @@ const DrawingforTheatrejs = ({ importHtml, playtoCasparcg, generateTheatreID, fp
                     Drag me
                     <button style={{ position: 'absolute', right: 0 }} onClick={() => dispatch({ type: 'SHOW_IMG_SEQ', payload: !showImgSeq })}>X</button>
                 </div>
-                <TheatreImageSequence sheet={sheet} generateTheatreID={generateTheatreID} fps={fps} />
+                <TheatreImageSequence sheet={sheet} generateTheatreID={generateTheatreID} FPS={FPS} />
             </div>
         </Rnd >
 
@@ -439,12 +439,12 @@ const WebAnimator = () => {
     const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
-    const [fps, setFps] = useState(60);
+
+    const FPS = useSelector(state => state.FPSReducer.FPS);
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const [duration, setDuration] = useState(1);
-    // const [loopcount, setLoopcount] = useState(1);
     const [fabric1, setFabric1] = useState('');
     const [coreAndStudio1, setCoreAndStudio1] = useState('');
     const [projectId, setProjectId] = useState('Fabricjs Object Animation')
@@ -481,10 +481,10 @@ const WebAnimator = () => {
     useEffect(() => {
         setTimeout(() => {
             studio.transaction((api) => {
-                api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(fps)) // make it 30fps
+                api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(FPS)) // make it 30fps
             })
         }, 2000);
-    }, [fps])
+    }, [FPS])
 
     useEffect(() => {
         window.chNumber = chNumber;
@@ -1347,7 +1347,7 @@ const WebAnimator = () => {
             const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
             setInterval(() => {
             rafDriver.tick(performance.now());
-            }, ${1000 / fps});
+            }, ${1000 / FPS});
 
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
@@ -1619,7 +1619,7 @@ const WebAnimator = () => {
             const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
             setInterval(() => {
             rafDriver.tick(performance.now());
-            }, ${1000 / fps});
+            }, ${1000 / FPS});
 
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
@@ -1816,7 +1816,7 @@ const WebAnimator = () => {
 
 
     const exportHtml = async (overRide = false) => {
-        const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize })
+        const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, FPS, currentscreenSize })
 
         const gdd = getGdd(canvas, 'RCCWebAnimator');
 
@@ -2145,7 +2145,7 @@ const WebAnimator = () => {
         const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
         setInterval(() => {
         rafDriver.tick(performance.now());
-        }, ${1000 / fps});
+        }, ${1000 / FPS});
 
         studio.initialize();
         studio.ui.hide();
@@ -2365,10 +2365,6 @@ const WebAnimator = () => {
     }
 
     const importHtml = async (canvasContent1, animationContetent1) => {
-
-        // const subUnitsPerUnit = (JSON.parse(animationContetent1)).sheetsById["Sheet 1"].sequence.subUnitsPerUnit;
-        // console.log(subUnitsPerUnit);
-
         localStorage.removeItem('theatre-0.4.persistent');
         if (canvasContent1) {
             deleteAllObjects();
@@ -2434,9 +2430,7 @@ const WebAnimator = () => {
                     }
                 };
             }
-
         }
-
     }
     const processContent = (content) => {
         var canvasContent = content.split('const content =')[1].split(']};')[0] + ']}';
@@ -2445,7 +2439,6 @@ const WebAnimator = () => {
             const jsfilename1 = content.split("<script src='")[1].split('.')[0];
             setJsfilename(jsfilename1);
         }
-
         try {
             const { duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize } = JSON.parse((content.split('const mainPageData=')[1]).split('</script>')[0]);
             setDuration(duration);
@@ -2454,13 +2447,11 @@ const WebAnimator = () => {
             setLoopAnimationEnd(loopAnimationEnd);
             setSelectedOption(selectedOption);
             setJsfilename(jsfilename);
-            setFps(fps);
-
+            dispatch({ type: 'CHANGE_FPS', payload: fps });
             dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: currentscreenSize })
         } catch (error) {
 
         }
-
         const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
         const pid = `project${randomNumber}`;
         project = getProject(pid, { state: JSON.parse(animationContetent) });
@@ -2470,7 +2461,6 @@ const WebAnimator = () => {
         project.ready.then(() => {
             // sheet.sequence.play({ iterationCount: Infinity, range: [0, 2] });
         });
-
         initialiseCore(canvasContent, true);
     }
     const findElementWithId = (group, id) => {
@@ -2489,211 +2479,12 @@ const WebAnimator = () => {
         return null;
     };
 
-    //     var video1 = new fabric.Image(video1El.current, {
-    //         // width: 1920,
-    //         // height: 1080
-    //     });
-    //     canvas.add(video1).setActiveObject(video1);;
-
-    //     fabric.util.requestAnimFrame(function render() {
-    //         canvas.renderAll();
-    //         fabric.util.requestAnimFrame(render);
-    //     });
-
-    //     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(function (stream) {
-    //         video1El.current.srcObject = stream;
-    //         video1El.current.play();
-    //     });
-    // }
-
-
-    // const gg = (totalFrames, prefix) => {
-    //     for (let i = 0; i <= totalFrames; i++) {
-    //         sheet.sequence.position = 0;;
-    //         studio.transaction((api) => {
-    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-    //         })
-    //     }
-
-    //     for (let i = 0; i <= totalFrames; i++) {
-    //         sheet.sequence.position = i * 0.04;
-    //         studio.transaction((api) => {
-    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-    //         })
-    //     }
-
-    //     for (let i = 0; i <= totalFrames; i++) {
-    //         sheet.sequence.position = (i + 1) * 0.04;
-    //         studio.transaction((api) => {
-    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 1);
-    //         })
-    //     }
-
-    //     for (let i = 0; i <= totalFrames; i++) {
-    //         sheet.sequence.position = (i + 2) * 0.04;
-    //         studio.transaction((api) => {
-    //             api.set(getObjectbyId(prefix + i.toString()).props.opacity, 0);
-    //         })
-    //     }
-    // }
-
-    // const addPngSequence = () => {
-    //     const input = document.createElement('input');
-    //     input.type = 'file';
-    //     input.webkitdirectory = true;
-    //     input.multiple = true;
-    //     input.style.display = 'none';
-
-    //     input.addEventListener('change', function (event) {
-    //         const files = event.target.files;
-    //         const prefix = 'pngseq / '
-
-    //         for (let j = 0; j < files.length; j++) {
-    //             const file = files[j];
-    //             if (file.type.startsWith('image/')) {
-    //                 loadImage(file, function (fabricImage, sheet) {
-    //                     fabricImage.set({
-    //                         left: 200, top: 200, scaleX: 1, scaleY: 1, id: prefix + j.toString(), opacity: 0,
-    //                         class: "class_" + fabric.Object.__uid,
-    //                         shadow: {
-    //                             color: '#000000',
-    //                             blur: 0,
-    //                             offsetX: 0,
-    //                             offsetY: 0,
-    //                             affectStroke: false,
-    //                         },
-    //                         strokeUniform: true,
-    //                         objectCaching: false,
-    //                         fill: "#ff0000",
-    //                         stroke: "#00ff00",
-    //                     });
-
-    //                     canvas.add(fabricImage).setActiveObject(fabricImage)
-    //                     canvas.requestRenderAll();
-
-    //                     const element = canvas.getActiveObjects()[0];
-    //                     const obj1 = {
-    //                         left: 500,
-    //                         top: 300,
-    //                         scaleX: types.number(1, { nudgeMultiplier: 0.01 }),
-    //                         scaleY: types.number(1, { nudgeMultiplier: 0.01 }),
-    //                         angle: 0,
-    //                         opacity: types.number(0, { range: [0, 1] }),
-    //                         rx: types.number(10, { range: [0, 100] }),
-    //                         ry: types.number(10, { range: [0, 100] }),
-    //                         strokeWidth: types.number(0, { range: [0, 100] }),
-    //                         fontSize: types.number(45, { range: [0, 100] }),
-    //                         strkdsar: types.number(0, { range: [0, 1000] }, { nudgeMultiplier: 0.1 }),
-    //                         strkDsOfst: types.number(0, { range: [-1000, 1000] }),
-    //                         fill: types.rgba(hexToRGB(element.type === 'rect' ? '#0000ff' : '#ffffff')),
-    //                         stroke: types.rgba(hexToRGB('#000000')),
-    //                         shadow: { ...shadowOptions, color: types.rgba(hexToRGB('#000000')), blur: types.number(parseInt(0), { range: [0, 100] }) },
-    //                         skewX: types.number(0, { range: [-88, 88] }),
-    //                         skewY: types.number(0, { range: [-60, 60] }),
-    //                     }
-    //                     const i = arrObject.length;
-    //                     arrObject[i] = sheet.object(element.id, obj1);
-    //                     arrObject[i].onValuesChange((val) => {
-    //                         element.set({
-    //                             left: val.left,
-    //                             top: val.top,
-    //                             opacity: val.opacity,
-    //                             scaleX: val.scaleX,
-    //                             scaleY: val.scaleY,
-    //                             angle: val.angle,
-    //                             rx: val.rx,
-    //                             ry: val.ry,
-    //                             strokeWidth: val.strokeWidth,
-    //                             fontSize: val.fontSize,
-    //                             strokeDashArray: [val.strkdsar, val.strkdsar],
-    //                             strokeDashOffset: val.strkDsOfst,
-    //                             shadow: val.shadow,
-    //                             fill: val.fill,
-    //                             stroke: val.stroke,
-    //                             skewX: val.skewX,
-    //                             skewY: val.skewY,
-    //                         });
-    //                         element.setCoords();
-    //                         canvas.requestRenderAll();
-    //                     })
-    //                     // const onMouseMove = (obj, event) => {
-    //                     //     if (mouseDown === 1) {
-    //                     //         studio.transaction(({ set }) => {
-    //                     //             set(obj.props.left, event.target.left);
-    //                     //             set(obj.props.top, event.target.top);
-    //                     //             set(obj.props.angle, event.target.angle);
-    //                     //         });
-    //                     //     }
-    //                     // };
-    //                     const onScaling = (obj, event) => {
-    //                         studio.transaction(({ set }) => {
-    //                             set(obj.props.scaleX, event.transform.target.scaleX);
-    //                             set(obj.props.scaleY, event.transform.target.scaleY);
-    //                         });
-    //                     };
-
-    //                     element.on('mousedown', () => studio.setSelection([arrObject[i]]), false);
-    //                     element.on('mousemove', (e) => onMouseMove11(arrObject[i], e), false);
-    //                     element.on('scaling', (e) => onScaling(arrObject[i], e), false);
-
-    //                     studio.setSelection([arrObject[i]]);
-
-    //                     if (j === (files.length - 1)) {
-    //                         gg(files.length - 1, prefix)
-    //                     }
-
-    //                 });
-
-
-    //             }
-
-
-
-    //         }
-
-    //     });
-
-    //     const onMouseMove11 = (obj, event) => {
-    //         if (mouseDown === 1) {
-    //             studio.transaction(({ set }) => {
-    //                 set(obj.props.left, event.target.left);
-    //                 set(obj.props.top, event.target.top);
-    //                 set(obj.props.angle, event.target.angle);
-    //             });
-    //         }
-    //     };
-
-    //     document.body.appendChild(input);
-    //     input.click();
-    //     document.body.removeChild(input);
-    //     function loadImage(file, callback) {
-    //         const reader = new FileReader();
-
-    //         reader.onload = function (event) {
-    //             const img = new Image();
-    //             img.onload = function () {
-    //                 const fabricImage = new fabric.Image(img, {
-    //                 });
-
-    //                 callback(fabricImage, sheet);
-    //             };
-    //             img.src = event.target.result;
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-
-
-    // }
-
-    // eslint-disable-next-line 
-
     const addItem = async (name, id = idofElement) => {
         const idAlreadyExists = findElementWithId(canvas, id);
         if (idAlreadyExists) {
             alert("Id Already exists");
             return
         }
-
         await name(canvas);
         generateTheatreID(id)
     }
@@ -3072,7 +2863,7 @@ const WebAnimator = () => {
         await ffmpeg.load();
         await ffmpeg.FS('writeFile', 'input.webm', await fetchFile(blob1));
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'libx264', '-r', fps.toString(), 'output.mp4');
-        await ffmpeg.run('-codec:v', 'libvpx-vp9', '-i', 'input.webm', '-codec:v', 'qtrle', '-r', fps.toString(), '-s', getTranscodedVideoSize(), 'output.mov');
+        await ffmpeg.run('-codec:v', 'libvpx-vp9', '-i', 'input.webm', '-codec:v', 'qtrle', '-r', FPS.toString(), '-s', getTranscodedVideoSize(), 'output.mov');
         // await ffmpeg.run('-i', 'input.webm', '-codec:v', 'prores_ks', '-pix_fmt', 'yuva444p10le', '-r', '25', 'output.mov');
         const processedData = ffmpeg.FS('readFile', 'output.mov');
         const processedBlob1 = new Blob([processedData.buffer], { type: 'video/mov' });
@@ -3180,8 +2971,8 @@ const WebAnimator = () => {
                     dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                 }} />
                 <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
-                FPS:<input type='text' style={{ width: 40 }} value={fps} onChange={e => {
-                    setFps(e.target.value);
+                FPS:<input type='text' style={{ width: 40 }} value={FPS} onChange={e => {
+                    dispatch({ type: 'CHANGE_FPS', payload: parseFloat(e.target.value) })
                     studio.transaction((api) => {
                         api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(e.target.value)) // make it 30fps
                     })
@@ -3207,7 +2998,7 @@ const WebAnimator = () => {
                 />
             </div>
             <span style={{ position: 'absolute', left: 960, top: 540, fontSize: 40 }}>.</span>
-            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} generateTheatreID={generateTheatreID} fps={fps} />
+            <DrawingforTheatrejs importHtml={importHtml} playtoCasparcg={playtoCasparcg} generateTheatreID={generateTheatreID} fps={FPS} />
             <ContextMenu x={x} y={y} visibility={visibility} />
         </div>
     </>)
