@@ -22,10 +22,11 @@ const Timer = ({ dataLayer, setText, updateText2, setAndPlay, dataLength, stop, 
                         endpoint(`call ${window.chNumber}-${dataLayer} window.sheet.sequence.position=0`);
                         executeScript(`sheet_${dataLayer}.sequence.position=0`);
 
+                        updateText2(canvas, dataLayer);
+
                         endpoint(`call ${window.chNumber}-${dataLayer} window.sheet.sequence.play()`);
                         executeScript(`sheet_${dataLayer}.sequence.play()`);
 
-                        updateText2(canvas, dataLayer)
                     }, 1000);
 
                     return newCounter;
