@@ -105,22 +105,27 @@ const ImageSequence = ({ layer }) => {
 
   }
   const addToCanvas = (id = 'id_' + layer) => {
-    const imageGroup = new fabric.Group(imageObjects, {
-      shadow: shadowOptions,
-      id: id,
-      class: "class_" + fabric.Object.__uid,
-      fill: "#ffffff",
-      objectCaching: false,
-      stroke: "#000000",
-      strokeWidth: 0,
-    });
+    const aa5 = canvas.getObjects().find((element => element.id === 'imgSeqGroup1'));
+    if (!aa5) {
+      const imageGroup = new fabric.Group(imageObjects, {
+        shadow: shadowOptions,
+        id: 'imgSeqGroup1',
+        class: "class_" + fabric.Object.__uid,
+        fill: "#ffffff",
+        objectCaching: false,
+        stroke: "#000000",
+        strokeWidth: 0,
+      });
 
-    canvas.add(imageGroup).setActiveObject(imageGroup);;
-    canvas.requestRenderAll();
+      canvas.add(imageGroup).setActiveObject(imageGroup);;
+      canvas.requestRenderAll();
+    }
+
+
   };
   const showFrame = (frameIndex) => {
-    if (canvas.getObjects().some(image => image.id === `id_${layer}`)) {
-      const group = canvas.getObjects().find(object => object.id === `id_${layer}`)
+    if (canvas.getObjects().some(image => image.id === 'imgSeqGroup1')) {
+      const group = canvas.getObjects().find(object => object.id === 'imgSeqGroup1')
       group.getObjects().forEach((image, index) => {
         image.set({ opacity: index === frameIndex ? 1 : 0 });
       });

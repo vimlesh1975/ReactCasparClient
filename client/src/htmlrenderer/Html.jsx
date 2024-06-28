@@ -171,7 +171,7 @@ const Html = () => {
             // console.log(str);
         }
         // str = str.replace(/CRLF/g, '\\n'); // removed on 27.06.2024 for bad control charater some image sequence
-        str = str.replace(/CRLF/g, '\\\\n');
+        // str = str.replace(/CRLF/g, '\\\\n');
 
         // eslint-disable-next-line
         eval(str)

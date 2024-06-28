@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fabric } from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 
-import { alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
@@ -31,15 +31,15 @@ import * as d from '@theatre/dataverse'
 fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
-var _clipboard;
-const copy = (canvas) => {
-    canvas?.getActiveObject()?.clone(
-        (cloned) => {
-            _clipboard = cloned;
-        },
-        ["id", "class", "selectable"]
-    );
-};
+// var _clipboard;
+// const copy = (canvas) => {
+//     canvas?.getActiveObject()?.clone(
+//         (cloned) => {
+//             _clipboard = cloned;
+//         },
+//         ["id", "class", "selectable"]
+//     );
+// };
 
 
 
@@ -940,11 +940,6 @@ const WebAnimator = () => {
                         dispatch({ type: 'SHOW_SAVEPANNEL', payload: !showSavePanel });
                     }}>{showSavePanel ? 'Hide Save Pannel' : 'Show Save Panel'}</li>
                     <li onClick={allOutofScreen}>All Out of Screen</li>
-                    {/* <li onClick={addPngSequence}>Add Png Sequence</li>
-                    <li onClick={addSequnce}>try addind sequnce</li> */}
-
-                    {/* <li onClick={allInScreen}>All on Screen</li> */}
-
                 </ul>
             </div>
         );
@@ -972,12 +967,8 @@ const WebAnimator = () => {
             b: normalizedValues[2],
             a: normalizedValues[3] * 255,
         };
-
         return rgbaObject;
     }
-
-
-
 
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent, () => {
@@ -986,11 +977,9 @@ const WebAnimator = () => {
                 if ((element.fill === null)) {
                     element.set({ fill: '#555252' })
                 }
-
                 if (element.stroke === null) {
                     element.set({ stroke: '#000000' })
                 }
-
                 var obj1 = {};
                 var isColorObjectfill;
                 var isColorObjectStroke;
@@ -1002,7 +991,6 @@ const WebAnimator = () => {
                     if (element.fill.type === 'pattern') {
                         // do nothing
                     }
-
                     else if (isColorObjectfill) {
                         obj1 = {
                             ...obj1,
@@ -1231,16 +1219,11 @@ const WebAnimator = () => {
 
             })
         })
-
-        // dispatch({ type: 'CHANGE_CANVAS', payload: window.editor.canvas });
-
     }
-
     const reset = () => {
         localStorage.removeItem('theatre-0.4.persistent');
         window.location.reload();
     }
-
     const pause = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} window.sheet.sequence.pause()`);
         executeScript(`sheet_${layerNumber}.sequence.pause()`);
@@ -1259,18 +1242,12 @@ const WebAnimator = () => {
         }
     }
 
-
     const playtoCasparcg = (layerNumber, loopcount, duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
-
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-        // console.log(contentforHtml)        // const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
         const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', 'CRLF');
-
         const state1 = (JSON.stringify(studio.createContentOfSaveFile(projectId)));
-
         const scriptforHTML = `
-       
         localStorage.removeItem('theatre-0.4.persistent');
         window.canvas_${layerNumber}?.getObjects().forEach(element => {
             sheet_${layerNumber}?.detachObject(element.id);
@@ -1537,7 +1514,6 @@ const WebAnimator = () => {
             });
         });
         `
-
         executeScript(scriptforHTML);
         endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/Theatrejs2"`);
         // endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`)
@@ -1812,13 +1788,9 @@ const WebAnimator = () => {
         "`)
     }
 
-
-
     const exportHtml = async (overRide = false) => {
         const mainPageData = JSON.stringify({ duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, FPS, currentscreenSize })
-
         const gdd = getGdd(canvas, 'RCCWebAnimator');
-
         const xx4 = `
         document.body.addEventListener('keypress', function(e) {
             if(e.key.toUpperCase() === "S") { stop(); }
@@ -2081,7 +2053,6 @@ const WebAnimator = () => {
             element.on('mousemove', (e) => onMouseMove(arrObject[i], e), false);
             element.on('scaling', (e) => onScaling(arrObject[i], e), false);
             `
-
         const aa =
             `<!DOCTYPE html>
             <html lang="en">
@@ -2334,7 +2305,6 @@ const WebAnimator = () => {
                     })
                 })
             }
-          
         }
      <//script>
          </body>
@@ -2352,10 +2322,7 @@ const WebAnimator = () => {
                 accept: { 'text/html': ['.html'] },
             }],
         };
-        // var aa1;
         if (overRide) {
-            // aa1 = htmlfileHandle;
-            // sethtmlfileHandle(aa1)
             saveFile(null, file, htmlfileHandle)
         }
         else {
