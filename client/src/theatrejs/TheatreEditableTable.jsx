@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { executeScript, stopGraphics1, loopDirection, saveFile, templateLayers, endpoint } from '../common'
 import Papa from "papaparse";
 import { fabric } from "fabric";
@@ -13,7 +13,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 const TheatreEditableTable = ({ playtoCasparcg }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [data1, setData1] = useState([]);
     const [headers, setHeaders] = useState([]);
     const [dataLayer, setDataLayer] = useState(templateLayers.data);
@@ -112,7 +112,7 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
         });
 
         canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+        // dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     };
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
@@ -436,7 +436,6 @@ const loopDirection = [{ direction: 'normal', notation: 'N' }, { direction: 'rev
 
 const WebAnimator = () => {
 
-    const video1El = useRef(null);
     const [recording, setRecording] = useState(false);
     const [transcoding, setTranscoding] = useState(false);
 
@@ -480,9 +479,11 @@ const WebAnimator = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            studio.transaction((api) => {
-                api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(FPS)) // make it 30fps
-            })
+            if (FPS) {
+                studio.transaction((api) => {
+                    api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(FPS)) // make it 30fps
+                })
+            }
         }, 2000);
     }, [FPS])
 
@@ -2858,15 +2859,6 @@ const WebAnimator = () => {
 
     return (<>
         <div style={{}} onContextMenu={handleClick} onClick={() => setVisibility(false)}>
-            <video
-                ref={video1El}
-                loop
-                // muted
-                width="1920"
-                height="1080"
-                style={{ display: 'none' }}        >
-
-            </video>
             <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 49, backgroundColor: 'white', height: 25, width: 1920 }}></div>
             <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 50, textAlign: 'center' }}>
                 <button title='Data from Local Storage' onClick={() => {
