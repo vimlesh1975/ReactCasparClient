@@ -479,7 +479,7 @@ const WebAnimator = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            if (FPS) {
+            if (FPS !== undefined && !isNaN(FPS)) {
                 studio.transaction((api) => {
                     api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(FPS)) // make it 30fps
                 })
@@ -2929,12 +2929,24 @@ const WebAnimator = () => {
                     dispatch({ type: 'CHANGE_CLIENTID', payload: e.target.value })
                 }} />
                 <button disabled={recording ? true : false} onClick={() => record()}>{recording ? transcoding ? 'Transcoding' : 'Recoreding' : 'Record'} </button>
-                FPS:<input type='text' style={{ width: 40 }} value={FPS} onChange={e => {
-                    dispatch({ type: 'CHANGE_FPS', payload: parseFloat(e.target.value) })
-                    studio.transaction((api) => {
-                        api.set(sheet.sequence.pointer.subUnitsPerUnit, parseInt(e.target.value)) // make it 30fps
-                    })
-                }} />
+                FPS:<input
+                    min={10}
+                    type="number"
+                    step={1}
+                    style={{ width: 40 }}
+                    value={FPS}
+                    onChange={e => {
+                        const value = e.target.value;
+                        if (value !== '' && !isNaN(value)) {
+                            dispatch({ type: 'CHANGE_FPS', payload: parseFloat(value) });
+                        }
+                    }}
+                    onBlur={e => {
+                        if (e.target.value === '') {
+                            dispatch({ type: 'CHANGE_FPS', payload: 10 });
+                        }
+                    }}
+                />
 
                 Size: <select value={currentscreenSize} onChange={e => {
                     localStorage.setItem('RCC_currentscreenSize', parseInt(e.target.value))
