@@ -41,7 +41,9 @@ const Timer = ({ dataLayer, setText, updateText2, setAndPlay, dataLength, stop, 
 
     const handleStart = () => {
         setAndPlay(counter);
-        setIsActive(true);
+        setTimeout(() => {
+            setIsActive(true);
+        }, 4000);
     };
 
     const handleStop = () => {

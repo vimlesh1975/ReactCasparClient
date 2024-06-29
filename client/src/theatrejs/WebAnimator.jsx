@@ -2407,14 +2407,14 @@ const WebAnimator = () => {
             setJsfilename(jsfilename1);
         }
         try {
-            const { duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, fps, currentscreenSize } = JSON.parse((content.split('const mainPageData=')[1]).split('</script>')[0]);
+            const { duration, enableLoopAnimation, loopAnimationStart, loopAnimationEnd, selectedOption, jsfilename, FPS, currentscreenSize } = JSON.parse((content.split('const mainPageData=')[1]).split('</script>')[0]);
             setDuration(duration);
             setEnableLoopAnimation(enableLoopAnimation);
             setLoopAnimationStart(loopAnimationStart);
             setLoopAnimationEnd(loopAnimationEnd);
             setSelectedOption(selectedOption);
             setJsfilename(jsfilename);
-            dispatch({ type: 'CHANGE_FPS', payload: fps });
+            dispatch({ type: 'CHANGE_FPS', payload: FPS });
             dispatch({ type: 'CHANGE_CURRENTSCREENSIZE', payload: currentscreenSize })
         } catch (error) {
 
