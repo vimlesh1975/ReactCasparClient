@@ -10,13 +10,17 @@ export default function Home({ ScriptID, title }) {
         async function fetchData() {
             try {
                 const res = await fetch(`${address1}/getContent?ScriptID=${ScriptID}`);
-                const data = await res.json();
-                setContent(data.Script);
+                try {
+                    const data = await res.json();
+                    setContent(data.Script);
+                } catch (error) {
+                    setContent('');
+                }
+
             } catch (error) {
                 console.error('Error fetching content:', error);
             }
         }
-
         fetchData();
     }, [ScriptID]);
 
@@ -30,15 +34,15 @@ export default function Home({ ScriptID, title }) {
 
         const newTimeoutId = setTimeout(async () => {
             try {
-                const res = await fetch('/api/updateContent', {
+                await fetch(address1 + '/updateContent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ content: newContent, ScriptID }),
                 });
-                const data = await res.json();
-                console.log(data.message);
+                // const data = await res.json();
+                // console.log(data.message);
             } catch (error) {
                 console.error('Error saving content:', error);
             }
@@ -59,7 +63,7 @@ export default function Home({ ScriptID, title }) {
                     rows="20"
                     cols="50"
                     style={{ fontSize: 20 }}
-                    disabled
+
                 />
             </div>
 

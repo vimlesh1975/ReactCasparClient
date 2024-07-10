@@ -608,4 +608,15 @@ app.get('/getContent', async (req, res) => {
   }
 })
 
+app.post('/updateContent', async (req, res) => {
+  const { content, ScriptID } = req.body;
+  try {
+    await pool.query(`UPDATE script SET Script = ?  where ScriptID='${ScriptID}' LIMIT 1`, [content]);
+    res.send('');
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 // NRCS code ends

@@ -565,7 +565,7 @@ const App = () => {
 
               <Tab>Help</Tab>
               <Tab>GA</Tab>
-              {/* <Tab>NRCS</Tab> */}
+              <Tab>NRCS</Tab>
 
             </TabList>
             <TabPanel>
@@ -697,9 +697,9 @@ const App = () => {
             <TabPanel>
               <GenerativeArts />
             </TabPanel>
-            {/* <TabPanel>
+            <TabPanel>
               <Graphics />
-            </TabPanel> */}
+            </TabPanel>
           </Tabs>
         </div>
       </div>
