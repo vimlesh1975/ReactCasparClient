@@ -2,7 +2,7 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import { fabric } from 'fabric';
 
-export const buildDate = '060724_1';
+export const buildDate = '200824_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"

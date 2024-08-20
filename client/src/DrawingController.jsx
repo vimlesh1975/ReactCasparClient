@@ -1487,8 +1487,8 @@ const DrawingController = () => {
   };
 
   const exportPngFullPage = (canvas) => {
+    canvas.discardActiveObject().renderAll();
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    selectAll(canvas);
     var ss = generalFileName();
     const options = {
       fileExtension: '.png',
@@ -1504,6 +1504,41 @@ const DrawingController = () => {
       saveFile(options, data);
     })
   };
+
+
+  const exportAllPngFullPage = async (canvas) => {
+    try {
+      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
+      canvas.discardActiveObject().renderAll();
+      canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+      let iii = 1;
+      const directoryHandle = await window.showDirectoryPicker();
+
+      for (const val of canvasList) {
+        // Load the JSON and wait for it to fully render
+        await new Promise((resolve) => {
+          canvas.loadFromJSON(val.pageValue, () => {
+            canvas.renderAll(); // Ensure the canvas is fully rendered
+            resolve();
+          });
+        });
+
+        // Convert the canvas to a Blob and save it
+        const data = await new Promise((resolve) => {
+          canvas.getElement().toBlob(resolve);
+        });
+
+        const fileHandle = await directoryHandle.getFileHandle(`${ss}_${iii}.png`, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(data);
+        await writable.close();
+        iii++;
+      }
+    } catch (err) {
+      console.error('Folder selection or file save failed:', err);
+    }
+  };
+
 
   const exportHorizontalScrollAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -2479,9 +2514,9 @@ const DrawingController = () => {
               <button onClick={() => OverrightHtml(canvas)}>Overwrite</button>
             )}
             <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
-            <button onClick={() => exportPngFullPage(canvas)}>
-              PNG(FullPage)
-            </button>
+            <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
+            <button onClick={() => exportAllPngFullPage(canvas)}>All PNG(FullPage)</button>
+
             <button onClick={() => exportSVG(canvas)}>SVG</button>
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
