@@ -601,17 +601,18 @@ app.post('/deleteGraphics', async (req, res) => {
 
 app.get('/getContent', async (req, res) => {
   const ScriptID = req.query.ScriptID;
+  const NewsId = req.query.NewsId;
   try {
-    const [rows] = await pool.query(`SELECT Script FROM script where ScriptID='${ScriptID}' LIMIT 1`);
+    const [rows] = await pool.query(`SELECT Script FROM script where ScriptID='${ScriptID}' AND NewsId='${NewsId}'`);
     res.send(rows[0]);
   } catch (error) {
   }
 })
 
 app.post('/updateContent', async (req, res) => {
-  const { content, ScriptID } = req.body;
+  const { content, ScriptID, NewsId } = req.body;
   try {
-    await pool.query(`UPDATE script SET Script = ?  where ScriptID='${ScriptID}' LIMIT 1`, [content]);
+    await pool.query(`UPDATE script SET Script = ?  where ScriptID='${ScriptID}'  AND NewsId='${NewsId}' `, [content]);
     res.send('');
   } catch (error) {
     console.log(error);

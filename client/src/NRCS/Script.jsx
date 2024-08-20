@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react';
 import { address1 } from '../common'
 
-export default function Home({ ScriptID, title }) {
+export default function Home({ ScriptID, title, currentSlugSlugName }) {
     const [content, setContent] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch(`${address1}/getContent?ScriptID=${ScriptID}`);
+                const res = await fetch(`${address1}/getContent?ScriptID=${ScriptID}&NewsId=${title}`);
                 try {
                     const data = await res.json();
                     setContent(data.Script);
@@ -22,7 +22,7 @@ export default function Home({ ScriptID, title }) {
             }
         }
         fetchData();
-    }, [ScriptID]);
+    }, [ScriptID, title]);
 
     const handleContentChange = (e) => {
         const newContent = e.target.value;
@@ -39,7 +39,7 @@ export default function Home({ ScriptID, title }) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ content: newContent, ScriptID }),
+                    body: JSON.stringify({ content: newContent, ScriptID, NewsId: title }),
                 });
                 // const data = await res.json();
                 // console.log(data.message);
@@ -54,7 +54,7 @@ export default function Home({ ScriptID, title }) {
     return (
         <div>
             <div style={{ backgroundColor: 'red' }}>
-                {title}
+                {title + " " + currentSlugSlugName}
             </div>
             <div>
                 <textarea

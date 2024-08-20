@@ -589,7 +589,7 @@ const Graphics = () => {
                         </TabPanel>
                         <TabPanel>
                             <div>
-                                <Script ScriptID={ScriptID} title={selectedRunOrderTitle + ' ' + currentSlugSlugName} />
+                                <Script ScriptID={ScriptID} title={selectedRunOrderTitle} currentSlugSlugName={currentSlugSlugName} />
                             </div>
                         </TabPanel>
                     </Tabs>
