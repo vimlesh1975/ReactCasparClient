@@ -335,20 +335,10 @@ const Graphics = () => {
 
     const fetchAllContent = async () => {
         const data1 = new Array(slugs.length * 2); // Creating an array with double the length to store index and script content
-        const fetchPromises = slugs.map((slug, i) => fetch(`${address1}/getContent?ScriptID=${slug.ScriptID}`)
-            .then(async (res) => {
-                const data = await res.json();
-                data1[i * 2] = `${i + 1} ${slug.SlugName}`;
-                data1[i * 2 + 1] = `${data.Script}\n_ _ _ _ _ _ _\n`;
-            })
-            .catch(error => {
-                console.error('Error fetching content:', error);
-            })
-        );
-
-        // Await all fetch promises to complete
-        await Promise.all(fetchPromises);
-
+        slugs.forEach((slug, i) => {
+            data1[i * 2] = `${i + 1} ${slug.SlugName}`;
+            data1[i * 2 + 1] = `${slug.Script}\n_ _ _ _ _ _ _\n`;
+        })
         return data1.filter(item => item !== undefined); // Filter out any undefined entries
     };
 
