@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { shadowOptions } from '../common';
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import { useSelector } from 'react-redux';
 
 const TheatreImageSequence = ({ layer, sheet, generateTheatreID, fps }) => {

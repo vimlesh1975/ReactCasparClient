@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import { resizeTextWidth, options, shadowOptions } from './common'
 import { useSelector } from 'react-redux'
 

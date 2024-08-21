@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 
 import { _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'

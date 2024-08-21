@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';

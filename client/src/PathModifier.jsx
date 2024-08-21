@@ -1,6 +1,6 @@
 import React, { } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { shadowOptions } from './common'
 import { mousedownandmousemoveevent } from './Drawing'
 

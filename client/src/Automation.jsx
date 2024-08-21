@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import socketIOClient from "socket.io-client";
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { endpoint, stopGraphics } from './common'
 import DrawingAutomation from './DrawingAutomation';
 import axios from 'axios';

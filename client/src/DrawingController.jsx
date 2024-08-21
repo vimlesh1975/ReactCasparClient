@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import {
   resizeTextWidth, deleteAll, lock, undo, unlockAll, redo, swapFaceandStrokeColors, sameSizeIMG, sameWidth, sameWidthIMG, sameHeightIMG,
   txtBold, textItalic, textUnderline, textLineThrough,

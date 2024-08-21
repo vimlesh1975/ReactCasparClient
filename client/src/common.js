@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { animation } from './animation.js';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric'
 
 export const buildDate = '200824_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];

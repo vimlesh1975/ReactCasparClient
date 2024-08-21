@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript, templateLayers } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";

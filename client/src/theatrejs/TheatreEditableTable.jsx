@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { executeScript, stopGraphics1, loopDirection, saveFile, templateLayers, endpoint } from '../common'
 import Papa from "papaparse";
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import TheatreTimer from './TheatreTimer';
 import { VscMove, VscTrash, } from "react-icons/vsc";
 import { FaPlay, FaStop, } from "react-icons/fa";

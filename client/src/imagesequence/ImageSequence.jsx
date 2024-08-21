@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { shadowOptions, endpoint, executeScript } from '../common';
 import Mixer from '../Mixer';
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { useSelector } from 'react-redux';
 
 const ImageSequence = ({ layer }) => {

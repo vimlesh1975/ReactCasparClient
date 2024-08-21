@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric'
 import { shadowOptions } from './common'
 
 const UnsplashSearch = ({ canvas }) => {

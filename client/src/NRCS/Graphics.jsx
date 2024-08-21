@@ -5,7 +5,7 @@ import GsapPlayer from '../GsapPlayer'
 import Script from './Script'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove } from "react-icons/vsc";
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import VerticalScrollPlayer from '../VerticalScrollPlayer'
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 

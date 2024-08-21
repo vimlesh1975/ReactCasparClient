@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import { importSvgCode, shadowOptions, openaiAddress } from './common'
 
 const addcommand = `Always Assume window.editor.canvas is avalable as fabricjs canvas . While adding a new object always use color parameter as full 6 digit hexadecimal notation, objectCaching as false and  shadow properties as {color: '#000000',  blur: 30, offsetX: 0, offsetY: 0, affectStroke: false};in object properties. After every code use window.editor.canvas.requestRenderAll();. `

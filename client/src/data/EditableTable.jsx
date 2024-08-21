@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { saveFile, templateLayers, stopGraphics, updateGraphics, startGraphics, playtoGsapCaspar, stopGsapLayer } from '../common'
 import Papa from "papaparse";
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import Timer from './Timer';
 import { VscMove, VscTrash } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";

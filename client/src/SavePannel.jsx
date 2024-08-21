@@ -8,7 +8,7 @@ import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex, saveFile } from './common'
 import { animation } from './animation.js'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 
 
 var currentFile = 'new';

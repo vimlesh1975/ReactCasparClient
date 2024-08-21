@@ -1,7 +1,7 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import {
 
 } from "./DrawingController";
