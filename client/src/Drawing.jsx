@@ -192,7 +192,7 @@ const Drawing = ({ canvasOutput }) => {
   useEffect(() => {
     setTimeout(() => {
       window.editor.canvas.extraProps = ["id", "selectable", "class"];
-      fabric.SHARED_ATTRIBUTES.push("class");
+      // fabric.SHARED_ATTRIBUTES.push("class");
       extendproperty();
 
       setZoomAndPan(window.editor.canvas);

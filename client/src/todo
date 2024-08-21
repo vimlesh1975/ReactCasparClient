@@ -1,0 +1,5 @@
+fabric.disableStyleCopyPaste = true; in drawingcontroller now not supported
+fabric.SHARED_ATTRIBUTES.push("class");in drawing  now not supported
+fabric.util.string.graphemeSplit = split from webanimator
+
+import "fabric-history"; from drawingcontroller

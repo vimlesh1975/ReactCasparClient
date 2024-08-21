@@ -23,12 +23,12 @@ import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
 import { Rnd } from 'react-rnd';
 
-import split from 'graphemesplit'
+// import split from 'graphemesplit'
 
 import * as d from '@theatre/dataverse'
 
 
-fabric.util.string.graphemeSplit = split
+// fabric.util.string.graphemeSplit = split
 
 const loopcount = 1;
 // var _clipboard;

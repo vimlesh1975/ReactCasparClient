@@ -39,7 +39,7 @@ import {
   sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1, setclipPathWhileImporting
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
-import "fabric-history";
+// import "fabric-history";
 import {
   VscPrimitiveSquare,
   VscCircleFilled,
@@ -78,24 +78,50 @@ var html;
 
 fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
-fabric.disableStyleCopyPaste = true;
+// fabric.disableStyleCopyPaste = true;
 
 
-const ErasedGroup = fabric.util.createClass(fabric.Group, {
-  original: null,
-  ErasedPath: null,
-  initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
+
+// const ErasedGroup = fabric.util.createClass(fabric.Group, {
+//   original: null,
+//   ErasedPath: null,
+//   initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
+//     this.original = original;
+//     this.ErasedPath = ErasedPath;
+//     this.callSuper(
+//       "initialize",
+//       [this.original, this.ErasedPath],
+//       options,
+//       isAlreadyGrouped
+//     );
+//   },
+
+//   _calcBounds: function (onlyWidthHeight) {
+//     const aX = [],
+//       aY = [],
+//       props = ["tr", "br", "bl", "tl"],
+//       jLen = props.length,
+//       ignoreZoom = true;
+
+//     let o = this.original;
+//     o.setCoords(ignoreZoom);
+//     for (let j = 0; j < jLen; j++) {
+//       var prop = props[j];
+//       aX.push(o.oCoords[prop].x);
+//       aY.push(o.oCoords[prop].y);
+//     }
+
+//     this._getBounds(aX, aY, onlyWidthHeight);
+//   },
+// });
+class ErasedGroup extends fabric.Group {
+  constructor(original, ErasedPath, options, isAlreadyGrouped) {
+    super([original, ErasedPath], options, isAlreadyGrouped);
     this.original = original;
     this.ErasedPath = ErasedPath;
-    this.callSuper(
-      "initialize",
-      [this.original, this.ErasedPath],
-      options,
-      isAlreadyGrouped
-    );
-  },
+  }
 
-  _calcBounds: function (onlyWidthHeight) {
+  _calcBounds(onlyWidthHeight) {
     const aX = [],
       aY = [],
       props = ["tr", "br", "bl", "tl"],
@@ -104,74 +130,144 @@ const ErasedGroup = fabric.util.createClass(fabric.Group, {
 
     let o = this.original;
     o.setCoords(ignoreZoom);
+
     for (let j = 0; j < jLen; j++) {
-      var prop = props[j];
+      const prop = props[j];
       aX.push(o.oCoords[prop].x);
       aY.push(o.oCoords[prop].y);
     }
 
     this._getBounds(aX, aY, onlyWidthHeight);
-  },
-});
-const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+  }
+}
+
+
+// const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+//   /**
+//    * On mouseup after drawing the path on contextTop canvas
+//    * we use the points captured to create an new fabric path object
+//    * and add it to the fabric canvas.
+//    */
+//   _finalizeAndAddPath: function () {
+//     var ctx = this.canvas.contextTop;
+//     ctx.closePath();
+//     if (this.decimate) {
+//       this._points = this.decimatePoints(this._points, this.decimate);
+//     }
+//     var pathData = this.convertPointsToSVGPath(this._points).join("");
+//     if (pathData === "M 0 0 Q 0 0 0 0 L 0 0") {
+//       // do not create 0 width/height paths, as they are
+//       // rendered inconsistently across browsers
+//       // Firefox 4, for example, renders a dot,
+//       // whereas Chrome 10 renders nothing
+//       this.canvas.requestRenderAll();
+//       return;
+//     }
+
+//     // use globalCompositeOperation to 'fake' Eraser
+//     var path = this.createPath(pathData);
+//     path.globalCompositeOperation = "destination-out";
+//     path.selectable = false;
+//     path.evented = false;
+//     path.absolutePositioned = true;
+
+//     // grab all the objects that intersects with the path
+//     const objects = this.canvas.getObjects().filter((obj) => {
+//       // if (obj instanceof fabric.Textbox) return false;
+//       // if (obj instanceof fabric.IText) return false;
+//       if (obj instanceof fabric.Rect && obj.id === "rectwithimg") {
+//         return false;
+//       }
+//       if (!obj.intersectsWithObject(path)) return false;
+//       return true;
+//     });
+
+//     if (objects.length > 0) {
+//       // merge those objects into a group
+//       const mergedGroup = new fabric.Group(objects);
+//       const newPath = new ErasedGroup(mergedGroup, path);
+//       const left = newPath.left;
+//       const top = newPath.top;
+//       // convert it into a dataURL, then back to a fabric image
+//       const newData = newPath.toDataURL({
+//         withoutTransform: true,
+//       });
+//       fabric.Image.fromURL(newData, (fabricImage) => {
+//         fabricImage.set({
+//           id: "ccg_" + fabric.Object.__uid,
+//           class: "class_" + fabric.Object.__uid,
+//           left: left,
+//           top: top,
+//           shadow: { ...shadowOptions, blur: 0 },
+//         });
+//         // remove the old objects then add the new image
+//         this.canvas.remove(...objects);
+//         this.canvas.add(fabricImage);
+//       });
+//     }
+
+//     this.canvas.clearContext(this.canvas.contextTop);
+//     this.canvas.renderAll();
+//     this._resetShadow();
+//   },
+// });
+
+class EraserBrush extends fabric.PencilBrush {
   /**
    * On mouseup after drawing the path on contextTop canvas
-   * we use the points captured to create an new fabric path object
+   * we use the points captured to create a new fabric path object
    * and add it to the fabric canvas.
    */
-  _finalizeAndAddPath: function () {
-    var ctx = this.canvas.contextTop;
+  _finalizeAndAddPath() {
+    const ctx = this.canvas.contextTop;
     ctx.closePath();
+
     if (this.decimate) {
       this._points = this.decimatePoints(this._points, this.decimate);
     }
-    var pathData = this.convertPointsToSVGPath(this._points).join("");
+
+    const pathData = this.convertPointsToSVGPath(this._points).join("");
     if (pathData === "M 0 0 Q 0 0 0 0 L 0 0") {
-      // do not create 0 width/height paths, as they are
-      // rendered inconsistently across browsers
-      // Firefox 4, for example, renders a dot,
-      // whereas Chrome 10 renders nothing
       this.canvas.requestRenderAll();
       return;
     }
 
-    // use globalCompositeOperation to 'fake' Eraser
-    var path = this.createPath(pathData);
+    // Use globalCompositeOperation to 'fake' Eraser
+    const path = this.createPath(pathData);
     path.globalCompositeOperation = "destination-out";
     path.selectable = false;
     path.evented = false;
     path.absolutePositioned = true;
 
-    // grab all the objects that intersects with the path
+    // Grab all the objects that intersect with the path
     const objects = this.canvas.getObjects().filter((obj) => {
-      // if (obj instanceof fabric.Textbox) return false;
-      // if (obj instanceof fabric.IText) return false;
       if (obj instanceof fabric.Rect && obj.id === "rectwithimg") {
         return false;
       }
-      if (!obj.intersectsWithObject(path)) return false;
-      return true;
+      return obj.intersectsWithObject(path);
     });
 
     if (objects.length > 0) {
-      // merge those objects into a group
+      // Merge those objects into a group
       const mergedGroup = new fabric.Group(objects);
       const newPath = new ErasedGroup(mergedGroup, path);
-      const left = newPath.left;
-      const top = newPath.top;
-      // convert it into a dataURL, then back to a fabric image
+      const { left, top } = newPath;
+
+      // Convert it into a dataURL, then back to a fabric image
       const newData = newPath.toDataURL({
         withoutTransform: true,
       });
+
       fabric.Image.fromURL(newData, (fabricImage) => {
         fabricImage.set({
-          id: "ccg_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
+          id: `ccg_${fabric.Object.__uid}`,
+          class: `class_${fabric.Object.__uid}`,
           left: left,
           top: top,
           shadow: { ...shadowOptions, blur: 0 },
         });
-        // remove the old objects then add the new image
+
+        // Remove the old objects, then add the new image
         this.canvas.remove(...objects);
         this.canvas.add(fabricImage);
       });
@@ -180,8 +276,9 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     this.canvas.clearContext(this.canvas.contextTop);
     this.canvas.renderAll();
     this._resetShadow();
-  },
-});
+  }
+}
+
 
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
