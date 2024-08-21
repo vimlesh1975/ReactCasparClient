@@ -917,13 +917,13 @@ const TimeLine1 = () => {
                               selectObject(e);
                               deleteItemfromtimeline(kf, xpositions, dispatch);
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 80 }} onChange={e => {
                               element.id = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
                             }
                             } value={(element.id)} /></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 80 }} onChange={e => {
                               element.class = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();

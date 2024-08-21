@@ -503,10 +503,14 @@ const WebAnimator = () => {
                 }
             };
 
-            fabric.util.addListener(document.body, 'keydown', handleKeyDown);
+            // fabric.util.addListener(document.body, 'keydown', handleKeyDown);
+            document.body.addEventListener('keydown', handleKeyDown);
+
 
             return () => {
-                fabric.util.removeListener(document.body, 'keydown', handleKeyDown);
+                // fabric.util.removeListener(document.body, 'keydown', handleKeyDown);
+                document.body.removeEventListener('keydown', handleKeyDown);
+
             };
         }
         // eslint-disable-next-line 

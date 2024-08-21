@@ -6,9 +6,14 @@ export const buildDate = '200824_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
+// export const generateUniqueId = (object) => {
+//   return object.type + '_' + Math.random().toString(36).slice(2, 11);
+// }
+
 export const generateUniqueId = (object) => {
-  return object.type + '_' + Math.random().toString(36).substr(2, 9);
+  return object.type + '_' + Number(Math.floor(Math.random() * 900) + 100); // Generates a number between 100 and 999
 }
+
 
 export const animate = (canvas, sss) => {
   var ss1 = new Date().toLocaleTimeString("en-US", {
@@ -25,13 +30,15 @@ export const animate = (canvas, sss) => {
 
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
+  const id = generateUniqueId({ type: 'rect' });
+
   fabric.util.loadImage(imageName1, (myImg) => {
     if (myImg == null) {
       alert("Error!");
     } else {
       var rect = new fabric.Rect({
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
+        id: id,
+        class: id,
         left: 10,
         top: 10,
         stroke: "#000000",
@@ -41,7 +48,8 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
         shadow: shadowOptions,
         ry: 30,
       });
-      canvas.add(rect).setActiveObject(rect);
+      canvas.add(rect);
+      canvas.setActiveObject(rect);
 
       rect.set({
         width: myImg.width,
@@ -54,6 +62,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 };
 
 export const Uploaddropedfile = (file0, canvas, x, y) => {
+  const id = generateUniqueId({ type: 'dropped' });
   if (file0) {
     var reader = new FileReader();
     reader.onload = function (event) {
@@ -62,8 +71,8 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
       imgObj.onload = function () {
         var image = new fabric.Image(imgObj);
         image.set({
-          id: "ccg_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
+          id: id,
+          class: id,
           shadow: shadowOptions,
           strokeUniform: true,
           objectCaching: false,
@@ -73,14 +82,15 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
           stroke: "#00ff00",
         });
         // .scale(0.5);
-        canvas.add(image).setActiveObject(image);
+        canvas.add(image);
+        canvas.setActiveObject(image);
       };
     };
     reader.readAsDataURL(file0);
   }
 };
 
-export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
+export const Upload = (e, canvas, id = generateUniqueId({ type: 'image' })) => {
   return new Promise((resolve, reject) => {
     if (e.target.files) {
       Array.from(e.target.files).forEach((element) => {
@@ -94,7 +104,7 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
               left: 300,
               top: 300,
               id: id,
-              class: "class_" + fabric.Object.__uid,
+              class: id,
               shadow: shadowOptions,
               strokeUniform: true,
               objectCaching: false,
@@ -103,7 +113,9 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
               src: imgObj.src
             });
             // .scale(0.5);
-            canvas.add(image).setActiveObject(image);
+
+            canvas.add(image);
+            canvas.setActiveObject(image);
             resolve();
           };
         };
@@ -113,8 +125,8 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
   });
 };
 
-export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
-  return new Promise((resolve, reject) => {
+export const addImage = (canvas, id = generateUniqueId({ type: 'image' })) => {
+  return new Promise((resolve) => {
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file"); //opens files
     fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
@@ -130,11 +142,11 @@ export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
   });
 };
 
-export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
+export const createTextBox = (canvas, id = generateUniqueId({ type: 'textbox' })) => {
   const text = new fabric.Textbox(id, {
     shadow: shadowOptions,
     id: id,
-    class: "class_" + fabric.Object.__uid,
+    class: id,
     left: 103 * 1.87,
     top: 762,
     width: 480 * 1.87,
@@ -148,17 +160,19 @@ export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
     stroke: "#000000",
     strokeWidth: 0,
   });
-  canvas.add(text).setActiveObject(text);
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.requestRenderAll();
 };
 
 export const createIText = (canvas) => {
+  const id = generateUniqueId({ type: 'itext' });
   const text = new fabric.IText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
     {
       shadow: shadowOptions,
-      id: "ccg_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
+      id: id,
+      class: id,
       left: 100,
       top: 0,
       width: 480,
@@ -173,17 +187,19 @@ export const createIText = (canvas) => {
       strokeWidth: options.strokeWidth,
     }
   );
-  canvas.add(text).setActiveObject(text);
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
-  text.animate("top", 343, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createText = (canvas) => {
-  const text = new fabric.Text(
+  const id = generateUniqueId({ type: 'text' });
+
+  const text = new fabric.FabricText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
     {
-      id: "ccg_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
+      id: id,
+      class: id,
       shadow: shadowOptions,
       left: 100 * 1.87,
       top: 0,
@@ -199,12 +215,15 @@ export const createText = (canvas) => {
       strokeWidth: options.strokeWidth,
     }
   );
-  canvas.add(text).setActiveObject(text);
+
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
-  text.animate("top", 243 * 1.87, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const addUpTimer = (canvas) => {
+  const id = generateUniqueId({ type: 'textbox' });
+
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
     left: 10 * 1.87,
@@ -221,9 +240,11 @@ export const addUpTimer = (canvas) => {
     stroke: "#000000",
     strokeWidth: 0,
     id: "uptimer1",
-    class: "class_" + fabric.Object.__uid,
+    class: id,
   });
-  canvas.add(sss).setActiveObject(sss);
+
+  canvas.add(sss);
+  canvas.setActiveObject(sss);
   canvas.requestRenderAll();
   var startTime = new Date();
   setInterval(() => {
@@ -244,6 +265,8 @@ export const addUpTimer = (canvas) => {
 };
 
 export const addClock = (canvas) => {
+  const id = generateUniqueId({ type: 'textbox' });
+
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
     left: 10 * 1.87,
@@ -260,9 +283,11 @@ export const addClock = (canvas) => {
     stroke: "#000000",
     strokeWidth: 0,
     id: "clock1",
-    class: "class_" + fabric.Object.__uid,
+    class: id,
   });
-  canvas.add(sss).setActiveObject(sss);
+
+  canvas.add(sss);
+  canvas.setActiveObject(sss);
   canvas.requestRenderAll();
   setInterval(() => {
     animate(canvas, sss);
@@ -285,10 +310,12 @@ export const gradient = new fabric.Gradient({
 });
 
 export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
+  const id = generateUniqueId({ type: 'textbox' });
+
   const text = new fabric.Textbox(dragedText, {
     shadow: shadowOptions,
-    id: "ccg_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     left: x,
     top: y,
     width: 480 * 1.87,
@@ -302,11 +329,15 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
     stroke: "#000000",
     strokeWidth: 0,
   });
-  canvas.add(text).setActiveObject(text);
+
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
 };
 
 export const pasteClipboard = async (canvas) => {
+  const id = generateUniqueId({ type: 'textbox' });
+
   try {
     const clipboardContents = await navigator.clipboard.read();
     if (clipboardContents) {
@@ -324,8 +355,8 @@ export const pasteClipboard = async (canvas) => {
           base64EncodeBlob(blob).then((base64) => {
             fabric.Image.fromURL("data:image/png;base64," + base64, (image) => {
               image.set({
-                id: "ccg_" + fabric.Object.__uid,
-                class: "class_" + fabric.Object.__uid,
+                id: id,
+                class: id,
                 shadow: shadowOptions,
                 strokeUniform: true,
                 objectCaching: false,
@@ -428,6 +459,8 @@ const finalPosition = (element, canvas) => {
   }
 };
 export const cloneAsImage = (canvas) => {
+  const id = generateUniqueId({ type: 'textbox' });
+
   canvas.getActiveObjects().forEach((element) => {
     const preshadow = element.shadow;
     if (
@@ -442,8 +475,8 @@ export const cloneAsImage = (canvas) => {
       clone.set({
         left: finalPosition(element, canvas).x + 10,
         top: finalPosition(element, canvas).y + 10,
-        id: "id_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
+        id: id,
+        class: id,
         shadow: {
           color: "black",
           blur: 0,
@@ -459,6 +492,7 @@ export const cloneAsImage = (canvas) => {
   canvas.requestRenderAll();
 };
 export const createRandomeStrip = (canvas) => {
+  const id = generateUniqueId({ type: 'rect' });
 
   function generateRandomStyledPathWithSpiral(width, height) {
     const startX = Math.random() * (width - 1700);
@@ -496,8 +530,8 @@ export const createRandomeStrip = (canvas) => {
 
   var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
   var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     left: 200,
     top: 300,
@@ -514,10 +548,13 @@ export const createRandomeStrip = (canvas) => {
       window.edit(window.dispatch)
     }
   })
-  canvas.add(pathObject).setActiveObject(pathObject);;
+  canvas.add(pathObject);
+  canvas.setActiveObject(pathObject);;
 };
 
 export const createPentagon = (canvas) => {
+  const id = generateUniqueId({ type: 'polygon' });
+
   const rect = new fabric.Polygon(
     [
       { x: 290, y: 124 },
@@ -527,10 +564,10 @@ export const createPentagon = (canvas) => {
       { x: 192, y: 190 },
     ],
     {
-      id: "id_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
+      id: id,
+      class: id,
       shadow: shadowOptions,
-      top: -100,
+      top: 300,
       left: 80,
       rx: 50,
       ry: 80,
@@ -543,17 +580,18 @@ export const createPentagon = (canvas) => {
       strokeUniform: true,
     }
   );
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createRect = (canvas) => {
+  const id = generateUniqueId({ type: 'rect' });
   const rect = new fabric.Rect({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
-    top: -100 * 1.87,
+    top: 750,
     left: 90 * 1.87,
     width: 500 * 1.87,
     height: 40 * 1.87,
@@ -567,9 +605,9 @@ export const createRect = (canvas) => {
     rx: 10,
     ry: 10,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 
@@ -597,9 +635,11 @@ export const removeStroke = (canvas) => {
 };
 
 export const createCircle = (canvas) => {
+  const id = generateUniqueId({ type: 'circle' });
+
   const circle = new fabric.Circle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     top: 0,
     left: 200,
@@ -610,17 +650,18 @@ export const createCircle = (canvas) => {
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(circle).setActiveObject(circle);
+  canvas.add(circle);
+  canvas.setActiveObject(circle);
   canvas.requestRenderAll();
-  circle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createHLine = (canvas) => {
+  const id = generateUniqueId({ type: 'path' });
   const rect = new fabric.Path("M 0 0 L 500 1", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
+    top: 500,
     left: 90,
     fill: "#0000ff",
     objectCaching: false,
@@ -628,18 +669,18 @@ export const createHLine = (canvas) => {
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 550, { onChange: canvas.renderAll.bind(canvas) });
 };
 export const createTriangle = (canvas) => {
-  canvas.isDrawingMode = false;
+  const id = generateUniqueId({ type: 'triangle' });
   const triangle = new fabric.Triangle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     top: 50,
-    left: -100,
+    left: 100,
     width: 100,
     height: 100,
     fill: "#ff00ff",
@@ -651,12 +692,14 @@ export const createTriangle = (canvas) => {
     strokeUniform: true,
   });
 
-  canvas.add(triangle).setActiveObject(triangle);
+  canvas.add(triangle);
+  canvas.setActiveObject(triangle);
   canvas.requestRenderAll();
-  triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const groupObjects = (canvas, shouldGroup) => {
+  const id = generateUniqueId({ type: 'group' });
+
   if (shouldGroup) {
     if (!canvas.getActiveObject()) {
       return;
@@ -669,8 +712,8 @@ export const groupObjects = (canvas, shouldGroup) => {
       .toGroup()
       .set({
         shadow: shadowOptions,
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
+        id: id,
+        class: id,
         fill: "#ff0000",
       });
   } else {
@@ -782,6 +825,8 @@ export const copy = (canvas) => {
 };
 
 export const paste = (canvas) => {
+  const id = generateUniqueId({ type: 'id' });
+
   try {
     _clipboard?.clone(
       (clonedObj) => {
@@ -795,9 +840,9 @@ export const paste = (canvas) => {
             clonedObj.type === "i-text" ||
               clonedObj.type === "textbox" ||
               clonedObj.type === "text"
-              ? "ccg_" + fabric.Object.__uid
-              : "id_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
+              ? id
+              : id,
+          class: id,
         });
         if (clonedObj.type === "activeSelection") {
           // active selection needs a reference to the canvas.
@@ -811,9 +856,9 @@ export const paste = (canvas) => {
                 obj.type === "i-text" ||
                   obj.type === "textbox" ||
                   obj.type === "text"
-                  ? "ccg_" + fabric.Object.__uid + i
-                  : "id_" + fabric.Object.__uid + i,
-              class: "class_" + fabric.Object.__uid + i,
+                  ? id + i
+                  : id + i,
+              class: id + i,
             });
           });
           // this should solve the unselectability
@@ -838,11 +883,13 @@ export const paste = (canvas) => {
 };
 
 export const createShape = (canvas, shape, size = 0.4) => {
+  const id = generateUniqueId({ type: 'path' });
+
   const rect = new fabric.Path(shape, {
-    id: "path_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
-    top: -100,
+    top: 250,
     left: Math.random() * 1000,
     scaleX: size,
     scaleY: size,
@@ -852,14 +899,13 @@ export const createShape = (canvas, shape, size = 0.4) => {
     stroke: options.stroke,
     strokeWidth: 2,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   rect.on("mousedblclick", () => {
     window.edit(window.dispatch);
   });
   canvas.requestRenderAll();
-  rect.animate("top", Math.random() * 500, {
-    onChange: canvas.renderAll.bind(canvas),
-  });
+
 };
 
 export const selectAll = (canvas) => {
@@ -925,11 +971,13 @@ export const gradient2 = () => {
   });
 };
 export const createVLine = (canvas) => {
+  const id = generateUniqueId({ type: 'path' });
+
   const rect = new fabric.Path("M 0 0 L 1 500", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
+    top: 300,
     left: 90,
     fill: "#0000ff",
     objectCaching: false,
@@ -937,9 +985,9 @@ export const createVLine = (canvas) => {
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const resizeTextWidth = (canvas) => {
@@ -1415,11 +1463,13 @@ export const getGdd = (canvas, designerSoftware) => {
 };
 
 export const setclipPathWhileImporting = (canvas) => {
+  const id = generateUniqueId({ type: 'id' });
+
   var objects = canvas.getObjects();
   objects.forEach((object) => {
     object.set({
-      id: object.id ? object.id : "id_" + fabric.Object.__uid,
-      class: object.class ? object.class : "class_" + fabric.Object.__uid,
+      id: object.id ? object.id : id,
+      class: object.class ? object.class : id,
       shadow: object.shadow ? object.shadow : shadowOptions,
       objectCaching: false,
     });
