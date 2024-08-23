@@ -817,7 +817,7 @@ const TimeLine1 = () => {
       const sourceIndex = result.source?.index;
       const destinationIndex = result.destination?.index;
 
-      canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
+      canvas.moveObjectTo(canvas.getObjects()[sourceIndex], destinationIndex);
       canvas.requestRenderAll();
       dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 
