@@ -1694,7 +1694,7 @@ export const sendBackward = (canvas, kf, xpositions, dispatch) => {
   if (sourceIndex !== 0) {
     const destinationIndex = sourceIndex - 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.sendBackwards(element);
+    canvas.sendObjectBackwards(element);
   }
   canvas.discardActiveObject();
   canvas.requestRenderAll();
