@@ -2,9 +2,6 @@ import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
 import * as fabric from 'fabric';
-import {
-
-} from "./DrawingController";
 
 import {
   Uploaddropedfile,
@@ -190,17 +187,20 @@ const Drawing = ({ canvasOutput }) => {
   }, [showId]);
 
   useEffect(() => {
-    setTimeout(() => {
-      window.editor.canvas.extraProps = ["id", "selectable", "class"];
-      // fabric.SHARED_ATTRIBUTES.push("class");
+    const initCanvas = () => {
+      const { canvas } = window.editor;
+      canvas.extraProps = ["id", "selectable", "class"];
       extendproperty();
+      setZoomAndPan(canvas);
+      canvas.preserveObjectStacking = true;
+      xyz(canvas);
+      ddd(canvas);
+    };
 
-      setZoomAndPan(window.editor.canvas);
-      window.editor.canvas.preserveObjectStacking = true;
-      xyz(window.editor.canvas);
-      ddd(window.editor.canvas);
-    }, 3000);
+    const timeoutId = setTimeout(initCanvas, 3000);
+
     return () => {
+      clearTimeout(timeoutId); // Clear timeout if component unmounts before timeout ends
       cancelZoomAndPan(window.editor.canvas);
       removeExtendproperty();
     };
@@ -209,8 +209,8 @@ const Drawing = ({ canvasOutput }) => {
 
   useEffect(() => {
     dispatch({ type: "CHANGE_CANVAS", payload: editor?.canvas });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor]);
+    // eslint-disable-next-line
+  }, [editor?.canvas._objects.length, dispatch]);
 
   const ddd = (canvas) => {
     canvas.on("mouse:over", (e) => {

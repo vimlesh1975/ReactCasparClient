@@ -492,7 +492,7 @@ export const cloneAsImage = (canvas) => {
   canvas.requestRenderAll();
 };
 export const createRandomeStrip = (canvas) => {
-  const id = generateUniqueId({ type: 'rect' });
+  const id = generateUniqueId({ type: 'path' });
 
   function generateRandomStyledPathWithSpiral(width, height) {
     const startX = Math.random() * (width - 1700);
@@ -607,7 +607,8 @@ export const createRect = (canvas) => {
   });
   canvas.add(rect);
   canvas.setActiveObject(rect);
-  canvas.requestRenderAll();
+  // canvas.requestRenderAll();
+  canvas.renderAll();
 };
 
 
@@ -1658,7 +1659,7 @@ export const sendToBack = (canvas, kf, xpositions, dispatch) => {
     const sourceIndex = canvas.getObjects().indexOf(element);
     const destinationIndex = 0;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.sendToBack(element);
+    canvas.sendObjectToBack(element);
   });
   canvas.discardActiveObject();
   canvas.requestRenderAll();

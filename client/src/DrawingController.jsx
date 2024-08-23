@@ -2389,7 +2389,7 @@ const DrawingController = () => {
         <div style={{ backgroundColor: "#eff4f6", border: "2px solid yellow" }}>
           <div className="drawingToolsRow">
             <b>Elements: </b>
-            <button title="Reactangle" onClick={() => createRect(canvas)}>
+            <button title="Rectangle" onClick={() => createRect(canvas)}>
               {" "}
               <VscPrimitiveSquare />
             </button>
