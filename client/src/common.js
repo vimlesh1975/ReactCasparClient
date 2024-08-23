@@ -1670,7 +1670,7 @@ export const bringToFront = (canvas, kf, xpositions, dispatch) => {
     const sourceIndex = canvas.getObjects().indexOf(element);
     const destinationIndex = canvas.getObjects().length - 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.bringToFront(element);
+    canvas.bringObjectToFront(element);
   });
   canvas.discardActiveObject();
   canvas.requestRenderAll();
@@ -1682,7 +1682,7 @@ export const bringForward = (canvas, kf, xpositions, dispatch) => {
   if (sourceIndex !== canvas.getObjects().length - 1) {
     const destinationIndex = sourceIndex + 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.bringForward(element);
+    canvas.bringObjectForward(element);
   }
   canvas.discardActiveObject();
   canvas.requestRenderAll();
