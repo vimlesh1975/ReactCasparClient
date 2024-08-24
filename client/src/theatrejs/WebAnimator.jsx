@@ -2579,7 +2579,7 @@ const WebAnimator = () => {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
 
-        setIdofElement('id_' + fabric.Object.__uid++);
+        setIdofElement(generateUniqueId({ type: 'id' }));
 
         if ((element.fill === null)) {
             element.set({ fill: '#555252' })

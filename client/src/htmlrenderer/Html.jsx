@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { socketAddress, getModifiedObject } from '../common'
 import socketIOClient from "socket.io-client";
 import Tsparticles2 from '../tsparticles/Tsparticles2';
+import * as fabric from 'fabric'
+
+window.fabric = fabric;
 
 window.getModifiedObject = getModifiedObject;
 window.hexToRGB = hex => {
