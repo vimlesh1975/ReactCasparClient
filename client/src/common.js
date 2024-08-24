@@ -13,9 +13,9 @@ export const buildDate = '200824_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
 export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
-// export const generateUniqueId = (object) => {
-//   return object.type + '_' + Math.random().toString(36).slice(2, 11);
-// }
+export const generateUniqueNumber = () => {
+  return Math.random().toString(36).slice(2, 11);
+}
 
 export const generateUniqueId = (object) => {
   return object.type + '_' + Number(Math.floor(Math.random() * 900) + 100); // Generates a number between 100 and 999
@@ -1088,7 +1088,16 @@ export const selectedatCenter = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.center());
+  selectedItems.forEach((item) => {
+    // Center horizontally
+    item.set({
+      left: (canvas.width - item.width) / 2
+    });
+    // Center vertically
+    item.set({
+      top: (canvas.height - item.height) / 2
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1097,7 +1106,12 @@ export const selectedatCenterH = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerH());
+  selectedItems.forEach((item) => {
+    // Center horizontally
+    item.set({
+      left: (canvas.width - item.width) / 2
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1107,7 +1121,12 @@ export const selectedatCenterV = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerV());
+  selectedItems.forEach((item) => {
+    // Center vertically
+    item.set({
+      top: (canvas.height - item.height) / 2
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1403,10 +1422,13 @@ export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', st
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
-    fabric.loadSVGFromString(ss, function (objects) {
-      objects?.forEach(element => {
+    fabric.loadSVGFromString(ss).then((objects) => {
+      console.log(objects)
+      objects?.objects?.forEach(element => {
+        const id = generateUniqueId({ type: element.type });
+
         canvas.add(element);
-        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: element.type + '_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
         if (element.type === 'text') {
           // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
           element.set({ type: 'textbox' })
@@ -1425,7 +1447,6 @@ export const importSvgCode = (ss, canvas) => {
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
-    console.log(object)
     if (object.id.startsWith('ccg')) {
       if (object.type === "textbox" || object.type === "image") {
         let gddType = "single-line";

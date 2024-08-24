@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as fabric from 'fabric'
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 
-import { _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { generateUniqueNumber, _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
@@ -1334,7 +1334,7 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
-            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${'project' + generateUniqueNumber()}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
 
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
@@ -1605,7 +1605,7 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
 
-            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${'project' + generateUniqueNumber()}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
 
             core.onChange(sheet.sequence.pointer.position, (position) => {
