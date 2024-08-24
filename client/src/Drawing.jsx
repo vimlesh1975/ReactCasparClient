@@ -210,7 +210,7 @@ const Drawing = ({ canvasOutput }) => {
   useEffect(() => {
     dispatch({ type: "CHANGE_CANVAS", payload: editor?.canvas });
     // eslint-disable-next-line
-  }, [editor?.canvas._objects.length, dispatch]);
+  }, [editor?.canvas._objects.length, editor?.canvas.getActiveObjects()]);
 
   const ddd = (canvas) => {
     canvas.on("mouse:over", (e) => {

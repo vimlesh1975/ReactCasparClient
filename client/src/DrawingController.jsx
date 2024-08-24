@@ -1163,16 +1163,17 @@ const DrawingController = () => {
   const importSVG = (file) => {
     if (file) {
       var site_url = URL.createObjectURL(file);
-      fabric.loadSVGFromURL(site_url, function (objects) {
-        objects?.forEach((element) => {
+      fabric.loadSVGFromURL(site_url).then((o) => {
+        o?.objects.forEach((element) => {
           canvas.add(element);
           element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+          console.log(element.type)
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
               top: element.top + (element.height * element.scaleY) / 4,
             });
-            element.set({ type: "i-text" });
+            // element.set({ type: "i-text" });
             var textobj = element.toObject();
             var clonedtextobj = JSON.parse(JSON.stringify(textobj));
             var aa = new fabric.IText(element.text, clonedtextobj);

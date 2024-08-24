@@ -835,7 +835,7 @@ const TimeLine1 = () => {
       canvas.setActiveObject(aa);
       canvas.requestRenderAll();
     } catch (error) {
-      //dummy
+      console.log(error)
     }
   }
 
@@ -898,13 +898,13 @@ const TimeLine1 = () => {
                           {...provided.draggableProps}
                           style={{
                             ...provided.draggableProps.style,
-                            backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'darkgray' : 'white',
+                            backgroundColor: snapshot.isDragging ? 'red' : '',
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
                             marginTop: 1
                           }}
                         >
-                          <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
+                          <div key1={i} style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'gray' : 'darkgray', }} onClick={(e) => { selectObject(e) }}>
                             <div style={{ minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
                             <div> <button title='Lock selected' onClick={() => {
