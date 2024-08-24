@@ -2,6 +2,13 @@ import axios from 'axios';
 import { animation } from './animation.js';
 import * as fabric from 'fabric'
 
+fabric.FabricObject.prototype.toObject = (function (toObject) {
+  return function (propertiesToInclude) {
+    propertiesToInclude = (propertiesToInclude || []).concat(['id', 'class', 'selectable']);
+    return toObject.call(this, propertiesToInclude);
+  };
+})(fabric.FabricObject.prototype.toObject);
+
 export const buildDate = '200824_1';
 export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
 
@@ -1418,6 +1425,7 @@ export const importSvgCode = (ss, canvas) => {
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
+    console.log(object)
     if (object.id.startsWith('ccg')) {
       if (object.type === "textbox" || object.type === "image") {
         let gddType = "single-line";

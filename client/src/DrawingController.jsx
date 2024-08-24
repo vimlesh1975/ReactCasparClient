@@ -39,7 +39,7 @@ import {
   sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1, setclipPathWhileImporting
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
-import "fabric-history";
+// import "fabric-history";
 import {
   VscPrimitiveSquare,
   VscCircleFilled,
