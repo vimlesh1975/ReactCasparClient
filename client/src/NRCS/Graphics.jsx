@@ -418,7 +418,7 @@ const Graphics = () => {
                             <span>Template:</span> <select ref={refPageName} onChange={e => {
                                 setPageName(canvasList[e.target.selectedIndex].pageName);
                                 dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: e.target.selectedIndex });
-                                window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue, () => {
+                                window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue).then(() => {
                                     const aa = window.editor.canvas.getObjects();
                                     aa.forEach(element => {
                                         try {

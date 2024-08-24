@@ -51,7 +51,7 @@ const GsapPlayer = ({ layer1, inline }) => {
         // endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/CanvasPlayer"`);
         const script = `
 
-        canvas.loadFromJSON(${contentforcasparcg},()=>{
+        canvas.loadFromJSON(${contentforcasparcg}).then(() => {
            
         });
         `
@@ -64,7 +64,7 @@ const GsapPlayer = ({ layer1, inline }) => {
       
         var content =\`${contentforHtml}\`;
 
-        canvas_${layerNumber}.loadFromJSON(content,()=>{
+        canvas_${layerNumber}.loadFromJSON(content).then(() => {
            
         })
         `

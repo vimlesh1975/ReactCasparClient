@@ -128,7 +128,7 @@ const Hockey = () => {
             //for form
 
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                 canvas.requestRenderAll();
             });
 

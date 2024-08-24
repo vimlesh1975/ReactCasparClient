@@ -164,7 +164,7 @@ const SavePannel = () => {
         dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
-        canvas.loadFromJSON(json, function () {
+        canvas.loadFromJSON(json).then(() => {
             const aa = canvas.getObjects();
             aa.forEach(element => {
                 try {

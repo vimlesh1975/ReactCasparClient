@@ -831,7 +831,7 @@ const DrawingController = () => {
       .toSVG(["id", "class", "selectable"])
       .replaceAll('"', "'");
     const content = fileReader.result;
-    canvas.loadFromJSON(content, () => {
+    canvas.loadFromJSON(content).then(() => {
       setclipPathWhileImporting(canvas);
     })
     importSvgCode(preCanvas);
@@ -1066,7 +1066,7 @@ const DrawingController = () => {
 
   const getFromLocalStorage = (canvas) => {
     const aa1 = localStorage.getItem("TheatrepageData");
-    canvas.loadFromJSON(aa1, () => {
+    canvas.loadFromJSON(aa1).then(() => {
       setclipPathWhileImporting(canvas)
 
       const aa = canvas.getObjects();
@@ -1195,7 +1195,7 @@ const DrawingController = () => {
     for (const val of canvasList) {
       // eslint-disable-next-line
       await new Promise((resolve) => {
-        canvas.loadFromJSON(val.pageValue, () => {
+        canvas.loadFromJSON(val.pageValue).then(() => {
           selectAll(canvas);
           var ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
           var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
@@ -1616,7 +1616,7 @@ const DrawingController = () => {
       for (const val of canvasList) {
         // Load the JSON and wait for it to fully render
         await new Promise((resolve) => {
-          canvas.loadFromJSON(val.pageValue, () => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
             canvas.renderAll(); // Ensure the canvas is fully rendered
             resolve();
           });
@@ -1649,7 +1649,7 @@ const DrawingController = () => {
       for (const val of canvasList) {
         // Load the JSON and wait for it to fully render
         await new Promise((resolve) => {
-          canvas.loadFromJSON(val.pageValue, () => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
             canvas.renderAll(); // Ensure the canvas is fully rendered
             resolve();
           });

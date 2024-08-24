@@ -1338,7 +1338,7 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
   document.body.appendChild(aa);
   var canvas = new fabric.Canvas('canvas');
   window.canvas=canvas;
-  canvas.loadFromJSON(${contentforcasparcg},()=>{
+  canvas.loadFromJSON(${contentforcasparcg}).then(() => {
       window.sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
       tl.pause();
       tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
@@ -1368,7 +1368,7 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
   var content =\`${contentforHtml}\`;
   tl.pause();
 
-  canvas_${layerNumber}.loadFromJSON(content,()=>{
+  canvas_${layerNumber}.loadFromJSON(content).then(() => {
       const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
       tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
       setTimeout(() => {
@@ -2074,7 +2074,7 @@ export const recallPage = (
   const index = canvasList.findIndex((val) => val.pageName === pageName);
   if (index !== -1) {
     const data1 = data;
-    canvas.loadFromJSON(canvasList[index].pageValue, () => {
+    canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
       data1.forEach((data2) => {
         canvas.getObjects().forEach((element) => {
           element.set({ selectable: false, strokeUniform: false });
@@ -2177,7 +2177,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
   const index = canvasList.findIndex((val) => val.pageName === pageName);
   if (index !== -1) {
     const data1 = data;
-    canvas.loadFromJSON(canvasList[index].pageValue, () => {
+    canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
       data1.forEach((data2) => {
         canvas.getObjects().forEach((element) => {
           element.set({ selectable: false, strokeUniform: false });

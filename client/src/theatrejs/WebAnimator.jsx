@@ -976,7 +976,8 @@ const WebAnimator = () => {
     }
 
     const initialiseCore = (jsonContent, importing = false) => {
-        canvas.loadFromJSON(jsonContent).then(() => {
+        canvas.loadFromJSON(jsonContent).then((object) => {
+            console.log(object)
             setclipPathWhileImportingWebAnimator(canvas);
             canvas.getObjects().forEach((element, i) => {
                 if ((element.fill === null)) {
@@ -1320,7 +1321,7 @@ const WebAnimator = () => {
                 }
             }
         };
-        canvas_${layerNumber}.loadFromJSON(content,()=>{
+        canvas_${layerNumber}.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('_' + layerNumber)}
 
             const { core } = __TheatreJS_StudioBundle._studio;
@@ -1591,7 +1592,7 @@ const WebAnimator = () => {
                 }
             }
         };
-        canvas.loadFromJSON((content),()=>{
+        canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
         
@@ -2127,7 +2128,7 @@ const WebAnimator = () => {
         window.studio=studio;
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         sheet = project.sheet('Sheet 1')
-        canvas.loadFromJSON(content, ()=> {
+        canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
             canvas.forEachObject((obj)=>{
                 originalCanvas.push(fabric.util.object.clone(obj,true));

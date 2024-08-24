@@ -78,7 +78,7 @@ const OnelinerAndBreakingNews = () => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
                         element.set({ selectable: false, strokeUniform: false });

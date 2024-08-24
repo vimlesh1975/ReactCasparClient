@@ -38,13 +38,15 @@ const CodeImport = () => {
         const preCanvas = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\'');
         if (jsoncode) {
             if (JSON.parse(jsoncode).objects) {
-                canvas.loadFromJSON(jsoncode, canvas.renderAll.bind(canvas), function (o, element) {
-                    element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
-                    canvas.add(element)
+                canvas.loadFromJSON(jsoncode).then(() => {
+                    canvas.getObjects().forEach(element => {
+                        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+                    })
+
                 })
             }
             else {
-                canvas.loadFromJSON(`{   "objects": [` + jsoncode + ` ]   }`, canvas.renderAll.bind(canvas), function (o, element) {
+                canvas.loadFromJSON(`{   "objects": [` + jsoncode + ` ]   }`).then(() => {
                     element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
                 })
             }
