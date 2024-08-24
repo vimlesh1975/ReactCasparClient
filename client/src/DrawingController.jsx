@@ -1586,7 +1586,8 @@ const DrawingController = () => {
 
 
   const exportPngFullPage = (canvas) => {
-    canvas.discardActiveObject().renderAll();
+    canvas.discardActiveObject();
+    canvas.renderAll();
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     var ss = generalFileName();
     const options = {
@@ -1608,7 +1609,8 @@ const DrawingController = () => {
   const exportAllPngFullPage = async (canvas) => {
     try {
       const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
-      canvas.discardActiveObject().renderAll();
+      canvas.discardActiveObject();
+      canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
       let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();
@@ -1641,7 +1643,8 @@ const DrawingController = () => {
   const exportAllPng = async (canvas) => {
     try {
       const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
-      canvas.discardActiveObject().renderAll();
+      canvas.discardActiveObject();
+      canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
       let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();

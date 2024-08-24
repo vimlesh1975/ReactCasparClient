@@ -140,7 +140,7 @@ const Drawing = ({ canvasOutput }) => {
                 svg.splice(
                   1,
                   0,
-                  `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}" lines=${this.textLines.length}></extraproperty>\n`
+                  `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}" lines='${this.textLines.length}'></extraproperty>\n`
                 );
               }
               if (this.class) {
