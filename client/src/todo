@@ -8,6 +8,8 @@ fabric.util.string.graphemeSplit = split from webanimator
 
 import "fabric-history"; from drawingcontroller
 canvas.freeDrawingBrush.width = parseInt(e.target.value); from drawing controller
+  canvas.freeDrawingBrush.color = e.target.value; from drawing controller
+ 
 
 copy 
 paste
