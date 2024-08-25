@@ -959,7 +959,7 @@ export const paste = async (canvas) => {
           }
         }
 
-        console.log("Cloned object:", clonedObj);
+        // console.log("Cloned object:", clonedObj);
         if (clonedObj) {
           canvas.add(clonedObj);
           objectsToSelect.push(clonedObj);

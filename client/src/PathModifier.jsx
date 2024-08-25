@@ -176,7 +176,7 @@ export function edit(dispatch) {
     } else {
       poly.cornerColor = "blue";
       poly.cornerStyle = "rect";
-      poly.controls = fabric.Object.prototype.controls;
+      poly.controls = fabric.FabricObject.prototype.controls;
     }
     poly.hasBorders = !poly.edit;
     window.editor.canvas.requestRenderAll();
@@ -446,8 +446,8 @@ const PathModifier = () => {
         return i !== index1
           ? val
           : val.map((val1, index2) => {
-              return ii !== index2 ? val1 : parseInt(e.target.value);
-            });
+            return ii !== index2 ? val1 : parseInt(e.target.value);
+          });
       });
 
       dispatch({ type: "CHANGE_PATH1", payload: updatedPath });
