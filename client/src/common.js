@@ -888,15 +888,19 @@ export const paste = async (canvas) => {
       } else {
         aa = [_clipboard];
       }
+      var left = 0;
+      var top = 0;
       aa.forEach(async (obj) => {
+        left += 100;
+        top += 100;
         const objectType = obj.type;
         const id = generateUniqueId({ type: objectType });
         let clonedObj;
         try {
           clonedObj = new fabric[objectType]({
             ...obj,
-            left: obj.left + 10,
-            top: obj.top + 10,
+            left: left,
+            top: top,
             id: id,
             class: id,
           });
@@ -909,8 +913,8 @@ export const paste = async (canvas) => {
               delete obj.type;
               clonedObj = new fabric.Textbox(obj.text.toString(), {
                 ...obj,
-                left: obj.left + 10,
-                top: obj.top + 10,
+                left: left,
+                top: top,
                 id: id,
                 class: id,
               });
@@ -919,8 +923,8 @@ export const paste = async (canvas) => {
             case "Path":
               clonedObj = new fabric.Path(obj.path, {
                 ...obj,
-                left: obj.left + 10,
-                top: obj.top + 10,
+                left: left,
+                top: top,
                 id: id,
                 class: id,
               });
@@ -935,8 +939,8 @@ export const paste = async (canvas) => {
 
               img.set({
                 ...obj,
-                left: obj.left + 100,
-                top: obj.top + 100,
+                left: left,
+                top: top,
                 objectCaching: false,
                 id: id,
                 class: id,
