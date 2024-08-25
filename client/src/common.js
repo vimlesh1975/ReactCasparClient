@@ -882,20 +882,25 @@ export const paste = async (canvas) => {
   try {
     if (_clipboard) {
       const objectType = _clipboard.type;
-      var aa = [];
+      let objectsToSelect = [];
+      let aa = [];
+
       if (objectType === "ActiveSelection") {
         aa = _clipboard.objects;
       } else {
         aa = [_clipboard];
       }
-      var left = 0;
-      var top = 0;
-      aa.forEach(async (obj) => {
+
+      let left = 0;
+      let top = 0;
+
+      for (const obj of aa) {
         left += 100;
         top += 100;
         const objectType = obj.type;
         const id = generateUniqueId({ type: objectType });
         let clonedObj;
+
         try {
           clonedObj = new fabric[objectType]({
             ...obj,
@@ -932,7 +937,6 @@ export const paste = async (canvas) => {
                 window.edit(window.dispatch);
               });
               break;
-
             case "image":
             case "Image":
               const img = await fabric.FabricImage.fromURL(obj.src);
@@ -954,13 +958,24 @@ export const paste = async (canvas) => {
               return;
           }
         }
+
         console.log("Cloned object:", clonedObj);
         if (clonedObj) {
           canvas.add(clonedObj);
-          canvas.setActiveObject(clonedObj);
-          canvas.requestRenderAll();
+          objectsToSelect.push(clonedObj);
         }
-      });
+      }
+
+      if (objectsToSelect.length > 1) {
+        const selection = new fabric.ActiveSelection(objectsToSelect, {
+          canvas: canvas,
+        });
+        canvas.setActiveObject(selection);
+      } else if (objectsToSelect.length === 1) {
+        canvas.setActiveObject(objectsToSelect[0]);
+      }
+
+      canvas.requestRenderAll();
     } else {
       console.log("Clipboard is empty, nothing to paste");
     }
