@@ -1,20 +1,47 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
-import * as fabric from 'fabric'
+import * as fabric from "fabric";
+import { generateUniqueId } from "./common";
 import {
-  resizeTextWidth, deleteAll, lock, undo, unlockAll, redo, swapFaceandStrokeColors, sameSizeIMG, sameWidth, sameWidthIMG, sameHeightIMG,
-  txtBold, textItalic, textUnderline, textLineThrough,
-  createVLine, putatCenter, selectedatCenter,
-  moveSelected, selectedatCenterH,
-  options, selectedatCenterV,
-  shadowOptions, alignAllRight, alignAllButtom, alignAllLeft, alignAllTop,
+  resizeTextWidth,
+  deleteAll,
+  lock,
+  undo,
+  unlockAll,
+  redo,
+  swapFaceandStrokeColors,
+  sameSizeIMG,
+  sameWidth,
+  sameWidthIMG,
+  sameHeightIMG,
+  txtBold,
+  textItalic,
+  textUnderline,
+  textLineThrough,
+  createVLine,
+  putatCenter,
+  selectedatCenter,
+  moveSelected,
+  selectedatCenterH,
+  options,
+  selectedatCenterV,
+  shadowOptions,
+  alignAllRight,
+  alignAllButtom,
+  alignAllLeft,
+  alignAllTop,
   changeCurrentColor,
   changeBackGroundColor,
   changeStrokeCurrentColor,
   changeShadowCurrentColor,
-  setasClipPath, cliptoPath,
-  selectAll, deSelectAll,
-  copy, paste, makeHorizontalEquidistant, makeVerticalEquidistant,
+  setasClipPath,
+  cliptoPath,
+  selectAll,
+  deSelectAll,
+  copy,
+  paste,
+  makeHorizontalEquidistant,
+  makeVerticalEquidistant,
   createTriangle,
   createHLine,
   createCircle,
@@ -25,7 +52,9 @@ import {
   createTextBox,
   addUpTimer,
   addClock,
-  Direction, rgbaCol, listglobalCompositeOperation,
+  Direction,
+  rgbaCol,
+  listglobalCompositeOperation,
   getGdd,
   endpoint,
   fontLists,
@@ -36,7 +65,15 @@ import {
   executeScript,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1, setclipPathWhileImporting
+  sendToBack,
+  bringToFront,
+  bringForward,
+  sendBackward,
+  deleteItemfromtimeline,
+  saveFile,
+  generalFileName,
+  address1,
+  setclipPathWhileImporting,
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 // import "fabric-history";
@@ -70,7 +107,7 @@ import Layers2 from "./Layers2";
 import CasparcgTools from "./CasparcgTools";
 
 import GsapPlayer from "./GsapPlayer";
-import VerticalScrollPlayer from './VerticalScrollPlayer'
+import VerticalScrollPlayer from "./VerticalScrollPlayer";
 
 var intervalGameTimer1;
 var intervalGameTimer2;
@@ -79,8 +116,6 @@ var html;
 fabric.Object.prototype.noScaleCache = false;
 fabric.Object.prototype.cornerSize = 18;
 // fabric.disableStyleCopyPaste = true;
-
-
 
 // const ErasedGroup = fabric.util.createClass(fabric.Group, {
 //   original: null,
@@ -140,7 +175,6 @@ class ErasedGroup extends fabric.Group {
     this._getBounds(aX, aY, onlyWidthHeight);
   }
 }
-
 
 // const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
 //   /**
@@ -257,11 +291,11 @@ class EraserBrush extends fabric.PencilBrush {
       const newData = newPath.toDataURL({
         withoutTransform: true,
       });
-
+      const id = generateUniqueId({ type: "image" });
       fabric.Image.fromURL(newData, (fabricImage) => {
         fabricImage.set({
-          id: `ccg_${fabric.Object.__uid}`,
-          class: `class_${fabric.Object.__uid}`,
+          id: id,
+          class: id,
           left: left,
           top: top,
           shadow: { ...shadowOptions, blur: 0 },
@@ -279,11 +313,9 @@ class EraserBrush extends fabric.PencilBrush {
   }
 }
 
-
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
-
 
   window.clientId = clientId;
 
@@ -385,83 +417,82 @@ const DrawingController = () => {
   const kf = useSelector((state) => state.kfReducer.kf);
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
 
+  const handleKeyDown = useCallback(
+    (event) => {
+      const { key, keyCode, ctrlKey, altKey } = event;
+      const activeObjects = window.editor.canvas?.getActiveObjects();
+      if (document.activeElement === window.editor.canvas.wrapperEl) {
+        switch (keyCode) {
+          case 37: // Left arrow key
+            moveSelected(Direction.LEFT);
+            break;
+          case 38: // Up arrow key
+            moveSelected(Direction.UP);
+            break;
+          case 39: // Right arrow key
+            moveSelected(Direction.RIGHT);
+            break;
+          case 40: // Down arrow key
+            moveSelected(Direction.DOWN);
+            break;
+          default:
+            break;
+        }
 
-  const handleKeyDown = useCallback((event) => {
-
-    const { key, keyCode, ctrlKey, altKey } = event;
-    const activeObjects = window.editor.canvas?.getActiveObjects();
-    if (document.activeElement === window.editor.canvas.wrapperEl) {
-      switch (keyCode) {
-        case 37: // Left arrow key
-          moveSelected(Direction.LEFT);
-          break;
-        case 38: // Up arrow key
-          moveSelected(Direction.UP);
-          break;
-        case 39: // Right arrow key
-          moveSelected(Direction.RIGHT);
-          break;
-        case 40: // Down arrow key
-          moveSelected(Direction.DOWN);
-          break;
-        default:
-          break;
-      }
-
-      if (key === 'Delete') {
-        activeObjects.forEach((item) => {
-          if (!(item.type === 'textbox' && item.isEditing)) {
-            deleteItemfromtimeline(kf, xpositions, dispatch);
-          }
-        });
-      } else if (ctrlKey) {
-        if (key.toLowerCase() === 'c') {
-          const item = activeObjects[0];
-          if (!(item?.type === 'textbox' && item?.isEditing)) {
-            copy(window.editor.canvas);
-          }
-        } else if (key.toLowerCase() === 'v') {
-          const item = activeObjects[0];
-          if (!(item?.type === 'textbox' && item?.isEditing)) {
-            paste(window.editor.canvas);
-          }
-        } else if (key.toLowerCase() === 'z') {
-          window.editor.canvas && undo(window.editor.canvas);
-        } else if (key.toLowerCase() === 'r') {
-          event.preventDefault();
-          window.editor.canvas && redo(window.editor.canvas);
-        } else if (key.toLowerCase() === 'a') {
-          event.preventDefault();
-          selectAll(window.editor.canvas);
-        } else if (key === 'Enter') {
-          previewHtml(window.editor.canvas);
-        } else if (altKey) {
-          window.editor.canvas.getObjects().forEach((item) => {
-            item.set('centeredScaling', true);
+        if (key === "Delete") {
+          activeObjects.forEach((item) => {
+            if (!(item.type === "textbox" && item.isEditing)) {
+              deleteItemfromtimeline(kf, xpositions, dispatch);
+            }
           });
+        } else if (ctrlKey) {
+          if (key.toLowerCase() === "c") {
+            const item = activeObjects[0];
+            if (!(item?.type === "textbox" && item?.isEditing)) {
+              copy(window.editor.canvas);
+            }
+          } else if (key.toLowerCase() === "v") {
+            const item = activeObjects[0];
+            if (!(item?.type === "textbox" && item?.isEditing)) {
+              paste(window.editor.canvas);
+            }
+          } else if (key.toLowerCase() === "z") {
+            window.editor.canvas && undo(window.editor.canvas);
+          } else if (key.toLowerCase() === "r") {
+            event.preventDefault();
+            window.editor.canvas && redo(window.editor.canvas);
+          } else if (key.toLowerCase() === "a") {
+            event.preventDefault();
+            selectAll(window.editor.canvas);
+          } else if (key === "Enter") {
+            previewHtml(window.editor.canvas);
+          } else if (altKey) {
+            window.editor.canvas.getObjects().forEach((item) => {
+              item.set("centeredScaling", true);
+            });
+          }
         }
       }
-    }
-
-  }, [kf, xpositions, dispatch]);
+    },
+    [kf, xpositions, dispatch]
+  );
 
   const handleKeyUp = useCallback((event) => {
     const { altKey } = event;
     if (altKey) {
       window.editor.canvas.getObjects().forEach((item) => {
-        item.set('centeredScaling', false);
+        item.set("centeredScaling", false);
       });
       window.editor.canvas.renderAll();
     }
   }, []);
 
   useEffect(() => {
-    document.body.addEventListener('keydown', handleKeyDown);
-    document.body.addEventListener('keyup', handleKeyUp);
+    document.body.addEventListener("keydown", handleKeyDown);
+    document.body.addEventListener("keyup", handleKeyUp);
     return () => {
-      document.body.removeEventListener('keydown', handleKeyDown);
-      document.body.removeEventListener('keyup', handleKeyUp);
-
+      document.body.removeEventListener("keydown", handleKeyDown);
+      document.body.removeEventListener("keyup", handleKeyUp);
     };
   }, [handleKeyDown, handleKeyUp]);
 
@@ -490,8 +521,8 @@ const DrawingController = () => {
         aaGameTimer1.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer1.style.zIndex = ${layerNumber};
         aaGameTimer1.innerHTML=\`${canvas
-        .toSVG(["id", "class", "selectable"])
-        .replaceAll('"', '\\"')}\`;
+          .toSVG(["id", "class", "selectable"])
+          .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer1);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -499,8 +530,8 @@ const DrawingController = () => {
         document.body.style.overflow='hidden';
         window.ccGameTimer1=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
         ccGameTimer1.textContent='${initialMinute}:${initialSecond
-        .toString()
-        .padStart(2, 0)}';
+      .toString()
+      .padStart(2, 0)}';
         window.startTimeGameTimer1 = new Date();
         startTimeGameTimer1.setMinutes(${initialMinute});
         startTimeGameTimer1.setSeconds(${initialSecond});
@@ -513,7 +544,9 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -552,8 +585,9 @@ const DrawingController = () => {
         startTimeGameTimer1.setSeconds(${initialSecond});
         clearInterval(intervalGameTimer1);
         intervalGameTimer1=setInterval(()=>{
-        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${countUp ? "+" : "-"
-      } 1);
+        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${
+          countUp ? "+" : "-"
+        } 1);
         var ss3 =  ((startTimeGameTimer1.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTimeGameTimer1.getSeconds()).toString()).padStart(2, '0');
         ccGameTimer1.textContent  =ss3;
         }, 1000);`;
@@ -587,7 +621,9 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
     const script = `
         window.aaGameTimer2 = document.createElement('div');
@@ -595,8 +631,8 @@ const DrawingController = () => {
         aaGameTimer2.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer2.style.zIndex = ${layerNumber};
         aaGameTimer2.innerHTML=\`${canvas
-        .toSVG(["id", "class", "selectable"])
-        .replaceAll('"', '\\"')}\`;
+          .toSVG(["id", "class", "selectable"])
+          .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer2);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -643,8 +679,8 @@ const DrawingController = () => {
       countUp2
         ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() + 1)
         : startTimeGameTimer2.getSeconds() > 0
-          ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
-          : startTimeGameTimer2.setSeconds(0);
+        ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
+        : startTimeGameTimer2.setSeconds(0);
       setInitialSecond2(startTimeGameTimer2.getSeconds());
     }, 1000);
     //for form
@@ -763,7 +799,7 @@ const DrawingController = () => {
       canvas.isDrawingMode = false;
       canvas.getObjects().forEach((item) => {
         if (!item.id) {
-          const id = fabric.Object.__uid++;
+          const id = generateUniqueId({ type: "id" });
           item.set({
             objectCaching: false,
             id: "id_" + id,
@@ -807,7 +843,9 @@ const DrawingController = () => {
     setCurrentglobalCompositeOperation(e.target.value);
     canvas
       .getActiveObjects()
-      .forEach((item) => item.set({ globalCompositeOperation: e.target.value, strokeWidth: 0 }));
+      .forEach((item) =>
+        item.set({ globalCompositeOperation: e.target.value, strokeWidth: 0 })
+      );
     canvas.requestRenderAll();
   };
 
@@ -833,7 +871,7 @@ const DrawingController = () => {
     const content = fileReader.result;
     canvas.loadFromJSON(content).then(() => {
       setclipPathWhileImporting(canvas);
-    })
+    });
     importSvgCode(preCanvas);
   };
   const importSvgCode = (ss) => {
@@ -925,7 +963,7 @@ const DrawingController = () => {
   const onstrokeSizeChange = (e) => {
     options.strokeWidth = parseInt(e.target.value);
     setStrokeWidth(parseInt(e.target.value));
-    canvas.freeDrawingBrush.width = parseInt(e.target.value);
+    // canvas.freeDrawingBrush.width = parseInt(e.target.value);
     canvas
       .getActiveObjects()
       .forEach((item) => (item.strokeWidth = parseInt(e.target.value)));
@@ -937,10 +975,10 @@ const DrawingController = () => {
       .getActiveObjects()
       .forEach(
         (item) =>
-        (item.strokeDashArray = [
-          parseInt(e.target.value),
-          parseInt(e.target.value),
-        ])
+          (item.strokeDashArray = [
+            parseInt(e.target.value),
+            parseInt(e.target.value),
+          ])
       );
     canvas.requestRenderAll();
   };
@@ -995,7 +1033,6 @@ const DrawingController = () => {
     canvas.requestRenderAll();
   };
 
-
   const onHorizontalSpeedChange = (e) => {
     setHorizontalSpeed(e.target.value);
     localStorage.setItem("RCC_horizontalSpeed", e.target.value);
@@ -1014,32 +1051,39 @@ const DrawingController = () => {
   };
   const exportSVG = (canvas) => {
     const options = {
-      fileExtension: '.svg',
+      fileExtension: ".svg",
       suggestedName: generalFileName(),
-      types: [{
-        description: 'svg file',
-        accept: { 'image/svg+xml': ['.svg'], }
-      }],
+      types: [
+        {
+          description: "svg file",
+          accept: { "image/svg+xml": [".svg"] },
+        },
+      ],
     };
-    const data = new Blob([canvas.toSVG(["id", "class", "selectable"])], { type: "text/xml" });
-    saveFile(options, data)
+    const data = new Blob([canvas.toSVG(["id", "class", "selectable"])], {
+      type: "text/xml",
+    });
+    saveFile(options, data);
   };
 
   const exportJSON = (canvas) => {
     const options = {
-      fileExtension: '.json',
+      fileExtension: ".json",
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'JSON Files',
+          description: "JSON Files",
           accept: {
-            'application/json': ['.json'],
+            "application/json": [".json"],
           },
         },
       ],
     };
-    const data = new Blob([JSON.stringify(canvas.toJSON(["id", "class", "selectable"]))], { type: "text/xml" });
-    saveFile(options, data)
+    const data = new Blob(
+      [JSON.stringify(canvas.toJSON(["id", "class", "selectable"]))],
+      { type: "text/xml" }
+    );
+    saveFile(options, data);
   };
 
   const exportJSONforTheatrejs = (canvas) => {
@@ -1054,7 +1098,7 @@ const DrawingController = () => {
 
   const openGdd = () => {
     window.open("/ReactCasparClient/GddTemplatePlayer");
-  }
+  };
   const saveToLocalStorage = (canvas) => {
     if (checkIdUniqueness(canvas)) {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
@@ -1067,11 +1111,10 @@ const DrawingController = () => {
   const getFromLocalStorage = (canvas) => {
     const aa1 = localStorage.getItem("TheatrepageData");
     canvas.loadFromJSON(aa1).then(() => {
-      setclipPathWhileImporting(canvas)
+      setclipPathWhileImporting(canvas);
 
       const aa = canvas.getObjects();
       aa.forEach((element) => {
-
         if (
           typeof element.fill === "object" &&
           element.fill !== null &&
@@ -1167,7 +1210,7 @@ const DrawingController = () => {
         o?.objects.forEach((element) => {
           canvas.add(element);
           element.set({ objectCaching: false, shadow: { ...shadowOptions } });
-          console.log(element.type)
+          console.log(element.type);
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
@@ -1201,9 +1244,11 @@ const DrawingController = () => {
           var ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
           var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
           // Modify the viewBox before converting to SVG
-          canvas.setDimensions({ width: ww > 1920 ? ww : 1920, height: hh > 1080 ? hh : 1080 }); // Change the canvas dimensions
+          canvas.setDimensions({
+            width: ww > 1920 ? ww : 1920,
+            height: hh > 1080 ? hh : 1080,
+          }); // Change the canvas dimensions
           canvas.renderAll(); // Render the canvas with the new dimensions
-
 
           aa += `<div> ${canvas.toSVG()}</div> `;
           if (ww > 1920 || hh > 1080) {
@@ -1217,7 +1262,7 @@ const DrawingController = () => {
         });
       });
     }
-    canvas.discardActiveObject()
+    canvas.discardActiveObject();
     canvas.requestRenderAll();
     await new Promise((resolve) => setTimeout(resolve, 2000));
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
@@ -1225,7 +1270,7 @@ const DrawingController = () => {
   };
 
   const setHtmlString = () => {
-    const gdd = getGdd(canvas, 'RCC');
+    const gdd = getGdd(canvas, "RCC");
     html = `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -1262,8 +1307,9 @@ const DrawingController = () => {
                                         document.body.style.padding = '0';
                                         document.body.style.overflow = 'hidden';
                                         var aa = document.getElementsByTagName('div')[0];
-                                        aa.style.zoom=(${currentscreenSize * 100
-      }/1920)+'%';
+                                        aa.style.zoom=(${
+                                          currentscreenSize * 100
+                                        }/1920)+'%';
                                         observer.disconnect();
             });
                                         observer.observe(elementToObserve, {subtree: true, childList: true })
@@ -1459,10 +1505,10 @@ const DrawingController = () => {
 
                                 </script>
                                 <div> ${canvas.toSVG([
-        "id",
-        "class",
-        "selectable",
-      ])}  </div>
+                                  "id",
+                                  "class",
+                                  "selectable",
+                                ])}  </div>
                             </body>
                             <script src="${jsfilename}.js"></script>
                             <script src="${jsfilename2}.js"></script>
@@ -1481,7 +1527,9 @@ const DrawingController = () => {
     selectAll(canvas);
     var ss = generalFileName();
     const options = {
-      suggestedName: canvasList[currentPage] ? canvasList[currentPage].pageName : ss,
+      suggestedName: canvasList[currentPage]
+        ? canvasList[currentPage].pageName
+        : ss,
       types: [
         {
           description: "Html file",
@@ -1492,8 +1540,8 @@ const DrawingController = () => {
     setHtmlString();
     const data = new Blob([html], { type: "text/html" });
 
-    const aa = await saveFile(options, data)
-    sethtmlfileHandle(aa)
+    const aa = await saveFile(options, data);
+    sethtmlfileHandle(aa);
 
     exportPage(canvas, aa);
     deSelectAll(canvas);
@@ -1536,7 +1584,7 @@ const DrawingController = () => {
     const data = new Blob([html], { type: "text/html" });
     // await writable.write(file);
     // await writable.close();
-    saveFile(null, data, htmlfileHandle)
+    saveFile(null, data, htmlfileHandle);
 
     if (htmlpageHandle) {
       const writable1 = await htmlpageHandle.createWritable();
@@ -1564,14 +1612,16 @@ const DrawingController = () => {
     var br = canvas.getActiveObject()?.getBoundingRect();
     var ss = generalFileName();
     const options = {
-      fileExtension: '.png',
+      fileExtension: ".png",
       suggestedName: ss,
-      types: [{
-        description: 'png file',
-        accept: {
-          'image/png': ['.png'],
+      types: [
+        {
+          description: "png file",
+          accept: {
+            "image/png": [".png"],
+          },
         },
-      }],
+      ],
     };
     const data1 = canvas.toDataURL({
       format: "png",
@@ -1579,12 +1629,10 @@ const DrawingController = () => {
       top: br.top,
       width: br.width,
       height: br.height,
-    })
+    });
     const data = await (await fetch(data1)).blob();
     saveFile(options, data);
   };
-
-
 
   const exportPngFullPage = (canvas) => {
     canvas.discardActiveObject();
@@ -1592,24 +1640,25 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     var ss = generalFileName();
     const options = {
-      fileExtension: '.png',
+      fileExtension: ".png",
       suggestedName: ss,
-      types: [{
-        description: 'png file',
-        accept: {
-          'image/png': ['.png'],
+      types: [
+        {
+          description: "png file",
+          accept: {
+            "image/png": [".png"],
+          },
         },
-      }],
+      ],
     };
     canvas.getElement().toBlob((data) => {
       saveFile(options, data);
-    })
+    });
   };
-
 
   const exportAllPngFullPage = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
+      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
       canvas.discardActiveObject();
       canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1630,20 +1679,23 @@ const DrawingController = () => {
           canvas.getElement().toBlob(resolve);
         });
 
-        const fileHandle = await directoryHandle.getFileHandle(`${ss}_${iii}.png`, { create: true });
+        const fileHandle = await directoryHandle.getFileHandle(
+          `${ss}_${iii}.png`,
+          { create: true }
+        );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
         iii++;
       }
     } catch (err) {
-      console.error('Folder selection or file save failed:', err);
+      console.error("Folder selection or file save failed:", err);
     }
   };
 
   const exportAllPng = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
+      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
       canvas.discardActiveObject();
       canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1673,20 +1725,22 @@ const DrawingController = () => {
           top: br.top,
           width: br.width,
           height: br.height,
-        })
+        });
         const data = await (await fetch(data1)).blob();
 
-        const fileHandle = await directoryHandle.getFileHandle(`${ss}_${iii}.png`, { create: true });
+        const fileHandle = await directoryHandle.getFileHandle(
+          `${ss}_${iii}.png`,
+          { create: true }
+        );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
         iii++;
       }
     } catch (err) {
-      console.error('Folder selection or file save failed:', err);
+      console.error("Folder selection or file save failed:", err);
     }
   };
-
 
   const exportHorizontalScrollAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1709,9 +1763,10 @@ const DrawingController = () => {
                                                             aa.style.position='absolute';
                                                             document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                             document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                            aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                            aa.style.zoom=(${
+                                                              currentscreenSize *
+                                                              100
+                                                            }/1920)+'%';
                                                             document.body.style.overflow='hidden';
                                                             var speed=${horizontalSpeed};
                                                             if (${!ltr}){
@@ -1761,14 +1816,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
   const exportHorizontalScrollAsHTML2 = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1791,9 +1846,10 @@ const DrawingController = () => {
                                                                         aa.style.position='absolute';
                                                                         document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                                         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                        aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                        aa.style.zoom=(${
+                                                                          currentscreenSize *
+                                                                          100
+                                                                        }/1920)+'%';
                                                                         document.body.style.overflow='hidden';
                                                                         var speed=${horizontalSpeed2};
                                                                         if (${!ltr2}){
@@ -1843,16 +1899,15 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
-
 
   const exportClockAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1878,9 +1933,10 @@ const DrawingController = () => {
 
                                                                                 var aa = document.getElementsByTagName('div')[0];
                                                                                 aa.style.position='absolute';
-                                                                                aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                aa.style.zoom=(${
+                                                                                  currentscreenSize *
+                                                                                  100
+                                                                                }/1920)+'%';
                                                                                 var cc=document.getElementsByTagName('tspan')[0];
                                                                                 cc.textContent='';
                                                                                 setInterval(function() {
@@ -1894,14 +1950,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
 
   const exportUpTimerAsHTML = (canvas) => {
@@ -1926,9 +1982,10 @@ const DrawingController = () => {
                                                                                             document.body.style.overflow='hidden';
                                                                                             var aa = document.getElementsByTagName('div')[0];
                                                                                             aa.style.position='absolute';
-                                                                                            aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                            aa.style.zoom=(${
+                                                                                              currentscreenSize *
+                                                                                              100
+                                                                                            }/1920)+'%';
                                                                                             var cc=document.getElementsByTagName('tspan')[0];
                                                                                             cc.textContent='';
                                                                                             var startTime = new Date();
@@ -1945,14 +2002,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
 
   const startHorizontalScroll = (layerNumber) => {
@@ -1964,30 +2021,33 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaHorizontal1 = document.createElement('div');
                                                                                     aaHorizontal1.style.position='absolute';
                                                                                     aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal1.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal1.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
+                                                                                      .toSVG(
+                                                                                        [
+                                                                                          "id",
+                                                                                          "class",
+                                                                                          "selectable",
+                                                                                        ]
+                                                                                      )
+                                                                                      .replaceAll(
+                                                                                        '"',
+                                                                                        '\\"'
+                                                                                      )}\`;
                                                                                     document.body.appendChild(aaHorizontal1);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal1.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                    aaHorizontal1.style.zoom=(${
+                                                                                      currentscreenSize *
+                                                                                      100
+                                                                                    }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed=${horizontalSpeed};
                                                                                     if (${!ltr}){
@@ -2040,30 +2100,33 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaHorizontal2 = document.createElement('div');
                                                                                     aaHorizontal2.style.position='absolute';
                                                                                     aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal2.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal2.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
+                                                                                      .toSVG(
+                                                                                        [
+                                                                                          "id",
+                                                                                          "class",
+                                                                                          "selectable",
+                                                                                        ]
+                                                                                      )
+                                                                                      .replaceAll(
+                                                                                        '"',
+                                                                                        '\\"'
+                                                                                      )}\`;
                                                                                     document.body.appendChild(aaHorizontal2);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal2.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                    aaHorizontal2.style.zoom=(${
+                                                                                      currentscreenSize *
+                                                                                      100
+                                                                                    }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
                                                                                     if (${!ltr2}){
@@ -2116,31 +2179,34 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
 
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaClock = document.createElement('div');
                                                                                     aaClock.style.position='absolute';
                                                                                     aaClock.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaClock.style.zIndex = ${layerNumber};
                                                                                     aaClock.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
+                                                                                      .toSVG(
+                                                                                        [
+                                                                                          "id",
+                                                                                          "class",
+                                                                                          "selectable",
+                                                                                        ]
+                                                                                      )
+                                                                                      .replaceAll(
+                                                                                        '"',
+                                                                                        '\\"'
+                                                                                      )}\`;
                                                                                     document.body.appendChild(aaClock);
 
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaClock.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                    aaClock.style.zoom=(${
+                                                                                      currentscreenSize *
+                                                                                      100
+                                                                                    }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
 
                                                                                     window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
@@ -2163,30 +2229,33 @@ const DrawingController = () => {
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaUpTimer = document.createElement('div');
                                                                                     aaUpTimer.style.position='absolute';
                                                                                     aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaUpTimer.style.zIndex = ${layerNumber};
                                                                                     aaUpTimer.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
+                                                                                      .toSVG(
+                                                                                        [
+                                                                                          "id",
+                                                                                          "class",
+                                                                                          "selectable",
+                                                                                        ]
+                                                                                      )
+                                                                                      .replaceAll(
+                                                                                        '"',
+                                                                                        '\\"'
+                                                                                      )}\`;
                                                                                     document.body.appendChild(aaUpTimer);
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaUpTimer.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                    aaUpTimer.style.zoom=(${
+                                                                                      currentscreenSize *
+                                                                                      100
+                                                                                    }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
                                                                                     ccUpTimer.textContent='00:00:000';
@@ -2229,7 +2298,6 @@ const DrawingController = () => {
     executeScript(script);
   };
 
-
   useEffect(() => {
     if (localStorage.getItem("RCC_currentscreenSize")) {
       dispatch({
@@ -2248,7 +2316,6 @@ const DrawingController = () => {
     setHorizontalScroll2(localStorage.getItem("RCC_horizontalScroll2"));
     setHorizontalSpeed2(localStorage.getItem("RCC_horizontalSpeed2"));
 
-
     if (window.location.origin !== "https://vimlesh1975.github.io") {
       axios
         .post(address1 + "/getfonts")
@@ -2259,7 +2326,7 @@ const DrawingController = () => {
           console.log("Error", aa);
         });
     }
-    return () => { };
+    return () => {};
     // eslint-disable-next-line
   }, []);
 
@@ -2397,7 +2464,10 @@ const DrawingController = () => {
               {" "}
               <VscPrimitiveSquare />
             </button>
-            <button title="Randome Size Strip" onClick={() => createRandomeStrip(canvas)}>
+            <button
+              title="Randome Size Strip"
+              onClick={() => createRandomeStrip(canvas)}
+            >
               RS
             </button>
             <button
@@ -2578,10 +2648,26 @@ const DrawingController = () => {
             <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
             <button onClick={() => selectAll(canvas)}>Select All</button>
             <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
-            <button onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>Send To BK</button>
-            <button onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>Send -1</button>
-            <button onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring to F</button>
-            <button onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>Bring +1</button>
+            <button
+              onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}
+            >
+              Send To BK
+            </button>
+            <button
+              onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}
+            >
+              Send -1
+            </button>
+            <button
+              onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}
+            >
+              Bring to F
+            </button>
+            <button
+              onClick={() => bringForward(canvas, kf, xpositions, dispatch)}
+            >
+              Bring +1
+            </button>
             <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
             <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
             <div>
@@ -2663,9 +2749,12 @@ const DrawingController = () => {
             )}
             <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
             <button onClick={() => exportAllPng(canvas)}>All PNG(Shape)</button>
-            <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
-            <button onClick={() => exportAllPngFullPage(canvas)}>All PNG(FullPage)</button>
-
+            <button onClick={() => exportPngFullPage(canvas)}>
+              PNG(FullPage)
+            </button>
+            <button onClick={() => exportAllPngFullPage(canvas)}>
+              All PNG(FullPage)
+            </button>
             <button onClick={() => exportSVG(canvas)}>SVG</button>
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
@@ -2678,9 +2767,7 @@ const DrawingController = () => {
             <button onClick={() => exportJSONforTheatrejs(canvas)}>
               Web Animator
             </button>
-            <button onClick={openGdd}>
-              Gdd Template Player
-            </button>
+            <button onClick={openGdd}>Gdd Template Player</button>
           </div>
           <div className="drawingToolsRow">
             Client Id
@@ -2845,13 +2932,15 @@ const DrawingController = () => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
-                    }deg,${canvas
-                      ?.getActiveObjects()[0]
-                      ?.fill?.colorStops.map((colorStop, i) => {
-                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
-                          }%`;
-                      })}`,
+                  backgroundImage: `linear-gradient(${
+                    canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
+                  }deg,${canvas
+                    ?.getActiveObjects()[0]
+                    ?.fill?.colorStops.map((colorStop, i) => {
+                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
+                        colorStop.offset * 100
+                      }%`;
+                    })}`,
                 }}
               />
             ) : (
@@ -2887,13 +2976,15 @@ const DrawingController = () => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
-                    }deg,${canvas
-                      ?.getActiveObjects()[0]
-                      ?.stroke?.colorStops.map((colorStop, i) => {
-                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
-                          }%`;
-                      })}`,
+                  backgroundImage: `linear-gradient(${
+                    canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
+                  }deg,${canvas
+                    ?.getActiveObjects()[0]
+                    ?.stroke?.colorStops.map((colorStop, i) => {
+                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
+                        colorStop.offset * 100
+                      }%`;
+                    })}`,
                 }}
               />
             ) : (
@@ -3338,7 +3429,11 @@ const DrawingController = () => {
             <b> Solid Cap 2: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.solidCaption2, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.solidCaption2,
+                  currentscreenSize
+                );
                 setSolidcaption2(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_solidCaption2",
@@ -3370,7 +3465,11 @@ const DrawingController = () => {
             <b> Solid Cap 3: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.solidCaption3, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.solidCaption3,
+                  currentscreenSize
+                );
                 setSolidcaption3(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_solidCaption3",
@@ -3437,7 +3536,11 @@ const DrawingController = () => {
             <b> Location Band: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.locationBand, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.locationBand,
+                  currentscreenSize
+                );
                 setLocationBand(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_locationBand",
@@ -3466,7 +3569,6 @@ const DrawingController = () => {
             <span> {locationBand} </span>
           </div>
           <VerticalScrollPlayer showTemplate={true} />
-
 
           <div className="drawingToolsRow">
             <b> H Scroll: </b>
@@ -3540,7 +3642,7 @@ const DrawingController = () => {
             <input
               type="checkbox"
               checked={ltr}
-              onChange={() => setLtr(val => !val)}
+              onChange={() => setLtr((val) => !val)}
             />
             <span> {horizontalScroll} </span>
           </div>
@@ -3616,7 +3718,7 @@ const DrawingController = () => {
             <input
               type="checkbox"
               checked={ltr2}
-              onChange={() => setLtr2(val => !val)}
+              onChange={() => setLtr2((val) => !val)}
             />
             <span> {horizontalScroll2} </span>
           </div>
@@ -3808,8 +3910,7 @@ const DrawingController = () => {
             <SavePannel />
           </TabPanel>
           <TabPanel>
-            <Layers2
-            />
+            <Layers2 />
           </TabPanel>
           <TabPanel>
             <CasparcgTools />

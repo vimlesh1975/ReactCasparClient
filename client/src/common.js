@@ -1,26 +1,31 @@
-import axios from 'axios';
-import { animation } from './animation.js';
-import * as fabric from 'fabric'
+import axios from "axios";
+import { animation } from "./animation.js";
+import * as fabric from "fabric";
+import _ from "lodash";
 
 fabric.FabricObject.prototype.toObject = (function (toObject) {
   return function (propertiesToInclude) {
-    propertiesToInclude = (propertiesToInclude || []).concat(['id', 'class', 'selectable']);
+    propertiesToInclude = (propertiesToInclude || []).concat([
+      "id",
+      "class",
+      "selectable",
+    ]);
     return toObject.call(this, propertiesToInclude);
   };
 })(fabric.FabricObject.prototype.toObject);
 
-export const buildDate = '200824_1';
-export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
+export const buildDate = "200824_1";
+export const loopDirection = ["normal", "reverse", "alternate", "AR"];
 
-export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
+export const defaultImageSrc =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+";
 export const generateUniqueNumber = () => {
   return Math.random().toString(36).slice(2, 11);
-}
+};
 
 export const generateUniqueId = (object) => {
-  return object.type + '_' + Number(Math.floor(Math.random() * 900) + 100); // Generates a number between 100 and 999
-}
-
+  return object.type + "_" + Number(Math.floor(Math.random() * 900) + 100); // Generates a number between 100 and 999
+};
 
 export const animate = (canvas, sss) => {
   var ss1 = new Date().toLocaleTimeString("en-US", {
@@ -33,11 +38,10 @@ export const animate = (canvas, sss) => {
     text: ss1,
   });
   canvas.requestRenderAll();
-}
-
+};
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
-  const id = generateUniqueId({ type: 'rect' });
+  const id = generateUniqueId({ type: "rect" });
 
   fabric.util.loadImage(imageName1, (myImg) => {
     if (myImg == null) {
@@ -69,7 +73,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 };
 
 export const Uploaddropedfile = (file0, canvas, x, y) => {
-  const id = generateUniqueId({ type: 'dropped' });
+  const id = generateUniqueId({ type: "dropped" });
   if (file0) {
     var reader = new FileReader();
     reader.onload = function (event) {
@@ -97,7 +101,7 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
   }
 };
 
-export const Upload = (e, canvas, id = generateUniqueId({ type: 'image' })) => {
+export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
   return new Promise((resolve, reject) => {
     if (e.target.files) {
       Array.from(e.target.files).forEach((element) => {
@@ -117,7 +121,7 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: 'image' })) => {
               objectCaching: false,
               fill: "#ff0000",
               stroke: "#00ff00",
-              src: imgObj.src
+              src: imgObj.src,
             });
             // .scale(0.5);
 
@@ -132,7 +136,7 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: 'image' })) => {
   });
 };
 
-export const addImage = (canvas, id = generateUniqueId({ type: 'image' })) => {
+export const addImage = (canvas, id = generateUniqueId({ type: "image" })) => {
   return new Promise((resolve) => {
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file"); //opens files
@@ -149,7 +153,10 @@ export const addImage = (canvas, id = generateUniqueId({ type: 'image' })) => {
   });
 };
 
-export const createTextBox = (canvas, id = generateUniqueId({ type: 'textbox' })) => {
+export const createTextBox = (
+  canvas,
+  id = generateUniqueId({ type: "textbox" })
+) => {
   const text = new fabric.Textbox(id, {
     shadow: shadowOptions,
     id: id,
@@ -173,7 +180,7 @@ export const createTextBox = (canvas, id = generateUniqueId({ type: 'textbox' })
 };
 
 export const createIText = (canvas) => {
-  const id = generateUniqueId({ type: 'itext' });
+  const id = generateUniqueId({ type: "itext" });
   const text = new fabric.IText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
     {
@@ -200,7 +207,7 @@ export const createIText = (canvas) => {
 };
 
 export const createText = (canvas) => {
-  const id = generateUniqueId({ type: 'text' });
+  const id = generateUniqueId({ type: "text" });
 
   const text = new fabric.FabricText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
@@ -229,7 +236,7 @@ export const createText = (canvas) => {
 };
 
 export const addUpTimer = (canvas) => {
-  const id = generateUniqueId({ type: 'textbox' });
+  const id = generateUniqueId({ type: "textbox" });
 
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
@@ -272,7 +279,7 @@ export const addUpTimer = (canvas) => {
 };
 
 export const addClock = (canvas) => {
-  const id = generateUniqueId({ type: 'textbox' });
+  const id = generateUniqueId({ type: "textbox" });
 
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
@@ -317,7 +324,7 @@ export const gradient = new fabric.Gradient({
 });
 
 export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
-  const id = generateUniqueId({ type: 'textbox' });
+  const id = generateUniqueId({ type: "textbox" });
 
   const text = new fabric.Textbox(dragedText, {
     shadow: shadowOptions,
@@ -343,7 +350,7 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
 };
 
 export const pasteClipboard = async (canvas) => {
-  const id = generateUniqueId({ type: 'textbox' });
+  const id = generateUniqueId({ type: "textbox" });
 
   try {
     const clipboardContents = await navigator.clipboard.read();
@@ -381,7 +388,6 @@ export const pasteClipboard = async (canvas) => {
   }
 };
 
-
 export const STEP = 5;
 export const Direction = {
   LEFT: 0,
@@ -412,14 +418,22 @@ export const moveSelected = (direction) => {
     activeObject.setCoords();
     window.editor.canvas.renderAll();
   }
-}
+};
 
 // Function to copy properties of a Fabric.js object (excluding .src)
 function copyFabricObjectProperties(object) {
   var copiedProperties = {};
   for (var prop in object) {
     // Exclude Fabric.js internal properties and methods, as well as .src property
-    if (object.hasOwnProperty(prop) && typeof object[prop] !== 'function' && prop !== 'canvas' && prop !== 'group' && prop !== '_objects' && prop !== '_objects' && prop !== 'src') {
+    if (
+      object.hasOwnProperty(prop) &&
+      typeof object[prop] !== "function" &&
+      prop !== "canvas" &&
+      prop !== "group" &&
+      prop !== "_objects" &&
+      prop !== "_objects" &&
+      prop !== "src"
+    ) {
       copiedProperties[prop] = object[prop];
     }
   }
@@ -466,7 +480,7 @@ const finalPosition = (element, canvas) => {
   }
 };
 export const cloneAsImage = (canvas) => {
-  const id = generateUniqueId({ type: 'textbox' });
+  const id = generateUniqueId({ type: "textbox" });
 
   canvas.getActiveObjects().forEach((element) => {
     const preshadow = element.shadow;
@@ -499,7 +513,7 @@ export const cloneAsImage = (canvas) => {
   canvas.requestRenderAll();
 };
 export const createRandomeStrip = (canvas) => {
-  const id = generateUniqueId({ type: 'path' });
+  const id = generateUniqueId({ type: "path" });
 
   function generateRandomStyledPathWithSpiral(width, height) {
     const startX = Math.random() * (width - 1700);
@@ -527,15 +541,50 @@ export const createRandomeStrip = (canvas) => {
 
     return [
       ["M", startX, startY],
-      ["C", controlX1, controlY1, topCurveX, topCurveY, startX + 200, startY + 50],
-      ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
-      ["C", controlX3, controlY3, bottomCurveX, bottomCurveY, endX - 200, endY - 50],
-      ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
-      ["Z"]
+      [
+        "C",
+        controlX1,
+        controlY1,
+        topCurveX,
+        topCurveY,
+        startX + 200,
+        startY + 50,
+      ],
+      [
+        "C",
+        controlX2,
+        controlY2,
+        endX - 200,
+        startY + 50,
+        endX - 200,
+        startY + 50,
+      ],
+      [
+        "C",
+        controlX3,
+        controlY3,
+        bottomCurveX,
+        bottomCurveY,
+        endX - 200,
+        endY - 50,
+      ],
+      [
+        "C",
+        controlX4,
+        controlY4,
+        startX + 200,
+        endY - 50,
+        startX + 200,
+        endY - 50,
+      ],
+      ["Z"],
     ];
   }
 
-  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
+  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(
+    1920,
+    1080
+  );
   var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
     id: id,
     class: id,
@@ -550,17 +599,17 @@ export const createRandomeStrip = (canvas) => {
     strokeUniform: true,
   });
 
-  pathObject.on('mousedblclick', () => {
+  pathObject.on("mousedblclick", () => {
     if (window.edit) {
-      window.edit(window.dispatch)
+      window.edit(window.dispatch);
     }
-  })
+  });
   canvas.add(pathObject);
-  canvas.setActiveObject(pathObject);;
+  canvas.setActiveObject(pathObject);
 };
 
 export const createPentagon = (canvas) => {
-  const id = generateUniqueId({ type: 'polygon' });
+  const id = generateUniqueId({ type: "polygon" });
 
   const rect = new fabric.Polygon(
     [
@@ -593,7 +642,7 @@ export const createPentagon = (canvas) => {
 };
 
 export const createRect = (canvas) => {
-  const id = generateUniqueId({ type: 'rect' });
+  const id = generateUniqueId({ type: "rect" });
   const rect = new fabric.Rect({
     id: id,
     class: id,
@@ -618,7 +667,6 @@ export const createRect = (canvas) => {
   canvas.renderAll();
 };
 
-
 export const removeShadow = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("shadow", { ...shadowOptions, blur: 0 });
@@ -633,7 +681,6 @@ export const removeFill = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
 export const removeStroke = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("strokeWidth", 0);
@@ -643,7 +690,7 @@ export const removeStroke = (canvas) => {
 };
 
 export const createCircle = (canvas) => {
-  const id = generateUniqueId({ type: 'circle' });
+  const id = generateUniqueId({ type: "circle" });
 
   const circle = new fabric.Circle({
     id: id,
@@ -664,7 +711,7 @@ export const createCircle = (canvas) => {
 };
 
 export const createHLine = (canvas) => {
-  const id = generateUniqueId({ type: 'path' });
+  const id = generateUniqueId({ type: "path" });
   const rect = new fabric.Path("M 0 0 L 500 1", {
     id: id,
     class: id,
@@ -682,7 +729,7 @@ export const createHLine = (canvas) => {
   canvas.requestRenderAll();
 };
 export const createTriangle = (canvas) => {
-  const id = generateUniqueId({ type: 'triangle' });
+  const id = generateUniqueId({ type: "triangle" });
   const triangle = new fabric.Triangle({
     id: id,
     class: id,
@@ -706,7 +753,7 @@ export const createTriangle = (canvas) => {
 };
 
 export const groupObjects = (canvas, shouldGroup) => {
-  const id = generateUniqueId({ type: 'group' });
+  const id = generateUniqueId({ type: "group" });
 
   if (shouldGroup) {
     if (!canvas.getActiveObject()) {
@@ -715,15 +762,12 @@ export const groupObjects = (canvas, shouldGroup) => {
     if (canvas.getActiveObject().type !== "activeSelection") {
       return;
     }
-    canvas
-      .getActiveObject()
-      .toGroup()
-      .set({
-        shadow: shadowOptions,
-        id: id,
-        class: id,
-        fill: "#ff0000",
-      });
+    canvas.getActiveObject().toGroup().set({
+      shadow: shadowOptions,
+      id: id,
+      class: id,
+      fill: "#ff0000",
+    });
   } else {
     if (!canvas.getActiveObject()) {
       return;
@@ -749,7 +793,7 @@ export const textNormal = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("fontWeight", "normal");
   });
-}
+};
 export const txtBold = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set(
@@ -790,7 +834,7 @@ export const alignRight = (canvas) => {
     element.set("textAlign", "right");
   });
   canvas.requestRenderAll();
-}
+};
 export const alignLeft = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("textAlign", "left");
@@ -821,77 +865,112 @@ export const redo = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
 export var _clipboard;
+
 export const copy = (canvas) => {
-  canvas?.getActiveObject()?.clone(
-    (cloned) => {
-      _clipboard = cloned;
-    },
-    ["id", "class", "selectable"]
-  );
+  const activeObject = canvas?.getActiveObject();
+  if (activeObject) {
+    // Store the JSON representation instead of cloning the object
+    _clipboard = _.cloneDeep(
+      activeObject.toObject(["id", "class", "selectable"])
+    );
+    console.log("Copied object JSON:", _clipboard);
+  }
 };
 
-export const paste = (canvas) => {
-  const id = generateUniqueId({ type: 'id' });
-
+export const paste = async (canvas) => {
   try {
-    _clipboard?.clone(
-      (clonedObj) => {
-        canvas?.discardActiveObject();
-        clonedObj.set({
-          left: clonedObj.left + 10,
-          top: clonedObj.top + 10,
-          evented: true,
-          objectCaching: false,
-          id:
-            clonedObj.type === "i-text" ||
-              clonedObj.type === "textbox" ||
-              clonedObj.type === "text"
-              ? id
-              : id,
+    if (_clipboard) {
+      console.log("Attempting to paste object from clipboard:", _clipboard);
+
+      // Check the exact type stored in _clipboard
+      const objectType = _clipboard.type;
+      console.log("Object type in clipboard:", objectType);
+      const id = generateUniqueId({ type: objectType });
+
+      let clonedObj;
+      try {
+        clonedObj = new fabric[objectType]({
+          ..._clipboard,
+          left: _clipboard.left + 10,
+          top: _clipboard.top + 10,
+          id: id,
           class: id,
         });
-        if (clonedObj.type === "activeSelection") {
-          // active selection needs a reference to the canvas.
-          clonedObj.canvas = canvas;
-          clonedObj.forEachObject((obj, i) => {
-            canvas?.add(obj);
-            obj.set({
-              evented: true,
-              objectCaching: false,
-              id:
-                obj.type === "i-text" ||
-                  obj.type === "textbox" ||
-                  obj.type === "text"
-                  ? id + i
-                  : id + i,
-              class: id + i,
+      } catch (error) {
+        switch (objectType) {
+          case "text":
+          case "Text":
+          case "textbox":
+          case "Textbox":
+            delete _clipboard.type;
+            clonedObj = new fabric.Textbox(_clipboard.text.toString(), {
+              ..._clipboard,
+              left: _clipboard.left + 10,
+              top: _clipboard.top + 10,
+              id: id,
+              class: id,
             });
-          });
-          // this should solve the unselectability
-          clonedObj.setCoords();
-        } else {
-          canvas?.add(clonedObj);
-        }
+            break;
+          case "path":
+          case "Path":
+            clonedObj = new fabric.Path(_clipboard.path, {
+              ..._clipboard,
+              left: _clipboard.left + 10,
+              top: _clipboard.top + 10,
+              id: id,
+              class: id,
+            });
+            clonedObj.on("mousedblclick", () => {
+              console.log("Object double-clicked");
+              window.edit(window.dispatch);
+            });
+            break;
 
-        _clipboard.top += 10;
-        _clipboard.left += 10;
-        canvas?.setActiveObject(clonedObj);
-        clonedObj.on("mousedblclick", () => {
-          window.edit(window.dispatch);
-        });
-        canvas?.requestRenderAll();
-      },
-      ["id", "class", "selectable"]
-    );
+          case "image":
+          case "Image":
+            const img = await fabric.FabricImage.fromURL(_clipboard.src);
+
+            img.set({
+              ..._clipboard,
+              left: _clipboard.left + 100,
+              top: _clipboard.top + 100,
+              objectCaching: false,
+              id: id,
+              class: id,
+            });
+            clonedObj = img;
+            canvas.add(clonedObj);
+            canvas.setActiveObject(clonedObj);
+            return;
+
+          // Add cases for other types as necessary
+          default:
+            console.error("Unsupported object type:", objectType);
+            return;
+        }
+      }
+
+      // Manually create a new Fabric.js object based on the type
+
+      console.log("Cloned object:", clonedObj);
+      if (clonedObj) {
+        canvas.add(clonedObj);
+        canvas.setActiveObject(clonedObj);
+
+        console.log("Requesting render after paste");
+        canvas.requestRenderAll();
+      }
+    } else {
+      console.log("Clipboard is empty, nothing to paste");
+    }
   } catch (error) {
-    // alert(error)
+    console.error("Error during paste operation:", error);
   }
 };
 
 export const createShape = (canvas, shape, size = 0.4) => {
-  const id = generateUniqueId({ type: 'path' });
+  const id = generateUniqueId({ type: "path" });
 
   const rect = new fabric.Path(shape, {
     id: id,
@@ -913,7 +992,6 @@ export const createShape = (canvas, shape, size = 0.4) => {
     window.edit(window.dispatch);
   });
   canvas.requestRenderAll();
-
 };
 
 export const selectAll = (canvas) => {
@@ -979,7 +1057,7 @@ export const gradient2 = () => {
   });
 };
 export const createVLine = (canvas) => {
-  const id = generateUniqueId({ type: 'path' });
+  const id = generateUniqueId({ type: "path" });
 
   const rect = new fabric.Path("M 0 0 L 1 500", {
     id: id,
@@ -1091,11 +1169,11 @@ export const selectedatCenter = (canvas) => {
   selectedItems.forEach((item) => {
     // Center horizontally
     item.set({
-      left: (canvas.width - item.width) / 2
+      left: (canvas.width - item.width) / 2,
     });
     // Center vertically
     item.set({
-      top: (canvas.height - item.height) / 2
+      top: (canvas.height - item.height) / 2,
     });
   });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
@@ -1109,7 +1187,7 @@ export const selectedatCenterH = (canvas) => {
   selectedItems.forEach((item) => {
     // Center horizontally
     item.set({
-      left: (canvas.width - item.width) / 2
+      left: (canvas.width - item.width) / 2,
     });
   });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
@@ -1124,7 +1202,7 @@ export const selectedatCenterV = (canvas) => {
   selectedItems.forEach((item) => {
     // Center vertically
     item.set({
-      top: (canvas.height - item.height) / 2
+      top: (canvas.height - item.height) / 2,
     });
   });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
@@ -1214,7 +1292,6 @@ export const makeHorizontalEquidistant = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
 export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
@@ -1240,7 +1317,9 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
     );
 
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
 
     const script = `
@@ -1253,23 +1332,24 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-        .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
-        .replaceAll(
-          '"',
-          '\\"'
-        )}\`;
+                                                                                    .toSVG(
+                                                                                      [
+                                                                                        "id",
+                                                                                        "class",
+                                                                                        "selectable",
+                                                                                      ]
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                  aa.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1294,7 +1374,9 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   }
 
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+  );
 
   const script = `
                                                                                   var bb = document.createElement('div');
@@ -1306,23 +1388,24 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-      .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
-      .replaceAll(
-        '"',
-        '\\"'
-      )}\`;
+                                                                                    .toSVG(
+                                                                                      [
+                                                                                        "id",
+                                                                                        "class",
+                                                                                        "selectable",
+                                                                                      ]
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+                                                                                  aa.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1339,13 +1422,26 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   }, 1200);
 };
 
-export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
-  const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+export const playtoGsapCaspar = (
+  canvas,
+  layerNumber,
+  currentscreenSize,
+  duration = 1,
+  ease = "back.inOut",
+  stagger = 0.03
+) => {
+  const content = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
 
-  const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-  const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+  const contentforHtml = content
+    .replaceAll('"', '\\"')
+    .replaceAll("\\n", "\\\\n");
+  const contentforcasparcg = content
+    .replaceAll('"', '\\"')
+    .replaceAll("\\n", " \\\n");
 
-  endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`
+  );
   const script = `
   var aa = document.createElement('div');
   aa.style.position='absolute';
@@ -1366,11 +1462,10 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
               tl.play();
           }, 100);
   });
-  `
+  `;
   setTimeout(() => {
-    endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`)
+    endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`);
   }, 100);
-
 
   const scriptforHtml = `
   document.getElementById('divid_${layerNumber}')?.remove();
@@ -1395,11 +1490,16 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
           tl.play();
       }, 100);
   })
-  `
-  executeScript(scriptforHtml)
-}
+  `;
+  executeScript(scriptforHtml);
+};
 
-export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
+export const stopGsapLayer = (
+  layerNumber,
+  duration = 1,
+  ease = "back.inOut",
+  stagger = 0.03
+) => {
   const scriptforhtml = `
   const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
   tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
@@ -1415,39 +1515,48 @@ export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', st
 
   endpoint(`call ${window.chNumber}-${layerNumber} "
   ${scriptforCasparcg}
-  "`)
-
-}
-
+  "`);
+};
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
     fabric.loadSVGFromString(ss).then((objects) => {
-      console.log(objects)
-      objects?.objects?.forEach(element => {
+      console.log(objects);
+      objects?.objects?.forEach((element) => {
         const id = generateUniqueId({ type: element.type });
 
         canvas.add(element);
-        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
-        if (element.type === 'text') {
+        element.set({
+          objectCaching: false,
+          shadow: element.shadow ? element.shadow : shadowOptions,
+          id: id,
+          class: id,
+        });
+        if (element.type === "text") {
           // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-          element.set({ type: 'textbox' })
+          element.set({ type: "textbox" });
           var textobj = element.toObject();
           var clonedtextobj = JSON.parse(JSON.stringify(textobj));
           var aa = new fabric.Textbox(element.text, clonedtextobj);
-          aa.set({ id: element.id, class: element.class, objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, width: 1000 });
-          canvas.remove(element)
+          aa.set({
+            id: element.id,
+            class: element.class,
+            objectCaching: false,
+            shadow: element.shadow ? element.shadow : shadowOptions,
+            width: 1000,
+          });
+          canvas.remove(element);
           canvas.add(aa);
         }
       });
     });
     canvas.requestRenderAll();
   }
-}
+};
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
-    if (object.id.startsWith('ccg')) {
+    if (object.id.startsWith("ccg")) {
       if (object.type === "textbox" || object.type === "image") {
         let gddType = "single-line";
         let default1 = "default";
@@ -1455,8 +1564,7 @@ export const getGdd = (canvas, designerSoftware) => {
         if (object.type === "textbox") {
           if (object.textLines.length > 1) {
             gddType = "multi-line";
-          }
-          else {
+          } else {
             gddType = "single-line";
           }
           default1 = object.text;
@@ -1470,7 +1578,7 @@ export const getGdd = (canvas, designerSoftware) => {
           description: object.type,
           default: default1,
           gddType: gddType,
-          pattern: ""
+          pattern: "",
         };
       }
     }
@@ -1489,11 +1597,11 @@ export const getGdd = (canvas, designerSoftware) => {
     window.gddSchema = JSON.parse(document.querySelector('head > script[name="graphics-data-definition"]').innerHTML);
   });
 </script>
-`
+`;
 };
 
 export const setclipPathWhileImporting = (canvas) => {
-  const id = generateUniqueId({ type: 'id' });
+  const id = generateUniqueId({ type: "id" });
 
   var objects = canvas.getObjects();
   objects.forEach((object) => {
@@ -1504,17 +1612,19 @@ export const setclipPathWhileImporting = (canvas) => {
       objectCaching: false,
     });
     if (object.clipPath) {
-      const clipPathObject = objects.find((element) => element.id === object.clipPath.id);
+      const clipPathObject = objects.find(
+        (element) => element.id === object.clipPath.id
+      );
       clipPathObject.set({ absolutePositioned: true });
       object.set({ clipPath: clipPathObject });
     }
   });
   canvas.requestRenderAll();
-}
+};
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
-    if (element.type === 'textbox') {
+    if (element.type === "textbox") {
       endpoint(
         `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:\\"${element.text}\\"});canvas.requestRenderAll();"`
       );
@@ -1536,24 +1646,24 @@ export const getModifiedObject = (path1) => {
     // Create a new object with modified keys
     const modifiedObject = {};
     for (const key in myObject) {
-      if (key === '1') {
-        modifiedObject[newi * 10 + 'x'] = myObject[key];
-      } else if (key === '2') {
-        modifiedObject[newi * 10 + 'y'] = myObject[key];
-      } else if (key === '3') {
-        modifiedObject[newi * 10 + 1 + 'x'] = myObject[key];
-      } else if (key === '4') {
-        modifiedObject[newi * 10 + 1 + 'y'] = myObject[key];
-      } else if (key === '5') {
-        modifiedObject[newi * 10 + 2 + 'x'] = myObject[key];
-      } else if (key === '6') {
-        modifiedObject[newi * 10 + 2 + 'y'] = myObject[key];
+      if (key === "1") {
+        modifiedObject[newi * 10 + "x"] = myObject[key];
+      } else if (key === "2") {
+        modifiedObject[newi * 10 + "y"] = myObject[key];
+      } else if (key === "3") {
+        modifiedObject[newi * 10 + 1 + "x"] = myObject[key];
+      } else if (key === "4") {
+        modifiedObject[newi * 10 + 1 + "y"] = myObject[key];
+      } else if (key === "5") {
+        modifiedObject[newi * 10 + 2 + "x"] = myObject[key];
+      } else if (key === "6") {
+        modifiedObject[newi * 10 + 2 + "y"] = myObject[key];
       } else {
         modifiedObject[key] = myObject[key];
       }
     }
 
-    aa['Point' + newi] = modifiedObject;
+    aa["Point" + newi] = modifiedObject;
   });
   return aa;
 };
@@ -1565,7 +1675,7 @@ export const lockUnlock = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 export const lockUnlock1 = (canvas, i, dispatch) => {
   const element = canvas.item(i);
@@ -1579,7 +1689,7 @@ export const lockUnlock1 = (canvas, i, dispatch) => {
   });
   element.selectable = !element.selectable;
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 export const visibleInVisible = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -1588,7 +1698,7 @@ export const visibleInVisible = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 
 export const saveFile = async (options, data, fileHandle = null) => {
@@ -1598,53 +1708,53 @@ export const saveFile = async (options, data, fileHandle = null) => {
       const writable = await handle.createWritable();
       await writable.write(data);
       await writable.close();
-      console.log('File saved successfully!', handle.name);
+      console.log("File saved successfully!", handle.name);
       return handle; // Return the FileHandle object
     } catch (error) {
-      console.error('Error saving the file:', error);
+      console.error("Error saving the file:", error);
     }
   } else {
-    const element = document.createElement('a');
+    const element = document.createElement("a");
     element.href = URL.createObjectURL(data);
 
     var retVal = prompt(
-      'Enter  file name to save : ',
-      generalFileName() + '_FileName'
+      "Enter  file name to save : ",
+      generalFileName() + "_FileName"
     );
     if (retVal !== null) {
-      element.download = retVal + (options.fileExtension ?? '.txt');
+      element.download = retVal + (options.fileExtension ?? ".txt");
       document.body.appendChild(element); // Required for this to work in FireFox
       element.click();
     }
   }
 };
 export const generalFileName = () => {
-  return new Date().toLocaleTimeString('en-US', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+  return new Date().toLocaleTimeString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
     hour12: false,
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
   });
 };
 
 export const listglobalCompositeOperation = [
-  'source-over',
-  'source-atop',
-  'source-in',
-  'source-out',
-  'destination-over',
-  'destination-atop',
-  'destination-in',
-  'destination-out',
-  'lighter',
-  'copy',
-  'xor',
-  'darker',
-  'multiply',
-  'screen',
+  "source-over",
+  "source-atop",
+  "source-in",
+  "source-out",
+  "destination-over",
+  "destination-atop",
+  "destination-in",
+  "destination-out",
+  "lighter",
+  "copy",
+  "xor",
+  "darker",
+  "multiply",
+  "screen",
 ];
 
 export const moveElement = (
@@ -1656,7 +1766,7 @@ export const moveElement = (
 ) => {
   const updatedkf = [...kf];
   updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
 
   const updatedxpositions = [...xpositions];
   updatedxpositions.splice(
@@ -1664,7 +1774,7 @@ export const moveElement = (
     0,
     updatedxpositions.splice(sourceIndex, 1)[0]
   );
-  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
 };
 
 export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
@@ -1676,8 +1786,8 @@ export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
     updatedkf.splice(index1, 1);
     updatedxpositions.splice(index1, 1);
   });
-  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
   window.editor.canvas?.discardActiveObject();
   window.editor.canvas?.requestRenderAll();
 };
@@ -1734,7 +1844,7 @@ export const findElementWithId = (group, id) => {
     const objects = group.getObjects();
     for (let i = 0; i < objects.length; i++) {
       const element = objects[i];
-      if (element.type === 'group') {
+      if (element.type === "group") {
         const result = findElementWithId(element, id);
         if (result) {
           return result;
@@ -1757,14 +1867,14 @@ export const hexToRGB = (hex) => {
 export const rgbaObjectToHex = (rgba) => {
   let r = Math.round(rgba.r * 255)
     .toString(16)
-    .padStart(2, '0');
+    .padStart(2, "0");
   let g = Math.round(rgba.g * 255)
     .toString(16)
-    .padStart(2, '0');
+    .padStart(2, "0");
   let b = Math.round(rgba.b * 255)
     .toString(16)
-    .padStart(2, '0');
-  let hex = '#' + r + g + b;
+    .padStart(2, "0");
+  let hex = "#" + r + g + b;
   return hex;
 };
 
@@ -1782,30 +1892,29 @@ export const checkIdUniqueness = (canvas) => {
   return true;
 };
 export const rgbaCol = (color, opacity) =>
-  'rgba(' +
+  "rgba(" +
   parseInt(color.slice(-6, -4), 16) +
-  ',' +
+  "," +
   parseInt(color.slice(-4, -2), 16) +
-  ',' +
+  "," +
   parseInt(color.slice(-2), 16) +
-  ',' +
+  "," +
   opacity +
-  ')';
+  ")";
 
-export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
+export var address1 = "https://" + window.location.host.split(":")[0] + ":9000";
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
   return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
 };
-
 
 export const videoLayers = [1, 2, 3, 10000, 5];
 export const templateLayers = {
@@ -1839,7 +1948,6 @@ export const templateLayers = {
   theatrejs: 166,
   gsap: 167,
   data: 170,
-
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 
@@ -1867,42 +1975,42 @@ export const stopAllTheatreLayes = () => {
 export const endpoint = (string) => {
   const data = { string: string };
   axios
-    .post(address1 + '/endpoint', data)
-    .then((aa) => { })
+    .post(address1 + "/endpoint", data)
+    .then((aa) => {})
     .catch((aa) => {
-      console.log('Error', aa);
+      console.log("Error", aa);
     });
 };
 
 export const htmlAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app/html';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app/html";
   } else {
-    return address1 + '/html';
+    return address1 + "/html";
   }
 };
 
 export const openaiAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app/';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app/";
   } else {
     return address1;
   }
 };
 
 export const socketAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
   } else {
     return address1;
   }
 };
 
 export const streamingAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
   } else {
-    return 'http://' + window.location.host.split(':')[0] + ':8000';
+    return "http://" + window.location.host.split(":")[0] + ":8000";
   }
 };
 export const sendtohtml = (canvas, layerNumber) => {
@@ -1911,9 +2019,9 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
-      console.log('Error', aa);
+      console.log("Error", aa);
     });
 };
 export const clearHtml = (layerNumber) => {
@@ -1923,58 +2031,56 @@ export const clearHtml = (layerNumber) => {
 };
 
 export const executeScript = (str) => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
+  if (window.location.origin === "https://vimlesh1975.github.io") {
     axios
-      .post('https://octopus-app-gzws3.ondigitalocean.app/executeScript', {
+      .post("https://octopus-app-gzws3.ondigitalocean.app/executeScript", {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   } else {
     axios
-      .post(address1 + '/executeScript', {
+      .post(address1 + "/executeScript", {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   }
 };
 
 export const chatScript = (str, clientId) => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
+  if (window.location.origin === "https://vimlesh1975.github.io") {
     axios
-      .post('https://octopus-app-gzws3.ondigitalocean.app/chat', {
+      .post("https://octopus-app-gzws3.ondigitalocean.app/chat", {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   } else {
     axios
-      .post(address1 + '/chat', {
+      .post(address1 + "/chat", {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   }
 };
 
-
-
 export function tempAlert(msg, duration, style) {
-  var el = document.createElement('div');
-  el.setAttribute('style', style);
+  var el = document.createElement("div");
+  el.setAttribute("style", style);
   el.innerHTML = msg;
   setTimeout(function () {
     el.parentNode.removeChild(el);
@@ -2006,12 +2112,9 @@ export const stopGraphics1 = (layerNumber) => {
 
 export const stopGraphics = (layerNumber) => {
   clearHtml(layerNumber);
-  if (window.animationMethod === 'mix') {
-    endpoint(
-      `mixer ${window.chNumber}-${layerNumber} opacity 0 12`
-    );
-  }
-  else {
+  if (window.animationMethod === "mix") {
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0 12`);
+  } else {
     endpoint(
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`
     );
@@ -2027,18 +2130,18 @@ export const stopGraphics = (layerNumber) => {
   }, 1500);
 };
 export const options = {
-  currentMode: '',
-  currentColor: '#ffffff',
-  currentFont: 'Arial',
+  currentMode: "",
+  currentColor: "#ffffff",
+  currentFont: "Arial",
   currentFontSize: 45,
-  backgroundColor: '#50037c',
+  backgroundColor: "#50037c",
   // currentWidth: 5,
   group: {},
-  stroke: '#ffffff',
+  stroke: "#ffffff",
   strokeWidth: 1,
 };
 export const shadowOptions = {
-  color: '#000000',
+  color: "#000000",
   blur: 30,
   offsetX: 0,
   offsetY: 0,
@@ -2101,7 +2204,7 @@ export const recallPage = (
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === 'text') {
+              if (data2.type === "text") {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -2113,7 +2216,7 @@ export const recallPage = (
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === 'image') {
+              } else if (data2.type === "image") {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -2123,34 +2226,34 @@ export const recallPage = (
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === 'image') {
+                  if (element.type === "image") {
                     element.setSrc(data2.value);
-                  } else if (element.type === 'rect') {
+                  } else if (element.type === "rect") {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: 'no-repeat',
+                        repeat: "no-repeat",
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === 'shadow') {
+              } else if (data2.type === "shadow") {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
       sendToCasparcg(layerNumber, canvas, currentscreenSize);
     });
   } else {
-    tempAlert('Pagename not avalaible', 1000);
+    tempAlert("Pagename not avalaible", 1000);
   }
 };
 export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
@@ -2162,7 +2265,9 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
   );
   setTimeout(() => {
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
   }, 250);
   const script = `
     var aa = document.createElement('div');
@@ -2204,7 +2309,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === 'text') {
+              if (data2.type === "text") {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -2216,7 +2321,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === 'image') {
+              } else if (data2.type === "image") {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -2226,27 +2331,27 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === 'image') {
+                  if (element.type === "image") {
                     element.setSrc(data2.value);
-                  } else if (element.type === 'rect') {
+                  } else if (element.type === "rect") {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: 'no-repeat',
+                        repeat: "no-repeat",
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === 'shadow') {
+              } else if (data2.type === "shadow") {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 
@@ -2259,647 +2364,650 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
 };
 
 export const fontLists = [
-  'Madhubala',
-  'Dhurjati',
-  'Aaradhana',
-  'Ajantha',
-  'GowthamiBold',
-  'Suranna',
-  'Gidugu',
-  'Gurajada',
-  'Mallanna',
-  'Mandali',
-  'NATS',
-  'NTR',
-  'Peddana',
-  'Potti Sreeramulu',
-  'Ramabhadra',
-  'Ramaraja',
-  'Sree Krushnadevaraya',
-  'Suranna',
-  'Suravaram',
-  'Syamala Ramana',
-  'TenaliRamakrishna',
-  'Timmana',
-  'AADevAksharReg',
-  'AADevApsBil',
-  'AADevApsReg',
-  'AADevChitralekhaReg',
-  'AADevIndicaReg',
-  'AADevIsfocBil',
-  'AADevIsfocReg',
-  'AADevKrutiReg',
-  'AADevShreeLipiBil',
-  'AADevShreeLipiReg',
-  'AADevSulipiReg',
-  'AADevSushaReg',
-  'AADevWinKeyBil',
-  'AADevWinKeyReg',
-  'AclAksharELight',
-  'Agency FB',
-  'AkrutiDevAbhijit',
-  'AkrutiDevAditi',
-  'AkrutiDevAditya',
-  'AkrutiDevAjit',
-  'AkrutiDevAkanksha',
-  'AkrutiDevAkankshaMedium',
-  'AkrutiDevAkhila',
-  'AkrutiDevAkshardhara',
-  'AkrutiDevAkshardharaExtBold',
-  'AkrutiDevAkshay',
-  'AkrutiDevAnand',
-  'AkrutiDevAnil',
-  'AkrutiDevAnjali',
-  'AkrutiDevArjun',
-  'AkrutiDevAshvin',
-  'AkrutiDevAsmita',
-  'AkrutiDevBela',
-  'AkrutiDevBhagya',
-  'AkrutiDevBharani',
-  'AkrutiDevBharati',
-  'AkrutiDevBhaskar',
-  'AkrutiDevBrahma',
-  'AkrutiDevCactus',
-  'AkrutiDevChakra',
-  'AkrutiDevChakraNormal',
-  'AkrutiDevChampa',
-  'AkrutiDevChandrika',
-  'AkrutiDevCharu',
-  'AkrutiDevDeepa',
-  'AkrutiDevGanesh',
-  'AkrutiDevHansa',
-  'AkrutiDevHarsha',
-  'AkrutiDevHarshaMedium',
-  'AkrutiDevHema',
-  'AkrutiDevIndu',
-  'AkrutiDevIshwar',
-  'AkrutiDevJanhavi',
-  'AkrutiDevKailas',
-  'AkrutiDevKailasMedium',
-  'AkrutiDevKalidas',
-  'AkrutiDevKusum',
-  'AkrutiDevMadhura',
-  'AkrutiDevMalavika',
-  'AkrutiDevMallika',
-  'AkrutiDevMandara',
-  'AkrutiDevMangal',
-  'AkrutiDevManisha',
-  'AkrutiDevManoj',
-  'AkrutiDevManorama',
-  'AkrutiDevMaya',
-  'AkrutiDevMayur',
-  'AkrutiDevMeera',
-  'AkrutiDevMegha',
-  'AkrutiDevMenaka',
-  'AkrutiDevMitra',
-  'AkrutiDevMogara',
-  'AkrutiDevMogaraMedium',
-  'AkrutiDevMouj',
-  'AkrutiDevMoujLight',
-  'AkrutiDevMukund',
-  'AkrutiDevNandi',
-  'AkrutiDevNarmada',
-  'AkrutiDevNartaki',
-  'AkrutiDevNatraj',
-  'AkrutiDevNatrajLight',
-  'AkrutiDevNavaneet',
-  'AkrutiDevNavin',
-  'AkrutiDevNewPriya',
-  'AkrutiDevNewPriyaExpand',
-  'AkrutiDevNewPriyaNormal',
-  'AkrutiDevOmkar',
-  'AkrutiDevParimala',
-  'AkrutiDevPataliputra',
-  'AkrutiDevPayal',
-  'AkrutiDevPooja',
-  'AkrutiDevPrakash',
-  'AkrutiDevPratap',
-  'AkrutiDevPratik',
-  'AkrutiDevPraveen',
-  'AkrutiDevPreeti',
-  'AkrutiDevPreetiLight',
-  'AkrutiDevPrema',
-  'AkrutiDevPriya',
-  'AkrutiDevPriyaExpanded',
-  'AkrutiDevPriyanka',
-  'AkrutiDevPushpa',
-  'AkrutiDevRahul',
-  'AkrutiDevRaksha',
-  'AkrutiDevRakshaExtBold',
-  'AkrutiDevRekha',
-  'AkrutiDevRishi',
-  'AkrutiDevRohini',
-  'AkrutiDevRoshan',
-  'AkrutiDevSavita',
-  'AkrutiDevSeetha',
-  'AkrutiDevShantala',
-  'AkrutiDevShivaji',
-  'AkrutiDevShradda',
-  'AkrutiDevShridhar',
-  'AkrutiDevShridharLight',
-  'AkrutiDevShruti',
-  'AkrutiDevSindhu',
-  'AkrutiDevSita',
-  'AkrutiDevSneha',
-  'AkrutiDevSulekh',
-  'AkrutiDevSunil',
-  'AkrutiDevSushma',
-  'AkrutiDevSwati',
-  'AkrutiDevTilak',
-  'AkrutiDevTriveni',
-  'AkrutiDevUpendra',
-  'AkrutiDevVaishali',
-  'AkrutiDevValmiki',
-  'AkrutiDevVandana',
-  'AkrutiDevVarsha',
-  'AkrutiDevVarun',
-  'AkrutiDevVedik',
-  'AkrutiDevVichitra',
-  'AkrutiDevVidya',
-  'AkrutiDevVijay',
-  'AkrutiDevVinod',
-  'AkrutiDevVivek',
-  'AkrutiDevXPYogini',
-  'AkrutiDevYamuna',
-  'AkrutiDevYogini',
-  'AkrutiOfficeAditi',
-  'AkrutiOfficeAditi01',
-  'AkrutiOfficeAjit',
-  'AkrutiOfficeAjit01',
-  'AkrutiOfficeAkanksha',
-  'AkrutiOfficeAkanksha01',
-  'AkrutiOfficeAkansha',
-  'AkrutiOfficeAkshardhara',
-  'AkrutiOfficeAkshardhara01',
-  'AkrutiOfficeAkshay',
-  'AkrutiOfficeAkshay01',
-  'AkrutiOfficeChakra',
-  'AkrutiOfficeChakra01',
-  'AkrutiOfficeChampa',
-  'AkrutiOfficeChampa01',
-  'AkrutiOfficeDeepa',
-  'AkrutiOfficeDeepa01',
-  'AkrutiOfficeHansa',
-  'AkrutiOfficeHansa01',
-  'AkrutiOfficeHinPriya',
-  'AkrutiOfficeHinPriya01',
-  'AkrutiOfficeManorama',
-  'AkrutiOfficeManorama01',
-  'AkrutiOfficeMogara',
-  'AkrutiOfficeMogara01',
-  'AkrutiOfficeMouj',
-  'AkrutiOfficeMouj01',
-  'AkrutiOfficePriya',
-  'AkrutiOfficePriya01',
-  'AkrutiOfficePriyaExpand',
-  'AkrutiOfficePriyaExpand01',
-  'AkrutiOfficeShruti',
-  'AkrutiOfficeShruti01',
-  'AkrutiOfficeSulekh',
-  'AkrutiOfficeSulekh01',
-  'AkrutiOfficeSwati',
-  'AkrutiOfficeSwati01',
-  'AkrutiOfficeTriveni',
-  'AkrutiOfficeTriveni01',
-  'AkrutiOfficeVijay',
-  'AkrutiOfficeVijay01',
-  'AkrutiOfficeYogini',
-  'AkrutiOfficeYogini-S',
-  'AkrutiOfficeYogini01',
-  'AkrutiOfficeYoginiLight',
-  'AkrutiOfficeYoginiLight01',
-  'Algerian',
-  'Aparajita',
-  'Arial',
-  'Arial Black',
-  'Arial Narrow',
-  'Arial Rounded MT Bold',
-  'Arial Unicode MS',
-  'Bahnschrift',
-  'Bahnschrift Condensed',
-  'Bahnschrift Light',
-  'Bahnschrift Light Condensed',
-  'Bahnschrift SemiBold',
-  'Bahnschrift SemiBold Condensed',
-  'Bahnschrift SemiCondensed',
-  'Bahnschrift SemiLight',
-  'Baskerville Old Face',
-  'Bauhaus 93',
-  'Bell MT',
-  'Berlin Sans FB',
-  'Berlin Sans FB Demi',
-  'Bernard MT Condensed',
-  'Blackadder ITC',
-  'Bodoni MT',
-  'Bodoni MT Black',
-  'Bodoni MT Condensed',
-  'Bodoni MT Poster Compressed',
-  'Book Antiqua',
-  'Bookman Old Style',
-  'Bookshelf Symbol 7',
-  'Bradley Hand ITC',
-  'Britannic Bold',
-  'Broadway',
-  'Brush Script MT',
-  'Calibri',
-  'Calibri Light',
-  'Californian FB',
-  'Calisto MT',
-  'Cambria',
-  'Cambria Math',
-  'Candara',
-  'Candara Light',
-  'Cascadia Code',
-  'Cascadia Code ExtraLight',
-  'Cascadia Code Light',
-  'Cascadia Code SemiBold',
-  'Cascadia Code SemiLight',
-  'Cascadia Mono',
-  'Cascadia Mono ExtraLight',
-  'Cascadia Mono Light',
-  'Cascadia Mono SemiBold',
-  'Cascadia Mono SemiLight',
-  'Castellar',
-  'Centaur',
-  'Century',
-  'Century Gothic',
-  'Century Schoolbook',
-  'Chiller',
-  'Colonna MT',
-  'Comic Sans MS',
-  'Consolas',
-  'Constantia',
-  'Cooper Black',
-  'Copperplate Gothic Bold',
-  'Copperplate Gothic Light',
-  'Corbel',
-  'Corbel Light',
-  'Courier New',
-  'Curlz MT',
-  'DVOT-Bhima',
-  'DVOT-Surekh',
-  'Ebrima',
-  'Edwardian Script ITC',
-  'Ek Mukta',
-  'Elephant',
-  'Engravers MT',
-  'Eras Bold ITC',
-  'Eras Demi ITC',
-  'Eras Light ITC',
-  'Eras Medium ITC',
-  'Felix Titling',
-  'Footlight MT Light',
-  'Forte',
-  'Franklin Gothic Book',
-  'Franklin Gothic Demi',
-  'Franklin Gothic Demi Cond',
-  'Franklin Gothic Heavy',
-  'Franklin Gothic Medium',
-  'Franklin Gothic Medium Cond',
-  'Freestyle Script',
-  'French Script MT',
-  'Gabriola',
-  'Gadugi',
-  'Garamond',
-  'Georgia',
-  'Gigi',
-  'Gill Sans MT',
-  'Gill Sans MT Condensed',
-  'Gill Sans MT Ext Condensed',
-  'Gill Sans Ultra Bold',
-  'Gill Sans Ultra Bold Condensed',
-  'Gloucester MT Extra Condensed',
-  'Goudy Old Style',
-  'Goudy Stout',
-  'Haettenschweiler',
-  'Harlow Solid Italic',
-  'Harrington',
-  'High Tower Text',
-  'HoloLens MDL2 Assets',
-  'Impact',
-  'Imprint MT Shadow',
-  'Informal Roman',
-  'Ink Free',
-  'ISCIIDev',
-  'Javanese Text',
-  'Jokerman',
-  'Juice ITC',
-  'Kokila',
-  'Kristen ITC',
-  'Kunstler Script',
-  'Leelawadee UI',
-  'Leelawadee UI Semilight',
-  'Lucida Bright',
-  'Lucida Calligraphy',
-  'Lucida Console',
-  'Lucida Fax',
-  'Lucida Handwriting',
-  'Lucida Sans',
-  'Lucida Sans Typewriter',
-  'Lucida Sans Unicode',
-  'Magneto',
-  'Maiandra GD',
-  'Malgun Gothic',
-  'Malgun Gothic Semilight',
-  'Mangal',
-  'Marat1',
-  'Marat2',
-  'Marlett',
-  'Matura MT Script Capitals',
-  'Microsoft Himalaya',
-  'Microsoft JhengHei',
-  'Microsoft JhengHei Light',
-  'Microsoft JhengHei UI',
-  'Microsoft JhengHei UI Light',
-  'Microsoft New Tai Lue',
-  'Microsoft PhagsPa',
-  'Microsoft Sans Serif',
-  'Microsoft Tai Le',
-  'Microsoft YaHei',
-  'Microsoft YaHei Light',
-  'Microsoft YaHei UI',
-  'Microsoft YaHei UI Light',
-  'Microsoft Yi Baiti',
-  'MingLiU-ExtB',
-  'MingLiU_HKSCS-ExtB',
-  'Mistral',
-  'Modern No. 20',
-  'Mongolian Baiti',
-  'Monotype Corsiva',
-  'MS Gothic',
-  'MS Mincho',
-  'MS Outlook',
-  'MS PGothic',
-  'MS Reference Sans Serif',
-  'MS Reference Specialty',
-  'MS UI Gothic',
-  'MT Extra',
-  'MV Boli',
-  'Myanmar Text',
-  'Niagara Engraved',
-  'Niagara Solid',
-  'Nirmala UI',
-  'Nirmala UI Semilight',
-  'NSimSun',
-  'OCR A Extended',
-  'Old English Text MT',
-  'Onyx',
-  'Palace Script MT',
-  'Palatino Linotype',
-  'Papyrus',
-  'Parchment',
-  'Perpetua',
-  'Perpetua Titling MT',
-  'Playbill',
-  'PMingLiU-ExtB',
-  'Poor Richard',
-  'Pristina',
-  'Rage Italic',
-  'Ravie',
-  'Rockwell',
-  'Rockwell Condensed',
-  'Rockwell Extra Bold',
-  'Sakal Marathi',
-  'SakalBharati',
-  'Sanskrit Text',
-  'Script MT Bold',
-  'Segoe Fluent Icons',
-  'Segoe MDL2 Assets',
-  'Segoe Print',
-  'Segoe Script',
-  'Segoe UI',
-  'Segoe UI Black',
-  'Segoe UI Emoji',
-  'Segoe UI Historic',
-  'Segoe UI Light',
-  'Segoe UI Semibold',
-  'Segoe UI Semilight',
-  'Segoe UI Symbol',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small Light',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text Light',
-  'Showcard Gothic',
-  'SimSun',
-  'SimSun-ExtB',
-  'Sitka Banner',
-  'Sitka Banner Semibold',
-  'Sitka Display',
-  'Sitka Display Semibold',
-  'Sitka Heading',
-  'Sitka Heading Semibold',
-  'Sitka Small',
-  'Sitka Small Semibold',
-  'Sitka Subheading',
-  'Sitka Subheading Semibold',
-  'Sitka Text',
-  'Sitka Text Semibold',
-  'Snap ITC',
-  'Stencil',
-  'Sylfaen',
-  'Symbol',
-  'Tahoma',
-  'Tempus Sans ITC',
-  'Times New Roman',
-  'Trebuchet MS',
-  'Tw Cen MT',
-  'Tw Cen MT Condensed',
-  'Tw Cen MT Condensed Extra Bold',
-  'Utsaah',
-  'Verdana',
-  'Viner Hand ITC',
-  'Vivaldi',
-  'Vladimir Script',
-  'Webdings',
-  'Wide Latin',
-  'Wingdings',
-  'Wingdings 2',
-  'Wingdings 3',
-  'Yu Gothic',
-  'Yu Gothic Light',
-  'Yu Gothic Medium',
-  'Yu Gothic UI',
-  'Yu Gothic UI Light',
-  'Yu Gothic UI Semibold',
-  'Yu Gothic UI Semilight',
+  "Madhubala",
+  "Dhurjati",
+  "Aaradhana",
+  "Ajantha",
+  "GowthamiBold",
+  "Suranna",
+  "Gidugu",
+  "Gurajada",
+  "Mallanna",
+  "Mandali",
+  "NATS",
+  "NTR",
+  "Peddana",
+  "Potti Sreeramulu",
+  "Ramabhadra",
+  "Ramaraja",
+  "Sree Krushnadevaraya",
+  "Suranna",
+  "Suravaram",
+  "Syamala Ramana",
+  "TenaliRamakrishna",
+  "Timmana",
+  "AADevAksharReg",
+  "AADevApsBil",
+  "AADevApsReg",
+  "AADevChitralekhaReg",
+  "AADevIndicaReg",
+  "AADevIsfocBil",
+  "AADevIsfocReg",
+  "AADevKrutiReg",
+  "AADevShreeLipiBil",
+  "AADevShreeLipiReg",
+  "AADevSulipiReg",
+  "AADevSushaReg",
+  "AADevWinKeyBil",
+  "AADevWinKeyReg",
+  "AclAksharELight",
+  "Agency FB",
+  "AkrutiDevAbhijit",
+  "AkrutiDevAditi",
+  "AkrutiDevAditya",
+  "AkrutiDevAjit",
+  "AkrutiDevAkanksha",
+  "AkrutiDevAkankshaMedium",
+  "AkrutiDevAkhila",
+  "AkrutiDevAkshardhara",
+  "AkrutiDevAkshardharaExtBold",
+  "AkrutiDevAkshay",
+  "AkrutiDevAnand",
+  "AkrutiDevAnil",
+  "AkrutiDevAnjali",
+  "AkrutiDevArjun",
+  "AkrutiDevAshvin",
+  "AkrutiDevAsmita",
+  "AkrutiDevBela",
+  "AkrutiDevBhagya",
+  "AkrutiDevBharani",
+  "AkrutiDevBharati",
+  "AkrutiDevBhaskar",
+  "AkrutiDevBrahma",
+  "AkrutiDevCactus",
+  "AkrutiDevChakra",
+  "AkrutiDevChakraNormal",
+  "AkrutiDevChampa",
+  "AkrutiDevChandrika",
+  "AkrutiDevCharu",
+  "AkrutiDevDeepa",
+  "AkrutiDevGanesh",
+  "AkrutiDevHansa",
+  "AkrutiDevHarsha",
+  "AkrutiDevHarshaMedium",
+  "AkrutiDevHema",
+  "AkrutiDevIndu",
+  "AkrutiDevIshwar",
+  "AkrutiDevJanhavi",
+  "AkrutiDevKailas",
+  "AkrutiDevKailasMedium",
+  "AkrutiDevKalidas",
+  "AkrutiDevKusum",
+  "AkrutiDevMadhura",
+  "AkrutiDevMalavika",
+  "AkrutiDevMallika",
+  "AkrutiDevMandara",
+  "AkrutiDevMangal",
+  "AkrutiDevManisha",
+  "AkrutiDevManoj",
+  "AkrutiDevManorama",
+  "AkrutiDevMaya",
+  "AkrutiDevMayur",
+  "AkrutiDevMeera",
+  "AkrutiDevMegha",
+  "AkrutiDevMenaka",
+  "AkrutiDevMitra",
+  "AkrutiDevMogara",
+  "AkrutiDevMogaraMedium",
+  "AkrutiDevMouj",
+  "AkrutiDevMoujLight",
+  "AkrutiDevMukund",
+  "AkrutiDevNandi",
+  "AkrutiDevNarmada",
+  "AkrutiDevNartaki",
+  "AkrutiDevNatraj",
+  "AkrutiDevNatrajLight",
+  "AkrutiDevNavaneet",
+  "AkrutiDevNavin",
+  "AkrutiDevNewPriya",
+  "AkrutiDevNewPriyaExpand",
+  "AkrutiDevNewPriyaNormal",
+  "AkrutiDevOmkar",
+  "AkrutiDevParimala",
+  "AkrutiDevPataliputra",
+  "AkrutiDevPayal",
+  "AkrutiDevPooja",
+  "AkrutiDevPrakash",
+  "AkrutiDevPratap",
+  "AkrutiDevPratik",
+  "AkrutiDevPraveen",
+  "AkrutiDevPreeti",
+  "AkrutiDevPreetiLight",
+  "AkrutiDevPrema",
+  "AkrutiDevPriya",
+  "AkrutiDevPriyaExpanded",
+  "AkrutiDevPriyanka",
+  "AkrutiDevPushpa",
+  "AkrutiDevRahul",
+  "AkrutiDevRaksha",
+  "AkrutiDevRakshaExtBold",
+  "AkrutiDevRekha",
+  "AkrutiDevRishi",
+  "AkrutiDevRohini",
+  "AkrutiDevRoshan",
+  "AkrutiDevSavita",
+  "AkrutiDevSeetha",
+  "AkrutiDevShantala",
+  "AkrutiDevShivaji",
+  "AkrutiDevShradda",
+  "AkrutiDevShridhar",
+  "AkrutiDevShridharLight",
+  "AkrutiDevShruti",
+  "AkrutiDevSindhu",
+  "AkrutiDevSita",
+  "AkrutiDevSneha",
+  "AkrutiDevSulekh",
+  "AkrutiDevSunil",
+  "AkrutiDevSushma",
+  "AkrutiDevSwati",
+  "AkrutiDevTilak",
+  "AkrutiDevTriveni",
+  "AkrutiDevUpendra",
+  "AkrutiDevVaishali",
+  "AkrutiDevValmiki",
+  "AkrutiDevVandana",
+  "AkrutiDevVarsha",
+  "AkrutiDevVarun",
+  "AkrutiDevVedik",
+  "AkrutiDevVichitra",
+  "AkrutiDevVidya",
+  "AkrutiDevVijay",
+  "AkrutiDevVinod",
+  "AkrutiDevVivek",
+  "AkrutiDevXPYogini",
+  "AkrutiDevYamuna",
+  "AkrutiDevYogini",
+  "AkrutiOfficeAditi",
+  "AkrutiOfficeAditi01",
+  "AkrutiOfficeAjit",
+  "AkrutiOfficeAjit01",
+  "AkrutiOfficeAkanksha",
+  "AkrutiOfficeAkanksha01",
+  "AkrutiOfficeAkansha",
+  "AkrutiOfficeAkshardhara",
+  "AkrutiOfficeAkshardhara01",
+  "AkrutiOfficeAkshay",
+  "AkrutiOfficeAkshay01",
+  "AkrutiOfficeChakra",
+  "AkrutiOfficeChakra01",
+  "AkrutiOfficeChampa",
+  "AkrutiOfficeChampa01",
+  "AkrutiOfficeDeepa",
+  "AkrutiOfficeDeepa01",
+  "AkrutiOfficeHansa",
+  "AkrutiOfficeHansa01",
+  "AkrutiOfficeHinPriya",
+  "AkrutiOfficeHinPriya01",
+  "AkrutiOfficeManorama",
+  "AkrutiOfficeManorama01",
+  "AkrutiOfficeMogara",
+  "AkrutiOfficeMogara01",
+  "AkrutiOfficeMouj",
+  "AkrutiOfficeMouj01",
+  "AkrutiOfficePriya",
+  "AkrutiOfficePriya01",
+  "AkrutiOfficePriyaExpand",
+  "AkrutiOfficePriyaExpand01",
+  "AkrutiOfficeShruti",
+  "AkrutiOfficeShruti01",
+  "AkrutiOfficeSulekh",
+  "AkrutiOfficeSulekh01",
+  "AkrutiOfficeSwati",
+  "AkrutiOfficeSwati01",
+  "AkrutiOfficeTriveni",
+  "AkrutiOfficeTriveni01",
+  "AkrutiOfficeVijay",
+  "AkrutiOfficeVijay01",
+  "AkrutiOfficeYogini",
+  "AkrutiOfficeYogini-S",
+  "AkrutiOfficeYogini01",
+  "AkrutiOfficeYoginiLight",
+  "AkrutiOfficeYoginiLight01",
+  "Algerian",
+  "Aparajita",
+  "Arial",
+  "Arial Black",
+  "Arial Narrow",
+  "Arial Rounded MT Bold",
+  "Arial Unicode MS",
+  "Bahnschrift",
+  "Bahnschrift Condensed",
+  "Bahnschrift Light",
+  "Bahnschrift Light Condensed",
+  "Bahnschrift SemiBold",
+  "Bahnschrift SemiBold Condensed",
+  "Bahnschrift SemiCondensed",
+  "Bahnschrift SemiLight",
+  "Baskerville Old Face",
+  "Bauhaus 93",
+  "Bell MT",
+  "Berlin Sans FB",
+  "Berlin Sans FB Demi",
+  "Bernard MT Condensed",
+  "Blackadder ITC",
+  "Bodoni MT",
+  "Bodoni MT Black",
+  "Bodoni MT Condensed",
+  "Bodoni MT Poster Compressed",
+  "Book Antiqua",
+  "Bookman Old Style",
+  "Bookshelf Symbol 7",
+  "Bradley Hand ITC",
+  "Britannic Bold",
+  "Broadway",
+  "Brush Script MT",
+  "Calibri",
+  "Calibri Light",
+  "Californian FB",
+  "Calisto MT",
+  "Cambria",
+  "Cambria Math",
+  "Candara",
+  "Candara Light",
+  "Cascadia Code",
+  "Cascadia Code ExtraLight",
+  "Cascadia Code Light",
+  "Cascadia Code SemiBold",
+  "Cascadia Code SemiLight",
+  "Cascadia Mono",
+  "Cascadia Mono ExtraLight",
+  "Cascadia Mono Light",
+  "Cascadia Mono SemiBold",
+  "Cascadia Mono SemiLight",
+  "Castellar",
+  "Centaur",
+  "Century",
+  "Century Gothic",
+  "Century Schoolbook",
+  "Chiller",
+  "Colonna MT",
+  "Comic Sans MS",
+  "Consolas",
+  "Constantia",
+  "Cooper Black",
+  "Copperplate Gothic Bold",
+  "Copperplate Gothic Light",
+  "Corbel",
+  "Corbel Light",
+  "Courier New",
+  "Curlz MT",
+  "DVOT-Bhima",
+  "DVOT-Surekh",
+  "Ebrima",
+  "Edwardian Script ITC",
+  "Ek Mukta",
+  "Elephant",
+  "Engravers MT",
+  "Eras Bold ITC",
+  "Eras Demi ITC",
+  "Eras Light ITC",
+  "Eras Medium ITC",
+  "Felix Titling",
+  "Footlight MT Light",
+  "Forte",
+  "Franklin Gothic Book",
+  "Franklin Gothic Demi",
+  "Franklin Gothic Demi Cond",
+  "Franklin Gothic Heavy",
+  "Franklin Gothic Medium",
+  "Franklin Gothic Medium Cond",
+  "Freestyle Script",
+  "French Script MT",
+  "Gabriola",
+  "Gadugi",
+  "Garamond",
+  "Georgia",
+  "Gigi",
+  "Gill Sans MT",
+  "Gill Sans MT Condensed",
+  "Gill Sans MT Ext Condensed",
+  "Gill Sans Ultra Bold",
+  "Gill Sans Ultra Bold Condensed",
+  "Gloucester MT Extra Condensed",
+  "Goudy Old Style",
+  "Goudy Stout",
+  "Haettenschweiler",
+  "Harlow Solid Italic",
+  "Harrington",
+  "High Tower Text",
+  "HoloLens MDL2 Assets",
+  "Impact",
+  "Imprint MT Shadow",
+  "Informal Roman",
+  "Ink Free",
+  "ISCIIDev",
+  "Javanese Text",
+  "Jokerman",
+  "Juice ITC",
+  "Kokila",
+  "Kristen ITC",
+  "Kunstler Script",
+  "Leelawadee UI",
+  "Leelawadee UI Semilight",
+  "Lucida Bright",
+  "Lucida Calligraphy",
+  "Lucida Console",
+  "Lucida Fax",
+  "Lucida Handwriting",
+  "Lucida Sans",
+  "Lucida Sans Typewriter",
+  "Lucida Sans Unicode",
+  "Magneto",
+  "Maiandra GD",
+  "Malgun Gothic",
+  "Malgun Gothic Semilight",
+  "Mangal",
+  "Marat1",
+  "Marat2",
+  "Marlett",
+  "Matura MT Script Capitals",
+  "Microsoft Himalaya",
+  "Microsoft JhengHei",
+  "Microsoft JhengHei Light",
+  "Microsoft JhengHei UI",
+  "Microsoft JhengHei UI Light",
+  "Microsoft New Tai Lue",
+  "Microsoft PhagsPa",
+  "Microsoft Sans Serif",
+  "Microsoft Tai Le",
+  "Microsoft YaHei",
+  "Microsoft YaHei Light",
+  "Microsoft YaHei UI",
+  "Microsoft YaHei UI Light",
+  "Microsoft Yi Baiti",
+  "MingLiU-ExtB",
+  "MingLiU_HKSCS-ExtB",
+  "Mistral",
+  "Modern No. 20",
+  "Mongolian Baiti",
+  "Monotype Corsiva",
+  "MS Gothic",
+  "MS Mincho",
+  "MS Outlook",
+  "MS PGothic",
+  "MS Reference Sans Serif",
+  "MS Reference Specialty",
+  "MS UI Gothic",
+  "MT Extra",
+  "MV Boli",
+  "Myanmar Text",
+  "Niagara Engraved",
+  "Niagara Solid",
+  "Nirmala UI",
+  "Nirmala UI Semilight",
+  "NSimSun",
+  "OCR A Extended",
+  "Old English Text MT",
+  "Onyx",
+  "Palace Script MT",
+  "Palatino Linotype",
+  "Papyrus",
+  "Parchment",
+  "Perpetua",
+  "Perpetua Titling MT",
+  "Playbill",
+  "PMingLiU-ExtB",
+  "Poor Richard",
+  "Pristina",
+  "Rage Italic",
+  "Ravie",
+  "Rockwell",
+  "Rockwell Condensed",
+  "Rockwell Extra Bold",
+  "Sakal Marathi",
+  "SakalBharati",
+  "Sanskrit Text",
+  "Script MT Bold",
+  "Segoe Fluent Icons",
+  "Segoe MDL2 Assets",
+  "Segoe Print",
+  "Segoe Script",
+  "Segoe UI",
+  "Segoe UI Black",
+  "Segoe UI Emoji",
+  "Segoe UI Historic",
+  "Segoe UI Light",
+  "Segoe UI Semibold",
+  "Segoe UI Semilight",
+  "Segoe UI Symbol",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small Light",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text Light",
+  "Showcard Gothic",
+  "SimSun",
+  "SimSun-ExtB",
+  "Sitka Banner",
+  "Sitka Banner Semibold",
+  "Sitka Display",
+  "Sitka Display Semibold",
+  "Sitka Heading",
+  "Sitka Heading Semibold",
+  "Sitka Small",
+  "Sitka Small Semibold",
+  "Sitka Subheading",
+  "Sitka Subheading Semibold",
+  "Sitka Text",
+  "Sitka Text Semibold",
+  "Snap ITC",
+  "Stencil",
+  "Sylfaen",
+  "Symbol",
+  "Tahoma",
+  "Tempus Sans ITC",
+  "Times New Roman",
+  "Trebuchet MS",
+  "Tw Cen MT",
+  "Tw Cen MT Condensed",
+  "Tw Cen MT Condensed Extra Bold",
+  "Utsaah",
+  "Verdana",
+  "Viner Hand ITC",
+  "Vivaldi",
+  "Vladimir Script",
+  "Webdings",
+  "Wide Latin",
+  "Wingdings",
+  "Wingdings 2",
+  "Wingdings 3",
+  "Yu Gothic",
+  "Yu Gothic Light",
+  "Yu Gothic Medium",
+  "Yu Gothic UI",
+  "Yu Gothic UI Light",
+  "Yu Gothic UI Semibold",
+  "Yu Gothic UI Semilight",
 ];
 export const chNumbers = [1, 2, 3, 4];
 export const inAnimationMethods = [
   ...animation.map((val) => val.name),
-  'lefttoright',
-  'mix',
+  "lefttoright",
+  "mix",
 ];
 
-export const animationMethods = [
-  'easenone',
-  'mix'
-];
+export const animationMethods = ["easenone", "mix"];
 export const languages = [
-  'en-US',
-  'hi-IN',
-  'te-IN',
-  'ta-IN',
-  'mr-IN',
-  'gu-IN',
-  'kn-IN',
-  'ml-IN',
-  'pa-Guru-IN',
-  'ur-IN',
-  'ar-SA',
-  'bn-BD',
-  'bn-IN',
-  'cs-CZ',
-  'da-DK',
-  'de-AT',
-  'de-CH',
-  'de-DE',
-  'el-GR',
-  'en-AU',
-  'en-CA',
-  'en-GB',
-  'en-IE',
-  'en-IN',
-  'en-NZ',
-  'en-US',
-  'en-ZA',
-  'es-AR',
-  'es-CL',
-  'es-CO',
-  'es-ES',
-  'es-MX',
-  'es-US',
-  'fi-FI',
-  'fr-BE',
-  'fr-CA',
-  'fr-CH',
-  'fr-FR',
-  'he-IL',
-  'hi-IN',
-  'hu-HU',
-  'id-ID',
-  'it-CH',
-  'it-IT',
-  'jp-JP',
-  'ko-KR',
-  'nl-BE',
-  'nl-NL',
-  'no-NO',
-  'pl-PL',
-  'pt-BR',
-  'pt-PT',
-  'ro-RO',
-  'ru-RU',
-  'sk-SK',
-  'sv-SE',
-  'ta-IN',
-  'ta-LK',
-  'th-TH',
-  'tr-TR',
-  'ur_PK',
-  'zh-CN',
-  'zh-HK',
-  'zh-TW',
-  'bh-IN',
+  "en-US",
+  "hi-IN",
+  "te-IN",
+  "ta-IN",
+  "mr-IN",
+  "gu-IN",
+  "kn-IN",
+  "ml-IN",
+  "pa-Guru-IN",
+  "ur-IN",
+  "ar-SA",
+  "bn-BD",
+  "bn-IN",
+  "cs-CZ",
+  "da-DK",
+  "de-AT",
+  "de-CH",
+  "de-DE",
+  "el-GR",
+  "en-AU",
+  "en-CA",
+  "en-GB",
+  "en-IE",
+  "en-IN",
+  "en-NZ",
+  "en-US",
+  "en-ZA",
+  "es-AR",
+  "es-CL",
+  "es-CO",
+  "es-ES",
+  "es-MX",
+  "es-US",
+  "fi-FI",
+  "fr-BE",
+  "fr-CA",
+  "fr-CH",
+  "fr-FR",
+  "he-IL",
+  "hi-IN",
+  "hu-HU",
+  "id-ID",
+  "it-CH",
+  "it-IT",
+  "jp-JP",
+  "ko-KR",
+  "nl-BE",
+  "nl-NL",
+  "no-NO",
+  "pl-PL",
+  "pt-BR",
+  "pt-PT",
+  "ro-RO",
+  "ru-RU",
+  "sk-SK",
+  "sv-SE",
+  "ta-IN",
+  "ta-LK",
+  "th-TH",
+  "tr-TR",
+  "ur_PK",
+  "zh-CN",
+  "zh-HK",
+  "zh-TW",
+  "bh-IN",
 ];
 export const easeTypes = [
-  'none',
-  'power1.in',
-  'power1.out',
-  'power1.inOut',
-  'power2.in',
-  'power2.out',
-  'power2.inOut',
-  'power3.in',
-  'power3.out',
-  'power3.inOut',
-  'power4.in',
-  'power4.out',
-  'power4.inOut',
-  'linear',
-  'back.in',
-  'back.out',
-  'back.inOut',
-  'bounce.in',
-  'bounce.out',
-  'bounce.inOut',
-  'elastic.in',
-  'elastic.out',
-  'elastic.inOut',
-  'rough',
-  'slow',
-  'stepped',
-  'circ.in',
-  'circ.out',
-  'circ.inOut',
-  'expo.in',
-  'expo.out',
-  'expo.inOut',
-  'sine.in',
-  'sine.out',
-  'sine.inOut',
+  "none",
+  "power1.in",
+  "power1.out",
+  "power1.inOut",
+  "power2.in",
+  "power2.out",
+  "power2.inOut",
+  "power3.in",
+  "power3.out",
+  "power3.inOut",
+  "power4.in",
+  "power4.out",
+  "power4.inOut",
+  "linear",
+  "back.in",
+  "back.out",
+  "back.inOut",
+  "bounce.in",
+  "bounce.out",
+  "bounce.inOut",
+  "elastic.in",
+  "elastic.out",
+  "elastic.inOut",
+  "rough",
+  "slow",
+  "stepped",
+  "circ.in",
+  "circ.out",
+  "circ.inOut",
+  "expo.in",
+  "expo.out",
+  "expo.inOut",
+  "sine.in",
+  "sine.out",
+  "sine.inOut",
 ];
 export const colors = [
-  '#1b648f',
-  '#a14e89',
-  '#af6b1c',
-  '#797362',
-  '#c8d23b',
-  '#7d45b6',
-  '#c8459e',
-  '#45c1a1',
-  '#c45d4b',
-  '#4f7390',
-  '#b95d9d',
-  '#2c907a',
-  '#946757',
-  '#8d3a4a',
-  '#44a764',
-  '#9c6da1',
-  '#4e6a2f',
-  '#8c438f',
-  '#a25e37',
-  '#536b8f',
-  '#a85357',
-  '#5b7e5f',
-  '#c97d91',
-  '#5c5d5d',
-  '#c2623b',
-  '#5e7c8d',
-  '#b94c74',
-  '#9d6e43',
-  '#b84e38',
-  '#7b8d4b',
-  '#c85f4c',
-  '#9a6f8d',
-  '#46685d',
-  '#c3478f',
-  '#7a5d6f',
-  '#c85e9a',
-  '#7a985d',
-  '#b64d38',
-  '#567c8e',
-  '#b64c7a',
-  '#5b7d5f',
-  '#c9496f',
-  '#5e748f',
-  '#c8643b',
-  '#637d5d',
-  '#b34e9d',
-  '#5e6a8d',
-  '#c65d7a',
-  '#9d6f43',
-  '#b34d38',
+  "#1b648f",
+  "#a14e89",
+  "#af6b1c",
+  "#797362",
+  "#c8d23b",
+  "#7d45b6",
+  "#c8459e",
+  "#45c1a1",
+  "#c45d4b",
+  "#4f7390",
+  "#b95d9d",
+  "#2c907a",
+  "#946757",
+  "#8d3a4a",
+  "#44a764",
+  "#9c6da1",
+  "#4e6a2f",
+  "#8c438f",
+  "#a25e37",
+  "#536b8f",
+  "#a85357",
+  "#5b7e5f",
+  "#c97d91",
+  "#5c5d5d",
+  "#c2623b",
+  "#5e7c8d",
+  "#b94c74",
+  "#9d6e43",
+  "#b84e38",
+  "#7b8d4b",
+  "#c85f4c",
+  "#9a6f8d",
+  "#46685d",
+  "#c3478f",
+  "#7a5d6f",
+  "#c85e9a",
+  "#7a985d",
+  "#b64d38",
+  "#567c8e",
+  "#b64c7a",
+  "#5b7d5f",
+  "#c9496f",
+  "#5e748f",
+  "#c8643b",
+  "#637d5d",
+  "#b34e9d",
+  "#5e6a8d",
+  "#c65d7a",
+  "#9d6f43",
+  "#b34d38",
 ];
 
-export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscreenSize, verticalSpeed) => {
+export const startVerticalScroll = (
+  layerNumber,
+  canvas,
+  selectAll,
+  currentscreenSize,
+  verticalSpeed
+) => {
   executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
       document.getElementById('divid_${layerNumber}')?.remove();
       `);
@@ -2907,31 +3015,34 @@ export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscree
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   selectAll(canvas);
   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+  );
   const script = `
                                                                                   window.aaVertical = document.createElement('div');
                                                                                   aaVertical.style.position='absolute';
                                                                                   aaVertical.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aaVertical.style.zIndex = ${layerNumber};
                                                                                   aaVertical.innerHTML=\`${canvas
-      .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
-      .replaceAll(
-        '"',
-        '\\"'
-      )}\`;
+                                                                                    .toSVG(
+                                                                                      [
+                                                                                        "id",
+                                                                                        "class",
+                                                                                        "selectable",
+                                                                                      ]
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )}\`;
                                                                                   document.body.appendChild(aaVertical);
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
                                                                                   aaVertical.style.top='100%';
-                                                                                  aaVertical.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+                                                                                  aaVertical.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   window.verticalSpeed=${verticalSpeed};
       window.intervalVerticalScroll= setInterval(()=>{
