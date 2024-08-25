@@ -881,86 +881,82 @@ export const copy = (canvas) => {
 export const paste = async (canvas) => {
   try {
     if (_clipboard) {
-      console.log("Attempting to paste object from clipboard:", _clipboard);
-
-      // Check the exact type stored in _clipboard
       const objectType = _clipboard.type;
-      console.log("Object type in clipboard:", objectType);
-      const id = generateUniqueId({ type: objectType });
+      var aa = [];
+      if (objectType === "ActiveSelection") {
+        aa = _clipboard.objects;
+      } else {
+        aa = [_clipboard];
+      }
+      aa.forEach(async (obj) => {
+        const objectType = obj.type;
+        const id = generateUniqueId({ type: objectType });
+        let clonedObj;
+        try {
+          clonedObj = new fabric[objectType]({
+            ...obj,
+            left: obj.left + 10,
+            top: obj.top + 10,
+            id: id,
+            class: id,
+          });
+        } catch (error) {
+          switch (objectType) {
+            case "text":
+            case "Text":
+            case "textbox":
+            case "Textbox":
+              delete obj.type;
+              clonedObj = new fabric.Textbox(obj.text.toString(), {
+                ...obj,
+                left: obj.left + 10,
+                top: obj.top + 10,
+                id: id,
+                class: id,
+              });
+              break;
+            case "path":
+            case "Path":
+              clonedObj = new fabric.Path(obj.path, {
+                ...obj,
+                left: obj.left + 10,
+                top: obj.top + 10,
+                id: id,
+                class: id,
+              });
+              clonedObj.on("mousedblclick", () => {
+                window.edit(window.dispatch);
+              });
+              break;
 
-      let clonedObj;
-      try {
-        clonedObj = new fabric[objectType]({
-          ..._clipboard,
-          left: _clipboard.left + 10,
-          top: _clipboard.top + 10,
-          id: id,
-          class: id,
-        });
-      } catch (error) {
-        switch (objectType) {
-          case "text":
-          case "Text":
-          case "textbox":
-          case "Textbox":
-            delete _clipboard.type;
-            clonedObj = new fabric.Textbox(_clipboard.text.toString(), {
-              ..._clipboard,
-              left: _clipboard.left + 10,
-              top: _clipboard.top + 10,
-              id: id,
-              class: id,
-            });
-            break;
-          case "path":
-          case "Path":
-            clonedObj = new fabric.Path(_clipboard.path, {
-              ..._clipboard,
-              left: _clipboard.left + 10,
-              top: _clipboard.top + 10,
-              id: id,
-              class: id,
-            });
-            clonedObj.on("mousedblclick", () => {
-              console.log("Object double-clicked");
-              window.edit(window.dispatch);
-            });
-            break;
+            case "image":
+            case "Image":
+              const img = await fabric.FabricImage.fromURL(obj.src);
 
-          case "image":
-          case "Image":
-            const img = await fabric.FabricImage.fromURL(_clipboard.src);
-
-            img.set({
-              ..._clipboard,
-              left: _clipboard.left + 100,
-              top: _clipboard.top + 100,
-              objectCaching: false,
-              id: id,
-              class: id,
-            });
-            clonedObj = img;
-            canvas.add(clonedObj);
-            canvas.setActiveObject(clonedObj);
-            return;
-
-          // Add cases for other types as necessary
-          default:
-            console.error("Unsupported object type:", objectType);
-            return;
+              img.set({
+                ...obj,
+                left: obj.left + 100,
+                top: obj.top + 100,
+                objectCaching: false,
+                id: id,
+                class: id,
+              });
+              clonedObj = img;
+              canvas.add(clonedObj);
+              canvas.setActiveObject(clonedObj);
+              return;
+            default:
+              console.error("Unsupported object type:", objectType);
+              return;
+          }
         }
-      }
-
-      // Manually create a new Fabric.js object based on the type
-
-      console.log("Cloned object:", clonedObj);
-      if (clonedObj) {
-        canvas.add(clonedObj);
-        canvas.setActiveObject(clonedObj);
-
-        console.log("Requesting render after paste");
-        canvas.requestRenderAll();
-      }
+        console.log("Cloned object:", clonedObj);
+        if (clonedObj) {
+          canvas.add(clonedObj);
+          canvas.setActiveObject(clonedObj);
+          canvas.requestRenderAll();
+        }
+      });
     } else {
       console.log("Clipboard is empty, nothing to paste");
     }
