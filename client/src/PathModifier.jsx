@@ -183,6 +183,7 @@ export function edit(dispatch) {
   }
 }
 
+
 export const startPath = () => {
   window.editor.canvas.off("mouse:down");
   window.editor.canvas.off("mouse:move");

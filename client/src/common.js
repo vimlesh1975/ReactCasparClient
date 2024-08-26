@@ -752,22 +752,32 @@ export const createTriangle = (canvas) => {
   canvas.requestRenderAll();
 };
 
+
+
 export const groupObjects = (canvas, shouldGroup) => {
   const id = generateUniqueId({ type: "group" });
-
   if (shouldGroup) {
     if (!canvas.getActiveObject()) {
       return;
     }
-    if (canvas.getActiveObject().type !== "activeSelection") {
+    if (canvas.getActiveObject().type !== "activeselection") {
       return;
     }
-    canvas.getActiveObject().toGroup().set({
-      shadow: shadowOptions,
+    const objects = canvas.getActiveObjects();
+    canvas.discardActiveObject();
+    const group = new fabric.Group(objects, { interactive: true, subTargetCheck: true });
+    group.set({
+      shadow: { ...shadowOptions, blur: 0 },
       id: id,
       class: id,
       fill: "#ff0000",
     });
+    canvas.add(group);
+    canvas.setActiveObject(group);
+    objects.forEach((element) => {
+      canvas.remove(element);
+    });
+
   } else {
     if (!canvas.getActiveObject()) {
       return;
@@ -775,10 +785,11 @@ export const groupObjects = (canvas, shouldGroup) => {
     if (canvas.getActiveObject().type !== "group") {
       return;
     }
-    canvas.getActiveObject().toActiveSelection(); //ungroup
-    canvas.forEachObject((element) =>
-      element.set({ objectCaching: false, shadow: shadowOptions })
-    );
+    const group = canvas.getActiveObject();
+    const objects = group && group.removeAll();
+    canvas.discardActiveObject();
+    canvas.remove(group);
+    canvas.add(...objects);
   }
   canvas.requestRenderAll();
 };
