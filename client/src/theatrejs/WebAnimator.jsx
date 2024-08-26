@@ -720,6 +720,7 @@ const WebAnimator = () => {
                             top: top,
                             id: id,
                             class: id,
+                            evented: true,
                         });
                         canvas.add(object);
                         canvas?.setActiveObject(object);

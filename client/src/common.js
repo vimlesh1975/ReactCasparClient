@@ -903,12 +903,17 @@ export const paste = async (canvas) => {
         top += 100;
 
         // Set properties
-        const id = generateUniqueId({ type: object.type.toLowerCase() });
+        var id = generateUniqueId({ type: object.type.toLowerCase() });
+        const idAlreadyExists = findElementWithId(canvas, id);
+        while (idAlreadyExists) {
+          id = generateUniqueId({ type: object.type.toLowerCase() });
+        }
         object.set({
           left: left,
           top: top,
           id: id,
           class: id,
+          evented: true,
         });
 
         // Add object to canvas and selection array
