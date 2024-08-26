@@ -519,18 +519,18 @@ export const cloneAsImage = (canvas) => {
 
   canvas.getActiveObjects().forEach(async (element) => {
     const preshadow = element.shadow;
-    if (
-      (element.type === "i-text" ||
-        element.type === "textbox" ||
-        element.type === "text") &&
-      element.shadow.blur < 5
-    ) {
-      element.shadow.blur = 5;
-    }
-
+    // if (
+    //   (element.type === "i-text" ||
+    //     element.type === "textbox" ||
+    //     element.type === "text") &&
+    //   element.shadow.blur < 5
+    // ) {
+    //   element.shadow.blur = 5;
+    // }
+    element.set('shadow', null);
     const dataURL = element.toDataURL({
       format: "png",
-      multiplier: 2, // Adjust multiplier for higher resolution
+      multiplier: 1, // Adjust multiplier for higher resolution
     });
 
     const clone = await fabric.FabricImage.fromURL(dataURL);
