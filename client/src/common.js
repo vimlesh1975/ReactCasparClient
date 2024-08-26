@@ -479,10 +479,45 @@ const finalPosition = (element, canvas) => {
     return finalPosition;
   }
 };
-export const cloneAsImage = (canvas) => {
-  const id = generateUniqueId({ type: "textbox" });
+// export const cloneAsImage = (canvas) => {
+//   const id = generateUniqueId({ type: "id" });
 
-  canvas.getActiveObjects().forEach((element) => {
+//   canvas.getActiveObjects().forEach((element) => {
+//     const preshadow = element.shadow;
+//     if (
+//       (element.type === "i-text" ||
+//         element.type === "textbox" ||
+//         element.type === "text") &&
+//       element.shadow.blur < 5
+//     ) {
+//       element.shadow.blur = 5;
+//     }
+//     element.cloneAsImage(function (clone) {
+//       console.log(clone)
+//       clone.set({
+//         left: finalPosition(element, canvas).x + 10,
+//         top: finalPosition(element, canvas).y + 10,
+//         id: id,
+//         class: id,
+//         shadow: {
+//           color: "black",
+//           blur: 0,
+//           offsetX: 0,
+//           offsetY: 0,
+//           affectStroke: false,
+//         },
+//       });
+//       canvas.add(clone);
+//     });
+//     element.shadow = preshadow;
+//   });
+//   canvas.requestRenderAll();
+// };
+
+export const cloneAsImage = (canvas) => {
+  const id = generateUniqueId({ type: "id" });
+
+  canvas.getActiveObjects().forEach(async (element) => {
     const preshadow = element.shadow;
     if (
       (element.type === "i-text" ||
@@ -492,26 +527,33 @@ export const cloneAsImage = (canvas) => {
     ) {
       element.shadow.blur = 5;
     }
-    element.cloneAsImage(function (clone) {
-      clone.set({
-        left: finalPosition(element, canvas).x + 10,
-        top: finalPosition(element, canvas).y + 10,
-        id: id,
-        class: id,
-        shadow: {
-          color: "black",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-        },
-      });
-      canvas.add(clone);
+
+    const dataURL = element.toDataURL({
+      format: "png",
+      multiplier: 2, // Adjust multiplier for higher resolution
     });
+
+    const clone = await fabric.FabricImage.fromURL(dataURL);
+    clone.set({
+      left: finalPosition(element, canvas).x + 10,
+      top: finalPosition(element, canvas).y + 10,
+      id: id,
+      class: id,
+      shadow: {
+        color: "black",
+        blur: 0,
+        offsetX: 0,
+        offsetY: 0,
+        affectStroke: false,
+      },
+    });
+    canvas.add(clone);
+    canvas.requestRenderAll();
     element.shadow = preshadow;
   });
-  canvas.requestRenderAll();
 };
+
+
 export const createRandomeStrip = (canvas) => {
   const id = generateUniqueId({ type: "path" });
 
