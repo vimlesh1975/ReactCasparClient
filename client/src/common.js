@@ -879,105 +879,44 @@ export const copy = (canvas) => {
 };
 
 export const paste = async (canvas) => {
-  try {
-    if (_clipboard) {
-      const objectType = _clipboard.type;
-      let objectsToSelect = [];
-      let aa = [];
+  if (_clipboard) {
+    let objectsToSelect = [];
 
+    let left = 0;
+    let top = 0;
+
+    try {
+      const objects = await fabric.util.enlivenObjects([_clipboard]);
+      let aa = [];
+      const objectType = _clipboard.type;
+
+      // Handle ActiveSelection or single object
       if (objectType === "ActiveSelection") {
-        aa = _clipboard.objects;
+        aa = objects[0]._objects;
       } else {
-        aa = [_clipboard];
+        aa = objects;
       }
 
-      let left = 0;
-      let top = 0;
-
-      for (const obj of aa) {
+      // Process each object
+      aa.forEach((object) => {
         left += 100;
         top += 100;
-        const objectType = obj.type;
-        const id = generateUniqueId({ type: objectType.toLowerCase() });
-        let clonedObj;
 
-        try {
-          clonedObj = new fabric[objectType]({
-            ...obj,
-            left: left,
-            top: top,
-            id: id,
-            class: id,
-            fill: obj.fill
-          });
-        } catch (error) {
-          switch (objectType) {
-            case "text":
-            case "Text":
-            case "textbox":
-            case "Textbox":
-              delete obj.type;
-              clonedObj = new fabric.Textbox(obj.text.toString(), {
-                ...obj,
-                left: left,
-                top: top,
-                id: id,
-                class: id,
-              });
-              break;
-            case "polygon":
-            case "Polygon":
-              delete obj.type;
-              clonedObj = new fabric.Polygon(obj.points, {
-                ...obj,
-                left: left,
-                top: top,
-                id: id,
-                class: id,
-              });
-              break;
-            case "path":
-            case "Path":
-              clonedObj = new fabric.Path(obj.path, {
-                ...obj,
-                left: left,
-                top: top,
-                id: id,
-                class: id,
-              });
-              clonedObj.on("mousedblclick", () => {
-                window.edit(window.dispatch);
-              });
-              break;
-            case "image":
-            case "Image":
-              const img = await fabric.FabricImage.fromURL(obj.src);
+        // Set properties
+        const id = generateUniqueId({ type: object.type.toLowerCase() });
+        object.set({
+          left: left,
+          top: top,
+          id: id,
+          class: id,
+        });
 
-              img.set({
-                ...obj,
-                left: left,
-                top: top,
-                objectCaching: false,
-                id: id,
-                class: id,
-              });
-              clonedObj = img;
-              canvas.add(clonedObj);
-              canvas.setActiveObject(clonedObj);
-              return;
-            default:
-              console.error("Unsupported object type:", objectType);
-              return;
-          }
-        }
+        // Add object to canvas and selection array
+        canvas.add(object);
+        objectsToSelect.push(object);
+      });
 
-        // console.log("Cloned object:", clonedObj);
-        if (clonedObj) {
-          canvas.add(clonedObj);
-          objectsToSelect.push(clonedObj);
-        }
-      }
-
+      // Set selection if multiple objects are pasted
       if (objectsToSelect.length > 1) {
         const selection = new fabric.ActiveSelection(objectsToSelect, {
           canvas: canvas,
@@ -987,12 +926,13 @@ export const paste = async (canvas) => {
         canvas.setActiveObject(objectsToSelect[0]);
       }
 
+      // Render the canvas
       canvas.requestRenderAll();
-    } else {
-      console.log("Clipboard is empty, nothing to paste");
+    } catch (error) {
+      console.error("Error during paste operation:", error);
     }
-  } catch (error) {
-    console.error("Error during paste operation:", error);
+  } else {
+    console.log("Clipboard is empty, nothing to paste");
   }
 };
 
