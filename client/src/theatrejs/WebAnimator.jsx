@@ -710,8 +710,7 @@ const WebAnimator = () => {
                         left += 100;
                         top += 100;
                         var id = generateUniqueId({ type: object.type.toLowerCase() });
-                        const idAlreadyExists = findElementWithId(canvas, id);
-                        while (idAlreadyExists) {
+                        while (findElementWithId(canvas, id)) {
                             id = generateUniqueId({ type: object.type.toLowerCase() });
                         }
 

@@ -881,31 +881,23 @@ export const copy = (canvas) => {
 export const paste = async (canvas) => {
   if (_clipboard) {
     let objectsToSelect = [];
-
     let left = 0;
     let top = 0;
-
     try {
       const objects = await fabric.util.enlivenObjects([_clipboard]);
       let aa = [];
       const objectType = _clipboard.type;
 
-      // Handle ActiveSelection or single object
       if (objectType === "ActiveSelection") {
         aa = objects[0]._objects;
       } else {
         aa = objects;
       }
-
-      // Process each object
       aa.forEach((object) => {
         left += 100;
         top += 100;
-
-        // Set properties
         var id = generateUniqueId({ type: object.type.toLowerCase() });
-        const idAlreadyExists = findElementWithId(canvas, id);
-        while (idAlreadyExists) {
+        while (findElementWithId(canvas, id)) {
           id = generateUniqueId({ type: object.type.toLowerCase() });
         }
         object.set({
@@ -915,13 +907,9 @@ export const paste = async (canvas) => {
           class: id,
           evented: true,
         });
-
-        // Add object to canvas and selection array
         canvas.add(object);
         objectsToSelect.push(object);
       });
-
-      // Set selection if multiple objects are pasted
       if (objectsToSelect.length > 1) {
         const selection = new fabric.ActiveSelection(objectsToSelect, {
           canvas: canvas,
@@ -930,8 +918,6 @@ export const paste = async (canvas) => {
       } else if (objectsToSelect.length === 1) {
         canvas.setActiveObject(objectsToSelect[0]);
       }
-
-      // Render the canvas
       canvas.requestRenderAll();
     } catch (error) {
       console.error("Error during paste operation:", error);
