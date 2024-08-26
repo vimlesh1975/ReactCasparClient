@@ -924,6 +924,17 @@ export const paste = async (canvas) => {
                 class: id,
               });
               break;
+            case "polygon":
+            case "Polygon":
+              delete obj.type;
+              clonedObj = new fabric.Polygon(obj.points, {
+                ...obj,
+                left: left,
+                top: top,
+                id: id,
+                class: id,
+              });
+              break;
             case "path":
             case "Path":
               clonedObj = new fabric.Path(obj.path, {
