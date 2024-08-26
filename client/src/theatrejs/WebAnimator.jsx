@@ -692,49 +692,46 @@ const WebAnimator = () => {
         // async function delayPromise() {
         //     return new Promise(resolve => setTimeout(resolve, 2000));
         // }
-        const paste = (canvas) => {
-            try {
-                _clipboard?.clone(
-                    (clonedObj) => {
-                        canvas?.discardActiveObject();
-                        clonedObj.set({
-                            evented: true,
-                            objectCaching: false,
-                            class: "class_" + fabric.Object.__uid,
-                        });
-                        if (clonedObj.type === "activeSelection") {
-                            // active selection needs a reference to the canvas.
-                            clonedObj.canvas = canvas;
-                            clonedObj.forEachObject((obj, i) => {
-                                obj.set({
-                                    evented: true,
-                                    objectCaching: false,
-                                    class: "class_" + (fabric.Object.__uid + i),
-                                });
-                                canvas?.add(obj);
-                                canvas?.setActiveObject(obj);
-                                generateTheatreIDforCopiedElement(obj.type + "_" + fabric.Object.__uid, i);
-                            });
-                        } else {
-                            const idAlreadyExists = findElementWithId(canvas, idofElement);
 
-                            canvas?.add(clonedObj);
-                            canvas?.setActiveObject(clonedObj);
-                            if (idAlreadyExists) {
-                                generateTheatreIDforCopiedElement(clonedObj.type + "_" + fabric.Object.__uid);
-                            }
-                            else {
-                                generateTheatreIDforCopiedElement(idofElement);
-                            }
+        const paste = async (canvas) => {
+            if (_clipboard) {
+                let left = 0;
+                let top = 0;
+                try {
+                    const objects = await fabric.util.enlivenObjects([_clipboard]);
+                    let aa = [];
+                    const objectType = _clipboard.type;
+                    if (objectType === "ActiveSelection") {
+                        aa = objects[0]._objects;
+                    } else {
+                        aa = objects;
+                    }
+                    aa.forEach((object, i) => {
+                        left += 100;
+                        top += 100;
+                        var id = generateUniqueId({ type: object.type.toLowerCase() });
+                        const idAlreadyExists = findElementWithId(canvas, id);
+                        while (idAlreadyExists) {
+                            id = generateUniqueId({ type: object.type.toLowerCase() });
                         }
-                        canvas?.setActiveObject(clonedObj); // this is important
-                    },
 
-                    ["id", "class", "selectable"]
-                );
-
-            } catch (error) {
-                console.log(error)
+                        object.set({
+                            left: left,
+                            top: top,
+                            id: id,
+                            class: id,
+                        });
+                        canvas.add(object);
+                        canvas?.setActiveObject(object);
+                        generateTheatreIDforCopiedElement(id, i);
+                        canvas?.discardActiveObject();
+                        canvas.requestRenderAll();
+                    });
+                } catch (error) {
+                    console.error("Error during paste operation:", error);
+                }
+            } else {
+                console.log("Clipboard is empty, nothing to paste");
             }
         };
 
@@ -2720,12 +2717,12 @@ const WebAnimator = () => {
         if (element.type === 'path') {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
-        setIdofElement('id_' + (fabric.Object.__uid + 10));
+        setIdofElement(generateUniqueId({ type: "id" }));
         const i = arrObject.length;
         var indexOfSelectedElement;
         var elementBeingCopied;
-        if (_clipboard._objects) {
-            elementBeingCopied = _clipboard._objects[multiSelectedIndex];
+        if (_clipboard.objects) {
+            elementBeingCopied = _clipboard.objects[multiSelectedIndex];
         }
         else {
             elementBeingCopied = _clipboard;
