@@ -43,7 +43,7 @@ const CodeImport = () => {
                         const id = generateUniqueId({ type: element.type });
                         element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
                     })
-
+                    importSvgCode(preCanvas, canvas);
                 })
             }
             else {
@@ -52,13 +52,11 @@ const CodeImport = () => {
                         const id = generateUniqueId({ type: element.type });
                         element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
                     })
+                    importSvgCode(preCanvas, canvas);
                 })
             }
             canvas.requestRenderAll();
         }
-
-        importSvgCode(preCanvas, canvas)
-
     }
 
     const askOpenAi = async (str) => {

@@ -594,17 +594,13 @@ const WebAnimator = () => {
             canvas.getActiveObjects().forEach(element => {
                 canvas.sendToBack(element);
             });
-            // canvas.discardActiveObject();
-            // canvas.requestRenderAll();
             reloadPage();
         }
 
         const bringToFront = canvas => {
             canvas.getActiveObjects().forEach(element => {
-                canvas.bringToFront(element);
+                canvas.bringObjectToFront(element);
             });
-            // canvas.discardActiveObject();
-            // canvas.requestRenderAll();
             reloadPage();
         }
 
