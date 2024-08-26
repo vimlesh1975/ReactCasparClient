@@ -898,7 +898,7 @@ export const paste = async (canvas) => {
         left += 100;
         top += 100;
         const objectType = obj.type;
-        const id = generateUniqueId({ type: objectType });
+        const id = generateUniqueId({ type: objectType.toLowerCase() });
         let clonedObj;
 
         try {
@@ -908,6 +908,7 @@ export const paste = async (canvas) => {
             top: top,
             id: id,
             class: id,
+            fill: obj.fill
           });
         } catch (error) {
           switch (objectType) {

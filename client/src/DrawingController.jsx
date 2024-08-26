@@ -109,12 +109,13 @@ import CasparcgTools from "./CasparcgTools";
 import GsapPlayer from "./GsapPlayer";
 import VerticalScrollPlayer from "./VerticalScrollPlayer";
 
+
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
 
-fabric.Object.prototype.noScaleCache = false;
-fabric.Object.prototype.cornerSize = 18;
+fabric.FabricObject.prototype.noScaleCache = false;
+fabric.FabricObject.prototype.cornerSize = 18;
 // fabric.disableStyleCopyPaste = true;
 
 // const ErasedGroup = fabric.util.createClass(fabric.Group, {
@@ -521,8 +522,8 @@ const DrawingController = () => {
         aaGameTimer1.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer1.style.zIndex = ${layerNumber};
         aaGameTimer1.innerHTML=\`${canvas
-          .toSVG(["id", "class", "selectable"])
-          .replaceAll('"', '\\"')}\`;
+        .toSVG(["id", "class", "selectable"])
+        .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer1);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -530,8 +531,8 @@ const DrawingController = () => {
         document.body.style.overflow='hidden';
         window.ccGameTimer1=document.getElementById('gameTimer1').getElementsByTagName('tspan')[0];
         ccGameTimer1.textContent='${initialMinute}:${initialSecond
-      .toString()
-      .padStart(2, 0)}';
+        .toString()
+        .padStart(2, 0)}';
         window.startTimeGameTimer1 = new Date();
         startTimeGameTimer1.setMinutes(${initialMinute});
         startTimeGameTimer1.setSeconds(${initialSecond});
@@ -585,9 +586,8 @@ const DrawingController = () => {
         startTimeGameTimer1.setSeconds(${initialSecond});
         clearInterval(intervalGameTimer1);
         intervalGameTimer1=setInterval(()=>{
-        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${
-          countUp ? "+" : "-"
-        } 1);
+        startTimeGameTimer1.setSeconds(startTimeGameTimer1.getSeconds() ${countUp ? "+" : "-"
+      } 1);
         var ss3 =  ((startTimeGameTimer1.getMinutes()).toString()).padStart(2, '0') + ':' + ((startTimeGameTimer1.getSeconds()).toString()).padStart(2, '0');
         ccGameTimer1.textContent  =ss3;
         }, 1000);`;
@@ -631,8 +631,8 @@ const DrawingController = () => {
         aaGameTimer2.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer2.style.zIndex = ${layerNumber};
         aaGameTimer2.innerHTML=\`${canvas
-          .toSVG(["id", "class", "selectable"])
-          .replaceAll('"', '\\"')}\`;
+        .toSVG(["id", "class", "selectable"])
+        .replaceAll('"', '\\"')}\`;
         document.body.appendChild(aaGameTimer2);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -679,8 +679,8 @@ const DrawingController = () => {
       countUp2
         ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() + 1)
         : startTimeGameTimer2.getSeconds() > 0
-        ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
-        : startTimeGameTimer2.setSeconds(0);
+          ? startTimeGameTimer2.setSeconds(startTimeGameTimer2.getSeconds() - 1)
+          : startTimeGameTimer2.setSeconds(0);
       setInitialSecond2(startTimeGameTimer2.getSeconds());
     }, 1000);
     //for form
@@ -975,10 +975,10 @@ const DrawingController = () => {
       .getActiveObjects()
       .forEach(
         (item) =>
-          (item.strokeDashArray = [
-            parseInt(e.target.value),
-            parseInt(e.target.value),
-          ])
+        (item.strokeDashArray = [
+          parseInt(e.target.value),
+          parseInt(e.target.value),
+        ])
       );
     canvas.requestRenderAll();
   };
@@ -1307,9 +1307,8 @@ const DrawingController = () => {
                                         document.body.style.padding = '0';
                                         document.body.style.overflow = 'hidden';
                                         var aa = document.getElementsByTagName('div')[0];
-                                        aa.style.zoom=(${
-                                          currentscreenSize * 100
-                                        }/1920)+'%';
+                                        aa.style.zoom=(${currentscreenSize * 100
+      }/1920)+'%';
                                         observer.disconnect();
             });
                                         observer.observe(elementToObserve, {subtree: true, childList: true })
@@ -1505,10 +1504,10 @@ const DrawingController = () => {
 
                                 </script>
                                 <div> ${canvas.toSVG([
-                                  "id",
-                                  "class",
-                                  "selectable",
-                                ])}  </div>
+        "id",
+        "class",
+        "selectable",
+      ])}  </div>
                             </body>
                             <script src="${jsfilename}.js"></script>
                             <script src="${jsfilename2}.js"></script>
@@ -1763,10 +1762,9 @@ const DrawingController = () => {
                                                             aa.style.position='absolute';
                                                             document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                             document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                            aa.style.zoom=(${
-                                                              currentscreenSize *
-                                                              100
-                                                            }/1920)+'%';
+                                                            aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                             document.body.style.overflow='hidden';
                                                             var speed=${horizontalSpeed};
                                                             if (${!ltr}){
@@ -1846,10 +1844,9 @@ const DrawingController = () => {
                                                                         aa.style.position='absolute';
                                                                         document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                                         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                        aa.style.zoom=(${
-                                                                          currentscreenSize *
-                                                                          100
-                                                                        }/1920)+'%';
+                                                                        aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                         document.body.style.overflow='hidden';
                                                                         var speed=${horizontalSpeed2};
                                                                         if (${!ltr2}){
@@ -1933,10 +1930,9 @@ const DrawingController = () => {
 
                                                                                 var aa = document.getElementsByTagName('div')[0];
                                                                                 aa.style.position='absolute';
-                                                                                aa.style.zoom=(${
-                                                                                  currentscreenSize *
-                                                                                  100
-                                                                                }/1920)+'%';
+                                                                                aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                 var cc=document.getElementsByTagName('tspan')[0];
                                                                                 cc.textContent='';
                                                                                 setInterval(function() {
@@ -1982,10 +1978,9 @@ const DrawingController = () => {
                                                                                             document.body.style.overflow='hidden';
                                                                                             var aa = document.getElementsByTagName('div')[0];
                                                                                             aa.style.position='absolute';
-                                                                                            aa.style.zoom=(${
-                                                                                              currentscreenSize *
-                                                                                              100
-                                                                                            }/1920)+'%';
+                                                                                            aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                             var cc=document.getElementsByTagName('tspan')[0];
                                                                                             cc.textContent='';
                                                                                             var startTime = new Date();
@@ -2030,24 +2025,23 @@ const DrawingController = () => {
                                                                                     aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal1.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal1.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaHorizontal1);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal1.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaHorizontal1.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed=${horizontalSpeed};
                                                                                     if (${!ltr}){
@@ -2109,24 +2103,23 @@ const DrawingController = () => {
                                                                                     aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal2.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal2.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaHorizontal2);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal2.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaHorizontal2.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
                                                                                     if (${!ltr2}){
@@ -2188,25 +2181,24 @@ const DrawingController = () => {
                                                                                     aaClock.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaClock.style.zIndex = ${layerNumber};
                                                                                     aaClock.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaClock);
 
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaClock.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaClock.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
 
                                                                                     window.ccClock=document.getElementById('clock1').getElementsByTagName('tspan')[0];
@@ -2238,24 +2230,23 @@ const DrawingController = () => {
                                                                                     aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaUpTimer.style.zIndex = ${layerNumber};
                                                                                     aaUpTimer.innerHTML=\`${canvas
-                                                                                      .toSVG(
-                                                                                        [
-                                                                                          "id",
-                                                                                          "class",
-                                                                                          "selectable",
-                                                                                        ]
-                                                                                      )
-                                                                                      .replaceAll(
-                                                                                        '"',
-                                                                                        '\\"'
-                                                                                      )}\`;
+        .toSVG(
+          [
+            "id",
+            "class",
+            "selectable",
+          ]
+        )
+        .replaceAll(
+          '"',
+          '\\"'
+        )}\`;
                                                                                     document.body.appendChild(aaUpTimer);
                                                                                     document.body.style.margin='0';
                                                                                     document.body.style.padding='0';
-                                                                                    aaUpTimer.style.zoom=(${
-                                                                                      currentscreenSize *
-                                                                                      100
-                                                                                    }/1920)+'%';
+                                                                                    aaUpTimer.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.ccUpTimer=document.getElementById('uptimer1').getElementsByTagName('tspan')[0];
                                                                                     ccUpTimer.textContent='00:00:000';
@@ -2326,7 +2317,7 @@ const DrawingController = () => {
           console.log("Error", aa);
         });
     }
-    return () => {};
+    return () => { };
     // eslint-disable-next-line
   }, []);
 
@@ -2932,15 +2923,13 @@ const DrawingController = () => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${
-                    canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
-                  }deg,${canvas
-                    ?.getActiveObjects()[0]
-                    ?.fill?.colorStops.map((colorStop, i) => {
-                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
-                        colorStop.offset * 100
-                      }%`;
-                    })}`,
+                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.fill?.coords.y2 * 180
+                    }deg,${canvas
+                      ?.getActiveObjects()[0]
+                      ?.fill?.colorStops.map((colorStop, i) => {
+                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
+                          }%`;
+                      })}`,
                 }}
               />
             ) : (
@@ -2976,15 +2965,13 @@ const DrawingController = () => {
                   border: "1px solid black",
                   width: 35,
                   height: 12,
-                  backgroundImage: `linear-gradient(${
-                    canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
-                  }deg,${canvas
-                    ?.getActiveObjects()[0]
-                    ?.stroke?.colorStops.map((colorStop, i) => {
-                      return `${rgbaCol(colorStop.color, colorStop.opacity)} ${
-                        colorStop.offset * 100
-                      }%`;
-                    })}`,
+                  backgroundImage: `linear-gradient(${canvas?.getActiveObjects()[0]?.stroke?.coords.y2 * 180
+                    }deg,${canvas
+                      ?.getActiveObjects()[0]
+                      ?.stroke?.colorStops.map((colorStop, i) => {
+                        return `${rgbaCol(colorStop.color, colorStop.opacity)} ${colorStop.offset * 100
+                          }%`;
+                      })}`,
                 }}
               />
             ) : (
