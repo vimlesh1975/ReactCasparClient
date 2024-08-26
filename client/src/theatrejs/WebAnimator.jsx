@@ -592,7 +592,7 @@ const WebAnimator = () => {
 
         const sendToBack = canvas => {
             canvas.getActiveObjects().forEach(element => {
-                canvas.sendToBack(element);
+                canvas.sendObjectToBack(element);
             });
             reloadPage();
         }
