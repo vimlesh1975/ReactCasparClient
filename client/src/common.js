@@ -2,6 +2,20 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import * as fabric from "fabric";
 import _ from "lodash";
+import * as d from '@theatre/dataverse'
+
+export const buildDate = "200824_1";
+
+export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
+  const studioPrivate = window.__TheatreJS_StudioBundle._studio
+  studioPrivate.transaction(({ stateEditors }) => {
+    const pathToProp = d.getPointerParts(propsPrimitive).path
+    const propAddress = { ...object.address, pathToProp }
+    stateEditors.coreByProject.historic.sheetsById.sequence.setPrimitivePropAsSequenced(
+      propAddress
+    )
+  })
+}
 
 fabric.FabricObject.prototype.toObject = (function (toObject) {
   return function (propertiesToInclude) {
@@ -14,7 +28,9 @@ fabric.FabricObject.prototype.toObject = (function (toObject) {
   };
 })(fabric.FabricObject.prototype.toObject);
 
-export const buildDate = "200824_1";
+
+
+
 export const loopDirection = ["normal", "reverse", "alternate", "AR"];
 
 export const defaultImageSrc =

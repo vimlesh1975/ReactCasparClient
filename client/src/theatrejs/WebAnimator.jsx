@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as fabric from 'fabric'
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 
-import { generateUniqueNumber, _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { setPrimitivePropAsSequenced, generateUniqueNumber, _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
@@ -860,6 +860,19 @@ const WebAnimator = () => {
                         <li onClick={() => addItem(createTriangle)}>Triangle <VscTriangleUp /></li>
                         <li onClick={appendDatafromLocalStorage}>Append Data from LocalStorage <VscTriangleUp /></li>
 
+                    </ul></li>
+                    <li>setPrimitivePropAsSequenced<ul>
+                        <li onClick={() => {
+                            // const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
+                            // setPrimitivePropAsSequenced(tracks)
+                        }}>All</li>
+                        {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map(((val1, index) => {
+                            return <li key={index} onClick={() => {
+                                const obj = getObjectbyId(studio?.selection?.[0]?.address?.objectKey);
+                                setPrimitivePropAsSequenced(obj, obj.props[val1]);
+                            }
+                            }>{val1}</li>
+                        }))}
                     </ul></li>
                     <li>Edit<ul >
                         <li onClick={() => copy(canvas)}>Copy</li>
