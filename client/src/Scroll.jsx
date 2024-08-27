@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 // import { isEqual } from "lodash";
-import { createRect, shadowOptions, options, generalFileName, saveFile } from './common'
+import { generateUniqueId, createRect, shadowOptions, options, generalFileName, saveFile } from './common'
 
 const Scroll = () => {
 
@@ -117,18 +117,21 @@ const Scroll = () => {
     };
 
     const setAsScrollText = () => {
+
         var aa = '';
         var left1 = 0;
         playerList1.forEach(element => {
+            const id = generateUniqueId({ type: "id" });
             if (element.use1 === true) {
                 aa = ` ${delemeter} ` + element.data1;
                 const text = new fabric.IText(aa, {
-                    id: 'id_' + fabric.Object.__uid,
-                    class: 'class_' + fabric.Object.__uid,
+                    id: id,
+                    class: id,
                     left: left1,
                     ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                 });
-                canvas.add(text).setActiveObject(text);;
+                canvas.add(text);
+                canvas.setActiveObject(text);
                 canvas.renderAll();
                 left1 += canvas.getActiveObjects()[0].width;
             };
@@ -141,35 +144,34 @@ const Scroll = () => {
     const setAsScrollText2 = () => {
         var left1 = 0;
         playerList1.forEach((element, i) => {
+            const id = generateUniqueId({ type: "id" });
             if (element.use1 === true) {
-                fabric.Image.fromURL(playerList1[i].delemeterLogo, myImg => {
+                fabric.FabricImage.fromURL(playerList1[i].delemeterLogo).then(myImg => {
                     if (myImg == null) {
                         alert("Error!");
                     } else {
-                        // myImg.scaleToWidth(25);
-                        // myImg.setAttribute('crossorigin', 'anonymous')
                         myImg.scaleToHeight(45);
-                        canvas.add(myImg).setActiveObject(myImg);
+                        canvas.add(myImg);
+                        canvas.setActiveObject(myImg);
                         myImg.set({
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: id,
+                            class: id,
                             left: left1,
                             top: scrollTextProperties.top,
                             crossOrigin: 'anonymous'
                         })
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
                         left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
 
                         const text = new fabric.IText(element.data1, {
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: id,
+                            class: id,
                             left: left1,
                             ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                         });
-                        canvas.add(text).setActiveObject(text);
+                        canvas.add(text);
+                        canvas.setActiveObject(text);
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width;
                         left1 += 25 + canvas.getActiveObjects()[0].width;
                     }
                 });
