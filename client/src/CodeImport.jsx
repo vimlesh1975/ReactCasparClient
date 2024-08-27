@@ -86,30 +86,37 @@ const CodeImport = () => {
     }
 
     const askOpenAiModels = async () => {
-        // setPrompt('')
-        const response = await fetch(openaiAddress() + 'openai/models', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        try {
+            // eslint-disable-next-line
+            const url = new URL(openaiAddress() + 'openai/models');
+            const response = await fetch(openaiAddress() + 'openai/models', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                })
             })
-        })
 
-        if (response.ok) {
-            const data = await response.json();
-            // trims any trailing spaces/'\n' 
-            // setAiAnswer(data.bot.trim())
-            // console.log(data.bot.data)
-            setModels(data.bot.data)
-            // setModels(['aa', 'bb'])
-            // console.log(data.bot.data)
+            if (response.ok) {
+                const data = await response.json();
+                // trims any trailing spaces/'\n' 
+                // setAiAnswer(data.bot.trim())
+                // console.log(data.bot.data)
+                setModels(data.bot.data)
+                // setModels(['aa', 'bb'])
+                // console.log(data.bot.data)
 
 
-        } else {
-            // const err = await response.text()
-            // alert(err)
+            } else {
+                // const err = await response.text()
+                // alert(err)
+            }
+        } catch (e) {
+
         }
+
+
     }
 
 

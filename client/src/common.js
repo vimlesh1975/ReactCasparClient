@@ -903,13 +903,39 @@ export const lock = (canvas) => {
   canvas.discardActiveObject();
   canvas.requestRenderAll();
 };
-export const undo = (canvas) => {
+export const undo2 = (canvas) => {
   canvas.undo();
   canvas.getObjects().forEach((element) => {
     element.set({ objectCaching: false });
   });
   canvas.requestRenderAll();
 };
+const history = [];
+export const saveCanvasState = (canvas) => {
+  const json = canvas.toJSON();
+  history.push(json);
+  console.log(history)
+}
+export const undo = (canvas) => {
+  if (history.length <= 1) return; // Do nothing if no more undo steps are available
+
+  history.pop(); // Remove the last state
+  const previousState = history[history.length - 1]; // Get the previous state
+
+  canvas.getObjects().forEach(obj => {
+    canvas.remove(obj);
+  });
+
+  fabric.util.enlivenObjects(previousState.objects)
+    .then((objects) => {
+      objects.forEach(obj => {
+        canvas.add(obj); // Add each object to the canvas
+      });
+      canvas.renderAll(); // Re-render the canvas
+    });
+  console.log(history)
+}
+
 export const redo = (canvas) => {
   canvas.redo();
   canvas.getObjects().forEach((element) => {

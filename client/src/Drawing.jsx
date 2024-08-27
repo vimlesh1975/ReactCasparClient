@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import * as fabric from 'fabric';
 
 import {
+  saveCanvasState,
   Uploaddropedfile,
   createTextBoxforDragedText,
 } from "./common";
@@ -95,7 +96,10 @@ const Drawing = ({ canvasOutput }) => {
     canvas.on({
       "selection:updated": window.getvalues,
       "selection:created": window.getvalues,
-      "object:modified": window.getvalues,
+      "object:modified": function () {
+        window.getvalues();
+        saveCanvasState(canvas);
+      },
       // 'object:moving': window.getvalues,
       "object:scaling": window.getvalues,
       "object:rotating": window.getvalues,

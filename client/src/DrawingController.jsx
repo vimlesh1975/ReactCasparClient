@@ -2334,95 +2334,100 @@ const DrawingController = () => {
     }
   };
   const getvalues = () => {
-    if (canvas?.getActiveObjects()?.[0]) {
-      const element = canvas?.getActiveObjects()?.[0];
-      if (element.rx !== null) {
-        setSkewRX(element.rx);
-      }
-      if (element.ry !== null) {
-        setSkewRY(element.ry);
-      }
-      if (element.skewX !== null) {
-        setSkewXSize(element.skewX.toFixed(0));
-      }
-      // if (element.skewX !== null) {setSkewXSize(element.skewX); }
-      if (element.skewY !== null) {
-        setSkewYSize(element.skewY.toFixed(0));
-      }
-      if (element.fontFamily !== null) {
-        setCurrentFont(element.fontFamily);
-      }
-      if (element.fontSize !== null) {
-        setFontSize(element.fontSize);
-      }
-      if (element.strokeWidth !== null) {
-        setStrokeWidth(element.strokeWidth);
-      }
+    try {
+      if (canvas?.getActiveObjects()?.[0]) {
+        const element = canvas?.getActiveObjects()?.[0];
+        if (element.rx !== null) {
+          setSkewRX(element.rx);
+        }
+        if (element.ry !== null) {
+          setSkewRY(element.ry);
+        }
+        if (element.skewX !== null) {
+          setSkewXSize(element.skewX.toFixed(0));
+        }
+        // if (element.skewX !== null) {setSkewXSize(element.skewX); }
+        if (element.skewY !== null) {
+          setSkewYSize(element.skewY.toFixed(0));
+        }
+        if (element.fontFamily !== null) {
+          setCurrentFont(element.fontFamily);
+        }
+        if (element.fontSize !== null) {
+          setFontSize(element.fontSize);
+        }
+        if (element.strokeWidth !== null) {
+          setStrokeWidth(element.strokeWidth);
+        }
 
-      if (element.opacity !== null) {
-        setOpacity(parseFloat(element.opacity).toFixed(1));
-      }
-      if (element.charSpacing !== null) {
-        setCharSpacing(element.charSpacing);
-      }
+        if (element.opacity !== null) {
+          setOpacity(parseFloat(element.opacity).toFixed(1));
+        }
+        if (element.charSpacing !== null) {
+          setCharSpacing(element.charSpacing);
+        }
 
-      if (element.scaleX !== null) {
-        setscaleX(element.scaleX);
-      }
-      if (element.scaleY !== null) {
-        setscaleY(element.scaleY);
-      }
+        if (element.scaleX !== null) {
+          setscaleX(element.scaleX);
+        }
+        if (element.scaleY !== null) {
+          setscaleY(element.scaleY);
+        }
 
-      if (element.left !== null) {
-        setX(parseInt(element.left));
-      }
-      if (element.top !== null) {
-        setY(parseInt(element.top));
-      }
+        if (element.left !== null) {
+          setX(parseInt(element.left));
+        }
+        if (element.top !== null) {
+          setY(parseInt(element.top));
+        }
 
-      if (element.width !== null) {
-        setWidth(parseInt(element.width));
-      }
-      if (element.height !== null) {
-        setHeight(parseInt(element.height));
-      }
+        if (element.width !== null) {
+          setWidth(parseInt(element.width));
+        }
+        if (element.height !== null) {
+          setHeight(parseInt(element.height));
+        }
 
-      if (element.angle !== null) {
-        setangle(parseInt(element.angle));
-      }
+        if (element.angle !== null) {
+          setangle(parseInt(element.angle));
+        }
 
-      if (element.fontStyle !== null) {
-        setitallicnormal(element.fontStyle);
-      }
-      if (element.fontWeight !== null) {
-        setfontWeight1(element.fontWeight);
-      }
+        if (element.fontStyle !== null) {
+          setitallicnormal(element.fontStyle);
+        }
+        if (element.fontWeight !== null) {
+          setfontWeight1(element.fontWeight);
+        }
 
-      if (element.undeline !== null) {
-        setunderline1(element.underline ? "underline" : "");
-      }
-      if (element.undeline !== null) {
-        setlinethrough1(element.linethrough ? "line-through" : "");
-      }
+        if (element.undeline !== null) {
+          setunderline1(element.underline ? "underline" : "");
+        }
+        if (element.undeline !== null) {
+          setlinethrough1(element.linethrough ? "line-through" : "");
+        }
 
-      setCurrentFillColor(element.fill);
+        setCurrentFillColor(element.fill);
 
-      if (element.strokeDashArray !== null) {
-        setstrokedasharray(element.strokeDashArray);
-      } else {
-        setstrokedasharray([0, 0]);
+        if (element.strokeDashArray !== null) {
+          setstrokedasharray(element.strokeDashArray);
+        } else {
+          setstrokedasharray([0, 0]);
+        }
+        if (element.strokeDashOffset !== null) {
+          setstrokedashoffset(element.strokeDashOffset);
+        }
+        if (element.shadow !== null) {
+          refShadowColor.current.value = element.shadow.color;
+          refBlur.current.value = element.shadow.blur;
+          refOffsetX.current.value = element.shadow.offsetX;
+          refOffsetY.current.value = element.shadow.offsetY;
+          refAffectStroke.current.checked = element.shadow.affectStroke;
+        }
       }
-      if (element.strokeDashOffset !== null) {
-        setstrokedashoffset(element.strokeDashOffset);
-      }
-      if (element.shadow !== null) {
-        refShadowColor.current.value = element.shadow.color;
-        refBlur.current.value = element.shadow.blur;
-        refOffsetX.current.value = element.shadow.offsetX;
-        refOffsetY.current.value = element.shadow.offsetY;
-        refAffectStroke.current.checked = element.shadow.affectStroke;
-      }
+    } catch (error) {
+
     }
+
   };
 
   const clientAddress = () => {
