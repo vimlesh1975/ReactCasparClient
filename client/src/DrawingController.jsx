@@ -1775,10 +1775,10 @@ const DrawingController = () => {
            }, 1);
         }
                                                             else{
-                                                                aa.style.left = -${hh};
+                                                                aa.style.left = '-${hh}px';
                                                             setInterval(function(){
                                                                 aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
              }, 1);
         }
         const elementToRemove = document.getElementById('scroll1_strip');
@@ -1857,10 +1857,10 @@ const DrawingController = () => {
            }, 1);
         }
                                                                         else{
-                                                                            aa.style.left = -${hh};
+                                                                            aa.style.left = '-${hh}px';
                                                                         setInterval(function(){
                                                                             aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
              }, 1);
         }
         const elementToRemove = document.getElementById('scroll2_strip');
