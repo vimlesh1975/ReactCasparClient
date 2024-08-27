@@ -11,16 +11,32 @@ const GeoPattern1 = () => {
     const particlebg = useRef()
 
 
-    const setPattern = () => {
-        canvas.getActiveObjects().forEach(element => {
-            fabric.util.loadImage(GeoPattern.generate(string1, {
-                color: color1,
-            }).toDataUri(), myImg => {
-                element.set({ fill: new fabric.Pattern({ source: myImg, repeat: 'repeat', offsetX: 0, offsetY: 0 }) })
+    const setPattern = async () => {
+        const activeObjects = canvas.getActiveObjects();
+        for (const element of activeObjects) {
+            try {
+                const myImg = await fabric.util.loadImage(
+                    GeoPattern.generate(string1, {
+                        color: color1,
+                    }).toDataUri()
+                );
+
+                element.set({
+                    fill: new fabric.Pattern({
+                        source: myImg,
+                        repeat: 'repeat',
+                        offsetX: 0,
+                        offsetY: 0,
+                    }),
+                });
+
                 canvas.requestRenderAll();
-            })
-        });
-    }
+            } catch (error) {
+                console.error("Error loading pattern image:", error);
+            }
+        }
+    };
+
 
     const Upload = (e) => {
         if (e.target.files[0]) {
