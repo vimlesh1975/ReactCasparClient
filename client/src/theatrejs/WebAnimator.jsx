@@ -970,7 +970,6 @@ const WebAnimator = () => {
 
     const initialiseCore = (jsonContent, importing = false) => {
         canvas.loadFromJSON(jsonContent).then((object) => {
-            console.log(object)
             setclipPathWhileImportingWebAnimator(canvas);
             canvas.getObjects().forEach((element, i) => {
                 if ((element.fill === null)) {

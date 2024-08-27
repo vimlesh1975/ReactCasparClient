@@ -31,7 +31,8 @@ const Tsparticles1 = () => {
   }, []);
 
   const particlesLoaded = useCallback(async (container) => {
-    await console.log(container);
+    await container
+    // await console.log(container);
     // window.tsParticles = container._engine;
   }, []);
 
