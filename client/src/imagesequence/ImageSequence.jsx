@@ -52,7 +52,7 @@ const ImageSequence = ({ layer }) => {
     const loadedImages = [];
     for (let i = 0; i <= aa.length; i++) {
       await new Promise((resolve) => {
-        fabric.Image.fromURL(aa[i], (image) => {
+        fabric.FabricImage.fromURL(aa[i]).then(image => {
           image.set({ opacity: 0 });
           loadedImages.push(image);
           resolve(image);
@@ -110,14 +110,15 @@ const ImageSequence = ({ layer }) => {
       const imageGroup = new fabric.Group(imageObjects, {
         shadow: shadowOptions,
         id: 'imgSeqGroup1',
-        class: "class_" + fabric.Object.__uid,
+        class: "class_imgSeqGroup1",
         fill: "#ffffff",
         objectCaching: false,
         stroke: "#000000",
         strokeWidth: 0,
       });
 
-      canvas.add(imageGroup).setActiveObject(imageGroup);;
+      canvas.add(imageGroup);
+      canvas.setActiveObject(imageGroup);
       canvas.requestRenderAll();
     }
 
