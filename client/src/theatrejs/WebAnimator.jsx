@@ -888,11 +888,9 @@ const WebAnimator = () => {
                                         if (canvas.getActiveObjects().length > 0) {
                                             const clipPath = canvas.getActiveObjects()[0];
                                             clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
-                                            canvas.sendToBack(clipPath);
-                                            // sendToBack(canvas);
+                                            canvas.sendObjectToBack(clipPath);
                                             element.set("clipPath", clipPath);
                                             reloadPage();
-
                                         }
                                     }}>{element.type}-{element.id}</li>
                                 )
