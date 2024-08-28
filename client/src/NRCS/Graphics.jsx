@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { shadowOptions, getFormattedDatetimeNumber, address1 } from '../common'
+import { generateUniqueId, shadowOptions, getFormattedDatetimeNumber, address1 } from '../common'
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from '../GsapPlayer'
 import Script from './Script'
@@ -349,11 +349,12 @@ const Graphics = () => {
 
         let currentTop = 500; // Initial top position
         for (let i = 0; i < allContent.length; i++) {
+            const id = generateUniqueId({ type: 'textbox' })
             const fillColor = i % 2 === 0 ? '#ffff00' : '#ffffff';
             const backgroundColor = i % 2 === 0 ? '#0000ff' : ''; // Alternate background color
             const textbox = new fabric.Textbox(allContent[i], {
-                id: "ccg_" + fabric.Object.__uid,
-                class: "class_" + fabric.Object.__uid,
+                id: id,
+                class: id,
                 shadow: { ...shadowOptions, blur: 0 },
                 left: 100,
                 top: currentTop,
@@ -450,11 +451,12 @@ const Graphics = () => {
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
 
-                                                        onClick={() => {
+                                                        onClick={async () => {
                                                             setGraphicsID(val.GraphicsID);
                                                             setCurrentGraphics(i);
                                                             const parsedJSON = JSON.parse(val.Graphicstext1);
-                                                            canvas.loadFromJSON(parsedJSON.pageValue);
+                                                            await canvas.loadFromJSON(parsedJSON.pageValue);
+                                                            canvas.requestRenderAll();
                                                         }}
                                                         style={{
                                                             backgroundColor: currentGraphics === i ? 'green' : '#E7DBD8',
@@ -539,10 +541,12 @@ const Graphics = () => {
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
 
-                                                                onClick={() => {
+                                                                onClick={async () => {
                                                                     setCurrentGraphics2(i);
                                                                     const parsedJSON = JSON.parse(val.Graphicstext1);
-                                                                    canvas.loadFromJSON(parsedJSON.pageValue);
+                                                                    await canvas.loadFromJSON(parsedJSON.pageValue);
+                                                                    canvas.requestRenderAll();
+
                                                                 }}
                                                                 style={{
                                                                     backgroundColor: currentGraphics2 === i ? 'green' : '#E7DBD8',
