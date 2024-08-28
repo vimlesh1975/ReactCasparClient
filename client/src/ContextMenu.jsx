@@ -98,7 +98,7 @@ const ContextMenu = ({ canvas }) => {
                 </li>
               </ul>
             </li>
-            <li onClick={startPath}>Start Path</li>
+            <li onClick={() => startPath(canvas)}>Start Path</li>
             <li onClick={window.closePath}>Close Path</li>
             <li onClick={window.edit}>Edit Path</li>
             <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring To Front</li>

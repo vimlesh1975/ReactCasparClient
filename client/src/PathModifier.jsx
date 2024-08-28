@@ -184,12 +184,12 @@ export function edit(dispatch) {
 }
 
 
-export const startPath = () => {
-  window.editor.canvas.off("mouse:down");
-  window.editor.canvas.off("mouse:move");
+export const startPath = (canvas) => {
+  canvas.off("mouse:down");
+  canvas.off("mouse:move");
   currentValue = [];
-  window.editor.canvas.on("mouse:down", eventHandlerMouseDown);
-  window.editor.canvas.on("mouse:move", eventHandlerMouseMove);
+  canvas.on("mouse:down", eventHandlerMouseDown);
+  canvas.on("mouse:move", eventHandlerMouseMove);
 };
 const eventHandlerMouseMove = (e) => {
   if (currentValue.length > 0) {
@@ -533,7 +533,7 @@ const PathModifier = () => {
     <div>
       <div style={{ paddingBottom: 10 }}>
         <div>
-          <button onClick={startPath}>
+          <button onClick={() => startPath(canvas)}>
             Start Drawing Path by clicking on canvas
           </button>
           <button onClick={closePath}>Finish Drawing path</button>
