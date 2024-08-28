@@ -964,6 +964,8 @@ const DrawingController = () => {
     options.strokeWidth = parseInt(e.target.value);
     setStrokeWidth(parseInt(e.target.value));
     // canvas.freeDrawingBrush.width = parseInt(e.target.value);
+    fabric.BaseBrush.width = parseInt(e.target.value);
+    fabric.PencilBrush.width = parseInt(e.target.value);
     canvas
       .getActiveObjects()
       .forEach((item) => (item.strokeWidth = parseInt(e.target.value)));

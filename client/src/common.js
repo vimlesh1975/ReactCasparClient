@@ -2206,6 +2206,9 @@ export const changeShadowCurrentColor = (e, canvas) => {
 export const changeStrokeCurrentColor = (e, canvas) => {
   options.stroke = e.target.value;
   // canvas.freeDrawingBrush.color = e.target.value;
+  fabric.BaseBrush.color = e.target.value;
+  fabric.PencilBrush.color = e.target.value;
+
   canvas.getActiveObjects().forEach((item) => (item.stroke = e.target.value));
   canvas.requestRenderAll();
 };
