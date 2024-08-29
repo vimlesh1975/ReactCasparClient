@@ -811,6 +811,19 @@ const DrawingController = () => {
     } else {
       canvas.isDrawingMode = true;
     }
+    fabric.BaseBrush.width = options.strokeWidth;
+    fabric.PencilBrush.width = options.strokeWidth;
+    fabric.SprayBrush.width = options.strokeWidth;
+    EraserBrush.width = options.strokeWidth;
+
+
+    fabric.BaseBrush.color = options.stroke;
+    fabric.PencilBrush.color = options.stroke;
+    fabric.SprayBrush.color = options.stroke;
+    EraserBrush.color = options.stroke;
+
+
+
 
     if (mode === "Pencil") {
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -966,6 +979,8 @@ const DrawingController = () => {
     // canvas.freeDrawingBrush.width = parseInt(e.target.value);
     fabric.BaseBrush.width = parseInt(e.target.value);
     fabric.PencilBrush.width = parseInt(e.target.value);
+    fabric.SprayBrush.width = parseInt(e.target.value);
+    EraserBrush.width = parseInt(e.target.value);
     canvas
       .getActiveObjects()
       .forEach((item) => (item.strokeWidth = parseInt(e.target.value)));
