@@ -1044,6 +1044,8 @@ export const createShape = (canvas, shape, size = 0.4) => {
   rect.on("mousedblclick", () => {
     window.edit(window.dispatch);
   });
+  rect.setCoords();
+
   canvas.requestRenderAll();
 };
 

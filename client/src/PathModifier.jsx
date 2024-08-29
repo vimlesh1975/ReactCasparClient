@@ -149,6 +149,7 @@ export function edit(dispatch) {
       poly.transparentCorners = true;
     }
     poly.hasBorders = !poly.edit;
+
     poly.setCoords();
 
     window.editor.canvas.requestRenderAll();
