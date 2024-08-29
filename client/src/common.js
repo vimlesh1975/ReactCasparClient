@@ -996,7 +996,11 @@ export const paste = async (canvas) => {
           top: top,
           id: id,
           class: id,
+          objectCaching: false,
           evented: true,
+        });
+        object.on("mousedblclick", () => {
+          window.edit(window.dispatch);
         });
         canvas.add(object);
         objectsToSelect.push(object);
@@ -1009,6 +1013,7 @@ export const paste = async (canvas) => {
       } else if (objectsToSelect.length === 1) {
         canvas.setActiveObject(objectsToSelect[0]);
       }
+
       canvas.requestRenderAll();
     } catch (error) {
       console.error("Error during paste operation:", error);
