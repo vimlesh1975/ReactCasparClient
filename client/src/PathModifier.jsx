@@ -91,7 +91,7 @@ function anchorWrapper(anchorIndex, fn, dispatch) {
       newX = (pathObj[1] - fabricObject.pathOffset.x) / polygonBaseSize.x,
       newY = (pathObj[2] - fabricObject.pathOffset.y) / polygonBaseSize.y;
     fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
-    dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
+    window.dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
     if (getObjectbyId(fabricObject.id)) {
       syncProps(fabricObject, getObjectbyId(fabricObject.id));
     }

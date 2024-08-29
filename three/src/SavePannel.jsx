@@ -170,7 +170,7 @@ const SavePannel = () => {
                 try {
                     element.set({ objectCaching: false });
                     element.on('mousedblclick', () => {
-                        window.edit();
+                        window.edit(dispatch);
                     })
                 } catch (error) {
                     alert(error);

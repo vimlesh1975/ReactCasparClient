@@ -965,7 +965,6 @@ export const copy = (canvas) => {
     _clipboard = _.cloneDeep(
       activeObject.toObject(["id", "class", "selectable"])
     );
-    console.log("Copied object JSON:", _clipboard);
   }
 };
 
@@ -1573,9 +1572,8 @@ export const stopGsapLayer = (
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
     fabric.loadSVGFromString(ss).then((objects) => {
-      console.log(objects);
       objects?.objects?.forEach((element) => {
-        const id = generateUniqueId({ type: element.type });
+        const id = generateUniqueId(element);
 
         canvas.add(element);
         element.set({
