@@ -293,7 +293,7 @@ class EraserBrush extends fabric.PencilBrush {
         withoutTransform: true,
       });
       const id = generateUniqueId({ type: "image" });
-      fabric.Image.fromURL(newData, (fabricImage) => {
+      fabric.FabricImage.fromURL(newData).then(fabricImage => {
         fabricImage.set({
           id: id,
           class: id,
