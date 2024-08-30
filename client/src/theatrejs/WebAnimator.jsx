@@ -22,26 +22,15 @@ import TheatreImageSequence from './TheatreImageSequence';
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
 import { Rnd } from 'react-rnd';
-
-// import split from 'graphemesplit'
-
 import * as d from '@theatre/dataverse'
 
 
-// fabric.util.string.graphemeSplit = split
+// import split from 'graphemesplit'
+// fabric.util.string.graphemeSplit.prototype = split
+
+
 
 const loopcount = 1;
-// var _clipboard;
-// const copy = (canvas) => {
-//     canvas?.getActiveObject()?.clone(
-//         (cloned) => {
-//             _clipboard = cloned;
-//         },
-//         ["id", "class", "selectable"]
-//     );
-// };
-
-
 
 const setclipPathWhileImportingWebAnimator = (canvas) => {
     var objects = canvas.getObjects();

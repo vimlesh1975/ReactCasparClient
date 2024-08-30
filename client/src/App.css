@@ -8,7 +8,17 @@
   }
 }
 
+
+/* this code is  for user interface breaks while editing Textbox in Lower postion of canvas. */
+/* this is for 5.3.0 */
 textarea[data-fabric-hiddentextarea] {
+  position: fixed !important;
+}
+
+
+/* this is for 6.3.0*/
+/* BREAKING feat(fabric.IText) rename data-fabric-hiddentextarea to data-fabric with value textarea */
+textarea[data-fabric] {
   position: fixed !important;
 }
 
