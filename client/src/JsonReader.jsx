@@ -68,13 +68,8 @@ const JsonReader = () => {
             canvas.add(text);
             canvas.setActiveObject(text);
             canvas.renderAll();
-            // text.animate('top', 200 - 60, { onChange: canvas.renderAll.bind(canvas) })
-            text.animate('top', 200 - 60, {
-                onChange: () => {
-                    canvas.renderAll();
-                    canvas.bind(canvas)
-                }
-            })
+            text.animate({ top: 200 - 60 }, { onChange: canvas.renderAll.bind(canvas) })
+
         });
 
         dataHeat?.entries?.forEach((val, i) => {
@@ -99,7 +94,7 @@ const JsonReader = () => {
             canvas.add(text);
             canvas.setActiveObject(text);
             canvas.renderAll();
-            text.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
 
             const id2 = generateUniqueId({ type: 'textbox' });
             const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
@@ -122,7 +117,7 @@ const JsonReader = () => {
             canvas.add(text1);
             canvas.setActiveObject(text1);
             canvas.renderAll();
-            text1.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) });
+            text1.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) });
 
             const id3 = generateUniqueId({ type: 'textbox' });
             const text2 = new fabric.Textbox(val.clubname.toString(), {
@@ -145,7 +140,7 @@ const JsonReader = () => {
             canvas.add(text2);
             canvas.setActiveObject(text2);
             canvas.renderAll();
-            text2.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text2.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
         });
     }
 
@@ -171,7 +166,7 @@ const JsonReader = () => {
             canvas.add(text);
             canvas.setActiveObject(text);
             canvas.renderAll();
-            text.animate('top', 200 - 60, { onChange: canvas.renderAll.bind(canvas) })
+            text.animate({ top: 200 - 60 }, { onChange: canvas.renderAll.bind(canvas) })
         });
 
 
@@ -196,7 +191,7 @@ const JsonReader = () => {
             canvas.add(text);
             canvas.setActiveObject(text);
             canvas.renderAll();
-            text.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
 
             const id4 = generateUniqueId({ type: 'textbox' });
             const text1 = new fabric.Textbox(val.id.toString() + ' ' + val.nametext.toString(), {
@@ -219,7 +214,7 @@ const JsonReader = () => {
             canvas.add(text1);
             canvas.setActiveObject(text1);
             canvas.renderAll();
-            text1.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text1.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
 
             const id5 = generateUniqueId({ type: 'textbox' });
             const text2 = new fabric.Textbox(val.clubname.toString(), {
@@ -242,7 +237,7 @@ const JsonReader = () => {
             canvas.add(text2);
             canvas.setActiveObject(text2);
             canvas.renderAll();
-            text2.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text2.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
 
             const id6 = generateUniqueId({ type: 'textbox' });
             const text3 = new fabric.Textbox(val.swimtime.toString(), {
@@ -265,7 +260,7 @@ const JsonReader = () => {
             canvas.add(text3);
             canvas.setActiveObject(text3);
             canvas.renderAll();
-            text3.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) });
+            text3.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) });
 
             const id7 = generateUniqueId({ type: 'textbox' });
             const text4 = new fabric.Textbox(val.place.toString(), {
@@ -288,7 +283,7 @@ const JsonReader = () => {
             canvas.add(text4);
             canvas.setActiveObject(text4);
             canvas.renderAll();
-            text4.animate('top', 200 + i * 60, { onChange: canvas.renderAll.bind(canvas) })
+            text4.animate({ top: 200 + i * 60 }, { onChange: canvas.renderAll.bind(canvas) })
         });
     }
 
