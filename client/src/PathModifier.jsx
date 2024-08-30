@@ -18,10 +18,8 @@ var temprect;
 function actionHandler(eventData, transform, x, y) {
   var polygon = transform.target,
     currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = fabric.util.transformPoint(
-      new fabric.Point(x, y),
-      fabric.util.invertTransform(polygon.calcTransformMatrix())
-    ),
+    mouseLocalPosition = new fabric.Point(x, y)
+      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
     polygonBaseSize = polygon._getNonTransformedDimensions(),
     size = polygon._getTransformedDimensions(0, 0),
     finalPointPosition = {
@@ -37,10 +35,8 @@ function actionHandler(eventData, transform, x, y) {
 function actionHandler2(eventData, transform, x, y) {
   var polygon = transform.target,
     currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = fabric.util.transformPoint(
-      new fabric.Point(x, y),
-      fabric.util.invertTransform(polygon.calcTransformMatrix())
-    ),
+    mouseLocalPosition = new fabric.Point(x, y)
+      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
     polygonBaseSize = polygon._getNonTransformedDimensions(),
     size = polygon._getTransformedDimensions(0, 0),
     finalPointPosition = {
@@ -56,10 +52,8 @@ function actionHandler2(eventData, transform, x, y) {
 function actionHandler3(eventData, transform, x, y) {
   var polygon = transform.target,
     currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = fabric.util.transformPoint(
-      new fabric.Point(x, y),
-      fabric.util.invertTransform(polygon.calcTransformMatrix())
-    ),
+    mouseLocalPosition = new fabric.Point(x, y)
+      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
     polygonBaseSize = polygon._getNonTransformedDimensions(),
     size = polygon._getTransformedDimensions(0, 0),
     finalPointPosition = {
