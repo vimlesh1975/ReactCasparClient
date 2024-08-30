@@ -1425,16 +1425,11 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
         .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
+      )
         .replaceAll(
           '"',
           '\\"'
-        )}\`;
+        ).replaceAll('`', '\\`')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -1489,7 +1484,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
       .replaceAll(
         '"',
         '\\"'
-      )}\`;
+      ).replaceAll('`', '\\`')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -2182,13 +2177,11 @@ export const updateGraphics = (canvas, layerNumber) => {
   // canvas.requestRenderAll();
 
   executeScript(
-    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG()}\`:''`
+    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`')}\`:''`
   );
 
-  endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${canvas.toSVG().replaceAll('"', '\\"')}';
-        "`);
-};
+  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`')}\`"`);
+}
 
 export const stopGraphics1 = (layerNumber) => {
   endpoint(
