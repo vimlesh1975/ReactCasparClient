@@ -366,7 +366,6 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
 };
 
 export const pasteClipboard = async (canvas) => {
-  const id = generateUniqueId({ type: "textbox" });
 
   try {
     const clipboardContents = await navigator.clipboard.read();
@@ -381,9 +380,12 @@ export const pasteClipboard = async (canvas) => {
           );
         }
         if (item.types.includes("image/png")) {
+          const id = generateUniqueId({ type: "image" });
+
           const blob = await item.getType("image/png");
           base64EncodeBlob(blob).then((base64) => {
-            fabric.Image.fromURL("data:image/png;base64," + base64, (image) => {
+            console.log(base64)
+            fabric.FabricImage.fromURL("data:image/png;base64," + base64).then(image => {
               image.set({
                 id: id,
                 class: id,
@@ -394,6 +396,7 @@ export const pasteClipboard = async (canvas) => {
                 stroke: "#00ff00",
               });
               canvas.add(image);
+              canvas.requestRenderAll();
             });
           });
         }
@@ -2230,19 +2233,20 @@ export const changeBackGroundColor = (e, canvas) => {
   canvas.requestRenderAll();
 };
 
-export const base64EncodeBlob = (blob) => {
+const base64EncodeBlob = (blob) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64data = btoa(reader.result);
-      resolve(base64data);
+      const arrayBuffer = reader.result;
+      const binaryString = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+      const base64String = btoa(binaryString);
+      resolve(base64String);
     };
     reader.onerror = reject;
-    // reader.readAsBinaryString(blob);
     reader.readAsArrayBuffer(blob);
-
   });
 };
+
 
 export const recallPage = (
   layerNumber,

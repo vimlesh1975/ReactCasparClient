@@ -118,38 +118,6 @@ fabric.FabricObject.prototype.noScaleCache = false;
 fabric.FabricObject.prototype.cornerSize = 18;
 // fabric.disableStyleCopyPaste = true;
 
-// const ErasedGroup = fabric.util.createClass(fabric.Group, {
-//   original: null,
-//   ErasedPath: null,
-//   initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
-//     this.original = original;
-//     this.ErasedPath = ErasedPath;
-//     this.callSuper(
-//       "initialize",
-//       [this.original, this.ErasedPath],
-//       options,
-//       isAlreadyGrouped
-//     );
-//   },
-
-//   _calcBounds: function (onlyWidthHeight) {
-//     const aX = [],
-//       aY = [],
-//       props = ["tr", "br", "bl", "tl"],
-//       jLen = props.length,
-//       ignoreZoom = true;
-
-//     let o = this.original;
-//     o.setCoords(ignoreZoom);
-//     for (let j = 0; j < jLen; j++) {
-//       var prop = props[j];
-//       aX.push(o.oCoords[prop].x);
-//       aY.push(o.oCoords[prop].y);
-//     }
-
-//     this._getBounds(aX, aY, onlyWidthHeight);
-//   },
-// });
 class ErasedGroup extends fabric.Group {
   constructor(original, ErasedPath, options, isAlreadyGrouped) {
     super([original, ErasedPath], options, isAlreadyGrouped);
