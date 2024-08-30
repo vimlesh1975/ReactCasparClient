@@ -49,10 +49,7 @@ export const mousedownandmousemoveevent = (canvas) => {
 
 
 function handleDrop(e, canvas) {
-  e.preventDefault();
-  console.log(e);
   if (e.dataTransfer.getData("Text")) {
-    // console.log(e.dataTransfer.getData("Text"));
     createTextBoxforDragedText(
       canvas,
       e.dataTransfer.getData("Text"),
@@ -242,7 +239,21 @@ const Drawing = ({ canvasOutput }) => {
         });
       }
     });
-    canvas.on("drop", (e) => handleDrop(e.e, canvas), false);
+    // canvas.on("drop", (e) => handleDrop(e.e, canvas), false);
+    // Add event listeners to the canvas element
+    canvas.getElement().parentNode.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Prevent default behavior to allow drop
+      // e.dataTransfer.dropEffect = 'copy'; // Show a copy cursor
+      // console.log(e)
+    });
+
+    canvas.getElement().parentNode.addEventListener('drop', (e) => {
+      e.preventDefault(); // Prevent default browser behavior
+      handleDrop(e, canvas);
+      // Process the drop event here
+      // For example, handle files or other data
+    });
+
   };
 
   return (

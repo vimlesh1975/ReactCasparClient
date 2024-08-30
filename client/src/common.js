@@ -88,14 +88,15 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
   });
 };
 
-export const Uploaddropedfile = (file0, canvas, x, y) => {
+export const Uploaddropedfile2 = (file0, canvas, x, y) => {
+  console.log(file0)
   const id = generateUniqueId({ type: "dropped" });
   if (file0) {
     var reader = new FileReader();
     reader.onload = function (event) {
       var imgObj = new Image();
       imgObj.src = event.target.result;
-      imgObj.onload = function () {
+      imgObj.onload = async function () {
         var image = new fabric.Image(imgObj);
         image.set({
           id: id,
@@ -117,6 +118,38 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
   }
 };
 
+export const Uploaddropedfile = async (file0, canvas, x, y) => {
+  console.log(file0);
+  const id = generateUniqueId({ type: "dropped" });
+  if (file0) {
+    const reader = new FileReader();
+    reader.onload = async function (event) {
+      try {
+        fabric.FabricImage.fromURL(event.target.result).then(img => {
+          img.set({
+            id: id,
+            class: id,
+            shadow: shadowOptions,
+            strokeUniform: true,
+            objectCaching: false,
+            left: x,
+            top: y,
+            fill: "#ff0000",
+            stroke: "#00ff00",
+          });
+          canvas.add(img);
+          canvas.setActiveObject(img);
+        })
+        canvas.requestRenderAll();
+      } catch (error) {
+        console.error('Error loading image:', error);
+      }
+    };
+    reader.readAsDataURL(file0);
+  }
+};
+
+
 export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
   return new Promise((resolve, reject) => {
     if (e.target.files) {
@@ -126,24 +159,25 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
           var imgObj = new Image();
           imgObj.src = event.target.result;
           imgObj.onload = function () {
-            var image = new fabric.Image(imgObj);
-            image.set({
-              left: 300,
-              top: 300,
-              id: id,
-              class: id,
-              shadow: shadowOptions,
-              strokeUniform: true,
-              objectCaching: false,
-              fill: "#ff0000",
-              stroke: "#00ff00",
-              src: imgObj.src,
-            });
-            // .scale(0.5);
+            fabric.FabricImage.fromURL(event.target.result).then(image => {
+              image.set({
+                left: 300,
+                top: 300,
+                id: id,
+                class: id,
+                shadow: shadowOptions,
+                strokeUniform: true,
+                objectCaching: false,
+                fill: "#ff0000",
+                stroke: "#00ff00",
+                src: imgObj.src,
+              });
+              // .scale(0.5);
 
-            canvas.add(image);
-            canvas.setActiveObject(image);
-            resolve();
+              canvas.add(image);
+              canvas.setActiveObject(image);
+              resolve();
+            })
           };
         };
         reader.readAsDataURL(element);
