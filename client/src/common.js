@@ -1464,7 +1464,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
     `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
   );
 
-  const script = `
+  const scriptforhtml = `
                                                                                   var bb = document.createElement('div');
                                                                                   bb.style.perspective='1920px';
                                                                                   bb.style.transformStyle='preserve-3d';
@@ -1475,12 +1475,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
       .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
+    )
       .replaceAll(
         '"',
         '\\"'
@@ -1496,10 +1491,40 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   style.textContent = '${inAnimation}';
                                                                                   document.head.appendChild(style);
                                                                                   `;
-  executeScript(script);
+  executeScript(scriptforhtml);
+
+
+  const scriptforcaspar = `
+                                                                                  var bb = document.createElement('div');
+                                                                                  bb.style.perspective='1920px';
+                                                                                  bb.style.transformStyle='preserve-3d';
+                                                                                  document.body.appendChild(bb);
+                                                                                  var aa = document.createElement('div');
+                                                                                  aa.style.position='absolute';
+                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aa.style.zIndex = ${layerNumber};
+                                                                                  aa.innerHTML=\`${canvas
+      .toSVG(
+    )
+      .replaceAll(
+        '"',
+        '\\"'
+      ).replaceAll('`', '\\\\`')}\`;
+                                                                                  bb.appendChild(aa);
+                                                                                  document.body.style.margin='0';
+                                                                                  document.body.style.padding='0';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  var style = document.createElement('style');
+                                                                                  style.textContent = '${inAnimation}';
+                                                                                  document.head.appendChild(style);
+                                                                                  `;
+
   setTimeout(() => {
     endpoint(`call ${window.chNumber}-${layerNumber} "
-     ${script}
+     ${scriptforcaspar}
           "`);
   }, 100);
   setTimeout(() => {
@@ -2180,7 +2205,7 @@ export const updateGraphics = (canvas, layerNumber) => {
     `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`')}\`:''`
   );
 
-  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`')}\`"`);
+  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\\\`')}\`"`);
 }
 
 export const stopGraphics1 = (layerNumber) => {
@@ -2362,7 +2387,7 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     aa.style.position='absolute';
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
-    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"')}\`;
+    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`')}\`;
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
@@ -3113,16 +3138,12 @@ export const startVerticalScroll = (
                                                                                   aaVertical.style.zIndex = ${layerNumber};
                                                                                   aaVertical.innerHTML=\`${canvas
       .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
+
+    )
       .replaceAll(
         '"',
         '\\"'
-      )}\`;
+      ).replaceAll('`', '\\`')}\`;
                                                                                   document.body.appendChild(aaVertical);
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
