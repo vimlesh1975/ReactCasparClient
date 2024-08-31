@@ -2122,9 +2122,7 @@ const WebAnimator = () => {
         sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
-            canvas.forEachObject((obj)=>{
-                originalCanvas.push(fabric.util.object.clone(obj,true));
-            });
+        originalCanvas=[...canvas._objects];
             ${xx4}
             ${xx5}
         })
@@ -2163,18 +2161,16 @@ const WebAnimator = () => {
                  const aa =findElementWithId(canvas,idCaspar);
                  if (aa){
                     const element = aa;
-                    if (element.type === 'image') {
-                       fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar]), img => {
-                           img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                           img.cloneAsImage(img1 => {
-                               element.setSrc(img1.getSrc(), () => {
+                   if (element.type === 'image') {
+                       fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar])).then((img) => {
+                           img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) });
+                               element.setSrc(img.cloneAsImage().getSrc()).then( () => {
                                    element.set({ visible: true });
                                     setTimeout(() => {
                                    changePropOfObject(idCaspar, 'scaleX',getPropOfObject(idCaspar, 'scaleX')+0.00001)  ;
                                   }, 10);
                                    canvas.requestRenderAll();
                                })
-                           })
                        })
                    }
                     else {
@@ -2290,16 +2286,14 @@ const WebAnimator = () => {
             const aa = findElementWithId(canvas,str1);
             if (aa){
                 const element = aa;
-                fabric.Image.fromURL(str2, img => {
+                fabric.Image.fromURL(str2).then(img => {
                     img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                    img.cloneAsImage(img1 => {
-                        element.setSrc(img1.getSrc(), () => {
-                            element.set({ visible: true });
-                            setTimeout(() => {
-                               changePropOfObject(str1, 'scaleX',getPropOfObject(str1, 'scaleX')+0.00001)  ;
+                   element.setSrc(img.cloneAsImage().getSrc()).then( () => {
+                        element.set({ visible: true });
+                                setTimeout(() => {
+                                   changePropOfObject(idCaspar, 'scaleX',getPropOfObject(idCaspar, 'scaleX')+0.00001)  ;
                                 }, 10);
-                            canvas.requestRenderAll();
-                        })
+                        canvas.requestRenderAll();
                     })
                 })
             }
