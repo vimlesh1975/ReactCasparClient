@@ -1429,7 +1429,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
         .replaceAll(
           '"',
           '\\"'
-        ).replaceAll('`', '\\`')}\`;
+        ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -1479,7 +1479,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
       .replaceAll(
         '"',
         '\\"'
-      ).replaceAll('`', '\\`')}\`;
+      ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -1509,7 +1509,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
       .replaceAll(
         '"',
         '\\"'
-      ).replaceAll('`', '\\\\`')}\`;
+      ).replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -2202,10 +2202,10 @@ export const updateGraphics = (canvas, layerNumber) => {
   // canvas.requestRenderAll();
 
   executeScript(
-    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`')}\`:''`
+    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`').replaceAll('$', '\\$')}\`:''`
   );
 
-  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\\\`')}\`"`);
+  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`"`);
 }
 
 export const stopGraphics1 = (layerNumber) => {
@@ -2382,23 +2382,35 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
       `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
     );
   }, 250);
-  const script = `
+  const scriptforhtml = `
     var aa = document.createElement('div');
     aa.style.position='absolute';
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
-    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`')}\`;
+    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
     aa.style.zoom=(${currentscreenSize * 100}/${1920})+'%';
     document.body.style.overflow='hidden';
     `;
-  executeScript(script);
+  executeScript(scriptforhtml);
 
+  const scriptforcaspar = `
+    var aa = document.createElement('div');
+    aa.style.position='absolute';
+    aa.setAttribute('id','divid_' + '${layerNumber}');
+    aa.style.zIndex = ${layerNumber};
+    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\\\$')}\`;
+    document.body.appendChild(aa);
+    document.body.style.margin='0';
+    document.body.style.padding='0';
+    aa.style.zoom=(${currentscreenSize * 100}/${1920})+'%';
+    document.body.style.overflow='hidden';
+    `;
   setTimeout(() => {
     endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
+        ${scriptforcaspar}
         "`);
   }, 300);
   setTimeout(() => {
