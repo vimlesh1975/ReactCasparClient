@@ -61,12 +61,12 @@ function handleDrop(e, canvas) {
     [...e.dataTransfer.items].forEach((item, i) => {
       if (item.kind === "file") {
         const file = item.getAsFile();
-        Uploaddropedfile(file, canvas, e.offsetX, e.offsetY);
+        Uploaddropedfile(file, canvas, e.offsetX + i * 250, e.offsetY + i * 250);
       }
     });
   } else {
     [...e.dataTransfer.files].forEach((file, i) => {
-      console.log(file);
+      console.log(i, file);
     });
   }
 }
