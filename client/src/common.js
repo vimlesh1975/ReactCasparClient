@@ -2213,7 +2213,7 @@ export const stopGraphics1 = (layerNumber) => {
     ` call ${window.chNumber}-${layerNumber} "window.sheet.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());" `
   );
   executeScript(
-    `window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`
+    `window.sheet_${layerNumber}?.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`
   );
 };
 

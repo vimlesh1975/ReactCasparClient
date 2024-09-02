@@ -28,12 +28,11 @@ const EditableTable = () => {
         const rowData = data1[rowIndex];
         if (!rowData) return;
         canvas.getObjects().forEach(element => {
-            element.set({ objectCaching: false })
-
+            element.set({ objectCaching: false });
             const dataValue = rowData[element.id];
             if (!dataValue) return;
             if (element.type === 'textbox') {
-                element.set({ text: dataValue.toString() })
+                element.set({ text: dataValue.toString() });
                 canvas.requestRenderAll();
             } else if (element.type === 'image') {
                 fabric.FabricImage.fromURL(dataValue).then(img => {
