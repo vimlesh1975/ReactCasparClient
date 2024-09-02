@@ -24,35 +24,30 @@ const EditableTable = () => {
         aa[rowIndex][key] = e.target.value;
         setData1(aa);
     };
-
     const setText = (rowIndex) => {
         const rowData = data1[rowIndex];
-
         if (!rowData) return;
-
         canvas.getObjects().forEach(element => {
+            element.set({ objectCaching: false })
+
             const dataValue = rowData[element.id];
-
             if (!dataValue) return;
-
             if (element.type === 'textbox') {
-                element.text = dataValue.toString();
+                element.set({ text: dataValue.toString() })
+                canvas.requestRenderAll();
             } else if (element.type === 'image') {
-                fabric.Image.fromURL(dataValue, img => {
+                fabric.FabricImage.fromURL(dataValue).then(img => {
                     img.set({
                         scaleX: element.width / img.width,
                         scaleY: element.height / img.height
                     });
-                    img.cloneAsImage(clonedImg => {
-                        element.setSrc(clonedImg.getSrc(), () => {
-                            element.set({ visible: true });
-                            canvas.requestRenderAll();
-                        });
+                    element.setSrc(img.cloneAsImage().getSrc()).then(() => {
+                        element.set({ visible: true });
+                        canvas.requestRenderAll();
                     });
                 });
             }
         });
-
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     };
