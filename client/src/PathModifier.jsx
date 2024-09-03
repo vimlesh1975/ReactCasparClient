@@ -16,47 +16,51 @@ var temprect;
 // and the current position in canvas coordinate
 // transform.target is a reference to the current object being transformed,
 function actionHandler(eventData, transform, x, y, point1, point2) {
-  var polygon = transform.target,
-    currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = new fabric.Point(x, y)
-      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
-    polygonBaseSize = polygon._getNonTransformedDimensions(),
-    size = polygon._getTransformedDimensions(0, 0),
-    finalPointPosition = {
-      x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-      y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-    };
+  const polygon = transform.target;
+  const currentControl = polygon.controls[polygon.__corner];
+  const mouseLocalPosition = new fabric.Point(x, y)
+    .transform(fabric.util.invertTransform(polygon.calcTransformMatrix()));
+  const polygonBaseSize = polygon._getNonTransformedDimensions();
+  const size = polygon._getTransformedDimensions(0, 0);
+  const finalPointPosition = {
+    x: mouseLocalPosition.x * (size.x / polygonBaseSize.x) + polygon.pathOffset.x,
+    y: mouseLocalPosition.y * (size.y / polygonBaseSize.y) + polygon.pathOffset.y
+  };
   polygon.path[currentControl.pointIndex][point1] = finalPointPosition.x;
   polygon.path[currentControl.pointIndex][point2] = finalPointPosition.y;
+
   window.dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
   return true;
 }
+
 // define a function that can keep the polygon in the same position when we change its
 // width/height/top/left.
 function anchorWrapper(anchorIndex, fn, dispatch) {
   return function (eventData, transform, x, y) {
-    var fabricObject = transform.target,
-      pathObj = fabricObject.path[anchorIndex],
-      absolutePoint = new fabric.Point(
-        pathObj[1] - fabricObject.pathOffset.x,
-        pathObj[2] - fabricObject.pathOffset.y
-      ).transform(fabricObject.calcTransformMatrix()),
-      actionPerformed = fn(eventData, transform, x, y),
-      /* eslint-disable no-unused-vars */
-      newDim = fabricObject._setPath(fabricObject.path),
-      /* eslint-disable no-unused-vars */
-      polygonBaseSize = fabricObject._getNonTransformedDimensions(),
-      newX = (pathObj[1] - fabricObject.pathOffset.x) / polygonBaseSize.x,
-      newY = (pathObj[2] - fabricObject.pathOffset.y) / polygonBaseSize.y;
+    const fabricObject = transform.target;
+    const pathObj = fabricObject.path[anchorIndex];
+    const absolutePoint = new fabric.Point(
+      pathObj[1] - fabricObject.pathOffset.x,
+      pathObj[2] - fabricObject.pathOffset.y
+    ).transform(fabricObject.calcTransformMatrix());
+    const actionPerformed = fn(eventData, transform, x, y);
+    fabricObject._setPath(fabricObject.path);
+    const polygonBaseSize = fabricObject._getNonTransformedDimensions();
+    const newX = (pathObj[1] - fabricObject.pathOffset.x) / polygonBaseSize.x;
+    const newY = (pathObj[2] - fabricObject.pathOffset.y) / polygonBaseSize.y;
     fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+
     window.dispatch({ type: 'CHANGE_PATH1', payload: fabricObject.path });
+
     if (getObjectbyId(fabricObject.id)) {
       syncProps(fabricObject, getObjectbyId(fabricObject.id));
     }
+
     return actionPerformed;
   }
 }
+
 
 export function edit(dispatch) {
   // clone what are you copying since you
@@ -221,8 +225,8 @@ function renderIcon(icon, point) {
 function polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, point1, point2) {
   var pathObj = fabricObject.path[currentControl.pointIndex]
   if (pathObj) {
-    var x = (pathObj[point1] - fabricObject.pathOffset.x),
-      y = (pathObj[point2] - fabricObject.pathOffset.y);
+    var x = (pathObj[point1] - fabricObject.pathOffset.x);
+    var y = (pathObj[point2] - fabricObject.pathOffset.y);
     return new fabric.Point(x, y).transform(
       fabric.util.multiplyTransformMatrices(
         fabricObject.canvas.viewportTransform,
