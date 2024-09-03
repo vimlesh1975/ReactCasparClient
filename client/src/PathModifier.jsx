@@ -23,8 +23,8 @@ function actionHandler(eventData, transform, x, y, point1, point2) {
   const polygonBaseSize = polygon._getNonTransformedDimensions();
   const size = polygon._getTransformedDimensions(0, 0);
   const finalPointPosition = {
-    x: mouseLocalPosition.x * (size.x / polygonBaseSize.x) + polygon.pathOffset.x,
-    y: mouseLocalPosition.y * (size.y / polygonBaseSize.y) + polygon.pathOffset.y
+    x: mouseLocalPosition.x + polygon.pathOffset.x,
+    y: mouseLocalPosition.y + polygon.pathOffset.y,
   };
   polygon.path[currentControl.pointIndex][point1] = finalPointPosition.x;
   polygon.path[currentControl.pointIndex][point2] = finalPointPosition.y;
