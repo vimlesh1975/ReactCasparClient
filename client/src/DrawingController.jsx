@@ -115,7 +115,7 @@ var intervalGameTimer2;
 var html;
 
 fabric.FabricObject.prototype.noScaleCache = false;
-fabric.FabricObject.prototype.cornerSize = 18;
+// fabric.FabricObject.prototype.cornerSize = 18;
 // fabric.disableStyleCopyPaste = true;
 
 class ErasedGroup extends fabric.Group {

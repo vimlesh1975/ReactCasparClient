@@ -403,6 +403,8 @@ const PathModifier = () => {
       dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
       currentValue = updatedPath;
       canvas.getActiveObjects()[0].set({ path: updatedPath });
+      canvas.getActiveObjects()[0].setCoords();
+
       canvas?.requestRenderAll();
     }
   }

@@ -473,25 +473,6 @@ export const moveSelected = (direction) => {
   }
 };
 
-// Function to copy properties of a Fabric.js object (excluding .src)
-function copyFabricObjectProperties(object) {
-  var copiedProperties = {};
-  for (var prop in object) {
-    // Exclude Fabric.js internal properties and methods, as well as .src property
-    if (
-      object.hasOwnProperty(prop) &&
-      typeof object[prop] !== "function" &&
-      prop !== "canvas" &&
-      prop !== "group" &&
-      prop !== "_objects" &&
-      prop !== "_objects" &&
-      prop !== "src"
-    ) {
-      copiedProperties[prop] = object[prop];
-    }
-  }
-  return copiedProperties;
-}
 
 export const replaceWithImage = (canvas) => {
   const element = canvas.getActiveObjects()[0];
