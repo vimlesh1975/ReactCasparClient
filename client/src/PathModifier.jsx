@@ -110,7 +110,7 @@ export function edit(dispatch) {
       poly.controls = poly.path.reduce(function (acc, point, index) {
         if (index < poly.path.length - 1) {
           acc['p1st' + index] = new fabric.Control({
-            positionHandler: polygonPositionHandler,
+            positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 1, 2),
             actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler, dispatch),
             pointIndex: index,
             render: renderIcon(`${index + 1}0`, point)
@@ -118,7 +118,7 @@ export function edit(dispatch) {
           });
           if ((point[0] === 'Q') || (point[0] === 'C')) {
             acc['p2nd' + index] = new fabric.Control({
-              positionHandler: polygonPositionHandler2,
+              positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 3, 4),
               actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler2, dispatch),
               pointIndex: index,
               render: renderIcon(`${index + 1}1`, point)
@@ -126,7 +126,7 @@ export function edit(dispatch) {
           }
           if (point[0] === 'C') {
             acc['p3rd' + index] = new fabric.Control({
-              positionHandler: polygonPositionHandler3,
+              positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 5, 6),
               actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler3, dispatch),
               pointIndex: index,
               render: renderIcon(`${index + 1}2`, point)
@@ -253,11 +253,11 @@ function renderIcon(icon, point) {
 
 // define a function that can locate the controls.
 // this function will be used both for drawing and for interaction.
-function polygonPositionHandler(dim, finalMatrix, fabricObject) {
-  var pathObj = fabricObject.path[this.pointIndex]
+function polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, point1, point2) {
+  var pathObj = fabricObject.path[currentControl.pointIndex]
   if (pathObj) {
-    var x = (pathObj[1] - fabricObject.pathOffset.x),
-      y = (pathObj[2] - fabricObject.pathOffset.y);
+    var x = (pathObj[point1] - fabricObject.pathOffset.x),
+      y = (pathObj[point2] - fabricObject.pathOffset.y);
     return new fabric.Point(x, y).transform(
       fabric.util.multiplyTransformMatrices(
         fabricObject.canvas.viewportTransform,
@@ -267,32 +267,7 @@ function polygonPositionHandler(dim, finalMatrix, fabricObject) {
   }
 
 }
-function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
-  var pathObj = fabricObject.path[this.pointIndex]
-  if (pathObj) {
-    var x = (pathObj[3] - fabricObject.pathOffset.x),
-      y = (pathObj[4] - fabricObject.pathOffset.y);
-    return new fabric.Point(x, y).transform(
-      fabric.util.multiplyTransformMatrices(
-        fabricObject.canvas.viewportTransform,
-        fabricObject.calcTransformMatrix()
-      )
-    );
-  }
-}
-function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
-  var pathObj = fabricObject.path[this.pointIndex];
-  if (pathObj) {
-    var x = (pathObj[5] - fabricObject.pathOffset.x),
-      y = (pathObj[6] - fabricObject.pathOffset.y);
-    return new fabric.Point(x, y).transform(
-      fabric.util.multiplyTransformMatrices(
-        fabricObject.canvas.viewportTransform,
-        fabricObject.calcTransformMatrix()
-      )
-    );
-  }
-}
+
 const PathModifier = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
   const path1 = useSelector(state => state.path1Reducer.path1);
@@ -413,78 +388,6 @@ const PathModifier = () => {
       canvas.getActiveObjects()[0].setCoords();
 
       canvas?.requestRenderAll();
-    }
-  }
-
-
-  // Function to create SVG path string from points
-  function createPathString(points) {
-    let pathString = '';
-    points.forEach((point, index) => {
-      const command = index === 0 ? 'M' : 'L';
-      pathString += `${command}${point.x} ${point.y} `;
-    });
-    return pathString.trim();
-  }
-
-  // Function to update the path with new points
-  function updatePath(newPoints) {
-    canvas.getActiveObjects()[0].set({ path: createPathString(newPoints) });
-    canvas?.requestRenderAll();
-  }
-
-  // Function to find the closest point on the path to the given click location
-  // Function to find the closest point on the path to the given click location
-  function findClosestPathPoint(pathSegments, clickX, clickY) {
-    let minDistance = Number.MAX_SAFE_INTEGER;
-    let closestIndex = -1;
-
-    for (let i = 0; i < pathSegments.length; i++) {
-      const [command, ...coordinates] = pathSegments[i];
-
-      if (command === 'M') {
-        continue; // Skip the 'move' command and consider it in the next segment
-      }
-
-      // Extract the coordinates for 'L' (line) command
-      const [x1, y1] = coordinates.slice(-2);
-
-      const distance = Math.sqrt((x1 - clickX) ** 2 + (y1 - clickY) ** 2);
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = i;
-      }
-    }
-
-    return closestIndex;
-  }
-  // Event listener for the first operation
-  function listener1(options) {
-    const { pointer } = options;
-    const clickX = pointer.x;
-    const clickY = pointer.y;
-
-    // Get the current path data points
-    const pathData = canvas.getActiveObjects()[0].path;
-    console.log(pathData)
-
-    // Parse the current path data string
-    // const pathSegments = fabric.util.parsePath(pathData);
-    const pathSegments = pathData;// fabric.util.parsePath(pathData);
-
-    // Find the closest point on the path to the click location
-    const closestIndex = findClosestPathPoint(pathSegments, clickX, clickY);
-
-    // Insert the new point after the closest point on the path
-    if (closestIndex !== -1) {
-      const newPoints = [
-        ...pathSegments.slice(0, closestIndex + 1),
-        ['L', clickX, clickY], // Use 'L' command to create a line to the new point
-        ...pathSegments.slice(closestIndex + 1),
-      ];
-
-      updatePath(newPoints);
     }
   }
 
