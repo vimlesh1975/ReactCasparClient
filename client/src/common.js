@@ -494,30 +494,28 @@ function copyFabricObjectProperties(object) {
 }
 
 export const replaceWithImage = (canvas) => {
-  var fInput = document.createElement("input"); //hidden input to open filedialog
-  fInput.setAttribute("type", "file");
-  fInput.setAttribute("accept", "image/*");
-
-  fInput.click();
-  fInput.onchange = (e) => {
-    const oldElement = canvas.getActiveObjects()[0];
-    const index = canvas.getObjects().indexOf(oldElement);
+  const element = canvas.getActiveObjects()[0];
+  if (element?.type === 'image') {
     var reader = new FileReader();
-    reader.onload = function (event) {
-      var imgObj = new Image();
-      imgObj.src = event.target.result;
-      imgObj.onload = function () {
-        var image = new fabric.Image(imgObj);
-        // Copy properties of oldElement to the new image object (excluding .src)
-        Object.assign(image, copyFabricObjectProperties(oldElement));
-        image.setSrc(event.target.result, () => {
-          canvas.remove(oldElement);
-          canvas.insertAt(image, index);
-          canvas.setActiveObject(image);
+    var fInput = document.createElement("input"); //hidden input to open filedialog
+    fInput.setAttribute("type", "file");
+    fInput.setAttribute("accept", "image/*");
+    fInput.click();
+    fInput.onchange = (e) => {
+      reader.onloadend = () => {
+        fabric.FabricImage.fromURL(reader.result).then(img => {
+          img.set({
+            scaleX: element.width / img.width,
+            scaleY: element.height / img.height
+          });
+          element.setSrc(img.cloneAsImage().getSrc()).then(() => {
+            element.set({ visible: true });
+            canvas.requestRenderAll();
+          });
         });
       };
-    };
-    reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 };
 const finalPosition = (element, canvas) => {
