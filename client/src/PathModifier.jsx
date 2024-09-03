@@ -255,39 +255,46 @@ function renderIcon(icon, point) {
 // this function will be used both for drawing and for interaction.
 function polygonPositionHandler(dim, finalMatrix, fabricObject) {
   var pathObj = fabricObject.path[this.pointIndex]
-  var x = (pathObj[1] - fabricObject.pathOffset.x),
-    y = (pathObj[2] - fabricObject.pathOffset.y);
-  return fabric.util.transformPoint(
-    { x: x, y: y },
-    fabric.util.multiplyTransformMatrices(
-      fabricObject.canvas.viewportTransform,
-      fabricObject.calcTransformMatrix()
-    )
-  );
+  if (pathObj) {
+    var x = (pathObj[1] - fabricObject.pathOffset.x),
+      y = (pathObj[2] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+      { x: x, y: y },
+      fabric.util.multiplyTransformMatrices(
+        fabricObject.canvas.viewportTransform,
+        fabricObject.calcTransformMatrix()
+      )
+    );
+  }
+
 }
 function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
   var pathObj = fabricObject.path[this.pointIndex]
-  var x = (pathObj[3] - fabricObject.pathOffset.x),
-    y = (pathObj[4] - fabricObject.pathOffset.y);
-  return fabric.util.transformPoint(
-    { x: x, y: y },
-    fabric.util.multiplyTransformMatrices(
-      fabricObject.canvas.viewportTransform,
-      fabricObject.calcTransformMatrix()
-    )
-  );
+  if (pathObj) {
+    var x = (pathObj[3] - fabricObject.pathOffset.x),
+      y = (pathObj[4] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+      { x: x, y: y },
+      fabric.util.multiplyTransformMatrices(
+        fabricObject.canvas.viewportTransform,
+        fabricObject.calcTransformMatrix()
+      )
+    );
+  }
 }
 function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
-  var pathObj = fabricObject.path[this.pointIndex]
-  var x = (pathObj[5] - fabricObject.pathOffset.x),
-    y = (pathObj[6] - fabricObject.pathOffset.y);
-  return fabric.util.transformPoint(
-    { x: x, y: y },
-    fabric.util.multiplyTransformMatrices(
-      fabricObject.canvas.viewportTransform,
-      fabricObject.calcTransformMatrix()
-    )
-  );
+  var pathObj = fabricObject.path[this.pointIndex];
+  if (pathObj) {
+    var x = (pathObj[5] - fabricObject.pathOffset.x),
+      y = (pathObj[6] - fabricObject.pathOffset.y);
+    return fabric.util.transformPoint(
+      { x: x, y: y },
+      fabric.util.multiplyTransformMatrices(
+        fabricObject.canvas.viewportTransform,
+        fabricObject.calcTransformMatrix()
+      )
+    );
+  }
 }
 const PathModifier = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -345,7 +352,10 @@ const PathModifier = () => {
       currentValue = updatedPath;
       dispatch({ type: 'CHANGE_PATH1', payload: updatedPath });
       canvas.getActiveObjects()[0].set({ path: updatedPath });
+      canvas.getActiveObjects()[0].setCoords();
       canvas?.requestRenderAll();
+      edit();
+      edit();
     }
   }
 
