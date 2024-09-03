@@ -73,10 +73,10 @@ function anchorWrapper(anchorIndex, fn, dispatch) {
   return function (eventData, transform, x, y) {
     var fabricObject = transform.target,
       pathObj = fabricObject.path[anchorIndex],
-      absolutePoint = fabric.util.transformPoint({
-        x: (pathObj[1] - fabricObject.pathOffset.x),
-        y: (pathObj[2] - fabricObject.pathOffset.y),
-      }, fabricObject.calcTransformMatrix()),
+      absolutePoint = new fabric.Point(
+        pathObj[1] - fabricObject.pathOffset.x,
+        pathObj[2] - fabricObject.pathOffset.y
+      ).transform(fabricObject.calcTransformMatrix()),
       actionPerformed = fn(eventData, transform, x, y),
       /* eslint-disable no-unused-vars */
       newDim = fabricObject._setPath(fabricObject.path),
@@ -258,8 +258,7 @@ function polygonPositionHandler(dim, finalMatrix, fabricObject) {
   if (pathObj) {
     var x = (pathObj[1] - fabricObject.pathOffset.x),
       y = (pathObj[2] - fabricObject.pathOffset.y);
-    return fabric.util.transformPoint(
-      { x: x, y: y },
+    return new fabric.Point(x, y).transform(
       fabric.util.multiplyTransformMatrices(
         fabricObject.canvas.viewportTransform,
         fabricObject.calcTransformMatrix()
@@ -273,8 +272,7 @@ function polygonPositionHandler2(dim, finalMatrix, fabricObject) {
   if (pathObj) {
     var x = (pathObj[3] - fabricObject.pathOffset.x),
       y = (pathObj[4] - fabricObject.pathOffset.y);
-    return fabric.util.transformPoint(
-      { x: x, y: y },
+    return new fabric.Point(x, y).transform(
       fabric.util.multiplyTransformMatrices(
         fabricObject.canvas.viewportTransform,
         fabricObject.calcTransformMatrix()
@@ -287,8 +285,7 @@ function polygonPositionHandler3(dim, finalMatrix, fabricObject) {
   if (pathObj) {
     var x = (pathObj[5] - fabricObject.pathOffset.x),
       y = (pathObj[6] - fabricObject.pathOffset.y);
-    return fabric.util.transformPoint(
-      { x: x, y: y },
+    return new fabric.Point(x, y).transform(
       fabric.util.multiplyTransformMatrices(
         fabricObject.canvas.viewportTransform,
         fabricObject.calcTransformMatrix()
