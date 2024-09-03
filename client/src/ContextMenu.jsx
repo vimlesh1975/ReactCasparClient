@@ -1,6 +1,6 @@
 import useContextMenu from "./useContextMenu";
 
-import { copy, paste, redo, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import { copy, paste, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 import {
   VscPrimitiveSquare,
@@ -10,7 +10,7 @@ import {
   VscLock,
   VscUnlock,
 } from "react-icons/vsc";
-import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -164,9 +164,7 @@ const ContextMenu = ({ canvas }) => {
             <li>
               Edit
               <ul>
-                <li onClick={() => redo(canvas)}>
-                  Redo <AiOutlineRedo />
-                </li>
+
                 <li onClick={() => undo(canvas)}>
                   Undo <AiOutlineUndo />
                 </li>

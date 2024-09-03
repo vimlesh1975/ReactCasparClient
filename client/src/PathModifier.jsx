@@ -20,8 +20,6 @@ function actionHandler(eventData, transform, x, y, point1, point2) {
   const currentControl = polygon.controls[polygon.__corner];
   const mouseLocalPosition = new fabric.Point(x, y)
     .transform(fabric.util.invertTransform(polygon.calcTransformMatrix()));
-  const polygonBaseSize = polygon._getNonTransformedDimensions();
-  const size = polygon._getTransformedDimensions(0, 0);
   const finalPointPosition = {
     x: mouseLocalPosition.x + polygon.pathOffset.x,
     y: mouseLocalPosition.y + polygon.pathOffset.y,

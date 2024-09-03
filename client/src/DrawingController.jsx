@@ -8,7 +8,6 @@ import {
   lock,
   undo,
   unlockAll,
-  redo,
   swapFaceandStrokeColors,
   sameSizeIMG,
   sameWidth,
@@ -427,9 +426,7 @@ const DrawingController = () => {
             }
           } else if (key.toLowerCase() === "z") {
             window.editor.canvas && undo(window.editor.canvas);
-          } else if (key.toLowerCase() === "r") {
-            event.preventDefault();
-            window.editor.canvas && redo(window.editor.canvas);
+
           } else if (key.toLowerCase() === "a") {
             event.preventDefault();
             selectAll(window.editor.canvas);
@@ -2623,7 +2620,6 @@ const DrawingController = () => {
               All
             </button>
             <button onClick={() => undo(canvas)}>Undo</button>
-            <button onClick={() => redo(canvas)}>Redo</button>
             <button onClick={() => copy(canvas)}>Copy</button>
             <button onClick={() => paste(canvas)}>Paste</button>
             <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>

@@ -964,14 +964,6 @@ export const undo = (canvas) => {
     });
 }
 
-export const redo = (canvas) => {
-  // canvas.redo();
-  // canvas.getObjects().forEach((element) => {
-  //   element.set({ objectCaching: false });
-  // });
-  // canvas.requestRenderAll();
-};
-
 export var _clipboard;
 
 export const copy = (canvas) => {
