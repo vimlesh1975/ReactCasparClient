@@ -15,7 +15,7 @@ var temprect;
 // The function receive as argument the mouse event, the current trasnform object
 // and the current position in canvas coordinate
 // transform.target is a reference to the current object being transformed,
-function actionHandler(eventData, transform, x, y) {
+function actionHandler(eventData, transform, x, y, point1, point2) {
   var polygon = transform.target,
     currentControl = polygon.controls[polygon.__corner],
     mouseLocalPosition = new fabric.Point(x, y)
@@ -26,47 +26,12 @@ function actionHandler(eventData, transform, x, y) {
       x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
       y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
     };
-  polygon.path[currentControl.pointIndex][1] = finalPointPosition.x;
-  polygon.path[currentControl.pointIndex][2] = finalPointPosition.y;
+  polygon.path[currentControl.pointIndex][point1] = finalPointPosition.x;
+  polygon.path[currentControl.pointIndex][point2] = finalPointPosition.y;
   window.dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
 
   return true;
 }
-function actionHandler2(eventData, transform, x, y) {
-  var polygon = transform.target,
-    currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = new fabric.Point(x, y)
-      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
-    polygonBaseSize = polygon._getNonTransformedDimensions(),
-    size = polygon._getTransformedDimensions(0, 0),
-    finalPointPosition = {
-      x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-      y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-    };
-  polygon.path[currentControl.pointIndex][3] = finalPointPosition.x;
-  polygon.path[currentControl.pointIndex][4] = finalPointPosition.y;
-  window.dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
-
-  return true;
-}
-function actionHandler3(eventData, transform, x, y) {
-  var polygon = transform.target,
-    currentControl = polygon.controls[polygon.__corner],
-    mouseLocalPosition = new fabric.Point(x, y)
-      .transform(fabric.util.invertTransform(polygon.calcTransformMatrix())),
-    polygonBaseSize = polygon._getNonTransformedDimensions(),
-    size = polygon._getTransformedDimensions(0, 0),
-    finalPointPosition = {
-      x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-      y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-    };
-  polygon.path[currentControl.pointIndex][5] = finalPointPosition.x;
-  polygon.path[currentControl.pointIndex][6] = finalPointPosition.y;
-  window.dispatch({ type: 'CHANGE_PATH1', payload: polygon.path });
-
-  return true;
-}
-
 // define a function that can keep the polygon in the same position when we change its
 // width/height/top/left.
 function anchorWrapper(anchorIndex, fn, dispatch) {
@@ -111,7 +76,7 @@ export function edit(dispatch) {
         if (index < poly.path.length - 1) {
           acc['p1st' + index] = new fabric.Control({
             positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 1, 2),
-            actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler, dispatch),
+            actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, (eventData, transform, x, y) => actionHandler(eventData, transform, x, y, 1, 2), dispatch),
             pointIndex: index,
             render: renderIcon(`${index + 1}0`, point)
 
@@ -119,7 +84,7 @@ export function edit(dispatch) {
           if ((point[0] === 'Q') || (point[0] === 'C')) {
             acc['p2nd' + index] = new fabric.Control({
               positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 3, 4),
-              actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler2, dispatch),
+              actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, (eventData, transform, x, y) => actionHandler(eventData, transform, x, y, 3, 4), dispatch),
               pointIndex: index,
               render: renderIcon(`${index + 1}1`, point)
             });
@@ -127,7 +92,7 @@ export function edit(dispatch) {
           if (point[0] === 'C') {
             acc['p3rd' + index] = new fabric.Control({
               positionHandler: (dim, finalMatrix, fabricObject, currentControl) => polygonPositionHandler(dim, finalMatrix, fabricObject, currentControl, 5, 6),
-              actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler3, dispatch),
+              actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, (eventData, transform, x, y) => actionHandler(eventData, transform, x, y, 5, 6), dispatch),
               pointIndex: index,
               render: renderIcon(`${index + 1}2`, point)
             });
