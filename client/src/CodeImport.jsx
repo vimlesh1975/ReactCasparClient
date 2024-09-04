@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
-import { importSvgCode, shadowOptions, openaiAddress } from './common'
+// import * as fabric from 'fabric'
+import { importSvgCode, shadowOptions, openaiAddress, generateUniqueId } from './common'
 
 const addcommand = `Always Assume window.editor.canvas is avalable as fabricjs canvas . While adding a new object always use color parameter as full 6 digit hexadecimal notation, objectCaching as false and  shadow properties as {color: '#000000',  blur: 30, offsetX: 0, offsetY: 0, affectStroke: false};in object properties. After every code use window.editor.canvas.requestRenderAll();. `
 const editCommand = `Assume window.editor.canvas is avalable as fabricjs canvas. Use color parameter as full 6 digit hexadecimal notation. After every code use window.editor.canvas.requestRenderAll();. Use find method of array of canvas.getObjects() to get object by id in canvas. `
@@ -38,21 +38,25 @@ const CodeImport = () => {
         const preCanvas = (canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\'');
         if (jsoncode) {
             if (JSON.parse(jsoncode).objects) {
-                canvas.loadFromJSON(jsoncode, canvas.renderAll.bind(canvas), function (o, element) {
-                    element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
-                    canvas.add(element)
+                canvas.loadFromJSON(jsoncode).then(() => {
+                    canvas.getObjects().forEach(element => {
+                        const id = generateUniqueId({ type: element.type });
+                        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
+                    })
+                    importSvgCode(preCanvas, canvas);
                 })
             }
             else {
-                canvas.loadFromJSON(`{   "objects": [` + jsoncode + ` ]   }`, canvas.renderAll.bind(canvas), function (o, element) {
-                    element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: 'id_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
+                canvas.loadFromJSON(`{   "objects": [` + jsoncode + ` ]   }`).then(() => {
+                    canvas.getObjects().forEach(element => {
+                        const id = generateUniqueId({ type: element.type });
+                        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: id, class: id, });
+                    })
+                    importSvgCode(preCanvas, canvas);
                 })
             }
             canvas.requestRenderAll();
         }
-
-        importSvgCode(preCanvas, canvas)
-
     }
 
     const askOpenAi = async (str) => {
@@ -82,30 +86,37 @@ const CodeImport = () => {
     }
 
     const askOpenAiModels = async () => {
-        // setPrompt('')
-        const response = await fetch(openaiAddress() + 'openai/models', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        try {
+            // eslint-disable-next-line
+            const url = new URL(openaiAddress() + 'openai/models');
+            const response = await fetch(openaiAddress() + 'openai/models', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                })
             })
-        })
 
-        if (response.ok) {
-            const data = await response.json();
-            // trims any trailing spaces/'\n' 
-            // setAiAnswer(data.bot.trim())
-            // console.log(data.bot.data)
-            setModels(data.bot.data)
-            // setModels(['aa', 'bb'])
-            // console.log(data.bot.data)
+            if (response.ok) {
+                const data = await response.json();
+                // trims any trailing spaces/'\n' 
+                // setAiAnswer(data.bot.trim())
+                // console.log(data.bot.data)
+                setModels(data.bot.data)
+                // setModels(['aa', 'bb'])
+                // console.log(data.bot.data)
 
 
-        } else {
-            // const err = await response.text()
-            // alert(err)
+            } else {
+                // const err = await response.text()
+                // alert(err)
+            }
+        } catch (e) {
+
         }
+
+
     }
 
 

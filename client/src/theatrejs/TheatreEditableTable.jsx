@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { executeScript, stopGraphics1, loopDirection, saveFile, templateLayers, endpoint } from '../common'
 import Papa from "papaparse";
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import TheatreTimer from './TheatreTimer';
 import { VscMove, VscTrash, } from "react-icons/vsc";
 import { FaPlay, FaStop, } from "react-icons/fa";
@@ -51,29 +51,26 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
             if (element.type === 'image') {
                 // const bb = textNodes.find((textNode) => textNode.key === element.id);
                 const ff = element.src;
-                const scriptforhtml = `fabric.Image.fromURL('${ff}', img => {
+                console.log(ff)
+                const scriptforhtml = `fabric.FabricImage.fromURL('${ff}').then(img => {
                     img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
-                    img.cloneAsImage(img1 => {
-                        canvas_${layerNumber}.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                        canvas_${layerNumber}.getObjects()[${i}].setSrc(img.cloneAsImage().getSrc()).then(() => {
                             canvas_${layerNumber}.getObjects()[${i}].set({ visible: true });
                             setTimeout(() => {
                                 changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
                             }, 100);
                             canvas_${layerNumber}.requestRenderAll();
                         })
-                    })
                 })`;
-                const scriptforcaspar = `fabric.Image.fromURL('${ff}', img => {
+                const scriptforcaspar = `fabric.FabricImage.fromURL('${ff}').then(img => {
                     img.set({ scaleX: ${element.width} / img.width, scaleY: (${element.height} / img.height) });
-                    img.cloneAsImage(img1 => {
-                        canvas.getObjects()[${i}].setSrc(img1.getSrc(), () => {
+                        canvas.getObjects()[${i}].setSrc(img.cloneAsImage().getSrc()).then(() => {
                             canvas.getObjects()[${i}].set({ visible: true });
                             setTimeout(() => {
                                 changePropOfObject('${element.id}', 'scaleX', getPropOfObject('${element.id}', 'scaleX') + 0.00001);
                             }, 100);
                             canvas.requestRenderAll();
                         })
-                    })
                 })`;
                 endpoint(
                     `call ${window.chNumber}-${layerNumber} "${scriptforcaspar}";`
@@ -83,38 +80,77 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
         });
 
     };
+    // const setTextold = (rowIndex) => {
+    //     const rowData = data1[rowIndex];
+    //     if (!rowData) return;
+    //     canvas.getObjects().forEach(element => {
+    //         element.set({ objectCaching: false });
+
+    //         const dataValue = rowData[element.id];
+    //         if (!dataValue) return;
+    //         if (element.type === 'textbox') {
+    //             element.set({ text: dataValue.toString() });
+    //             canvas.requestRenderAll();
+    //         } else if (element.type === 'image') {
+    //             fabric.FabricImage.fromURL(dataValue).then(img => {
+    //                 img.set({
+    //                     scaleX: element.width / img.width,
+    //                     scaleY: element.height / img.height
+    //                 });
+    //                 element.setSrc(img.cloneAsImage().getSrc()).then(() => {
+    //                     element.set({ visible: true });
+    //                     canvas.requestRenderAll();
+    //                 });
+    //             });
+    //         }
+    //     });
+
+    //     canvas.requestRenderAll();
+    //     // dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+    // };
+
     const setText = (rowIndex) => {
-        const rowData = data1[rowIndex];
+        return new Promise((resolve, reject) => {
+            try {
+                const rowData = data1[rowIndex];
+                if (!rowData) return resolve();
 
-        if (!rowData) return;
+                const promises = canvas.getObjects().map(element => {
+                    element.set({ objectCaching: false });
 
-        canvas.getObjects().forEach(element => {
-            const dataValue = rowData[element.id];
+                    const dataValue = rowData[element.id];
+                    if (!dataValue) return Promise.resolve();
 
-            if (!dataValue) return;
-
-            if (element.type === 'textbox') {
-                element.text = dataValue.toString();
-            } else if (element.type === 'image') {
-                fabric.Image.fromURL(dataValue, img => {
-                    img.set({
-                        scaleX: element.width / img.width,
-                        scaleY: element.height / img.height
-                    });
-                    img.cloneAsImage(clonedImg => {
-                        element.setSrc(clonedImg.getSrc(), () => {
-                            element.set({ visible: true, src: clonedImg.getSrc() });
-                            canvas.requestRenderAll();
-                        });
-                    });
+                    if (element.type === 'textbox') {
+                        element.set({ text: dataValue.toString() });
+                        return Promise.resolve();
+                    } else if (element.type === 'image') {
+                        return fabric.FabricImage.fromURL(dataValue)
+                            .then(img => {
+                                img.set({
+                                    scaleX: element.width / img.width,
+                                    scaleY: element.height / img.height
+                                });
+                                return element.setSrc(img.cloneAsImage().getSrc())
+                                    .then(() => {
+                                        element.set({ visible: true, src: img.cloneAsImage().getSrc() });
+                                    });
+                            });
+                    } else {
+                        return Promise.resolve();
+                    }
                 });
+
+                // Once all promises are resolved, request render and resolve the setText promise
+                Promise.all(promises).then(() => {
+                    canvas.requestRenderAll();
+                    resolve();
+                });
+            } catch (error) {
+                reject(error);
             }
         });
-
-        canvas.requestRenderAll();
-        // dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     };
-
 
 
     const createTable = () => {
@@ -366,10 +402,12 @@ const TheatreEditableTable = ({ playtoCasparcg }) => {
                                                     setAndPlay(rowIndex);
                                                 }}><FaPlay /></button></td>
                                                 <td><button title='Preview and Update' onClick={() => {
-                                                    setText(rowIndex);
-                                                    setTimeout(() => {
+                                                    setText(rowIndex).then(() => {
                                                         updateText2(canvas, dataLayer);
-                                                    }, 1000);
+                                                    });
+                                                    // setTimeout(() => {
+                                                    //     updateText2(canvas, dataLayer);
+                                                    // }, 1000);
                                                 }}>Update</button></td>
 
                                                 {headers.map(key => (

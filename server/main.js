@@ -488,6 +488,9 @@ app.post('/fetch-proxy', async (req, res) => {
 
 
 // rss feed code  ends
+
+//NRCS code starts-----------
+// rss feed code  ends
 const mysql = require('mysql2/promise');
 var pool;
 
@@ -627,3 +630,4 @@ app.post('/updateContent', async (req, res) => {
     res.status(500).send('Error updating content');
   }
 });
+// NRCS code ends

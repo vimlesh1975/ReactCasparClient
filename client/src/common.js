@@ -1,14 +1,47 @@
-import axios from 'axios';
-import { animation } from './animation.js';
-import { fabric } from 'fabric';
+import axios from "axios";
+import { animation } from "./animation.js";
+import * as fabric from "fabric";
+import _ from "lodash";
+import * as d from '@theatre/dataverse'
 
-export const buildDate = '200824_1';
-export const loopDirection = ['normal', 'reverse', 'alternate', 'AR'];
+export const buildDate = "200824_1";
 
-export const defaultImageSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+"
-export const generateUniqueId = (object) => {
-  return object.type + '_' + Math.random().toString(36).substr(2, 9);
+export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
+  const studioPrivate = window.__TheatreJS_StudioBundle._studio
+  studioPrivate.transaction(({ stateEditors }) => {
+    const pathToProp = d.getPointerParts(propsPrimitive).path
+    const propAddress = { ...object.address, pathToProp }
+    stateEditors.coreByProject.historic.sheetsById.sequence.setPrimitivePropAsSequenced(
+      propAddress
+    )
+  })
 }
+
+fabric.FabricObject.prototype.toObject = (function (toObject) {
+  return function (propertiesToInclude) {
+    propertiesToInclude = (propertiesToInclude || []).concat([
+      "id",
+      "class",
+      "selectable",
+    ]);
+    return toObject.call(this, propertiesToInclude);
+  };
+})(fabric.FabricObject.prototype.toObject);
+
+
+
+
+export const loopDirection = ["normal", "reverse", "alternate", "AR"];
+
+export const defaultImageSrc =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wD/AP+";
+export const generateUniqueNumber = () => {
+  return Math.random().toString(36).slice(2, 11);
+};
+
+export const generateUniqueId = (object) => {
+  return object.type + "_" + Number(Math.floor(Math.random() * 900) + 100); // Generates a number between 100 and 999
+};
 
 export const animate = (canvas, sss) => {
   var ss1 = new Date().toLocaleTimeString("en-US", {
@@ -21,18 +54,19 @@ export const animate = (canvas, sss) => {
     text: ss1,
   });
   canvas.requestRenderAll();
-}
-
+};
 
 export const addRoundedCornerImage = (canvas, imageName1) => {
+  const id = generateUniqueId({ type: "rect" });
+
   fabric.util.loadImage(imageName1, (myImg) => {
     if (myImg == null) {
       alert("Error!");
     } else {
       var rect = new fabric.Rect({
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        left: 10,
+        id: id,
+        class: id,
+        left: 630,
         top: 10,
         stroke: "#000000",
         strokeWidth: 3,
@@ -41,7 +75,8 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
         shadow: shadowOptions,
         ry: 30,
       });
-      canvas.add(rect).setActiveObject(rect);
+      canvas.add(rect);
+      canvas.setActiveObject(rect);
 
       rect.set({
         width: myImg.width,
@@ -53,17 +88,19 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
   });
 };
 
-export const Uploaddropedfile = (file0, canvas, x, y) => {
+export const Uploaddropedfile2 = (file0, canvas, x, y) => {
+  console.log(file0)
+  const id = generateUniqueId({ type: "dropped" });
   if (file0) {
     var reader = new FileReader();
     reader.onload = function (event) {
       var imgObj = new Image();
       imgObj.src = event.target.result;
-      imgObj.onload = function () {
+      imgObj.onload = async function () {
         var image = new fabric.Image(imgObj);
         image.set({
-          id: "ccg_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
+          id: id,
+          class: id,
           shadow: shadowOptions,
           strokeUniform: true,
           objectCaching: false,
@@ -73,14 +110,47 @@ export const Uploaddropedfile = (file0, canvas, x, y) => {
           stroke: "#00ff00",
         });
         // .scale(0.5);
-        canvas.add(image).setActiveObject(image);
+        canvas.add(image);
+        canvas.setActiveObject(image);
       };
     };
     reader.readAsDataURL(file0);
   }
 };
 
-export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
+export const Uploaddropedfile = async (file0, canvas, x, y) => {
+  console.log(file0);
+  const id = generateUniqueId({ type: "dropped" });
+  if (file0) {
+    const reader = new FileReader();
+    reader.onload = async function (event) {
+      try {
+        fabric.FabricImage.fromURL(event.target.result).then(img => {
+          img.set({
+            id: id,
+            class: id,
+            shadow: shadowOptions,
+            strokeUniform: true,
+            objectCaching: false,
+            left: x,
+            top: y,
+            fill: "#ff0000",
+            stroke: "#00ff00",
+          });
+          canvas.add(img);
+          canvas.setActiveObject(img);
+        })
+        canvas.requestRenderAll();
+      } catch (error) {
+        console.error('Error loading image:', error);
+      }
+    };
+    reader.readAsDataURL(file0);
+  }
+};
+
+
+export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
   return new Promise((resolve, reject) => {
     if (e.target.files) {
       Array.from(e.target.files).forEach((element) => {
@@ -89,22 +159,25 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
           var imgObj = new Image();
           imgObj.src = event.target.result;
           imgObj.onload = function () {
-            var image = new fabric.Image(imgObj);
-            image.set({
-              left: 300,
-              top: 300,
-              id: id,
-              class: "class_" + fabric.Object.__uid,
-              shadow: shadowOptions,
-              strokeUniform: true,
-              objectCaching: false,
-              fill: "#ff0000",
-              stroke: "#00ff00",
-              src: imgObj.src
-            });
-            // .scale(0.5);
-            canvas.add(image).setActiveObject(image);
-            resolve();
+            fabric.FabricImage.fromURL(event.target.result).then(image => {
+              image.set({
+                left: 300,
+                top: 300,
+                id: id,
+                class: id,
+                shadow: shadowOptions,
+                strokeUniform: true,
+                objectCaching: false,
+                fill: "#ff0000",
+                stroke: "#00ff00",
+                src: imgObj.src,
+              });
+              // .scale(0.5);
+
+              canvas.add(image);
+              canvas.setActiveObject(image);
+              resolve();
+            })
           };
         };
         reader.readAsDataURL(element);
@@ -113,8 +186,8 @@ export const Upload = (e, canvas, id = "ccg_" + fabric.Object.__uid) => {
   });
 };
 
-export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
-  return new Promise((resolve, reject) => {
+export const addImage = (canvas, id = generateUniqueId({ type: "image" })) => {
+  return new Promise((resolve) => {
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file"); //opens files
     fInput.setAttribute("accept", "image/*"); ////only useful for inspector debugging
@@ -130,13 +203,16 @@ export const addImage = (canvas, id = "ccg_" + fabric.Object.__uid) => {
   });
 };
 
-export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
+export const createTextBox = (
+  canvas,
+  id = generateUniqueId({ type: "textbox" })
+) => {
   const text = new fabric.Textbox(id, {
     shadow: shadowOptions,
     id: id,
-    class: "class_" + fabric.Object.__uid,
+    class: id,
     left: 103 * 1.87,
-    top: 762,
+    top: 200,
     width: 480 * 1.87,
     fill: "#ffffff",
     fontFamily: options.currentFont,
@@ -148,19 +224,21 @@ export const createTextBox = (canvas, id = "ccg_" + fabric.Object.__uid) => {
     stroke: "#000000",
     strokeWidth: 0,
   });
-  canvas.add(text).setActiveObject(text);
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.requestRenderAll();
 };
 
 export const createIText = (canvas) => {
+  const id = generateUniqueId({ type: "itext" });
   const text = new fabric.IText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
     {
       shadow: shadowOptions,
-      id: "ccg_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
-      left: 100,
-      top: 0,
+      id: id,
+      class: id,
+      left: 1000,
+      top: 150,
       width: 480,
       fill: options.currentColor,
       fontFamily: options.currentFont,
@@ -173,20 +251,22 @@ export const createIText = (canvas) => {
       strokeWidth: options.strokeWidth,
     }
   );
-  canvas.add(text).setActiveObject(text);
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
-  text.animate("top", 343, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createText = (canvas) => {
-  const text = new fabric.Text(
+  const id = generateUniqueId({ type: "text" });
+
+  const text = new fabric.FabricText(
     "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
     {
-      id: "ccg_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
+      id: id,
+      class: id,
       shadow: shadowOptions,
-      left: 100 * 1.87,
-      top: 0,
+      left: 800,
+      top: 50,
       width: 480 * 1.87,
       fill: options.currentColor,
       fontFamily: options.currentFont,
@@ -199,16 +279,19 @@ export const createText = (canvas) => {
       strokeWidth: options.strokeWidth,
     }
   );
-  canvas.add(text).setActiveObject(text);
+
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
-  text.animate("top", 243 * 1.87, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const addUpTimer = (canvas) => {
+  const id = generateUniqueId({ type: "textbox" });
+
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
-    left: 10 * 1.87,
-    top: 530 * 1.87,
+    left: 700,
+    top: 78,
     width: 100 * 1.87,
     fill: "#ffffff",
     backgroundColor: options.backgroundColor,
@@ -221,9 +304,11 @@ export const addUpTimer = (canvas) => {
     stroke: "#000000",
     strokeWidth: 0,
     id: "uptimer1",
-    class: "class_" + fabric.Object.__uid,
+    class: id,
   });
-  canvas.add(sss).setActiveObject(sss);
+
+  canvas.add(sss);
+  canvas.setActiveObject(sss);
   canvas.requestRenderAll();
   var startTime = new Date();
   setInterval(() => {
@@ -244,10 +329,12 @@ export const addUpTimer = (canvas) => {
 };
 
 export const addClock = (canvas) => {
+  const id = generateUniqueId({ type: "textbox" });
+
   const sss = new fabric.Textbox("", {
     shadow: shadowOptions,
-    left: 10 * 1.87,
-    top: 530 * 1.87,
+    left: 600,
+    top: 85,
     width: 100 * 1.87,
     fill: "#ffffff",
     backgroundColor: options.backgroundColor,
@@ -260,9 +347,11 @@ export const addClock = (canvas) => {
     stroke: "#000000",
     strokeWidth: 0,
     id: "clock1",
-    class: "class_" + fabric.Object.__uid,
+    class: id,
   });
-  canvas.add(sss).setActiveObject(sss);
+
+  canvas.add(sss);
+  canvas.setActiveObject(sss);
   canvas.requestRenderAll();
   setInterval(() => {
     animate(canvas, sss);
@@ -285,10 +374,12 @@ export const gradient = new fabric.Gradient({
 });
 
 export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
+  const id = generateUniqueId({ type: "textbox" });
+
   const text = new fabric.Textbox(dragedText, {
     shadow: shadowOptions,
-    id: "ccg_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     left: x,
     top: y,
     width: 480 * 1.87,
@@ -302,11 +393,14 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
     stroke: "#000000",
     strokeWidth: 0,
   });
-  canvas.add(text).setActiveObject(text);
+
+  canvas.add(text);
+  canvas.setActiveObject(text);
   canvas.renderAll();
 };
 
 export const pasteClipboard = async (canvas) => {
+
   try {
     const clipboardContents = await navigator.clipboard.read();
     if (clipboardContents) {
@@ -320,12 +414,15 @@ export const pasteClipboard = async (canvas) => {
           );
         }
         if (item.types.includes("image/png")) {
+          const id = generateUniqueId({ type: "image" });
+
           const blob = await item.getType("image/png");
           base64EncodeBlob(blob).then((base64) => {
-            fabric.Image.fromURL("data:image/png;base64," + base64, (image) => {
+            console.log(base64)
+            fabric.FabricImage.fromURL("data:image/png;base64," + base64).then(image => {
               image.set({
-                id: "ccg_" + fabric.Object.__uid,
-                class: "class_" + fabric.Object.__uid,
+                id: id,
+                class: id,
                 shadow: shadowOptions,
                 strokeUniform: true,
                 objectCaching: false,
@@ -333,6 +430,7 @@ export const pasteClipboard = async (canvas) => {
                 stroke: "#00ff00",
               });
               canvas.add(image);
+              canvas.requestRenderAll();
             });
           });
         }
@@ -342,7 +440,6 @@ export const pasteClipboard = async (canvas) => {
     console.log(error);
   }
 };
-
 
 export const STEP = 5;
 export const Direction = {
@@ -374,45 +471,32 @@ export const moveSelected = (direction) => {
     activeObject.setCoords();
     window.editor.canvas.renderAll();
   }
-}
+};
 
-// Function to copy properties of a Fabric.js object (excluding .src)
-function copyFabricObjectProperties(object) {
-  var copiedProperties = {};
-  for (var prop in object) {
-    // Exclude Fabric.js internal properties and methods, as well as .src property
-    if (object.hasOwnProperty(prop) && typeof object[prop] !== 'function' && prop !== 'canvas' && prop !== 'group' && prop !== '_objects' && prop !== '_objects' && prop !== 'src') {
-      copiedProperties[prop] = object[prop];
-    }
-  }
-  return copiedProperties;
-}
 
 export const replaceWithImage = (canvas) => {
-  var fInput = document.createElement("input"); //hidden input to open filedialog
-  fInput.setAttribute("type", "file");
-  fInput.setAttribute("accept", "image/*");
-
-  fInput.click();
-  fInput.onchange = (e) => {
-    const oldElement = canvas.getActiveObjects()[0];
-    const index = canvas.getObjects().indexOf(oldElement);
+  const element = canvas.getActiveObjects()[0];
+  if (element?.type === 'image') {
     var reader = new FileReader();
-    reader.onload = function (event) {
-      var imgObj = new Image();
-      imgObj.src = event.target.result;
-      imgObj.onload = function () {
-        var image = new fabric.Image(imgObj);
-        // Copy properties of oldElement to the new image object (excluding .src)
-        Object.assign(image, copyFabricObjectProperties(oldElement));
-        image.setSrc(event.target.result, () => {
-          canvas.remove(oldElement);
-          canvas.insertAt(image, index);
-          canvas.setActiveObject(image);
+    var fInput = document.createElement("input"); //hidden input to open filedialog
+    fInput.setAttribute("type", "file");
+    fInput.setAttribute("accept", "image/*");
+    fInput.click();
+    fInput.onchange = (e) => {
+      reader.onloadend = () => {
+        fabric.FabricImage.fromURL(reader.result).then(img => {
+          img.set({
+            scaleX: element.width / img.width,
+            scaleY: element.height / img.height
+          });
+          element.setSrc(img.cloneAsImage().getSrc()).then(() => {
+            element.set({ visible: true });
+            canvas.requestRenderAll();
+          });
         });
       };
-    };
-    reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
+    }
   };
 };
 const finalPosition = (element, canvas) => {
@@ -427,38 +511,83 @@ const finalPosition = (element, canvas) => {
     return finalPosition;
   }
 };
+// export const cloneAsImage = (canvas) => {
+//   const id = generateUniqueId({ type: "id" });
+
+//   canvas.getActiveObjects().forEach((element) => {
+//     const preshadow = element.shadow;
+//     if (
+//       (element.type === "i-text" ||
+//         element.type === "textbox" ||
+//         element.type === "text") &&
+//       element.shadow.blur < 5
+//     ) {
+//       element.shadow.blur = 5;
+//     }
+//     element.cloneAsImage(function (clone) {
+//       console.log(clone)
+//       clone.set({
+//         left: finalPosition(element, canvas).x + 10,
+//         top: finalPosition(element, canvas).y + 10,
+//         id: id,
+//         class: id,
+//         shadow: {
+//           color: "black",
+//           blur: 0,
+//           offsetX: 0,
+//           offsetY: 0,
+//           affectStroke: false,
+//         },
+//       });
+//       canvas.add(clone);
+//     });
+//     element.shadow = preshadow;
+//   });
+//   canvas.requestRenderAll();
+// };
+
 export const cloneAsImage = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
+  const id = generateUniqueId({ type: "id" });
+
+  canvas.getActiveObjects().forEach(async (element) => {
     const preshadow = element.shadow;
-    if (
-      (element.type === "i-text" ||
-        element.type === "textbox" ||
-        element.type === "text") &&
-      element.shadow.blur < 5
-    ) {
-      element.shadow.blur = 5;
-    }
-    element.cloneAsImage(function (clone) {
-      clone.set({
-        left: finalPosition(element, canvas).x + 10,
-        top: finalPosition(element, canvas).y + 10,
-        id: "id_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        shadow: {
-          color: "black",
-          blur: 0,
-          offsetX: 0,
-          offsetY: 0,
-          affectStroke: false,
-        },
-      });
-      canvas.add(clone);
+    // if (
+    //   (element.type === "i-text" ||
+    //     element.type === "textbox" ||
+    //     element.type === "text") &&
+    //   element.shadow.blur < 5
+    // ) {
+    //   element.shadow.blur = 5;
+    // }
+    element.set('shadow', null);
+    const dataURL = element.toDataURL({
+      format: "png",
+      multiplier: 1, // Adjust multiplier for higher resolution
     });
+
+    const clone = await fabric.FabricImage.fromURL(dataURL);
+    clone.set({
+      left: finalPosition(element, canvas).x + 10,
+      top: finalPosition(element, canvas).y + 10,
+      id: id,
+      class: id,
+      shadow: {
+        color: "black",
+        blur: 0,
+        offsetX: 0,
+        offsetY: 0,
+        affectStroke: false,
+      },
+    });
+    canvas.add(clone);
+    canvas.requestRenderAll();
     element.shadow = preshadow;
   });
-  canvas.requestRenderAll();
 };
+
+
 export const createRandomeStrip = (canvas) => {
+  const id = generateUniqueId({ type: "path" });
 
   function generateRandomStyledPathWithSpiral(width, height) {
     const startX = Math.random() * (width - 1700);
@@ -486,18 +615,53 @@ export const createRandomeStrip = (canvas) => {
 
     return [
       ["M", startX, startY],
-      ["C", controlX1, controlY1, topCurveX, topCurveY, startX + 200, startY + 50],
-      ["C", controlX2, controlY2, endX - 200, startY + 50, endX - 200, startY + 50],
-      ["C", controlX3, controlY3, bottomCurveX, bottomCurveY, endX - 200, endY - 50],
-      ["C", controlX4, controlY4, startX + 200, endY - 50, startX + 200, endY - 50],
-      ["Z"]
+      [
+        "C",
+        controlX1,
+        controlY1,
+        topCurveX,
+        topCurveY,
+        startX + 200,
+        startY + 50,
+      ],
+      [
+        "C",
+        controlX2,
+        controlY2,
+        endX - 200,
+        startY + 50,
+        endX - 200,
+        startY + 50,
+      ],
+      [
+        "C",
+        controlX3,
+        controlY3,
+        bottomCurveX,
+        bottomCurveY,
+        endX - 200,
+        endY - 50,
+      ],
+      [
+        "C",
+        controlX4,
+        controlY4,
+        startX + 200,
+        endY - 50,
+        startX + 200,
+        endY - 50,
+      ],
+      ["Z"],
     ];
   }
 
-  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(1920, 1080);
+  var randomStyledPathWithSpiral = generateRandomStyledPathWithSpiral(
+    1920,
+    1080
+  );
   var pathObject = new fabric.Path(randomStyledPathWithSpiral, {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     left: 200,
     top: 300,
@@ -509,15 +673,18 @@ export const createRandomeStrip = (canvas) => {
     strokeUniform: true,
   });
 
-  pathObject.on('mousedblclick', () => {
+  pathObject.on("mousedblclick", () => {
     if (window.edit) {
-      window.edit(window.dispatch)
+      window.edit(window.dispatch);
     }
-  })
-  canvas.add(pathObject).setActiveObject(pathObject);;
+  });
+  canvas.add(pathObject);
+  canvas.setActiveObject(pathObject);
 };
 
 export const createPentagon = (canvas) => {
+  const id = generateUniqueId({ type: "polygon" });
+
   const rect = new fabric.Polygon(
     [
       { x: 290, y: 124 },
@@ -527,10 +694,10 @@ export const createPentagon = (canvas) => {
       { x: 192, y: 190 },
     ],
     {
-      id: "id_" + fabric.Object.__uid,
-      class: "class_" + fabric.Object.__uid,
+      id: id,
+      class: id,
       shadow: shadowOptions,
-      top: -100,
+      top: 300,
       left: 80,
       rx: 50,
       ry: 80,
@@ -543,18 +710,19 @@ export const createPentagon = (canvas) => {
       strokeUniform: true,
     }
   );
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 330, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createRect = (canvas) => {
+  const id = generateUniqueId({ type: "rect" });
   const rect = new fabric.Rect({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
-    top: -100 * 1.87,
-    left: 90 * 1.87,
+    top: 200,
+    left: 650,
     width: 500 * 1.87,
     height: 40 * 1.87,
     opacity: 0.9,
@@ -567,11 +735,11 @@ export const createRect = (canvas) => {
     rx: 10,
     ry: 10,
   });
-  canvas.add(rect).setActiveObject(rect);
-  canvas.requestRenderAll();
-  rect.animate("top", 750, { onChange: canvas.renderAll.bind(canvas) });
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
+  // canvas.requestRenderAll();
+  canvas.renderAll();
 };
-
 
 export const removeShadow = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -587,7 +755,6 @@ export const removeFill = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
 export const removeStroke = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("strokeWidth", 0);
@@ -597,12 +764,14 @@ export const removeStroke = (canvas) => {
 };
 
 export const createCircle = (canvas) => {
+  const id = generateUniqueId({ type: "circle" });
+
   const circle = new fabric.Circle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     top: 0,
-    left: 200,
+    left: 550,
     radius: 50,
     fill: "#0000ff",
     objectCaching: false,
@@ -610,36 +779,37 @@ export const createCircle = (canvas) => {
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(circle).setActiveObject(circle);
+  canvas.add(circle);
+  canvas.setActiveObject(circle);
   canvas.requestRenderAll();
-  circle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const createHLine = (canvas) => {
+  const id = generateUniqueId({ type: "path" });
   const rect = new fabric.Path("M 0 0 L 500 1", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
-    left: 90,
+    top: 500,
+    left: 710,
     fill: "#0000ff",
     objectCaching: false,
     stroke: "#ff0000",
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 550, { onChange: canvas.renderAll.bind(canvas) });
 };
 export const createTriangle = (canvas) => {
-  canvas.isDrawingMode = false;
+  const id = generateUniqueId({ type: "triangle" });
   const triangle = new fabric.Triangle({
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
     top: 50,
-    left: -100,
+    left: 350,
     width: 100,
     height: 100,
     fill: "#ff00ff",
@@ -651,28 +821,37 @@ export const createTriangle = (canvas) => {
     strokeUniform: true,
   });
 
-  canvas.add(triangle).setActiveObject(triangle);
+  canvas.add(triangle);
+  canvas.setActiveObject(triangle);
   canvas.requestRenderAll();
-  triangle.animate("left", 150, { onChange: canvas.renderAll.bind(canvas) });
 };
 
+
+
 export const groupObjects = (canvas, shouldGroup) => {
+  const id = generateUniqueId({ type: "group" });
   if (shouldGroup) {
     if (!canvas.getActiveObject()) {
       return;
     }
-    if (canvas.getActiveObject().type !== "activeSelection") {
+    if (canvas.getActiveObject().type !== "activeselection") {
       return;
     }
-    canvas
-      .getActiveObject()
-      .toGroup()
-      .set({
-        shadow: shadowOptions,
-        id: "ccg_" + fabric.Object.__uid,
-        class: "class_" + fabric.Object.__uid,
-        fill: "#ff0000",
-      });
+    const objects = canvas.getActiveObjects();
+    canvas.discardActiveObject();
+    const group = new fabric.Group(objects, { interactive: true, subTargetCheck: true });
+    group.set({
+      shadow: { ...shadowOptions, blur: 0 },
+      id: id,
+      class: id,
+      fill: "#ff0000",
+    });
+    canvas.add(group);
+    canvas.setActiveObject(group);
+    objects.forEach((element) => {
+      canvas.remove(element);
+    });
+
   } else {
     if (!canvas.getActiveObject()) {
       return;
@@ -680,10 +859,11 @@ export const groupObjects = (canvas, shouldGroup) => {
     if (canvas.getActiveObject().type !== "group") {
       return;
     }
-    canvas.getActiveObject().toActiveSelection(); //ungroup
-    canvas.forEachObject((element) =>
-      element.set({ objectCaching: false, shadow: shadowOptions })
-    );
+    const group = canvas.getActiveObject();
+    const objects = group && group.removeAll();
+    canvas.discardActiveObject();
+    canvas.remove(group);
+    canvas.add(...objects);
   }
   canvas.requestRenderAll();
 };
@@ -698,7 +878,7 @@ export const textNormal = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("fontWeight", "normal");
   });
-}
+};
 export const txtBold = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set(
@@ -739,7 +919,7 @@ export const alignRight = (canvas) => {
     element.set("textAlign", "right");
   });
   canvas.requestRenderAll();
-}
+};
 export const alignLeft = (canvas) => {
   canvas.getActiveObjects().forEach((element) => {
     element.set("textAlign", "left");
@@ -755,94 +935,109 @@ export const lock = (canvas) => {
   canvas.discardActiveObject();
   canvas.requestRenderAll();
 };
-export const undo = (canvas) => {
+export const undo2 = (canvas) => {
   canvas.undo();
   canvas.getObjects().forEach((element) => {
     element.set({ objectCaching: false });
   });
   canvas.requestRenderAll();
 };
-export const redo = (canvas) => {
-  canvas.redo();
-  canvas.getObjects().forEach((element) => {
-    element.set({ objectCaching: false });
+const history = [];
+export const saveCanvasState = (canvas) => {
+  const json = canvas.toJSON();
+  history.push(json);
+}
+export const undo = (canvas) => {
+  if (history.length <= 1) return; // Do nothing if no more undo steps are available
+  history.pop(); // Remove the last state
+  const previousState = history[history.length - 1]; // Get the previous state
+  canvas.getObjects().forEach(obj => {
+    canvas.remove(obj);
   });
-  canvas.requestRenderAll();
-};
 
+  fabric.util.enlivenObjects(previousState.objects)
+    .then((objects) => {
+      objects.forEach(obj => {
+        canvas.add(obj); // Add each object to the canvas
+      });
+      canvas.renderAll(); // Re-render the canvas
+    });
+}
 
 export var _clipboard;
+
 export const copy = (canvas) => {
-  canvas?.getActiveObject()?.clone(
-    (cloned) => {
-      _clipboard = cloned;
-    },
-    ["id", "class", "selectable"]
-  );
+  const activeObject = canvas?.getActiveObject();
+  if (activeObject) {
+    // Store the JSON representation instead of cloning the object
+    _clipboard = _.cloneDeep(
+      activeObject.toObject(["id", "class", "selectable"])
+    );
+  }
 };
 
-export const paste = (canvas) => {
-  try {
-    _clipboard?.clone(
-      (clonedObj) => {
-        canvas?.discardActiveObject();
-        clonedObj.set({
-          left: clonedObj.left + 10,
-          top: clonedObj.top + 10,
-          evented: true,
-          objectCaching: false,
-          id:
-            clonedObj.type === "i-text" ||
-              clonedObj.type === "textbox" ||
-              clonedObj.type === "text"
-              ? "ccg_" + fabric.Object.__uid
-              : "id_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
-        });
-        if (clonedObj.type === "activeSelection") {
-          // active selection needs a reference to the canvas.
-          clonedObj.canvas = canvas;
-          clonedObj.forEachObject((obj, i) => {
-            canvas?.add(obj);
-            obj.set({
-              evented: true,
-              objectCaching: false,
-              id:
-                obj.type === "i-text" ||
-                  obj.type === "textbox" ||
-                  obj.type === "text"
-                  ? "ccg_" + fabric.Object.__uid + i
-                  : "id_" + fabric.Object.__uid + i,
-              class: "class_" + fabric.Object.__uid + i,
-            });
-          });
-          // this should solve the unselectability
-          clonedObj.setCoords();
-        } else {
-          canvas?.add(clonedObj);
-        }
+export const paste = async (canvas) => {
+  if (_clipboard) {
+    let objectsToSelect = [];
+    let left = 0;
+    let top = 0;
+    try {
+      const objects = await fabric.util.enlivenObjects([_clipboard]);
+      let aa = [];
+      const objectType = _clipboard.type;
 
-        _clipboard.top += 10;
-        _clipboard.left += 10;
-        canvas?.setActiveObject(clonedObj);
-        clonedObj.on("mousedblclick", () => {
+      if (objectType === "ActiveSelection") {
+        aa = objects[0]._objects;
+      } else {
+        aa = objects;
+      }
+      aa.forEach((object) => {
+        left += 100;
+        top += 100;
+        var id = generateUniqueId({ type: object.type.toLowerCase() });
+        while (findElementWithId(canvas, id)) {
+          id = generateUniqueId({ type: object.type.toLowerCase() });
+        }
+        object.set({
+          left: left,
+          top: top,
+          id: id,
+          class: id,
+          objectCaching: false,
+          evented: true,
+        });
+        object.on("mousedblclick", () => {
           window.edit(window.dispatch);
         });
-        canvas?.requestRenderAll();
-      },
-      ["id", "class", "selectable"]
-    );
-  } catch (error) {
-    // alert(error)
+        canvas.add(object);
+        objectsToSelect.push(object);
+      });
+      if (objectsToSelect.length > 1) {
+        const selection = new fabric.ActiveSelection(objectsToSelect, {
+          canvas: canvas,
+        });
+        canvas.setActiveObject(selection);
+      } else if (objectsToSelect.length === 1) {
+        canvas.setActiveObject(objectsToSelect[0]);
+      }
+
+      canvas.requestRenderAll();
+    } catch (error) {
+      console.error("Error during paste operation:", error);
+    }
+  } else {
+    console.log("Clipboard is empty, nothing to paste");
   }
 };
 
 export const createShape = (canvas, shape, size = 0.4) => {
+  const id = generateUniqueId({ type: "path" });
+
   const rect = new fabric.Path(shape, {
-    id: "path_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: shadowOptions,
-    top: -100,
+    top: 250,
     left: Math.random() * 1000,
     scaleX: size,
     scaleY: size,
@@ -852,14 +1047,14 @@ export const createShape = (canvas, shape, size = 0.4) => {
     stroke: options.stroke,
     strokeWidth: 2,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   rect.on("mousedblclick", () => {
     window.edit(window.dispatch);
   });
+  rect.setCoords();
+
   canvas.requestRenderAll();
-  rect.animate("top", Math.random() * 500, {
-    onChange: canvas.renderAll.bind(canvas),
-  });
 };
 
 export const selectAll = (canvas) => {
@@ -925,21 +1120,23 @@ export const gradient2 = () => {
   });
 };
 export const createVLine = (canvas) => {
+  const id = generateUniqueId({ type: "path" });
+
   const rect = new fabric.Path("M 0 0 L 1 500", {
-    id: "id_" + fabric.Object.__uid,
-    class: "class_" + fabric.Object.__uid,
+    id: id,
+    class: id,
     shadow: { ...shadowOptions, Blur: 10 },
-    top: -100,
-    left: 90,
+    top: 300,
+    left: 475,
     fill: "#0000ff",
     objectCaching: false,
     stroke: "#ffff00",
     strokeWidth: 3,
     strokeUniform: true,
   });
-  canvas.add(rect).setActiveObject(rect);
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
   canvas.requestRenderAll();
-  rect.animate("top", 50, { onChange: canvas.renderAll.bind(canvas) });
 };
 
 export const resizeTextWidth = (canvas) => {
@@ -1032,7 +1229,16 @@ export const selectedatCenter = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.center());
+  selectedItems.forEach((item) => {
+    // Center horizontally
+    item.set({
+      left: (canvas.width - item.width) / 2,
+    });
+    // Center vertically
+    item.set({
+      top: (canvas.height - item.height) / 2,
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1041,7 +1247,12 @@ export const selectedatCenterH = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerH());
+  selectedItems.forEach((item) => {
+    // Center horizontally
+    item.set({
+      left: (canvas.width - item.width) / 2,
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1051,7 +1262,12 @@ export const selectedatCenterV = (canvas) => {
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   const selectedItems = canvas.getActiveObjects();
   canvas.discardActiveObject();
-  selectedItems.forEach((item) => item.centerV());
+  selectedItems.forEach((item) => {
+    // Center vertically
+    item.set({
+      top: (canvas.height - item.height) / 2,
+    });
+  });
   var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
   canvas.setActiveObject(sel);
   canvas.requestRenderAll();
@@ -1139,7 +1355,6 @@ export const makeHorizontalEquidistant = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
 export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
@@ -1165,7 +1380,9 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
     );
 
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
 
     const script = `
@@ -1179,16 +1396,11 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
         .toSVG(
-          [
-            "id",
-            "class",
-            "selectable",
-          ]
-        )
+      )
         .replaceAll(
           '"',
           '\\"'
-        )}\`;
+        ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -1219,9 +1431,11 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   }
 
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+  );
 
-  const script = `
+  const scriptforhtml = `
                                                                                   var bb = document.createElement('div');
                                                                                   bb.style.perspective='1920px';
                                                                                   bb.style.transformStyle='preserve-3d';
@@ -1232,16 +1446,11 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
       .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
+    )
       .replaceAll(
         '"',
         '\\"'
-      )}\`;
+      ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
@@ -1253,10 +1462,40 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   style.textContent = '${inAnimation}';
                                                                                   document.head.appendChild(style);
                                                                                   `;
-  executeScript(script);
+  executeScript(scriptforhtml);
+
+
+  const scriptforcaspar = `
+                                                                                  var bb = document.createElement('div');
+                                                                                  bb.style.perspective='1920px';
+                                                                                  bb.style.transformStyle='preserve-3d';
+                                                                                  document.body.appendChild(bb);
+                                                                                  var aa = document.createElement('div');
+                                                                                  aa.style.position='absolute';
+                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aa.style.zIndex = ${layerNumber};
+                                                                                  aa.innerHTML=\`${canvas
+      .toSVG(
+    )
+      .replaceAll(
+        '"',
+        '\\"'
+      ).replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`;
+                                                                                  bb.appendChild(aa);
+                                                                                  document.body.style.margin='0';
+                                                                                  document.body.style.padding='0';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  var style = document.createElement('style');
+                                                                                  style.textContent = '${inAnimation}';
+                                                                                  document.head.appendChild(style);
+                                                                                  `;
+
   setTimeout(() => {
     endpoint(`call ${window.chNumber}-${layerNumber} "
-     ${script}
+     ${scriptforcaspar}
           "`);
   }, 100);
   setTimeout(() => {
@@ -1264,13 +1503,26 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
   }, 1200);
 };
 
-export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
-  const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
+export const playtoGsapCaspar = (
+  canvas,
+  layerNumber,
+  currentscreenSize,
+  duration = 1,
+  ease = "back.inOut",
+  stagger = 0.03
+) => {
+  const content = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
 
-  const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-  const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+  const contentforHtml = content
+    .replaceAll('"', '\\"')
+    .replaceAll("\\n", "\\\\n");
+  const contentforcasparcg = content
+    .replaceAll('"', '\\"')
+    .replaceAll("\\n", " \\\n");
 
-  endpoint(`play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`
+  );
   const script = `
   var aa = document.createElement('div');
   aa.style.position='absolute';
@@ -1282,7 +1534,7 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
   document.body.appendChild(aa);
   var canvas = new fabric.Canvas('canvas');
   window.canvas=canvas;
-  canvas.loadFromJSON(${contentforcasparcg},()=>{
+  canvas.loadFromJSON(${contentforcasparcg}).then(() => {
       window.sortedElements = Array.from(canvas.getObjects()).sort(function (a, b) { return a.top - b.top; });
       tl.pause();
       tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas.requestRenderAll(); } });
@@ -1291,11 +1543,10 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
               tl.play();
           }, 100);
   });
-  `
+  `;
   setTimeout(() => {
-    endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`)
+    endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`);
   }, 100);
-
 
   const scriptforHtml = `
   document.getElementById('divid_${layerNumber}')?.remove();
@@ -1312,7 +1563,7 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
   var content =\`${contentforHtml}\`;
   tl.pause();
 
-  canvas_${layerNumber}.loadFromJSON(content,()=>{
+  canvas_${layerNumber}.loadFromJSON(content).then(() => {
       const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
       tl.from(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
       setTimeout(() => {
@@ -1320,11 +1571,16 @@ export const playtoGsapCaspar = (canvas, layerNumber, currentscreenSize, duratio
           tl.play();
       }, 100);
   })
-  `
-  executeScript(scriptforHtml)
-}
+  `;
+  executeScript(scriptforHtml);
+};
 
-export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', stagger = 0.03) => {
+export const stopGsapLayer = (
+  layerNumber,
+  duration = 1,
+  ease = "back.inOut",
+  stagger = 0.03
+) => {
   const scriptforhtml = `
   const sortedElements = Array.from(canvas_${layerNumber}.getObjects()).sort(function (a, b) { return a.top - b.top; });
   tl.to(sortedElements, { duration: ${duration}, left:-2100, ease: '${ease}', stagger:${stagger}, onUpdate: () => { canvas_${layerNumber}.requestRenderAll(); } });
@@ -1340,36 +1596,52 @@ export const stopGsapLayer = (layerNumber, duration = 1, ease = 'back.inOut', st
 
   endpoint(`call ${window.chNumber}-${layerNumber} "
   ${scriptforCasparcg}
-  "`)
-
-}
-
+  "`);
+};
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
-    fabric.loadSVGFromString(ss, function (objects) {
-      objects?.forEach(element => {
+    fabric.loadSVGFromString(ss).then((objects) => {
+      objects?.objects?.forEach((element) => {
+        const id = generateUniqueId(element);
+
         canvas.add(element);
-        element.set({ objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, id: element.type + '_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid, });
-        if (element.type === 'text') {
+        element.set({
+          objectCaching: false,
+          shadow: element.shadow ? element.shadow : shadowOptions,
+          id: id,
+          class: id,
+        });
+        if (element.type === "path") {
+          element.on("mousedblclick", () => {
+            window.edit(window.dispatch);
+          });
+        }
+        if (element.type === "text") {
           // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-          element.set({ type: 'textbox' })
+          element.set({ type: "textbox" });
           var textobj = element.toObject();
           var clonedtextobj = JSON.parse(JSON.stringify(textobj));
           var aa = new fabric.Textbox(element.text, clonedtextobj);
-          aa.set({ id: element.id, class: element.class, objectCaching: false, shadow: element.shadow ? element.shadow : shadowOptions, width: 1000 });
-          canvas.remove(element)
+          aa.set({
+            id: element.id,
+            class: element.class,
+            objectCaching: false,
+            shadow: element.shadow ? element.shadow : shadowOptions,
+            width: 1000,
+          });
+          canvas.remove(element);
           canvas.add(aa);
         }
       });
     });
     canvas.requestRenderAll();
   }
-}
+};
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
-    if (object.id.startsWith('ccg')) {
+    if (object.id.startsWith("ccg")) {
       if (object.type === "textbox" || object.type === "image") {
         let gddType = "single-line";
         let default1 = "default";
@@ -1377,8 +1649,7 @@ export const getGdd = (canvas, designerSoftware) => {
         if (object.type === "textbox") {
           if (object.textLines.length > 1) {
             gddType = "multi-line";
-          }
-          else {
+          } else {
             gddType = "single-line";
           }
           default1 = object.text;
@@ -1392,7 +1663,7 @@ export const getGdd = (canvas, designerSoftware) => {
           description: object.type,
           default: default1,
           gddType: gddType,
-          pattern: ""
+          pattern: "",
         };
       }
     }
@@ -1411,30 +1682,34 @@ export const getGdd = (canvas, designerSoftware) => {
     window.gddSchema = JSON.parse(document.querySelector('head > script[name="graphics-data-definition"]').innerHTML);
   });
 </script>
-`
+`;
 };
 
 export const setclipPathWhileImporting = (canvas) => {
+  const id = generateUniqueId({ type: "id" });
+
   var objects = canvas.getObjects();
   objects.forEach((object) => {
     object.set({
-      id: object.id ? object.id : "id_" + fabric.Object.__uid,
-      class: object.class ? object.class : "class_" + fabric.Object.__uid,
+      id: object.id ? object.id : id,
+      class: object.class ? object.class : id,
       shadow: object.shadow ? object.shadow : shadowOptions,
       objectCaching: false,
     });
     if (object.clipPath) {
-      const clipPathObject = objects.find((element) => element.id === object.clipPath.id);
+      const clipPathObject = objects.find(
+        (element) => element.id === object.clipPath.id
+      );
       clipPathObject.set({ absolutePositioned: true });
       object.set({ clipPath: clipPathObject });
     }
   });
   canvas.requestRenderAll();
-}
+};
 
 export const updateText = (canvas, layerNumber) => {
   canvas.getObjects().forEach((element, i) => {
-    if (element.type === 'textbox') {
+    if (element.type === "textbox") {
       endpoint(
         `call ${window.chNumber}-${layerNumber} "canvas.getObjects()[${i}].set({text:\\"${element.text}\\"});canvas.requestRenderAll();"`
       );
@@ -1456,24 +1731,24 @@ export const getModifiedObject = (path1) => {
     // Create a new object with modified keys
     const modifiedObject = {};
     for (const key in myObject) {
-      if (key === '1') {
-        modifiedObject[newi * 10 + 'x'] = myObject[key];
-      } else if (key === '2') {
-        modifiedObject[newi * 10 + 'y'] = myObject[key];
-      } else if (key === '3') {
-        modifiedObject[newi * 10 + 1 + 'x'] = myObject[key];
-      } else if (key === '4') {
-        modifiedObject[newi * 10 + 1 + 'y'] = myObject[key];
-      } else if (key === '5') {
-        modifiedObject[newi * 10 + 2 + 'x'] = myObject[key];
-      } else if (key === '6') {
-        modifiedObject[newi * 10 + 2 + 'y'] = myObject[key];
+      if (key === "1") {
+        modifiedObject[newi * 10 + "x"] = myObject[key];
+      } else if (key === "2") {
+        modifiedObject[newi * 10 + "y"] = myObject[key];
+      } else if (key === "3") {
+        modifiedObject[newi * 10 + 1 + "x"] = myObject[key];
+      } else if (key === "4") {
+        modifiedObject[newi * 10 + 1 + "y"] = myObject[key];
+      } else if (key === "5") {
+        modifiedObject[newi * 10 + 2 + "x"] = myObject[key];
+      } else if (key === "6") {
+        modifiedObject[newi * 10 + 2 + "y"] = myObject[key];
       } else {
         modifiedObject[key] = myObject[key];
       }
     }
 
-    aa['Point' + newi] = modifiedObject;
+    aa["Point" + newi] = modifiedObject;
   });
   return aa;
 };
@@ -1485,7 +1760,7 @@ export const lockUnlock = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 export const lockUnlock1 = (canvas, i, dispatch) => {
   const element = canvas.item(i);
@@ -1499,7 +1774,7 @@ export const lockUnlock1 = (canvas, i, dispatch) => {
   });
   element.selectable = !element.selectable;
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 export const visibleInVisible = (canvas, i, dispatch) => {
   canvas.getObjects().forEach((element, ii) => {
@@ -1508,7 +1783,7 @@ export const visibleInVisible = (canvas, i, dispatch) => {
     }
   });
   canvas.requestRenderAll();
-  dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
+  dispatch({ type: "CHANGE_CANVAS", payload: canvas });
 };
 
 export const saveFile = async (options, data, fileHandle = null) => {
@@ -1518,53 +1793,53 @@ export const saveFile = async (options, data, fileHandle = null) => {
       const writable = await handle.createWritable();
       await writable.write(data);
       await writable.close();
-      console.log('File saved successfully!', handle.name);
+      console.log("File saved successfully!", handle.name);
       return handle; // Return the FileHandle object
     } catch (error) {
-      console.error('Error saving the file:', error);
+      console.error("Error saving the file:", error);
     }
   } else {
-    const element = document.createElement('a');
+    const element = document.createElement("a");
     element.href = URL.createObjectURL(data);
 
     var retVal = prompt(
-      'Enter  file name to save : ',
-      generalFileName() + '_FileName'
+      "Enter  file name to save : ",
+      generalFileName() + "_FileName"
     );
     if (retVal !== null) {
-      element.download = retVal + (options.fileExtension ?? '.txt');
+      element.download = retVal + (options.fileExtension ?? ".txt");
       document.body.appendChild(element); // Required for this to work in FireFox
       element.click();
     }
   }
 };
 export const generalFileName = () => {
-  return new Date().toLocaleTimeString('en-US', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+  return new Date().toLocaleTimeString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
     hour12: false,
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
   });
 };
 
 export const listglobalCompositeOperation = [
-  'source-over',
-  'source-atop',
-  'source-in',
-  'source-out',
-  'destination-over',
-  'destination-atop',
-  'destination-in',
-  'destination-out',
-  'lighter',
-  'copy',
-  'xor',
-  'darker',
-  'multiply',
-  'screen',
+  "source-over",
+  "source-atop",
+  "source-in",
+  "source-out",
+  "destination-over",
+  "destination-atop",
+  "destination-in",
+  "destination-out",
+  "lighter",
+  "copy",
+  "xor",
+  "darker",
+  "multiply",
+  "screen",
 ];
 
 export const moveElement = (
@@ -1576,7 +1851,7 @@ export const moveElement = (
 ) => {
   const updatedkf = [...kf];
   updatedkf.splice(destinationIndex, 0, updatedkf.splice(sourceIndex, 1)[0]);
-  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
 
   const updatedxpositions = [...xpositions];
   updatedxpositions.splice(
@@ -1584,7 +1859,7 @@ export const moveElement = (
     0,
     updatedxpositions.splice(sourceIndex, 1)[0]
   );
-  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
 };
 
 export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
@@ -1596,8 +1871,8 @@ export const deleteItemfromtimeline = (kf, xpositions, dispatch) => {
     updatedkf.splice(index1, 1);
     updatedxpositions.splice(index1, 1);
   });
-  dispatch({ type: 'CHANGE_KF', payload: updatedkf });
-  dispatch({ type: 'CHANGE_XPOSITIONS', payload: updatedxpositions });
+  dispatch({ type: "CHANGE_KF", payload: updatedkf });
+  dispatch({ type: "CHANGE_XPOSITIONS", payload: updatedxpositions });
   window.editor.canvas?.discardActiveObject();
   window.editor.canvas?.requestRenderAll();
 };
@@ -1608,7 +1883,7 @@ export const sendToBack = (canvas, kf, xpositions, dispatch) => {
     const sourceIndex = canvas.getObjects().indexOf(element);
     const destinationIndex = 0;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.sendToBack(element);
+    canvas.sendObjectToBack(element);
   });
   canvas.discardActiveObject();
   canvas.requestRenderAll();
@@ -1619,7 +1894,7 @@ export const bringToFront = (canvas, kf, xpositions, dispatch) => {
     const sourceIndex = canvas.getObjects().indexOf(element);
     const destinationIndex = canvas.getObjects().length - 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.bringToFront(element);
+    canvas.bringObjectToFront(element);
   });
   canvas.discardActiveObject();
   canvas.requestRenderAll();
@@ -1631,7 +1906,7 @@ export const bringForward = (canvas, kf, xpositions, dispatch) => {
   if (sourceIndex !== canvas.getObjects().length - 1) {
     const destinationIndex = sourceIndex + 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.bringForward(element);
+    canvas.bringObjectForward(element);
   }
   canvas.discardActiveObject();
   canvas.requestRenderAll();
@@ -1643,7 +1918,7 @@ export const sendBackward = (canvas, kf, xpositions, dispatch) => {
   if (sourceIndex !== 0) {
     const destinationIndex = sourceIndex - 1;
     moveElement(sourceIndex, destinationIndex, kf, xpositions, dispatch);
-    canvas.sendBackwards(element);
+    canvas.sendObjectBackwards(element);
   }
   canvas.discardActiveObject();
   canvas.requestRenderAll();
@@ -1654,7 +1929,7 @@ export const findElementWithId = (group, id) => {
     const objects = group.getObjects();
     for (let i = 0; i < objects.length; i++) {
       const element = objects[i];
-      if (element.type === 'group') {
+      if (element.type === "group") {
         const result = findElementWithId(element, id);
         if (result) {
           return result;
@@ -1677,14 +1952,14 @@ export const hexToRGB = (hex) => {
 export const rgbaObjectToHex = (rgba) => {
   let r = Math.round(rgba.r * 255)
     .toString(16)
-    .padStart(2, '0');
+    .padStart(2, "0");
   let g = Math.round(rgba.g * 255)
     .toString(16)
-    .padStart(2, '0');
+    .padStart(2, "0");
   let b = Math.round(rgba.b * 255)
     .toString(16)
-    .padStart(2, '0');
-  let hex = '#' + r + g + b;
+    .padStart(2, "0");
+  let hex = "#" + r + g + b;
   return hex;
 };
 
@@ -1702,32 +1977,32 @@ export const checkIdUniqueness = (canvas) => {
   return true;
 };
 export const rgbaCol = (color, opacity) =>
-  'rgba(' +
+  "rgba(" +
   parseInt(color.slice(-6, -4), 16) +
-  ',' +
+  "," +
   parseInt(color.slice(-4, -2), 16) +
-  ',' +
+  "," +
   parseInt(color.slice(-2), 16) +
-  ',' +
+  "," +
   opacity +
-  ')';
+  ")";
 
-export var address1 = 'https://' + window.location.host.split(':')[0] + ':9000';
+export var address1 = "https://" + window.location.host.split(":")[0] + ":9000";
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
   return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}`;
 };
 
-
 export const videoLayers = [1, 2, 3, 10000, 5];
+
 export const templateLayers = {
   imgSequenceLayer1: 10,
   imgSequenceLayer2: 15,
@@ -1760,6 +2035,11 @@ export const templateLayers = {
   gsap: 167,
   data: 170,
 
+  hockeygenerallayer: 500,
+  hockeyscoreLayer: 501,
+  hockeyclockLayer: 502,
+
+  breakingneslayer: 550,
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 
@@ -1787,42 +2067,42 @@ export const stopAllTheatreLayes = () => {
 export const endpoint = (string) => {
   const data = { string: string };
   axios
-    .post(address1 + '/endpoint', data)
+    .post(address1 + "/endpoint", data)
     .then((aa) => { })
     .catch((aa) => {
-      console.log('Error', aa);
+      console.log("Error", aa);
     });
 };
 
 export const htmlAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app/html';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app/html";
   } else {
-    return address1 + '/html';
+    return address1 + "/html";
   }
 };
 
 export const openaiAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app/';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app/";
   } else {
     return address1;
   }
 };
 
 export const socketAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
   } else {
     return address1;
   }
 };
 
 export const streamingAddress = () => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
-    return 'https://octopus-app-gzws3.ondigitalocean.app';
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
   } else {
-    return 'http://' + window.location.host.split(':')[0] + ':8000';
+    return "http://" + window.location.host.split(":")[0] + ":8000";
   }
 };
 export const sendtohtml = (canvas, layerNumber) => {
@@ -1833,7 +2113,7 @@ export const sendtohtml = (canvas, layerNumber) => {
     })
     .then((aa) => { })
     .catch((aa) => {
-      console.log('Error', aa);
+      console.log("Error", aa);
     });
 };
 export const clearHtml = (layerNumber) => {
@@ -1843,58 +2123,56 @@ export const clearHtml = (layerNumber) => {
 };
 
 export const executeScript = (str) => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
+  if (window.location.origin === "https://vimlesh1975.github.io") {
     axios
-      .post('https://octopus-app-gzws3.ondigitalocean.app/executeScript', {
+      .post("https://octopus-app-gzws3.ondigitalocean.app/executeScript", {
         data1: str,
         clientId: window.clientId,
       })
       .then((aa) => { })
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   } else {
     axios
-      .post(address1 + '/executeScript', {
+      .post(address1 + "/executeScript", {
         data1: str,
         clientId: window.clientId,
       })
       .then((aa) => { })
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   }
 };
 
 export const chatScript = (str, clientId) => {
-  if (window.location.origin === 'https://vimlesh1975.github.io') {
+  if (window.location.origin === "https://vimlesh1975.github.io") {
     axios
-      .post('https://octopus-app-gzws3.ondigitalocean.app/chat', {
+      .post("https://octopus-app-gzws3.ondigitalocean.app/chat", {
         data1: str,
         clientId: clientId,
       })
       .then((aa) => { })
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   } else {
     axios
-      .post(address1 + '/chat', {
+      .post(address1 + "/chat", {
         data1: str,
         clientId: clientId,
       })
       .then((aa) => { })
       .catch((aa) => {
-        console.log('Error', aa);
+        console.log("Error", aa);
       });
   }
 };
 
-
-
 export function tempAlert(msg, duration, style) {
-  var el = document.createElement('div');
-  el.setAttribute('style', style);
+  var el = document.createElement("div");
+  el.setAttribute("style", style);
   el.innerHTML = msg;
   setTimeout(function () {
     el.parentNode.removeChild(el);
@@ -1907,31 +2185,26 @@ export const updateGraphics = (canvas, layerNumber) => {
   // canvas.requestRenderAll();
 
   executeScript(
-    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG()}\`:''`
+    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`').replaceAll('$', '\\$')}\`:''`
   );
 
-  endpoint(`call ${window.chNumber}-${layerNumber} "
-    aa.innerHTML='${canvas.toSVG().replaceAll('"', '\\"')}';
-        "`);
-};
+  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`"`);
+}
 
 export const stopGraphics1 = (layerNumber) => {
   endpoint(
     ` call ${window.chNumber}-${layerNumber} "window.sheet.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());" `
   );
   executeScript(
-    `window.sheet_${layerNumber}.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`
+    `window.sheet_${layerNumber}?.sequence.play({ direction: 'reverse' }).then(()=>document.getElementById('divid_${layerNumber}')?.remove());`
   );
 };
 
 export const stopGraphics = (layerNumber) => {
   clearHtml(layerNumber);
-  if (window.animationMethod === 'mix') {
-    endpoint(
-      `mixer ${window.chNumber}-${layerNumber} opacity 0 12`
-    );
-  }
-  else {
+  if (window.animationMethod === "mix") {
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0 12`);
+  } else {
     endpoint(
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 12 ${window.animationMethod}`
     );
@@ -1947,18 +2220,18 @@ export const stopGraphics = (layerNumber) => {
   }, 1500);
 };
 export const options = {
-  currentMode: '',
-  currentColor: '#ffffff',
-  currentFont: 'Arial',
+  currentMode: "",
+  currentColor: "#ffffff",
+  currentFont: "Arial",
   currentFontSize: 45,
-  backgroundColor: '#50037c',
+  backgroundColor: "#50037c",
   // currentWidth: 5,
   group: {},
-  stroke: '#ffffff',
+  stroke: "#ffffff",
   strokeWidth: 1,
 };
 export const shadowOptions = {
-  color: '#000000',
+  color: "#000000",
   blur: 30,
   offsetX: 0,
   offsetY: 0,
@@ -1975,7 +2248,10 @@ export const changeShadowCurrentColor = (e, canvas) => {
 };
 export const changeStrokeCurrentColor = (e, canvas) => {
   options.stroke = e.target.value;
-  canvas.freeDrawingBrush.color = e.target.value;
+  // canvas.freeDrawingBrush.color = e.target.value;
+  fabric.BaseBrush.color = e.target.value;
+  fabric.PencilBrush.color = e.target.value;
+
   canvas.getActiveObjects().forEach((item) => (item.stroke = e.target.value));
   canvas.requestRenderAll();
 };
@@ -1992,17 +2268,20 @@ export const changeBackGroundColor = (e, canvas) => {
   canvas.requestRenderAll();
 };
 
-export const base64EncodeBlob = (blob) => {
+const base64EncodeBlob = (blob) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64data = btoa(reader.result);
-      resolve(base64data);
+      const arrayBuffer = reader.result;
+      const binaryString = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+      const base64String = btoa(binaryString);
+      resolve(base64String);
     };
     reader.onerror = reject;
-    reader.readAsBinaryString(blob);
+    reader.readAsArrayBuffer(blob);
   });
 };
+
 
 export const recallPage = (
   layerNumber,
@@ -2015,13 +2294,13 @@ export const recallPage = (
   const index = canvasList.findIndex((val) => val.pageName === pageName);
   if (index !== -1) {
     const data1 = data;
-    canvas.loadFromJSON(canvasList[index].pageValue, () => {
+    canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
       data1.forEach((data2) => {
         canvas.getObjects().forEach((element) => {
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === 'text') {
+              if (data2.type === "text") {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -2033,7 +2312,7 @@ export const recallPage = (
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === 'image') {
+              } else if (data2.type === "image") {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -2043,21 +2322,21 @@ export const recallPage = (
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === 'image') {
+                  if (element.type === "image") {
                     element.setSrc(data2.value);
-                  } else if (element.type === 'rect') {
+                  } else if (element.type === "rect") {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: 'no-repeat',
+                        repeat: "no-repeat",
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === 'shadow') {
+              } else if (data2.type === "shadow") {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
@@ -2070,7 +2349,7 @@ export const recallPage = (
       sendToCasparcg(layerNumber, canvas, currentscreenSize);
     });
   } else {
-    tempAlert('Pagename not avalaible', 1000);
+    tempAlert("Pagename not avalaible", 1000);
   }
 };
 export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
@@ -2082,25 +2361,39 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
   );
   setTimeout(() => {
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
   }, 250);
-  const script = `
+  const scriptforhtml = `
     var aa = document.createElement('div');
     aa.style.position='absolute';
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
-    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"')}\`;
+    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
     aa.style.zoom=(${currentscreenSize * 100}/${1920})+'%';
     document.body.style.overflow='hidden';
     `;
-  executeScript(script);
+  executeScript(scriptforhtml);
 
+  const scriptforcaspar = `
+    var aa = document.createElement('div');
+    aa.style.position='absolute';
+    aa.setAttribute('id','divid_' + '${layerNumber}');
+    aa.style.zIndex = ${layerNumber};
+    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\\\$')}\`;
+    document.body.appendChild(aa);
+    document.body.style.margin='0';
+    document.body.style.padding='0';
+    aa.style.zoom=(${currentscreenSize * 100}/${1920})+'%';
+    document.body.style.overflow='hidden';
+    `;
   setTimeout(() => {
     endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
+        ${scriptforcaspar}
         "`);
   }, 300);
   setTimeout(() => {
@@ -2118,13 +2411,13 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
   const index = canvasList.findIndex((val) => val.pageName === pageName);
   if (index !== -1) {
     const data1 = data;
-    canvas.loadFromJSON(canvasList[index].pageValue, () => {
+    canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
       data1.forEach((data2) => {
         canvas.getObjects().forEach((element) => {
           element.set({ selectable: false, strokeUniform: false });
           try {
             if (element.id === data2.key) {
-              if (data2.type === 'text') {
+              if (data2.type === "text") {
                 const originalWidth = element.width;
                 element.set({
                   objectCaching: false,
@@ -2136,7 +2429,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                   } while (element.textLines.length > 1);
                   element.set({ scaleX: originalWidth / element.width });
                 }
-              } else if (data2.type === 'image') {
+              } else if (data2.type === "image") {
                 var i = new Image();
                 i.onload = function () {
                   const originalWidth = element.width * element.scaleX;
@@ -2146,21 +2439,21 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                     scaleX: originalWidth / i.width,
                     scaleY: originalHeight / i.height,
                   });
-                  if (element.type === 'image') {
+                  if (element.type === "image") {
                     element.setSrc(data2.value);
-                  } else if (element.type === 'rect') {
+                  } else if (element.type === "rect") {
                     element.set({
                       width: i.width,
                       height: i.height,
                       fill: new fabric.Pattern({
                         source: data2.value,
-                        repeat: 'no-repeat',
+                        repeat: "no-repeat",
                       }),
                     });
                   }
                 };
                 i.src = data2.value;
-              } else if (data2.type === 'shadow') {
+              } else if (data2.type === "shadow") {
                 element.set({ shadow: { ...element.shadow, ...data2.value } });
               } else {
                 element.set({ [data2.type]: data2.value });
@@ -2179,647 +2472,650 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
 };
 
 export const fontLists = [
-  'Madhubala',
-  'Dhurjati',
-  'Aaradhana',
-  'Ajantha',
-  'GowthamiBold',
-  'Suranna',
-  'Gidugu',
-  'Gurajada',
-  'Mallanna',
-  'Mandali',
-  'NATS',
-  'NTR',
-  'Peddana',
-  'Potti Sreeramulu',
-  'Ramabhadra',
-  'Ramaraja',
-  'Sree Krushnadevaraya',
-  'Suranna',
-  'Suravaram',
-  'Syamala Ramana',
-  'TenaliRamakrishna',
-  'Timmana',
-  'AADevAksharReg',
-  'AADevApsBil',
-  'AADevApsReg',
-  'AADevChitralekhaReg',
-  'AADevIndicaReg',
-  'AADevIsfocBil',
-  'AADevIsfocReg',
-  'AADevKrutiReg',
-  'AADevShreeLipiBil',
-  'AADevShreeLipiReg',
-  'AADevSulipiReg',
-  'AADevSushaReg',
-  'AADevWinKeyBil',
-  'AADevWinKeyReg',
-  'AclAksharELight',
-  'Agency FB',
-  'AkrutiDevAbhijit',
-  'AkrutiDevAditi',
-  'AkrutiDevAditya',
-  'AkrutiDevAjit',
-  'AkrutiDevAkanksha',
-  'AkrutiDevAkankshaMedium',
-  'AkrutiDevAkhila',
-  'AkrutiDevAkshardhara',
-  'AkrutiDevAkshardharaExtBold',
-  'AkrutiDevAkshay',
-  'AkrutiDevAnand',
-  'AkrutiDevAnil',
-  'AkrutiDevAnjali',
-  'AkrutiDevArjun',
-  'AkrutiDevAshvin',
-  'AkrutiDevAsmita',
-  'AkrutiDevBela',
-  'AkrutiDevBhagya',
-  'AkrutiDevBharani',
-  'AkrutiDevBharati',
-  'AkrutiDevBhaskar',
-  'AkrutiDevBrahma',
-  'AkrutiDevCactus',
-  'AkrutiDevChakra',
-  'AkrutiDevChakraNormal',
-  'AkrutiDevChampa',
-  'AkrutiDevChandrika',
-  'AkrutiDevCharu',
-  'AkrutiDevDeepa',
-  'AkrutiDevGanesh',
-  'AkrutiDevHansa',
-  'AkrutiDevHarsha',
-  'AkrutiDevHarshaMedium',
-  'AkrutiDevHema',
-  'AkrutiDevIndu',
-  'AkrutiDevIshwar',
-  'AkrutiDevJanhavi',
-  'AkrutiDevKailas',
-  'AkrutiDevKailasMedium',
-  'AkrutiDevKalidas',
-  'AkrutiDevKusum',
-  'AkrutiDevMadhura',
-  'AkrutiDevMalavika',
-  'AkrutiDevMallika',
-  'AkrutiDevMandara',
-  'AkrutiDevMangal',
-  'AkrutiDevManisha',
-  'AkrutiDevManoj',
-  'AkrutiDevManorama',
-  'AkrutiDevMaya',
-  'AkrutiDevMayur',
-  'AkrutiDevMeera',
-  'AkrutiDevMegha',
-  'AkrutiDevMenaka',
-  'AkrutiDevMitra',
-  'AkrutiDevMogara',
-  'AkrutiDevMogaraMedium',
-  'AkrutiDevMouj',
-  'AkrutiDevMoujLight',
-  'AkrutiDevMukund',
-  'AkrutiDevNandi',
-  'AkrutiDevNarmada',
-  'AkrutiDevNartaki',
-  'AkrutiDevNatraj',
-  'AkrutiDevNatrajLight',
-  'AkrutiDevNavaneet',
-  'AkrutiDevNavin',
-  'AkrutiDevNewPriya',
-  'AkrutiDevNewPriyaExpand',
-  'AkrutiDevNewPriyaNormal',
-  'AkrutiDevOmkar',
-  'AkrutiDevParimala',
-  'AkrutiDevPataliputra',
-  'AkrutiDevPayal',
-  'AkrutiDevPooja',
-  'AkrutiDevPrakash',
-  'AkrutiDevPratap',
-  'AkrutiDevPratik',
-  'AkrutiDevPraveen',
-  'AkrutiDevPreeti',
-  'AkrutiDevPreetiLight',
-  'AkrutiDevPrema',
-  'AkrutiDevPriya',
-  'AkrutiDevPriyaExpanded',
-  'AkrutiDevPriyanka',
-  'AkrutiDevPushpa',
-  'AkrutiDevRahul',
-  'AkrutiDevRaksha',
-  'AkrutiDevRakshaExtBold',
-  'AkrutiDevRekha',
-  'AkrutiDevRishi',
-  'AkrutiDevRohini',
-  'AkrutiDevRoshan',
-  'AkrutiDevSavita',
-  'AkrutiDevSeetha',
-  'AkrutiDevShantala',
-  'AkrutiDevShivaji',
-  'AkrutiDevShradda',
-  'AkrutiDevShridhar',
-  'AkrutiDevShridharLight',
-  'AkrutiDevShruti',
-  'AkrutiDevSindhu',
-  'AkrutiDevSita',
-  'AkrutiDevSneha',
-  'AkrutiDevSulekh',
-  'AkrutiDevSunil',
-  'AkrutiDevSushma',
-  'AkrutiDevSwati',
-  'AkrutiDevTilak',
-  'AkrutiDevTriveni',
-  'AkrutiDevUpendra',
-  'AkrutiDevVaishali',
-  'AkrutiDevValmiki',
-  'AkrutiDevVandana',
-  'AkrutiDevVarsha',
-  'AkrutiDevVarun',
-  'AkrutiDevVedik',
-  'AkrutiDevVichitra',
-  'AkrutiDevVidya',
-  'AkrutiDevVijay',
-  'AkrutiDevVinod',
-  'AkrutiDevVivek',
-  'AkrutiDevXPYogini',
-  'AkrutiDevYamuna',
-  'AkrutiDevYogini',
-  'AkrutiOfficeAditi',
-  'AkrutiOfficeAditi01',
-  'AkrutiOfficeAjit',
-  'AkrutiOfficeAjit01',
-  'AkrutiOfficeAkanksha',
-  'AkrutiOfficeAkanksha01',
-  'AkrutiOfficeAkansha',
-  'AkrutiOfficeAkshardhara',
-  'AkrutiOfficeAkshardhara01',
-  'AkrutiOfficeAkshay',
-  'AkrutiOfficeAkshay01',
-  'AkrutiOfficeChakra',
-  'AkrutiOfficeChakra01',
-  'AkrutiOfficeChampa',
-  'AkrutiOfficeChampa01',
-  'AkrutiOfficeDeepa',
-  'AkrutiOfficeDeepa01',
-  'AkrutiOfficeHansa',
-  'AkrutiOfficeHansa01',
-  'AkrutiOfficeHinPriya',
-  'AkrutiOfficeHinPriya01',
-  'AkrutiOfficeManorama',
-  'AkrutiOfficeManorama01',
-  'AkrutiOfficeMogara',
-  'AkrutiOfficeMogara01',
-  'AkrutiOfficeMouj',
-  'AkrutiOfficeMouj01',
-  'AkrutiOfficePriya',
-  'AkrutiOfficePriya01',
-  'AkrutiOfficePriyaExpand',
-  'AkrutiOfficePriyaExpand01',
-  'AkrutiOfficeShruti',
-  'AkrutiOfficeShruti01',
-  'AkrutiOfficeSulekh',
-  'AkrutiOfficeSulekh01',
-  'AkrutiOfficeSwati',
-  'AkrutiOfficeSwati01',
-  'AkrutiOfficeTriveni',
-  'AkrutiOfficeTriveni01',
-  'AkrutiOfficeVijay',
-  'AkrutiOfficeVijay01',
-  'AkrutiOfficeYogini',
-  'AkrutiOfficeYogini-S',
-  'AkrutiOfficeYogini01',
-  'AkrutiOfficeYoginiLight',
-  'AkrutiOfficeYoginiLight01',
-  'Algerian',
-  'Aparajita',
-  'Arial',
-  'Arial Black',
-  'Arial Narrow',
-  'Arial Rounded MT Bold',
-  'Arial Unicode MS',
-  'Bahnschrift',
-  'Bahnschrift Condensed',
-  'Bahnschrift Light',
-  'Bahnschrift Light Condensed',
-  'Bahnschrift SemiBold',
-  'Bahnschrift SemiBold Condensed',
-  'Bahnschrift SemiCondensed',
-  'Bahnschrift SemiLight',
-  'Baskerville Old Face',
-  'Bauhaus 93',
-  'Bell MT',
-  'Berlin Sans FB',
-  'Berlin Sans FB Demi',
-  'Bernard MT Condensed',
-  'Blackadder ITC',
-  'Bodoni MT',
-  'Bodoni MT Black',
-  'Bodoni MT Condensed',
-  'Bodoni MT Poster Compressed',
-  'Book Antiqua',
-  'Bookman Old Style',
-  'Bookshelf Symbol 7',
-  'Bradley Hand ITC',
-  'Britannic Bold',
-  'Broadway',
-  'Brush Script MT',
-  'Calibri',
-  'Calibri Light',
-  'Californian FB',
-  'Calisto MT',
-  'Cambria',
-  'Cambria Math',
-  'Candara',
-  'Candara Light',
-  'Cascadia Code',
-  'Cascadia Code ExtraLight',
-  'Cascadia Code Light',
-  'Cascadia Code SemiBold',
-  'Cascadia Code SemiLight',
-  'Cascadia Mono',
-  'Cascadia Mono ExtraLight',
-  'Cascadia Mono Light',
-  'Cascadia Mono SemiBold',
-  'Cascadia Mono SemiLight',
-  'Castellar',
-  'Centaur',
-  'Century',
-  'Century Gothic',
-  'Century Schoolbook',
-  'Chiller',
-  'Colonna MT',
-  'Comic Sans MS',
-  'Consolas',
-  'Constantia',
-  'Cooper Black',
-  'Copperplate Gothic Bold',
-  'Copperplate Gothic Light',
-  'Corbel',
-  'Corbel Light',
-  'Courier New',
-  'Curlz MT',
-  'DVOT-Bhima',
-  'DVOT-Surekh',
-  'Ebrima',
-  'Edwardian Script ITC',
-  'Ek Mukta',
-  'Elephant',
-  'Engravers MT',
-  'Eras Bold ITC',
-  'Eras Demi ITC',
-  'Eras Light ITC',
-  'Eras Medium ITC',
-  'Felix Titling',
-  'Footlight MT Light',
-  'Forte',
-  'Franklin Gothic Book',
-  'Franklin Gothic Demi',
-  'Franklin Gothic Demi Cond',
-  'Franklin Gothic Heavy',
-  'Franklin Gothic Medium',
-  'Franklin Gothic Medium Cond',
-  'Freestyle Script',
-  'French Script MT',
-  'Gabriola',
-  'Gadugi',
-  'Garamond',
-  'Georgia',
-  'Gigi',
-  'Gill Sans MT',
-  'Gill Sans MT Condensed',
-  'Gill Sans MT Ext Condensed',
-  'Gill Sans Ultra Bold',
-  'Gill Sans Ultra Bold Condensed',
-  'Gloucester MT Extra Condensed',
-  'Goudy Old Style',
-  'Goudy Stout',
-  'Haettenschweiler',
-  'Harlow Solid Italic',
-  'Harrington',
-  'High Tower Text',
-  'HoloLens MDL2 Assets',
-  'Impact',
-  'Imprint MT Shadow',
-  'Informal Roman',
-  'Ink Free',
-  'ISCIIDev',
-  'Javanese Text',
-  'Jokerman',
-  'Juice ITC',
-  'Kokila',
-  'Kristen ITC',
-  'Kunstler Script',
-  'Leelawadee UI',
-  'Leelawadee UI Semilight',
-  'Lucida Bright',
-  'Lucida Calligraphy',
-  'Lucida Console',
-  'Lucida Fax',
-  'Lucida Handwriting',
-  'Lucida Sans',
-  'Lucida Sans Typewriter',
-  'Lucida Sans Unicode',
-  'Magneto',
-  'Maiandra GD',
-  'Malgun Gothic',
-  'Malgun Gothic Semilight',
-  'Mangal',
-  'Marat1',
-  'Marat2',
-  'Marlett',
-  'Matura MT Script Capitals',
-  'Microsoft Himalaya',
-  'Microsoft JhengHei',
-  'Microsoft JhengHei Light',
-  'Microsoft JhengHei UI',
-  'Microsoft JhengHei UI Light',
-  'Microsoft New Tai Lue',
-  'Microsoft PhagsPa',
-  'Microsoft Sans Serif',
-  'Microsoft Tai Le',
-  'Microsoft YaHei',
-  'Microsoft YaHei Light',
-  'Microsoft YaHei UI',
-  'Microsoft YaHei UI Light',
-  'Microsoft Yi Baiti',
-  'MingLiU-ExtB',
-  'MingLiU_HKSCS-ExtB',
-  'Mistral',
-  'Modern No. 20',
-  'Mongolian Baiti',
-  'Monotype Corsiva',
-  'MS Gothic',
-  'MS Mincho',
-  'MS Outlook',
-  'MS PGothic',
-  'MS Reference Sans Serif',
-  'MS Reference Specialty',
-  'MS UI Gothic',
-  'MT Extra',
-  'MV Boli',
-  'Myanmar Text',
-  'Niagara Engraved',
-  'Niagara Solid',
-  'Nirmala UI',
-  'Nirmala UI Semilight',
-  'NSimSun',
-  'OCR A Extended',
-  'Old English Text MT',
-  'Onyx',
-  'Palace Script MT',
-  'Palatino Linotype',
-  'Papyrus',
-  'Parchment',
-  'Perpetua',
-  'Perpetua Titling MT',
-  'Playbill',
-  'PMingLiU-ExtB',
-  'Poor Richard',
-  'Pristina',
-  'Rage Italic',
-  'Ravie',
-  'Rockwell',
-  'Rockwell Condensed',
-  'Rockwell Extra Bold',
-  'Sakal Marathi',
-  'SakalBharati',
-  'Sanskrit Text',
-  'Script MT Bold',
-  'Segoe Fluent Icons',
-  'Segoe MDL2 Assets',
-  'Segoe Print',
-  'Segoe Script',
-  'Segoe UI',
-  'Segoe UI Black',
-  'Segoe UI Emoji',
-  'Segoe UI Historic',
-  'Segoe UI Light',
-  'Segoe UI Semibold',
-  'Segoe UI Semilight',
-  'Segoe UI Symbol',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Display',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small',
-  'Segoe UI Variable Small Light',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text',
-  'Segoe UI Variable Text Light',
-  'Showcard Gothic',
-  'SimSun',
-  'SimSun-ExtB',
-  'Sitka Banner',
-  'Sitka Banner Semibold',
-  'Sitka Display',
-  'Sitka Display Semibold',
-  'Sitka Heading',
-  'Sitka Heading Semibold',
-  'Sitka Small',
-  'Sitka Small Semibold',
-  'Sitka Subheading',
-  'Sitka Subheading Semibold',
-  'Sitka Text',
-  'Sitka Text Semibold',
-  'Snap ITC',
-  'Stencil',
-  'Sylfaen',
-  'Symbol',
-  'Tahoma',
-  'Tempus Sans ITC',
-  'Times New Roman',
-  'Trebuchet MS',
-  'Tw Cen MT',
-  'Tw Cen MT Condensed',
-  'Tw Cen MT Condensed Extra Bold',
-  'Utsaah',
-  'Verdana',
-  'Viner Hand ITC',
-  'Vivaldi',
-  'Vladimir Script',
-  'Webdings',
-  'Wide Latin',
-  'Wingdings',
-  'Wingdings 2',
-  'Wingdings 3',
-  'Yu Gothic',
-  'Yu Gothic Light',
-  'Yu Gothic Medium',
-  'Yu Gothic UI',
-  'Yu Gothic UI Light',
-  'Yu Gothic UI Semibold',
-  'Yu Gothic UI Semilight',
+  "Madhubala",
+  "Dhurjati",
+  "Aaradhana",
+  "Ajantha",
+  "GowthamiBold",
+  "Suranna",
+  "Gidugu",
+  "Gurajada",
+  "Mallanna",
+  "Mandali",
+  "NATS",
+  "NTR",
+  "Peddana",
+  "Potti Sreeramulu",
+  "Ramabhadra",
+  "Ramaraja",
+  "Sree Krushnadevaraya",
+  "Suranna",
+  "Suravaram",
+  "Syamala Ramana",
+  "TenaliRamakrishna",
+  "Timmana",
+  "AADevAksharReg",
+  "AADevApsBil",
+  "AADevApsReg",
+  "AADevChitralekhaReg",
+  "AADevIndicaReg",
+  "AADevIsfocBil",
+  "AADevIsfocReg",
+  "AADevKrutiReg",
+  "AADevShreeLipiBil",
+  "AADevShreeLipiReg",
+  "AADevSulipiReg",
+  "AADevSushaReg",
+  "AADevWinKeyBil",
+  "AADevWinKeyReg",
+  "AclAksharELight",
+  "Agency FB",
+  "AkrutiDevAbhijit",
+  "AkrutiDevAditi",
+  "AkrutiDevAditya",
+  "AkrutiDevAjit",
+  "AkrutiDevAkanksha",
+  "AkrutiDevAkankshaMedium",
+  "AkrutiDevAkhila",
+  "AkrutiDevAkshardhara",
+  "AkrutiDevAkshardharaExtBold",
+  "AkrutiDevAkshay",
+  "AkrutiDevAnand",
+  "AkrutiDevAnil",
+  "AkrutiDevAnjali",
+  "AkrutiDevArjun",
+  "AkrutiDevAshvin",
+  "AkrutiDevAsmita",
+  "AkrutiDevBela",
+  "AkrutiDevBhagya",
+  "AkrutiDevBharani",
+  "AkrutiDevBharati",
+  "AkrutiDevBhaskar",
+  "AkrutiDevBrahma",
+  "AkrutiDevCactus",
+  "AkrutiDevChakra",
+  "AkrutiDevChakraNormal",
+  "AkrutiDevChampa",
+  "AkrutiDevChandrika",
+  "AkrutiDevCharu",
+  "AkrutiDevDeepa",
+  "AkrutiDevGanesh",
+  "AkrutiDevHansa",
+  "AkrutiDevHarsha",
+  "AkrutiDevHarshaMedium",
+  "AkrutiDevHema",
+  "AkrutiDevIndu",
+  "AkrutiDevIshwar",
+  "AkrutiDevJanhavi",
+  "AkrutiDevKailas",
+  "AkrutiDevKailasMedium",
+  "AkrutiDevKalidas",
+  "AkrutiDevKusum",
+  "AkrutiDevMadhura",
+  "AkrutiDevMalavika",
+  "AkrutiDevMallika",
+  "AkrutiDevMandara",
+  "AkrutiDevMangal",
+  "AkrutiDevManisha",
+  "AkrutiDevManoj",
+  "AkrutiDevManorama",
+  "AkrutiDevMaya",
+  "AkrutiDevMayur",
+  "AkrutiDevMeera",
+  "AkrutiDevMegha",
+  "AkrutiDevMenaka",
+  "AkrutiDevMitra",
+  "AkrutiDevMogara",
+  "AkrutiDevMogaraMedium",
+  "AkrutiDevMouj",
+  "AkrutiDevMoujLight",
+  "AkrutiDevMukund",
+  "AkrutiDevNandi",
+  "AkrutiDevNarmada",
+  "AkrutiDevNartaki",
+  "AkrutiDevNatraj",
+  "AkrutiDevNatrajLight",
+  "AkrutiDevNavaneet",
+  "AkrutiDevNavin",
+  "AkrutiDevNewPriya",
+  "AkrutiDevNewPriyaExpand",
+  "AkrutiDevNewPriyaNormal",
+  "AkrutiDevOmkar",
+  "AkrutiDevParimala",
+  "AkrutiDevPataliputra",
+  "AkrutiDevPayal",
+  "AkrutiDevPooja",
+  "AkrutiDevPrakash",
+  "AkrutiDevPratap",
+  "AkrutiDevPratik",
+  "AkrutiDevPraveen",
+  "AkrutiDevPreeti",
+  "AkrutiDevPreetiLight",
+  "AkrutiDevPrema",
+  "AkrutiDevPriya",
+  "AkrutiDevPriyaExpanded",
+  "AkrutiDevPriyanka",
+  "AkrutiDevPushpa",
+  "AkrutiDevRahul",
+  "AkrutiDevRaksha",
+  "AkrutiDevRakshaExtBold",
+  "AkrutiDevRekha",
+  "AkrutiDevRishi",
+  "AkrutiDevRohini",
+  "AkrutiDevRoshan",
+  "AkrutiDevSavita",
+  "AkrutiDevSeetha",
+  "AkrutiDevShantala",
+  "AkrutiDevShivaji",
+  "AkrutiDevShradda",
+  "AkrutiDevShridhar",
+  "AkrutiDevShridharLight",
+  "AkrutiDevShruti",
+  "AkrutiDevSindhu",
+  "AkrutiDevSita",
+  "AkrutiDevSneha",
+  "AkrutiDevSulekh",
+  "AkrutiDevSunil",
+  "AkrutiDevSushma",
+  "AkrutiDevSwati",
+  "AkrutiDevTilak",
+  "AkrutiDevTriveni",
+  "AkrutiDevUpendra",
+  "AkrutiDevVaishali",
+  "AkrutiDevValmiki",
+  "AkrutiDevVandana",
+  "AkrutiDevVarsha",
+  "AkrutiDevVarun",
+  "AkrutiDevVedik",
+  "AkrutiDevVichitra",
+  "AkrutiDevVidya",
+  "AkrutiDevVijay",
+  "AkrutiDevVinod",
+  "AkrutiDevVivek",
+  "AkrutiDevXPYogini",
+  "AkrutiDevYamuna",
+  "AkrutiDevYogini",
+  "AkrutiOfficeAditi",
+  "AkrutiOfficeAditi01",
+  "AkrutiOfficeAjit",
+  "AkrutiOfficeAjit01",
+  "AkrutiOfficeAkanksha",
+  "AkrutiOfficeAkanksha01",
+  "AkrutiOfficeAkansha",
+  "AkrutiOfficeAkshardhara",
+  "AkrutiOfficeAkshardhara01",
+  "AkrutiOfficeAkshay",
+  "AkrutiOfficeAkshay01",
+  "AkrutiOfficeChakra",
+  "AkrutiOfficeChakra01",
+  "AkrutiOfficeChampa",
+  "AkrutiOfficeChampa01",
+  "AkrutiOfficeDeepa",
+  "AkrutiOfficeDeepa01",
+  "AkrutiOfficeHansa",
+  "AkrutiOfficeHansa01",
+  "AkrutiOfficeHinPriya",
+  "AkrutiOfficeHinPriya01",
+  "AkrutiOfficeManorama",
+  "AkrutiOfficeManorama01",
+  "AkrutiOfficeMogara",
+  "AkrutiOfficeMogara01",
+  "AkrutiOfficeMouj",
+  "AkrutiOfficeMouj01",
+  "AkrutiOfficePriya",
+  "AkrutiOfficePriya01",
+  "AkrutiOfficePriyaExpand",
+  "AkrutiOfficePriyaExpand01",
+  "AkrutiOfficeShruti",
+  "AkrutiOfficeShruti01",
+  "AkrutiOfficeSulekh",
+  "AkrutiOfficeSulekh01",
+  "AkrutiOfficeSwati",
+  "AkrutiOfficeSwati01",
+  "AkrutiOfficeTriveni",
+  "AkrutiOfficeTriveni01",
+  "AkrutiOfficeVijay",
+  "AkrutiOfficeVijay01",
+  "AkrutiOfficeYogini",
+  "AkrutiOfficeYogini-S",
+  "AkrutiOfficeYogini01",
+  "AkrutiOfficeYoginiLight",
+  "AkrutiOfficeYoginiLight01",
+  "Algerian",
+  "Aparajita",
+  "Arial",
+  "Arial Black",
+  "Arial Narrow",
+  "Arial Rounded MT Bold",
+  "Arial Unicode MS",
+  "Bahnschrift",
+  "Bahnschrift Condensed",
+  "Bahnschrift Light",
+  "Bahnschrift Light Condensed",
+  "Bahnschrift SemiBold",
+  "Bahnschrift SemiBold Condensed",
+  "Bahnschrift SemiCondensed",
+  "Bahnschrift SemiLight",
+  "Baskerville Old Face",
+  "Bauhaus 93",
+  "Bell MT",
+  "Berlin Sans FB",
+  "Berlin Sans FB Demi",
+  "Bernard MT Condensed",
+  "Blackadder ITC",
+  "Bodoni MT",
+  "Bodoni MT Black",
+  "Bodoni MT Condensed",
+  "Bodoni MT Poster Compressed",
+  "Book Antiqua",
+  "Bookman Old Style",
+  "Bookshelf Symbol 7",
+  "Bradley Hand ITC",
+  "Britannic Bold",
+  "Broadway",
+  "Brush Script MT",
+  "Calibri",
+  "Calibri Light",
+  "Californian FB",
+  "Calisto MT",
+  "Cambria",
+  "Cambria Math",
+  "Candara",
+  "Candara Light",
+  "Cascadia Code",
+  "Cascadia Code ExtraLight",
+  "Cascadia Code Light",
+  "Cascadia Code SemiBold",
+  "Cascadia Code SemiLight",
+  "Cascadia Mono",
+  "Cascadia Mono ExtraLight",
+  "Cascadia Mono Light",
+  "Cascadia Mono SemiBold",
+  "Cascadia Mono SemiLight",
+  "Castellar",
+  "Centaur",
+  "Century",
+  "Century Gothic",
+  "Century Schoolbook",
+  "Chiller",
+  "Colonna MT",
+  "Comic Sans MS",
+  "Consolas",
+  "Constantia",
+  "Cooper Black",
+  "Copperplate Gothic Bold",
+  "Copperplate Gothic Light",
+  "Corbel",
+  "Corbel Light",
+  "Courier New",
+  "Curlz MT",
+  "DVOT-Bhima",
+  "DVOT-Surekh",
+  "Ebrima",
+  "Edwardian Script ITC",
+  "Ek Mukta",
+  "Elephant",
+  "Engravers MT",
+  "Eras Bold ITC",
+  "Eras Demi ITC",
+  "Eras Light ITC",
+  "Eras Medium ITC",
+  "Felix Titling",
+  "Footlight MT Light",
+  "Forte",
+  "Franklin Gothic Book",
+  "Franklin Gothic Demi",
+  "Franklin Gothic Demi Cond",
+  "Franklin Gothic Heavy",
+  "Franklin Gothic Medium",
+  "Franklin Gothic Medium Cond",
+  "Freestyle Script",
+  "French Script MT",
+  "Gabriola",
+  "Gadugi",
+  "Garamond",
+  "Georgia",
+  "Gigi",
+  "Gill Sans MT",
+  "Gill Sans MT Condensed",
+  "Gill Sans MT Ext Condensed",
+  "Gill Sans Ultra Bold",
+  "Gill Sans Ultra Bold Condensed",
+  "Gloucester MT Extra Condensed",
+  "Goudy Old Style",
+  "Goudy Stout",
+  "Haettenschweiler",
+  "Harlow Solid Italic",
+  "Harrington",
+  "High Tower Text",
+  "HoloLens MDL2 Assets",
+  "Impact",
+  "Imprint MT Shadow",
+  "Informal Roman",
+  "Ink Free",
+  "ISCIIDev",
+  "Javanese Text",
+  "Jokerman",
+  "Juice ITC",
+  "Kokila",
+  "Kristen ITC",
+  "Kunstler Script",
+  "Leelawadee UI",
+  "Leelawadee UI Semilight",
+  "Lucida Bright",
+  "Lucida Calligraphy",
+  "Lucida Console",
+  "Lucida Fax",
+  "Lucida Handwriting",
+  "Lucida Sans",
+  "Lucida Sans Typewriter",
+  "Lucida Sans Unicode",
+  "Magneto",
+  "Maiandra GD",
+  "Malgun Gothic",
+  "Malgun Gothic Semilight",
+  "Mangal",
+  "Marat1",
+  "Marat2",
+  "Marlett",
+  "Matura MT Script Capitals",
+  "Microsoft Himalaya",
+  "Microsoft JhengHei",
+  "Microsoft JhengHei Light",
+  "Microsoft JhengHei UI",
+  "Microsoft JhengHei UI Light",
+  "Microsoft New Tai Lue",
+  "Microsoft PhagsPa",
+  "Microsoft Sans Serif",
+  "Microsoft Tai Le",
+  "Microsoft YaHei",
+  "Microsoft YaHei Light",
+  "Microsoft YaHei UI",
+  "Microsoft YaHei UI Light",
+  "Microsoft Yi Baiti",
+  "MingLiU-ExtB",
+  "MingLiU_HKSCS-ExtB",
+  "Mistral",
+  "Modern No. 20",
+  "Mongolian Baiti",
+  "Monotype Corsiva",
+  "MS Gothic",
+  "MS Mincho",
+  "MS Outlook",
+  "MS PGothic",
+  "MS Reference Sans Serif",
+  "MS Reference Specialty",
+  "MS UI Gothic",
+  "MT Extra",
+  "MV Boli",
+  "Myanmar Text",
+  "Niagara Engraved",
+  "Niagara Solid",
+  "Nirmala UI",
+  "Nirmala UI Semilight",
+  "NSimSun",
+  "OCR A Extended",
+  "Old English Text MT",
+  "Onyx",
+  "Palace Script MT",
+  "Palatino Linotype",
+  "Papyrus",
+  "Parchment",
+  "Perpetua",
+  "Perpetua Titling MT",
+  "Playbill",
+  "PMingLiU-ExtB",
+  "Poor Richard",
+  "Pristina",
+  "Rage Italic",
+  "Ravie",
+  "Rockwell",
+  "Rockwell Condensed",
+  "Rockwell Extra Bold",
+  "Sakal Marathi",
+  "SakalBharati",
+  "Sanskrit Text",
+  "Script MT Bold",
+  "Segoe Fluent Icons",
+  "Segoe MDL2 Assets",
+  "Segoe Print",
+  "Segoe Script",
+  "Segoe UI",
+  "Segoe UI Black",
+  "Segoe UI Emoji",
+  "Segoe UI Historic",
+  "Segoe UI Light",
+  "Segoe UI Semibold",
+  "Segoe UI Semilight",
+  "Segoe UI Symbol",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Display",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small",
+  "Segoe UI Variable Small Light",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text",
+  "Segoe UI Variable Text Light",
+  "Showcard Gothic",
+  "SimSun",
+  "SimSun-ExtB",
+  "Sitka Banner",
+  "Sitka Banner Semibold",
+  "Sitka Display",
+  "Sitka Display Semibold",
+  "Sitka Heading",
+  "Sitka Heading Semibold",
+  "Sitka Small",
+  "Sitka Small Semibold",
+  "Sitka Subheading",
+  "Sitka Subheading Semibold",
+  "Sitka Text",
+  "Sitka Text Semibold",
+  "Snap ITC",
+  "Stencil",
+  "Sylfaen",
+  "Symbol",
+  "Tahoma",
+  "Tempus Sans ITC",
+  "Times New Roman",
+  "Trebuchet MS",
+  "Tw Cen MT",
+  "Tw Cen MT Condensed",
+  "Tw Cen MT Condensed Extra Bold",
+  "Utsaah",
+  "Verdana",
+  "Viner Hand ITC",
+  "Vivaldi",
+  "Vladimir Script",
+  "Webdings",
+  "Wide Latin",
+  "Wingdings",
+  "Wingdings 2",
+  "Wingdings 3",
+  "Yu Gothic",
+  "Yu Gothic Light",
+  "Yu Gothic Medium",
+  "Yu Gothic UI",
+  "Yu Gothic UI Light",
+  "Yu Gothic UI Semibold",
+  "Yu Gothic UI Semilight",
 ];
 export const chNumbers = [1, 2, 3, 4];
 export const inAnimationMethods = [
   ...animation.map((val) => val.name),
-  'lefttoright',
-  'mix',
+  "lefttoright",
+  "mix",
 ];
 
-export const animationMethods = [
-  'easenone',
-  'mix'
-];
+export const animationMethods = ["easenone", "mix"];
 export const languages = [
-  'en-US',
-  'hi-IN',
-  'te-IN',
-  'ta-IN',
-  'mr-IN',
-  'gu-IN',
-  'kn-IN',
-  'ml-IN',
-  'pa-Guru-IN',
-  'ur-IN',
-  'ar-SA',
-  'bn-BD',
-  'bn-IN',
-  'cs-CZ',
-  'da-DK',
-  'de-AT',
-  'de-CH',
-  'de-DE',
-  'el-GR',
-  'en-AU',
-  'en-CA',
-  'en-GB',
-  'en-IE',
-  'en-IN',
-  'en-NZ',
-  'en-US',
-  'en-ZA',
-  'es-AR',
-  'es-CL',
-  'es-CO',
-  'es-ES',
-  'es-MX',
-  'es-US',
-  'fi-FI',
-  'fr-BE',
-  'fr-CA',
-  'fr-CH',
-  'fr-FR',
-  'he-IL',
-  'hi-IN',
-  'hu-HU',
-  'id-ID',
-  'it-CH',
-  'it-IT',
-  'jp-JP',
-  'ko-KR',
-  'nl-BE',
-  'nl-NL',
-  'no-NO',
-  'pl-PL',
-  'pt-BR',
-  'pt-PT',
-  'ro-RO',
-  'ru-RU',
-  'sk-SK',
-  'sv-SE',
-  'ta-IN',
-  'ta-LK',
-  'th-TH',
-  'tr-TR',
-  'ur_PK',
-  'zh-CN',
-  'zh-HK',
-  'zh-TW',
-  'bh-IN',
+  "en-US",
+  "hi-IN",
+  "te-IN",
+  "ta-IN",
+  "mr-IN",
+  "gu-IN",
+  "kn-IN",
+  "ml-IN",
+  "pa-Guru-IN",
+  "ur-IN",
+  "ar-SA",
+  "bn-BD",
+  "bn-IN",
+  "cs-CZ",
+  "da-DK",
+  "de-AT",
+  "de-CH",
+  "de-DE",
+  "el-GR",
+  "en-AU",
+  "en-CA",
+  "en-GB",
+  "en-IE",
+  "en-IN",
+  "en-NZ",
+  "en-US",
+  "en-ZA",
+  "es-AR",
+  "es-CL",
+  "es-CO",
+  "es-ES",
+  "es-MX",
+  "es-US",
+  "fi-FI",
+  "fr-BE",
+  "fr-CA",
+  "fr-CH",
+  "fr-FR",
+  "he-IL",
+  "hi-IN",
+  "hu-HU",
+  "id-ID",
+  "it-CH",
+  "it-IT",
+  "jp-JP",
+  "ko-KR",
+  "nl-BE",
+  "nl-NL",
+  "no-NO",
+  "pl-PL",
+  "pt-BR",
+  "pt-PT",
+  "ro-RO",
+  "ru-RU",
+  "sk-SK",
+  "sv-SE",
+  "ta-IN",
+  "ta-LK",
+  "th-TH",
+  "tr-TR",
+  "ur_PK",
+  "zh-CN",
+  "zh-HK",
+  "zh-TW",
+  "bh-IN",
 ];
 export const easeTypes = [
-  'none',
-  'power1.in',
-  'power1.out',
-  'power1.inOut',
-  'power2.in',
-  'power2.out',
-  'power2.inOut',
-  'power3.in',
-  'power3.out',
-  'power3.inOut',
-  'power4.in',
-  'power4.out',
-  'power4.inOut',
-  'linear',
-  'back.in',
-  'back.out',
-  'back.inOut',
-  'bounce.in',
-  'bounce.out',
-  'bounce.inOut',
-  'elastic.in',
-  'elastic.out',
-  'elastic.inOut',
-  'rough',
-  'slow',
-  'stepped',
-  'circ.in',
-  'circ.out',
-  'circ.inOut',
-  'expo.in',
-  'expo.out',
-  'expo.inOut',
-  'sine.in',
-  'sine.out',
-  'sine.inOut',
+  "none",
+  "power1.in",
+  "power1.out",
+  "power1.inOut",
+  "power2.in",
+  "power2.out",
+  "power2.inOut",
+  "power3.in",
+  "power3.out",
+  "power3.inOut",
+  "power4.in",
+  "power4.out",
+  "power4.inOut",
+  "linear",
+  "back.in",
+  "back.out",
+  "back.inOut",
+  "bounce.in",
+  "bounce.out",
+  "bounce.inOut",
+  "elastic.in",
+  "elastic.out",
+  "elastic.inOut",
+  "rough",
+  "slow",
+  "stepped",
+  "circ.in",
+  "circ.out",
+  "circ.inOut",
+  "expo.in",
+  "expo.out",
+  "expo.inOut",
+  "sine.in",
+  "sine.out",
+  "sine.inOut",
 ];
 export const colors = [
-  '#1b648f',
-  '#a14e89',
-  '#af6b1c',
-  '#797362',
-  '#c8d23b',
-  '#7d45b6',
-  '#c8459e',
-  '#45c1a1',
-  '#c45d4b',
-  '#4f7390',
-  '#b95d9d',
-  '#2c907a',
-  '#946757',
-  '#8d3a4a',
-  '#44a764',
-  '#9c6da1',
-  '#4e6a2f',
-  '#8c438f',
-  '#a25e37',
-  '#536b8f',
-  '#a85357',
-  '#5b7e5f',
-  '#c97d91',
-  '#5c5d5d',
-  '#c2623b',
-  '#5e7c8d',
-  '#b94c74',
-  '#9d6e43',
-  '#b84e38',
-  '#7b8d4b',
-  '#c85f4c',
-  '#9a6f8d',
-  '#46685d',
-  '#c3478f',
-  '#7a5d6f',
-  '#c85e9a',
-  '#7a985d',
-  '#b64d38',
-  '#567c8e',
-  '#b64c7a',
-  '#5b7d5f',
-  '#c9496f',
-  '#5e748f',
-  '#c8643b',
-  '#637d5d',
-  '#b34e9d',
-  '#5e6a8d',
-  '#c65d7a',
-  '#9d6f43',
-  '#b34d38',
+  "#1b648f",
+  "#a14e89",
+  "#af6b1c",
+  "#797362",
+  "#c8d23b",
+  "#7d45b6",
+  "#c8459e",
+  "#45c1a1",
+  "#c45d4b",
+  "#4f7390",
+  "#b95d9d",
+  "#2c907a",
+  "#946757",
+  "#8d3a4a",
+  "#44a764",
+  "#9c6da1",
+  "#4e6a2f",
+  "#8c438f",
+  "#a25e37",
+  "#536b8f",
+  "#a85357",
+  "#5b7e5f",
+  "#c97d91",
+  "#5c5d5d",
+  "#c2623b",
+  "#5e7c8d",
+  "#b94c74",
+  "#9d6e43",
+  "#b84e38",
+  "#7b8d4b",
+  "#c85f4c",
+  "#9a6f8d",
+  "#46685d",
+  "#c3478f",
+  "#7a5d6f",
+  "#c85e9a",
+  "#7a985d",
+  "#b64d38",
+  "#567c8e",
+  "#b64c7a",
+  "#5b7d5f",
+  "#c9496f",
+  "#5e748f",
+  "#c8643b",
+  "#637d5d",
+  "#b34e9d",
+  "#5e6a8d",
+  "#c65d7a",
+  "#9d6f43",
+  "#b34d38",
 ];
 
-export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscreenSize, verticalSpeed) => {
+export const startVerticalScroll = (
+  layerNumber,
+  canvas,
+  selectAll,
+  currentscreenSize,
+  verticalSpeed
+) => {
   executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
       document.getElementById('divid_${layerNumber}')?.remove();
       `);
@@ -2827,7 +3123,9 @@ export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscree
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   selectAll(canvas);
   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-  endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+  endpoint(
+    `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+  );
   const script = `
                                                                                   window.aaVertical = document.createElement('div');
                                                                                   aaVertical.style.position='absolute';
@@ -2835,16 +3133,12 @@ export const startVerticalScroll = (layerNumber, canvas, selectAll, currentscree
                                                                                   aaVertical.style.zIndex = ${layerNumber};
                                                                                   aaVertical.innerHTML=\`${canvas
       .toSVG(
-        [
-          "id",
-          "class",
-          "selectable",
-        ]
-      )
+
+    )
       .replaceAll(
         '"',
         '\\"'
-      )}\`;
+      ).replaceAll('`', '\\`')}\`;
                                                                                   document.body.appendChild(aaVertical);
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');

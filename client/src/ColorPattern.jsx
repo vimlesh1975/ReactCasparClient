@@ -28,8 +28,8 @@ const ColorPattern = () => {
         const inAnimation = `@keyframes example {from {height:-50%} to {height:-20%}} @keyframes example2 {to {width:0%}} div {animation: example 0.2s forwards }`
 
         setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-            endpoint(`play ${window.chNumber}-${layerNumber + 1} [HTML] xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber + 1} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
         }, 250);
 
         canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -74,7 +74,7 @@ const ColorPattern = () => {
             aa.setAttribute('id','divid_' + '${layerNumber + 1}');
             aa.style.zIndex = ${layerNumber + 1};
             aa.style.position='absolute';
-            aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
+            aa.innerHTML=\`'${(canvas.toSVG()).replaceAll('"', '\\"')}'\`;
             bb.appendChild(aa);
             document.body.style.margin='0';
             document.body.style.padding='0';

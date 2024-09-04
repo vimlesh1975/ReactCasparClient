@@ -1,0 +1,11 @@
+
+https://fabricjs.github.io/docs/upgrading/upgrading-to-fabric-60/
+
+
+fabric.disableStyleCopyPaste = true; in drawingcontroller now not supported
+fabric.util.string.graphemeSplit = split from webanimator
+
+import "fabric-history"; from drawingcontroller
+ 
+
+redo

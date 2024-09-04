@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { v4 as uuidv4 } from 'uuid';
 // import { isEqual } from "lodash";
-import { createRect, shadowOptions, options, generalFileName, saveFile } from './common'
+import { generateUniqueId, createRect, shadowOptions, options, generalFileName, saveFile } from './common'
 
 const Scroll = () => {
+    const [ltr, setLtr] = useState(false);
 
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [delemeter, setDelemeter] = useState('⏺️')
@@ -117,18 +118,29 @@ const Scroll = () => {
     };
 
     const setAsScrollText = () => {
+
         var aa = '';
         var left1 = 0;
-        playerList1.forEach(element => {
+        var arr;
+        if (ltr) {
+            arr = [...playerList1].slice().reverse();
+        }
+        else {
+            arr = [...playerList1]
+        }
+
+        arr.forEach(element => {
+            const id = generateUniqueId({ type: "id" });
             if (element.use1 === true) {
                 aa = ` ${delemeter} ` + element.data1;
                 const text = new fabric.IText(aa, {
-                    id: 'id_' + fabric.Object.__uid,
-                    class: 'class_' + fabric.Object.__uid,
+                    id: id,
+                    class: id,
                     left: left1,
                     ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                 });
-                canvas.add(text).setActiveObject(text);;
+                canvas.add(text);
+                canvas.setActiveObject(text);
                 canvas.renderAll();
                 left1 += canvas.getActiveObjects()[0].width;
             };
@@ -140,36 +152,46 @@ const Scroll = () => {
 
     const setAsScrollText2 = () => {
         var left1 = 0;
-        playerList1.forEach((element, i) => {
+
+        var arr;
+        if (ltr) {
+            arr = [...playerList1].slice().reverse();
+        }
+        else {
+            arr = [...playerList1]
+        }
+
+        arr.forEach((element, i) => {
             if (element.use1 === true) {
-                fabric.Image.fromURL(playerList1[i].delemeterLogo, myImg => {
+                fabric.FabricImage.fromURL(element.delemeterLogo).then(myImg => {
                     if (myImg == null) {
                         alert("Error!");
                     } else {
-                        // myImg.scaleToWidth(25);
-                        // myImg.setAttribute('crossorigin', 'anonymous')
                         myImg.scaleToHeight(45);
-                        canvas.add(myImg).setActiveObject(myImg);
+                        canvas.add(myImg);
+                        canvas.setActiveObject(myImg);
+                        const id = generateUniqueId({ type: "id" });
+
                         myImg.set({
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: id,
+                            class: id,
                             left: left1,
                             top: scrollTextProperties.top,
                             crossOrigin: 'anonymous'
                         })
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
                         left1 += 25 + canvas.getActiveObjects()[0].width * canvas.getActiveObjects()[0].scaleX;
+                        const id2 = generateUniqueId({ type: "id" });
 
                         const text = new fabric.IText(element.data1, {
-                            id: 'id_' + fabric.Object.__uid,
-                            class: 'class_' + fabric.Object.__uid,
+                            id: id2,
+                            class: id2,
                             left: left1,
                             ...scrollTextProperties, shadow: { ...shadowOptions, blur: 0 },
                         });
-                        canvas.add(text).setActiveObject(text);
+                        canvas.add(text);
+                        canvas.setActiveObject(text);
                         canvas.renderAll();
-                        // left1 += 15 + canvas.getActiveObjects()[0].width;
                         left1 += 25 + canvas.getActiveObjects()[0].width;
                     }
                 });
@@ -234,6 +256,14 @@ const Scroll = () => {
                                 <td><button onClick={setAsScrollText}>Set as Scroll Text with delemeter</button></td>
                                 <td>Delemeter for scroll text</td>
                                 <td><input style={{ width: 40, textAlign: 'center' }} onChange={(e) => setDelemeter(e.target.value)} value={delemeter} /></td>
+                                <td title='Check for Left to Right scroll'>
+                                    <span> LTR:</span>{" "}
+                                    <input
+                                        type="checkbox"
+                                        checked={ltr}
+                                        onChange={() => setLtr((val) => !val)}
+                                    />
+                                </td>
                             </tr>
                         </tbody>
                     </table>

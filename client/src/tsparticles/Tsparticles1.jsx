@@ -3,7 +3,7 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { endpoint, templateLayers, executeScript, colors } from '../common'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 
 const Tsparticles1 = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -31,7 +31,8 @@ const Tsparticles1 = () => {
   }, []);
 
   const particlesLoaded = useCallback(async (container) => {
-    await console.log(container);
+    await container
+    // await console.log(container);
     // window.tsParticles = container._engine;
   }, []);
 

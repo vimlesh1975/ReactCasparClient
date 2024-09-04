@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Rnd } from 'react-rnd';
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { deSelectAll, selectAll } from './common';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscTrash, VscMove, VscLock, VscUnlock, VscEye, VscEyeClosed } from "react-icons/vsc";
 import { endpoint, templateLayers, executeScript, deleteItemfromtimeline, moveElement, lockUnlock, visibleInVisible } from './common'
 
-const timelineWidth = 1024;
+// const timelineWidth = 1024;
+const timelineWidth = 420;
 const controlWidth = 305;
 var cf = 0;
 var aa;
@@ -299,16 +300,6 @@ const TimeLine1 = () => {
 
         })
       }, (position(i).delay + position(i).initialToFinalDuration));
-
-
-      // setTimeout(() => {
-      //   element.animate({ left: position(i).outx, top: position(i).outy, scaleX: position(i).outScaleX, scaleY: position(i).outScaleY, angle: position(i).outAngle, opacity: 0 }, {
-      //     onChange: canvas.renderAll.bind(canvas),
-      //     duration: position(i).outDuration,
-      //     easing: fabric.util.ease.linear,
-      //     abort:()=> aborted
-      //   });
-      // }, (position(i).delay + position(i).initialToFinalDuration + position(i).stayDuration));
     });
 
   }
@@ -817,7 +808,7 @@ const TimeLine1 = () => {
       const sourceIndex = result.source?.index;
       const destinationIndex = result.destination?.index;
 
-      canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
+      canvas.moveObjectTo(canvas.getObjects()[sourceIndex], destinationIndex);
       canvas.requestRenderAll();
       dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
 
@@ -835,7 +826,7 @@ const TimeLine1 = () => {
       canvas.setActiveObject(aa);
       canvas.requestRenderAll();
     } catch (error) {
-      //dummy
+      console.log(error)
     }
   }
 
@@ -880,7 +871,7 @@ const TimeLine1 = () => {
           {Array.from(Array(parseInt(6 * (timelineScale))).keys()).map((val, i) => { return (<div key={i} style={{ backgroundColor: '', border: 'none', boxSizing: 'border-box', fontSize: 8, fontWeight: 'bold', minWidth: (100 / timelineScale) }}>{(i < 10) ? '0' + i : i}</div>) })}
         </div>
       </>}
-      <div style={{ height: 240, maxHeight: 240, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
+      <div style={{ height: 340, maxHeight: 340, width: timelineWidth, overflowY: 'scroll', overflowX: 'hidden' }}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable-1" type="PERSON">
             {(provided, snapshot) => (
@@ -898,14 +889,14 @@ const TimeLine1 = () => {
                           {...provided.draggableProps}
                           style={{
                             ...provided.draggableProps.style,
-                            backgroundColor: snapshot.isDragging ? 'red' : (activeLayers.includes(element)) ? 'darkgray' : 'white',
+                            backgroundColor: snapshot.isDragging ? 'red' : '',
                             boxShadow: snapshot.isDragging ? "0 0 .4rem #666" : "none",
                             verticalAlign: 'top',
                             marginTop: 1
                           }}
                         >
-                          <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'grey' : 'darkgray', }}>
-                            <div style={{ minWidth: 60 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
+                          <div key1={i} style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'gray' : 'darkgray', }} onClick={(e) => { selectObject(e) }}>
+                            <div style={{ minWidth: 70 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
                             <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
                             <div> <button title='Lock selected' onClick={() => {
                               canvas.discardActiveObject();
@@ -917,18 +908,18 @@ const TimeLine1 = () => {
                               selectObject(e);
                               deleteItemfromtimeline(kf, xpositions, dispatch);
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 105 }} onChange={e => {
                               element.id = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
                             }
-                            } value={(element.id)} /></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 60 }} onChange={e => {
+                            } value={element.id} /></div>
+                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 105 }} onChange={e => {
                               element.class = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
                             }
-                            } value={(element.class)} /></div>
+                            } value={element.class} /></div>
                             {showTimeline && <div onClick={(e) => {
                               ss({ x: e.screenX - controlWidth });
                               canvas.setActiveObject(canvas.item(i));

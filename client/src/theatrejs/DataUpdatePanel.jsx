@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { templateLayers, theatreLayers, endpoint, executeScript } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { changePropOfObject, getPropOfObject } from './WebAnimator'

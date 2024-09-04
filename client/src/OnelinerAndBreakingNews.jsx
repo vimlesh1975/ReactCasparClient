@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { endpoint, stopGraphics, updateGraphics, executeScript, generalFileName, saveFile } from './common'
+import { templateLayers, endpoint, stopGraphics, updateGraphics, executeScript, generalFileName, saveFile } from './common'
 import { iniBreakingNews } from './hockeyData'
 import { useSelector } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
@@ -15,7 +15,6 @@ const OnelinerAndBreakingNews = () => {
     const [playerList1, setPlayerList1] = useState(iniBreakingNews);
     const [aaa, setAaa] = useState(0);
     const [currentRow, setCurrentRow] = useState(0);
-    const [generalayer, setGeneralayer] = useState(550);
     const [variableName, setVariableName] = useState('f0');
     const [pageName, setPageName] = useState('BreakingNews');
     const [timeInterval, setTimeInterval] = useState(4000);
@@ -37,7 +36,7 @@ const OnelinerAndBreakingNews = () => {
                 continue;
             }
             setCurrentRow(iii);
-            recallPage(generalayer, pageName, [{ key: variableName, value: playerList1[iii].data1, type: 'text' }]);
+            recallPage(templateLayers.breakingneslayer, pageName, [{ key: variableName, value: playerList1[iii].data1, type: 'text' }]);
             if (iii < playerList1.length - 1) {
 
                 iii += 1;
@@ -59,7 +58,7 @@ const OnelinerAndBreakingNews = () => {
             setAaa(0);
         }
         // eslint-disable-next-line
-    }, [generalayer, pageName, variableName, playerList1, timeInterval])
+    }, [templateLayers.breakingneslayer, pageName, variableName, playerList1, timeInterval])
 
     // const updateplayerList1 = () => {
     //     setPlayerList1([...newplayerList1])
@@ -78,7 +77,7 @@ const OnelinerAndBreakingNews = () => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             const data1 = data;
-            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                 data1.forEach(data2 => {
                     window.automationeditor[0].canvas.getObjects().forEach((element) => {
                         element.set({ selectable: false, strokeUniform: false });
@@ -261,7 +260,7 @@ const OnelinerAndBreakingNews = () => {
                 <table border='1'>
                     <tbody >
                         <tr><td>Page Name</td><td><input size="10" type='text' value={pageName} onChange={e => setPageName(e.target.value)} /></td><td>Variable Name</td><td><input size="2" type='text' value={variableName} onChange={e => setVariableName(e.target.value)} /></td>
-                            <td>Layer No.</td><td><input size="2" type='text' value={generalayer} onChange={e => setGeneralayer(e.target.value)} /></td><td>Time Interval</td><td><input size="2" type='text' value={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
+                            <td>Layer No.</td><td>{templateLayers.breakingneslayer}</td><td>Time Interval</td><td><input size="2" type='text' value={timeInterval} onChange={e => setTimeInterval(e.target.value)} /></td>
                             <td><label>Start Breaking News: <input type='checkbox' onChange={(e) => {
                                 if (e.target.checked === true) {
                                     startBreakingNews();
@@ -272,7 +271,7 @@ const OnelinerAndBreakingNews = () => {
                                 }
                             }
                             } /></label></td>
-                            <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button></td>
+                            <td><button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(templateLayers.breakingneslayer); }} ><FaStop /></button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -347,8 +346,8 @@ const OnelinerAndBreakingNews = () => {
 
                                                                 }
                                                                 } /></td>
-                                                                <td><button onClick={() => recallPage(generalayer, pageName, [{ key: variableName, value: val.data1, type: 'text' }])}> <FaPlay /></button></td>
-                                                                <td><button onClick={() => updateData(generalayer, [{ key: variableName, value: val.data1, type: 'text' }])}> Update</button></td>
+                                                                <td><button onClick={() => recallPage(templateLayers.breakingneslayer, pageName, [{ key: variableName, value: val.data1, type: 'text' }])}> <FaPlay /></button></td>
+                                                                <td><button onClick={() => updateData(templateLayers.breakingneslayer, [{ key: variableName, value: val.data1, type: 'text' }])}> Update</button></td>
                                                                 <td><button key1={i} onClick={(e) => deletePage(e)}>-</button></td>
                                                                 <td><button key1={i} onClick={(e) => addPage(e)}>+</button></td>
                                                             </tr>

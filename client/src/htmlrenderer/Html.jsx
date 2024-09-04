@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { socketAddress, getModifiedObject } from '../common'
 import socketIOClient from "socket.io-client";
 import Tsparticles2 from '../tsparticles/Tsparticles2';
+import * as fabric from 'fabric'
+
+window.fabric = fabric;
 
 window.getModifiedObject = getModifiedObject;
 window.hexToRGB = hex => {
@@ -168,7 +171,7 @@ const Html = () => {
 
     const executeScript = (str) => {
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-            // console.log(str);
+            console.log(str);
         }
         // str = str.replace(/CRLF/g, '\\n'); // removed on 27.06.2024 for bad control charater some image sequence
         // str = str.replace(/CRLF/g, '\\\\n');

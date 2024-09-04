@@ -8,7 +8,7 @@ import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex, saveFile } from './common'
 import { animation } from './animation.js'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 
 
 var currentFile = 'new';
@@ -182,7 +182,7 @@ const SavePannel = () => {
         dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
-        canvas.loadFromJSON(json, function () {
+        canvas.loadFromJSON(json).then(() => {
             const aa = canvas.getObjects();
             aa.forEach(element => {
                 try {

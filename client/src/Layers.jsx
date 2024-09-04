@@ -88,7 +88,7 @@ const Layers = () => {
 
     const onDragEnd = (result) => {
         if (result.destination != null) {
-            canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
+            canvas.moveObjectTo(canvas.getObjects()[result.source?.index], result.destination?.index);
             canvas.requestRenderAll();
             dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 

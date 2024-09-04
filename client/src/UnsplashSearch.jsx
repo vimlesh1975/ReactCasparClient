@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { fabric } from 'fabric';
-import { shadowOptions } from './common'
+import * as fabric from 'fabric'
+import { generateUniqueId, shadowOptions } from './common'
 
 const UnsplashSearch = ({ canvas }) => {
   const [photos, setPhotos] = useState([]);
@@ -18,7 +18,6 @@ const UnsplashSearch = ({ canvas }) => {
           page: page,
         },
       });
-      console.log(response)
 
       setPhotos([...response.data.results, ...photos]);
     } catch (error) {
@@ -29,22 +28,25 @@ const UnsplashSearch = ({ canvas }) => {
   };
 
   const handleImageClick = (photo) => {
+    const id = generateUniqueId({ type: "image" });
+
     if (canvas) {
       const img = new Image();
       img.src = `${photo.urls.regular}`;
       img.crossOrigin = 'Anonymous'; // Enable cross-origin image loading
       img.onload = () => {
         const base64Data = getBase64Image(img);
-        new fabric.Image.fromURL(base64Data, (fabricImg) => {
+        fabric.FabricImage.fromURL(base64Data).then(fabricImg => {
           fabricImg.set({
             left: 50,
             top: 50,
             src: base64Data,
             objectCaching: false,
             shadow: shadowOptions,
-            id: fabricImg.type + '_' + fabric.Object.__uid, class: 'class_' + fabric.Object.__uid,
+            id: id, class: id,
           });
-          canvas.add(fabricImg).setActiveObject(fabricImg);
+          canvas.add(fabricImg);
+          canvas.setActiveObject(fabricImg);
           canvas.renderAll();
         });
       };

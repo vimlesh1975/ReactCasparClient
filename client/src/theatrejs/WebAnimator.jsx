@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback } from 'react'
 import studio from '@theatre/studio'
 import { getProject, types, val, onChange } from '@theatre/core'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric'
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 
-import { _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
+import { setPrimitivePropAsSequenced, generateUniqueNumber, _clipboard, copy, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, createTriangle, createCircle, createRect, createRandomeStrip, addImage, moveSelected, Direction, createTextBox, generateUniqueId, getGdd, stopGraphics1, updateText, getModifiedObject, findElementWithId, endpoint, templateLayers, shadowOptions, executeScript, hexToRGB, rgbaObjectToHex, screenSizes, buildDate, chNumbers, generalFileName, saveFile } from '../common'
 
 import { VscPrimitiveSquare, VscCircleFilled, VscTriangleUp } from "react-icons/vsc";
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
@@ -22,26 +22,15 @@ import TheatreImageSequence from './TheatreImageSequence';
 import { edit } from '../PathModifier'
 import HtmlOutput from '../HtmlOutput'
 import { Rnd } from 'react-rnd';
-
-import split from 'graphemesplit'
-
 import * as d from '@theatre/dataverse'
 
 
-fabric.util.string.graphemeSplit = split
+// import split from 'graphemesplit'
+// fabric.util.string.graphemeSplit.prototype = split
+
+
 
 const loopcount = 1;
-// var _clipboard;
-// const copy = (canvas) => {
-//     canvas?.getActiveObject()?.clone(
-//         (cloned) => {
-//             _clipboard = cloned;
-//         },
-//         ["id", "class", "selectable"]
-//     );
-// };
-
-
 
 const setclipPathWhileImportingWebAnimator = (canvas) => {
     var objects = canvas.getObjects();
@@ -503,10 +492,14 @@ const WebAnimator = () => {
                 }
             };
 
-            fabric.util.addListener(document.body, 'keydown', handleKeyDown);
+            // fabric.util.addListener(document.body, 'keydown', handleKeyDown);
+            document.body.addEventListener('keydown', handleKeyDown);
+
 
             return () => {
-                fabric.util.removeListener(document.body, 'keydown', handleKeyDown);
+                // fabric.util.removeListener(document.body, 'keydown', handleKeyDown);
+                document.body.removeEventListener('keydown', handleKeyDown);
+
             };
         }
         // eslint-disable-next-line 
@@ -588,19 +581,15 @@ const WebAnimator = () => {
 
         const sendToBack = canvas => {
             canvas.getActiveObjects().forEach(element => {
-                canvas.sendToBack(element);
+                canvas.sendObjectToBack(element);
             });
-            // canvas.discardActiveObject();
-            // canvas.requestRenderAll();
             reloadPage();
         }
 
         const bringToFront = canvas => {
             canvas.getActiveObjects().forEach(element => {
-                canvas.bringToFront(element);
+                canvas.bringObjectToFront(element);
             });
-            // canvas.discardActiveObject();
-            // canvas.requestRenderAll();
             reloadPage();
         }
 
@@ -688,49 +677,46 @@ const WebAnimator = () => {
         // async function delayPromise() {
         //     return new Promise(resolve => setTimeout(resolve, 2000));
         // }
-        const paste = (canvas) => {
-            try {
-                _clipboard?.clone(
-                    (clonedObj) => {
-                        canvas?.discardActiveObject();
-                        clonedObj.set({
-                            evented: true,
-                            objectCaching: false,
-                            class: "class_" + fabric.Object.__uid,
-                        });
-                        if (clonedObj.type === "activeSelection") {
-                            // active selection needs a reference to the canvas.
-                            clonedObj.canvas = canvas;
-                            clonedObj.forEachObject((obj, i) => {
-                                obj.set({
-                                    evented: true,
-                                    objectCaching: false,
-                                    class: "class_" + (fabric.Object.__uid + i),
-                                });
-                                canvas?.add(obj);
-                                canvas?.setActiveObject(obj);
-                                generateTheatreIDforCopiedElement(obj.type + "_" + fabric.Object.__uid, i);
-                            });
-                        } else {
-                            const idAlreadyExists = findElementWithId(canvas, idofElement);
 
-                            canvas?.add(clonedObj);
-                            canvas?.setActiveObject(clonedObj);
-                            if (idAlreadyExists) {
-                                generateTheatreIDforCopiedElement(clonedObj.type + "_" + fabric.Object.__uid);
-                            }
-                            else {
-                                generateTheatreIDforCopiedElement(idofElement);
-                            }
+        const paste = async (canvas) => {
+            if (_clipboard) {
+                let left = 0;
+                let top = 0;
+                try {
+                    const objects = await fabric.util.enlivenObjects([_clipboard]);
+                    let aa = [];
+                    const objectType = _clipboard.type;
+                    if (objectType === "ActiveSelection") {
+                        aa = objects[0]._objects;
+                    } else {
+                        aa = objects;
+                    }
+                    aa.forEach((object, i) => {
+                        left += 100;
+                        top += 100;
+                        var id = generateUniqueId({ type: object.type.toLowerCase() });
+                        while (findElementWithId(canvas, id)) {
+                            id = generateUniqueId({ type: object.type.toLowerCase() });
                         }
-                        canvas?.setActiveObject(clonedObj); // this is important
-                    },
 
-                    ["id", "class", "selectable"]
-                );
-
-            } catch (error) {
-                console.log(error)
+                        object.set({
+                            left: left,
+                            top: top,
+                            id: id,
+                            class: id,
+                            evented: true,
+                        });
+                        canvas.add(object);
+                        canvas?.setActiveObject(object);
+                        generateTheatreIDforCopiedElement(id, i);
+                        canvas?.discardActiveObject();
+                        canvas.requestRenderAll();
+                    });
+                } catch (error) {
+                    console.error("Error during paste operation:", error);
+                }
+            } else {
+                console.log("Clipboard is empty, nothing to paste");
             }
         };
 
@@ -864,6 +850,19 @@ const WebAnimator = () => {
                         <li onClick={appendDatafromLocalStorage}>Append Data from LocalStorage <VscTriangleUp /></li>
 
                     </ul></li>
+                    <li>setPrimitivePropAsSequenced<ul>
+                        <li onClick={() => {
+                            // const tracks = Object.keys(getObjectbyId(studio.selection[0].address.objectKey).value);
+                            // setPrimitivePropAsSequenced(tracks)
+                        }}>All</li>
+                        {getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value && (Object.keys(getObjectbyId(studio?.selection?.[0]?.address?.objectKey)?.value))?.map(((val1, index) => {
+                            return <li key={index} onClick={() => {
+                                const obj = getObjectbyId(studio?.selection?.[0]?.address?.objectKey);
+                                setPrimitivePropAsSequenced(obj, obj.props[val1]);
+                            }
+                            }>{val1}</li>
+                        }))}
+                    </ul></li>
                     <li>Edit<ul >
                         <li onClick={() => copy(canvas)}>Copy</li>
                         <li onClick={() => {
@@ -878,11 +877,9 @@ const WebAnimator = () => {
                                         if (canvas.getActiveObjects().length > 0) {
                                             const clipPath = canvas.getActiveObjects()[0];
                                             clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
-                                            canvas.sendToBack(clipPath);
-                                            // sendToBack(canvas);
+                                            canvas.sendObjectToBack(clipPath);
                                             element.set("clipPath", clipPath);
                                             reloadPage();
-
                                         }
                                     }}>{element.type}-{element.id}</li>
                                 )
@@ -972,7 +969,7 @@ const WebAnimator = () => {
     }
 
     const initialiseCore = (jsonContent, importing = false) => {
-        canvas.loadFromJSON(jsonContent, () => {
+        canvas.loadFromJSON(jsonContent).then((object) => {
             setclipPathWhileImportingWebAnimator(canvas);
             canvas.getObjects().forEach((element, i) => {
                 if ((element.fill === null)) {
@@ -1316,7 +1313,7 @@ const WebAnimator = () => {
                 }
             }
         };
-        canvas_${layerNumber}.loadFromJSON(content,()=>{
+        canvas_${layerNumber}.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('_' + layerNumber)}
 
             const { core } = __TheatreJS_StudioBundle._studio;
@@ -1329,7 +1326,7 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
-            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${'project' + generateUniqueNumber()}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
 
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
@@ -1587,7 +1584,7 @@ const WebAnimator = () => {
                 }
             }
         };
-        canvas.loadFromJSON((content),()=>{
+        canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
             const { core } = __TheatreJS_StudioBundle._studio;
         
@@ -1600,7 +1597,7 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
 
-            window.project = core.getProject('${'project' + fabric.Object.__uid++}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${'project' + generateUniqueNumber()}', {state:${(state1.replaceAll('"', "'")).replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
 
             core.onChange(sheet.sequence.pointer.position, (position) => {
@@ -2123,11 +2120,9 @@ const WebAnimator = () => {
         window.studio=studio;
         const project = core.getProject('${projectId}', {state:${JSON.stringify(studio.createContentOfSaveFile(projectId))}});
         sheet = project.sheet('Sheet 1')
-        canvas.loadFromJSON(content, ()=> {
+        canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
-            canvas.forEachObject((obj)=>{
-                originalCanvas.push(fabric.util.object.clone(obj,true));
-            });
+        originalCanvas=[...canvas._objects];
             ${xx4}
             ${xx5}
         })
@@ -2166,18 +2161,16 @@ const WebAnimator = () => {
                  const aa =findElementWithId(canvas,idCaspar);
                  if (aa){
                     const element = aa;
-                    if (element.type === 'image') {
-                       fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar]), img => {
-                           img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                           img.cloneAsImage(img1 => {
-                               element.setSrc(img1.getSrc(), () => {
+                   if (element.type === 'image') {
+                       fabric.Image.fromURL( escapeHtml(dataCaspar[idCaspar])).then((img) => {
+                           img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) });
+                               element.setSrc(img.cloneAsImage().getSrc()).then( () => {
                                    element.set({ visible: true });
                                     setTimeout(() => {
                                    changePropOfObject(idCaspar, 'scaleX',getPropOfObject(idCaspar, 'scaleX')+0.00001)  ;
                                   }, 10);
                                    canvas.requestRenderAll();
                                })
-                           })
                        })
                    }
                     else {
@@ -2293,16 +2286,14 @@ const WebAnimator = () => {
             const aa = findElementWithId(canvas,str1);
             if (aa){
                 const element = aa;
-                fabric.Image.fromURL(str2, img => {
+                fabric.Image.fromURL(str2).then(img => {
                     img.set({ scaleX: element.width / img.width, scaleY: (element.height / img.height) })
-                    img.cloneAsImage(img1 => {
-                        element.setSrc(img1.getSrc(), () => {
-                            element.set({ visible: true });
-                            setTimeout(() => {
-                               changePropOfObject(str1, 'scaleX',getPropOfObject(str1, 'scaleX')+0.00001)  ;
+                   element.setSrc(img.cloneAsImage().getSrc()).then( () => {
+                        element.set({ visible: true });
+                                setTimeout(() => {
+                                   changePropOfObject(idCaspar, 'scaleX',getPropOfObject(idCaspar, 'scaleX')+0.00001)  ;
                                 }, 10);
-                            canvas.requestRenderAll();
-                        })
+                        canvas.requestRenderAll();
                     })
                 })
             }
@@ -2575,7 +2566,7 @@ const WebAnimator = () => {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
 
-        setIdofElement('id_' + fabric.Object.__uid++);
+        setIdofElement(generateUniqueId({ type: 'id' }));
 
         if ((element.fill === null)) {
             element.set({ fill: '#555252' })
@@ -2715,12 +2706,12 @@ const WebAnimator = () => {
         if (element.type === 'path') {
             element.on('mousedblclick', () => edit(dispatch), false)
         }
-        setIdofElement('id_' + (fabric.Object.__uid + 10));
+        setIdofElement(generateUniqueId({ type: "id" }));
         const i = arrObject.length;
         var indexOfSelectedElement;
         var elementBeingCopied;
-        if (_clipboard._objects) {
-            elementBeingCopied = _clipboard._objects[multiSelectedIndex];
+        if (_clipboard.objects) {
+            elementBeingCopied = _clipboard.objects[multiSelectedIndex];
         }
         else {
             elementBeingCopied = _clipboard;

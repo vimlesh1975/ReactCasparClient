@@ -1,12 +1,10 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
-import { fabric } from "fabric";
-import {
-
-} from "./DrawingController";
+import * as fabric from 'fabric';
 
 import {
+  saveCanvasState,
   Uploaddropedfile,
   createTextBoxforDragedText,
 } from "./common";
@@ -51,10 +49,7 @@ export const mousedownandmousemoveevent = (canvas) => {
 
 
 function handleDrop(e, canvas) {
-  e.preventDefault();
-  console.log(e);
   if (e.dataTransfer.getData("Text")) {
-    // console.log(e.dataTransfer.getData("Text"));
     createTextBoxforDragedText(
       canvas,
       e.dataTransfer.getData("Text"),
@@ -66,12 +61,12 @@ function handleDrop(e, canvas) {
     [...e.dataTransfer.items].forEach((item, i) => {
       if (item.kind === "file") {
         const file = item.getAsFile();
-        Uploaddropedfile(file, canvas, e.offsetX, e.offsetY);
+        Uploaddropedfile(file, canvas, e.offsetX + i * 250, e.offsetY + i * 250);
       }
     });
   } else {
     [...e.dataTransfer.files].forEach((file, i) => {
-      console.log(file);
+      console.log(i, file);
     });
   }
 }
@@ -98,7 +93,10 @@ const Drawing = ({ canvasOutput }) => {
     canvas.on({
       "selection:updated": window.getvalues,
       "selection:created": window.getvalues,
-      "object:modified": window.getvalues,
+      "object:modified": function () {
+        window.getvalues();
+        saveCanvasState(canvas);
+      },
       // 'object:moving': window.getvalues,
       "object:scaling": window.getvalues,
       "object:rotating": window.getvalues,
@@ -143,7 +141,7 @@ const Drawing = ({ canvasOutput }) => {
                 svg.splice(
                   1,
                   0,
-                  `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}" lines=${this.textLines.length}></extraproperty>\n`
+                  `<extraproperty textAlign="${this.textAlign}" width="${this.width}" originalFontSize="${this.fontSize}" lines='${this.textLines.length}'></extraproperty>\n`
                 );
               }
               if (this.class) {
@@ -190,17 +188,20 @@ const Drawing = ({ canvasOutput }) => {
   }, [showId]);
 
   useEffect(() => {
-    setTimeout(() => {
-      window.editor.canvas.extraProps = ["id", "selectable", "class"];
-      fabric.SHARED_ATTRIBUTES.push("class");
+    const initCanvas = () => {
+      const { canvas } = window.editor;
+      canvas.extraProps = ["id", "selectable", "class"];
       extendproperty();
+      setZoomAndPan(canvas);
+      canvas.preserveObjectStacking = true;
+      xyz(canvas);
+      ddd(canvas);
+    };
 
-      setZoomAndPan(window.editor.canvas);
-      window.editor.canvas.preserveObjectStacking = true;
-      xyz(window.editor.canvas);
-      ddd(window.editor.canvas);
-    }, 3000);
+    const timeoutId = setTimeout(initCanvas, 3000);
+
     return () => {
+      clearTimeout(timeoutId); // Clear timeout if component unmounts before timeout ends
       cancelZoomAndPan(window.editor.canvas);
       removeExtendproperty();
     };
@@ -209,8 +210,8 @@ const Drawing = ({ canvasOutput }) => {
 
   useEffect(() => {
     dispatch({ type: "CHANGE_CANVAS", payload: editor?.canvas });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor]);
+    // eslint-disable-next-line
+  }, [editor?.canvas._objects.length, editor?.canvas.getActiveObjects()]);
 
   const ddd = (canvas) => {
     canvas.on("mouse:over", (e) => {
@@ -238,7 +239,21 @@ const Drawing = ({ canvasOutput }) => {
         });
       }
     });
-    canvas.on("drop", (e) => handleDrop(e.e, canvas), false);
+    // canvas.on("drop", (e) => handleDrop(e.e, canvas), false);
+    // Add event listeners to the canvas element
+    canvas.getElement().parentNode.addEventListener('dragover', (e) => {
+      e.preventDefault(); // Prevent default behavior to allow drop
+      // e.dataTransfer.dropEffect = 'copy'; // Show a copy cursor
+      // console.log(e)
+    });
+
+    canvas.getElement().parentNode.addEventListener('drop', (e) => {
+      e.preventDefault(); // Prevent default browser behavior
+      handleDrop(e, canvas);
+      // Process the drop event here
+      // For example, handle files or other data
+    });
+
   };
 
   return (

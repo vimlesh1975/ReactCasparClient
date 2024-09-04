@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { fabric } from "fabric";
+import * as fabric from 'fabric';
 import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript, templateLayers } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
@@ -57,7 +57,7 @@ const CustomClient = () => {
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
             const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                 data1.forEach(data2 => {
                     canvas.getObjects().forEach((element) => {
                         try {
@@ -154,7 +154,7 @@ const CustomClient = () => {
         if (index !== -1) {
             // dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: index })
             const data1 = data;
-            canvas.loadFromJSON(canvasList[index].pageValue, () => {
+            canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                 data1.forEach(data2 => {
                     canvas.getObjects().forEach((element) => {
                         // element.set({ selectable: false, strokeUniform: false });
@@ -241,7 +241,7 @@ const CustomClient = () => {
                     <span>PageName</span> <select ref={refPageName} onChange={e => {
                         setPageName(canvasList[e.target.selectedIndex].pageName);
                         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: e.target.selectedIndex });
-                        window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue, () => {
+                        window.editor.canvas.loadFromJSON(canvasList[e.target.selectedIndex].pageValue).then(() => {
                             const aa = window.editor.canvas.getObjects();
                             aa.forEach(element => {
                                 try {
@@ -389,7 +389,7 @@ const CustomClient = () => {
 
                                         const index = canvasList.findIndex(val1 => val1.pageName === val.pageName);
                                         if (index !== -1) {
-                                            window.editor.canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                                            window.editor.canvas.loadFromJSON(canvasList[index].pageValue).then(() => {
                                                 const aa = window.editor.canvas.getObjects();
                                                 aa.forEach(element => {
                                                     try {

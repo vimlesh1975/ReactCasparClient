@@ -1,6 +1,6 @@
 import useContextMenu from "./useContextMenu";
 
-import { copy, paste, redo, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import { copy, paste, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
 
 import {
   VscPrimitiveSquare,
@@ -10,7 +10,7 @@ import {
   VscLock,
   VscUnlock,
 } from "react-icons/vsc";
-import { AiOutlineRedo, AiOutlineUndo } from "react-icons/ai";
+import { AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -67,12 +67,12 @@ const ContextMenu = ({ canvas }) => {
             </li>
             <li>Set As Mask to
               <ul>
-                {canvas.getObjects().map((element) => {
-                  return ((canvas.getActiveObjects()[0] !== element) && <li key={element.id} onClick={() => {
+                {canvas.getObjects().map((element, i) => {
+                  return ((canvas.getActiveObjects()[0] !== element) && <li key={i} onClick={() => {
                     if (canvas.getActiveObjects().length > 0) {
                       const clipPath = canvas.getActiveObjects()[0]
                       clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
-                      canvas.sendToBack(clipPath);
+                      canvas.sendObjectToBack(clipPath);
                       element.set({ clipPath: clipPath });
                       canvas.requestRenderAll();
                     }
@@ -98,7 +98,7 @@ const ContextMenu = ({ canvas }) => {
                 </li>
               </ul>
             </li>
-            <li onClick={startPath}>Start Path</li>
+            <li onClick={() => startPath(canvas)}>Start Path</li>
             <li onClick={window.closePath}>Close Path</li>
             <li onClick={window.edit}>Edit Path</li>
             <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring To Front</li>
@@ -164,9 +164,7 @@ const ContextMenu = ({ canvas }) => {
             <li>
               Edit
               <ul>
-                <li onClick={() => redo(canvas)}>
-                  Redo <AiOutlineRedo />
-                </li>
+
                 <li onClick={() => undo(canvas)}>
                   Undo <AiOutlineUndo />
                 </li>

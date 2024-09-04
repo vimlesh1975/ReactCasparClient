@@ -1,20 +1,46 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
-import { fabric } from "fabric";
+import * as fabric from "fabric";
+import { generateUniqueId } from "./common";
 import {
-  resizeTextWidth, deleteAll, lock, undo, unlockAll, redo, swapFaceandStrokeColors, sameSizeIMG, sameWidth, sameWidthIMG, sameHeightIMG,
-  txtBold, textItalic, textUnderline, textLineThrough,
-  createVLine, putatCenter, selectedatCenter,
-  moveSelected, selectedatCenterH,
-  options, selectedatCenterV,
-  shadowOptions, alignAllRight, alignAllButtom, alignAllLeft, alignAllTop,
+  resizeTextWidth,
+  deleteAll,
+  lock,
+  undo,
+  unlockAll,
+  swapFaceandStrokeColors,
+  sameSizeIMG,
+  sameWidth,
+  sameWidthIMG,
+  sameHeightIMG,
+  txtBold,
+  textItalic,
+  textUnderline,
+  textLineThrough,
+  createVLine,
+  putatCenter,
+  selectedatCenter,
+  moveSelected,
+  selectedatCenterH,
+  options,
+  selectedatCenterV,
+  shadowOptions,
+  alignAllRight,
+  alignAllButtom,
+  alignAllLeft,
+  alignAllTop,
   changeCurrentColor,
   changeBackGroundColor,
   changeStrokeCurrentColor,
   changeShadowCurrentColor,
-  setasClipPath, cliptoPath,
-  selectAll, deSelectAll,
-  copy, paste, makeHorizontalEquidistant, makeVerticalEquidistant,
+  setasClipPath,
+  cliptoPath,
+  selectAll,
+  deSelectAll,
+  copy,
+  paste,
+  makeHorizontalEquidistant,
+  makeVerticalEquidistant,
   createTriangle,
   createHLine,
   createCircle,
@@ -25,7 +51,9 @@ import {
   createTextBox,
   addUpTimer,
   addClock,
-  Direction, rgbaCol, listglobalCompositeOperation,
+  Direction,
+  rgbaCol,
+  listglobalCompositeOperation,
   getGdd,
   endpoint,
   fontLists,
@@ -36,10 +64,18 @@ import {
   executeScript,
   checkIdUniqueness,
   rgbaObjectToHex,
-  sendToBack, bringToFront, bringForward, sendBackward, deleteItemfromtimeline, saveFile, generalFileName, address1, setclipPathWhileImporting
+  sendToBack,
+  bringToFront,
+  bringForward,
+  sendBackward,
+  deleteItemfromtimeline,
+  saveFile,
+  generalFileName,
+  address1,
+  setclipPathWhileImporting,
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
-import "fabric-history";
+// import "fabric-history";
 import {
   VscPrimitiveSquare,
   VscCircleFilled,
@@ -70,32 +106,25 @@ import Layers2 from "./Layers2";
 import CasparcgTools from "./CasparcgTools";
 
 import GsapPlayer from "./GsapPlayer";
-import VerticalScrollPlayer from './VerticalScrollPlayer'
+import VerticalScrollPlayer from "./VerticalScrollPlayer";
+
 
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
 
-fabric.Object.prototype.noScaleCache = false;
-fabric.Object.prototype.cornerSize = 18;
-fabric.disableStyleCopyPaste = true;
+fabric.FabricObject.prototype.noScaleCache = false;
+// fabric.FabricObject.prototype.cornerSize = 18;
+// fabric.disableStyleCopyPaste = true;
 
-
-const ErasedGroup = fabric.util.createClass(fabric.Group, {
-  original: null,
-  ErasedPath: null,
-  initialize: function (original, ErasedPath, options, isAlreadyGrouped) {
+class ErasedGroup extends fabric.Group {
+  constructor(original, ErasedPath, options, isAlreadyGrouped) {
+    super([original, ErasedPath], options, isAlreadyGrouped);
     this.original = original;
     this.ErasedPath = ErasedPath;
-    this.callSuper(
-      "initialize",
-      [this.original, this.ErasedPath],
-      options,
-      isAlreadyGrouped
-    );
-  },
+  }
 
-  _calcBounds: function (onlyWidthHeight) {
+  _calcBounds(onlyWidthHeight) {
     const aX = [],
       aY = [],
       props = ["tr", "br", "bl", "tl"],
@@ -104,74 +133,143 @@ const ErasedGroup = fabric.util.createClass(fabric.Group, {
 
     let o = this.original;
     o.setCoords(ignoreZoom);
+
     for (let j = 0; j < jLen; j++) {
-      var prop = props[j];
+      const prop = props[j];
       aX.push(o.oCoords[prop].x);
       aY.push(o.oCoords[prop].y);
     }
 
     this._getBounds(aX, aY, onlyWidthHeight);
-  },
-});
-const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+  }
+}
+
+// const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
+//   /**
+//    * On mouseup after drawing the path on contextTop canvas
+//    * we use the points captured to create an new fabric path object
+//    * and add it to the fabric canvas.
+//    */
+//   _finalizeAndAddPath: function () {
+//     var ctx = this.canvas.contextTop;
+//     ctx.closePath();
+//     if (this.decimate) {
+//       this._points = this.decimatePoints(this._points, this.decimate);
+//     }
+//     var pathData = this.convertPointsToSVGPath(this._points).join("");
+//     if (pathData === "M 0 0 Q 0 0 0 0 L 0 0") {
+//       // do not create 0 width/height paths, as they are
+//       // rendered inconsistently across browsers
+//       // Firefox 4, for example, renders a dot,
+//       // whereas Chrome 10 renders nothing
+//       this.canvas.requestRenderAll();
+//       return;
+//     }
+
+//     // use globalCompositeOperation to 'fake' Eraser
+//     var path = this.createPath(pathData);
+//     path.globalCompositeOperation = "destination-out";
+//     path.selectable = false;
+//     path.evented = false;
+//     path.absolutePositioned = true;
+
+//     // grab all the objects that intersects with the path
+//     const objects = this.canvas.getObjects().filter((obj) => {
+//       // if (obj instanceof fabric.Textbox) return false;
+//       // if (obj instanceof fabric.IText) return false;
+//       if (obj instanceof fabric.Rect && obj.id === "rectwithimg") {
+//         return false;
+//       }
+//       if (!obj.intersectsWithObject(path)) return false;
+//       return true;
+//     });
+
+//     if (objects.length > 0) {
+//       // merge those objects into a group
+//       const mergedGroup = new fabric.Group(objects);
+//       const newPath = new ErasedGroup(mergedGroup, path);
+//       const left = newPath.left;
+//       const top = newPath.top;
+//       // convert it into a dataURL, then back to a fabric image
+//       const newData = newPath.toDataURL({
+//         withoutTransform: true,
+//       });
+//       fabric.Image.fromURL(newData, (fabricImage) => {
+//         fabricImage.set({
+//           id: "ccg_" + fabric.Object.__uid,
+//           class: "class_" + fabric.Object.__uid,
+//           left: left,
+//           top: top,
+//           shadow: { ...shadowOptions, blur: 0 },
+//         });
+//         // remove the old objects then add the new image
+//         this.canvas.remove(...objects);
+//         this.canvas.add(fabricImage);
+//       });
+//     }
+
+//     this.canvas.clearContext(this.canvas.contextTop);
+//     this.canvas.renderAll();
+//     this._resetShadow();
+//   },
+// });
+
+class EraserBrush extends fabric.PencilBrush {
   /**
    * On mouseup after drawing the path on contextTop canvas
-   * we use the points captured to create an new fabric path object
+   * we use the points captured to create a new fabric path object
    * and add it to the fabric canvas.
    */
-  _finalizeAndAddPath: function () {
-    var ctx = this.canvas.contextTop;
+  _finalizeAndAddPath() {
+    const ctx = this.canvas.contextTop;
     ctx.closePath();
+
     if (this.decimate) {
       this._points = this.decimatePoints(this._points, this.decimate);
     }
-    var pathData = this.convertPointsToSVGPath(this._points).join("");
+
+    const pathData = this.convertPointsToSVGPath(this._points).join("");
     if (pathData === "M 0 0 Q 0 0 0 0 L 0 0") {
-      // do not create 0 width/height paths, as they are
-      // rendered inconsistently across browsers
-      // Firefox 4, for example, renders a dot,
-      // whereas Chrome 10 renders nothing
       this.canvas.requestRenderAll();
       return;
     }
 
-    // use globalCompositeOperation to 'fake' Eraser
-    var path = this.createPath(pathData);
+    // Use globalCompositeOperation to 'fake' Eraser
+    const path = this.createPath(pathData);
     path.globalCompositeOperation = "destination-out";
     path.selectable = false;
     path.evented = false;
     path.absolutePositioned = true;
 
-    // grab all the objects that intersects with the path
+    // Grab all the objects that intersect with the path
     const objects = this.canvas.getObjects().filter((obj) => {
-      // if (obj instanceof fabric.Textbox) return false;
-      // if (obj instanceof fabric.IText) return false;
       if (obj instanceof fabric.Rect && obj.id === "rectwithimg") {
         return false;
       }
-      if (!obj.intersectsWithObject(path)) return false;
-      return true;
+      return obj.intersectsWithObject(path);
     });
 
     if (objects.length > 0) {
-      // merge those objects into a group
+      // Merge those objects into a group
       const mergedGroup = new fabric.Group(objects);
       const newPath = new ErasedGroup(mergedGroup, path);
-      const left = newPath.left;
-      const top = newPath.top;
-      // convert it into a dataURL, then back to a fabric image
+      const { left, top } = newPath;
+
+      // Convert it into a dataURL, then back to a fabric image
       const newData = newPath.toDataURL({
         withoutTransform: true,
       });
-      fabric.Image.fromURL(newData, (fabricImage) => {
+      const id = generateUniqueId({ type: "image" });
+      fabric.FabricImage.fromURL(newData).then(fabricImage => {
         fabricImage.set({
-          id: "ccg_" + fabric.Object.__uid,
-          class: "class_" + fabric.Object.__uid,
+          id: id,
+          class: id,
           left: left,
           top: top,
           shadow: { ...shadowOptions, blur: 0 },
         });
-        // remove the old objects then add the new image
+
+        // Remove the old objects, then add the new image
         this.canvas.remove(...objects);
         this.canvas.add(fabricImage);
       });
@@ -180,13 +278,12 @@ const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
     this.canvas.clearContext(this.canvas.contextTop);
     this.canvas.renderAll();
     this._resetShadow();
-  },
-});
+  }
+}
 
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
-
 
   window.clientId = clientId;
 
@@ -288,83 +385,80 @@ const DrawingController = () => {
   const kf = useSelector((state) => state.kfReducer.kf);
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
 
+  const handleKeyDown = useCallback(
+    (event) => {
+      const { key, keyCode, ctrlKey, altKey } = event;
+      const activeObjects = window.editor.canvas?.getActiveObjects();
+      if (document.activeElement === window.editor.canvas.wrapperEl) {
+        switch (keyCode) {
+          case 37: // Left arrow key
+            moveSelected(Direction.LEFT);
+            break;
+          case 38: // Up arrow key
+            moveSelected(Direction.UP);
+            break;
+          case 39: // Right arrow key
+            moveSelected(Direction.RIGHT);
+            break;
+          case 40: // Down arrow key
+            moveSelected(Direction.DOWN);
+            break;
+          default:
+            break;
+        }
 
-  const handleKeyDown = useCallback((event) => {
-
-    const { key, keyCode, ctrlKey, altKey } = event;
-    const activeObjects = window.editor.canvas?.getActiveObjects();
-    if (document.activeElement === window.editor.canvas.wrapperEl) {
-      switch (keyCode) {
-        case 37: // Left arrow key
-          moveSelected(Direction.LEFT);
-          break;
-        case 38: // Up arrow key
-          moveSelected(Direction.UP);
-          break;
-        case 39: // Right arrow key
-          moveSelected(Direction.RIGHT);
-          break;
-        case 40: // Down arrow key
-          moveSelected(Direction.DOWN);
-          break;
-        default:
-          break;
-      }
-
-      if (key === 'Delete') {
-        activeObjects.forEach((item) => {
-          if (!(item.type === 'textbox' && item.isEditing)) {
-            deleteItemfromtimeline(kf, xpositions, dispatch);
-          }
-        });
-      } else if (ctrlKey) {
-        if (key.toLowerCase() === 'c') {
-          const item = activeObjects[0];
-          if (!(item?.type === 'textbox' && item?.isEditing)) {
-            copy(window.editor.canvas);
-          }
-        } else if (key.toLowerCase() === 'v') {
-          const item = activeObjects[0];
-          if (!(item?.type === 'textbox' && item?.isEditing)) {
-            paste(window.editor.canvas);
-          }
-        } else if (key.toLowerCase() === 'z') {
-          window.editor.canvas && undo(window.editor.canvas);
-        } else if (key.toLowerCase() === 'r') {
-          event.preventDefault();
-          window.editor.canvas && redo(window.editor.canvas);
-        } else if (key.toLowerCase() === 'a') {
-          event.preventDefault();
-          selectAll(window.editor.canvas);
-        } else if (key === 'Enter') {
-          previewHtml(window.editor.canvas);
-        } else if (altKey) {
-          window.editor.canvas.getObjects().forEach((item) => {
-            item.set('centeredScaling', true);
+        if (key === "Delete") {
+          activeObjects.forEach((item) => {
+            if (!(item.type === "textbox" && item.isEditing)) {
+              deleteItemfromtimeline(kf, xpositions, dispatch);
+            }
           });
+        } else if (ctrlKey) {
+          if (key.toLowerCase() === "c") {
+            const item = activeObjects[0];
+            if (!(item?.type === "textbox" && item?.isEditing)) {
+              copy(window.editor.canvas);
+            }
+          } else if (key.toLowerCase() === "v") {
+            const item = activeObjects[0];
+            if (!(item?.type === "textbox" && item?.isEditing)) {
+              paste(window.editor.canvas);
+            }
+          } else if (key.toLowerCase() === "z") {
+            window.editor.canvas && undo(window.editor.canvas);
+
+          } else if (key.toLowerCase() === "a") {
+            event.preventDefault();
+            selectAll(window.editor.canvas);
+          } else if (key === "Enter") {
+            previewHtml(window.editor.canvas);
+          } else if (altKey) {
+            window.editor.canvas.getObjects().forEach((item) => {
+              item.set("centeredScaling", true);
+            });
+          }
         }
       }
-    }
-
-  }, [kf, xpositions, dispatch]);
+    },
+    [kf, xpositions, dispatch]
+  );
 
   const handleKeyUp = useCallback((event) => {
     const { altKey } = event;
     if (altKey) {
       window.editor.canvas.getObjects().forEach((item) => {
-        item.set('centeredScaling', false);
+        item.set("centeredScaling", false);
       });
       window.editor.canvas.renderAll();
     }
   }, []);
 
   useEffect(() => {
-    document.body.addEventListener('keydown', handleKeyDown);
-    document.body.addEventListener('keyup', handleKeyUp);
+    document.body.addEventListener("keydown", handleKeyDown);
+    document.body.addEventListener("keyup", handleKeyUp);
     return () => {
-      document.body.removeEventListener('keydown', handleKeyDown);
-      document.body.removeEventListener('keyup', handleKeyUp);
-
+      document.body.removeEventListener("keydown", handleKeyDown);
+      document.body.removeEventListener("keyup", handleKeyUp);
     };
   }, [handleKeyDown, handleKeyUp]);
 
@@ -416,7 +510,9 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${layerNumber} "
@@ -490,7 +586,9 @@ const DrawingController = () => {
       `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
     );
     setTimeout(() => {
-      endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+      endpoint(
+        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+      );
     }, 250);
     const script = `
         window.aaGameTimer2 = document.createElement('div');
@@ -666,7 +764,7 @@ const DrawingController = () => {
       canvas.isDrawingMode = false;
       canvas.getObjects().forEach((item) => {
         if (!item.id) {
-          const id = fabric.Object.__uid++;
+          const id = generateUniqueId({ type: "id" });
           item.set({
             objectCaching: false,
             id: "id_" + id,
@@ -678,6 +776,19 @@ const DrawingController = () => {
     } else {
       canvas.isDrawingMode = true;
     }
+    fabric.BaseBrush.width = options.strokeWidth;
+    fabric.PencilBrush.width = options.strokeWidth;
+    fabric.SprayBrush.width = options.strokeWidth;
+    EraserBrush.width = options.strokeWidth;
+
+
+    fabric.BaseBrush.color = options.stroke;
+    fabric.PencilBrush.color = options.stroke;
+    fabric.SprayBrush.color = options.stroke;
+    EraserBrush.color = options.stroke;
+
+
+
 
     if (mode === "Pencil") {
       canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -710,7 +821,9 @@ const DrawingController = () => {
     setCurrentglobalCompositeOperation(e.target.value);
     canvas
       .getActiveObjects()
-      .forEach((item) => item.set({ globalCompositeOperation: e.target.value, strokeWidth: 0 }));
+      .forEach((item) =>
+        item.set({ globalCompositeOperation: e.target.value, strokeWidth: 0 })
+      );
     canvas.requestRenderAll();
   };
 
@@ -734,9 +847,9 @@ const DrawingController = () => {
       .toSVG(["id", "class", "selectable"])
       .replaceAll('"', "'");
     const content = fileReader.result;
-    canvas.loadFromJSON(content, () => {
+    canvas.loadFromJSON(content).then(() => {
       setclipPathWhileImporting(canvas);
-    })
+    });
     importSvgCode(preCanvas);
   };
   const importSvgCode = (ss) => {
@@ -828,7 +941,11 @@ const DrawingController = () => {
   const onstrokeSizeChange = (e) => {
     options.strokeWidth = parseInt(e.target.value);
     setStrokeWidth(parseInt(e.target.value));
-    canvas.freeDrawingBrush.width = parseInt(e.target.value);
+    // canvas.freeDrawingBrush.width = parseInt(e.target.value);
+    fabric.BaseBrush.width = parseInt(e.target.value);
+    fabric.PencilBrush.width = parseInt(e.target.value);
+    fabric.SprayBrush.width = parseInt(e.target.value);
+    EraserBrush.width = parseInt(e.target.value);
     canvas
       .getActiveObjects()
       .forEach((item) => (item.strokeWidth = parseInt(e.target.value)));
@@ -898,7 +1015,6 @@ const DrawingController = () => {
     canvas.requestRenderAll();
   };
 
-
   const onHorizontalSpeedChange = (e) => {
     setHorizontalSpeed(e.target.value);
     localStorage.setItem("RCC_horizontalSpeed", e.target.value);
@@ -917,32 +1033,39 @@ const DrawingController = () => {
   };
   const exportSVG = (canvas) => {
     const options = {
-      fileExtension: '.svg',
+      fileExtension: ".svg",
       suggestedName: generalFileName(),
-      types: [{
-        description: 'svg file',
-        accept: { 'image/svg+xml': ['.svg'], }
-      }],
+      types: [
+        {
+          description: "svg file",
+          accept: { "image/svg+xml": [".svg"] },
+        },
+      ],
     };
-    const data = new Blob([canvas.toSVG(["id", "class", "selectable"])], { type: "text/xml" });
-    saveFile(options, data)
+    const data = new Blob([canvas.toSVG(["id", "class", "selectable"])], {
+      type: "text/xml",
+    });
+    saveFile(options, data);
   };
 
   const exportJSON = (canvas) => {
     const options = {
-      fileExtension: '.json',
+      fileExtension: ".json",
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'JSON Files',
+          description: "JSON Files",
           accept: {
-            'application/json': ['.json'],
+            "application/json": [".json"],
           },
         },
       ],
     };
-    const data = new Blob([JSON.stringify(canvas.toJSON(["id", "class", "selectable"]))], { type: "text/xml" });
-    saveFile(options, data)
+    const data = new Blob(
+      [JSON.stringify(canvas.toJSON(["id", "class", "selectable"]))],
+      { type: "text/xml" }
+    );
+    saveFile(options, data);
   };
 
   const exportJSONforTheatrejs = (canvas) => {
@@ -957,7 +1080,7 @@ const DrawingController = () => {
 
   const openGdd = () => {
     window.open("/ReactCasparClient/GddTemplatePlayer");
-  }
+  };
   const saveToLocalStorage = (canvas) => {
     if (checkIdUniqueness(canvas)) {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
@@ -969,12 +1092,11 @@ const DrawingController = () => {
 
   const getFromLocalStorage = (canvas) => {
     const aa1 = localStorage.getItem("TheatrepageData");
-    canvas.loadFromJSON(aa1, () => {
-      setclipPathWhileImporting(canvas)
+    canvas.loadFromJSON(aa1).then(() => {
+      setclipPathWhileImporting(canvas);
 
       const aa = canvas.getObjects();
       aa.forEach((element) => {
-
         if (
           typeof element.fill === "object" &&
           element.fill !== null &&
@@ -1066,16 +1188,17 @@ const DrawingController = () => {
   const importSVG = (file) => {
     if (file) {
       var site_url = URL.createObjectURL(file);
-      fabric.loadSVGFromURL(site_url, function (objects) {
-        objects?.forEach((element) => {
+      fabric.loadSVGFromURL(site_url).then((o) => {
+        o?.objects.forEach((element) => {
           canvas.add(element);
           element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+          console.log(element.type);
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
               top: element.top + (element.height * element.scaleY) / 4,
             });
-            element.set({ type: "i-text" });
+            // element.set({ type: "i-text" });
             var textobj = element.toObject();
             var clonedtextobj = JSON.parse(JSON.stringify(textobj));
             var aa = new fabric.IText(element.text, clonedtextobj);
@@ -1098,14 +1221,16 @@ const DrawingController = () => {
     for (const val of canvasList) {
       // eslint-disable-next-line
       await new Promise((resolve) => {
-        canvas.loadFromJSON(val.pageValue, () => {
+        canvas.loadFromJSON(val.pageValue).then(() => {
           selectAll(canvas);
           var ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
           var hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
           // Modify the viewBox before converting to SVG
-          canvas.setDimensions({ width: ww > 1920 ? ww : 1920, height: hh > 1080 ? hh : 1080 }); // Change the canvas dimensions
+          canvas.setDimensions({
+            width: ww > 1920 ? ww : 1920,
+            height: hh > 1080 ? hh : 1080,
+          }); // Change the canvas dimensions
           canvas.renderAll(); // Render the canvas with the new dimensions
-
 
           aa += `<div> ${canvas.toSVG()}</div> `;
           if (ww > 1920 || hh > 1080) {
@@ -1119,7 +1244,7 @@ const DrawingController = () => {
         });
       });
     }
-    canvas.discardActiveObject()
+    canvas.discardActiveObject();
     canvas.requestRenderAll();
     await new Promise((resolve) => setTimeout(resolve, 2000));
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
@@ -1127,7 +1252,7 @@ const DrawingController = () => {
   };
 
   const setHtmlString = () => {
-    const gdd = getGdd(canvas, 'RCC');
+    const gdd = getGdd(canvas, "RCC");
     html = `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -1383,7 +1508,9 @@ const DrawingController = () => {
     selectAll(canvas);
     var ss = generalFileName();
     const options = {
-      suggestedName: canvasList[currentPage] ? canvasList[currentPage].pageName : ss,
+      suggestedName: canvasList[currentPage]
+        ? canvasList[currentPage].pageName
+        : ss,
       types: [
         {
           description: "Html file",
@@ -1394,8 +1521,8 @@ const DrawingController = () => {
     setHtmlString();
     const data = new Blob([html], { type: "text/html" });
 
-    const aa = await saveFile(options, data)
-    sethtmlfileHandle(aa)
+    const aa = await saveFile(options, data);
+    sethtmlfileHandle(aa);
 
     exportPage(canvas, aa);
     deSelectAll(canvas);
@@ -1438,7 +1565,7 @@ const DrawingController = () => {
     const data = new Blob([html], { type: "text/html" });
     // await writable.write(file);
     // await writable.close();
-    saveFile(null, data, htmlfileHandle)
+    saveFile(null, data, htmlfileHandle);
 
     if (htmlpageHandle) {
       const writable1 = await htmlpageHandle.createWritable();
@@ -1466,14 +1593,16 @@ const DrawingController = () => {
     var br = canvas.getActiveObject()?.getBoundingRect();
     var ss = generalFileName();
     const options = {
-      fileExtension: '.png',
+      fileExtension: ".png",
       suggestedName: ss,
-      types: [{
-        description: 'png file',
-        accept: {
-          'image/png': ['.png'],
+      types: [
+        {
+          description: "png file",
+          accept: {
+            "image/png": [".png"],
+          },
         },
-      }],
+      ],
     };
     const data1 = canvas.toDataURL({
       format: "png",
@@ -1481,37 +1610,38 @@ const DrawingController = () => {
       top: br.top,
       width: br.width,
       height: br.height,
-    })
+    });
     const data = await (await fetch(data1)).blob();
     saveFile(options, data);
   };
 
-
-
   const exportPngFullPage = (canvas) => {
-    canvas.discardActiveObject().renderAll();
+    canvas.discardActiveObject();
+    canvas.renderAll();
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     var ss = generalFileName();
     const options = {
-      fileExtension: '.png',
+      fileExtension: ".png",
       suggestedName: ss,
-      types: [{
-        description: 'png file',
-        accept: {
-          'image/png': ['.png'],
+      types: [
+        {
+          description: "png file",
+          accept: {
+            "image/png": [".png"],
+          },
         },
-      }],
+      ],
     };
     canvas.getElement().toBlob((data) => {
       saveFile(options, data);
-    })
+    });
   };
-
 
   const exportAllPngFullPage = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
-      canvas.discardActiveObject().renderAll();
+      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
+      canvas.discardActiveObject();
+      canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
       let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();
@@ -1519,7 +1649,7 @@ const DrawingController = () => {
       for (const val of canvasList) {
         // Load the JSON and wait for it to fully render
         await new Promise((resolve) => {
-          canvas.loadFromJSON(val.pageValue, () => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
             canvas.renderAll(); // Ensure the canvas is fully rendered
             resolve();
           });
@@ -1530,21 +1660,25 @@ const DrawingController = () => {
           canvas.getElement().toBlob(resolve);
         });
 
-        const fileHandle = await directoryHandle.getFileHandle(`${ss}_${iii}.png`, { create: true });
+        const fileHandle = await directoryHandle.getFileHandle(
+          `${ss}_${iii}.png`,
+          { create: true }
+        );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
         iii++;
       }
     } catch (err) {
-      console.error('Folder selection or file save failed:', err);
+      console.error("Folder selection or file save failed:", err);
     }
   };
 
   const exportAllPng = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, '_');
-      canvas.discardActiveObject().renderAll();
+      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
+      canvas.discardActiveObject();
+      canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
       let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();
@@ -1552,7 +1686,7 @@ const DrawingController = () => {
       for (const val of canvasList) {
         // Load the JSON and wait for it to fully render
         await new Promise((resolve) => {
-          canvas.loadFromJSON(val.pageValue, () => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
             canvas.renderAll(); // Ensure the canvas is fully rendered
             resolve();
           });
@@ -1572,20 +1706,22 @@ const DrawingController = () => {
           top: br.top,
           width: br.width,
           height: br.height,
-        })
+        });
         const data = await (await fetch(data1)).blob();
 
-        const fileHandle = await directoryHandle.getFileHandle(`${ss}_${iii}.png`, { create: true });
+        const fileHandle = await directoryHandle.getFileHandle(
+          `${ss}_${iii}.png`,
+          { create: true }
+        );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
         iii++;
       }
     } catch (err) {
-      console.error('Folder selection or file save failed:', err);
+      console.error("Folder selection or file save failed:", err);
     }
   };
-
 
   const exportHorizontalScrollAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1621,10 +1757,10 @@ const DrawingController = () => {
            }, 1);
         }
                                                             else{
-                                                                aa.style.left = -${hh};
+                                                                aa.style.left = '-${hh}px';
                                                             setInterval(function(){
                                                                 aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
              }, 1);
         }
         const elementToRemove = document.getElementById('scroll1_strip');
@@ -1660,14 +1796,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
   const exportHorizontalScrollAsHTML2 = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1703,10 +1839,10 @@ const DrawingController = () => {
            }, 1);
         }
                                                                         else{
-                                                                            aa.style.left = -${hh};
+                                                                            aa.style.left = '-${hh}px';
                                                                         setInterval(function(){
                                                                             aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = -${hh}};
+                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
              }, 1);
         }
         const elementToRemove = document.getElementById('scroll2_strip');
@@ -1742,16 +1878,15 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
-
 
   const exportClockAsHTML = (canvas) => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
@@ -1793,14 +1928,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
 
   const exportUpTimerAsHTML = (canvas) => {
@@ -1844,14 +1979,14 @@ const DrawingController = () => {
       suggestedName: generalFileName(),
       types: [
         {
-          description: 'HTML Files',
+          description: "HTML Files",
           accept: {
-            'text/html': ['.html'],
+            "text/html": [".html"],
           },
         },
       ],
     };
-    saveFile(options, data)
+    saveFile(options, data);
   };
 
   const startHorizontalScroll = (layerNumber) => {
@@ -1863,7 +1998,9 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaHorizontal1 = document.createElement('div');
                                                                                     aaHorizontal1.style.position='absolute';
@@ -1939,7 +2076,9 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaHorizontal2 = document.createElement('div');
                                                                                     aaHorizontal2.style.position='absolute';
@@ -2015,7 +2154,9 @@ const DrawingController = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
 
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaClock = document.createElement('div');
                                                                                     aaClock.style.position='absolute';
@@ -2062,7 +2203,9 @@ const DrawingController = () => {
 
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    );
     const script = `
                                                                                     window.aaUpTimer = document.createElement('div');
                                                                                     aaUpTimer.style.position='absolute';
@@ -2128,7 +2271,6 @@ const DrawingController = () => {
     executeScript(script);
   };
 
-
   useEffect(() => {
     if (localStorage.getItem("RCC_currentscreenSize")) {
       dispatch({
@@ -2146,7 +2288,6 @@ const DrawingController = () => {
     setHorizontalSpeed(localStorage.getItem("RCC_horizontalSpeed"));
     setHorizontalScroll2(localStorage.getItem("RCC_horizontalScroll2"));
     setHorizontalSpeed2(localStorage.getItem("RCC_horizontalSpeed2"));
-
 
     if (window.location.origin !== "https://vimlesh1975.github.io") {
       axios
@@ -2175,95 +2316,100 @@ const DrawingController = () => {
     }
   };
   const getvalues = () => {
-    if (canvas?.getActiveObjects()?.[0]) {
-      const element = canvas?.getActiveObjects()?.[0];
-      if (element.rx !== null) {
-        setSkewRX(element.rx);
-      }
-      if (element.ry !== null) {
-        setSkewRY(element.ry);
-      }
-      if (element.skewX !== null) {
-        setSkewXSize(element.skewX.toFixed(0));
-      }
-      // if (element.skewX !== null) {setSkewXSize(element.skewX); }
-      if (element.skewY !== null) {
-        setSkewYSize(element.skewY.toFixed(0));
-      }
-      if (element.fontFamily !== null) {
-        setCurrentFont(element.fontFamily);
-      }
-      if (element.fontSize !== null) {
-        setFontSize(element.fontSize);
-      }
-      if (element.strokeWidth !== null) {
-        setStrokeWidth(element.strokeWidth);
-      }
+    try {
+      if (canvas?.getActiveObjects()?.[0]) {
+        const element = canvas?.getActiveObjects()?.[0];
+        if (element.rx !== null) {
+          setSkewRX(element.rx);
+        }
+        if (element.ry !== null) {
+          setSkewRY(element.ry);
+        }
+        if (element.skewX !== null) {
+          setSkewXSize(element.skewX.toFixed(0));
+        }
+        // if (element.skewX !== null) {setSkewXSize(element.skewX); }
+        if (element.skewY !== null) {
+          setSkewYSize(element.skewY.toFixed(0));
+        }
+        if (element.fontFamily !== null) {
+          setCurrentFont(element.fontFamily);
+        }
+        if (element.fontSize !== null) {
+          setFontSize(element.fontSize);
+        }
+        if (element.strokeWidth !== null) {
+          setStrokeWidth(element.strokeWidth);
+        }
 
-      if (element.opacity !== null) {
-        setOpacity(parseFloat(element.opacity).toFixed(1));
-      }
-      if (element.charSpacing !== null) {
-        setCharSpacing(element.charSpacing);
-      }
+        if (element.opacity !== null) {
+          setOpacity(parseFloat(element.opacity).toFixed(1));
+        }
+        if (element.charSpacing !== null) {
+          setCharSpacing(element.charSpacing);
+        }
 
-      if (element.scaleX !== null) {
-        setscaleX(element.scaleX);
-      }
-      if (element.scaleY !== null) {
-        setscaleY(element.scaleY);
-      }
+        if (element.scaleX !== null) {
+          setscaleX(element.scaleX);
+        }
+        if (element.scaleY !== null) {
+          setscaleY(element.scaleY);
+        }
 
-      if (element.left !== null) {
-        setX(parseInt(element.left));
-      }
-      if (element.top !== null) {
-        setY(parseInt(element.top));
-      }
+        if (element.left !== null) {
+          setX(parseInt(element.left));
+        }
+        if (element.top !== null) {
+          setY(parseInt(element.top));
+        }
 
-      if (element.width !== null) {
-        setWidth(parseInt(element.width));
-      }
-      if (element.height !== null) {
-        setHeight(parseInt(element.height));
-      }
+        if (element.width !== null) {
+          setWidth(parseInt(element.width));
+        }
+        if (element.height !== null) {
+          setHeight(parseInt(element.height));
+        }
 
-      if (element.angle !== null) {
-        setangle(parseInt(element.angle));
-      }
+        if (element.angle !== null) {
+          setangle(parseInt(element.angle));
+        }
 
-      if (element.fontStyle !== null) {
-        setitallicnormal(element.fontStyle);
-      }
-      if (element.fontWeight !== null) {
-        setfontWeight1(element.fontWeight);
-      }
+        if (element.fontStyle !== null) {
+          setitallicnormal(element.fontStyle);
+        }
+        if (element.fontWeight !== null) {
+          setfontWeight1(element.fontWeight);
+        }
 
-      if (element.undeline !== null) {
-        setunderline1(element.underline ? "underline" : "");
-      }
-      if (element.undeline !== null) {
-        setlinethrough1(element.linethrough ? "line-through" : "");
-      }
+        if (element.undeline !== null) {
+          setunderline1(element.underline ? "underline" : "");
+        }
+        if (element.undeline !== null) {
+          setlinethrough1(element.linethrough ? "line-through" : "");
+        }
 
-      setCurrentFillColor(element.fill);
+        setCurrentFillColor(element.fill);
 
-      if (element.strokeDashArray !== null) {
-        setstrokedasharray(element.strokeDashArray);
-      } else {
-        setstrokedasharray([0, 0]);
+        if (element.strokeDashArray !== null) {
+          setstrokedasharray(element.strokeDashArray);
+        } else {
+          setstrokedasharray([0, 0]);
+        }
+        if (element.strokeDashOffset !== null) {
+          setstrokedashoffset(element.strokeDashOffset);
+        }
+        if (element.shadow !== null) {
+          refShadowColor.current.value = element.shadow.color;
+          refBlur.current.value = element.shadow.blur;
+          refOffsetX.current.value = element.shadow.offsetX;
+          refOffsetY.current.value = element.shadow.offsetY;
+          refAffectStroke.current.checked = element.shadow.affectStroke;
+        }
       }
-      if (element.strokeDashOffset !== null) {
-        setstrokedashoffset(element.strokeDashOffset);
-      }
-      if (element.shadow !== null) {
-        refShadowColor.current.value = element.shadow.color;
-        refBlur.current.value = element.shadow.blur;
-        refOffsetX.current.value = element.shadow.offsetX;
-        refOffsetY.current.value = element.shadow.offsetY;
-        refAffectStroke.current.checked = element.shadow.affectStroke;
-      }
+    } catch (error) {
+
     }
+
   };
 
   const clientAddress = () => {
@@ -2292,11 +2438,14 @@ const DrawingController = () => {
         <div style={{ backgroundColor: "#eff4f6", border: "2px solid yellow" }}>
           <div className="drawingToolsRow">
             <b>Elements: </b>
-            <button title="Reactangle" onClick={() => createRect(canvas)}>
+            <button title="Rectangle" onClick={() => createRect(canvas)}>
               {" "}
               <VscPrimitiveSquare />
             </button>
-            <button title="Randome Size Strip" onClick={() => createRandomeStrip(canvas)}>
+            <button
+              title="Randome Size Strip"
+              onClick={() => createRandomeStrip(canvas)}
+            >
               RS
             </button>
             <button
@@ -2471,16 +2620,31 @@ const DrawingController = () => {
               All
             </button>
             <button onClick={() => undo(canvas)}>Undo</button>
-            <button onClick={() => redo(canvas)}>Redo</button>
             <button onClick={() => copy(canvas)}>Copy</button>
             <button onClick={() => paste(canvas)}>Paste</button>
             <button onClick={() => cloneAsImage(canvas)}>CloneAsImage</button>
             <button onClick={() => selectAll(canvas)}>Select All</button>
             <button onClick={() => deSelectAll(canvas)}>Deselect All</button>
-            <button onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>Send To BK</button>
-            <button onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>Send -1</button>
-            <button onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring to F</button>
-            <button onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>Bring +1</button>
+            <button
+              onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}
+            >
+              Send To BK
+            </button>
+            <button
+              onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}
+            >
+              Send -1
+            </button>
+            <button
+              onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}
+            >
+              Bring to F
+            </button>
+            <button
+              onClick={() => bringForward(canvas, kf, xpositions, dispatch)}
+            >
+              Bring +1
+            </button>
             <button onClick={() => resizeTextWidth(canvas)}>Text Fit</button>
             <button onClick={() => sameWidth(canvas)}>Same Width Text</button>
             <div>
@@ -2562,9 +2726,12 @@ const DrawingController = () => {
             )}
             <button onClick={() => exportPng(canvas)}>PNG(Shape)</button>
             <button onClick={() => exportAllPng(canvas)}>All PNG(Shape)</button>
-            <button onClick={() => exportPngFullPage(canvas)}>PNG(FullPage)</button>
-            <button onClick={() => exportAllPngFullPage(canvas)}>All PNG(FullPage)</button>
-
+            <button onClick={() => exportPngFullPage(canvas)}>
+              PNG(FullPage)
+            </button>
+            <button onClick={() => exportAllPngFullPage(canvas)}>
+              All PNG(FullPage)
+            </button>
             <button onClick={() => exportSVG(canvas)}>SVG</button>
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
@@ -2577,9 +2744,7 @@ const DrawingController = () => {
             <button onClick={() => exportJSONforTheatrejs(canvas)}>
               Web Animator
             </button>
-            <button onClick={openGdd}>
-              Gdd Template Player
-            </button>
+            <button onClick={openGdd}>Gdd Template Player</button>
           </div>
           <div className="drawingToolsRow">
             Client Id
@@ -3237,7 +3402,11 @@ const DrawingController = () => {
             <b> Solid Cap 2: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.solidCaption2, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.solidCaption2,
+                  currentscreenSize
+                );
                 setSolidcaption2(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_solidCaption2",
@@ -3269,7 +3438,11 @@ const DrawingController = () => {
             <b> Solid Cap 3: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.solidCaption3, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.solidCaption3,
+                  currentscreenSize
+                );
                 setSolidcaption3(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_solidCaption3",
@@ -3336,7 +3509,11 @@ const DrawingController = () => {
             <b> Location Band: </b>
             <button
               onClick={() => {
-                startGraphics(canvas, templateLayers.locationBand, currentscreenSize);
+                startGraphics(
+                  canvas,
+                  templateLayers.locationBand,
+                  currentscreenSize
+                );
                 setLocationBand(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_locationBand",
@@ -3365,7 +3542,6 @@ const DrawingController = () => {
             <span> {locationBand} </span>
           </div>
           <VerticalScrollPlayer showTemplate={true} />
-
 
           <div className="drawingToolsRow">
             <b> H Scroll: </b>
@@ -3439,7 +3615,7 @@ const DrawingController = () => {
             <input
               type="checkbox"
               checked={ltr}
-              onChange={() => setLtr(val => !val)}
+              onChange={() => setLtr((val) => !val)}
             />
             <span> {horizontalScroll} </span>
           </div>
@@ -3515,7 +3691,7 @@ const DrawingController = () => {
             <input
               type="checkbox"
               checked={ltr2}
-              onChange={() => setLtr2(val => !val)}
+              onChange={() => setLtr2((val) => !val)}
             />
             <span> {horizontalScroll2} </span>
           </div>
@@ -3707,8 +3883,7 @@ const DrawingController = () => {
             <SavePannel />
           </TabPanel>
           <TabPanel>
-            <Layers2
-            />
+            <Layers2 />
           </TabPanel>
           <TabPanel>
             <CasparcgTools />

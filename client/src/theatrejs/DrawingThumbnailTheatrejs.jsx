@@ -12,7 +12,7 @@ const DrawingThumbnailTheatrejs = ({ i = 0 }) => {
   const { editor, onReady } = useFabricJSEditor();
   const canvasList = useSelector(state => state.canvasListReducer.canvasList);
   const recallPage = (json, canvas) => {
-    canvas.loadFromJSON(json, () => {
+    canvas.loadFromJSON(json).then(() => {
       const aa = canvas.getObjects();
       aa.forEach(element => {
         try {

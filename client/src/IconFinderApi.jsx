@@ -68,9 +68,7 @@ const IconFinder = ({ canvas }) => {
 
     const handleIconClick = (icon) => {
         const { svgContent } = icon;
-
         importSvgCode(svgContent, canvas)
-
     }
     const handleSearchInputKeyDown = (e) => {
         if (e.key === 'Enter') {
