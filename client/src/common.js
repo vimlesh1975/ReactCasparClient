@@ -2079,7 +2079,7 @@ export const endpoint = (string) => {
     .post(address1 + "/endpoint", data)
     .then((aa) => { })
     .catch((aa) => {
-      console.log("Error", aa);
+      // console.log("Error", aa);
     });
 };
 

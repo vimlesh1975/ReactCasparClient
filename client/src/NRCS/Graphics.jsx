@@ -40,7 +40,7 @@ const Graphics = () => {
                 const data = await res.json();
                 setRunOrderTitles(data);
             } catch (error) {
-                console.error('Error fetching RunOrderTitles:', error);
+                // console.error('Error fetching RunOrderTitles:', error);
             }
         }
         fetchData();
@@ -53,7 +53,7 @@ const Graphics = () => {
                 const data = await res.json();
                 setSlugs(data);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                // console.error('Error fetching users:', error);
             }
         }
 
@@ -67,7 +67,7 @@ const Graphics = () => {
                 const data = await res.json();
                 setSlugs2(data);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                // console.error('Error fetching users:', error);
             }
         }
 
@@ -81,7 +81,7 @@ const Graphics = () => {
                 const data = await res.json();
                 setGraphics(data);
             } catch (error) {
-                console.error('Error fetching RunOrderTitles:', error);
+                // console.error('Error fetching RunOrderTitles:', error);
             }
         }
 
@@ -95,7 +95,7 @@ const Graphics = () => {
                 const data = await res.json();
                 setGraphics2(data);
             } catch (error) {
-                console.error('Error fetching RunOrderTitles:', error);
+                // console.error('Error fetching RunOrderTitles:', error);
             }
         }
 
@@ -126,7 +126,7 @@ const Graphics = () => {
             });
 
         } catch (error) {
-            console.error('Error saving content:', error);
+            // console.error('Error saving content:', error);
         }
     };
     const addNew = async () => {
@@ -143,7 +143,7 @@ const Graphics = () => {
             });
 
         } catch (error) {
-            console.error('Error saving content:', error);
+            // console.error('Error saving content:', error);
         }
     };
 
@@ -167,7 +167,7 @@ const Graphics = () => {
 
             await updateGraphicsOrder(reorderedItemsWithNewOrder);
         } catch (error) {
-            console.error('Error deleting graphic:', error);
+            // console.error('Error deleting graphic:', error);
         }
     };
 
@@ -191,7 +191,7 @@ const Graphics = () => {
 
             await updateGraphicsOrder(reorderedItemsWithNewOrder);
         } catch (error) {
-            console.error('Error deleting graphic:', error);
+            // console.error('Error deleting graphic:', error);
         }
     };
 
@@ -207,7 +207,7 @@ const Graphics = () => {
                     body: JSON.stringify({ GraphicsID: val.GraphicsID, GraphicsOrder: val.GraphicsOrder }),
                 });
             } catch (error) {
-                console.error('Error saving content:', error);
+                // console.error('Error saving content:', error);
             }
         });
 
@@ -283,7 +283,7 @@ const Graphics = () => {
                     body: JSON.stringify(newItem),
                 });
             } catch (error) {
-                console.error('Error saving copied item:', error);
+                // console.error('Error saving copied item:', error);
             }
         }
     };
@@ -306,7 +306,7 @@ const Graphics = () => {
                 body: JSON.stringify({ GraphicsID, GraphicsTemplate: newTemplate }),
             });
         } catch (error) {
-            console.error('Error updating template:', error);
+            // console.error('Error updating template:', error);
         }
     };
 
@@ -326,7 +326,7 @@ const Graphics = () => {
                 body: JSON.stringify({ GraphicsID, GraphicsTemplate: newTemplate }),
             });
         } catch (error) {
-            console.error('Error updating template:', error);
+            // console.error('Error updating template:', error);
         }
     };
 
