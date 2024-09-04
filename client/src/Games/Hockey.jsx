@@ -5,7 +5,7 @@ import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
-import { templateLayers } from "../common";
+import { clieentPublicFolder, templateLayers } from "../common";
 
 var xxx;
 // import moment from 'moment'
@@ -28,8 +28,8 @@ const Hockey = () => {
     const [currentPlayer1, setCurrentPlayer1] = useState('Vimlesh Kumar 1')
     const [currentPlayer2, setCurrentPlayer2] = useState('Vimlesh Kumar 2')
     const [team1Goal, setTeam1Goal] = useState(88)
-    const [team1Logo, setTeam1Logo] = useState('ReactCasparClient/img/flag/Albania.png')
-    const [team2Logo, setTeam2Logo] = useState('ReactCasparClient/img/flag/Mauritania.png')
+    const [team1Logo, setTeam1Logo] = useState(clieentPublicFolder() + '/img/flag/Albania.png')
+    const [team2Logo, setTeam2Logo] = useState(clieentPublicFolder() + '/img/flag/Mauritania.png')
 
     const [team1, setTeam1] = useState('Albania')
     const [team2, setTeam2] = useState('Mauritania')

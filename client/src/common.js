@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from '@theatre/dataverse'
 
-export const buildDate = "040924_1";
+export const buildDate = "040924_2";
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
   const studioPrivate = window.__TheatreJS_StudioBundle._studio
@@ -1989,6 +1989,15 @@ export const rgbaCol = (color, opacity) =>
 
 export var address1 = "https://" + window.location.host.split(":")[0] + ":9000";
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
+
+export const clieentPublicFolder = () => {
+  if (window.location.host === 'localhost:10000') {
+    return 'https://localhost:10000/ReactCasparClient'
+  }
+  else {
+    return 'https://vimlesh1975.github.io/ReactCasparClient'
+  }
+}
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
