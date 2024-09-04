@@ -12,7 +12,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
-    const [pageName, setPageName] = useState([]);
+    const [pageName, setPageName] = useState('');
     const dispatch = useDispatch();
     const refPageName = useRef();
 
@@ -388,7 +388,8 @@ const Graphics = () => {
             <div style={{ display: 'flex' }}>
                 <div style={{ minWidth: 320, maxWidth: 320 }}>
                     <div>
-                        Run Orders:<select value={selectedRunOrderTitle} onChange={handleSelectionChange}>
+                        Run Orders:
+                        <select value={selectedRunOrderTitle} onChange={handleSelectionChange}>
                             <option value="" disabled>Select a Run Order</option>
                             {runOrderTitles && runOrderTitles.map((runOrderTitle, i) => (
                                 <option key={i} value={runOrderTitle.title}>{runOrderTitle.title}</option>

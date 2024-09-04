@@ -144,75 +144,7 @@ class ErasedGroup extends fabric.Group {
   }
 }
 
-// const EraserBrush = fabric.util.createClass(fabric.PencilBrush, {
-//   /**
-//    * On mouseup after drawing the path on contextTop canvas
-//    * we use the points captured to create an new fabric path object
-//    * and add it to the fabric canvas.
-//    */
-//   _finalizeAndAddPath: function () {
-//     var ctx = this.canvas.contextTop;
-//     ctx.closePath();
-//     if (this.decimate) {
-//       this._points = this.decimatePoints(this._points, this.decimate);
-//     }
-//     var pathData = this.convertPointsToSVGPath(this._points).join("");
-//     if (pathData === "M 0 0 Q 0 0 0 0 L 0 0") {
-//       // do not create 0 width/height paths, as they are
-//       // rendered inconsistently across browsers
-//       // Firefox 4, for example, renders a dot,
-//       // whereas Chrome 10 renders nothing
-//       this.canvas.requestRenderAll();
-//       return;
-//     }
 
-//     // use globalCompositeOperation to 'fake' Eraser
-//     var path = this.createPath(pathData);
-//     path.globalCompositeOperation = "destination-out";
-//     path.selectable = false;
-//     path.evented = false;
-//     path.absolutePositioned = true;
-
-//     // grab all the objects that intersects with the path
-//     const objects = this.canvas.getObjects().filter((obj) => {
-//       // if (obj instanceof fabric.Textbox) return false;
-//       // if (obj instanceof fabric.IText) return false;
-//       if (obj instanceof fabric.Rect && obj.id === "rectwithimg") {
-//         return false;
-//       }
-//       if (!obj.intersectsWithObject(path)) return false;
-//       return true;
-//     });
-
-//     if (objects.length > 0) {
-//       // merge those objects into a group
-//       const mergedGroup = new fabric.Group(objects);
-//       const newPath = new ErasedGroup(mergedGroup, path);
-//       const left = newPath.left;
-//       const top = newPath.top;
-//       // convert it into a dataURL, then back to a fabric image
-//       const newData = newPath.toDataURL({
-//         withoutTransform: true,
-//       });
-//       fabric.Image.fromURL(newData, (fabricImage) => {
-//         fabricImage.set({
-//           id: "ccg_" + fabric.Object.__uid,
-//           class: "class_" + fabric.Object.__uid,
-//           left: left,
-//           top: top,
-//           shadow: { ...shadowOptions, blur: 0 },
-//         });
-//         // remove the old objects then add the new image
-//         this.canvas.remove(...objects);
-//         this.canvas.add(fabricImage);
-//       });
-//     }
-
-//     this.canvas.clearContext(this.canvas.contextTop);
-//     this.canvas.renderAll();
-//     this._resetShadow();
-//   },
-// });
 
 class EraserBrush extends fabric.PencilBrush {
   /**
@@ -287,8 +219,9 @@ const DrawingController = () => {
 
   window.clientId = clientId;
 
-  const refShadowColor = useRef();
-  const refAffectStroke = useRef(false);
+  const [shadowColor, setShadowColor] = useState('#000000');
+  const [affectStrokeValue, setAffectStrokevalue] = useState(false);
+
   const refBlur = useRef();
   const refOffsetX = useRef();
   const refOffsetY = useRef();
@@ -1192,7 +1125,6 @@ const DrawingController = () => {
         o?.objects.forEach((element) => {
           canvas.add(element);
           element.set({ objectCaching: false, shadow: { ...shadowOptions } });
-          console.log(element.type);
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
@@ -2296,7 +2228,7 @@ const DrawingController = () => {
           setFontList(aa.data);
         })
         .catch((aa) => {
-          console.log("Error", aa);
+          // console.log("Error", aa);
         });
     }
     return () => { };
@@ -2316,6 +2248,7 @@ const DrawingController = () => {
     }
   };
   const getvalues = () => {
+    console.log('getvalues')
     try {
       if (canvas?.getActiveObjects()?.[0]) {
         const element = canvas?.getActiveObjects()?.[0];
@@ -2389,6 +2322,10 @@ const DrawingController = () => {
         }
 
         setCurrentFillColor(element.fill);
+        // console.log(element.fill)
+        // console.log(element.shadow.color)
+        // console.log(element.stroke)
+        // console.log(element.backgroundColor)
 
         if (element.strokeDashArray !== null) {
           setstrokedasharray(element.strokeDashArray);
@@ -2399,11 +2336,12 @@ const DrawingController = () => {
           setstrokedashoffset(element.strokeDashOffset);
         }
         if (element.shadow !== null) {
-          refShadowColor.current.value = element.shadow.color;
+          // refShadowColor.current.value = element.shadow.color;
+          setShadowColor(element.shadow.color);
+          setAffectStrokevalue(element.shadow.affectStroke)
           refBlur.current.value = element.shadow.blur;
           refOffsetX.current.value = element.shadow.offsetX;
           refOffsetY.current.value = element.shadow.offsetY;
-          refAffectStroke.current.checked = element.shadow.affectStroke;
         }
       }
     } catch (error) {
@@ -2411,6 +2349,7 @@ const DrawingController = () => {
     }
 
   };
+  window.getvalues = getvalues;
 
   const clientAddress = () => {
     const aa = window.location.href + "/html/" + clientId;
@@ -2424,7 +2363,6 @@ const DrawingController = () => {
     // }, 1000);
   };
 
-  window.getvalues = getvalues;
   return (
     <div style={{ display: "flex" }}>
       <div
@@ -2929,11 +2867,18 @@ const DrawingController = () => {
               />
             )}
             BG
+
             <input
               type="color"
-              value={canvas?.getActiveObjects()[0]?.backgroundColor}
+              value={
+                canvas?.getActiveObjects()[0]?.backgroundColor &&
+                  /^#[0-9A-Fa-f]{6}$/i.test(canvas?.getActiveObjects()[0]?.backgroundColor)
+                  ? canvas?.getActiveObjects()[0]?.backgroundColor
+                  : '#000000'
+              }
               onChange={(e) => changeBackGroundColor(e, canvas)}
             />
+
             Strk{" "}
             {canvas?.getActiveObjects()[0]?.stroke?.colorStops ? (
               <span
@@ -3132,10 +3077,13 @@ const DrawingController = () => {
                     <td colSpan="2">
                       <b> Shadow: </b>color{" "}
                       <input
-                        ref={refShadowColor}
+                        // ref={refShadowColor}
                         type="color"
-                        defaultValue="#000000"
-                        onChange={(e) => changeShadowCurrentColor(e, canvas)}
+                        value={shadowColor}
+                        onChange={(e) => {
+                          changeShadowCurrentColor(e, canvas);
+                          setShadowColor(e.target.value);
+                        }}
                       />
                     </td>
                   </tr>
@@ -3143,10 +3091,13 @@ const DrawingController = () => {
                     <td colSpan="2">
                       affectStroke
                       <input
-                        ref={refAffectStroke}
                         type="checkbox"
-                        onChange={(e) => affectStroke(e)}
-                        defaultChecked={false}
+                        onChange={(e) => {
+                          setAffectStrokevalue(val => !val);
+                          affectStroke(e)
+                        }
+                        }
+                        checked={affectStrokeValue}
                       />
                     </td>
                   </tr>

@@ -93,7 +93,7 @@ const Drawing = ({ canvasOutput }) => {
     canvas.on({
       "selection:updated": window.getvalues,
       "selection:created": window.getvalues,
-      "object:modified": function () {
+      "object:modified": () => {
         window.getvalues();
         saveCanvasState(canvas);
       },
