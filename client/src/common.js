@@ -2002,6 +2002,7 @@ export const getFormattedDatetimeNumber = (date = new Date()) => {
 };
 
 export const videoLayers = [1, 2, 3, 10000, 5];
+
 export const templateLayers = {
   imgSequenceLayer1: 10,
   imgSequenceLayer2: 15,
@@ -2033,6 +2034,12 @@ export const templateLayers = {
   theatrejs: 166,
   gsap: 167,
   data: 170,
+
+  hockeygenerallayer: 500,
+  hockeyscoreLayer: 501,
+  hockeyclockLayer: 502,
+
+  breakingneslayer: 550,
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 

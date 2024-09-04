@@ -92,8 +92,6 @@ const App = () => {
   );
   const [solidcaption1, setSolidcaption1] = useState("");
   const [tabindex, settabindex] = useState(0);
-  const [tabindex2, settabindex2] = useState(0);
-
   const continuous1 = useSelector(
     (state) => state.speechRecognitionReducer.continuous1
   );
@@ -212,14 +210,14 @@ const App = () => {
       //nothing
     }
   };
-  const onTabChange2 = (index, prevIndex) => {
-    settabindex2(index);
-    if (index === 0) {
-      dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: true });
-    } else {
-      dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: false });
-    }
-  };
+  // const onTabChange2 = (index, prevIndex) => {
+  //   settabindex2(index);
+  //   if (index === 0) {
+  //     dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: true });
+  //   } else {
+  //     dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: false });
+  //   }
+  // };
 
   const onTabChangevdo = (index, prevIndex) => {
     if (index === 0) {
@@ -257,12 +255,12 @@ const App = () => {
     settabindex(i);
     // console.log(i)
   };
-  const changeTab2 = (i) => {
-    settabindex2(i);
-    // console.log(i)
-  };
+  // const changeTab2 = (i) => {
+  //   settabindex2(i);
+  //   // console.log(i)
+  // };
   window.changeTab = changeTab;
-  window.changeTab2 = changeTab2;
+  // window.changeTab2 = changeTab2;
   return (
     <div style={{ minWidth: 1920, minHeight: 1080, top: 0 }}>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -486,52 +484,17 @@ const App = () => {
                   <Drawing />
                 </div>
               </div>
-              <Tabs
-                selectedIndex={tabindex2}
-                selectedTabClassName="selectedTab2"
-                forceRenderTabPanel={true}
-                onSelect={(index, prevIndex) => onTabChange2(index, prevIndex)}
-              >
-                <TabList>
-                  <Tab>Timeline</Tab>
-                  <Tab>Casparcg Window</Tab>
-                  <Tab>Html Output Window</Tab>
-                </TabList>
-                <TabPanel>
+              <div style={{ display: 'flex' }}>
+                <div>
                   <TimeLine1 />
-                </TabPanel>
-                <TabPanel>
-                  <div style={{ display: "flex" }}>
-                    <div
-                      style={{
-                        backgroundColor: "grey",
-                        border: "1px solid yellow",
-                        maxWidth: 690,
-                        minWidth: 690,
-                        height: 400,
-                      }}
-                    >
-                      <h4>
-                        Put as below in casparcg.config file and drag screen
-                        consumer here
-                      </h4>
-                      <h5>
-                        &lt;screen&gt;
-                        &lt;always-on-top&gt;true&lt;/always-on-top&gt;
-                        &lt;x&gt;0&lt;/x&gt; &lt;y&gt;680&lt;/y&gt;
-                        &lt;width&gt;680&lt;/width&gt;
-                        &lt;height&gt;325&lt;/height&gt; &lt;/screen&gt;
-                      </h5>
-                    </div>
-                    <div style={{ display: 'none' }}>
-                      <Automation />
-                    </div>
-                  </div>
-                </TabPanel>
-                <TabPanel>
-                  <HtmlOutput scale={0.28} />
-                </TabPanel>
-              </Tabs>
+                </div>
+                <div>
+                  <HtmlOutput scale={0.315} />
+                </div>
+                <div style={{ display: 'none' }}>
+                  <Automation />
+                </div>
+              </div>
             </div>
           </div>
         </div>

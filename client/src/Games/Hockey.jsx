@@ -5,12 +5,9 @@ import { iniplayerList1, iniplayerList2 } from '../hockeyData'
 import { useSelector, useDispatch } from 'react-redux'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
+import { templateLayers } from "../common";
 
-const generalayer = 500;
-const scoreLayer = 501;
-const clockLayer = 502;
 var xxx;
-
 // import moment from 'moment'
 
 const Hockey = () => {
@@ -30,15 +27,13 @@ const Hockey = () => {
 
     const [currentPlayer1, setCurrentPlayer1] = useState('Vimlesh Kumar 1')
     const [currentPlayer2, setCurrentPlayer2] = useState('Vimlesh Kumar 2')
-    const [team1, setTeam1] = useState('Mumbai')
     const [team1Goal, setTeam1Goal] = useState(88)
-    // const [team1Logo, setTeam1Logo] = useState(address1 + '/media/anchor.png')
-    // const [team2Logo, setTeam2Logo] = useState(address1 + '/media/hd_frame.png')
+    const [team1Logo, setTeam1Logo] = useState('ReactCasparClient/img/flag/Albania.png')
+    const [team2Logo, setTeam2Logo] = useState('ReactCasparClient/img/flag/Mauritania.png')
 
-    const [team1Logo, setTeam1Logo] = useState('')
-    const [team2Logo, setTeam2Logo] = useState('')
+    const [team1, setTeam1] = useState('Albania')
+    const [team2, setTeam2] = useState('Mauritania')
 
-    const [team2, setTeam2] = useState('Delhi')
     const [team2Goal, setTeam2Goal] = useState(77)
 
     const [initialMinute, setInitilaMinute] = useState(45)
@@ -111,7 +106,7 @@ const Hockey = () => {
 
         const index = canvasList.findIndex(val => val.pageName === pageName);
         if (index !== -1) {
-            const layerNumber = clockLayer;
+            const layerNumber = templateLayers.hockeyclockLayer;
             executeScript(`if(window.xxx){clearInterval(xxx)}`);
             executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
 
@@ -336,7 +331,7 @@ const Hockey = () => {
                         </Droppable>
                     </DragDropContext>
                     {currentPlayer1}
-                    <br /><button onClick={() => recallPage(generalayer, 'PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId1 <FaPlay /></button>
+                    <br /><button onClick={() => recallPage(templateLayers.hockeygenerallayer, 'PlayerId1', [{ key: 'f0', value: currentPlayer1, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId1 <FaPlay /></button>
                     <br />    <button onClick={() => recallPage(500, 'TeamList', [
 
                         { key: 'f0', value: team1, type: 'text' },
@@ -407,8 +402,8 @@ const Hockey = () => {
                         </Droppable>
                     </DragDropContext>
                     {currentPlayer2}
-                    <br /> <button onClick={() => recallPage(generalayer, 'PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId2<FaPlay /></button>
-                    <br />  <button onClick={() => recallPage(generalayer, 'TeamList', [
+                    <br /> <button onClick={() => recallPage(templateLayers.hockeygenerallayer, 'PlayerId2', [{ key: 'f0', value: currentPlayer2, type: 'text' }], canvasList, canvas, currentscreenSize)}>PlayerId2<FaPlay /></button>
+                    <br />  <button onClick={() => recallPage(templateLayers.hockeygenerallayer, 'TeamList', [
 
                         { key: 'f0', value: team2, type: 'text' },
                         { key: 'f1', value: playerList2[0], type: 'text' },
@@ -428,12 +423,12 @@ const Hockey = () => {
 
                 </div>
 
-                <br /> <button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(generalayer); }} ><FaStop /></button>
+                <br /> <button style={{ backgroundColor: 'red' }} onClick={() => { stopGraphics(templateLayers.hockeygenerallayer); }} ><FaStop /></button>
 
                 <div>
                     <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                         <div>
-                            Team1 <br />
+                            {team1} <br />
                             <label>
                                 <img src={team1Logo} alt='' width='80' height='80' style={{ border: '3px solid red' }} />
                                 <input type="file" onChange={e => {
@@ -446,7 +441,7 @@ const Hockey = () => {
                             </label>
                         </div>
                         <div>
-                            Team2 <br />
+                            {team2} <br />
                             <label>
                                 <img src={team2Logo} alt='' width='80' height='80' style={{ border: '3px solid red' }} />
                                 <input type="file" onChange={e => {
@@ -458,7 +453,7 @@ const Hockey = () => {
                                 }} style={{ display: 'none' }} />
                             </label>
                         </div>
-                        <button onClick={() => recallPage(generalayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }], canvasList, canvas, currentscreenSize)}>Versus</button>
+                        <button onClick={() => recallPage(templateLayers.hockeygenerallayer, 'Versus', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'img1', value: team1Logo, type: 'image' }, { key: 'img2', value: team2Logo, type: 'image' }], canvasList, canvas, currentscreenSize)}>Versus</button>
                     </div>
                     <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                         <div>
@@ -466,8 +461,8 @@ const Hockey = () => {
                             <br /><input type='text' size="8" value={team2} onChange={e => setTeam2(e.target.value)} /><input type='text' size="1" value={team2Goal} onChange={e => setTeam2Goal(e.target.value)} />
                         </div>
                         <div>
-                            <button onClick={() => recallPage(scoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }], canvasList, canvas, currentscreenSize)}>Score <FaPlay /></button>
-                            <button onClick={() => stopGraphics(scoreLayer)} > <FaStop /></button>
+                            <button onClick={() => recallPage(templateLayers.hockeyscoreLayer, 'Score', [{ key: 'f0', value: team1, type: 'text' }, { key: 'f1', value: team2, type: 'text' }, { key: 'f2', value: team1Goal, type: 'text' }, { key: 'f3', value: team2Goal, type: 'text' }], canvasList, canvas, currentscreenSize)}>Score <FaPlay /></button>
+                            <button onClick={() => stopGraphics(templateLayers.hockeyscoreLayer)} > <FaStop /></button>
                         </div>
                     </div>
                     <div>
@@ -476,13 +471,13 @@ const Hockey = () => {
                             <span>Ini. Sec </span> <input type='text' size="1" value={initialSecond} onChange={e => setInitialSecond(e.target.value)} />
                             <span>countUp</span> <input type='checkbox' checked={countUp} onChange={e => setCountUp(val => !val)} />
                             <button onClick={() => showClock('Clock')}>Clock <FaPlay /></button>
-                            <button onClick={() => pauseClock(clockLayer)}> Pause </button>
-                            <button onClick={() => resumeClock(clockLayer)}> Resume </button>
-                            <button onClick={() => stopClock(clockLayer)} ><FaStop /></button>
+                            <button onClick={() => pauseClock(templateLayers.hockeyclockLayer)}> Pause </button>
+                            <button onClick={() => resumeClock(templateLayers.hockeyclockLayer)}> Resume </button>
+                            <button onClick={() => stopClock(templateLayers.hockeyclockLayer)} ><FaStop /></button>
                         </div>
                         <div style={{ display: 'flex', border: '1px solid blue', margin: 10 }}>
                             <div>  <div> <span>IN . .</span><input type='text' value={inPlayer} onChange={e => setInPlayer(e.target.value)} /></div>  <div> <span>OUT</span><input type='text' value={outPlayer} onChange={e => setOutPlayer(e.target.value)} /></div></div>
-                            <div> <button onClick={() => recallPage(generalayer, 'InOut', [{ key: 'f0', value: inPlayer, type: 'text' }, { key: 'f1', value: outPlayer, type: 'text' }], canvasList, canvas, currentscreenSize)}>IN OUT <FaPlay /></button></div>
+                            <div> <button onClick={() => recallPage(templateLayers.hockeygenerallayer, 'InOut', [{ key: 'f0', value: inPlayer, type: 'text' }, { key: 'f1', value: outPlayer, type: 'text' }], canvasList, canvas, currentscreenSize)}>IN OUT <FaPlay /></button></div>
                         </div>
                     </div>
                 </div>
