@@ -1612,6 +1612,11 @@ export const importSvgCode = (ss, canvas) => {
           id: id,
           class: id,
         });
+        if (element.type === "path") {
+          element.on("mousedblclick", () => {
+            window.edit(window.dispatch);
+          });
+        }
         if (element.type === "text") {
           // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
           element.set({ type: "textbox" });
