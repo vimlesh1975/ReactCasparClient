@@ -140,7 +140,7 @@ function stop() {
 const clientId = window.location.pathname.replace('/ReactCasparClient/html/', '');
 
 const Html = () => {
-    console.log(clientId)
+    // console.log(clientId);
     const refhtml = useRef();
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))

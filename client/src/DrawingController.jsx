@@ -2256,9 +2256,11 @@ const DrawingController = () => {
     }
   };
   const getvalues = () => {
+    // console.log('getvalue');
     try {
       if (canvas?.getActiveObjects()?.[0]) {
         const element = canvas?.getActiveObjects()?.[0];
+        // console.log(element);
         if (element.rx) {
           setSkewRX(element.rx);
         }
@@ -2274,7 +2276,6 @@ const DrawingController = () => {
         if (element.fontFamily) {
           setCurrentFont(element.fontFamily);
         }
-        console.log(element.fontSize)
         if (element.fontSize) {
           setFontSize(element.fontSize);
         }
@@ -2328,8 +2329,13 @@ const DrawingController = () => {
           setlinethrough1(element.linethrough ? "line-through" : "");
         }
 
+
         setCurrentFillColor(element.fill);
-        setCurrentBGColor(element.backgroundColor);
+
+        if (element.backgroundColor !== '') {
+          setCurrentBGColor(element.backgroundColor);
+        }
+
         setCurrentStrokColor(element.stroke);
 
         if (element.strokeDashArray) {
