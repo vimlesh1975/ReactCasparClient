@@ -3,8 +3,9 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor, moveElement, deleteItemfromtimeline } from './common'
+import ComSpeechRecognition from "./ComSpeechRecognition";
 
-const LayersAll = () => {
+const LayersAll = ({ compact }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -18,37 +19,24 @@ const LayersAll = () => {
 
     const setText = () => {
         canvas.getActiveObjects().forEach(element => {
-            element.text = textofActiveObject;
+            element.set({ text: textofActiveObject });
         });
         canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     }
 
-    const firstLetterCapitalise = () => {
+    const capitalizeText = (formatter) => {
         canvas.getActiveObjects().forEach(element => {
-            element.text = textofActiveObject[0].toUpperCase() + textofActiveObject.slice(1);;
+            element.set({ text: formatter(textofActiveObject) });
         });
         canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
+        dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
     }
 
-    const wordCapitalise = () => {
-        canvas.getActiveObjects().forEach(element => {
-            const aa = textofActiveObject.split(" ");
-            const bb = aa.map((val) => val[0].toUpperCase() + val.slice(1))
-            const cc = bb.join(" ");
-            element.text = cc
-        });
-        canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-    }
-    const allCapitalise = () => {
-        canvas.getActiveObjects().forEach(element => {
-            element.text = textofActiveObject.toUpperCase()
-        });
-        canvas.requestRenderAll();
-        dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
-    }
+    const firstLetterCapitalise = () => capitalizeText(text => text.charAt(0).toUpperCase() + text.slice(1));
+    const wordCapitalise = () => capitalizeText(text => text.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "));
+    const allCapitalise = () => capitalizeText(text => text.toUpperCase());
+
     const setId = () => {
         canvas.getActiveObjects().forEach(element => {
             element.id = idofActiveObject;
@@ -56,13 +44,13 @@ const LayersAll = () => {
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
-    const onDragEnd = (result) => {
-        if (result.destination != null) {
-            canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
-            canvas.requestRenderAll();
-            dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
 
-            moveElement(result.source?.index, result.destination?.index, kf, xpositions, dispatch);
+    const onDragEnd = (result) => {
+        if (result.destination) {
+            canvas.moveObjectTo(canvas.getObjects()[result.source.index], result.destination.index);
+            moveElement(result.source.index, result.destination.index, kf, xpositions, dispatch);
+            canvas.requestRenderAll(); // Call this once after moving
+            dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
         }
     }
 
@@ -94,12 +82,16 @@ const LayersAll = () => {
     }
 
     const getHexColor = (colorStr) => {
+        if (!colorStr) return '#000000'; // Fallback to black if colorStr is null or undefined
         var a = document.createElement('div');
         a.style.color = colorStr;
-        var colors = window.getComputedStyle(document.body.appendChild(a)).color.match(/\d+/g).map(function (a) { return parseInt(a, 10); });
+        var colors = window.getComputedStyle(document.body.appendChild(a)).color.match(/\d+/g)?.map(Number);
         document.body.removeChild(a);
-        return (colors.length >= 3) ? '#' + (((1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2]).toString(16).substr(1)) : false;
+        return (colors && colors.length === 3)
+            ? '#' + ((1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2]).toString(16).slice(1)
+            : '#000000'; // Fallback in case the colorStr is invalid
     }
+
     const putxBeforeId = () => {
         canvas.getObjects().forEach(element => {
             if ((element.id).substring(0, 3) === 'ccg') {
@@ -123,7 +115,7 @@ const LayersAll = () => {
         <button onClick={() => dispatch({ type: 'CHANGE_CANVAS', payload: canvas })}>Refresh</button> <b>Total Layers: </b>{layers?.length}
         <button onClick={putxBeforeId}>Put x Before All Id</button>
         <button onClick={removexBeforeId}>Remove x Before All Id</button>
-        <div style={{ border: '1px solid black', height: 460, width: 355, overflow: 'scroll' }} >
+        <div style={{ border: '1px solid black', height: compact ? 300 : 400, width: compact ? 355 : 890, overflow: 'scroll' }} >
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable-1" type="PERSON">
                     {(provided, snapshot) => (
@@ -188,7 +180,7 @@ const LayersAll = () => {
         <div>
             <br />  <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
             Font Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={25} />{fontSizeofTexrArea}
-            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: 350, height: 150, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
+            <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: compact ? 350 : 890, height: 150, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
             <button onClick={setText}>Set Text</button>
             <button onClick={firstLetterCapitalise}>1st Letter Capitalise</button>
             <button onClick={allCapitalise}>AllCapitalise</button>
@@ -196,6 +188,8 @@ const LayersAll = () => {
 
 
         </div>
+        <ComSpeechRecognition />
+
     </div>)
 }
 

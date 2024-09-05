@@ -20,22 +20,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import VideoController from "./VideoController.jsx";
 import Help from "./Help.jsx";
-import {
-  screenSizes,
-  inAnimationMethods,
-  animationMethods,
-  chNumbers,
-  endpoint,
-  address1,
-  updateGraphics,
-  stopGraphics,
-  templateLayers,
-  clearHtml,
-  languages,
-  buildDate,
-  startGraphics
-} from "./common.js";
-import Layers from "./Layers.jsx";
+
+import LayersAll from "./LayersAll.jsx";
 import VideoPlaylist from "./VideoPlaylist.jsx";
 import Scroll from "./Scroll.jsx";
 import Automation from "./Automation.jsx";
@@ -64,6 +50,22 @@ import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
 import HtmlOutput from "./HtmlOutput.jsx";
 import GenerativeArts from "./GenerativeArts/GenerativeArts.jsx";
 import Data from "./data/Data.jsx";
+
+import {
+  screenSizes,
+  inAnimationMethods,
+  animationMethods,
+  chNumbers,
+  endpoint,
+  address1,
+  updateGraphics,
+  stopGraphics,
+  templateLayers,
+  clearHtml,
+  languages,
+  buildDate,
+  startGraphics
+} from "./common.js";
 
 const App = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -605,7 +607,7 @@ const App = () => {
               <VideoPlaylist />
             </TabPanel>
             <TabPanel>
-              <Layers />
+              <LayersAll compact={false} />
             </TabPanel>
             <TabPanel>
               <ColorGradient2 />

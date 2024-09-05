@@ -3835,7 +3835,7 @@ const DrawingController = () => {
             <SavePannel />
           </TabPanel>
           <TabPanel>
-            <LayersAll />
+            <LayersAll compact={true} />
           </TabPanel>
           <TabPanel>
             <CasparcgTools />
