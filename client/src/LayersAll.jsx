@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor, moveElement, deleteItemfromtimeline } from './common'
 
-const Layers2 = () => {
+const LayersAll = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
     const activeLayers = useSelector(state => state.canvasReducer.canvas?.getActiveObjects());
@@ -49,8 +49,6 @@ const Layers2 = () => {
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
-
-
     const setId = () => {
         canvas.getActiveObjects().forEach(element => {
             element.id = idofActiveObject;
@@ -58,8 +56,6 @@ const Layers2 = () => {
         canvas.requestRenderAll();
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
-
-
     const onDragEnd = (result) => {
         if (result.destination != null) {
             canvas.moveTo(canvas.getObjects()[result.source?.index], result.destination?.index);
@@ -70,13 +66,13 @@ const Layers2 = () => {
         }
     }
 
-    const deleteLayer = (e, canvas) => {
-        canvas.setActiveObject(canvas.item(e.target.getAttribute('key1')))
+    const deleteLayer = (canvas, i) => {
+        canvas.setActiveObject(canvas.item(i));
         deleteItemfromtimeline(kf, xpositions, dispatch);
     }
-    const toggleLock = (e, canvas) => {
+    const toggleLock = (canvas, i) => {
         try {
-            var aa = canvas.item(e.target.getAttribute('key1'));
+            var aa = canvas.item(i);
             aa.set({ selectable: !aa.selectable })
             canvas.discardActiveObject();
             canvas.requestRenderAll();
@@ -85,28 +81,18 @@ const Layers2 = () => {
         }
         dispatch({ type: 'CHANGE_CANVAS', payload: canvas })
     }
-    const selectObject = (e, canvas) => {
+    const selectObject = (canvas, i) => {
         try {
-            var aa = canvas.item(e.target.getAttribute('key1'));
+            var aa = canvas.item(i);
             canvas.setActiveObject(aa);
             setTextofActiveObject(aa.text ? aa.text : '');
             setIdofActiveObject(aa.id ? aa.id : '');
             setFontofInputBox(aa.fontFamily ? aa.fontFamily : '')
-            // console.log(aa._originalElement.currentSrc)
             canvas.requestRenderAll();
         } catch (error) {
-            //dummy
         }
     }
-    const selectObject1 = (e, canvas) => {
-        try {
-            var aa = canvas.item(e.target.getAttribute('key1'));
-            canvas.setActiveObject(aa);
-            canvas.requestRenderAll();
-        } catch (error) {
-            //dummy
-        }
-    }
+
     const getHexColor = (colorStr) => {
         var a = document.createElement('div');
         a.style.color = colorStr;
@@ -155,7 +141,7 @@ const Layers2 = () => {
                                         return (
                                             <Draggable draggableId={"draggable" + i} key={val + i} index={i}>
                                                 {(provided, snapshot) => (
-                                                    <tr
+                                                    <tr onClick={() => selectObject(canvas, i)}
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         style={{
@@ -166,23 +152,23 @@ const Layers2 = () => {
                                                             color: snapshot.isDragging ? 'white' : (activeLayers.includes(val)) ? 'white' : '',
                                                             //  marginTop: 100
                                                         }}
-                                                    ><td key1={i} onClick={(e) => selectObject(e, canvas)}>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e, canvas)} /></td>
-                                                        <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} key1={i} onClick={(e) => selectObject(e, canvas)} >{val.type}</td>
-                                                        <td><button key1={i} onClick={(e) => deleteLayer(e, window.editor?.canvas)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
-                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.id}</td>
-                                                        <td key1={i} onClick={(e) => toggleLock(e, canvas)}>{(!val.selectable).toString()}</td>
+                                                    ><td>{i + 1}</td><td  {...provided.dragHandleProps}><VscMove /></td>
+                                                        <td style={{ backgroundColor: (activeLayers.includes(val)) ? 'green' : '' }} >{val.type}</td>
+                                                        <td><button onClick={() => deleteLayer(canvas, i)}><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
+                                                        <td>{val.id}</td>
+                                                        <td onClick={() => toggleLock(canvas, i)}>{(!val.selectable).toString()}</td>
 
-                                                        <td style={{ fontFamily: val.fontFamily }} key1={i} onClick={(e) => selectObject(e, canvas)}>{val.text}</td>
+                                                        <td style={{ fontFamily: val.fontFamily }} >{val.text}</td>
 
-                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontFamily}</td>
-                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontSize}</td>
-                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontStyle}</td>
-                                                        <td key1={i} onClick={(e) => selectObject(e, canvas)}>{val.fontWeight}</td>
+                                                        <td>{val.fontFamily}</td>
+                                                        <td>{val.fontSize}</td>
+                                                        <td>{val.fontStyle}</td>
+                                                        <td>{val.fontWeight}</td>
 
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.fill)} onChange={e => { changeCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.backgroundColor)} onChange={e => { changeBackGroundColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.stroke)} onChange={e => { changeStrokeCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
-                                                        <td><input key1={i} onClick={(e) => selectObject1(e, canvas)} type="color" value={getHexColor(val.shadow?.color)} onChange={e => { changeShadowCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
+                                                        <td><input type="color" value={getHexColor(val.fill)} onChange={e => { changeCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
+                                                        <td><input type="color" value={getHexColor(val.backgroundColor)} onChange={e => { changeBackGroundColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
+                                                        <td><input type="color" value={getHexColor(val.stroke)} onChange={e => { changeStrokeCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
+                                                        <td><input type="color" value={getHexColor(val.shadow?.color)} onChange={e => { changeShadowCurrentColor(e, canvas); dispatch({ type: 'CHANGE_CANVAS', payload: canvas }) }} /></td>
 
                                                     </tr>
                                                 )
@@ -213,4 +199,4 @@ const Layers2 = () => {
     </div>)
 }
 
-export default Layers2
+export default LayersAll

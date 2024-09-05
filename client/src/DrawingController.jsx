@@ -102,7 +102,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Images from "./Images";
 import SavedStyles from "./SavedStyles";
 
-import Layers2 from "./Layers2";
+import LayersAll from "./LayersAll";
 import CasparcgTools from "./CasparcgTools";
 
 import GsapPlayer from "./GsapPlayer";
@@ -674,7 +674,11 @@ const DrawingController = () => {
     setFontSize(e.target.value);
     canvas
       .getActiveObjects()
-      .forEach((item) => (item.fontSize = e.target.value));
+      .forEach(item => {
+        item.fontSize = e.target.value;
+        item.setCoords();
+      });
+
     canvas.requestRenderAll();
   };
   const makeFullScreen = () => {
@@ -2252,7 +2256,6 @@ const DrawingController = () => {
     }
   };
   const getvalues = () => {
-    console.log('getvalues')
     try {
       if (canvas?.getActiveObjects()?.[0]) {
         const element = canvas?.getActiveObjects()?.[0];
@@ -2265,7 +2268,6 @@ const DrawingController = () => {
         if (element.skewX !== null) {
           setSkewXSize(element.skewX.toFixed(0));
         }
-        // if (element.skewX !== null) {setSkewXSize(element.skewX); }
         if (element.skewY !== null) {
           setSkewYSize(element.skewY.toFixed(0));
         }
@@ -2808,9 +2810,9 @@ const DrawingController = () => {
           <div className="drawingToolsRow">
             <b> Font: </b>{" "}
             <select onChange={(e) => onFontChange(e)} value={currentFont}>
-              {fontList.map((val) => {
+              {fontList.map((val, i) => {
                 return (
-                  <option key={uuidv4()} value={val}>
+                  <option key={i} value={val}>
                     {val}
                   </option>
                 );
@@ -2871,12 +2873,6 @@ const DrawingController = () => {
 
             <input
               type="color"
-              // value={
-              //   canvas?.getActiveObjects()[0]?.backgroundColor &&
-              //     /^#[0-9A-Fa-f]{6}$/i.test(canvas?.getActiveObjects()[0]?.backgroundColor)
-              //     ? canvas?.getActiveObjects()[0]?.backgroundColor
-              //     : '#000000'
-              // }
               value={currentBGColor}
               onChange={(e) => {
                 changeBackGroundColor(e, canvas);
@@ -3839,7 +3835,7 @@ const DrawingController = () => {
             <SavePannel />
           </TabPanel>
           <TabPanel>
-            <Layers2 />
+            <LayersAll />
           </TabPanel>
           <TabPanel>
             <CasparcgTools />
