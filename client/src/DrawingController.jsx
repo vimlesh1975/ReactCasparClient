@@ -313,6 +313,8 @@ const DrawingController = () => {
   const [strokedashoffset, setstrokedashoffset] = useState(0);
   const [strokedasharray, setstrokedasharray] = useState([0, 0]);
   const [currentFillColor, setCurrentFillColor] = useState("#000000");
+  const [currentBGColor, setCurrentBGColor] = useState("#000000");
+  const [currentStrokColor, setCurrentStrokColor] = useState("#000000");
 
   const kf = useSelector((state) => state.kfReducer.kf);
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
@@ -2324,10 +2326,8 @@ const DrawingController = () => {
         }
 
         setCurrentFillColor(element.fill);
-        // console.log(element.fill)
-        // console.log(element.shadow.color)
-        // console.log(element.stroke)
-        // console.log(element.backgroundColor)
+        setCurrentBGColor(element.backgroundColor);
+        setCurrentStrokColor(element.stroke);
 
         if (element.strokeDashArray !== null) {
           setstrokedasharray(element.strokeDashArray);
@@ -2863,7 +2863,7 @@ const DrawingController = () => {
                 value={currentFillColor}
                 onChange={(e) => {
                   changeCurrentColor(e, canvas);
-                  // setCurrentFillColor(e.target.value);
+                  setCurrentFillColor(e.target.value);
                 }}
               />
             )}
@@ -2871,13 +2871,17 @@ const DrawingController = () => {
 
             <input
               type="color"
-              value={
-                canvas?.getActiveObjects()[0]?.backgroundColor &&
-                  /^#[0-9A-Fa-f]{6}$/i.test(canvas?.getActiveObjects()[0]?.backgroundColor)
-                  ? canvas?.getActiveObjects()[0]?.backgroundColor
-                  : '#000000'
-              }
-              onChange={(e) => changeBackGroundColor(e, canvas)}
+              // value={
+              //   canvas?.getActiveObjects()[0]?.backgroundColor &&
+              //     /^#[0-9A-Fa-f]{6}$/i.test(canvas?.getActiveObjects()[0]?.backgroundColor)
+              //     ? canvas?.getActiveObjects()[0]?.backgroundColor
+              //     : '#000000'
+              // }
+              value={currentBGColor}
+              onChange={(e) => {
+                changeBackGroundColor(e, canvas);
+                setCurrentBGColor(e.target.value);
+              }}
             />
 
             Strk{" "}
@@ -2909,8 +2913,11 @@ const DrawingController = () => {
             ) : (
               <input
                 type="color"
-                value={canvas?.getActiveObjects()[0]?.stroke}
-                onChange={(e) => changeStrokeCurrentColor(e, canvas)}
+                value={currentStrokColor}
+                onChange={(e) => {
+                  changeStrokeCurrentColor(e, canvas);
+                  setCurrentStrokColor(e.target.value);
+                }}
               />
             )}
             <button

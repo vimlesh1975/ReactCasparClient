@@ -418,7 +418,6 @@ export const pasteClipboard = async (canvas) => {
 
           const blob = await item.getType("image/png");
           base64EncodeBlob(blob).then((base64) => {
-            console.log(base64)
             fabric.FabricImage.fromURL("data:image/png;base64," + base64).then(image => {
               image.set({
                 id: id,
