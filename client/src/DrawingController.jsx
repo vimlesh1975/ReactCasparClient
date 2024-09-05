@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import * as fabric from "fabric";
 import { generateUniqueId } from "./common";
@@ -221,10 +221,9 @@ const DrawingController = () => {
 
   const [shadowColor, setShadowColor] = useState('#000000');
   const [affectStrokeValue, setAffectStrokevalue] = useState(false);
-
-  const refBlur = useRef();
-  const refOffsetX = useRef();
-  const refOffsetY = useRef();
+  const [blur, setBlur] = useState(30);
+  const [offsetX, setOffsetX] = useState(30);
+  const [offsetY, setOffsetY] = useState(30);
 
   const [fontList, setFontList] = useState(fontLists);
   const [currentFont, setCurrentFont] = useState("Arial");
@@ -836,6 +835,7 @@ const DrawingController = () => {
   };
   const onBlurSizeChange = (value) => {
     shadowOptions.blur = value;
+    setBlur(value)
     canvas.getActiveObjects().forEach((item) => {
       if (item.shadow) {
         item.shadow.blur = value;
@@ -844,6 +844,7 @@ const DrawingController = () => {
     canvas.requestRenderAll();
   };
   const onoffsetXChange = (value) => {
+    setOffsetX(value);
     shadowOptions.offsetX = value;
     canvas.getActiveObjects().forEach((item) => {
       if (item.shadow) {
@@ -854,6 +855,7 @@ const DrawingController = () => {
   };
 
   const onoffsetYChange = (value) => {
+    setOffsetY(value);
     shadowOptions.offsetY = value;
     canvas.getActiveObjects().forEach((item) => {
       if (item.shadow) {
@@ -2336,12 +2338,11 @@ const DrawingController = () => {
           setstrokedashoffset(element.strokeDashOffset);
         }
         if (element.shadow !== null) {
-          // refShadowColor.current.value = element.shadow.color;
           setShadowColor(element.shadow.color);
           setAffectStrokevalue(element.shadow.affectStroke)
-          refBlur.current.value = element.shadow.blur;
-          refOffsetX.current.value = element.shadow.offsetX;
-          refOffsetY.current.value = element.shadow.offsetY;
+          setBlur(element.shadow.blur);
+          setOffsetX(element.shadow.offsetX);
+          setOffsetY(element.shadow.offsetY);
         }
       }
     } catch (error) {
@@ -3106,16 +3107,15 @@ const DrawingController = () => {
                     <td>
                       {" "}
                       <input
-                        ref={refBlur}
                         className="inputRangeshadow"
                         onChange={(e) => onBlurSizeChange(e.target.value)}
                         type="range"
                         min="0"
                         max="100"
                         step="1"
-                        defaultValue="30"
+                        value={blur}
                       />
-                      <button onClick={() => onBlurSizeChange(0)}>R</button>
+                      <button onClick={() => onBlurSizeChange(30)}>R</button>
                     </td>
                   </tr>
                   <tr>
@@ -3123,14 +3123,13 @@ const DrawingController = () => {
                     <td>
                       {" "}
                       <input
-                        ref={refOffsetX}
                         className="inputRangeshadow"
                         onChange={(e) => onoffsetXChange(e.target.value)}
                         type="range"
                         min="-400"
                         max="400"
                         step="1"
-                        defaultValue="0"
+                        value={offsetX}
                       />
                       <button onClick={() => onoffsetXChange(0)}>R</button>
                     </td>
@@ -3139,14 +3138,13 @@ const DrawingController = () => {
                     <td> offsetY</td>
                     <td>
                       <input
-                        ref={refOffsetY}
                         className="inputRangeshadow"
                         onChange={(e) => onoffsetYChange(e.target.value)}
                         type="range"
                         min="-200"
                         max="200"
                         step="1"
-                        defaultValue="0"
+                        value={offsetY}
                       />
                       <button onClick={() => onoffsetYChange(0)}>R</button>
                     </td>
