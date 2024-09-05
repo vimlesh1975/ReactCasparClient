@@ -2259,71 +2259,72 @@ const DrawingController = () => {
     try {
       if (canvas?.getActiveObjects()?.[0]) {
         const element = canvas?.getActiveObjects()?.[0];
-        if (element.rx !== null) {
+        if (element.rx) {
           setSkewRX(element.rx);
         }
-        if (element.ry !== null) {
+        if (element.ry) {
           setSkewRY(element.ry);
         }
-        if (element.skewX !== null) {
+        if (element.skewX) {
           setSkewXSize(element.skewX.toFixed(0));
         }
-        if (element.skewY !== null) {
+        if (element.skewY) {
           setSkewYSize(element.skewY.toFixed(0));
         }
-        if (element.fontFamily !== null) {
+        if (element.fontFamily) {
           setCurrentFont(element.fontFamily);
         }
-        if (element.fontSize !== null) {
+        console.log(element.fontSize)
+        if (element.fontSize) {
           setFontSize(element.fontSize);
         }
-        if (element.strokeWidth !== null) {
+        if (element.strokeWidth) {
           setStrokeWidth(element.strokeWidth);
         }
 
-        if (element.opacity !== null) {
+        if (element.opacity) {
           setOpacity(parseFloat(element.opacity).toFixed(1));
         }
-        if (element.charSpacing !== null) {
+        if (element.charSpacing) {
           setCharSpacing(element.charSpacing);
         }
 
-        if (element.scaleX !== null) {
+        if (element.scaleX) {
           setscaleX(element.scaleX);
         }
-        if (element.scaleY !== null) {
+        if (element.scaleY) {
           setscaleY(element.scaleY);
         }
 
-        if (element.left !== null) {
+        if (element.left) {
           setX(parseInt(element.left));
         }
-        if (element.top !== null) {
+        if (element.top) {
           setY(parseInt(element.top));
         }
 
-        if (element.width !== null) {
+        if (element.width) {
           setWidth(parseInt(element.width));
         }
-        if (element.height !== null) {
+        if (element.height) {
           setHeight(parseInt(element.height));
         }
 
-        if (element.angle !== null) {
+        if (element.angle) {
           setangle(parseInt(element.angle));
         }
 
-        if (element.fontStyle !== null) {
+        if (element.fontStyle) {
           setitallicnormal(element.fontStyle);
         }
-        if (element.fontWeight !== null) {
+        if (element.fontWeight) {
           setfontWeight1(element.fontWeight);
         }
 
-        if (element.undeline !== null) {
+        if (element.undeline) {
           setunderline1(element.underline ? "underline" : "");
         }
-        if (element.undeline !== null) {
+        if (element.undeline) {
           setlinethrough1(element.linethrough ? "line-through" : "");
         }
 
@@ -2331,15 +2332,15 @@ const DrawingController = () => {
         setCurrentBGColor(element.backgroundColor);
         setCurrentStrokColor(element.stroke);
 
-        if (element.strokeDashArray !== null) {
+        if (element.strokeDashArray) {
           setstrokedasharray(element.strokeDashArray);
         } else {
           setstrokedasharray([0, 0]);
         }
-        if (element.strokeDashOffset !== null) {
+        if (element.strokeDashOffset) {
           setstrokedashoffset(element.strokeDashOffset);
         }
-        if (element.shadow !== null) {
+        if (element.shadow) {
           setShadowColor(element.shadow.color);
           setAffectStrokevalue(element.shadow.affectStroke)
           setBlur(element.shadow.blur);

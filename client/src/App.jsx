@@ -487,10 +487,10 @@ const App = () => {
                 </div>
               </div>
               <div style={{ display: 'flex' }}>
-                <div>
+                <div style={{ border: '1px solid red' }}>
                   <TimeLine1 />
                 </div>
-                <div>
+                <div style={{ border: '1px solid red' }}>
                   <HtmlOutput scale={0.315} />
                 </div>
                 <div style={{ display: 'none' }}>

@@ -178,7 +178,8 @@ const LayersAll = ({ compact }) => {
         </div>
 
         <div>
-            <br />  <button onClick={setId}>Set Id</button><input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
+            <br />  <button onClick={setId}>Set Id</button>
+            <input type='text' style={{ width: 300 }} value={idofActiveObject} onChange={e => setIdofActiveObject(e.target.value)} />
             Font Size<input className='inputRangeFontSize' onChange={e => setFontSizeofTexrArea(parseInt(e.target.value))} type="range" min={0} max={100} step={1} defaultValue={25} />{fontSizeofTexrArea}
             <br />  <textarea value={textofActiveObject} onChange={e => setTextofActiveObject(e.target.value)} style={{ width: compact ? 350 : 890, height: 150, fontFamily: fontofInputBox, fontSize: fontSizeofTexrArea }} ></textarea>
             <button onClick={setText}>Set Text</button>
