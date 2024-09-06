@@ -38,16 +38,13 @@ const ElementList = ({ sheet, arrObject, studio, importHtml }) => {
 
     const onDragEnd = (result) => {
         if (result.destination != null) {
-
             const sourceIndex = result.source?.index;
             const destinationIndex = result.destination?.index;
-
-            canvas.moveTo(canvas.getObjects()[sourceIndex], destinationIndex);
+            canvas.moveObjectTo(canvas.getObjects()[sourceIndex], destinationIndex);
             moveElement(sourceIndex, destinationIndex,
                 kf,
                 xpositions,
                 dispatch);
-
             const modifiedcanvasContent = (JSON.stringify(canvas.toJSON(['id', 'class', 'selectable'])))
             const modifiedAnimationContent = (JSON.stringify(studio.createContentOfSaveFile(sheet.address.projectId)))
             importHtml(modifiedcanvasContent, modifiedAnimationContent)
