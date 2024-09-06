@@ -60,7 +60,7 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
                 <textarea
                     value={content}
                     onChange={handleContentChange}
-                    rows="20"
+                    rows="30"
                     cols="50"
                     style={{ fontSize: 20 }}
 

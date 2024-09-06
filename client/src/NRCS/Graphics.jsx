@@ -8,6 +8,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import * as fabric from 'fabric';
 import VerticalScrollPlayer from '../VerticalScrollPlayer'
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import Oneliner from './Oneliner';
 
 const Graphics = () => {
     const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -505,9 +506,17 @@ const Graphics = () => {
                         forceRenderTabPanel={true}
                     >
                         <TabList>
+                            <Tab>Oneliner and Script</Tab>
                             <Tab>Copy Graphics</Tab>
-                            <Tab>Script</Tab>
                         </TabList>
+                        <TabPanel>
+                            <div>
+                                <Oneliner slugs={slugs} currentStoryNumber={currentSlug} />
+                            </div>
+                            <div>
+                                <Script ScriptID={ScriptID} title={selectedRunOrderTitle} currentSlugSlugName={currentSlugSlugName} />
+                            </div>
+                        </TabPanel>
                         <TabPanel>
                             <div>
                                 Run Orders:<select value={selectedRunOrderTitle2} onChange={handleSelectionChange2}>
@@ -582,11 +591,7 @@ const Graphics = () => {
 
                             </div>
                         </TabPanel>
-                        <TabPanel>
-                            <div>
-                                <Script ScriptID={ScriptID} title={selectedRunOrderTitle} currentSlugSlugName={currentSlugSlugName} />
-                            </div>
-                        </TabPanel>
+
                     </Tabs>
                 </div>
             </div>
