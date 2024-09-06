@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import * as fabric from "fabric";
-import { generateUniqueId } from "./common";
+import { debounce } from "lodash";
+// import { generateUniqueId } from "./common";
 import {
+  generateUniqueId,
   resizeTextWidth,
   deleteAll,
   lock,
@@ -318,6 +320,24 @@ const DrawingController = () => {
 
   const kf = useSelector((state) => state.kfReducer.kf);
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
+
+  // Create debounced function
+  const debouncedSetCurrentFillColor = debounce(value => {
+    setCurrentFillColor(value);
+  }, 300);
+
+  const debouncedsetCurrentBGColor = debounce(value => {
+    setCurrentBGColor(value);
+  }, 300);
+
+  const debouncedsetCurrentStrokColor = debounce(value => {
+    setCurrentStrokColor(value);
+  }, 300);
+
+
+  const debouncedsetShadowColor = debounce(value => {
+    setShadowColor(value);
+  }, 300);
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -2872,7 +2892,8 @@ const DrawingController = () => {
                 value={currentFillColor}
                 onChange={(e) => {
                   changeCurrentColor(e, canvas);
-                  setCurrentFillColor(e.target.value);
+                  // setCurrentFillColor(e.target.value);
+                  debouncedSetCurrentFillColor(e.target.value); // Debounced state update
                 }}
               />
             )}
@@ -2883,7 +2904,7 @@ const DrawingController = () => {
               value={currentBGColor}
               onChange={(e) => {
                 changeBackGroundColor(e, canvas);
-                setCurrentBGColor(e.target.value);
+                debouncedsetCurrentBGColor(e.target.value);
               }}
             />
 
@@ -2919,7 +2940,7 @@ const DrawingController = () => {
                 value={currentStrokColor}
                 onChange={(e) => {
                   changeStrokeCurrentColor(e, canvas);
-                  setCurrentStrokColor(e.target.value);
+                  debouncedsetCurrentStrokColor(e.target.value);
                 }}
               />
             )}
@@ -3093,7 +3114,7 @@ const DrawingController = () => {
                         value={shadowColor}
                         onChange={(e) => {
                           changeShadowCurrentColor(e, canvas);
-                          setShadowColor(e.target.value);
+                          debouncedsetShadowColor(e.target.value);
                         }}
                       />
                     </td>
