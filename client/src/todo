@@ -9,3 +9,6 @@ import "fabric-history"; from drawingcontroller
  
 
 redo
+
+svg is exported with rgb color  like rgb(0,0,0), text only as text element with spans
+json like #00000

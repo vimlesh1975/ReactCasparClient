@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from '@theatre/dataverse'
 
-export const buildDate = "060924_2";
+export const buildDate = "060924_3";
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
   const studioPrivate = window.__TheatreJS_StudioBundle._studio
@@ -1899,6 +1899,32 @@ export const findElementWithId = (group, id) => {
 
   return null;
 };
+
+export function rgbStringToHex(rgbString) {
+  // Extract the numeric values from the rgb() string
+  if (rgbString === "") {
+    rgbString = "rgb(0, 0, 0)";
+  }
+  const rgbValues = rgbString
+    .match(/\d+/g)
+    .map(Number); // Extracts [r, g, b]
+
+  // Convert the RGB values to hexadecimal
+  return rgbToHex(...rgbValues);
+}
+
+export function rgbToHex(r, g, b) {
+  return (
+    "#" +
+    [r, g, b]
+      .map((value) => {
+        const hex = value.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("")
+  );
+}
+
 export const hexToRGB = (hex) => {
   const red = parseInt(hex.slice(1, 3), 16);
   const green = parseInt(hex.slice(3, 5), 16);

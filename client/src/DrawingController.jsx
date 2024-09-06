@@ -4,6 +4,7 @@ import * as fabric from "fabric";
 import { debounce } from "lodash";
 // import { generateUniqueId } from "./common";
 import {
+  // rgbStringToHex,
   generateUniqueId,
   resizeTextWidth,
   deleteAll,
@@ -656,7 +657,7 @@ const DrawingController = () => {
         stroke: "#000000",
         strokeWidth: 0,
         id: "gameTimer1",
-        class: "class_" + fabric.Object.__uid,
+        class: "class_gameTimer1",
       }
     );
     canvas.add(sss).setActiveObject(sss);
@@ -682,7 +683,7 @@ const DrawingController = () => {
         stroke: "#000000",
         strokeWidth: 0,
         id: "gameTimer2",
-        class: "class_" + fabric.Object.__uid,
+        class: "class_gameTimer2"
       }
     );
     canvas.add(sss).setActiveObject(sss);
@@ -814,31 +815,24 @@ const DrawingController = () => {
     if (ss) {
       fabric.loadSVGFromString(ss, function (objects) {
         objects?.forEach((element) => {
-          canvas.add(element);
+          const id = generateUniqueId({ type: "id" });
           element.set({
+            id: element.id ?? id,
+            class: element.id ?? id,
             objectCaching: false,
-            shadow: element.shadow ? element.shadow : shadowOptions,
-            id: "id_" + fabric.Object.__uid,
-            class: "class_" + fabric.Object.__uid,
+            shadow: element.shadow ?? shadowOptions,
+
           });
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
               top: element.top + (element.height * element.scaleY) / 4,
             });
-            element.set({ type: "textbox" });
-            var textobj = element.toObject();
-            var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-            var aa = new fabric.Textbox(element.text, clonedtextobj);
-            aa.set({
-              id: element.id,
-              class: element.class,
-              objectCaching: false,
-              shadow: element.shadow ? element.shadow : shadowOptions,
-              width: 1000,
-            });
-            canvas.remove(element);
+            var aa = new fabric.Textbox(element.text, { ...element });
             canvas.add(aa);
+          }
+          else {
+            canvas.add(element);
           }
         });
       });
@@ -1151,24 +1145,23 @@ const DrawingController = () => {
       var site_url = URL.createObjectURL(file);
       fabric.loadSVGFromURL(site_url).then((o) => {
         o?.objects.forEach((element) => {
-          canvas.add(element);
-          element.set({ objectCaching: false, shadow: { ...shadowOptions } });
+          const id = generateUniqueId({ type: "id" });
+          element.set({
+            id: element.id ?? id,
+            class: element.id ?? id,
+            objectCaching: false,
+            shadow: { ...shadowOptions, blur: 0 },
+          });
           if (element.type === "text") {
             element.set({
               left: element.left - (element.width * element.scaleX) / 2,
               top: element.top + (element.height * element.scaleY) / 4,
             });
-            // element.set({ type: "i-text" });
-            var textobj = element.toObject();
-            var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-            var aa = new fabric.IText(element.text, clonedtextobj);
-            aa.set({
-              id: element.id,
-              objectCaching: false,
-              shadow: { ...shadowOptions },
-            });
-            canvas.remove(element);
+            var aa = new fabric.Textbox(element.text, { ...element });
             canvas.add(aa);
+          }
+          else {
+            canvas.add(element);
           }
         });
       });
