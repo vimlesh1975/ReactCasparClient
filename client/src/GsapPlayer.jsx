@@ -46,26 +46,16 @@ const GsapPlayer = ({ layer1, inline }) => {
         const content = JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']));
 
         const contentforHtml = content.replaceAll('"', '\\"').replaceAll('\\n', '\\\\n');
-        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\n');
+        const contentforcasparcg = content.replaceAll('"', '\\"').replaceAll('\\n', ' \\\\n');
 
-        // endpoint(`play ${window.chNumber}-${layerNumber} [html] "http://localhost:10000/ReactCasparClient/CanvasPlayer"`);
-        const script = `
+        const script = `canvas.loadFromJSON(${contentforcasparcg}).then(() => {canvas.requestRenderAll(); });`
 
-        canvas.loadFromJSON(${contentforcasparcg}).then(() => {
-           
-        });
-        `
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`)
-        }, 100);
-
+        setTimeout(() => { endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`) }, 100);
 
         const scriptforHtml = `
-      
         var content =\`${contentforHtml}\`;
-
         canvas_${layerNumber}.loadFromJSON(content).then(() => {
-           
+           canvas_${layerNumber}.requestRenderAll();
         })
         `
         executeScript(scriptforHtml)
