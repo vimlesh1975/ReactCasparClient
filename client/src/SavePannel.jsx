@@ -153,21 +153,21 @@ const SavePannel = () => {
         // eslint-disable-next-line
     }, [])
 
-    const deletePage = e => {
-        if (currentPage > e.target.getAttribute('key1')) {
+    const deletePage = index => {
+        if (currentPage > index) {
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: currentPage - 1 })
         }
-        else if (currentPage === parseInt(e.target.getAttribute('key1'))) {
+        else if (currentPage === index) {
             dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: null })
         }
         const updatedcanvasList = canvasList.filter((_, i) => {
-            return (parseInt(e.target.getAttribute('key1')) !== i)
+            return (index !== i)
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
     }
-    const updatePageName = e => {
+    const updatePageName = (e, index) => {
         const updatedcanvasList = canvasList.map((val, i) => {
-            return (i === parseInt(e.target.getAttribute('key1'))) ? { ...val, 'pageName': e.target.value } : val;
+            return (i === index) ? { ...val, 'pageName': e.target.value } : val;
         });
         dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
 
@@ -444,12 +444,12 @@ const SavePannel = () => {
                                                             {listView ? <><td>
                                                                 <span>{i + 1}</span>
                                                                 <span style={{ marginLeft: 10 }}  {...provided.dragHandleProps}><VscMove /></span>
-                                                                <button style={{ marginLeft: 10 }} key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                                <button style={{ marginLeft: 10 }} onClick={() => deletePage(i)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                             </td>
                                                                 <td>
                                                                     <input type='text' style={{ border: 'none', borderWidth: 0, minWidth: 245, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                         recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2);
-                                                                    }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                    }} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={e => updatePageName(e, i)}
                                                                     />
                                                                 </td></> :
 
@@ -462,7 +462,7 @@ const SavePannel = () => {
                                                                             <span {...provided.dragHandleProps}><VscMove /></span>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={(e) => deletePage(e)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button onClick={() => deletePage(i)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
                                                                             <button key1={i} onClick={() => {
@@ -481,7 +481,7 @@ const SavePannel = () => {
                                                                         </div>
                                                                         <input type='text' style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }} onClick={(e) => {
                                                                             recallPage(val.pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2);
-                                                                        }} key1={i} key2={'vimlesh'} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={updatePageName}
+                                                                        }} onDoubleClick={e => e.target.setSelectionRange(0, e.target.value.length)} value={val.pageName} onChange={e => updatePageName(e, i)}
                                                                         />
                                                                     </td></>}
                                                         </tr>
