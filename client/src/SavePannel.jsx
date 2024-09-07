@@ -75,13 +75,13 @@ const SavePannel = () => {
         const updatedcanvasList = canvasList.filter((_, i) => {
             return (index !== i)
         });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
     }
     const updatePageName = (e, index) => {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === index) ? { ...val, 'pageName': e.target.value } : val;
         });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
 
     }
 
@@ -195,8 +195,7 @@ const SavePannel = () => {
         });
     }
     const drawingFileNew = () => {
-        var updatedcanvasList = [];
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [] })
         setCurrentFileName('')
     }
 
@@ -204,7 +203,7 @@ const SavePannel = () => {
         const updatedcanvasList = canvasList.map((val, i) => {
             return (i === currentPage) ? { ...val, 'pageValue': canvas.toJSON(['id', 'selectable', 'class']), jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 } : val;
         });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
     }
 
     async function drawingFileSaveAs() {
@@ -306,7 +305,7 @@ const SavePannel = () => {
                 updatedcanvasList.push(cc)
             }
         });
-        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...updatedcanvasList] })
+        dispatch({ type: 'CHANGE_CANVAS_LIST', payload: updatedcanvasList })
     }
 
 
