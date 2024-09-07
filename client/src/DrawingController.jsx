@@ -696,11 +696,10 @@ const DrawingController = () => {
     canvas
       .getActiveObjects()
       .forEach(item => {
-        item.fontSize = e.target.value;
-        item.setCoords();
+        item.set({ fontSize: e.target.value });
       });
-
     canvas.requestRenderAll();
+
   };
   const makeFullScreen = () => {
     canvas?.getActiveObjects().forEach((element) => {
@@ -771,7 +770,9 @@ const DrawingController = () => {
     setCurrentFont(e.target.value);
     canvas
       .getActiveObjects()
-      .forEach((item) => (item.fontFamily = e.target.value));
+      .forEach((item) => {
+        item.set({ fontFamily: e.target.value });
+      })
     canvas.requestRenderAll();
   };
 

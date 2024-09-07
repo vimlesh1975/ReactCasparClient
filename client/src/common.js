@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from '@theatre/dataverse'
 
-export const buildDate = "060924_3";
+export const buildDate = "070924_1";
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
   const studioPrivate = window.__TheatreJS_StudioBundle._studio
