@@ -820,9 +820,9 @@ const TimeLine1 = () => {
   }
 
 
-  const selectObject = (e) => {
+  const selectObject = (i) => {
     try {
-      var aa = canvas.item(e.target.getAttribute('key1'));
+      var aa = canvas.item(i);
       canvas.setActiveObject(aa);
       canvas.requestRenderAll();
     } catch (error) {
@@ -895,26 +895,25 @@ const TimeLine1 = () => {
                             marginTop: 1
                           }}
                         >
-                          <div key1={i} style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'gray' : 'darkgray', }} onClick={(e) => { selectObject(e) }}>
-                            <div style={{ minWidth: 70 }}><span key1={i} onClick={(e) => selectObject(e)} style={{ marginLeft: 5 }}>{(element.type)}</span></div>
-                            <div  {...provided.dragHandleProps}><VscMove key1={i} onClick={(e) => selectObject(e)} /> </div>
+                          <div style={{ display: 'flex', backgroundColor: (activeLayers.includes(element)) ? 'gray' : 'darkgray', }} onClick={() => { selectObject(i) }}>
+                            <div style={{ minWidth: 70, }}><span style={{ marginLeft: 5, cursor: 'default' }}>{(element.type)}</span></div>
+                            <div  {...provided.dragHandleProps}><VscMove /> </div>
                             <div> <button title='Lock selected' onClick={() => {
                               canvas.discardActiveObject();
                               lockUnlock(canvas, i, dispatch);
                             }}
                             >{element.selectable ? < VscUnlock /> : < VscLock style={{ opacity: 0.5 }} />}</button></div>
                             <div> <button title='visible selected' onClick={() => visibleInVisible(canvas, i, dispatch)}>{element.visible ? < VscEye /> : < VscEyeClosed style={{ opacity: 0.5 }} />}</button></div>
-                            <div> <button key1={i} onClick={(e) => {
-                              selectObject(e);
+                            <div> <button onClick={() => {
                               deleteItemfromtimeline(kf, xpositions, dispatch);
                             }}><VscTrash style={{ pointerEvents: 'none' }} /></button></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 105 }} onChange={e => {
+                            <div ><input style={{ width: 105 }} onChange={e => {
                               element.id = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
                             }
                             } value={element.id} /></div>
-                            <div ><input key1={i} onClick={(e) => selectObject(e)} style={{ width: 105 }} onChange={e => {
+                            <div ><input style={{ width: 105 }} onChange={e => {
                               element.class = e.target.value;
                               dispatch({ type: 'CHANGE_CANVAS', payload: canvas });
                               canvas.requestRenderAll();
