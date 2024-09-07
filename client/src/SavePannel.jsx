@@ -6,10 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { endpoint, stopGraphics, updateGraphics, templateLayers, executeScript, rgbaObjectToHex, saveFile } from './common'
-import { animation } from './animation.js'
-import * as fabric from 'fabric';
-
+import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, saveFile } from './common'
 
 var currentFile = 'new';
 let fileReader;
@@ -27,92 +24,7 @@ const SavePannel = () => {
     const [listView, setListView] = useState(true);
     const dispatch = useDispatch();
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
-
-
     const [currentFileName, setCurrentFileName] = useState()
-
-    const startGraphics = (canvas, layerNumber) => {
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-
-        var inAnimation;
-        if (window.inAnimationMethod === 'mix') {
-            inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`
-        }
-
-        else if (((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod)) !== -1) {
-            inAnimation = animation[((animation.map(val => val.name)).findIndex(val => val === window.inAnimationMethod))].value;
-        }
-        else if (window.inAnimationMethod === 'lefttoright') {
-            inAnimation = ``
-            // canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-            endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
-
-            setTimeout(() => {
-                endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-            }, 250);
-            const script = `
-                            var aa = document.createElement('div');
-                            aa.style.position='absolute';
-                            aa.setAttribute('id','divid_' + '${layerNumber}');
-                            aa.style.zIndex = ${layerNumber};
-                            aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
-                            document.body.appendChild(aa);
-                            document.body.style.margin='0';
-                            document.body.style.padding='0';
-                            aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                            document.body.style.overflow='hidden';
-                            var style = document.createElement('style');
-                            style.textContent = '${inAnimation}';
-                            document.head.appendChild(style);
-                        `
-            executeScript(script);
-            setTimeout(() => {
-                endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
-            "`)
-            }, 300);
-
-            setTimeout(() => {
-                endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`)
-            }, 800);
-            setTimeout(() => {
-                updateGraphics(canvas, layerNumber);
-            }, 1100);
-            return
-        }
-
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
-        const script = `
-                    var bb = document.createElement('div');
-                    bb.style.perspective='1920px';
-                    bb.style.transformStyle='preserve-3d';
-                    document.body.appendChild(bb);
-                    var aa = document.createElement('div');
-                    aa.style.position='absolute';
-                    aa.setAttribute('id','divid_' + '${layerNumber}');
-                    aa.style.zIndex = ${layerNumber};
-                    aa.innerHTML=\`${(canvas.toSVG()).replaceAll('"', '\\"')}\`;
-                    bb.appendChild(aa);
-                    document.body.style.margin='0';
-                    document.body.style.padding='0';
-                    aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
-                    document.body.style.overflow='hidden';
-                    var style = document.createElement('style');
-                    style.textContent = '${inAnimation}';
-                    document.head.appendChild(style);
-                `
-        executeScript(script);
-
-        setTimeout(() => {
-            endpoint(`call ${window.chNumber}-${layerNumber} "
-        ${script}
-            "`)
-        }, 100);
-        setTimeout(() => {
-            updateGraphics(canvas, layerNumber);
-        }, 1200);
-
-    }
 
     useEffect(() => {
         setTimeout(() => {
@@ -173,40 +85,75 @@ const SavePannel = () => {
 
     }
 
-    const recallPage = (json, canvas, i, jsfilename1, cssfilename1, jsfilename2, cssfilename2) => {
-        dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+    const recallPage = (
+        json,
+        canvas,
+        i,
+        jsfilename1 = 'main',
+        cssfilename1 = 'main',
+        jsfilename2 = 'main2',
+        cssfilename2 = 'main2'
+    ) => {
+        return new Promise((resolve, reject) => {
+            try {
+                // Dispatch actions for current page, js/css filenames
+                dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
+                dispatch({ type: 'CHANGE_JSFILENAME', payload: jsfilename1 });
+                dispatch({ type: 'CHANGE_CSSFILENAME', payload: cssfilename1 });
+                dispatch({ type: 'CHANGE_JSFILENAME2', payload: jsfilename2 });
+                dispatch({ type: 'CHANGE_CSSFILENAME2', payload: cssfilename2 });
 
-        dispatch({ type: 'CHANGE_JSFILENAME', payload: (jsfilename1 === undefined) ? 'main' : jsfilename1 });;
-        dispatch({ type: 'CHANGE_CSSFILENAME', payload: (cssfilename1 === undefined) ? 'main' : cssfilename1 });
+                // Load the canvas from JSON
+                canvas.loadFromJSON(json).then(() => {
+                    const objects = canvas.getObjects();
 
-        dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
-        dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
+                    // Process each object in the canvas
+                    objects.forEach((element) => {
+                        try {
+                            //  disable object caching
+                            element.set({
+                                objectCaching: false,
+                            });
 
-        canvas.loadFromJSON(json).then(() => {
-            const aa = canvas.getObjects();
-            aa.forEach(element => {
-                try {
-                    element.set({ id: element.id ? element.id : 'id_' + fabric.Object.__uid++, class: element.class ? element.class : 'class_' + fabric.Object.__uid++, objectCaching: false });
-                    if (typeof element.fill === 'object' && element.fill !== null && 'r' in element.fill && 'g' in element.fill && 'b' in element.fill && 'a' in element.fill) {
-                        element.set({ fill: rgbaObjectToHex(element.fill) })
-                    }
-                    if (typeof element.stroke === 'object' && element.stroke !== null && 'r' in element.stroke && 'g' in element.stroke && 'b' in element.stroke && 'a' in element.stroke) {
-                        element.set({ stroke: rgbaObjectToHex(element.stroke) })
-                    }
-                    if (typeof element.shadow.color === 'object' && element.shadow.color !== null && 'r' in element.shadow.color && 'g' in element.shadow.color && 'b' in element.shadow.color && 'a' in element.shadow.color) {
-                        element.set({ shadow: { ...element.shadow, color: rgbaObjectToHex(element.shadow.color) } })
-                    }
-                    element.on('mousedblclick', () => {
-                        window.edit();
-                    })
-                } catch (error) {
-                    // alert(error);
-                    return;
-                }
-            });
-            canvas.requestRenderAll();
+                            // Convert fill, stroke, and shadow color from RGBA to hex if necessary
+                            if (isRGBAObject(element.fill)) {
+                                element.set({ fill: rgbaObjectToHex(element.fill) });
+                            }
+                            if (isRGBAObject(element.stroke)) {
+                                element.set({ stroke: rgbaObjectToHex(element.stroke) });
+                            }
+                            if (element.shadow && isRGBAObject(element.shadow.color)) {
+                                element.set({ shadow: { ...element.shadow, color: rgbaObjectToHex(element.shadow.color) } });
+                            }
+
+                            // Add a double-click event to trigger the edit function
+                            element.on('mousedblclick', () => {
+                                window.edit();
+                            });
+                        } catch (error) {
+                            console.error('Error processing element:', error);
+                        }
+                    });
+
+                    // Trigger a render after all changes
+                    canvas.requestRenderAll();
+
+                    // Resolve the promise after the canvas is rendered
+                    resolve();
+                }).catch((err) => {
+                    console.error('Error loading canvas from JSON:', err);
+                    reject(err);
+                });
+            } catch (error) {
+                console.error('Error recalling page:', error);
+                reject(error);
+            }
         });
-    }
+    };
+
+    // Helper function to check if the color is an RGBA object
+    const isRGBAObject = (color) => color && typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color && 'a' in color;
+
 
     const deleteAll = canvas => {
         const aa = canvas.getObjects()
@@ -465,13 +412,13 @@ const SavePannel = () => {
                                                                             <button onClick={() => deletePage(i)}>  <VscTrash style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() => {
-                                                                                recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2)
-                                                                                startGraphics(canvas, templateLayers.savePannelPlayer);
+                                                                            <button onClick={() => {
+                                                                                recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2).then(() =>
+                                                                                    startGraphics(canvas, templateLayers.savePannelPlayer, currentscreenSize))
                                                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
-                                                                            <button key1={i} onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                     </div>
                                                                 </td>
