@@ -361,7 +361,7 @@ const SavePannel = () => {
                 <button onClick={() => setListView(val => !val)}>{listView ? 'ListView' : 'Thumbnail View'}</button>
 
             </div>
-            <div style={{ height: 690, width: 380, overflow: 'scroll', border: '1px solid black' }}>
+            <div style={{ height: 645, width: 380, overflow: 'scroll', border: '1px solid black' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable-1" type="PERSON">
                         {(provided, snapshot) => (
