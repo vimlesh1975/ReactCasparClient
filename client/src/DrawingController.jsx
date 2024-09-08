@@ -2392,7 +2392,7 @@ const DrawingController = () => {
       <div
         style={{
           width: 495,
-          height: 900,
+          height: 835,
           backgroundColor: "#f4f0e7",
           overflow: "scroll",
         }}
