@@ -2,9 +2,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import * as fabric from "fabric";
 import { debounce } from "lodash";
-// import { generateUniqueId } from "./common";
 import {
-  // rgbStringToHex,
+  importSvgCode,
+  parseSvg,
   generateUniqueId,
   resizeTextWidth,
   deleteAll,
@@ -810,36 +810,10 @@ const DrawingController = () => {
     canvas.loadFromJSON(content).then(() => {
       setclipPathWhileImporting(canvas);
     });
-    importSvgCode(preCanvas);
+    importSvgCode(preCanvas, canvas);
   };
-  const importSvgCode = (ss) => {
-    if (ss) {
-      fabric.loadSVGFromString(ss, function (objects) {
-        objects?.forEach((element) => {
-          const id = generateUniqueId({ type: "id" });
-          element.set({
-            id: element.id ?? id,
-            class: element.id ?? id,
-            objectCaching: false,
-            shadow: element.shadow ?? shadowOptions,
 
-          });
-          if (element.type === "text") {
-            element.set({
-              left: element.left - (element.width * element.scaleX) / 2,
-              top: element.top + (element.height * element.scaleY) / 4,
-            });
-            var aa = new fabric.Textbox(element.text, { ...element });
-            canvas.add(aa);
-          }
-          else {
-            canvas.add(element);
-          }
-        });
-      });
-      canvas.requestRenderAll();
-    }
-  };
+
 
   const resetZommandPan = () => {
     canvas.setZoom(1);
@@ -1144,27 +1118,8 @@ const DrawingController = () => {
   const importSVG = (file) => {
     if (file) {
       var site_url = URL.createObjectURL(file);
-      fabric.loadSVGFromURL(site_url).then((o) => {
-        o?.objects.forEach((element) => {
-          const id = generateUniqueId({ type: "id" });
-          element.set({
-            id: element.id ?? id,
-            class: element.id ?? id,
-            objectCaching: false,
-            shadow: { ...shadowOptions, blur: 0 },
-          });
-          if (element.type === "text") {
-            element.set({
-              left: element.left - (element.width * element.scaleX) / 2,
-              top: element.top + (element.height * element.scaleY) / 4,
-            });
-            var aa = new fabric.Textbox(element.text, { ...element });
-            canvas.add(aa);
-          }
-          else {
-            canvas.add(element);
-          }
-        });
+      fabric.loadSVGFromURL(site_url).then(output => {
+        parseSvg(output, canvas);
       });
       canvas.renderAll();
     }

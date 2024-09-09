@@ -4,7 +4,52 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from '@theatre/dataverse'
 
-export const buildDate = "070924_1";
+export const buildDate = "090924_1";
+
+export const importSvgCode = (ss, canvas) => {
+  if (ss) {
+    fabric.loadSVGFromString(ss).then(output => {
+      parseSvg(output, canvas);
+    });
+    canvas.requestRenderAll();
+  }
+};
+
+export const parseSvg = (output, canvas) => {
+  // eslint-disable-next-line
+  const { objects, elements, options, allElements } = output;
+  objects?.forEach((element, i) => {
+    const id = generateUniqueId({ type: "id" });
+    element.set({
+      id: element.id ?? id,
+      class: element.id ?? id,
+      objectCaching: false,
+      shadow: element.shadow ?? shadowOptions,
+
+    });
+    if (element.type === "path") {
+      element.on("mousedblclick", () => {
+        window.edit(window.dispatch);
+      });
+    }
+    if (element.type === "text") {
+      // const currentElement = elements[i]
+      // if (currentElement.children.length === 1) {
+      element.set({
+        left: element.left - (element.width * element.scaleX) / 2,
+        top: element.top + (element.height * element.scaleY) / 4,
+      });
+      // }
+      var aa = new fabric.Textbox(element.text, {
+        ...element,
+      });
+      canvas.add(aa);
+    }
+    else {
+      canvas.add(element);
+    }
+  });
+}
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
   const studioPrivate = window.__TheatreJS_StudioBundle._studio
@@ -1556,45 +1601,7 @@ export const stopGsapLayer = (
   "`);
 };
 
-export const importSvgCode = (ss, canvas) => {
-  if (ss) {
-    fabric.loadSVGFromString(ss).then((objects) => {
-      objects?.objects?.forEach((element) => {
-        const id = generateUniqueId(element);
 
-        canvas.add(element);
-        element.set({
-          objectCaching: false,
-          shadow: element.shadow ? element.shadow : shadowOptions,
-          id: id,
-          class: id,
-        });
-        if (element.type === "path") {
-          element.on("mousedblclick", () => {
-            window.edit(window.dispatch);
-          });
-        }
-        if (element.type === "text") {
-          // element.set({ left: (element.left - ((element.width) * element.scaleX / 2)), top: (element.top + ((element.height) * element.scaleY / 4)) })
-          element.set({ type: "textbox" });
-          var textobj = element.toObject();
-          var clonedtextobj = JSON.parse(JSON.stringify(textobj));
-          var aa = new fabric.Textbox(element.text, clonedtextobj);
-          aa.set({
-            id: element.id,
-            class: element.class,
-            objectCaching: false,
-            shadow: element.shadow ? element.shadow : shadowOptions,
-            width: 1000,
-          });
-          canvas.remove(element);
-          canvas.add(aa);
-        }
-      });
-    });
-    canvas.requestRenderAll();
-  }
-};
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
