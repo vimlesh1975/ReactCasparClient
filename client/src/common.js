@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from '@theatre/dataverse'
 
-export const buildDate = "090924_1";
+export const buildDate = "100924_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -15,41 +15,128 @@ export const importSvgCode = (ss, canvas) => {
   }
 };
 
+// export const parseSvg = (output, canvas) => {
+//   // eslint-disable-next-line
+//   const { objects, elements, options, allElements } = output;
+//   objects?.forEach((element, i) => {
+//     const id = generateUniqueId({ type: "id" });
+//     element.set({
+//       id: element.id ?? id,
+//       class: element.id ?? id,
+//       objectCaching: false,
+//       shadow: element.shadow ?? shadowOptions,
+
+//     });
+//     if (element.type === "path") {
+//       element.on("mousedblclick", () => {
+//         window.edit(window.dispatch);
+//       });
+//     }
+//     if (element.type === "text") {
+//       // const currentElement = elements[i]
+//       // if (currentElement.children.length === 1) {
+//       element.set({
+//         left: element.left - (element.width * element.scaleX) / 2,
+//         top: element.top + (element.height * element.scaleY) / 4,
+//       });
+//       // }
+//       var aa = new fabric.Textbox(element.text, {
+//         ...element,
+//       });
+//       canvas.add(aa);
+//     }
+//     else {
+//       canvas.add(element);
+//     }
+//   });
+// }
 export const parseSvg = (output, canvas) => {
+  console.log(output);
   // eslint-disable-next-line
   const { objects, elements, options, allElements } = output;
-  objects?.forEach((element, i) => {
-    const id = generateUniqueId({ type: "id" });
-    element.set({
-      id: element.id ?? id,
-      class: element.id ?? id,
-      objectCaching: false,
-      shadow: element.shadow ?? shadowOptions,
 
+  // Find extraproperty tags
+  const extrapropertyTags = allElements.filter((svgTag) => svgTag.tagName === 'extraproperty');
+
+  if (extrapropertyTags.length === 0) {
+    console.log('No extraproperty tags found. Using default values.');
+  }
+
+  var textNumber = 0;
+  objects.forEach((obj, index) => {
+
+    const id = generateUniqueId({ type: "id" });
+    obj.set({
+      id: obj.id ?? id,
+      class: obj.id ?? id,
+      objectCaching: false,
+      shadow: obj.shadow ?? { ...shadowOptions, blur: 5 },
     });
-    if (element.type === "path") {
-      element.on("mousedblclick", () => {
+
+    if (obj.type === "path") {
+      obj.on("mousedblclick", () => {
         window.edit(window.dispatch);
       });
     }
-    if (element.type === "text") {
-      // const currentElement = elements[i]
-      // if (currentElement.children.length === 1) {
-      element.set({
-        left: element.left - (element.width * element.scaleX) / 2,
-        top: element.top + (element.height * element.scaleY) / 4,
+
+    if (obj.type === 'text') {
+
+      // Set default values if no extraproperty tags found
+      let width = 200;
+      let textAlign = 'left';
+
+      if (extrapropertyTags.length > 0) {
+        // Use extraproperty tag values if available
+        width = extrapropertyTags[textNumber]?.getAttribute('width') || width;
+        textAlign = extrapropertyTags[textNumber]?.getAttribute('textAlign') || textAlign;
+        textNumber++;
+      }
+
+      console.log(width, textAlign);
+
+      const currentElement = elements[index];
+
+      // Concatenate all the tspans into one text with newline characters
+      let combinedText = '';
+      Array.from(currentElement.children).forEach((tspan) => {
+        combinedText += tspan.innerHTML + '\n'; // Adds each tspan's text and a newline
       });
-      // }
-      var aa = new fabric.Textbox(element.text, {
-        ...element,
+
+      combinedText = combinedText.trimEnd();
+
+      const tspan = currentElement.children[0];
+      const { x, y } = tspan.attributes;
+
+      let leftPosition = obj.left;
+
+      // Adjust the x position based on alignment
+      if (textAlign === 'center') {
+        leftPosition = obj.left - (parseInt(width) * obj.scaleX) / 2;
+      } else if (textAlign === 'right') {
+        leftPosition = obj.left - (parseInt(width) * obj.scaleX) / 2;
+      } else {
+        leftPosition = obj.left + Number(x.value);
+      }
+
+      // Create a new Textbox with combined tspan text
+      const text = new fabric.Textbox(combinedText, {
+        ...obj,
+        left: leftPosition,
+        top: obj.top + Number(y.value),
+        textAlign: textAlign,
+        width: parseInt(width),
       });
-      canvas.add(aa);
-    }
-    else {
-      canvas.add(element);
+
+      // Add the text to the canvas
+      return canvas.add(text);
+    } else {
+      // Add non-text objects directly to the canvas
+      canvas.add(obj);
     }
   });
-}
+};
+
+
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
   const studioPrivate = window.__TheatreJS_StudioBundle._studio
