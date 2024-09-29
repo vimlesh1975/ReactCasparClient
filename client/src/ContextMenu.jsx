@@ -1,6 +1,41 @@
 import useContextMenu from "./useContextMenu";
 
-import { copy, paste, undo, lock, unlockAll, alignLeft, alignRight, alignCenter, textUnderline, textLineThrough, textItalic, txtBold, textNormal, removeBg, groupObjects, createTriangle, createCircle, removeStroke, removeFill, removeShadow, createRect, createRandomeStrip, cloneAsImage, replaceWithImage, addImage, createTextBox, gradient, pasteClipboard, sendToBack, bringToFront, sendBackward, bringForward, shadowOptions } from "./common";
+import {
+  removeBgApi,
+  copy,
+  paste,
+  undo,
+  lock,
+  unlockAll,
+  alignLeft,
+  alignRight,
+  alignCenter,
+  textUnderline,
+  textLineThrough,
+  textItalic,
+  txtBold,
+  textNormal,
+  removeBg,
+  groupObjects,
+  createTriangle,
+  createCircle,
+  removeStroke,
+  removeFill,
+  removeShadow,
+  createRect,
+  createRandomeStrip,
+  cloneAsImage,
+  replaceWithImage,
+  addImage,
+  createTextBox,
+  gradient,
+  pasteClipboard,
+  sendToBack,
+  bringToFront,
+  sendBackward,
+  bringForward,
+  shadowOptions,
+} from "./common";
 
 import {
   VscPrimitiveSquare,
@@ -14,7 +49,6 @@ import { AiOutlineUndo } from "react-icons/ai";
 import { startPath } from "./PathModifier";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 
 const ContextMenu = ({ canvas }) => {
   const { xPos, yPos, showMenu } = useContextMenu();
@@ -65,18 +99,32 @@ const ContextMenu = ({ canvas }) => {
             <li onClick={() => dispatch({ type: "SHOW_ID", payload: !showId })}>
               Show Id on Hover :Toggle
             </li>
-            <li>Set As Mask to
+            <li>
+              Set As Mask to
               <ul>
                 {canvas.getObjects().map((element, i) => {
-                  return ((canvas.getActiveObjects()[0] !== element) && <li key={i} onClick={() => {
-                    if (canvas.getActiveObjects().length > 0) {
-                      const clipPath = canvas.getActiveObjects()[0]
-                      clipPath.set({ globalCompositeOperation: 'destination-out', absolutePositioned: true, shadow: { ...shadowOptions, blur: 0 } });
-                      canvas.sendObjectToBack(clipPath);
-                      element.set({ clipPath: clipPath });
-                      canvas.requestRenderAll();
-                    }
-                  }}>{element.type}-{element.id}</li>)
+                  return (
+                    canvas.getActiveObjects()[0] !== element && (
+                      <li
+                        key={i}
+                        onClick={() => {
+                          if (canvas.getActiveObjects().length > 0) {
+                            const clipPath = canvas.getActiveObjects()[0];
+                            clipPath.set({
+                              globalCompositeOperation: "destination-out",
+                              absolutePositioned: true,
+                              shadow: { ...shadowOptions, blur: 0 },
+                            });
+                            canvas.sendObjectToBack(clipPath);
+                            element.set({ clipPath: clipPath });
+                            canvas.requestRenderAll();
+                          }
+                        }}
+                      >
+                        {element.type}-{element.id}
+                      </li>
+                    )
+                  );
                 })}
               </ul>
             </li>
@@ -84,11 +132,15 @@ const ContextMenu = ({ canvas }) => {
               Add
               <ul>
                 <li onClick={() => addImage(canvas)}>Image</li>
-                <li onClick={() => replaceWithImage(canvas)}>Replace with Image</li>
+                <li onClick={() => replaceWithImage(canvas)}>
+                  Replace with Image
+                </li>
                 <li onClick={() => createRect(canvas)}>
                   Rectangle <VscPrimitiveSquare />
                 </li>
-                <li onClick={() => createRandomeStrip(canvas)}>Randome Path Strip <VscPrimitiveSquare /></li>
+                <li onClick={() => createRandomeStrip(canvas)}>
+                  Randome Path Strip <VscPrimitiveSquare />
+                </li>
                 <li onClick={() => createTextBox(canvas)}>Text T</li>
                 <li onClick={() => createCircle(canvas)}>
                   Circle <VscCircleFilled />
@@ -101,10 +153,18 @@ const ContextMenu = ({ canvas }) => {
             <li onClick={() => startPath(canvas)}>Start Path</li>
             <li onClick={window.closePath}>Close Path</li>
             <li onClick={window.edit}>Edit Path</li>
-            <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>Bring To Front</li>
-            <li onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>Bring +1</li>
-            <li onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>Send To Back</li>
-            <li onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>Send -1</li>
+            <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>
+              Bring To Front
+            </li>
+            <li onClick={() => bringForward(canvas, kf, xpositions, dispatch)}>
+              Bring +1
+            </li>
+            <li onClick={() => sendToBack(canvas, kf, xpositions, dispatch)}>
+              Send To Back
+            </li>
+            <li onClick={() => sendBackward(canvas, kf, xpositions, dispatch)}>
+              Send -1
+            </li>
 
             <li onClick={() => lock(canvas)}>
               Lock <VscLock />
@@ -142,6 +202,7 @@ const ContextMenu = ({ canvas }) => {
               <ul>
                 <li onClick={() => removeFill(canvas)}> Fill</li>
                 <li onClick={() => removeBg(canvas)}> BG</li>
+                <li onClick={() => removeBgApi(canvas)}> BG from Image</li>
                 <li onClick={() => removeStroke(canvas)}> Stroke</li>
                 <li onClick={() => removeShadow(canvas)}> shadow</li>
               </ul>
@@ -164,7 +225,6 @@ const ContextMenu = ({ canvas }) => {
             <li>
               Edit
               <ul>
-
                 <li onClick={() => undo(canvas)}>
                   Undo <AiOutlineUndo />
                 </li>
@@ -205,7 +265,6 @@ const ContextMenu = ({ canvas }) => {
                 </li>
               </ul>
             </li>
-
           </ul>
         </div>
       ) : (

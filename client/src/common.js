@@ -2,13 +2,13 @@ import axios from "axios";
 import { animation } from "./animation.js";
 import * as fabric from "fabric";
 import _ from "lodash";
-import * as d from '@theatre/dataverse'
+import * as d from "@theatre/dataverse";
 
-export const buildDate = "100924_1";
+export const buildDate = "290924_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
-    fabric.loadSVGFromString(ss).then(output => {
+    fabric.loadSVGFromString(ss).then((output) => {
       parseSvg(output, canvas);
     });
     canvas.requestRenderAll();
@@ -56,15 +56,16 @@ export const parseSvg = (output, canvas) => {
   const { objects, elements, options, allElements } = output;
 
   // Find extraproperty tags
-  const extrapropertyTags = allElements.filter((svgTag) => svgTag.tagName === 'extraproperty');
+  const extrapropertyTags = allElements.filter(
+    (svgTag) => svgTag.tagName === "extraproperty"
+  );
 
   if (extrapropertyTags.length === 0) {
-    console.log('No extraproperty tags found. Using default values.');
+    console.log("No extraproperty tags found. Using default values.");
   }
 
   var textNumber = 0;
   objects.forEach((obj, index) => {
-
     const id = generateUniqueId({ type: "id" });
     obj.set({
       id: obj.id ?? id,
@@ -79,16 +80,16 @@ export const parseSvg = (output, canvas) => {
       });
     }
 
-    if (obj.type === 'text') {
-
+    if (obj.type === "text") {
       // Set default values if no extraproperty tags found
       let width = 200;
-      let textAlign = 'left';
+      let textAlign = "left";
 
       if (extrapropertyTags.length > 0) {
         // Use extraproperty tag values if available
-        width = extrapropertyTags[textNumber]?.getAttribute('width') || width;
-        textAlign = extrapropertyTags[textNumber]?.getAttribute('textAlign') || textAlign;
+        width = extrapropertyTags[textNumber]?.getAttribute("width") || width;
+        textAlign =
+          extrapropertyTags[textNumber]?.getAttribute("textAlign") || textAlign;
         textNumber++;
       }
 
@@ -97,9 +98,9 @@ export const parseSvg = (output, canvas) => {
       const currentElement = elements[index];
 
       // Concatenate all the tspans into one text with newline characters
-      let combinedText = '';
+      let combinedText = "";
       Array.from(currentElement.children).forEach((tspan) => {
-        combinedText += tspan.innerHTML + '\n'; // Adds each tspan's text and a newline
+        combinedText += tspan.innerHTML + "\n"; // Adds each tspan's text and a newline
       });
 
       combinedText = combinedText.trimEnd();
@@ -110,9 +111,9 @@ export const parseSvg = (output, canvas) => {
       let leftPosition = obj.left;
 
       // Adjust the x position based on alignment
-      if (textAlign === 'center') {
+      if (textAlign === "center") {
         leftPosition = obj.left - (parseInt(width) * obj.scaleX) / 2;
-      } else if (textAlign === 'right') {
+      } else if (textAlign === "right") {
         leftPosition = obj.left - (parseInt(width) * obj.scaleX) / 2;
       } else {
         leftPosition = obj.left + Number(x.value);
@@ -136,18 +137,16 @@ export const parseSvg = (output, canvas) => {
   });
 };
 
-
-
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
-  const studioPrivate = window.__TheatreJS_StudioBundle._studio
+  const studioPrivate = window.__TheatreJS_StudioBundle._studio;
   studioPrivate.transaction(({ stateEditors }) => {
-    const pathToProp = d.getPointerParts(propsPrimitive).path
-    const propAddress = { ...object.address, pathToProp }
+    const pathToProp = d.getPointerParts(propsPrimitive).path;
+    const propAddress = { ...object.address, pathToProp };
     stateEditors.coreByProject.historic.sheetsById.sequence.setPrimitivePropAsSequenced(
       propAddress
-    )
-  })
-}
+    );
+  });
+};
 
 fabric.FabricObject.prototype.toObject = (function (toObject) {
   return function (propertiesToInclude) {
@@ -159,9 +158,6 @@ fabric.FabricObject.prototype.toObject = (function (toObject) {
     return toObject.call(this, propertiesToInclude);
   };
 })(fabric.FabricObject.prototype.toObject);
-
-
-
 
 export const loopDirection = ["normal", "reverse", "alternate", "AR"];
 
@@ -221,7 +217,7 @@ export const addRoundedCornerImage = (canvas, imageName1) => {
 };
 
 export const Uploaddropedfile2 = (file0, canvas, x, y) => {
-  console.log(file0)
+  console.log(file0);
   const id = generateUniqueId({ type: "dropped" });
   if (file0) {
     var reader = new FileReader();
@@ -257,7 +253,7 @@ export const Uploaddropedfile = async (file0, canvas, x, y) => {
     const reader = new FileReader();
     reader.onload = async function (event) {
       try {
-        fabric.FabricImage.fromURL(event.target.result).then(img => {
+        fabric.FabricImage.fromURL(event.target.result).then((img) => {
           img.set({
             id: id,
             class: id,
@@ -271,16 +267,15 @@ export const Uploaddropedfile = async (file0, canvas, x, y) => {
           });
           canvas.add(img);
           canvas.setActiveObject(img);
-        })
+        });
         canvas.requestRenderAll();
       } catch (error) {
-        console.error('Error loading image:', error);
+        console.error("Error loading image:", error);
       }
     };
     reader.readAsDataURL(file0);
   }
 };
-
 
 export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
   return new Promise((resolve, reject) => {
@@ -291,7 +286,7 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
           var imgObj = new Image();
           imgObj.src = event.target.result;
           imgObj.onload = function () {
-            fabric.FabricImage.fromURL(event.target.result).then(image => {
+            fabric.FabricImage.fromURL(event.target.result).then((image) => {
               image.set({
                 left: 300,
                 top: 300,
@@ -309,7 +304,7 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
               canvas.add(image);
               canvas.setActiveObject(image);
               resolve();
-            })
+            });
           };
         };
         reader.readAsDataURL(element);
@@ -532,7 +527,6 @@ export const createTextBoxforDragedText = (canvas, dragedText, x, y) => {
 };
 
 export const pasteClipboard = async (canvas) => {
-
   try {
     const clipboardContents = await navigator.clipboard.read();
     if (clipboardContents) {
@@ -550,19 +544,21 @@ export const pasteClipboard = async (canvas) => {
 
           const blob = await item.getType("image/png");
           base64EncodeBlob(blob).then((base64) => {
-            fabric.FabricImage.fromURL("data:image/png;base64," + base64).then(image => {
-              image.set({
-                id: id,
-                class: id,
-                shadow: shadowOptions,
-                strokeUniform: true,
-                objectCaching: false,
-                fill: "#ff0000",
-                stroke: "#00ff00",
-              });
-              canvas.add(image);
-              canvas.requestRenderAll();
-            });
+            fabric.FabricImage.fromURL("data:image/png;base64," + base64).then(
+              (image) => {
+                image.set({
+                  id: id,
+                  class: id,
+                  shadow: shadowOptions,
+                  strokeUniform: true,
+                  objectCaching: false,
+                  fill: "#ff0000",
+                  stroke: "#00ff00",
+                });
+                canvas.add(image);
+                canvas.requestRenderAll();
+              }
+            );
           });
         }
       }
@@ -604,10 +600,9 @@ export const moveSelected = (direction) => {
   }
 };
 
-
 export const replaceWithImage = (canvas) => {
   const element = canvas.getActiveObjects()[0];
-  if (element?.type === 'image') {
+  if (element?.type === "image") {
     var reader = new FileReader();
     var fInput = document.createElement("input"); //hidden input to open filedialog
     fInput.setAttribute("type", "file");
@@ -615,10 +610,10 @@ export const replaceWithImage = (canvas) => {
     fInput.click();
     fInput.onchange = (e) => {
       reader.onloadend = () => {
-        fabric.FabricImage.fromURL(reader.result).then(img => {
+        fabric.FabricImage.fromURL(reader.result).then((img) => {
           img.set({
             scaleX: element.width / img.width,
-            scaleY: element.height / img.height
+            scaleY: element.height / img.height,
           });
           element.setSrc(img.cloneAsImage().getSrc()).then(() => {
             element.set({ visible: true });
@@ -627,8 +622,8 @@ export const replaceWithImage = (canvas) => {
         });
       };
       reader.readAsDataURL(e.target.files[0]);
-    }
-  };
+    };
+  }
 };
 const finalPosition = (element, canvas) => {
   if (canvas.getActiveObjects().length > 1) {
@@ -648,7 +643,7 @@ export const cloneAsImage = (canvas) => {
   canvas.getActiveObjects().forEach(async (element) => {
     const preshadow = element.shadow;
 
-    element.set('shadow', null);
+    element.set("shadow", null);
     const dataURL = element.toDataURL({
       format: "png",
       multiplier: 1, // Adjust multiplier for higher resolution
@@ -673,7 +668,6 @@ export const cloneAsImage = (canvas) => {
     element.shadow = preshadow;
   });
 };
-
 
 export const createRandomeStrip = (canvas) => {
   const id = generateUniqueId({ type: "path" });
@@ -915,8 +909,6 @@ export const createTriangle = (canvas) => {
   canvas.requestRenderAll();
 };
 
-
-
 export const groupObjects = (canvas, shouldGroup) => {
   const id = generateUniqueId({ type: "group" });
   if (shouldGroup) {
@@ -928,7 +920,10 @@ export const groupObjects = (canvas, shouldGroup) => {
     }
     const objects = canvas.getActiveObjects();
     canvas.discardActiveObject();
-    const group = new fabric.Group(objects, { interactive: true, subTargetCheck: true });
+    const group = new fabric.Group(objects, {
+      interactive: true,
+      subTargetCheck: true,
+    });
     group.set({
       shadow: { ...shadowOptions, blur: 0 },
       id: id,
@@ -940,7 +935,6 @@ export const groupObjects = (canvas, shouldGroup) => {
     objects.forEach((element) => {
       canvas.remove(element);
     });
-
   } else {
     if (!canvas.getActiveObject()) {
       return;
@@ -1035,23 +1029,22 @@ const history = [];
 export const saveCanvasState = (canvas) => {
   const json = canvas.toJSON();
   history.push(json);
-}
+};
 export const undo = (canvas) => {
   if (history.length <= 1) return; // Do nothing if no more undo steps are available
   history.pop(); // Remove the last state
   const previousState = history[history.length - 1]; // Get the previous state
-  canvas.getObjects().forEach(obj => {
+  canvas.getObjects().forEach((obj) => {
     canvas.remove(obj);
   });
 
-  fabric.util.enlivenObjects(previousState.objects)
-    .then((objects) => {
-      objects.forEach(obj => {
-        canvas.add(obj); // Add each object to the canvas
-      });
-      canvas.renderAll(); // Re-render the canvas
+  fabric.util.enlivenObjects(previousState.objects).then((objects) => {
+    objects.forEach((obj) => {
+      canvas.add(obj); // Add each object to the canvas
     });
-}
+    canvas.renderAll(); // Re-render the canvas
+  });
+};
 
 export var _clipboard;
 
@@ -1484,18 +1477,26 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-        .toSVG(
-      )
-        .replaceAll(
-          '"',
-          '\\"'
-        ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
+                                                                                    .toSVG()
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "`",
+                                                                                      "\\`"
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "$",
+                                                                                      "\\$"
+                                                                                    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
+                                                                                  aa.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1534,25 +1535,32 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-      .toSVG(
-    )
-      .replaceAll(
-        '"',
-        '\\"'
-      ).replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
+                                                                                    .toSVG()
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "`",
+                                                                                      "\\`"
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "$",
+                                                                                      "\\$"
+                                                                                    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+                                                                                  aa.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
                                                                                   document.head.appendChild(style);
                                                                                   `;
   executeScript(scriptforhtml);
-
 
   const scriptforcaspar = `
                                                                                   var bb = document.createElement('div');
@@ -1564,18 +1572,26 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-      .toSVG(
-    )
-      .replaceAll(
-        '"',
-        '\\"'
-      ).replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`;
+                                                                                    .toSVG()
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "`",
+                                                                                      "\\\\`"
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "$",
+                                                                                      "\\\\$"
+                                                                                    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+                                                                                  aa.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1687,8 +1703,6 @@ export const stopGsapLayer = (
   ${scriptforCasparcg}
   "`);
 };
-
-
 
 export const getGdd = (canvas, designerSoftware) => {
   const allObjects = canvas.getObjects().reduce((acc, object) => {
@@ -1999,9 +2013,7 @@ export function rgbStringToHex(rgbString) {
   if (rgbString === "") {
     rgbString = "rgb(0, 0, 0)";
   }
-  const rgbValues = rgbString
-    .match(/\d+/g)
-    .map(Number); // Extracts [r, g, b]
+  const rgbValues = rgbString.match(/\d+/g).map(Number); // Extracts [r, g, b]
 
   // Convert the RGB values to hexadecimal
   return rgbToHex(...rgbValues);
@@ -2068,13 +2080,12 @@ export var address1 = "https://" + window.location.host.split(":")[0] + ":9000";
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
 export const clieentPublicFolder = () => {
-  if (window.location.host === 'localhost:10000') {
-    return 'https://localhost:10000/ReactCasparClient'
+  if (window.location.host === "localhost:10000") {
+    return "https://localhost:10000/ReactCasparClient";
+  } else {
+    return "https://vimlesh1975.github.io/ReactCasparClient";
   }
-  else {
-    return 'https://vimlesh1975.github.io/ReactCasparClient'
-  }
-}
+};
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
@@ -2154,7 +2165,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       // console.log("Error", aa);
     });
@@ -2197,7 +2208,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => { })
+    .then((aa) => {})
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -2215,7 +2226,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2225,7 +2236,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2239,7 +2250,7 @@ export const chatScript = (str, clientId) => {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2249,7 +2260,7 @@ export const chatScript = (str, clientId) => {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => { })
+      .then((aa) => {})
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2271,11 +2282,20 @@ export const updateGraphics = (canvas, layerNumber) => {
   // canvas.requestRenderAll();
 
   executeScript(
-    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas.toSVG().replaceAll('`', '\\`').replaceAll('$', '\\$')}\`:''`
+    `document.getElementById('divid_${layerNumber}')?document.getElementById('divid_${layerNumber}').innerHTML=\`${canvas
+      .toSVG()
+      .replaceAll("`", "\\`")
+      .replaceAll("$", "\\$")}\`:''`
   );
 
-  endpoint(`call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\\\`').replaceAll('$', '\\\\$')}\`"`);
-}
+  endpoint(
+    `call ${window.chNumber}-${layerNumber} "aa.innerHTML=\`${canvas
+      .toSVG()
+      .replaceAll('"', '\\"')
+      .replaceAll("`", "\\\\`")
+      .replaceAll("$", "\\\\$")}\`"`
+  );
+};
 
 export const stopGraphics1 = (layerNumber) => {
   endpoint(
@@ -2359,7 +2379,10 @@ const base64EncodeBlob = (blob) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const arrayBuffer = reader.result;
-      const binaryString = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer));
+      const binaryString = String.fromCharCode.apply(
+        null,
+        new Uint8Array(arrayBuffer)
+      );
       const base64String = btoa(binaryString);
       resolve(base64String);
     };
@@ -2367,7 +2390,6 @@ const base64EncodeBlob = (blob) => {
     reader.readAsArrayBuffer(blob);
   });
 };
-
 
 export const recallPage = (
   layerNumber,
@@ -2428,7 +2450,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
       canvas.requestRenderAll();
@@ -2456,7 +2478,11 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     aa.style.position='absolute';
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
-    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\$')}\`;
+    aa.innerHTML=\`${canvas
+      .toSVG()
+      .replaceAll('"', '\\"')
+      .replaceAll("`", "\\`")
+      .replaceAll("$", "\\$")}\`;
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
@@ -2470,7 +2496,11 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
     aa.style.position='absolute';
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
-    aa.innerHTML=\`${canvas.toSVG().replaceAll('"', '\\"').replaceAll('`', '\\`').replaceAll('$', '\\\\$')}\`;
+    aa.innerHTML=\`${canvas
+      .toSVG()
+      .replaceAll('"', '\\"')
+      .replaceAll("`", "\\`")
+      .replaceAll("$", "\\\\$")}\`;
     document.body.appendChild(aa);
     document.body.style.margin='0';
     document.body.style.padding='0';
@@ -2545,7 +2575,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) { }
+          } catch (error) {}
         });
       });
 
@@ -3218,20 +3248,23 @@ export const startVerticalScroll = (
                                                                                   aaVertical.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aaVertical.style.zIndex = ${layerNumber};
                                                                                   aaVertical.innerHTML=\`${canvas
-      .toSVG(
-
-    )
-      .replaceAll(
-        '"',
-        '\\"'
-      ).replaceAll('`', '\\`')}\`;
+                                                                                    .toSVG()
+                                                                                    .replaceAll(
+                                                                                      '"',
+                                                                                      '\\"'
+                                                                                    )
+                                                                                    .replaceAll(
+                                                                                      "`",
+                                                                                      "\\`"
+                                                                                    )}\`;
                                                                                   document.body.appendChild(aaVertical);
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
                                                                                   aaVertical.style.top='100%';
-                                                                                  aaVertical.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+                                                                                  aaVertical.style.zoom=(${
+                                                                                    currentscreenSize *
+                                                                                    100
+                                                                                  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   window.verticalSpeed=${verticalSpeed};
       window.intervalVerticalScroll= setInterval(()=>{
@@ -3242,4 +3275,27 @@ export const startVerticalScroll = (
   endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
 
   executeScript(script); //for html
+};
+
+export const removeBgApi = async (canvas) => {
+  if (
+    canvas.getActiveObjects()[0] &&
+    canvas.getActiveObjects()[0]?.type === "image"
+  ) {
+    try {
+      const response = await axios.post(
+        "https://localhost:9000/api/remove-bg",
+        {
+          base64Image: canvas.getActiveObjects()[0]?.src,
+        }
+      );
+      canvas.getActiveObjects()[0]?.setSrc(response.data.imageData);
+      canvas.requestRenderAll();
+    } catch (error) {
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  }
 };
