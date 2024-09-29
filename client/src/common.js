@@ -3284,7 +3284,7 @@ export const removeBgApi = async (canvas) => {
   ) {
     try {
       const response = await axios.post(
-        "https://localhost:9000/api/remove-bg",
+        "https://octopus-app-gzws3.ondigitalocean.app/api/remove-bg",
         {
           base64Image: canvas.getActiveObjects()[0]?.src,
         }
