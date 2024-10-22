@@ -164,21 +164,7 @@ document.body.onmouseup = function () {
 export const getObjectbyId = id => {
     return arrObject.find(object => object.address.objectKey === id)
 }
-// const findElementWithId = (group, id) => {
-//     const objects = group.getObjects();
-//     for (let i = 0; i < objects.length; i++) {
-//         const element = objects[i];
-//         if (element.type === 'group') {
-//             const result = findElementWithId(element, id);
-//             if (result) {
-//                 return result;
-//             }
-//         } else if (element.id === id) {
-//             return element;
-//         }
-//     }
-//     return null;
-// };
+
 // eslint-disable-next-line
 const findElementWithIdoriginalCanvas = (group, id) => {
     const objects = group;
@@ -2069,7 +2055,6 @@ const WebAnimator = () => {
 
     <div><canvas id='canvas' width='1920' height='1080'></canvas></div>
     <script>
-    var originalCanvas=[];
     const arrObject = [];
     var sheet;
     </script>
@@ -2108,6 +2093,7 @@ const WebAnimator = () => {
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
+        window.content=content;
         const { core, studio } = Theatre;
 
         const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
@@ -2122,7 +2108,6 @@ const WebAnimator = () => {
         sheet = project.sheet('Sheet 1')
         canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting('')}
-        originalCanvas=[...canvas._objects];
             ${xx4}
             ${xx5}
         })
@@ -2175,7 +2160,7 @@ const WebAnimator = () => {
                    }
                     else {
                         if (element.textLines.length === 1) {
-                            const bb = findElementWithIdoriginalCanvas(originalCanvas, idCaspar);
+                            const bb = findElementWithIdoriginalCanvas(idCaspar);
                             const originalWidth = bb.width;
                             const originalscaleX = bb.scaleX;
                             element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width: originalWidth });
@@ -2240,21 +2225,21 @@ const WebAnimator = () => {
             }
             return null;
         };
-        const findElementWithIdoriginalCanvas = (group, id) => {
-            const objects = group;
-            for (let i = 0; i < objects.length; i++) {
-                const element = objects[i];
-                if (element.type === 'group') {
-                    const result = findElementWithIdoriginalCanvas(element._objects, id);
-                    if (result) {
-                        return result;
-                    }
-                } else if (element.id === id) {
-                    return element;
-                }
+
+        const findElementWithIdoriginalCanvas = (id) => {
+                function findObjectInGroup(objects, id) {
+                for (let obj of objects) {
+                if (obj.id === id) return obj; 
+                if (obj.type === 'Group' && obj.objects)
+                 { 
+                    const foundInGroup = findObjectInGroup(obj.objects, id);
+                    if (foundInGroup) return foundInGroup;
+                 }
             }
             return null;
-        };
+            }
+            return findObjectInGroup(content.objects, id);
+        }
  
          function updatestring(str1, str2) {
             const aa = findElementWithId(canvas,str1);
@@ -2262,7 +2247,7 @@ const WebAnimator = () => {
             {
                 const element = aa;
                 if (element.textLines.length === 1) {
-                    const bb = findElementWithIdoriginalCanvas(originalCanvas, str1);
+                    const bb = findElementWithIdoriginalCanvas(str1);
                     const originalWidth = bb.width;
                     const originalscaleX = bb.scaleX;
                     element.set({ objectCaching: false, text: str2, visible: true, width: originalWidth });

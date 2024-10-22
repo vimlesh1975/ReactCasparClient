@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "290924_1";
+export const buildDate = "221024_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -15,41 +15,6 @@ export const importSvgCode = (ss, canvas) => {
   }
 };
 
-// export const parseSvg = (output, canvas) => {
-//   // eslint-disable-next-line
-//   const { objects, elements, options, allElements } = output;
-//   objects?.forEach((element, i) => {
-//     const id = generateUniqueId({ type: "id" });
-//     element.set({
-//       id: element.id ?? id,
-//       class: element.id ?? id,
-//       objectCaching: false,
-//       shadow: element.shadow ?? shadowOptions,
-
-//     });
-//     if (element.type === "path") {
-//       element.on("mousedblclick", () => {
-//         window.edit(window.dispatch);
-//       });
-//     }
-//     if (element.type === "text") {
-//       // const currentElement = elements[i]
-//       // if (currentElement.children.length === 1) {
-//       element.set({
-//         left: element.left - (element.width * element.scaleX) / 2,
-//         top: element.top + (element.height * element.scaleY) / 4,
-//       });
-//       // }
-//       var aa = new fabric.Textbox(element.text, {
-//         ...element,
-//       });
-//       canvas.add(aa);
-//     }
-//     else {
-//       canvas.add(element);
-//     }
-//   });
-// }
 export const parseSvg = (output, canvas) => {
   console.log(output);
   // eslint-disable-next-line
@@ -1477,26 +1442,25 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-                                                                                    .toSVG()
-                                                                                    .replaceAll(
-                                                                                      '"',
-                                                                                      '\\"'
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "`",
-                                                                                      "\\`"
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "$",
-                                                                                      "\\$"
-                                                                                    )}\`;
+        .toSVG()
+        .replaceAll(
+          '"',
+          '\\"'
+        )
+        .replaceAll(
+          "`",
+          "\\`"
+        )
+        .replaceAll(
+          "$",
+          "\\$"
+        )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${
-                                                                                    currentscreenSize *
-                                                                                    100
-                                                                                  }/1920)+'%';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+      100
+      }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1535,26 +1499,25 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-                                                                                    .toSVG()
-                                                                                    .replaceAll(
-                                                                                      '"',
-                                                                                      '\\"'
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "`",
-                                                                                      "\\`"
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "$",
-                                                                                      "\\$"
-                                                                                    )}\`;
+      .toSVG()
+      .replaceAll(
+        '"',
+        '\\"'
+      )
+      .replaceAll(
+        "`",
+        "\\`"
+      )
+      .replaceAll(
+        "$",
+        "\\$"
+      )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${
-                                                                                    currentscreenSize *
-                                                                                    100
-                                                                                  }/1920)+'%';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -1572,26 +1535,25 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-                                                                                    .toSVG()
-                                                                                    .replaceAll(
-                                                                                      '"',
-                                                                                      '\\"'
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "`",
-                                                                                      "\\\\`"
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "$",
-                                                                                      "\\\\$"
-                                                                                    )}\`;
+      .toSVG()
+      .replaceAll(
+        '"',
+        '\\"'
+      )
+      .replaceAll(
+        "`",
+        "\\\\`"
+      )
+      .replaceAll(
+        "$",
+        "\\\\$"
+      )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${
-                                                                                    currentscreenSize *
-                                                                                    100
-                                                                                  }/1920)+'%';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
                                                                                   style.textContent = '${inAnimation}';
@@ -2165,7 +2127,7 @@ export const endpoint = (string) => {
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       // console.log("Error", aa);
     });
@@ -2208,7 +2170,7 @@ export const sendtohtml = (canvas, layerNumber) => {
       data1: `<div id='divid_${layerNumber}'>${canvas.toSVG()}</div>`,
       clientId: window.clientId,
     })
-    .then((aa) => {})
+    .then((aa) => { })
     .catch((aa) => {
       console.log("Error", aa);
     });
@@ -2226,7 +2188,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2236,7 +2198,7 @@ export const executeScript = (str) => {
         data1: str,
         clientId: window.clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2250,7 +2212,7 @@ export const chatScript = (str, clientId) => {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2260,7 +2222,7 @@ export const chatScript = (str, clientId) => {
         data1: str,
         clientId: clientId,
       })
-      .then((aa) => {})
+      .then((aa) => { })
       .catch((aa) => {
         console.log("Error", aa);
       });
@@ -2450,7 +2412,7 @@ export const recallPage = (
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
       canvas.requestRenderAll();
@@ -2575,7 +2537,7 @@ export const updateData = (layerNumber, pageName, data, canvasList, canvas) => {
                 element.set({ [data2.type]: data2.value });
               }
             }
-          } catch (error) {}
+          } catch (error) { }
         });
       });
 
@@ -3248,23 +3210,22 @@ export const startVerticalScroll = (
                                                                                   aaVertical.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aaVertical.style.zIndex = ${layerNumber};
                                                                                   aaVertical.innerHTML=\`${canvas
-                                                                                    .toSVG()
-                                                                                    .replaceAll(
-                                                                                      '"',
-                                                                                      '\\"'
-                                                                                    )
-                                                                                    .replaceAll(
-                                                                                      "`",
-                                                                                      "\\`"
-                                                                                    )}\`;
+      .toSVG()
+      .replaceAll(
+        '"',
+        '\\"'
+      )
+      .replaceAll(
+        "`",
+        "\\`"
+      )}\`;
                                                                                   document.body.appendChild(aaVertical);
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
                                                                                   document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
                                                                                   aaVertical.style.top='100%';
-                                                                                  aaVertical.style.zoom=(${
-                                                                                    currentscreenSize *
-                                                                                    100
-                                                                                  }/1920)+'%';
+                                                                                  aaVertical.style.zoom=(${currentscreenSize *
+    100
+    }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   window.verticalSpeed=${verticalSpeed};
       window.intervalVerticalScroll= setInterval(()=>{
