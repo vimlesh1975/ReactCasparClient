@@ -2144,8 +2144,8 @@ const WebAnimator = () => {
                        })
                    }
                     else {
-                        if (element.textLines.length === 1) {
-                            const bb = findElementWithIdoriginalCanvas(idCaspar);
+                        const bb = findElementWithIdoriginalCanvas(idCaspar);
+                        if ((bb.fontSize)*2 >bb.height) {
                             const originalWidth = bb.width;
                             const originalscaleX = bb.scaleX;
                             element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width: originalWidth });
@@ -2231,8 +2231,8 @@ const WebAnimator = () => {
             if (aa)
             {
                 const element = aa;
-                if (element.textLines.length === 1) {
-                    const bb = findElementWithIdoriginalCanvas(str1);
+                const bb = findElementWithIdoriginalCanvas(str1);
+                if ((bb.fontSize)*2 > bb.height) {
                     const originalWidth = bb.width;
                     const originalscaleX = bb.scaleX;
                     element.set({ objectCaching: false, text: str2, visible: true, width: originalWidth });
