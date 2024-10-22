@@ -165,22 +165,7 @@ export const getObjectbyId = id => {
     return arrObject.find(object => object.address.objectKey === id)
 }
 
-// eslint-disable-next-line
-const findElementWithIdoriginalCanvas = (group, id) => {
-    const objects = group;
-    for (let i = 0; i < objects.length; i++) {
-        const element = objects[i];
-        if (element.type === 'group') {
-            const result = findElementWithIdoriginalCanvas(element._objects, id);
-            if (result) {
-                return result;
-            }
-        } else if (element.id === id) {
-            return element;
-        }
-    }
-    return null;
-};
+
 export const changePropOfObject = (id, str1, str2) => {
     const objs = arrObject.find(object => {
         return (object.address.objectKey === id)
