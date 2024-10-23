@@ -2160,7 +2160,11 @@ const WebAnimator = () => {
                             }
                           }
                           else {
-                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true, });
+                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true});
+                                    changePropOfObject(str1, 'scaleY', bb.scaleY);
+                                    if (element.height>bb.height){
+                                    changePropOfObject(str1, 'scaleY', bb.height / element.height);
+                                    }
                           }
                     }
                     canvas.requestRenderAll()
@@ -2248,6 +2252,10 @@ const WebAnimator = () => {
                   }
                   else {
                     element.set({ objectCaching: false, text: (str2).replace(/CRLF/g, '\\n'), visible: true, });
+                    changePropOfObject(str1, 'scaleY', bb.scaleY);
+                    if (element.height>bb.height){
+                      changePropOfObject(str1, 'scaleY', bb.height / element.height);
+                    }
                   }
             }
                 canvas.requestRenderAll();
