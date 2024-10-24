@@ -2078,8 +2078,8 @@ const WebAnimator = () => {
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(canvas.toJSON(['id', 'class', 'selectable']))};
-        window.content=content;
         const { core, studio } = Theatre;
+        window.content=content;
 
         const rafDriver =core.createRafDriver({ name: 'a custom 25fps raf driver' });
         setInterval(() => {
