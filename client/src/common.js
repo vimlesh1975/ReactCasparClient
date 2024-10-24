@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "241024_1";
+export const buildDate = "241024_2";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {

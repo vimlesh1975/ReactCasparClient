@@ -2161,9 +2161,9 @@ const WebAnimator = () => {
                           }
                           else {
                             element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true});
-                                    changePropOfObject(str1, 'scaleY', bb.scaleY);
+                                    changePropOfObject(idCaspar, 'scaleY', bb.scaleY);
                                     if (element.height>bb.height){
-                                    changePropOfObject(str1, 'scaleY', bb.height / element.height);
+                                    changePropOfObject(idCaspar, 'scaleY', bb.height / element.height);
                                     }
                           }
                     }
