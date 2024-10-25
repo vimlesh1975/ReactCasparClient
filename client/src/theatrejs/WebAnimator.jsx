@@ -2148,9 +2148,9 @@ const WebAnimator = () => {
                         if ((bb.fontSize)*2 >bb.height) {
                             const originalWidth = bb.width;
                             const originalscaleX = bb.scaleX;
-                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), visible: true, width: originalWidth });
+                            element.set({visible: false});
+                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]), width: originalWidth});
                             changePropOfObject(idCaspar, 'scaleX', originalscaleX);
-            
                             if (element.textLines.length > 1) {
                               do {
                                 element.set({ width: element.width + 5 });
@@ -2158,13 +2158,20 @@ const WebAnimator = () => {
                               while (element.textLines.length > 1);
                               changePropOfObject(idCaspar, 'scaleX', originalWidth / element.width);
                             }
+                            setTimeout(() => {
+                            element.set({visible: true});
+                            }, 100);
                           }
                           else {
-                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n'), visible: true});
-                                    changePropOfObject(idCaspar, 'scaleY', bb.scaleY);
-                                    if (element.height>bb.height){
-                                    changePropOfObject(idCaspar, 'scaleY', bb.height / element.height);
-                                    }
+                            element.set({visible: false});
+                            element.set({ objectCaching: false, text: (dataCaspar[idCaspar]).replace(/CRLF/g, '\\n')});
+                            changePropOfObject(idCaspar, 'scaleY', bb.scaleY);
+                            if (element.height>bb.height){
+                            changePropOfObject(idCaspar, 'scaleY', bb.height / element.height);
+                            }
+                            setTimeout(() => {
+                            element.set({visible: true});
+                            }, 100);
                           }
                     }
                     canvas.requestRenderAll()
@@ -2239,7 +2246,8 @@ const WebAnimator = () => {
                 if ((bb.fontSize)*2 > bb.height) {
                     const originalWidth = bb.width;
                     const originalscaleX = bb.scaleX;
-                    element.set({ objectCaching: false, text: str2, visible: true, width: originalWidth });
+                    element.set({visible: false});
+                    element.set({ objectCaching: false, text: str2, width: originalWidth });
                     changePropOfObject(str1, 'scaleX', originalscaleX);
     
                     if (element.textLines.length > 1) {
@@ -2249,13 +2257,20 @@ const WebAnimator = () => {
                       while (element.textLines.length > 1);
                       changePropOfObject(str1, 'scaleX', originalWidth / element.width);
                     }
+                      setTimeout(() => {
+                            element.set({visible: true});
+                       }, 100);
                   }
                   else {
-                    element.set({ objectCaching: false, text: (str2).replace(/CRLF/g, '\\n'), visible: true, });
+                    element.set({visible: false});
+                    element.set({ objectCaching: false, text: (str2).replace(/CRLF/g, '\\n') });
                     changePropOfObject(str1, 'scaleY', bb.scaleY);
                     if (element.height>bb.height){
                       changePropOfObject(str1, 'scaleY', bb.height / element.height);
                     }
+                    setTimeout(() => {
+                            element.set({visible: true});
+                    }, 100);
                   }
             }
                 canvas.requestRenderAll();

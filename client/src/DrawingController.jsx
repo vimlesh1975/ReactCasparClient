@@ -1361,10 +1361,10 @@ const DrawingController = () => {
                                         document.body.innerHTML = '' ;
             }
                                     function updatestring(str1, str2) {
-                                        document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
                                     document.getElementById(str1).style.display = "block";
                                     if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
-                    var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                                    var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
                                     var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
                                     var originalFontSize =  document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
                                     if (textalign1 == 'center') {
@@ -1381,7 +1381,7 @@ const DrawingController = () => {
                     }
                                     document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
                                     do {
-                        var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
+                                    var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
                                     document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
                                     var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
                     } while (width2 > width1);
