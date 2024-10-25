@@ -1274,6 +1274,11 @@ const DrawingController = () => {
                                                   else {
                                                     idTemplate.style.display = "block";
                                                     var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = 1;
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
                                                     var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
                                                     var initialX = existingTspans[0].getAttribute('x');
                                                     var initialY = existingTspans[0].getAttribute('y');
@@ -1281,6 +1286,7 @@ const DrawingController = () => {
                                                     var newData = escapeHtml(dataCaspar[idCaspar]);
                                                     var dataSegments = newData.split('CRLF');
                                                     var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                    var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
                         
                                                     function splitTextIntoLines(text, maxWidth) {
                                                         var words = text.split(' ');
@@ -1331,10 +1337,11 @@ const DrawingController = () => {
                                                     tspans.forEach(function (tspan) {
                                                         textElement.appendChild(tspan);
                                                     });
-                        
                                                   }
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = (maxHeight / textElement.getBBox().height);
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
                                               }
-                          
                           
                                               else if (idimage != undefined) {
                                                   idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
@@ -1384,7 +1391,7 @@ const DrawingController = () => {
                                     var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
                                     document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
                                     var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
-                    } while (width2 > width1);
+                                    } while (width2 > width1);
                 }
             }
                                     function updateimage(str1, str2) {
