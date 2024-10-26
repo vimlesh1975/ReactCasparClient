@@ -1071,7 +1071,7 @@ const WebAnimator = () => {
                 onChange(sheet.sequence.pointer.position, (position) => {
                     if (element.id === 'imgSeqGroup1') {
                         element.getObjects().forEach((image, index) => {
-                            image.set({ opacity: index === parseInt((position) * 30) ? 1 : 0 });
+                            image.set({ opacity: index === parseInt((position) * FPS) ? 1 : 0 });
                         });
                         canvas.requestRenderAll();
                     }
@@ -2199,10 +2199,10 @@ const WebAnimator = () => {
             console.log('invoked hello funtion')
         }
         function goto(framenumber) {
-            window.sheet.sequence.position=framenumber/30;
+            window.sheet.sequence.position=framenumber/${FPS};
         }
         function goToAndPlay(framenumber) {
-            window.sheet.sequence.position=framenumber/30;
+            window.sheet.sequence.position=framenumber/${FPS};
             window.sheet.sequence.play();
         }
         
