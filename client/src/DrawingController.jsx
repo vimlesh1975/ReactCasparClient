@@ -1337,10 +1337,11 @@ const DrawingController = () => {
                                                     tspans.forEach(function (tspan) {
                                                         textElement.appendChild(tspan);
                                                     });
-                                                  }
                                                     var ctm = textElement.parentNode.getCTM();
                                                     ctm.d = (maxHeight / textElement.getBBox().height);
                                                     textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+                                                  }
+                                                  
                                               }
                           
                                               else if (idimage != undefined) {
@@ -1368,32 +1369,108 @@ const DrawingController = () => {
                                         document.body.innerHTML = '' ;
             }
                                     function updatestring(str1, str2) {
-                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
-                                    document.getElementById(str1).style.display = "block";
-                                    if (document.getElementById(str1).getElementsByTagName('extraproperty')[0] != undefined) {
-                                    var textalign1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('textalign');
-                                    var width1 = document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('width');
-                                    var originalFontSize =  document.getElementById(str1).getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
-                                    if (textalign1 == 'center') {
-                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = "normal";
-                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
-                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+            var idTemplate = document.getElementById(str1);
+
+            const lines = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+            if (lines === '1') {
+                idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                idTemplate.style.display = "block";
+                if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                    if (textalign1 == 'center') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
                     }
-                                    if (textalign1 == 'right') {
-                                        document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
-                                    document.getElementById(str1).getElementsByTagName('text')[0].style.whiteSpace = 'normal';
-                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
-                                    document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    if (textalign1 == 'right') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
                     }
-                                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
-                                    do {
-                                    var dd = document.getElementById(str1).getElementsByTagName('text')[0].getAttribute('font-size');
-                                    document.getElementById(str1).getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
-                                    var width2 = document.getElementById(str1).getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
-                                    } while (width2 > width1);
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    do {
+                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
                 }
             }
+            else {
+                idTemplate.style.display = "block";
+                var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = 1;
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
+                var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                var initialX = existingTspans[0].getAttribute('x');
+                var initialY = existingTspans[0].getAttribute('y');
+                var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                var newData = str2;
+                var dataSegments = newData.split('CRLF');
+                var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
+
+                function splitTextIntoLines(text, maxWidth) {
+                    var words = text.split(' ');
+                    var lines = [];
+                    var currentLine = '';
+                    words.forEach(function (word) {
+                        var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                        var testWidth = textElement.getSubStringLength(0, testLine.length);
+
+                        if (testWidth > maxWidth) {
+                            lines.push(currentLine);
+                            currentLine = word;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    lines.push(currentLine);
+                    return lines;
+                }
+
+                var tspans = [];
+                var previoustxtlines = 0;
+
+                dataSegments.forEach(function (segment, i) {
+                    if (segment.trim() === '') {
+                        segment = ' ';
+                    }
+                    textElement.innerHTML = segment;
+                    var txtlines = splitTextIntoLines(segment, maxWidth);
+                    txtlines.forEach(function (line, j) {
+                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = line;
+                        tspan.setAttribute('x', initialX);
+                        tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                        tspans.push(tspan);
+                    });
+                    previoustxtlines += txtlines.length;
+                });
+                textElement.innerHTML = '';
+                if (tspans.length === 1) {
+                    var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = ' ';
+                    tspan.setAttribute('x', initialX);
+                    tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                    tspans.push(tspan);
+                }
+
+                tspans.forEach(function (tspan) {
+                    textElement.appendChild(tspan);
+                });
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = (maxHeight / textElement.getBBox().height);
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+            }
+         
+        }
                                     function updateimage(str1, str2) {
                                         document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
                                     document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
