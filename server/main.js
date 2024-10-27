@@ -582,7 +582,6 @@ app.get("/getGraphics", async (req, res) => {
       `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`,
       [ScriptID]
     );
-    console.log(rows);
     res.send(rows);
   } catch (error) {
     console.log(error);
