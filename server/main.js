@@ -579,9 +579,10 @@ app.get("/getGraphics", async (req, res) => {
   const ScriptID = req.query.ScriptID;
   try {
     const [rows] = await safeQuery(
-      `SELECT * FROM graphics where ScriptID=? order by GraphicsOrder`,
+      `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`,
       [ScriptID]
     );
+    console.log(rows);
     res.send(rows);
   } catch (error) {
     console.log(error);
