@@ -3,7 +3,7 @@ import {
   generateUniqueId,
   shadowOptions,
   getFormattedDatetimeNumber,
-  address1,
+  addressmysql,
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -41,7 +41,7 @@ const Graphics = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(address1 + "/getNewsID");
+        const res = await fetch(addressmysql() + "/getNewsID");
         const data = await res.json();
         setRunOrderTitles(data);
       } catch (error) {
@@ -58,7 +58,7 @@ const Graphics = () => {
     async function fetchData() {
       try {
         const res = await fetch(
-          address1 + `/show_runorder?param1=${selectedRunOrderTitle}`
+          addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle}`
         );
         const data = await res.json();
         setSlugs(data);
@@ -77,7 +77,7 @@ const Graphics = () => {
     async function fetchData() {
       try {
         const res = await fetch(
-          address1 + `/show_runorder?param1=${selectedRunOrderTitle2}`
+          addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle2}`
         );
         const data = await res.json();
         setSlugs2(data);
@@ -92,7 +92,9 @@ const Graphics = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(address1 + `/getGraphics?ScriptID=${ScriptID}`);
+        const res = await fetch(
+          addressmysql() + `/getGraphics?ScriptID=${ScriptID}`
+        );
         const data = await res.json();
         setGraphics(data);
       } catch (error) {
@@ -107,7 +109,7 @@ const Graphics = () => {
     async function fetchData() {
       try {
         const res = await fetch(
-          address1 + `/getGraphics?ScriptID=${ScriptID2}`
+          addressmysql() + `/getGraphics?ScriptID=${ScriptID2}`
         );
         const data = await res.json();
         setGraphics2(data);
@@ -141,7 +143,7 @@ const Graphics = () => {
     );
     setGraphics(newGraphics);
     try {
-      await fetch(address1 + "/setGraphics", {
+      await fetch(addressmysql() + "/setGraphics", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,7 +171,7 @@ const Graphics = () => {
     setGraphics(newGraphics);
 
     try {
-      await fetch(address1 + "/insertGraphics", {
+      await fetch(addressmysql() + "/insertGraphics", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +199,7 @@ const Graphics = () => {
     setGraphics(reorderedItemsWithNewOrder);
 
     try {
-      await fetch(`${address1}/deleteGraphics`, {
+      await fetch(`${addressmysql()}/deleteGraphics`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -223,7 +225,7 @@ const Graphics = () => {
     setGraphics2(reorderedItemsWithNewOrder);
 
     try {
-      await fetch(`${address1}/deleteGraphics`, {
+      await fetch(`${addressmysql()}/deleteGraphics`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -240,7 +242,7 @@ const Graphics = () => {
   const updateGraphicsOrder = async (updatedItems) => {
     const requests = updatedItems.map(async (val) => {
       try {
-        await fetch(`${address1}/updateGraphicsOrder`, {
+        await fetch(`${addressmysql()}/updateGraphicsOrder`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -328,7 +330,7 @@ const Graphics = () => {
 
       // Optionally, save the copied item to the database
       try {
-        await fetch(`${address1}/insertGraphics`, {
+        await fetch(`${addressmysql()}/insertGraphics`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -349,7 +351,7 @@ const Graphics = () => {
     );
     setGraphics(updatedGraphics);
     try {
-      await fetch(address1 + "/updateGraphicTemplate", {
+      await fetch(addressmysql() + "/updateGraphicTemplate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -369,7 +371,7 @@ const Graphics = () => {
     );
     setGraphics2(updatedGraphics);
     try {
-      await fetch(address1 + "/updateGraphicTemplate", {
+      await fetch(addressmysql() + "/updateGraphicTemplate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

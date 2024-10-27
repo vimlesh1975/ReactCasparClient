@@ -1,3 +1,6 @@
+require("dotenv").config(); // Load environment variables from .env file
+console.log(process.env.DB_HOST);
+
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -529,10 +532,10 @@ var pool;
 
 try {
   pool = mysql.createPool({
-    host: "localhost",
-    user: "itmaint",
-    password: "itddkchn",
-    database: "c1news",
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "itmaint",
+    password: process.env.DB_PASSWORD || "itddkchn",
+    database: process.env.DB_DATABASE || "c1news",
   });
   console.log("Connected to MySQL database");
 } catch (error) {
