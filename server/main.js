@@ -562,6 +562,10 @@ app.get("/getNewsID", async (req, res) => {
 
 app.get("/show_runorder", async (req, res) => {
   const param1 = req.query.param1;
+  if (param1 === "") {
+    res.status(500).send("Error fetching run order");
+    return;
+  }
   try {
     const [rows] = await safeQuery(`CALL show_runorder(?)`, [param1]);
     res.send(rows[0]);
