@@ -430,11 +430,15 @@ const Graphics = () => {
     }
   };
 
+  const refreshRO = () => {
+
+  }
+
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
-          <div style={{ minWidth: 320, maxWidth: 320 }}>
+          <div style={{ minWidth: 450, maxWidth: 450 }}>
             <div>
               Run Orders:
               <select
@@ -451,9 +455,13 @@ const Graphics = () => {
                     </option>
                   ))}
               </select>
+              <button onClick={refreshRO}>Refresh RO</button>
+              {slugs.length} slugs
+
             </div>
 
-            <div style={{ maxHeight: 300, minHeight: 300, overflow: "auto" }}>
+
+            <div style={{ maxHeight: 300, minHeight: 300, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
                 slugs?.map((val, i) => (
                   <div
@@ -470,7 +478,7 @@ const Graphics = () => {
                     }}
                   >
                     {i + 1}{" "}
-                    <label style={{ cursor: "pointer" }}>{val.SlugName}</label>{" "}
+                    <label style={{ cursor: "pointer" }}>{val.SlugName}</label>{" "} {val.MediaInsert}
                     <br />
                   </div>
                 ))}
@@ -479,8 +487,8 @@ const Graphics = () => {
             <h4>Graphics</h4>
             <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
               <GsapPlayer layer1={200} inline={false} />
-            </div>
-            <div>
+            </div >
+            <div style={{ border: '1px solid red' }}>
               <button onClick={updateGraphicsToDatabase}>
                 Update Graphics
               </button>
@@ -522,9 +530,10 @@ const Graphics = () => {
                     );
                   })}
                 </select>
+
               </div>
             </div>
-            <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto" }}>
+            <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}>
               <Droppable droppableId="graphics1">
                 {(provided) => (
                   <table {...provided.droppableProps} ref={provided.innerRef}>
@@ -619,7 +628,7 @@ const Graphics = () => {
                 <Tab>Copy Graphics</Tab>
               </TabList>
               <TabPanel>
-                <div>
+                <div style={{ minHeight: 157, border: '1px solid red' }}>
                   <Oneliner slugs={slugs} currentStoryNumber={currentSlug} />
                 </div>
                 <div>
@@ -631,7 +640,7 @@ const Graphics = () => {
                 </div>
               </TabPanel>
               <TabPanel>
-                <div>
+                <div style={{ minWidth: 450, maxWidth: 450 }}>
                   Run Orders:
                   <select
                     value={selectedRunOrderTitle2}
@@ -647,9 +656,12 @@ const Graphics = () => {
                         </option>
                       ))}
                   </select>
+                  <button onClick={refreshRO}>Refresh RO</button>
+                  {slugs2.length} slugs
+
                 </div>
                 <div
-                  style={{ maxHeight: 450, minHeight: 450, overflow: "auto" }}
+                  style={{ maxHeight: 430, minHeight: 430, overflow: "auto", border: '1px solid red' }}
                 >
 
                   {slugs2 &&
@@ -670,13 +682,13 @@ const Graphics = () => {
                         {i + 1}{" "}
                         <label style={{ cursor: "pointer" }}>
                           {val.SlugName}
-                        </label>{" "}
+                        </label>{" "}  {val.MediaInsert}
                         <br />
                       </div>
                     ))}
                 </div>
                 <div
-                  style={{ maxHeight: 250, minHeight: 250, overflow: "auto" }}
+                  style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}
                 >
                   <Droppable droppableId="graphics2">
                     {(provided) => (

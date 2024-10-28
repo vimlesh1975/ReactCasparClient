@@ -53,15 +53,15 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
 
     return (
         <div>
-            <div style={{ backgroundColor: 'red' }}>
+            <div style={{ backgroundColor: 'blue', color: 'white' }}>
                 {title + " " + currentSlugSlugName}
             </div>
             <div>
                 <textarea
                     value={content}
                     onChange={handleContentChange}
-                    rows="30"
-                    cols="50"
+                    rows="25"
+                    cols="37"
                     style={{ fontSize: 20 }}
 
                 />
