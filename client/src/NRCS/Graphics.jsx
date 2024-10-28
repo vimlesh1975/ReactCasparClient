@@ -171,6 +171,8 @@ const Graphics = () => {
     ];
     setGraphics(newGraphics);
 
+    updateCGEntry();
+
     try {
       await fetch(addressmysql() + "/insertGraphics", {
         method: "POST",
@@ -183,6 +185,7 @@ const Graphics = () => {
           GraphicsOrder: graphics.length + 1,
           ScriptID,
           GraphicsTemplate: pageName,
+          NewsId: selectedRunOrderTitle
         }),
       });
     } catch (error) {
@@ -190,7 +193,72 @@ const Graphics = () => {
     }
   };
 
+  const updateCGEntry = async (deleteCG = false) => {
+    var cgValue = '';
+    if (deleteCG) {
+      if (slugs[currentSlug].MediaInsert === 'Visuals') {
+        return;
+      }
+      else if (slugs[currentSlug].MediaInsert === '' || null) {
+        return;
+      }
+      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+        cgValue = 'Visuals';
+      }
+      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+        cgValue = null;
+      }
+      else {
+        return;
+      }
+    }
+    else {
+      if (slugs[currentSlug].MediaInsert === 'Visuals') {
+        cgValue = 'Visuals/CG';
+      }
+      else if (slugs[currentSlug].MediaInsert === ('' || null)) {
+        cgValue = 'CG';
+      }
+      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+        return;
+      }
+      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+        return
+      }
+      else {
+        return;
+      }
+    }
+
+    // updateSlugs(cgValue);
+
+    const updatedSlugs = [...slugs];
+    updatedSlugs[currentSlug].MediaInsert = cgValue;
+    setSlugs(updatedSlugs);
+
+    console.log(slugs[currentSlug].MediaInsert, cgValue, ScriptID, selectedRunOrderTitle)
+
+    try {
+      await fetch(addressmysql() + "/updateCGEntry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cgValue,
+          ScriptID,
+          NewsId: selectedRunOrderTitle
+        }),
+      });
+    } catch (error) {
+      // console.error('Error saving content:', error);
+    }
+  }
+
   const deleteGraphic = async (GraphicsID) => {
+    if (graphics.length === 1) {
+      updateCGEntry(true);
+    }
     const newGraphics = graphics.filter((val) => val.GraphicsID !== GraphicsID);
     const reorderedItemsWithNewOrder = newGraphics.map((item, index) => ({
       ...item,
@@ -620,6 +688,8 @@ const Graphics = () => {
               <div>
                 <VerticalScrollPlayer />
               </div>
+              <button onClick={updateCGEntry}> updateCGEntry</button>
+
             </div>
           </div>
           <div>
@@ -646,7 +716,6 @@ const Graphics = () => {
                       ))}
                   </select>
                   {slugs2.length} slugs
-
                 </div>
                 <div
                   style={{ maxHeight: 430, minHeight: 430, overflow: "auto", border: '1px solid red' }}

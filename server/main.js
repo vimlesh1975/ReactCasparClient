@@ -614,6 +614,7 @@ app.post("/insertGraphics", async (req, res) => {
     GraphicsOrder,
     ScriptID,
     GraphicsTemplate,
+    NewsId
   } = req.body;
   const values = [
     GraphicsID,
@@ -621,7 +622,9 @@ app.post("/insertGraphics", async (req, res) => {
     GraphicsOrder,
     ScriptID,
     GraphicsTemplate,
+    NewsId
   ];
+
   try {
     await safeQuery(
       `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`,
@@ -631,6 +634,25 @@ app.post("/insertGraphics", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send("Error inserting graphics");
+  }
+});
+
+app.post("/updateCGEntry", async (req, res) => {
+  const { cgValue, ScriptID, NewsId } = req.body;
+  const values = [
+    cgValue,
+    ScriptID,
+    NewsId,
+  ];
+  try {
+    await safeQuery(
+      `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `,
+      values
+    );
+    res.send("");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating graphics order");
   }
 });
 
