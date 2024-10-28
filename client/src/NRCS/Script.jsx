@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { address1 } from '../common'
+import { addressmysql } from '../common'
 
 export default function Home({ ScriptID, title, currentSlugSlugName }) {
     const [content, setContent] = useState('');
@@ -9,7 +9,7 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch(`${address1}/getContent?ScriptID=${ScriptID}&NewsId=${title}`);
+                const res = await fetch(`${addressmysql()}/getContent?ScriptID=${ScriptID}&NewsId=${title}`);
                 try {
                     const data = await res.json();
                     setContent(data.Script);
@@ -34,7 +34,7 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
 
         const newTimeoutId = setTimeout(async () => {
             try {
-                await fetch(address1 + '/updateContent', {
+                await fetch(addressmysql + '/updateContent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
