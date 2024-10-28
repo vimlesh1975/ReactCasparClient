@@ -688,7 +688,7 @@ const Graphics = () => {
               <div>
                 <VerticalScrollPlayer />
               </div>
-              <button onClick={updateCGEntry}> updateCGEntry</button>
+              {/* <button onClick={updateCGEntry}> updateCGEntry</button> */}
 
             </div>
           </div>
