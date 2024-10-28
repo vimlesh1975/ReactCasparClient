@@ -171,7 +171,7 @@ const Graphics = () => {
     ];
     setGraphics(newGraphics);
 
-    updateCGEntry();
+    await updateCGEntry();
 
     try {
       await fetch(addressmysql() + "/insertGraphics", {
@@ -185,7 +185,6 @@ const Graphics = () => {
           GraphicsOrder: graphics.length + 1,
           ScriptID,
           GraphicsTemplate: pageName,
-          NewsId: selectedRunOrderTitle
         }),
       });
     } catch (error) {
@@ -199,7 +198,7 @@ const Graphics = () => {
       if (slugs[currentSlug].MediaInsert === 'Visuals') {
         return;
       }
-      else if (slugs[currentSlug].MediaInsert === '' || null) {
+      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
         return;
       }
       else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
@@ -216,7 +215,7 @@ const Graphics = () => {
       if (slugs[currentSlug].MediaInsert === 'Visuals') {
         cgValue = 'Visuals/CG';
       }
-      else if (slugs[currentSlug].MediaInsert === ('' || null)) {
+      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
         cgValue = 'CG';
       }
       else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
@@ -231,12 +230,12 @@ const Graphics = () => {
     }
 
     // updateSlugs(cgValue);
+    // console.log(slugs[currentSlug].MediaInsert, cgValue, ScriptID, selectedRunOrderTitle)
 
     const updatedSlugs = [...slugs];
     updatedSlugs[currentSlug].MediaInsert = cgValue;
     setSlugs(updatedSlugs);
 
-    console.log(slugs[currentSlug].MediaInsert, cgValue, ScriptID, selectedRunOrderTitle)
 
     try {
       await fetch(addressmysql() + "/updateCGEntry", {
@@ -257,7 +256,7 @@ const Graphics = () => {
 
   const deleteGraphic = async (GraphicsID) => {
     if (graphics.length === 1) {
-      updateCGEntry(true);
+      await updateCGEntry(true);
     }
     const newGraphics = graphics.filter((val) => val.GraphicsID !== GraphicsID);
     const reorderedItemsWithNewOrder = newGraphics.map((item, index) => ({
@@ -336,7 +335,7 @@ const Graphics = () => {
     const destinationDroppableId = result.destination.droppableId;
 
     if ((destinationDroppableId === "graphics1") && (sourceDroppableId === "graphics2")) {
-      updateCGEntry();
+      await updateCGEntry();
     }
 
     if (sourceDroppableId === destinationDroppableId) {

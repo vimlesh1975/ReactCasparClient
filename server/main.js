@@ -614,7 +614,6 @@ app.post("/insertGraphics", async (req, res) => {
     GraphicsOrder,
     ScriptID,
     GraphicsTemplate,
-    NewsId
   } = req.body;
   const values = [
     GraphicsID,
@@ -622,7 +621,6 @@ app.post("/insertGraphics", async (req, res) => {
     GraphicsOrder,
     ScriptID,
     GraphicsTemplate,
-    NewsId
   ];
 
   try {
