@@ -38,17 +38,18 @@ const Graphics = () => {
   const [graphicsID, setGraphicsID] = useState("");
   const [currentSlugSlugName, setCurrentSlugSlugName] = useState("");
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch(addressmysql() + "/getNewsID");
-        const data = await res.json();
-        setRunOrderTitles(data);
-      } catch (error) {
-        // console.error('Error fetching RunOrderTitles:', error);
-      }
+  async function fetchRO() {
+    try {
+      const res = await fetch(addressmysql() + "/getNewsID");
+      const data = await res.json();
+      setRunOrderTitles(data);
+    } catch (error) {
+      // console.error('Error fetching RunOrderTitles:', error);
     }
-    fetchData();
+  }
+
+  useEffect(() => {
+    fetchRO();
   }, []);
 
   useEffect(() => {
@@ -431,9 +432,8 @@ const Graphics = () => {
   };
 
   const refreshRO = () => {
-
+    fetchRO();
   }
-
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -645,7 +645,6 @@ const Graphics = () => {
                         </option>
                       ))}
                   </select>
-                  <button onClick={refreshRO}>Refresh RO</button>
                   {slugs2.length} slugs
 
                 </div>

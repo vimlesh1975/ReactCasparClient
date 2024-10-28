@@ -536,6 +536,7 @@ try {
     user: process.env.DB_USER || "itmaint",
     password: process.env.DB_PASSWORD || "itddkchn",
     database: process.env.DB_DATABASE || "c1news",
+    // database: process.env.DB_DATABASE || "urdu",
   });
   console.log("Connected to MySQL database");
 } catch (error) {
