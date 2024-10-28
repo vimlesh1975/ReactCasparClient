@@ -18,7 +18,7 @@ import Oneliner from "./Oneliner";
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
-  const [pageName, setPageName] = useState("");
+  const [pageName, setPageName] = useState("new Graphics");
   const dispatch = useDispatch();
   const refPageName = useRef();
 
@@ -136,9 +136,9 @@ const Graphics = () => {
     const newGraphics = graphics.map((val) =>
       val.GraphicsID === graphicsID
         ? {
-            ...val,
-            Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }),
-          }
+          ...val,
+          Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }),
+        }
         : val
     );
     setGraphics(newGraphics);
@@ -543,6 +543,7 @@ const Graphics = () => {
                                 onClick={async () => {
                                   setGraphicsID(val.GraphicsID);
                                   setCurrentGraphics(i);
+                                  setPageName(val.GraphicsTemplate + '_copy');
                                   const parsedJSON = JSON.parse(
                                     val.Graphicstext1
                                   );
@@ -647,10 +648,10 @@ const Graphics = () => {
                       ))}
                   </select>
                 </div>
-
                 <div
                   style={{ maxHeight: 450, minHeight: 450, overflow: "auto" }}
                 >
+
                   {slugs2 &&
                     slugs2?.map((val, i) => (
                       <div
@@ -697,6 +698,7 @@ const Graphics = () => {
                                     {...provided.draggableProps}
                                     onClick={async () => {
                                       setCurrentGraphics2(i);
+                                      setPageName(val.GraphicsTemplate + '_copy');
                                       const parsedJSON = JSON.parse(
                                         val.Graphicstext1
                                       );
