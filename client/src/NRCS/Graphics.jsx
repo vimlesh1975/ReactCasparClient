@@ -438,7 +438,7 @@ const Graphics = () => {
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
-          <div style={{ minWidth: 450, maxWidth: 450 }}>
+          <div style={{ minWidth: 450, maxWidth: 450, marginTop: 45 }}>
             <div>
               Run Orders:
               <select
@@ -461,30 +461,33 @@ const Graphics = () => {
             </div>
 
 
-            <div style={{ maxHeight: 300, minHeight: 300, overflow: "auto", border: '1px solid red' }}>
+            <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
-                slugs?.map((val, i) => (
+                slugs?.map((val, i) => (<div key={i} style={{
+                  display: 'flex', color: currentSlug === i ? "white" : "black",
+                  backgroundColor: currentSlug === i ? "green" : "#E7DBD8",
+                  margin: 10,
+                }}>
                   <div
                     onClick={() => {
                       setScriptID(val.ScriptID);
                       setCurrentSlug(i);
                       setCurrentSlugSlugName(val.SlugName);
                     }}
-                    key={i}
+
                     style={{
-                      color: currentSlug === i ? "white" : "black",
-                      backgroundColor: currentSlug === i ? "green" : "#E7DBD8",
-                      margin: 10,
+                      minWidth: 320
                     }}
                   >
                     {i + 1}{" "}
-                    <label style={{ cursor: "pointer" }}>{val.SlugName}</label>{" "} {val.MediaInsert}
-                    <br />
+                    <label style={{ cursor: "pointer" }}>{val.SlugName}</label>{" "}
                   </div>
+                  <div>{val.MediaInsert}</div>
+                </div>
                 ))}
             </div>
 
-            <h4>Graphics</h4>
+            {/* <h4>Graphics</h4> */}
             <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
               <GsapPlayer layer1={200} inline={false} />
             </div >
@@ -492,46 +495,44 @@ const Graphics = () => {
               <button onClick={updateGraphicsToDatabase}>
                 Update Graphics
               </button>
-              <div>
-                <button onClick={addNew}>addNew</button>
-                <span>Template:</span>{" "}
-                <select
-                  ref={refPageName}
-                  onChange={(e) => {
-                    setPageName(canvasList[e.target.selectedIndex].pageName);
-                    dispatch({
-                      type: "CHANGE_CURRENT_PAGE",
-                      payload: e.target.selectedIndex,
-                    });
-                    window.editor.canvas
-                      .loadFromJSON(
-                        canvasList[e.target.selectedIndex].pageValue
-                      )
-                      .then(() => {
-                        const aa = window.editor.canvas.getObjects();
-                        aa.forEach((element) => {
-                          try {
-                            element.set({ objectCaching: false });
-                          } catch (error) {
-                            alert(error);
-                            return;
-                          }
-                        });
-                        window.editor.canvas.requestRenderAll();
-                      });
-                  }}
-                  value={pageName}
-                >
-                  {canvasList.map((val, i) => {
-                    return (
-                      <option key={i} value={val.pageName}>
-                        {val.pageName}
-                      </option>
-                    );
-                  })}
-                </select>
 
-              </div>
+              <button onClick={addNew}>Add New</button>
+              <span>Template:</span>{" "}
+              <select
+                ref={refPageName}
+                onChange={(e) => {
+                  setPageName(canvasList[e.target.selectedIndex].pageName);
+                  dispatch({
+                    type: "CHANGE_CURRENT_PAGE",
+                    payload: e.target.selectedIndex,
+                  });
+                  window.editor.canvas
+                    .loadFromJSON(
+                      canvasList[e.target.selectedIndex].pageValue
+                    )
+                    .then(() => {
+                      const aa = window.editor.canvas.getObjects();
+                      aa.forEach((element) => {
+                        try {
+                          element.set({ objectCaching: false });
+                        } catch (error) {
+                          alert(error);
+                          return;
+                        }
+                      });
+                      window.editor.canvas.requestRenderAll();
+                    });
+                }}
+                value={pageName}
+              >
+                {canvasList.map((val, i) => {
+                  return (
+                    <option key={i} value={val.pageName}>
+                      {val.pageName}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
             <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}>
               <Droppable droppableId="graphics1">
@@ -624,21 +625,9 @@ const Graphics = () => {
           <div>
             <Tabs selectedTabClassName="selectedTab" forceRenderTabPanel={true}>
               <TabList>
-                <Tab>Oneliner and Script</Tab>
                 <Tab>Copy Graphics</Tab>
+                <Tab>Oneliner and Script</Tab>
               </TabList>
-              <TabPanel>
-                <div style={{ minHeight: 157, border: '1px solid red' }}>
-                  <Oneliner slugs={slugs} currentStoryNumber={currentSlug} />
-                </div>
-                <div>
-                  <Script
-                    ScriptID={ScriptID}
-                    title={selectedRunOrderTitle}
-                    currentSlugSlugName={currentSlugSlugName}
-                  />
-                </div>
-              </TabPanel>
               <TabPanel>
                 <div style={{ minWidth: 450, maxWidth: 450 }}>
                   Run Orders:
@@ -665,7 +654,11 @@ const Graphics = () => {
                 >
 
                   {slugs2 &&
-                    slugs2?.map((val, i) => (
+                    slugs2?.map((val, i) => (<div key={i} style={{
+                      display: 'flex', color: currentSlug2 === i ? "white" : "black",
+                      backgroundColor: currentSlug2 === i ? "green" : "#E7DBD8",
+                      margin: 10,
+                    }}>
                       <div
                         onClick={() => {
                           setScriptID2(val.ScriptID);
@@ -673,18 +666,16 @@ const Graphics = () => {
                         }}
                         key={i}
                         style={{
-                          color: currentSlug2 === i ? "white" : "black",
-                          backgroundColor:
-                            currentSlug2 === i ? "green" : "#E7DBD8",
-                          margin: 10,
+                          minWidth: 320
                         }}
                       >
                         {i + 1}{" "}
                         <label style={{ cursor: "pointer" }}>
                           {val.SlugName}
                         </label>{" "}  {val.MediaInsert}
-                        <br />
                       </div>
+                      <div>{val.MediaInsert}</div>
+                    </div>
                     ))}
                 </div>
                 <div
@@ -776,6 +767,19 @@ const Graphics = () => {
                   </Droppable>
                 </div>
               </TabPanel>
+              <TabPanel>
+                <div style={{ minHeight: 157, border: '1px solid red' }}>
+                  <Oneliner slugs={slugs} currentStoryNumber={currentSlug} />
+                </div>
+                <div>
+                  <Script
+                    ScriptID={ScriptID}
+                    title={selectedRunOrderTitle}
+                    currentSlugSlugName={currentSlugSlugName}
+                  />
+                </div>
+              </TabPanel>
+
             </Tabs>
           </div>
         </div>
