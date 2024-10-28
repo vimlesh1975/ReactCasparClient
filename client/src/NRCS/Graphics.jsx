@@ -335,6 +335,10 @@ const Graphics = () => {
     const sourceDroppableId = result.source.droppableId;
     const destinationDroppableId = result.destination.droppableId;
 
+    if ((destinationDroppableId === "graphics1") && (sourceDroppableId === "graphics2")) {
+      updateCGEntry();
+    }
+
     if (sourceDroppableId === destinationDroppableId) {
       // Reordering within the same list
       const updatedItems = Array.from(
