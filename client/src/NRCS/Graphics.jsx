@@ -523,7 +523,8 @@ const Graphics = () => {
                     }}
 
                     style={{
-                      minWidth: 320
+                      minWidth: 320,
+                      maxWidth: 320,
                     }}
                   >
                     {i + 1}{" "}
@@ -717,13 +718,14 @@ const Graphics = () => {
                         }}
                         key={i}
                         style={{
-                          minWidth: 320
+                          minWidth: 320,
+                          maxWidth: 320,
                         }}
                       >
                         {i + 1}{" "}
                         <label style={{ cursor: "pointer" }}>
                           {val.SlugName}
-                        </label>{" "}  {val.MediaInsert}
+                        </label>{" "}
                       </div>
                       <div>{val.MediaInsert}</div>
                     </div>
