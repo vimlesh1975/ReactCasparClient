@@ -306,18 +306,24 @@ const Graphics = () => {
 
   const handleOnDragEnd = async (result) => {
     if (!result.destination) return;
-
     const sourceDroppableId = result.source.droppableId;
     const destinationDroppableId = result.destination.droppableId;
-
     if (destinationDroppableId === 'graphics2') return;
     if ((destinationDroppableId === "graphics2") && (sourceDroppableId === "graphics2")) return;
-
     if ((destinationDroppableId === "graphics1") && (sourceDroppableId === "graphics2")) {
       await updateCGEntry();
     }
-
     if (sourceDroppableId === destinationDroppableId) {
+      //update currentGraphics
+      if (currentGraphics === result.source?.index) {
+        setCurrentGraphics(result.destination?.index);
+      }
+      else if ((currentGraphics >= result.destination?.index) && (currentGraphics < result.source?.index)) {
+        setCurrentGraphics(currentGraphics + 1);
+      }
+      else if ((currentGraphics <= result.destination?.index) && (currentGraphics > result.source?.index)) {
+        setCurrentGraphics(currentGraphics - 1);
+      }
       // Reordering within the same list
       const updatedItems = Array.from(
         sourceDroppableId === "graphics1" ? graphics : graphics2
@@ -338,6 +344,11 @@ const Graphics = () => {
 
       await updateGraphicsOrder(reorderedItemsWithNewOrder);
     } else {
+      //update currentGraphics
+      if ((currentGraphics >= result.destination?.index)) {
+        setCurrentGraphics(currentGraphics + 1);
+      }
+
       // Copying between lists
       const sourceList = Array.from(
         sourceDroppableId === "graphics1" ? graphics : graphics2
@@ -357,7 +368,6 @@ const Graphics = () => {
       };
 
       destinationList.splice(result.destination.index, 0, newItem);
-
       const reorderedSourceList = sourceList.map((item, index) => ({
         ...item,
         GraphicsOrder: index + 1,
@@ -392,6 +402,9 @@ const Graphics = () => {
         // console.error('Error saving copied item:', error);
       }
     }
+
+
+
   };
 
   const updateGraphicTemplate = async (GraphicsID, newTemplate) => {
@@ -587,6 +600,7 @@ const Graphics = () => {
                                 onClick={async () => {
                                   setGraphicsID(val.GraphicsID);
                                   setCurrentGraphics(i);
+                                  setCurrentGraphics2(-1);
                                   setPageName(val.GraphicsTemplate + '_copy');
                                   const parsedJSON = JSON.parse(
                                     val.Graphicstext1
