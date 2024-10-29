@@ -14,6 +14,9 @@ import * as fabric from "fabric";
 import VerticalScrollPlayer from "../VerticalScrollPlayer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Oneliner from "./Oneliner";
+import DataUpdater from "./DataUpdater";
+
+import debounce from "lodash.debounce";
 
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -134,6 +137,10 @@ const Graphics = () => {
     setScriptID2("");
   };
   const updateGraphicsToDatabase = async () => {
+    if (graphicsID === '') {
+      alert('no template is selected')
+      return;
+    }
     const newGraphics = graphics.map((val) =>
       val.GraphicsID === graphicsID
         ? {
@@ -159,10 +166,11 @@ const Graphics = () => {
     }
   };
   const addNew = async () => {
+    const GraphicsID = getFormattedDatetimeNumber(); // Generate GraphicsID once
     const newGraphics = [
       ...graphics,
       {
-        GraphicsID: getFormattedDatetimeNumber(),
+        GraphicsID,
         Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }),
         GraphicsOrder: graphics.length + 1,
         ScriptID,
@@ -180,7 +188,7 @@ const Graphics = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          GraphicsID: getFormattedDatetimeNumber(),
+          GraphicsID,
           Graphicstext1: JSON.stringify({ pageValue: canvas.toJSON() }),
           GraphicsOrder: graphics.length + 1,
           ScriptID,
@@ -416,24 +424,38 @@ const Graphics = () => {
   };
 
   const updateGraphicTemplate = async (GraphicsID, newTemplate) => {
+    console.log(GraphicsID, newTemplate);
+    if (!GraphicsID) {
+      console.error("GraphicsID is missing or invalid.");
+      return;
+    }
+
     const updatedGraphics = graphics.map((graphic) =>
       graphic.GraphicsID === GraphicsID
         ? { ...graphic, GraphicsTemplate: newTemplate }
         : graphic
     );
     setGraphics(updatedGraphics);
+
     try {
-      await fetch(addressmysql() + "/updateGraphicTemplate", {
+      const response = await fetch(addressmysql() + "/updateGraphicTemplate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ GraphicsID, GraphicsTemplate: newTemplate }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to update graphic template on server.");
+      }
     } catch (error) {
-      // console.error('Error updating template:', error);
+      console.error("Error updating template:", error);
     }
   };
+  const handleTemplateChange = debounce((GraphicsID, newTemplate) => {
+    updateGraphicTemplate(GraphicsID, newTemplate);
+  }, 100);
 
   const updateGraphicTemplate2 = async (GraphicsID, newTemplate) => {
     const updatedGraphics = graphics2.map((graphic) =>
@@ -661,11 +683,7 @@ const Graphics = () => {
                                   <input
                                     type="text"
                                     value={val.GraphicsTemplate}
-                                    onChange={(e) =>
-                                      updateGraphicTemplate(
-                                        val.GraphicsID,
-                                        e.target.value
-                                      )
+                                    onChange={(e) => handleTemplateChange(val.GraphicsID, e.target.value)
                                     }
                                   />
                                 </td>
@@ -698,9 +716,15 @@ const Graphics = () => {
           <div>
             <Tabs selectedTabClassName="selectedTab" forceRenderTabPanel={true}>
               <TabList>
+
+                <Tab>DataUpdater</Tab>
                 <Tab>Copy Graphics</Tab>
                 <Tab>Oneliner and Script</Tab>
+
               </TabList>
+              <TabPanel>
+                <DataUpdater />
+              </TabPanel>
               <TabPanel>
                 <div style={{ minWidth: 450, maxWidth: 450 }}>
                   Run Orders:
