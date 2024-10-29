@@ -7,7 +7,6 @@ const DataUpdater = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [textNodes, settextNodes] = useState([])
     const updateData = (data) => {
-        console.log(data)
         data.forEach(data2 => {
             canvas.getObjects().forEach((element) => {
                 // element.set({ selectable: false, strokeUniform: false });

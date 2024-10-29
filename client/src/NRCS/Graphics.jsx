@@ -236,15 +236,9 @@ const Graphics = () => {
         return;
       }
     }
-
-    // updateSlugs(cgValue);
-    // console.log(slugs[currentSlug].MediaInsert, cgValue, ScriptID, selectedRunOrderTitle)
-
     const updatedSlugs = [...slugs];
     updatedSlugs[currentSlug].MediaInsert = cgValue;
     setSlugs(updatedSlugs);
-
-
     try {
       await fetch(addressmysql() + "/updateCGEntry", {
         method: "POST",
@@ -289,32 +283,6 @@ const Graphics = () => {
     }
   };
 
-  const deleteGraphic2 = async (GraphicsID) => {
-    const newGraphics = graphics2.filter(
-      (val) => val.GraphicsID !== GraphicsID
-    );
-    const reorderedItemsWithNewOrder = newGraphics.map((item, index) => ({
-      ...item,
-      GraphicsOrder: index + 1,
-    }));
-
-    setGraphics2(reorderedItemsWithNewOrder);
-
-    try {
-      await fetch(`${addressmysql()}/deleteGraphics`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ GraphicsID }),
-      });
-
-      await updateGraphicsOrder(reorderedItemsWithNewOrder);
-    } catch (error) {
-      // console.error('Error deleting graphic:', error);
-    }
-  };
-
   const updateGraphicsOrder = async (updatedItems) => {
     const requests = updatedItems.map(async (val) => {
       try {
@@ -341,6 +309,9 @@ const Graphics = () => {
 
     const sourceDroppableId = result.source.droppableId;
     const destinationDroppableId = result.destination.droppableId;
+
+    if (destinationDroppableId === 'graphics2') return;
+    if ((destinationDroppableId === "graphics2") && (sourceDroppableId === "graphics2")) return;
 
     if ((destinationDroppableId === "graphics1") && (sourceDroppableId === "graphics2")) {
       await updateCGEntry();
@@ -424,7 +395,6 @@ const Graphics = () => {
   };
 
   const updateGraphicTemplate = async (GraphicsID, newTemplate) => {
-    console.log(GraphicsID, newTemplate);
     if (!GraphicsID) {
       console.error("GraphicsID is missing or invalid.");
       return;
@@ -456,26 +426,6 @@ const Graphics = () => {
   const handleTemplateChange = debounce((GraphicsID, newTemplate) => {
     updateGraphicTemplate(GraphicsID, newTemplate);
   }, 100);
-
-  const updateGraphicTemplate2 = async (GraphicsID, newTemplate) => {
-    const updatedGraphics = graphics2.map((graphic) =>
-      graphic.GraphicsID === GraphicsID
-        ? { ...graphic, GraphicsTemplate: newTemplate }
-        : graphic
-    );
-    setGraphics2(updatedGraphics);
-    try {
-      await fetch(addressmysql() + "/updateGraphicTemplate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ GraphicsID, GraphicsTemplate: newTemplate }),
-      });
-    } catch (error) {
-      // console.error('Error updating template:', error);
-    }
-  };
 
   const fetchAllContent = async () => {
     const data1 = new Array(slugs.length * 2); // Creating an array with double the length to store index and script content
@@ -512,21 +462,12 @@ const Graphics = () => {
         stroke: "#000000",
         strokeWidth: 2,
       });
-
-      // Add textbox to canvas
       canvas.add(textbox);
-
-      // Render the canvas to ensure the textbox is drawn and dimensions are available
       canvas.requestRenderAll();
-
-      // Calculate the next top position based on the height of the current textbox
       currentTop += textbox.getBoundingRect().height + 10; // 10 is the spacing between textboxes
     }
   };
 
-  const refreshRO = () => {
-    fetchRO();
-  }
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -548,7 +489,7 @@ const Graphics = () => {
                     </option>
                   ))}
               </select>
-              <button onClick={refreshRO}>Refresh RO</button>
+              <button onClick={() => fetchRO()}>Refresh RO</button>
               {slugs.length} slugs
 
             </div>
@@ -681,6 +622,7 @@ const Graphics = () => {
                                 </td>
                                 <td>
                                   <input
+                                    style={{ width: 340 }}
                                     type="text"
                                     value={val.GraphicsTemplate}
                                     onChange={(e) => handleTemplateChange(val.GraphicsID, e.target.value)
@@ -823,26 +765,13 @@ const Graphics = () => {
                                     <td {...provided.dragHandleProps}>
                                       <VscMove />
                                     </td>
-                                    <td>
-                                      <button
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                          deleteGraphic2(val.GraphicsID)
-                                        }
-                                      >
-                                        <VscTrash />
-                                      </button>
-                                    </td>
+
                                     <td>
                                       <input
+                                        style={{ pointerEvents: 'none', width: 370 }}
+                                        readonly
                                         type="text"
                                         value={val.GraphicsTemplate}
-                                        onChange={(e) =>
-                                          updateGraphicTemplate2(
-                                            val.GraphicsID,
-                                            e.target.value
-                                          )
-                                        }
                                       />
                                     </td>
                                   </tr>
