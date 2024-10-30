@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   generateUniqueId,
   shadowOptions,
@@ -17,6 +17,7 @@ import Oneliner from "./Oneliner";
 import DataUpdater from "./DataUpdater";
 
 import debounce from "lodash.debounce";
+import Timer from "./Timer";
 
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
@@ -41,7 +42,26 @@ const Graphics = () => {
   const [graphicsID, setGraphicsID] = useState("");
   const [currentSlugSlugName, setCurrentSlugSlugName] = useState("");
 
-  async function fetchRO() {
+  const [stopOnNext, setStopOnNext] = useState(false);
+  const [live, setLive] = useState(false);
+
+
+  const timerFunction = async () => {
+    if (!live) return;
+    await fetchRO();
+    try {
+      const res = await fetch(
+        addressmysql() + `/getGraphics?ScriptID=${ScriptID}`
+      );
+      const data = await res.json();
+      // console.log(data);
+      setGraphics(data);
+    } catch (error) {
+      // console.error('Error fetching RunOrderTitles:', error);
+    }
+  }
+
+  async function fetchNewsID() {
     try {
       const res = await fetch(addressmysql() + "/getNewsID");
       const data = await res.json();
@@ -52,27 +72,30 @@ const Graphics = () => {
   }
 
   useEffect(() => {
-    fetchRO();
+    fetchNewsID();
   }, []);
 
-  useEffect(() => {
+  const fetchRO = useCallback(async () => {
     if (selectedRunOrderTitle === "") {
       return;
     }
-    async function fetchData() {
-      try {
-        const res = await fetch(
-          addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle}`
-        );
-        const data = await res.json();
-        setSlugs(data);
-      } catch (error) {
-        // console.error('Error fetching users:', error);
-      }
+    try {
+      const res = await fetch(
+        addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle}`
+      );
+      const data = await res.json();
+      setSlugs(data);
+    } catch (error) {
+      // console.error('Error fetching data:', error);
     }
+  }, [selectedRunOrderTitle, setSlugs]);
 
-    fetchData();
-  }, [selectedRunOrderTitle]);
+
+
+
+  useEffect(() => {
+    fetchRO();
+  }, [selectedRunOrderTitle, fetchRO]);
 
   useEffect(() => {
     if (selectedRunOrderTitle2 === "") {
@@ -481,7 +504,7 @@ const Graphics = () => {
     }
   };
 
-  return (
+  return (<div>
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
@@ -502,8 +525,16 @@ const Graphics = () => {
                     </option>
                   ))}
               </select>
-              <button onClick={() => fetchRO()}>Refresh RO</button>
+              <button onClick={() => fetchNewsID()}>Refresh RO</button>
               {slugs.length} slugs
+              <label>
+                <input
+                  type="checkbox"
+                  checked={live}
+                  onChange={() => setLive(val => !val)}
+                />
+                Live Mode
+              </label>
 
             </div>
 
@@ -825,7 +856,16 @@ const Graphics = () => {
         </div>
       </div>
     </DragDropContext>
-  );
+    <div>
+      <Timer
+        callback={timerFunction}
+        interval={5000}
+        stopOnNext={stopOnNext}
+        setStopOnNext={setStopOnNext}
+      />
+    </div>
+
+  </div>);
 };
 
 export default Graphics;

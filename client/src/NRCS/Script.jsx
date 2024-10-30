@@ -58,6 +58,7 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
             </div>
             <div>
                 <textarea
+                    disabled
                     value={content}
                     onChange={handleContentChange}
                     rows="25"
