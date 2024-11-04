@@ -6,7 +6,7 @@ import { VscTrash, VscMove } from "react-icons/vsc";
 import { useSelector, useDispatch } from 'react-redux'
 import DrawingThumbnail from './DrawingThumbnail'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, saveFile } from './common'
+import { startGraphics, stopGraphics, updateGraphics, templateLayers, rgbaObjectToHex, saveFile } from './common'
 
 var currentFile = 'new';
 let fileReader;
@@ -416,6 +416,16 @@ const SavePannel = () => {
                                                                                     startGraphics(canvas, templateLayers.savePannelPlayer, currentscreenSize))
                                                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
+
+                                                                        <div>
+                                                                            <button title='Update' onClick={() => {
+                                                                                recallPage(val.pageValue, canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2).then(() => {
+                                                                                    updateGraphics(canvas, templateLayers.savePannelPlayer);
+                                                                                }
+                                                                                )
+                                                                            }}>U</button>
+                                                                        </div>
+
                                                                         <div>
                                                                             <button onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>

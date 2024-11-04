@@ -19,6 +19,8 @@ import DataUpdater from "./DataUpdater";
 import debounce from "lodash.debounce";
 import Timer from "./Timer";
 
+import Thumbnailview from "./Thumbnailview";
+
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
@@ -44,6 +46,7 @@ const Graphics = () => {
 
   const [stopOnNext, setStopOnNext] = useState(false);
   const [live, setLive] = useState(false);
+
 
 
   const timerFunction = async () => {
@@ -652,7 +655,7 @@ const Graphics = () => {
                                   ...provided.draggableProps.style,
                                 }}
                               >
-                                <td>{i}</td>
+                                <td>{i + 1}</td>
                                 <td {...provided.dragHandleProps}>
                                   <VscMove />
                                 </td>
@@ -704,12 +707,14 @@ const Graphics = () => {
           <div>
             <Tabs selectedTabClassName="selectedTab" forceRenderTabPanel={true}>
               <TabList>
-
+                <Tab>Thumbnailview</Tab>
                 <Tab>DataUpdater</Tab>
-                <Tab>Copy Graphics</Tab>
-                <Tab>Oneliner and Script</Tab>
-
+                <Tab>Copy </Tab>
+                <Tab>Script</Tab>
               </TabList>
+              <TabPanel>
+                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} />
+              </TabPanel>
               <TabPanel>
                 <DataUpdater />
               </TabPanel>
