@@ -717,7 +717,7 @@ const Graphics = () => {
                 <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} />
               </TabPanel>
               <TabPanel>
-                <DataUpdater />
+                <DataUpdater updateGraphicsToDatabase={updateGraphicsToDatabase} />
               </TabPanel>
               <TabPanel>
                 <div style={{ minWidth: 450, maxWidth: 450 }}>

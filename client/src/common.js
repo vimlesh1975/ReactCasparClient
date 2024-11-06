@@ -2100,7 +2100,8 @@ export const templateLayers = {
   twoliner: 165,
   theatrejs: 166,
   gsap: 167,
-  NRCSgsap: 167,
+  NRCSgsap: 168,
+  NRCSThumnailplayer: 169,
   data: 170,
 
   hockeygenerallayer: 500,

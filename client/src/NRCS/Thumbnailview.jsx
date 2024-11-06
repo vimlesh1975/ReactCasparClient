@@ -109,20 +109,20 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics }) => {
                                                                             <button onClick={() => {
                                                                                 setCurrentGraphics(i);
                                                                                 recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() =>
-                                                                                    startGraphics(canvas, templateLayers.savePannelPlayer, currentscreenSize))
+                                                                                    startGraphics(canvas, templateLayers.NRCSThumnailplayer, currentscreenSize))
                                                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                         <div>
                                                                             <button title='Update' onClick={() => {
                                                                                 recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() => {
                                                                                     setCurrentGraphics(i);
-                                                                                    updateGraphics(canvas, templateLayers.savePannelPlayer)
+                                                                                    updateGraphics(canvas, templateLayers.NRCSThumnailplayer)
                                                                                 }
                                                                                 )
                                                                             }}>U</button>
                                                                         </div>
                                                                         <div>
-                                                                            <button onClick={() => stopGraphics(templateLayers.savePannelPlayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                                                            <button onClick={() => stopGraphics(templateLayers.NRCSThumnailplayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                                                         </div>
                                                                     </div>
                                                                 </td>

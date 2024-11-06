@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import * as fabric from 'fabric';
 
-const DataUpdater = () => {
+const DataUpdater = ({ updateGraphicsToDatabase }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [textNodes, settextNodes] = useState([])
     const updateData = (data) => {
@@ -79,6 +79,7 @@ const DataUpdater = () => {
             <div >
                 <button onClick={getAllKeyValue}>Get All Key Value</button>
                 <button onClick={() => updateData(textNodes)}>update on Preview</button>
+                <button onClick={() => updateGraphicsToDatabase()}>Update to Database</button>
             </div>
             <div style={{ maxHeight: 730, minHeight: 730, minWidth: 430, overflow: 'scroll' }}>
                 <table border='0'><tbody>
