@@ -4,6 +4,7 @@ import {
   shadowOptions,
   getFormattedDatetimeNumber,
   addressmysql,
+  templateLayers,
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -571,7 +572,7 @@ const Graphics = () => {
 
             {/* <h4>Graphics</h4> */}
             <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
-              <GsapPlayer layer1={200} inline={false} />
+              <GsapPlayer layer1={templateLayers.NRCSgsap} inline={false} />
             </div >
             <div style={{ border: '1px solid red' }}>
               <button onClick={updateGraphicsToDatabase}>
