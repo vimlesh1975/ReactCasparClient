@@ -1,14 +1,18 @@
+//works only in linux
+
 module.exports = {
-  apps: [{
-    name: "RCC Client",
-    script: "serve",
-    args: "-s build", // Serve the 'build' directory
-    instances: 1,
-    autorestart: true,
-    watch: false,
-    max_memory_restart: "1G",
-    env: {
-      NODE_ENV: "production"
-    }
-  }]
+  apps: [
+    {
+      name: "React Caspar Client",
+      script: "npm",
+      args: "start",
+      env: {
+        HTTPS: "true",
+        SSL_CRT_FILE: "./cert.crt",
+        SSL_KEY_FILE: "./cert.key",
+        PORT: "10000",
+        NODE_ENV: "development",
+      },
+    },
+  ],
 };

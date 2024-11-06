@@ -66,11 +66,12 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "deploy2": "gh-pages-clean gh-pages -d build",
-    "start": "set HTTPS=true&& set SSL_CRT_FILE=./cert.crt&& set SSL_KEY_FILE=./cert.key&& set PORT=10000&& craco start",
+    "start": "cross-env HTTPS=true SSL_CRT_FILE=./cert.crt SSL_KEY_FILE=./cert.key PORT=10000 craco start",
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "remotion": "remotion studio src/remotion/index.js"
+    "remotion": "remotion studio src/remotion/index.js",
+    "prod": "serve -s build"
   },
   "eslintConfig": {
     "extends": [
