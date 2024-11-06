@@ -5,7 +5,7 @@ import DrawingThumbnailNRCS from './DrawingThumbnailNRCS'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, updateGraphics } from '../common'
 
-const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics }) => {
+const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyValue }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -49,6 +49,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics }) => {
 
                     // Trigger a render after all changes
                     canvas.requestRenderAll();
+                    getAllKeyValue();
 
                     // Resolve the promise after the canvas is rendered
                     resolve();
@@ -132,7 +133,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics }) => {
                                                                             setCurrentGraphics(i);
                                                                             recallPage((JSON.parse(val.Graphicstext1)).pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2)
                                                                         }}>
-                                                                            <DrawingThumbnailNRCS i={i} graphics={graphics} />
+                                                                            {canvas && <DrawingThumbnailNRCS i={i} graphics={graphics} />}
                                                                         </div>
                                                                         <span style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }}
                                                                             value={val.GraphicsTemplate}

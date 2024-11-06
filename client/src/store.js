@@ -17,6 +17,8 @@ const initialStateCanvasList = {
     },
   ],
 };
+
+
 const canvasListReducer = (state = initialStateCanvasList, action) => {
   switch (action.type) {
     case 'CHANGE_CANVAS_LIST':
@@ -460,6 +462,21 @@ const clientIdReducer = (state = initialClientId, action) => {
   }
 };
 
+const initialTextNodes = [];
+const textNodesReducer = (state = initialTextNodes, action) => {
+  switch (action.type) {
+    case 'CHANGE_TEXT_NODES':
+      return {
+        ...state,
+        textNodes: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
+
 const rootReducer = combineReducers({
   canvasListReducer,
   currentPageReducer,
@@ -489,7 +506,8 @@ const rootReducer = combineReducers({
   xpositionsReducer,
   speechRecognitionReducer,
   clientIdReducer,
-  FPSReducer
+  FPSReducer,
+  textNodesReducer
 });
 const store = createStore(
   rootReducer,

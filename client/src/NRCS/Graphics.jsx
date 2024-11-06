@@ -22,9 +22,12 @@ import Timer from "./Timer";
 
 import Thumbnailview from "./Thumbnailview";
 
+
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
+  // const textNodes = useSelector(state => state.textNodesReducer.textNodes);
+
   const [pageName, setPageName] = useState("new Graphics");
   const dispatch = useDispatch();
   const refPageName = useRef();
@@ -48,7 +51,25 @@ const Graphics = () => {
   const [stopOnNext, setStopOnNext] = useState(false);
   const [live, setLive] = useState(false);
 
-
+  const getAllKeyValue = () => {
+    const aa = []
+    canvas.getObjects().forEach((element) => {
+      var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
+      if (type === 'text') {
+        if (element.textLines.length > 1) {
+          aa.push({ key: element.id, value: element.text, type: 'textarea', fontFamily: element.fontFamily });
+        }
+        else {
+          aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily });
+        }
+      }
+      if (type === 'image') {
+        aa.push({ key: element.id, value: element.src, type: 'image' })
+      }
+    });
+    // settextNodes(aa);
+    dispatch({ type: "CHANGE_TEXT_NODES", payload: aa });
+  }
 
   const timerFunction = async () => {
     if (!live) return;
@@ -464,6 +485,7 @@ const Graphics = () => {
     }
   };
   const handleTemplateChange = debounce((GraphicsID, newTemplate) => {
+    console.log(GraphicsID);
     updateGraphicTemplate(GraphicsID, newTemplate);
   }, 100);
 
@@ -645,6 +667,7 @@ const Graphics = () => {
                                     parsedJSON.pageValue
                                   );
                                   canvas.requestRenderAll();
+                                  getAllKeyValue();
                                 }}
                                 style={{
                                   backgroundColor:
@@ -714,10 +737,10 @@ const Graphics = () => {
                 <Tab>Script</Tab>
               </TabList>
               <TabPanel>
-                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} />
+                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} />
               </TabPanel>
               <TabPanel>
-                <DataUpdater updateGraphicsToDatabase={updateGraphicsToDatabase} />
+                <DataUpdater updateGraphicsToDatabase={updateGraphicsToDatabase} getAllKeyValue={getAllKeyValue} />
               </TabPanel>
               <TabPanel>
                 <div style={{ minWidth: 450, maxWidth: 450 }}>

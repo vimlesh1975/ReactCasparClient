@@ -1,11 +1,13 @@
 import React from 'react'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+// import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import * as fabric from 'fabric';
 
-const DataUpdater = ({ updateGraphicsToDatabase }) => {
+const DataUpdater = ({ updateGraphicsToDatabase, getAllKeyValue }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
-    const [textNodes, settextNodes] = useState([])
+    const textNodes = useSelector(state => state.textNodesReducer.textNodes);
+    const dispatch = useDispatch();
+
     const updateData = (data) => {
         data.forEach(data2 => {
             canvas.getObjects().forEach((element) => {
@@ -55,24 +57,25 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
         canvas.requestRenderAll();
     }
 
-    const getAllKeyValue = () => {
-        const aa = []
-        canvas.getObjects().forEach((element) => {
-            var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
-            if (type === 'text') {
-                if (element.textLines.length > 1) {
-                    aa.push({ key: element.id, value: element.text, type: 'textarea', fontFamily: element.fontFamily });
-                }
-                else {
-                    aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily });
-                }
-            }
-            if (type === 'image') {
-                aa.push({ key: element.id, value: element.src, type: 'image' })
-            }
-        });
-        settextNodes(aa);
-    }
+    // const getAllKeyValue = () => {
+    //     const aa = []
+    //     canvas.getObjects().forEach((element) => {
+    //         var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
+    //         if (type === 'text') {
+    //             if (element.textLines.length > 1) {
+    //                 aa.push({ key: element.id, value: element.text, type: 'textarea', fontFamily: element.fontFamily });
+    //             }
+    //             else {
+    //                 aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily });
+    //             }
+    //         }
+    //         if (type === 'image') {
+    //             aa.push({ key: element.id, value: element.src, type: 'image' })
+    //         }
+    //     });
+    //     // settextNodes(aa);
+    //     dispatch({ type: "CHANGE_TEXT_NODES", payload: aa });
+    // }
 
     return (
         <div >
@@ -83,7 +86,7 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
             </div>
             <div style={{ maxHeight: 730, minHeight: 730, minWidth: 430, overflow: 'scroll' }}>
                 <table border='0'><tbody>
-                    {textNodes.map((val, i) => {
+                    {textNodes?.map((val, i) => {
                         if (val.type === 'text' || val.type === 'textarea') {
                             return (
                                 <tr key={i}>
@@ -107,7 +110,9 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
                                                             const updatednodes = textNodes.map((node, index) => (
                                                                 (i === index) ? { ...node, value: e.target.value } : node
                                                             ));
-                                                            settextNodes(updatednodes);
+                                                            // settextNodes(updatednodes);
+                                                            dispatch({ type: "CHANGE_TEXT_NODES", payload: updatednodes });
+
                                                         }}
                                                     /> :
                                                     <textarea
@@ -118,7 +123,10 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
                                                             const updatednodes = textNodes.map((node, index) => (
                                                                 (i === index) ? { ...node, value: e.target.value } : node
                                                             ));
-                                                            settextNodes(updatednodes);
+                                                            // settextNodes(updatednodes);
+                                                            dispatch({ type: "CHANGE_TEXT_NODES", payload: updatednodes });
+
+
                                                         }}
                                                     />
 
@@ -133,14 +141,18 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
                                                                 const updatednodes = textNodes.map((node, index) => (
                                                                     (i === index) ? { ...node, value: e.target.value } : node
                                                                 ));
-                                                                settextNodes(updatednodes);
+                                                                // settextNodes(updatednodes);
+                                                                dispatch({ type: "CHANGE_TEXT_NODES", payload: updatednodes });
+
                                                             }}
                                                         />
                                                         <button onClick={() => {
                                                             const updatednodes = textNodes.map((node, index) => (
                                                                 (i === index) ? { ...node, value: parseFloat(node.value) + 1 } : node
                                                             ));
-                                                            settextNodes(updatednodes);
+                                                            // settextNodes(updatednodes);
+                                                            dispatch({ type: "CHANGE_TEXT_NODES", payload: updatednodes });
+
                                                         }}>
                                                             +
                                                         </button>
@@ -158,7 +170,9 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
                                         const updatedKeyframe = textNodes.map((val, index) => {
                                             return (i === index) ? { ...val, key: e.target.value } : val;
                                         });
-                                        settextNodes(updatedKeyframe)
+                                        // settextNodes(updatedKeyframe)
+                                        dispatch({ type: "CHANGE_TEXT_NODES", payload: updatedKeyframe });
+
                                     }}
                                 /></td>
                                 <td>
@@ -172,7 +186,9 @@ const DataUpdater = ({ updateGraphicsToDatabase }) => {
                                                 const updatedKeyframe = textNodes.map((val, index) => {
                                                     return (i === index) ? { ...val, value: reader.result } : val;
                                                 });
-                                                settextNodes(updatedKeyframe)
+                                                // settextNodes(updatedKeyframe)
+                                                dispatch({ type: "CHANGE_TEXT_NODES", payload: updatedKeyframe });
+
                                             }
                                             reader.readAsDataURL(file);
                                         });
