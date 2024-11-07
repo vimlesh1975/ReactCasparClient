@@ -58,10 +58,13 @@ function handleDrop(e, canvas) {
     );
   }
   if (e.dataTransfer.items) {
+    var ii = 0;
     [...e.dataTransfer.items].forEach((item, i) => {
+      // console.log(item, i);
       if (item.kind === "file") {
         const file = item.getAsFile();
-        Uploaddropedfile(file, canvas, e.offsetX + i * 250, e.offsetY + i * 250);
+        Uploaddropedfile(file, canvas, e.offsetX + ii * 250, e.offsetY + ii * 250);
+        ii++;
       }
     });
   } else {

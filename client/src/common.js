@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "061124_2";
+export const buildDate = "071124_2";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -212,7 +212,7 @@ export const Uploaddropedfile2 = (file0, canvas, x, y) => {
 };
 
 export const Uploaddropedfile = async (file0, canvas, x, y) => {
-  console.log(file0);
+  // console.log(file0);
   const id = generateUniqueId({ type: "dropped" });
   if (file0) {
     const reader = new FileReader();
