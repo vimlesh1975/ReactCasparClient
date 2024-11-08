@@ -530,6 +530,19 @@ const Graphics = () => {
     }
   };
 
+
+  const onTabChange = (index, prevIndex) => {
+    switch (index) {
+      case 0:
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 100);
+        break;
+      default:
+      //nothing
+    }
+  };
+
   return (<div>
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -729,7 +742,11 @@ const Graphics = () => {
             </div>
           </div>
           <div>
-            <Tabs selectedTabClassName="selectedTab" forceRenderTabPanel={true}>
+            <Tabs
+              selectedTabClassName="selectedTab"
+              forceRenderTabPanel={true}
+              onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}
+            >
               <TabList>
                 <Tab>Thumbnailview</Tab>
                 <Tab>DataUpdater</Tab>

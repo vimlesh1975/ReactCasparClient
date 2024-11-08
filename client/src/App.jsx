@@ -199,6 +199,7 @@ const App = () => {
       case 9:
       case 10:
       case 11:
+      case 20:
         setCurrentTab("Drawing");
         setTimeout(() => {
           window.dispatchEvent(new Event("resize"));
@@ -212,14 +213,6 @@ const App = () => {
       //nothing
     }
   };
-  // const onTabChange2 = (index, prevIndex) => {
-  //   settabindex2(index);
-  //   if (index === 0) {
-  //     dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: true });
-  //   } else {
-  //     dispatch({ type: "CHANGE_PANNEL_ENABLED", payload: false });
-  //   }
-  // };
 
   const onTabChangevdo = (index, prevIndex) => {
     if (index === 0) {

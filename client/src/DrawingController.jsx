@@ -2363,6 +2363,7 @@ const DrawingController = () => {
   }, []);
 
   const onTabChange = (index, prevIndex) => {
+    console.log(index)
     switch (index) {
       case 0:
       case 4:
