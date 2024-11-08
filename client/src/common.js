@@ -201,6 +201,7 @@ export const Uploaddropedfile2 = (file0, canvas, x, y) => {
           top: y,
           fill: "#ff0000",
           stroke: "#00ff00",
+          src: imgObj.src,
         });
         // .scale(0.5);
         canvas.add(image);
@@ -229,6 +230,7 @@ export const Uploaddropedfile = async (file0, canvas, x, y) => {
             top: y,
             fill: "#ff0000",
             stroke: "#00ff00",
+            src: event.target.result,
           });
           canvas.add(img);
           canvas.setActiveObject(img);
@@ -262,7 +264,7 @@ export const Upload = (e, canvas, id = generateUniqueId({ type: "image" })) => {
                 objectCaching: false,
                 fill: "#ff0000",
                 stroke: "#00ff00",
-                src: imgObj.src,
+                src: event.target.result,
               });
               // .scale(0.5);
 
