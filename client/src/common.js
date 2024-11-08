@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "081124_2";
+export const buildDate = "081124_3";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -2350,18 +2350,14 @@ const base64EncodeBlob = (blob) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      const arrayBuffer = reader.result;
-      const binaryString = String.fromCharCode.apply(
-        null,
-        new Uint8Array(arrayBuffer)
-      );
-      const base64String = btoa(binaryString);
+      const base64String = reader.result.split(',')[1];  // Extract base64 part after "data:*/*;base64,"
       resolve(base64String);
     };
     reader.onerror = reject;
-    reader.readAsArrayBuffer(blob);
+    reader.readAsDataURL(blob);
   });
 };
+
 
 export const recallPage = (
   layerNumber,
