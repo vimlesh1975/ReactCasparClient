@@ -1159,6 +1159,72 @@ const DrawingController = () => {
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
     myWindow.document.body.innerHTML = aa;
   };
+  // exportAllPagetoHTML
+  const exportAllPagetoHTML = async () => {
+    // Start the HTML content with a UTF-8 meta tag
+    let htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Exported SVGs</title>
+      </head>
+      <body>
+    `;
+
+    const processCanvasItem = async (val) => {
+      return new Promise((resolve) => {
+        canvas.loadFromJSON(val.pageValue).then(() => {
+          selectAll(canvas);
+
+          const ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
+          const hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
+
+          // Set canvas dimensions based on the bounding box
+          canvas.setDimensions({
+            width: ww > 1920 ? ww : 1920,
+            height: hh > 1080 ? hh : 1080,
+          });
+          canvas.renderAll();
+
+          // Convert canvas to SVG and return the SVG string
+          const svgString = `<div>${canvas.toSVG()}</div>`;
+
+          // Reset canvas dimensions if necessary
+          if (ww > 1920 || hh > 1080) {
+            canvas.setDimensions({ width: 1920, height: 1080 });
+            canvas.renderAll();
+          }
+
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+          resolve(svgString);
+        });
+      });
+    };
+
+    for (const val of canvasList) {
+      const svgContent = await processCanvasItem(val);
+      htmlContent += svgContent;
+    }
+
+    htmlContent += "</body></html>";
+
+    // Create a Blob from the HTML content with UTF-8 encoding
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link and trigger a download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "exported.html";
+    link.click();
+
+    // Release the object URL
+    URL.revokeObjectURL(url);
+  };
+
+
 
   const setHtmlString = () => {
     const gdd = getGdd(canvas, "RCC");
@@ -2736,6 +2802,9 @@ const DrawingController = () => {
             <button onClick={() => exportSVG(canvas)}>SVG</button>
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
+            <button onClick={() => exportAllPagetoHTML()}>html</button>
+
+
             <button onClick={() => saveToLocalStorage(canvas)}>
               saveToLocalStorage
             </button>

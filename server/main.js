@@ -272,6 +272,7 @@ const server2 = https.createServer(options2, app);
 server2.listen(port, () => {
   console.log(`Node server is listening on port ${port} with HTTPS`);
 });
+// server2.timeout = 300000;  // 5 minutes, adjust as necessary
 
 var aa = new CasparCG("127.0.0.1", 5250);
 aa.queueMode = Options.QueueMode.SEQUENTIAL;

@@ -171,7 +171,7 @@ const Html = () => {
 
     const executeScript = (str) => {
         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-            console.log(str);
+            // console.log(str);
         }
         // str = str.replace(/CRLF/g, '\\n'); // removed on 27.06.2024 for bad control charater some image sequence
         // str = str.replace(/CRLF/g, '\\\\n');
