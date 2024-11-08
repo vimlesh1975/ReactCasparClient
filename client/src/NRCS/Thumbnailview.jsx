@@ -74,7 +74,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
             <table border='1'>
                 <tbody>
                     {graphics.map((val, i) => {
-                        return (<tr>
+                        return (<tr key={i}>
                             <><td>
                                 <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
                                     <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
