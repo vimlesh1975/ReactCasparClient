@@ -51,6 +51,8 @@ const Graphics = () => {
   const [stopOnNext, setStopOnNext] = useState(false);
   const [live, setLive] = useState(false);
 
+  const [loading, setLoading] = useState(true);  // Initialize loading state to true
+
   const getAllKeyValue = () => {
     const aa = []
     canvas.getObjects().forEach((element) => {
@@ -144,13 +146,17 @@ const Graphics = () => {
   useEffect(() => {
     async function fetchData() {
       try {
+        setLoading(true);  // Start loading
         const res = await fetch(
           addressmysql() + `/getGraphics?ScriptID=${ScriptID}`
         );
         const data = await res.json();
         setGraphics(data);
       } catch (error) {
+        // Handle the error (optional)
         // console.error('Error fetching RunOrderTitles:', error);
+      } finally {
+        setLoading(false);  // Stop loading when data is set or if an error occurs
       }
     }
 
@@ -652,84 +658,89 @@ const Graphics = () => {
                 })}
               </select>
             </div>
+
             <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}>
-              <Droppable droppableId="graphics1">
-                {(provided) => (
-                  <table {...provided.droppableProps} ref={provided.innerRef}>
-                    <tbody>
-                      {graphics.length ? (
-                        graphics.map((val, i) => (
-                          <Draggable
-                            key={val.GraphicsID}
-                            draggableId={val.GraphicsID.toString()}
-                            index={i}
-                          >
-                            {(provided, snapshot) => (
-                              <tr
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                onClick={async () => {
-                                  setGraphicsID(val.GraphicsID);
-                                  setCurrentGraphics(i);
-                                  setCurrentGraphics2(-1);
-                                  setPageName(val.GraphicsTemplate + '_copy');
-                                  const parsedJSON = JSON.parse(
-                                    val.Graphicstext1
-                                  );
-                                  await canvas.loadFromJSON(
-                                    parsedJSON.pageValue
-                                  );
-                                  canvas.requestRenderAll();
-                                  getAllKeyValue();
-                                }}
-                                style={{
-                                  backgroundColor:
-                                    currentGraphics === i ? "green" : "#E7DBD8",
-                                  color:
-                                    currentGraphics === i ? "white" : "black",
-                                  margin: 10,
-                                  padding: 10,
-                                  ...provided.draggableProps.style,
-                                }}
-                              >
-                                <td>{i + 1}</td>
-                                <td {...provided.dragHandleProps}>
-                                  <VscMove />
-                                </td>
-                                <td>
-                                  <button
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() =>
-                                      deleteGraphic(val.GraphicsID)
-                                    }
-                                  >
-                                    <VscTrash />
-                                  </button>
-                                </td>
-                                <td>
-                                  <input
-                                    style={{ width: 340 }}
-                                    type="text"
-                                    value={val.GraphicsTemplate}
-                                    onChange={(e) => handleTemplateChange(val.GraphicsID, e.target.value)
-                                    }
-                                  />
-                                </td>
-                              </tr>
-                            )}
-                          </Draggable>
-                        ))
-                      ) : (
-                        <tr>
-                          <td>No Graphics</td>
-                        </tr>
-                      )}
-                      {provided.placeholder}
-                    </tbody>
-                  </table>
-                )}
-              </Droppable>
+              {loading ? <img src="/ReactCasparClient/loader.gif" alt="Loading..." /> :
+                <Droppable droppableId="graphics1">
+                  {(provided) => (
+                    <table {...provided.droppableProps} ref={provided.innerRef}>
+                      <tbody>
+                        {graphics.length ? (
+                          graphics.map((val, i) => (
+                            <Draggable
+                              key={val.GraphicsID}
+                              draggableId={val.GraphicsID.toString()}
+                              index={i}
+                            >
+                              {(provided, snapshot) => (
+                                <tr
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  onClick={async () => {
+                                    setGraphicsID(val.GraphicsID);
+                                    setCurrentGraphics(i);
+                                    setCurrentGraphics2(-1);
+                                    setPageName(val.GraphicsTemplate + '_copy');
+                                    const parsedJSON = JSON.parse(
+                                      val.Graphicstext1
+                                    );
+                                    await canvas.loadFromJSON(
+                                      parsedJSON.pageValue
+                                    );
+                                    canvas.requestRenderAll();
+                                    getAllKeyValue();
+                                  }}
+                                  style={{
+                                    backgroundColor:
+                                      currentGraphics === i ? "green" : "#E7DBD8",
+                                    color:
+                                      currentGraphics === i ? "white" : "black",
+                                    margin: 10,
+                                    padding: 10,
+                                    ...provided.draggableProps.style,
+                                  }}
+                                >
+                                  <td>{i + 1}</td>
+                                  <td {...provided.dragHandleProps}>
+                                    <VscMove />
+                                  </td>
+                                  <td>
+                                    <button
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() =>
+                                        deleteGraphic(val.GraphicsID)
+                                      }
+                                    >
+                                      <VscTrash />
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <input
+                                      style={{ width: 340 }}
+                                      type="text"
+                                      value={val.GraphicsTemplate}
+                                      onChange={(e) => handleTemplateChange(val.GraphicsID, e.target.value)
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              )}
+                            </Draggable>
+                          ))
+                        ) : (
+                          <tr>
+                            <td>No Graphics</td>
+                          </tr>
+                        )}
+                        {provided.placeholder}
+                      </tbody>
+                    </table>
+                  )}
+                </Droppable>
+              }
             </div>
+
+
             <div style={{ border: "1px solid red" }}>
               <button onClick={addToCanvas}>
                 Add Sripts to canvas for Teleprompting
@@ -754,7 +765,7 @@ const Graphics = () => {
                 <Tab>Script</Tab>
               </TabList>
               <TabPanel>
-                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} />
+                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} />
               </TabPanel>
               <TabPanel>
                 <DataUpdater updateGraphicsToDatabase={updateGraphicsToDatabase} getAllKeyValue={getAllKeyValue} />

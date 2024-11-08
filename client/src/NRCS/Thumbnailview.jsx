@@ -4,7 +4,7 @@ import DrawingThumbnailNRCS from './DrawingThumbnailNRCS'
 import { FaPlay, FaStop } from "react-icons/fa";
 import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, updateGraphics } from '../common'
 
-const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyValue }) => {
+const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyValue, loading }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -71,54 +71,56 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
             {graphics.length}  <b> Pages: </b>
         </div>
         <div style={{ height: 750, width: 380, overflow: 'scroll', border: '1px solid black' }}>
-            <table border='1'>
-                <tbody>
-                    {graphics.map((val, i) => {
-                        return (<tr key={i}>
-                            <><td>
-                                <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
-                                    <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
-                                        {i + 1}
-                                    </div>
+            {loading ? <img src="/ReactCasparClient/loader.gif" alt="Loading..." /> :
+                <table border='1'>
+                    <tbody>
+                        {graphics.map((val, i) => {
+                            return (<tr key={i}>
+                                <><td>
+                                    <div style={{ backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black', display: 'flex', height: 200, flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', placeItems: 'center' }}>
+                                        <div style={{ border: '2px solid grey', minWidth: 20, textAlign: 'center' }}>
+                                            {i + 1}
+                                        </div>
 
-                                    <div>
-                                        <button onClick={() => {
-                                            setCurrentGraphics(i);
-                                            recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() =>
-                                                startGraphics(canvas, templateLayers.NRCSThumnailplayer, currentscreenSize))
-                                        }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
-                                    </div>
-                                    <div>
-                                        <button title='Update' onClick={() => {
-                                            recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() => {
+                                        <div>
+                                            <button onClick={() => {
                                                 setCurrentGraphics(i);
-                                                updateGraphics(canvas, templateLayers.NRCSThumnailplayer)
-                                            }
-                                            )
-                                        }}>U</button>
+                                                recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() =>
+                                                    startGraphics(canvas, templateLayers.NRCSThumnailplayer, currentscreenSize))
+                                            }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
+                                        </div>
+                                        <div>
+                                            <button title='Update' onClick={() => {
+                                                recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() => {
+                                                    setCurrentGraphics(i);
+                                                    updateGraphics(canvas, templateLayers.NRCSThumnailplayer)
+                                                }
+                                                )
+                                            }}>U</button>
+                                        </div>
+                                        <div>
+                                            <button onClick={() => stopGraphics(templateLayers.NRCSThumnailplayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button onClick={() => stopGraphics(templateLayers.NRCSThumnailplayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
-                                    </div>
-                                </div>
-                            </td>
-                                <td>
-                                    <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => {
+                                </td>
+                                    <td>
+                                        <div style={{ display: 'table-cell' }} className='thumbnail-preview-container' onClick={(e) => {
 
-                                        setCurrentGraphics(i);
-                                        recallPage((JSON.parse(val.Graphicstext1)).pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2)
-                                    }}>
-                                        {canvas && <DrawingThumbnailNRCS i={i} graphics={graphics} />}
-                                    </div>
-                                    <span style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }}
-                                        value={val.GraphicsTemplate}
-                                    >{val.GraphicsTemplate}</span>
-                                </td></>
-                        </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+                                            setCurrentGraphics(i);
+                                            recallPage((JSON.parse(val.Graphicstext1)).pageValue, window.editor.canvas, i, val.jsfilename, val.cssfilename, val.jsfilename2, val.cssfilename2)
+                                        }}>
+                                            {canvas && <DrawingThumbnailNRCS i={i} graphics={graphics} />}
+                                        </div>
+                                        <span style={{ minWidth: 305, backgroundColor: currentPage === i ? 'green' : 'white', color: currentPage === i ? 'white' : 'black' }}
+                                            value={val.GraphicsTemplate}
+                                        >{val.GraphicsTemplate}</span>
+                                    </td></>
+                            </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            }
         </div>
     </div>)
 }
