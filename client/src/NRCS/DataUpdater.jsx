@@ -57,26 +57,6 @@ const DataUpdater = ({ updateGraphicsToDatabase, getAllKeyValue }) => {
         canvas.requestRenderAll();
     }
 
-    // const getAllKeyValue = () => {
-    //     const aa = []
-    //     canvas.getObjects().forEach((element) => {
-    //         var type = (element.type === 'i-text' || element.type === 'textbox' || element.type === 'text') ? 'text' : element.type;
-    //         if (type === 'text') {
-    //             if (element.textLines.length > 1) {
-    //                 aa.push({ key: element.id, value: element.text, type: 'textarea', fontFamily: element.fontFamily });
-    //             }
-    //             else {
-    //                 aa.push({ key: element.id, value: element.text, type: 'text', fontFamily: element.fontFamily });
-    //             }
-    //         }
-    //         if (type === 'image') {
-    //             aa.push({ key: element.id, value: element.src, type: 'image' })
-    //         }
-    //     });
-    //     // settextNodes(aa);
-    //     dispatch({ type: "CHANGE_TEXT_NODES", payload: aa });
-    // }
-
     return (
         <div >
             <div >

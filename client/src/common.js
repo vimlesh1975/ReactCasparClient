@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "081124_3";
+export const buildDate = "091124_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -521,6 +521,7 @@ export const pasteClipboard = async (canvas) => {
                   objectCaching: false,
                   fill: "#ff0000",
                   stroke: "#00ff00",
+                  src: "data:image/png;base64," + base64,
                 });
                 canvas.add(image);
                 canvas.requestRenderAll();

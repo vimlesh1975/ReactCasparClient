@@ -49,28 +49,35 @@ export const mousedownandmousemoveevent = (canvas) => {
 
 
 function handleDrop(e, canvas) {
-  if (e.dataTransfer.getData("Text")) {
-    createTextBoxforDragedText(
-      canvas,
-      e.dataTransfer.getData("Text"),
-      e.offsetX,
-      e.offsetY
-    );
-  }
-  if (e.dataTransfer.items) {
-    var ii = 0;
-    [...e.dataTransfer.items].forEach((item, i) => {
-      // console.log(item, i);
-      if (item.kind === "file") {
-        const file = item.getAsFile();
-        Uploaddropedfile(file, canvas, e.offsetX + ii * 250, e.offsetY + ii * 250);
-        ii++;
-      }
-    });
-  } else {
-    [...e.dataTransfer.files].forEach((file, i) => {
-      console.log(i, file);
-    });
+  // Convert e.dataTransfer.items to an array
+  const items = Array.from(e.dataTransfer.items);
+
+  let ii = 0;
+  let hasImage = false;
+
+  // First, check for image files
+  items.forEach((item, i) => {
+    if (item.kind === "file" && item.type.startsWith("image/")) {
+      hasImage = true;
+      console.log('adding image');
+      const file = item.getAsFile();
+      Uploaddropedfile(file, canvas, e.offsetX + ii * 250, e.offsetY + ii * 250);
+      ii++;
+    }
+  });
+
+  // If no image, check for text
+  if (!hasImage) {
+    const text = e.dataTransfer.getData("Text");
+    if (text) {
+      console.log('adding text');
+      createTextBoxforDragedText(
+        canvas,
+        text,
+        e.offsetX,
+        e.offsetY
+      );
+    }
   }
 }
 
