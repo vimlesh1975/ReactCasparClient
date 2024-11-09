@@ -1163,14 +1163,18 @@ const DrawingController = () => {
   const exportAllPagetoHTML = async () => {
     // Start the HTML content with a UTF-8 meta tag
     let htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Exported SVGs</title>
-      </head>
-      <body>
-    `;
+       <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Exported SVGs</title>
+      <!-- Link to external CSS -->
+      <link rel="stylesheet" href="main.css">
+      <!-- Link to external JavaScript -->
+      <script src="main.js" defer></script>
+    </head>
+    <body>
+  `;
 
     const processCanvasItem = async (val) => {
       return new Promise((resolve) => {
