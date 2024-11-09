@@ -1159,73 +1159,96 @@ const DrawingController = () => {
     var myWindow = window.open("", "MsgWindow", "width=1920,height=1080");
     myWindow.document.body.innerHTML = aa;
   };
-  // exportAllPagetoHTML
-  const exportAllPagetoHTML = async () => {
-    // Start the HTML content with a UTF-8 meta tag
-    let htmlContent = `
-       <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Exported SVGs</title>
-      <!-- Link to external CSS -->
-      <link rel="stylesheet" href="main.css">
-      <!-- Link to external JavaScript -->
-      <script src="main.js" defer></script>
-    </head>
-    <body>
-  `;
-
-    const processCanvasItem = async (val) => {
-      return new Promise((resolve) => {
-        canvas.loadFromJSON(val.pageValue).then(() => {
-          selectAll(canvas);
-
-          const ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
-          const hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
-
-          // Set canvas dimensions based on the bounding box
-          canvas.setDimensions({
-            width: ww > 1920 ? ww : 1920,
-            height: hh > 1080 ? hh : 1080,
-          });
-          canvas.renderAll();
-
-          // Convert canvas to SVG and return the SVG string
-          const svgString = `<div>${canvas.toSVG()}</div>`;
-
-          // Reset canvas dimensions if necessary
-          if (ww > 1920 || hh > 1080) {
-            canvas.setDimensions({ width: 1920, height: 1080 });
-            canvas.renderAll();
-          }
-
-          canvas.discardActiveObject();
-          canvas.requestRenderAll();
-          resolve(svgString);
-        });
-      });
+  const exportAllPagetoHTML = async (canvas) => {
+    // Define the options for the file save dialog
+    const options = {
+      fileExtension: ".html",
+      suggestedName: generalFileName(), // Ensure this returns a valid file name
+      types: [{
+        description: 'HTML Files',
+        accept: { 'text/html': ['.html'] },
+      }],
     };
 
-    for (const val of canvasList) {
-      const svgContent = await processCanvasItem(val);
-      htmlContent += svgContent;
+    // Trigger the save file dialog immediately after the user gesture
+    const fileHandle = await showSaveDialog(options);
+
+    if (fileHandle) {
+      // Proceed with processing the canvas data after the file is selected
+      let htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Exported SVGs</title>
+          <link rel="stylesheet" href="main.css">
+        </head>
+        <body>
+      `;
+
+      const processCanvasItem = async (val) => {
+        return new Promise((resolve) => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
+            selectAll(canvas);
+
+            const ww = canvas.getActiveObject()?.getBoundingRect().width + 100;
+            const hh = canvas.getActiveObject()?.getBoundingRect().height + 100;
+
+            // Set canvas dimensions based on the bounding box
+            canvas.setDimensions({
+              width: ww > 1920 ? ww : 1920,
+              height: hh > 1080 ? hh : 1080,
+            });
+            canvas.renderAll();
+
+            // Convert canvas to SVG and return the SVG string
+            const svgString = `<div>${canvas.toSVG()}</div>`;
+
+            // Reset canvas dimensions if necessary
+            if (ww > 1920 || hh > 1080) {
+              canvas.setDimensions({ width: 1920, height: 1080 });
+              canvas.renderAll();
+            }
+
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+            resolve(svgString);
+          });
+        });
+      };
+
+      // Process all canvas items asynchronously
+      for (const val of canvasList) {
+        const svgContent = await processCanvasItem(val);
+        htmlContent += svgContent;
+      }
+
+      htmlContent += `
+      </body>
+          <script src="main.js" defer></script>
+      </html>
+      `;
+
+      // Convert the HTML content into a Blob
+      const data = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+
+      // Use the file handle to save the content
+      await saveFile({ fileExtension: ".html", suggestedName: generalFileName() }, data, fileHandle);
     }
+  };
 
-    htmlContent += "</body></html>";
-
-    // Create a Blob from the HTML content with UTF-8 encoding
-    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-
-    // Create a link and trigger a download
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "exported.html";
-    link.click();
-
-    // Release the object URL
-    URL.revokeObjectURL(url);
+  // Show the file save dialog immediately after user gesture
+  const showSaveDialog = async (options) => {
+    if ('showSaveFilePicker' in window) {
+      try {
+        const fileHandle = await window.showSaveFilePicker(options);
+        return fileHandle;
+      } catch (error) {
+        console.error("Error opening save file picker:", error);
+      }
+    } else {
+      console.error("showSaveFilePicker is not supported in this browser.");
+    }
   };
 
 
@@ -2807,7 +2830,7 @@ const DrawingController = () => {
             <button onClick={() => exportSVG(canvas)}>SVG</button>
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
-            <button onClick={() => exportAllPagetoHTML()}>html</button>
+            <button onClick={() => exportAllPagetoHTML(canvas)}>html</button>
 
 
             <button onClick={() => saveToLocalStorage(canvas)}>
