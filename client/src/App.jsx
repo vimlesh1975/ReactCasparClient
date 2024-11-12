@@ -161,39 +161,45 @@ const App = () => {
   };
 
   useEffect(() => {
+    var socket;
     if (window.location.origin !== "https://vimlesh1975.github.io") {
-      const socket = new socketIOClient(":9000");
-      socket.on("Fromccgsocket", (data) => {
-        setmediaPath(data);
-      });
-      socket.on("connectionStatus", (data) => {
-        if (data === "true") {
-          connectbutton.current.style.backgroundColor = "green";
-        } else {
-          connectbutton.current.style.backgroundColor = "red";
-        }
-      });
-
-      socket.on('connect', () => {
-        console.log('Connected to server');
-        setServerAlive(true);
-
-      });
-
-      socket.on('connect_error', (error) => {
-        setServerAlive(false);
-      });
-
-      socket.on('disconnect', () => {
-        console.log('Disconnected from server');
-        setServerAlive(false);
-      });
-
-      return () => {
-        socket.disconnect();
-        socket.close();
-      };
+      socket = new socketIOClient(":9000");
     }
+    else {
+      socket = new socketIOClient("https://octopus-app-gzws3.ondigitalocean.app");
+    }
+
+    socket.on("Fromccgsocket", (data) => {
+      setmediaPath(data);
+    });
+    socket.on("connectionStatus", (data) => {
+      if (data === "true") {
+        connectbutton.current.style.backgroundColor = "green";
+      } else {
+        connectbutton.current.style.backgroundColor = "red";
+      }
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      setServerAlive(true);
+
+    });
+
+    socket.on('connect_error', (error) => {
+      setServerAlive(false);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+      setServerAlive(false);
+    });
+
+    return () => {
+      socket.disconnect();
+      socket.close();
+    };
+
   }, []);
 
   useEffect(() => {
