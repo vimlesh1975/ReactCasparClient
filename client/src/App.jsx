@@ -102,6 +102,8 @@ const App = () => {
   );
   const { listening } = useSpeechRecognition();
 
+  const [serverAlive, setServerAlive] = useState(false);
+
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem("RCC_solidCaption1"));
@@ -135,7 +137,7 @@ const App = () => {
           console.log("Error", aa);
         });
     } else {
-      const data = { host: "localhost", port: 5250 };
+      const data = { host: "127.0.0.1", port: 5250 };
       axios
         .post(address1 + "/connect", data)
         .then((aa) => { })
@@ -160,7 +162,7 @@ const App = () => {
 
   useEffect(() => {
     if (window.location.origin !== "https://vimlesh1975.github.io") {
-      const socket = socketIOClient(":9000");
+      const socket = new socketIOClient(":9000");
       socket.on("Fromccgsocket", (data) => {
         setmediaPath(data);
       });
@@ -171,8 +173,25 @@ const App = () => {
           connectbutton.current.style.backgroundColor = "red";
         }
       });
+
+      socket.on('connect', () => {
+        console.log('Connected to server');
+        setServerAlive(true);
+
+      });
+
+      socket.on('connect_error', (error) => {
+        setServerAlive(false);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+        setServerAlive(false);
+      });
+
       return () => {
         socket.disconnect();
+        socket.close();
       };
     }
   }, []);
@@ -283,6 +302,7 @@ const App = () => {
           >
             Stop Channel
           </button>
+          {serverAlive ? '🟢' : '🔴'}
         </div>
 
         <div>
