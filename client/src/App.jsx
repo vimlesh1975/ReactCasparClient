@@ -188,11 +188,13 @@ const App = () => {
 
     socket.on('connect_error', (error) => {
       setServerAlive(false);
+      connectbutton.current.style.backgroundColor = "red";
     });
 
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
       setServerAlive(false);
+      connectbutton.current.style.backgroundColor = "red";
     });
 
     return () => {
