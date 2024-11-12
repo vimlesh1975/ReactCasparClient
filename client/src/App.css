@@ -245,13 +245,13 @@ textarea[data-fabric] {
 }
 
 .editableBox {
-  width: 350px;
+  width: 380px;
   height: 30px;
 }
 
 .timeTextBox {
-  width: 310px;
-  margin-left: -350px;
+  width: 353px;
+  margin-left: -377px;
   height: 25px;
   border: none;
 }
