@@ -286,7 +286,7 @@ const App = () => {
       <div style={{ display: "flex", justifyContent: "space-around" }}>
         <div>
           <button
-            title="Github Client will not connect to casparcg"
+            title="Caspar Server status. Github Client will not connect to casparcg"
             className="connectbutton"
             style={{}}
             ref={connectbutton}
@@ -308,7 +308,8 @@ const App = () => {
           >
             Stop Channel
           </button>
-          {serverAlive ? '🟢' : '🔴'}
+          <span title="Socket Server Status"> {serverAlive ? '🟢' : '🔴'}</span>
+
         </div>
 
         <div>
