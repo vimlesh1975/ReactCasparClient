@@ -3551,8 +3551,27 @@ const DrawingController = () => {
                 startGraphics(
                   canvas,
                   templateLayers.solidCaption3,
-                  currentscreenSize
+                  currentscreenSize,
+                  'https://localhost:10000/ReactCasparClient/solidcap3/xyz.html'
                 );
+                setTimeout(() => {
+                  const scriptforcaspar = `
+                  const script = document.createElement('script');
+                  script.src = 'main.js';
+                  script.defer = true;
+                  document.body.appendChild(script);
+
+                  const script2 = document.createElement('script');
+                  script2.src = 'main2.js';
+                  script2.defer = true;
+                  document.body.appendChild(script2);
+
+                  `;
+                  endpoint(`call ${window.chNumber}-${templateLayers.solidCaption3} "
+                   ${scriptforcaspar}
+                        "`);
+                }, 1300);
+
                 setSolidcaption3(canvasList[currentPage]?.pageName);
                 localStorage.setItem(
                   "RCC_solidCaption3",

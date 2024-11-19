@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "121124_1";
+export const buildDate = "191124_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -1131,7 +1131,7 @@ export const cliptoPath = (canvas) => {
       shadow: { ...shadowOptions, blur: 0 },
       absolutePositioned: true,
     });
-    canvas.sendToBack(clipPath1[0]);
+    canvas.sendObjectToBack(clipPath1[0]);
     img[0].set("clipPath", clipPath1[0]);
     clipPath1 = null;
     canvas.requestRenderAll();
@@ -1405,7 +1405,7 @@ export const makeHorizontalEquidistant = (canvas) => {
   canvas.requestRenderAll();
 };
 
-export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
+export const startGraphics = (canvas, layerNumber, currentscreenSize, templateName = 'https://localhost:10000/ReactCasparClient/xyz.html') => {
   executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
 
   var inAnimation;
@@ -1431,7 +1431,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
 
     setTimeout(() => {
       endpoint(
-        `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+        `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
       );
     }, 250);
 
@@ -1489,7 +1489,7 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize) => {
 
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   endpoint(
-    `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
+    `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
   );
 
   const scriptforhtml = `
