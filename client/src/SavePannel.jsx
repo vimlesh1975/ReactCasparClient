@@ -217,7 +217,7 @@ const SavePannel = () => {
         // element.href = URL.createObjectURL(data);
         var ss
         if (currentFile === 'new') {
-            ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+            ss = (new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" })).replace(/[\\/:*?"<>|]/g, "_");
         } else {
             ss = currentFileName?.name;
         }
@@ -336,7 +336,7 @@ const SavePannel = () => {
 
                     {canvasList.length}  <b> Pages: </b>
                     <button onClick={() => {
-                        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+                        var ss = (new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" })).replace(/[\\/:*?"<>|]/g, "_");
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             deleteAll(window.editor?.canvas);
@@ -346,7 +346,7 @@ const SavePannel = () => {
                     }}
                     > Add Blank</button>
                     <button onClick={() => {
-                        var ss = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
+                        var ss = (new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" })).replace(/[\\/:*?"<>|]/g, "_");
                         var retVal = prompt("Enter  page name to save : ", ss + "_pageName");
                         if (retVal !== null) {
                             dispatch({ type: 'CHANGE_CANVAS_LIST', payload: [...canvasList, { pageName: retVal, pageValue: `${JSON.stringify((window.editor?.canvas.toJSON(['id', 'selectable', 'class'])))}`, animation: '', jsfilename: jsfilename, cssfilename: cssfilename, jsfilename2: jsfilename2, cssfilename2: cssfilename2 }] })
