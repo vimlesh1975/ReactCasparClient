@@ -2,7 +2,7 @@ import React, { } from 'react'
 import { useSelector } from 'react-redux'
 import DrawingThumbnailNRCS from './DrawingThumbnailNRCS'
 import { FaPlay, FaStop } from "react-icons/fa";
-import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, updateGraphics } from '../common'
+import { startGraphics, stopGraphics, templateLayers, rgbaObjectToHex, updateGraphics, endpoint } from '../common'
 
 const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyValue, loading }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
@@ -83,7 +83,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                         </div>
 
                                         <div>
-                                            <button onClick={() => {
+                                            <button title='Page Play' onClick={() => {
                                                 setCurrentGraphics(i);
                                                 recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() =>
                                                     startGraphics(canvas, templateLayers.NRCSThumnailplayer, currentscreenSize))
@@ -98,6 +98,15 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                                 )
                                             }}>U</button>
                                         </div>
+                                        <div>
+                                            <button title='Template Play' onClick={() => {
+                                                endpoint(
+                                                    `play ${window.chNumber}-${templateLayers.NRCSThumnailplayer} [HTML] "${val.ScriptID}_${i + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}"`
+                                                );
+                                            }}>TP</button>
+                                        </div>
+
+
                                         <div>
                                             <button onClick={() => stopGraphics(templateLayers.NRCSThumnailplayer)}>  <FaStop style={{ pointerEvents: 'none' }} /></button>
                                         </div>
