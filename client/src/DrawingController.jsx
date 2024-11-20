@@ -110,7 +110,7 @@ import CasparcgTools from "./CasparcgTools";
 
 import GsapPlayer from "./GsapPlayer";
 import VerticalScrollPlayer from "./VerticalScrollPlayer";
-
+import Spinner from './spinner/Spinner'
 
 var intervalGameTimer1;
 var intervalGameTimer2;
@@ -321,6 +321,8 @@ const DrawingController = () => {
 
   const kf = useSelector((state) => state.kfReducer.kf);
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // Create debounced function
   const debouncedSetCurrentFillColor = debounce(value => {
@@ -1160,6 +1162,7 @@ const DrawingController = () => {
     myWindow.document.body.innerHTML = aa;
   };
   const exportAllPagetoHTML = async (canvas) => {
+    setIsLoading(true);
     // Define the options for the file save dialog
     const options = {
       fileExtension: ".html",
@@ -1182,6 +1185,7 @@ const DrawingController = () => {
           <meta charset="UTF-8">
           <title>Exported SVGs</title>
           <link rel="stylesheet" href="main.css">
+          <link rel="stylesheet" href="main2.css">
         </head>
         <body>
       `;
@@ -1226,6 +1230,7 @@ const DrawingController = () => {
       htmlContent += `
       </body>
           <script src="main.js" defer></script>
+          <script src="main2.js" defer></script>
       </html>
       `;
 
@@ -1234,8 +1239,100 @@ const DrawingController = () => {
 
       // Use the file handle to save the content
       await saveFile({ fileExtension: ".html", suggestedName: generalFileName() }, data, fileHandle);
+      setIsLoading(false); // Hide spinner
     }
   };
+
+  const exportEachPagetoHTML = async (canvas) => {
+    setIsLoading(true); // Show spinner
+    try {
+      // Prompt user to select a folder for saving files
+      const directoryHandle = await window.showDirectoryPicker();
+      if (!directoryHandle) return; // User cancelled the folder selection
+
+      // Helper function to process and save each canvas item
+      const processAndSaveCanvasItem = async (val, index) => {
+        return new Promise((resolve, reject) => {
+          canvas.loadFromJSON(val.pageValue).then(() => {
+            selectAll(canvas);
+
+            const activeObj = canvas.getActiveObject();
+            const ww = activeObj?.getBoundingRect().width + 100 || 1920;
+            const hh = activeObj?.getBoundingRect().height + 100 || 1080;
+
+            // Set canvas dimensions
+            const newWidth = Math.max(1920, ww);
+            const newHeight = Math.max(1080, hh);
+            canvas.setDimensions({ width: newWidth, height: newHeight });
+            canvas.renderAll();
+
+            // Convert to SVG
+            const svgString = canvas.toSVG();
+
+            // Reset canvas dimensions
+            if (newWidth !== 1920 || newHeight !== 1080) {
+              canvas.setDimensions({ width: 1920, height: 1080 });
+              canvas.renderAll();
+            }
+
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+
+            // Generate HTML content
+            const htmlContent = `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <meta charset="UTF-8">
+                <title>Exported SVG - Page ${index + 1}</title>
+                <style>
+                body{
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                }
+                </style>
+                <link rel="stylesheet" href="main.css">
+                <link rel="stylesheet" href="main2.css">
+              </head>
+              <body>
+                <div>${svgString}</div>
+              </body>
+              <script src="main.js" defer></script>
+              <script src="main2.js" defer></script>
+              </html>
+            `;
+
+            resolve(htmlContent);
+          }).catch(reject);
+        });
+      };
+
+      // Loop through canvasList and save each as an HTML file
+      for (const [index, val] of canvasList.entries()) {
+        const htmlContent = await processAndSaveCanvasItem(val, index);
+
+        // Create a new file in the selected folder
+        const fileName = `${val.pageName}.html`;
+        const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+
+        // Write the HTML content to the file
+        const writable = await fileHandle.createWritable();
+        await writable.write(htmlContent);
+        await writable.close();
+      }
+
+      console.log("All files have been saved successfully.");
+    } catch (error) {
+      console.error("Error exporting pages to individual HTML files:", error);
+    } finally {
+      setIsLoading(false); // Hide spinner
+    }
+  };
+
+
+
 
   // Show the file save dialog immediately after user gesture
   const showSaveDialog = async (options) => {
@@ -2831,6 +2928,7 @@ const DrawingController = () => {
             <button onClick={() => exportJSON(canvas)}>JSON</button>
             <button onClick={() => exportPDF(canvas)}>Pdf</button>
             <button onClick={() => exportAllPagetoHTML(canvas)}>html</button>
+            <button onClick={() => exportEachPagetoHTML(canvas)}>All Indivisual html</button>
 
 
             <button onClick={() => saveToLocalStorage(canvas)}>
@@ -4025,6 +4123,7 @@ const DrawingController = () => {
           </TabPanel>
         </Tabs>
       </div>
+      {isLoading && <Spinner />}
     </div>
   );
 };
