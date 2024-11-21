@@ -208,6 +208,18 @@ const Scroll = () => {
         createRect(canvas)
         canvas.getActiveObjects()[0].set({ id: 'scroll2_strip' })
     }
+    const deleteScroll = () => {
+        const aa = canvas.getObjects();
+        aa.forEach((element) => {
+            if ((element.type === 'image') || (element.type === 'i-text')) {
+                canvas.remove(element);
+            }
+        });
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+    }
+
+
     return (
         <div>
             <div style={{ display: 'flex1' }}>
@@ -294,6 +306,7 @@ const Scroll = () => {
                                 }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
                                     <button onClick={addStrip}>Add Strip with id scroll1_strip</button>
                                     <button onClick={addStrip2}>Add Strip with id scroll2_strip</button>
+                                    <button onClick={deleteScroll}>Delete Scroll</button>
                                 </td>
                             </tr>
                         </tbody>

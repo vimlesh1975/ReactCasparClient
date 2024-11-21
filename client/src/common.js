@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "201124_1";
+export const buildDate = "211124_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -1109,12 +1109,20 @@ export const createShape = (canvas, shape, size = 0.4) => {
 
 export const selectAll = (canvas) => {
   canvas.discardActiveObject();
-  var sel = new fabric.ActiveSelection(canvas.getObjects(), {
-    canvas: canvas,
-  });
-  canvas.setActiveObject(sel);
+
+  // Filter out objects with selectable: false
+  const selectableObjects = canvas.getObjects().filter(obj => obj.selectable !== false);
+
+  if (selectableObjects.length > 0) {
+    const sel = new fabric.ActiveSelection(selectableObjects, {
+      canvas: canvas,
+    });
+    canvas.setActiveObject(sel);
+  }
+
   canvas.requestRenderAll();
 };
+
 export const deSelectAll = (canvas) => {
   canvas.discardActiveObject();
   canvas.requestRenderAll();
