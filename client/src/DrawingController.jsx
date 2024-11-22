@@ -113,6 +113,9 @@ import GsapPlayer from "./GsapPlayer";
 import VerticalScrollPlayer from "./VerticalScrollPlayer";
 import Spinner from './spinner/Spinner'
 
+import localforage from './localForageConfig';
+
+
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
@@ -1004,8 +1007,10 @@ const DrawingController = () => {
   const exportJSONforTheatrejs = (canvas) => {
     if (checkIdUniqueness(canvas)) {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
-      localStorage.setItem("RCCpageData", aa1);
-      window.open("/ReactCasparClient/WebAnimator");
+      // localStorage.setItem("RCCpageData", aa1);
+      localforage.setItem("RCCpageData", aa1).then(() => {
+        window.open("/ReactCasparClient/WebAnimator");
+      })
     } else {
       alert("All elements must have unique id");
     }
@@ -1017,57 +1022,60 @@ const DrawingController = () => {
   const saveToLocalStorage = (canvas) => {
     if (checkIdUniqueness(canvas)) {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
-      localStorage.setItem("RCCpageData", aa1);
+      // localStorage.setItem("RCCpageData", aa1);
+      localforage.setItem("RCCpageData", aa1);
+
     } else {
       alert("All elements must have unique id");
     }
   };
 
   const getFromLocalStorage = (canvas) => {
-    const aa1 = localStorage.getItem("TheatrepageData");
-    canvas.loadFromJSON(aa1).then(() => {
-      setclipPathWhileImporting(canvas);
+    localforage.getItem("TheatrepageData").then(data => {
+      canvas.loadFromJSON(data).then(() => {
+        setclipPathWhileImporting(canvas);
 
-      const aa = canvas.getObjects();
-      aa.forEach((element) => {
-        if (
-          typeof element.fill === "object" &&
-          element.fill !== null &&
-          "r" in element.fill &&
-          "g" in element.fill &&
-          "b" in element.fill &&
-          "a" in element.fill
-        ) {
-          element.set({ fill: rgbaObjectToHex(element.fill) });
-        }
-        if (
-          typeof element.stroke === "object" &&
-          element.stroke !== null &&
-          "r" in element.stroke &&
-          "g" in element.stroke &&
-          "b" in element.stroke &&
-          "a" in element.stroke
-        ) {
-          element.set({ stroke: rgbaObjectToHex(element.stroke) });
-        }
-        if (
-          typeof element.shadow.color === "object" &&
-          element.shadow.color !== null &&
-          "r" in element.shadow.color &&
-          "g" in element.shadow.color &&
-          "b" in element.shadow.color &&
-          "a" in element.shadow.color
-        ) {
-          element.set({
-            shadow: {
-              ...element.shadow,
-              color: rgbaObjectToHex(element.shadow.color),
-            },
-          });
-        }
+        const aa = canvas.getObjects();
+        aa.forEach((element) => {
+          if (
+            typeof element.fill === "object" &&
+            element.fill !== null &&
+            "r" in element.fill &&
+            "g" in element.fill &&
+            "b" in element.fill &&
+            "a" in element.fill
+          ) {
+            element.set({ fill: rgbaObjectToHex(element.fill) });
+          }
+          if (
+            typeof element.stroke === "object" &&
+            element.stroke !== null &&
+            "r" in element.stroke &&
+            "g" in element.stroke &&
+            "b" in element.stroke &&
+            "a" in element.stroke
+          ) {
+            element.set({ stroke: rgbaObjectToHex(element.stroke) });
+          }
+          if (
+            typeof element.shadow.color === "object" &&
+            element.shadow.color !== null &&
+            "r" in element.shadow.color &&
+            "g" in element.shadow.color &&
+            "b" in element.shadow.color &&
+            "a" in element.shadow.color
+          ) {
+            element.set({
+              shadow: {
+                ...element.shadow,
+                color: rgbaObjectToHex(element.shadow.color),
+              },
+            });
+          }
+        });
+        canvas.requestRenderAll();
       });
-      canvas.requestRenderAll();
-    });
+    })
   };
 
   const sdToHD = () => {

@@ -4,6 +4,8 @@ import { getProject, types, val, onChange } from "@theatre/core";
 import { useSelector, useDispatch } from "react-redux";
 import * as fabric from "fabric";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
+import localforage from '../localForageConfig';
+
 
 import {
   setPrimitivePropAsSequenced,
@@ -164,7 +166,7 @@ const deletrTracks = (tracks) => {
           sheet.sequence.position = val.position;
           api.unset(
             getObjectbyId(studio.selection[0].address.objectKey).props[prop1][
-              prop2
+            prop2
             ]
           );
         });
@@ -361,7 +363,7 @@ const DrawingforTheatrejs = ({
         }
       });
     }, 3000);
-    return () => {};
+    return () => { };
     // eslint-disable-next-line
   }, []);
 
@@ -663,7 +665,7 @@ const WebAnimator = () => {
     // Cleanup function
     return () => {
       // Use a workaround for removing the event listener if there is no `offSelectionChange` method
-      studio.onSelectionChange(() => {});
+      studio.onSelectionChange(() => { });
     };
   }, [canvas]);
 
@@ -944,7 +946,10 @@ const WebAnimator = () => {
     const appendDatafromLocalStorage = () => {
       const oldData = canvas.toJSON(["id", "class", "selectable"]); //'importing true
       deleteAllObjects();
-      initialiseCore(localStorage.getItem("RCCpageData"));
+      // initialiseCore(localStorage.getItem("RCCpageData"));
+      localforage.getItem("RCCpageData").then(data => {
+        initialiseCore(data);
+      })
       const newData = canvas.toJSON(["id", "class", "selectable"]); //'importing true
 
       // Check and update IDs in newData if they already exist in oldData
@@ -1238,11 +1243,11 @@ const WebAnimator = () => {
               ...obj1,
               fill:
                 typeof element.fill === "object" &&
-                element.fill !== null &&
-                "r" in element.fill &&
-                "g" in element.fill &&
-                "b" in element.fill &&
-                "a" in element.fill
+                  element.fill !== null &&
+                  "r" in element.fill &&
+                  "g" in element.fill &&
+                  "b" in element.fill &&
+                  "a" in element.fill
                   ? types.rgba(element.fill)
                   : types.rgba(rgbaArrayToObject(element.fill)),
             };
@@ -1278,11 +1283,11 @@ const WebAnimator = () => {
               ...obj1,
               stroke:
                 typeof element.stroke === "object" &&
-                element.stroke !== null &&
-                "r" in element.stroke &&
-                "g" in element.stroke &&
-                "b" in element.stroke &&
-                "a" in element.stroke
+                  element.stroke !== null &&
+                  "r" in element.stroke &&
+                  "g" in element.stroke &&
+                  "b" in element.stroke &&
+                  "a" in element.stroke
                   ? types.rgba(element.stroke)
                   : types.rgba(rgbaArrayToObject(element.stroke)),
             };
@@ -1293,11 +1298,11 @@ const WebAnimator = () => {
               ...element.shadow,
               color:
                 typeof element.shadow.color === "object" &&
-                element.shadow.color !== null &&
-                "r" in element.shadow.color &&
-                "g" in element.shadow.color &&
-                "b" in element.shadow.color &&
-                "a" in element.shadow.color
+                  element.shadow.color !== null &&
+                  "r" in element.shadow.color &&
+                  "g" in element.shadow.color &&
+                  "b" in element.shadow.color &&
+                  "a" in element.shadow.color
                   ? types.rgba(element.shadow.color)
                   : types.rgba(rgbaArrayToObject(element.shadow.color)),
             },
@@ -1541,15 +1546,12 @@ const WebAnimator = () => {
         `window.sheet_${layerNumber}.sequence.play({ iterationCount: Infinity, range: [${loopAnimationStart},${loopAnimationEnd}] ,direction: '${selectedOption}'})`
       );
     } else {
-      endpoint(`call ${
-        window.chNumber
-      }-${layerNumber} window.sheet.sequence.play({ iterationCount: ${
-        parseInt(loopcount) === 0 ? Infinity : parseInt(loopcount)
-      }, range: [0, ${duration}] });
+      endpoint(`call ${window.chNumber
+        }-${layerNumber} window.sheet.sequence.play({ iterationCount: ${parseInt(loopcount) === 0 ? Infinity : parseInt(loopcount)
+        }, range: [0, ${duration}] });
         `);
       executeScript(
-        `window.sheet_${layerNumber}.sequence.play({ iterationCount: ${
-          parseInt(loopcount) === 0 ? Infinity : parseInt(loopcount)
+        `window.sheet_${layerNumber}.sequence.play({ iterationCount: ${parseInt(loopcount) === 0 ? Infinity : parseInt(loopcount)
         }, range: [0, ${duration}] })`
       );
     }
@@ -1655,11 +1657,10 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
            
-            window.project = core.getProject('${
-              "project" + generateUniqueNumber()
-            }', {state:${state1
-      .replaceAll('"', "'")
-      .replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${"project" + generateUniqueNumber()
+      }', {state:${state1
+        .replaceAll('"', "'")
+        .replaceAll("\\'", '\\"')}});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
 
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
@@ -1932,11 +1933,10 @@ const WebAnimator = () => {
             const { _studio } = __TheatreJS_StudioBundle;
             window.studio=_studio;
 
-            window.project = core.getProject('${
-              "project" + generateUniqueNumber()
-            }', {state:${state1
-      .replaceAll('"', "'")
-      .replaceAll("\\'", '\\"')}});
+            window.project = core.getProject('${"project" + generateUniqueNumber()
+      }', {state:${state1
+        .replaceAll('"', "'")
+        .replaceAll("\\'", '\\"')}});
             window.sheet = project.sheet('Sheet 1');
 
             core.onChange(sheet.sequence.pointer.position, (position) => {
@@ -2454,8 +2454,8 @@ const WebAnimator = () => {
         window.canvas=canvas;
         canvas.preserveObjectStacking = true;
         const content =${JSON.stringify(
-          canvas.toJSON(["id", "class", "selectable"])
-        )};
+      canvas.toJSON(["id", "class", "selectable"])
+    )};
         const { core, studio } = Theatre;
         window.content=content;
 
@@ -2812,7 +2812,7 @@ const WebAnimator = () => {
         type: "CHANGE_CURRENTSCREENSIZE",
         payload: currentscreenSize,
       });
-    } catch (error) {}
+    } catch (error) { }
 
     const randomNumber = Math.floor(Math.random() * (5000 - 50 + 1)) + 50;
     const pid = `project${randomNumber}`;
@@ -2991,11 +2991,11 @@ const WebAnimator = () => {
           ...obj1,
           fill:
             typeof element.fill === "object" &&
-            element.fill !== null &&
-            "r" in element.fill &&
-            "g" in element.fill &&
-            "b" in element.fill &&
-            "a" in element.fill
+              element.fill !== null &&
+              "r" in element.fill &&
+              "g" in element.fill &&
+              "b" in element.fill &&
+              "a" in element.fill
               ? types.rgba(element.fill)
               : types.rgba(rgbaArrayToObject(element.fill)),
         };
@@ -3031,11 +3031,11 @@ const WebAnimator = () => {
           ...obj1,
           stroke:
             typeof element.stroke === "object" &&
-            element.stroke !== null &&
-            "r" in element.stroke &&
-            "g" in element.stroke &&
-            "b" in element.stroke &&
-            "a" in element.stroke
+              element.stroke !== null &&
+              "r" in element.stroke &&
+              "g" in element.stroke &&
+              "b" in element.stroke &&
+              "a" in element.stroke
               ? types.rgba(element.stroke)
               : types.rgba(rgbaArrayToObject(element.stroke)),
         };
@@ -3046,11 +3046,11 @@ const WebAnimator = () => {
           ...element.shadow,
           color:
             typeof element.shadow.color === "object" &&
-            element.shadow.color !== null &&
-            "r" in element.shadow.color &&
-            "g" in element.shadow.color &&
-            "b" in element.shadow.color &&
-            "a" in element.shadow.color
+              element.shadow.color !== null &&
+              "r" in element.shadow.color &&
+              "g" in element.shadow.color &&
+              "b" in element.shadow.color &&
+              "a" in element.shadow.color
               ? types.rgba(element.shadow.color)
               : types.rgba(rgbaArrayToObject(element.shadow.color)),
         },
@@ -3230,7 +3230,7 @@ const WebAnimator = () => {
 
   const saveToLocalStorage = (canvas) => {
     var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
-    localStorage.setItem("TheatrepageData", aa1);
+    localforage.setItem("TheatrepageData", aa1);
   };
 
   const handleClick = (e) => {
@@ -3378,7 +3378,10 @@ const WebAnimator = () => {
             title="Data from Local Storage"
             onClick={() => {
               deleteAllObjects();
-              initialiseCore(localStorage.getItem("RCCpageData"));
+              // initialiseCore(localStorage.getItem("RCCpageData"));
+              localforage.getItem("RCCpageData").then(data => {
+                initialiseCore(data);
+              })
             }}
           >
             DataFrom Lo.Strg
