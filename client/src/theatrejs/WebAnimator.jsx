@@ -946,26 +946,22 @@ const WebAnimator = () => {
     const appendDatafromLocalStorage = () => {
       const oldData = canvas.toJSON(["id", "class", "selectable"]); //'importing true
       deleteAllObjects();
-      // initialiseCore(localStorage.getItem("RCCpageData"));
       localforage.getItem("RCCpageData").then(data => {
-        initialiseCore(data);
+        initialiseCore(data).then(() => {
+          const newData = canvas.toJSON(["id", "class", "selectable"]); //'importing true
+          newData.objects.forEach((newObject) => {
+            const matchingOldObject = oldData.objects.find(
+              (oldObject) => oldObject.id === newObject.id
+            );
+            if (matchingOldObject) {
+              newObject.id = generateUniqueId(newObject); // Implement a function to generate a new unique ID
+            }
+          });
+          oldData.objects = oldData.objects.concat(newData.objects);
+          deleteAllObjects();
+          initialiseCore(JSON.stringify(oldData), true);
+        })
       })
-      const newData = canvas.toJSON(["id", "class", "selectable"]); //'importing true
-
-      // Check and update IDs in newData if they already exist in oldData
-      newData.objects.forEach((newObject) => {
-        const matchingOldObject = oldData.objects.find(
-          (oldObject) => oldObject.id === newObject.id
-        );
-        if (matchingOldObject) {
-          // If ID already exists, assign a new ID
-          newObject.id = generateUniqueId(newObject); // Implement a function to generate a new unique ID
-        }
-      });
-
-      oldData.objects = oldData.objects.concat(newData.objects);
-      deleteAllObjects();
-      initialiseCore(JSON.stringify(oldData), true);
     };
 
     return (
@@ -1219,314 +1215,319 @@ const WebAnimator = () => {
   }, [FPS, canvas]);
 
   const initialiseCore = (jsonContent, importing = false, filefps = 60) => {
-    canvas.loadFromJSON(jsonContent).then((object) => {
-      setclipPathWhileImportingWebAnimator(canvas);
-      canvas.getObjects().forEach((element, i) => {
-        if (element.fill === null) {
-          element.set({ fill: "#555252" });
-        }
-        if (element.stroke === null) {
-          element.set({ stroke: "#000000" });
-        }
-        var obj1 = {};
-        var isColorObjectfill;
-        var isColorObjectStroke;
+    return new Promise((resolve, reject) => {
 
-        if (importing) {
-          isColorObjectfill = element.fill.type !== "linear";
-          isColorObjectStroke = element.stroke.type !== "linear";
+      canvas.loadFromJSON(jsonContent).then((object) => {
+        setclipPathWhileImportingWebAnimator(canvas);
+        canvas.getObjects().forEach((element, i) => {
+          if (element.fill === null) {
+            element.set({ fill: "#555252" });
+          }
+          if (element.stroke === null) {
+            element.set({ stroke: "#000000" });
+          }
+          var obj1 = {};
+          var isColorObjectfill;
+          var isColorObjectStroke;
 
-          if (element.fill.type === "pattern") {
-            // do nothing
-          } else if (isColorObjectfill) {
-            obj1 = {
-              ...obj1,
-              fill:
-                typeof element.fill === "object" &&
-                  element.fill !== null &&
-                  "r" in element.fill &&
-                  "g" in element.fill &&
-                  "b" in element.fill &&
-                  "a" in element.fill
-                  ? types.rgba(element.fill)
-                  : types.rgba(rgbaArrayToObject(element.fill)),
-            };
-          } else {
-            const colorStops = element.fill.colorStops.map((colorStop) => {
-              return {
-                offset: types.number(parseFloat(colorStop.offset), {
-                  range: [0, 1],
-                }),
-                color: colorStop.color.toString().startsWith("rgb")
-                  ? types.rgba(rgbaArrayToObject(colorStop.color))
-                  : types.rgba(hexToRGB(colorStop.color)),
-                opacity: types.number(
-                  colorStop.opacity ? parseFloat(colorStop.opacity) : 1,
-                  { range: [0, 1] }
-                ),
+          if (importing) {
+            isColorObjectfill = element.fill.type !== "linear";
+            isColorObjectStroke = element.stroke.type !== "linear";
+
+            if (element.fill.type === "pattern") {
+              // do nothing
+            } else if (isColorObjectfill) {
+              obj1 = {
+                ...obj1,
+                fill:
+                  typeof element.fill === "object" &&
+                    element.fill !== null &&
+                    "r" in element.fill &&
+                    "g" in element.fill &&
+                    "b" in element.fill &&
+                    "a" in element.fill
+                    ? types.rgba(element.fill)
+                    : types.rgba(rgbaArrayToObject(element.fill)),
               };
-            });
-            obj1 = {
-              ...obj1,
-              ...colorStops,
-              coords: {
-                x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
-                y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
-                x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
-                y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
-              },
-            };
-          }
-
-          if (isColorObjectStroke) {
-            obj1 = {
-              ...obj1,
-              stroke:
-                typeof element.stroke === "object" &&
-                  element.stroke !== null &&
-                  "r" in element.stroke &&
-                  "g" in element.stroke &&
-                  "b" in element.stroke &&
-                  "a" in element.stroke
-                  ? types.rgba(element.stroke)
-                  : types.rgba(rgbaArrayToObject(element.stroke)),
-            };
-          }
-          obj1 = {
-            ...obj1,
-            shadow: {
-              ...element.shadow,
-              color:
-                typeof element.shadow.color === "object" &&
-                  element.shadow.color !== null &&
-                  "r" in element.shadow.color &&
-                  "g" in element.shadow.color &&
-                  "b" in element.shadow.color &&
-                  "a" in element.shadow.color
-                  ? types.rgba(element.shadow.color)
-                  : types.rgba(rgbaArrayToObject(element.shadow.color)),
-            },
-          };
-        } else {
-          if (!element.shadow?.color.toString().startsWith("#")) {
-            element.set({ shadow: { ...element.shadow, color: "#000000" } });
-          }
-          isColorObjectfill = typeof element.fill !== "object";
-          isColorObjectStroke = typeof element.stroke !== "object";
-          if (isColorObjectfill) {
-            obj1 = {
-              ...obj1,
-              fill: types.rgba(
-                hexToRGB(element.fill ? element.fill : "#ff0000")
-              ),
-            };
-          } else if (element.fill.type === "pattern") {
-          } else {
-            const colorStops = element.fill.colorStops.map((colorStop) => {
-              return {
-                offset: types.number(parseFloat(colorStop.offset), {
-                  range: [0, 1],
-                }),
-                color: colorStop.color.toString().startsWith("rgb")
-                  ? types.rgba(rgbaArrayToObject(colorStop.color))
-                  : types.rgba(hexToRGB(colorStop.color)),
-                opacity: types.number(
-                  parseFloat(
-                    colorStop.opacity === undefined ? 1 : colorStop.opacity
+            } else {
+              const colorStops = element.fill.colorStops.map((colorStop) => {
+                return {
+                  offset: types.number(parseFloat(colorStop.offset), {
+                    range: [0, 1],
+                  }),
+                  color: colorStop.color.toString().startsWith("rgb")
+                    ? types.rgba(rgbaArrayToObject(colorStop.color))
+                    : types.rgba(hexToRGB(colorStop.color)),
+                  opacity: types.number(
+                    colorStop.opacity ? parseFloat(colorStop.opacity) : 1,
+                    { range: [0, 1] }
                   ),
-                  { range: [0, 1] }
-                ),
+                };
+              });
+              obj1 = {
+                ...obj1,
+                ...colorStops,
+                coords: {
+                  x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                  y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                  x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                  y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
+                },
               };
-            });
+            }
+
+            if (isColorObjectStroke) {
+              obj1 = {
+                ...obj1,
+                stroke:
+                  typeof element.stroke === "object" &&
+                    element.stroke !== null &&
+                    "r" in element.stroke &&
+                    "g" in element.stroke &&
+                    "b" in element.stroke &&
+                    "a" in element.stroke
+                    ? types.rgba(element.stroke)
+                    : types.rgba(rgbaArrayToObject(element.stroke)),
+              };
+            }
             obj1 = {
               ...obj1,
-              ...colorStops,
-              coords: {
-                x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
-                y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
-                x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
-                y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
+              shadow: {
+                ...element.shadow,
+                color:
+                  typeof element.shadow.color === "object" &&
+                    element.shadow.color !== null &&
+                    "r" in element.shadow.color &&
+                    "g" in element.shadow.color &&
+                    "b" in element.shadow.color &&
+                    "a" in element.shadow.color
+                    ? types.rgba(element.shadow.color)
+                    : types.rgba(rgbaArrayToObject(element.shadow.color)),
+              },
+            };
+          } else {
+            if (!element.shadow?.color.toString().startsWith("#")) {
+              element.set({ shadow: { ...element.shadow, color: "#000000" } });
+            }
+            isColorObjectfill = typeof element.fill !== "object";
+            isColorObjectStroke = typeof element.stroke !== "object";
+            if (isColorObjectfill) {
+              obj1 = {
+                ...obj1,
+                fill: types.rgba(
+                  hexToRGB(element.fill ? element.fill : "#ff0000")
+                ),
+              };
+            } else if (element.fill.type === "pattern") {
+            } else {
+              const colorStops = element.fill.colorStops.map((colorStop) => {
+                return {
+                  offset: types.number(parseFloat(colorStop.offset), {
+                    range: [0, 1],
+                  }),
+                  color: colorStop.color.toString().startsWith("rgb")
+                    ? types.rgba(rgbaArrayToObject(colorStop.color))
+                    : types.rgba(hexToRGB(colorStop.color)),
+                  opacity: types.number(
+                    parseFloat(
+                      colorStop.opacity === undefined ? 1 : colorStop.opacity
+                    ),
+                    { range: [0, 1] }
+                  ),
+                };
+              });
+              obj1 = {
+                ...obj1,
+                ...colorStops,
+                coords: {
+                  x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
+                  y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
+                  x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
+                  y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
+                },
+              };
+            }
+
+            if (isColorObjectStroke) {
+              obj1 = {
+                ...obj1,
+                stroke: types.rgba(
+                  hexToRGB(element.stroke ? element.stroke : "#000000")
+                ),
+              };
+            }
+            obj1 = {
+              ...obj1,
+              shadow: {
+                ...shadowOptions,
+                color: types.rgba(hexToRGB(element.shadow.color)),
+                blur: types.number(parseInt(element.shadow.blur), {
+                  range: [0, 100],
+                }),
               },
             };
           }
 
-          if (isColorObjectStroke) {
-            obj1 = {
-              ...obj1,
-              stroke: types.rgba(
-                hexToRGB(element.stroke ? element.stroke : "#000000")
-              ),
-            };
-          }
-          obj1 = {
-            ...obj1,
-            shadow: {
-              ...shadowOptions,
-              color: types.rgba(hexToRGB(element.shadow.color)),
-              blur: types.number(parseInt(element.shadow.blur), {
-                range: [0, 100],
-              }),
-            },
-          };
-        }
-
-        if (element.type === "path") {
-          const pathProps = getModifiedObject(element);
-          obj1 = { ...obj1, ...pathProps };
-        }
-        arrObjectProps[i] = {
-          left: element.left,
-          top: element.top,
-          scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-          scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-          opacity: types.number(element.opacity, { range: [0, 1] }),
-          angle: element.angle,
-          rx: types.number(element.rx ? parseInt(element.rx) : 10, {
-            range: [-360, 360],
-          }),
-          ry: types.number(element.ry ? parseInt(element.rx) : 10, {
-            range: [-360, 360],
-          }),
-          fontSize: types.number(
-            element.fontSize ? parseInt(element.fontSize) : 30,
-            { range: [0, 100] }
-          ),
-          strkdsar: types.number(
-            element.strokeDashArray ? parseInt(element.strokeDashArray) : 0,
-            { range: [0, 1000] }
-          ),
-          strkDsOfst: types.number(
-            element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0,
-            { range: [-1000, 1000] }
-          ),
-          ...obj1,
-          strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
-          skewX: types.number(element.skewX, { range: [-88, 88] }),
-          skewY: types.number(element.skewY, { range: [-60, 60] }),
-        };
-        arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
-
-        onChange(sheet.sequence.pointer.position, (position) => {
-          if (element.id === "imgSeqGroup1") {
-            element.getObjects().forEach((image, index) => {
-              image.set({
-                opacity: index === parseInt(position * filefps) ? 1 : 0,
-              });
-            });
-            canvas.requestRenderAll();
-          }
-        });
-
-        arrObject[i].onValuesChange((val) => {
-          var obj2 = {};
-          if (element.fill?.type === "pattern") {
-            // do nothing
-          } else if (isColorObjectfill) {
-            obj2 = {
-              ...obj2,
-              fill: val.fill,
-            };
-          } else {
-            obj2 = {
-              ...obj2,
-              fill: new fabric.Gradient({
-                type: element.fill.type,
-                gradientUnits: element.fill.gradientUnits,
-                coords: {
-                  x1: val.coords.x1,
-                  y1: val.coords.y1,
-                  x2: val.coords.x2,
-                  y2: val.coords.y2,
-                },
-                colorStops: Array.from({
-                  length: element.fill.colorStops.length,
-                }).map((_, i) => {
-                  return {
-                    offset: val[i].offset,
-                    color: rgbaObjectToHex(val[i].color),
-                    opacity: val[i].opacity,
-                  };
-                }),
-                id: element.fill.id,
-              }),
-            };
-          }
-          if (isColorObjectStroke) {
-            obj2 = {
-              ...obj2,
-              stroke: val.stroke,
-            };
-          }
-          element.set({
-            left: val.left,
-            top: val.top,
-            scaleX: val.scaleX,
-            scaleY: val.scaleY,
-            opacity: val.opacity,
-            angle: val.angle,
-            rx: val.rx,
-            ry: val.ry,
-            strokeWidth: val.strokeWidth,
-            fontSize: val.fontSize,
-            strokeDashArray: [val.strkdsar, val.strkdsar],
-            strokeDashOffset: val.strkDsOfst,
-            shadow: val.shadow,
-            ...obj2,
-            skewX: val.skewX,
-            skewY: val.skewY,
-          });
           if (element.type === "path") {
-            const newPath = [...element.path];
-            newPath.forEach((_, i) => {
-              const newi = i + 1;
-              const ss = [];
-              if (val["Point" + newi][0]) ss.push(val["Point" + newi][0]);
-              if (val["Point" + newi][newi * 10 + "x"])
-                ss.push(val["Point" + newi][newi * 10 + "x"]);
-              if (val["Point" + newi][newi * 10 + "y"])
-                ss.push(val["Point" + newi][newi * 10 + "y"]);
-              if (val["Point" + newi][newi * 10 + 1 + "x"])
-                ss.push(val["Point" + newi][newi * 10 + 1 + "x"]);
-              if (val["Point" + newi][newi * 10 + 1 + "y"])
-                ss.push(val["Point" + newi][newi * 10 + 1 + "y"]);
-              if (val["Point" + newi][newi * 10 + 2 + "x"])
-                ss.push(val["Point" + newi][newi * 10 + 2 + "x"]);
-              if (val["Point" + newi][newi * 10 + 2 + "y"])
-                ss.push(val["Point" + newi][newi * 10 + 2 + "y"]);
-              newPath[i] = ss;
-            });
-            element.set({ path: newPath, objectCaching: false });
+            const pathProps = getModifiedObject(element);
+            obj1 = { ...obj1, ...pathProps };
           }
+          arrObjectProps[i] = {
+            left: element.left,
+            top: element.top,
+            scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+            scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+            opacity: types.number(element.opacity, { range: [0, 1] }),
+            angle: element.angle,
+            rx: types.number(element.rx ? parseInt(element.rx) : 10, {
+              range: [-360, 360],
+            }),
+            ry: types.number(element.ry ? parseInt(element.rx) : 10, {
+              range: [-360, 360],
+            }),
+            fontSize: types.number(
+              element.fontSize ? parseInt(element.fontSize) : 30,
+              { range: [0, 100] }
+            ),
+            strkdsar: types.number(
+              element.strokeDashArray ? parseInt(element.strokeDashArray) : 0,
+              { range: [0, 1000] }
+            ),
+            strkDsOfst: types.number(
+              element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0,
+              { range: [-1000, 1000] }
+            ),
+            ...obj1,
+            strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
+            skewX: types.number(element.skewX, { range: [-88, 88] }),
+            skewY: types.number(element.skewY, { range: [-60, 60] }),
+          };
+          arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
 
-          element.setCoords();
-          canvas.requestRenderAll();
-        });
-        const onMouseMove = (obj, event) => {
-          if (mouseDown === 1) {
-            studio.transaction(({ set }) => {
-              set(obj.props.left, event.target.left);
-              set(obj.props.top, event.target.top);
-              set(obj.props.angle, event.target.angle);
-            });
-          }
-        };
-        const onScaling = (obj, event) => {
-          studio.transaction(({ set }) => {
-            set(obj.props.scaleX, event.transform.target.scaleX);
-            set(obj.props.scaleY, event.transform.target.scaleY);
+          onChange(sheet.sequence.pointer.position, (position) => {
+            if (element.id === "imgSeqGroup1") {
+              element.getObjects().forEach((image, index) => {
+                image.set({
+                  opacity: index === parseInt(position * filefps) ? 1 : 0,
+                });
+              });
+              canvas.requestRenderAll();
+            }
           });
-        };
 
-        element.on(
-          "mousedown",
-          () => studio.setSelection([arrObject[i]]),
-          false
-        );
-        element.on("mousemove", (e) => onMouseMove(arrObject[i], e), false);
-        element.on("scaling", (e) => onScaling(arrObject[i], e), false);
-        element.on("mousedblclick", () => edit(dispatch), false);
-      });
-    });
+          arrObject[i].onValuesChange((val) => {
+            var obj2 = {};
+            if (element.fill?.type === "pattern") {
+              // do nothing
+            } else if (isColorObjectfill) {
+              obj2 = {
+                ...obj2,
+                fill: val.fill,
+              };
+            } else {
+              obj2 = {
+                ...obj2,
+                fill: new fabric.Gradient({
+                  type: element.fill.type,
+                  gradientUnits: element.fill.gradientUnits,
+                  coords: {
+                    x1: val.coords.x1,
+                    y1: val.coords.y1,
+                    x2: val.coords.x2,
+                    y2: val.coords.y2,
+                  },
+                  colorStops: Array.from({
+                    length: element.fill.colorStops.length,
+                  }).map((_, i) => {
+                    return {
+                      offset: val[i].offset,
+                      color: rgbaObjectToHex(val[i].color),
+                      opacity: val[i].opacity,
+                    };
+                  }),
+                  id: element.fill.id,
+                }),
+              };
+            }
+            if (isColorObjectStroke) {
+              obj2 = {
+                ...obj2,
+                stroke: val.stroke,
+              };
+            }
+            element.set({
+              left: val.left,
+              top: val.top,
+              scaleX: val.scaleX,
+              scaleY: val.scaleY,
+              opacity: val.opacity,
+              angle: val.angle,
+              rx: val.rx,
+              ry: val.ry,
+              strokeWidth: val.strokeWidth,
+              fontSize: val.fontSize,
+              strokeDashArray: [val.strkdsar, val.strkdsar],
+              strokeDashOffset: val.strkDsOfst,
+              shadow: val.shadow,
+              ...obj2,
+              skewX: val.skewX,
+              skewY: val.skewY,
+            });
+            if (element.type === "path") {
+              const newPath = [...element.path];
+              newPath.forEach((_, i) => {
+                const newi = i + 1;
+                const ss = [];
+                if (val["Point" + newi][0]) ss.push(val["Point" + newi][0]);
+                if (val["Point" + newi][newi * 10 + "x"])
+                  ss.push(val["Point" + newi][newi * 10 + "x"]);
+                if (val["Point" + newi][newi * 10 + "y"])
+                  ss.push(val["Point" + newi][newi * 10 + "y"]);
+                if (val["Point" + newi][newi * 10 + 1 + "x"])
+                  ss.push(val["Point" + newi][newi * 10 + 1 + "x"]);
+                if (val["Point" + newi][newi * 10 + 1 + "y"])
+                  ss.push(val["Point" + newi][newi * 10 + 1 + "y"]);
+                if (val["Point" + newi][newi * 10 + 2 + "x"])
+                  ss.push(val["Point" + newi][newi * 10 + 2 + "x"]);
+                if (val["Point" + newi][newi * 10 + 2 + "y"])
+                  ss.push(val["Point" + newi][newi * 10 + 2 + "y"]);
+                newPath[i] = ss;
+              });
+              element.set({ path: newPath, objectCaching: false });
+            }
+
+            element.setCoords();
+            canvas.requestRenderAll();
+          });
+          const onMouseMove = (obj, event) => {
+            if (mouseDown === 1) {
+              studio.transaction(({ set }) => {
+                set(obj.props.left, event.target.left);
+                set(obj.props.top, event.target.top);
+                set(obj.props.angle, event.target.angle);
+              });
+            }
+          };
+          const onScaling = (obj, event) => {
+            studio.transaction(({ set }) => {
+              set(obj.props.scaleX, event.transform.target.scaleX);
+              set(obj.props.scaleY, event.transform.target.scaleY);
+            });
+          };
+
+          element.on(
+            "mousedown",
+            () => studio.setSelection([arrObject[i]]),
+            false
+          );
+          element.on("mousemove", (e) => onMouseMove(arrObject[i], e), false);
+          element.on("scaling", (e) => onScaling(arrObject[i], e), false);
+          element.on("mousedblclick", () => edit(dispatch), false);
+        });
+        resolve("Canvas initialized successfully");
+      }
+      );
+    })
   };
   const reset = () => {
     localStorage.removeItem("theatre-0.4.persistent");
@@ -2711,7 +2712,7 @@ const WebAnimator = () => {
       setProjectId(pid);
 
       sheet = project.sheet("Sheet 1");
-      initialiseCore(canvasContent1, true);
+      await initialiseCore(canvasContent1, true);
 
       project.ready.then(() => {
         sheet.sequence.play({ range: [0, parseFloat(duration)] }).then(() =>
@@ -3378,7 +3379,6 @@ const WebAnimator = () => {
             title="Data from Local Storage"
             onClick={() => {
               deleteAllObjects();
-              // initialiseCore(localStorage.getItem("RCCpageData"));
               localforage.getItem("RCCpageData").then(data => {
                 initialiseCore(data);
               })
