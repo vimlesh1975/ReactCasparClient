@@ -101,7 +101,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                         <div>
                                             <button title='Template Play' onClick={() => {
                                                 endpoint(
-                                                    `play ${window.chNumber}-${templateLayers.NRCSThumnailplayer} [HTML] "${val.ScriptID}_${i + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}"`
+                                                    `play ${window.chNumber}-${templateLayers.NRCSThumnailplayer} [HTML] "${val.ScriptID}_${i + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}" mix 40`
                                                 );
                                             }}>TP</button>
                                         </div>
