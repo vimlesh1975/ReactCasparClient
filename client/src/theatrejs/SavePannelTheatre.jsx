@@ -88,6 +88,7 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
     }
 
     const recallPage = (json, canvas, i, jsfilename1, cssfilename1, jsfilename2, cssfilename2, animationTheatrejs) => {
+        console.log(animationTheatrejs);
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: i });
 
         dispatch({ type: 'CHANGE_JSFILENAME', payload: (jsfilename1 === undefined) ? 'main' : jsfilename1 });;
@@ -96,9 +97,10 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         dispatch({ type: 'CHANGE_JSFILENAME2', payload: (jsfilename2 === undefined) ? 'main2' : jsfilename2 });;
         dispatch({ type: 'CHANGE_CSSFILENAME2', payload: (cssfilename2 === undefined) ? 'main2' : cssfilename2 });
 
-        const subUnitsPerUnit = (JSON.parse(animationTheatrejs)).sheetsById["Sheet 1"].sequence.subUnitsPerUnit;
-        dispatch({ type: 'CHANGE_FPS', payload: subUnitsPerUnit });
-
+        if (animationTheatrejs) {
+            const subUnitsPerUnit = (JSON.parse(animationTheatrejs)).sheetsById["Sheet 1"].sequence.subUnitsPerUnit;
+            dispatch({ type: 'CHANGE_FPS', payload: subUnitsPerUnit });
+        }
         importHtml(json, animationTheatrejs)
 
         dispatch({ type: 'SHOW_EXTENSIONPANNEL', payload: false });
