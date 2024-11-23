@@ -90,7 +90,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                             }}>  <FaPlay style={{ pointerEvents: 'none' }} /></button>
                                         </div>
                                         <div>
-                                            <button title='Update' onClick={() => {
+                                            <button title='Page Update' onClick={() => {
                                                 recallPage((JSON.parse(val.Graphicstext1)).pageValue, canvas).then(() => {
                                                     setCurrentGraphics(i);
                                                     updateGraphics(canvas, templateLayers.NRCSThumnailplayer)
@@ -99,7 +99,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                             }}>U</button>
                                         </div>
                                         {directoryHandle && <div >
-                                            <button title='Renedr' onClick={() => exportEachPagetoHTML([val], i)}>R</button>
+                                            <button title='Template Renedr' onClick={() => exportEachPagetoHTML([val], i)}>R</button>
                                         </div>}
                                         <div>
                                             <button title='Template Play' onClick={() => {
