@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "221124_1";
+export const buildDate = "231124_1";
 
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
@@ -2308,6 +2308,7 @@ export const stopGraphics = (layerNumber) => {
   }, 1000);
   setTimeout(() => {
     endpoint(`mixer ${window.chNumber}-${layerNumber} clear`);
+    endpoint(`stop ${window.chNumber}-${layerNumber}`);
   }, 1500);
 };
 export const options = {
