@@ -66,10 +66,6 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
     // Helper function to check if the color is an RGBA object
     const isRGBAObject = (color) => color && typeof color === 'object' && 'r' in color && 'g' in color && 'b' in color && 'a' in color;
 
-    const rendersingleTemplate = (canvasList) => {
-        exportEachPagetoHTML(canvasList)
-    }
-
     return (<div >
         <div>
             {graphics.length}  <b> Pages: </b>
@@ -103,7 +99,7 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                             }}>U</button>
                                         </div>
                                         {directoryHandle && <div >
-                                            <button title='Renedr' onClick={() => rendersingleTemplate([val])}>R</button>
+                                            <button title='Renedr' onClick={() => exportEachPagetoHTML([val], i)}>R</button>
                                         </div>}
                                         <div>
                                             <button title='Template Play' onClick={() => {

@@ -67,7 +67,7 @@ const Graphics = () => {
     setTimeout(() => setFlashMessage(""), 3000);
   };
 
-  const exportEachPagetoHTML = async (canvasList) => {
+  const exportEachPagetoHTML = async (canvasList, number = '') => {
     setIsLoading(true); // Show spinner
     try {
       // Prompt user to select a folder for saving files
@@ -140,14 +140,11 @@ const Graphics = () => {
 
       // Loop through canvasList and save each as an HTML file
       for (const [index, val] of canvasList.entries()) {
+
         if (val.Graphicstext1) {
           const htmlContent = await processAndSaveCanvasItem(val, index);
-
-          // Create a new file in the selected folder
-          const fileName = `${val.ScriptID}_${index + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
+          const fileName = `${val.ScriptID}_${(number === '') ? (index + 1) : (number + 1)}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
           const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
-
-          // Write the HTML content to the file
           const writable = await fileHandle.createWritable();
           await writable.write(htmlContent);
           await writable.close();
@@ -870,10 +867,10 @@ const Graphics = () => {
               </button> */}
               <div>
                 {/* <VerticalScrollPlayer /> */}
-                <button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button>
-                <button onClick={setDirectory}>Set Directory</button> {directoryHandle && directoryHandle.name}
+
+                {directoryHandle && <><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button></>}
+                <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
               </div>
-              {/* <button onClick={updateCGEntry}> updateCGEntry</button> */}
 
             </div>
           </div>
