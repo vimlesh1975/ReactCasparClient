@@ -23,98 +23,8 @@ import Timer from "./Timer";
 
 import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
+import FlashMessage from "../FlashMessage";
 
-
-export const exportEachPagetoHTML = async (canvas, setIsLoading, canvasList, ScriptID) => {
-  setIsLoading(true); // Show spinner
-  try {
-    // Prompt user to select a folder for saving files
-    const directoryHandle = await window.showDirectoryPicker();
-    if (!directoryHandle) return; // User cancelled the folder selection
-
-    // Helper function to process and save each canvas item
-    const processAndSaveCanvasItem = async (val, index) => {
-      return new Promise((resolve, reject) => {
-        canvas.loadFromJSON(JSON.parse(val.Graphicstext1).pageValue).then(() => {
-          selectAll(canvas);
-
-          const activeObj = canvas.getActiveObject();
-          const ww = activeObj?.getBoundingRect().width + 100 || 1920;
-          const hh = activeObj?.getBoundingRect().height + 100 || 1080;
-
-          // Set canvas dimensions
-          const newWidth = Math.max(1920, ww);
-          const newHeight = Math.max(1080, hh);
-          canvas.setDimensions({ width: newWidth, height: newHeight });
-          canvas.renderAll();
-
-          // Convert to SVG
-          const svgString = canvas.toSVG();
-
-          // Reset canvas dimensions
-          if (newWidth !== 1920 || newHeight !== 1080) {
-            canvas.setDimensions({ width: 1920, height: 1080 });
-            canvas.renderAll();
-          }
-
-          canvas.discardActiveObject();
-          canvas.requestRenderAll();
-
-          // Generate HTML content
-          const htmlContent = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8">
-              <title>Exported SVG - Page ${index + 1}</title>
-              <style>
-              body{
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                  overflow: hidden;
-              }
-              </style>
-              <link rel="stylesheet" href="main.css">
-              <link rel="stylesheet" href="main2.css">
-            </head>
-            <body>
-              <div>${svgString}</div>
-            </body>
-            <script src="main.js" defer></script>
-            <script src="main2.js" defer></script>
-            </html>
-          `;
-
-          resolve(htmlContent);
-        }).catch(reject);
-      });
-    };
-
-    // Loop through canvasList and save each as an HTML file
-    for (const [index, val] of canvasList.entries()) {
-      if (val.Graphicstext1) {
-        const htmlContent = await processAndSaveCanvasItem(val, index);
-
-        // Create a new file in the selected folder
-        const fileName = `${ScriptID}_${index + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
-        const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
-
-        // Write the HTML content to the file
-        const writable = await fileHandle.createWritable();
-        await writable.write(htmlContent);
-        await writable.close();
-      }
-
-    }
-
-    console.log("All files have been saved successfully.");
-  } catch (error) {
-    console.error("Error exporting pages to individual HTML files:", error);
-  } finally {
-    setIsLoading(false); // Hide spinner
-  }
-};
 
 
 const Graphics = () => {
@@ -148,6 +58,112 @@ const Graphics = () => {
   const [loading, setLoading] = useState(true);  // Initialize loading state to true
   const [isLoading, setIsLoading] = useState(false);
 
+  const [directoryHandle, setDirectoryHandle] = useState(null);
+  const [flashMessage, setFlashMessage] = useState("");
+
+  const showMessage = (msg) => {
+    setFlashMessage(msg);
+    // Clear the message after 3 seconds (optional, but prevents stacking messages)
+    setTimeout(() => setFlashMessage(""), 3000);
+  };
+
+  const exportEachPagetoHTML = async (canvasList) => {
+    setIsLoading(true); // Show spinner
+    try {
+      // Prompt user to select a folder for saving files
+      // const directoryHandle = await window.showDirectoryPicker();
+      // if (!directoryHandle) return; // User cancelled the folder selection
+
+      if (!directoryHandle) {
+        await setDirectory();
+        // return;
+      }
+
+      // Helper function to process and save each canvas item
+      const processAndSaveCanvasItem = async (val, index) => {
+        return new Promise((resolve, reject) => {
+          canvas.loadFromJSON(JSON.parse(val.Graphicstext1).pageValue).then(() => {
+            selectAll(canvas);
+
+            const activeObj = canvas.getActiveObject();
+            const ww = activeObj?.getBoundingRect().width + 100 || 1920;
+            const hh = activeObj?.getBoundingRect().height + 100 || 1080;
+
+            // Set canvas dimensions
+            const newWidth = Math.max(1920, ww);
+            const newHeight = Math.max(1080, hh);
+            canvas.setDimensions({ width: newWidth, height: newHeight });
+            canvas.renderAll();
+
+            // Convert to SVG
+            const svgString = canvas.toSVG();
+
+            // Reset canvas dimensions
+            if (newWidth !== 1920 || newHeight !== 1080) {
+              canvas.setDimensions({ width: 1920, height: 1080 });
+              canvas.renderAll();
+            }
+
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+
+            // Generate HTML content
+            const htmlContent = `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <meta charset="UTF-8">
+                <title>Exported SVG - Page ${index + 1}</title>
+                <style>
+                body{
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                }
+                </style>
+                <link rel="stylesheet" href="main.css">
+                <link rel="stylesheet" href="main2.css">
+              </head>
+              <body>
+                <div>${svgString}</div>
+              </body>
+              <script src="main.js" defer></script>
+              <script src="main2.js" defer></script>
+              </html>
+            `;
+
+            resolve(htmlContent);
+          }).catch(reject);
+        });
+      };
+
+      // Loop through canvasList and save each as an HTML file
+      for (const [index, val] of canvasList.entries()) {
+        if (val.Graphicstext1) {
+          const htmlContent = await processAndSaveCanvasItem(val, index);
+
+          // Create a new file in the selected folder
+          const fileName = `${val.ScriptID}_${index + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
+          const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+
+          // Write the HTML content to the file
+          const writable = await fileHandle.createWritable();
+          await writable.write(htmlContent);
+          await writable.close();
+        }
+
+      }
+
+      console.log("All files have been saved successfully.");
+    } catch (error) {
+      console.error("Error exporting pages to individual HTML files:", error);
+      alert(error);
+    } finally {
+      setIsLoading(false); // Hide spinner
+      showMessage('Done');
+    }
+  };
 
 
   const getAllKeyValue = () => {
@@ -646,6 +662,16 @@ const Graphics = () => {
     }
   };
 
+  const setDirectory = async () => {
+    try {
+      const handle = await window.showDirectoryPicker();
+      setDirectoryHandle(handle); // Save the directory handle in state
+      console.log("Directory selected:", handle);
+    } catch (error) {
+      console.error("Directory selection canceled or failed:", error);
+    }
+  }
+
   return (<div>
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -844,8 +870,8 @@ const Graphics = () => {
               </button> */}
               <div>
                 {/* <VerticalScrollPlayer /> */}
-                <button onClick={() => exportEachPagetoHTML(canvas, setIsLoading, graphics, ScriptID)}>exportEachPagetoHTML</button>
-
+                <button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button>
+                <button onClick={setDirectory}>Set Directory</button> {directoryHandle && directoryHandle.name}
               </div>
               {/* <button onClick={updateCGEntry}> updateCGEntry</button> */}
 
@@ -864,7 +890,7 @@ const Graphics = () => {
                 <Tab>Script</Tab>
               </TabList>
               <TabPanel>
-                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} />
+                <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} directoryHandle={directoryHandle} exportEachPagetoHTML={exportEachPagetoHTML} />
               </TabPanel>
               <TabPanel>
                 <DataUpdater updateGraphicsToDatabase={updateGraphicsToDatabase} getAllKeyValue={getAllKeyValue} />
@@ -1021,6 +1047,7 @@ const Graphics = () => {
       />
     </div>
     {isLoading && <Spinner />}
+    {flashMessage && <FlashMessage message={flashMessage} />}
 
   </div>);
 };
