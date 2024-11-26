@@ -60,12 +60,42 @@ const Graphics = () => {
 
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
+  // const [allGraphics, setAllGraphics] = useState([]);
 
   const showMessage = (msg) => {
     setFlashMessage(msg);
     // Clear the message after 3 seconds (optional, but prevents stacking messages)
     setTimeout(() => setFlashMessage(""), 3000);
   };
+
+  const exportTotalEachPagetoHTML = async () => {
+    try {
+      const aa = await Promise.all(
+        slugs.map(async (slug) => {
+          const res = await fetch(
+            addressmysql() + `/getGraphics?ScriptID=${slug.ScriptID}`
+          );
+          const data = await res.json();
+          return data;
+        })
+      );
+
+      console.log(aa); // `aa` is now an array of all fetched results.
+
+      // Sequentially process each fetched value with exportEachPagetoHTML
+      for (const val of aa) {
+        await exportEachPagetoHTML(val);
+      }
+
+      // If parallel processing is acceptable, use:
+      // await Promise.all(aa.map((val) => exportEachPagetoHTML(val)));
+
+      console.log("All pages have been exported.");
+    } catch (error) {
+      console.error("Error exporting pages:", error);
+    }
+  };
+
 
   const exportEachPagetoHTML = async (canvasList, number = '') => {
     setIsLoading(true); // Show spinner
@@ -868,7 +898,7 @@ const Graphics = () => {
               <div>
                 {/* <VerticalScrollPlayer /> */}
 
-                {directoryHandle && <><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button></>}
+                {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button></>}
                 <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
               </div>
 
