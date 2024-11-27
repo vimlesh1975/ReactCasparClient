@@ -699,6 +699,40 @@ const Graphics = () => {
     }
   }
 
+  async function deleteOllFiles() {
+    const now = new Date();
+    try {
+      for await (const [name, handle] of directoryHandle.entries()) {
+        if (handle.kind === 'file' && name.endsWith('.html')) {
+          const first15 = name.slice(0, 15);
+          const asInteger = parseInt(first15, 10);
+
+          if (!isNaN(asInteger)) {
+
+            const file = await handle.getFile();
+            const lastModifiedDate = new Date(file.lastModified);
+            // Calculate the age of the file in days
+            const fileAgeInDays = (now - lastModifiedDate) / (1000 * 60 * 60 * 24);
+
+            if (fileAgeInDays > 0) {
+              try {
+                // Uncomment to enable deletion
+                await directoryHandle.removeEntry(name);
+                console.log(`File "${name}" deleted.`);
+              } catch (deleteError) {
+                console.error(`Failed to delete "${name}":`, deleteError);
+              }
+            }
+
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error iterating through directory:', error);
+    }
+  }
+
+
   return (<div>
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -898,7 +932,7 @@ const Graphics = () => {
               <div>
                 {/* <VerticalScrollPlayer /> */}
 
-                {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button></>}
+                {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button> <button onClick={deleteOllFiles}>Delete Old files</button> </>}
                 <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
               </div>
 
