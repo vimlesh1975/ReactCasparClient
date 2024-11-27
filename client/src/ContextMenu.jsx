@@ -35,6 +35,7 @@ import {
   sendBackward,
   bringForward,
   shadowOptions,
+  groupInteractive,
 } from "./common";
 
 import {
@@ -230,6 +231,8 @@ const ContextMenu = ({ canvas }) => {
                 </li>
                 <li onClick={() => copy(canvas)}>Copy</li>
                 <li onClick={() => paste(canvas)}>Paste</li>
+                <li onClick={() => groupInteractive(canvas, true)}>Group interactive</li>
+                <li onClick={() => groupInteractive(canvas, false)}>Group not interactive </li>
               </ul>
             </li>
 

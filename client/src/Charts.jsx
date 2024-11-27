@@ -95,7 +95,7 @@ const Charts = () => {
             });
             var svgGroups = fabric.util.groupSVGElements(obj?.objects);
             const id = generateUniqueId({ type: 'group' });
-            svgGroups.set({ id: id, class: id });
+            svgGroups.set({ id: id, class: id, subTargetCheck: true, });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();
@@ -208,7 +208,7 @@ const Charts = () => {
             });
             var svgGroups = fabric.util.groupSVGElements(obj?.objects);
             const id = generateUniqueId({ type: 'group' });
-            svgGroups.set({ id: id, class: id });
+            svgGroups.set({ id: id, class: id, subTargetCheck: true, });
             canvas.add(svgGroups);
         });
         canvas.requestRenderAll();

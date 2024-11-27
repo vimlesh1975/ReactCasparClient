@@ -6,6 +6,15 @@ import * as d from "@theatre/dataverse";
 
 export const buildDate = "271124_1";
 
+export const groupInteractive = (canvas, bool) => {
+  canvas.getActiveObjects().forEach((element) => {
+    if (element.type === 'group') {
+      element.set({ interactive: bool })
+    }
+  });
+  canvas.requestRenderAll();
+}
+
 export const importSvgCode = (ss, canvas) => {
   if (ss) {
     fabric.loadSVGFromString(ss).then((output) => {
@@ -889,7 +898,7 @@ export const groupObjects = (canvas, shouldGroup) => {
     const objects = canvas.getActiveObjects();
     canvas.discardActiveObject();
     const group = new fabric.Group(objects, {
-      interactive: true,
+      interactive: false,
       subTargetCheck: true,
     });
     group.set({
