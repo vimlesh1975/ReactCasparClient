@@ -1,50 +1,143 @@
 <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-        </head>
-        
-        <body>
-        <div><?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xml:space="preserve">
-<desc>Created with Fabric.js 5.2.4</desc>
-<defs>
-</defs>
-<g transform="matrix(1 0 0 1 721.61 197.1)" style="filter: url(#SVGID_53);" id="clock1"  >
-<filter id="SVGID_53" y="-79%" height="258%" x="-36%" width="172%" >
-	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
-	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
-	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
-	<feComposite in2="oBlur" operator="in" />
-	<feMerge>
-		<feMergeNode></feMergeNode>
-		<feMergeNode in="SourceGraphic"></feMergeNode>
-	</feMerge>
-</filter>
-		<rect fill="#50037c" x="-93.5" y="-25.42" width="187" height="50.85"></rect>
-<extraproperty textAlign="center" width="187" originalFontSize="45"></extraproperty>
-		<text xml:space="preserve" class="class_53" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-87.58" y="14.14" >11:11:21</tspan></text>
-</g>
-</svg></div>
-            </body>
-            <script>
+<html lang="en">
 
-            document.body.style.margin='0';
-            document.body.style.padding='0';
-            document.body.style.overflow='hidden';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric.js Convolute Filter with Sliders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-            var aa = document.getElementsByTagName('div')[0];
-            aa.style.position='absolute';
-            aa.style.zoom=(192000/1920)+'%';
-            var cc=document.getElementsByTagName('tspan')[0];
-            cc.textContent='';
-            setInterval(function() {
-                var ss1 = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
-             cc.textContent  =ss1;
-              }, 1000);
-              </script>
-            </html>
+        canvas {
+            border: 1px solid #ccc;
+        }
+
+        .controls {
+            margin-top: 10px;
+        }
+
+        label,
+        input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Test Convolute Filter with Fabric.js (Adjustable Effects)</h1>
+
+    <!-- Image upload input -->
+    <input type="file" id="imageUpload" accept="image/*">
+
+    <!-- Canvas to display image -->
+    <canvas id="canvas" width="600" height="400"></canvas>
+
+    <!-- Controls for sharpening, blur, and edge detection -->
+    <div class="controls">
+        <div>
+            <label for="sharpenSlider">Sharpen Effect:</label>
+            <input type="range" id="sharpenSlider" min="0" max="5" step="0.1" value="1">
+            <span id="sharpenValue">1</span>
+        </div>
+        <div>
+            <label for="blurSlider">Blur Effect:</label>
+            <input type="range" id="blurSlider" min="1" max="5" step="0.1" value="1">
+            <span id="blurValue">1</span>
+        </div>
+        <div>
+            <label for="edgeSlider">Edge Detection Intensity:</label>
+            <input type="range" id="edgeSlider" min="0" max="5" step="0.1" value="1">
+            <span id="edgeValue">1</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <script>
+        const canvas = new fabric.Canvas('canvas');
+        let imgObj = null;
+
+        // Load an image onto the canvas
+        document.getElementById('imageUpload').addEventListener('change', (e) => {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                fabric.Image.fromURL(event.target.result, function (img) {
+                    imgObj = img;
+                    img.set({ left: 100, top: 100 }); // Set position of the image
+                    canvas.clear(); // Clear previous canvas content
+                    canvas.add(img);
+                });
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // Function to apply sharpen filter with intensity
+        document.getElementById('sharpenSlider').addEventListener('input', (e) => {
+            const sharpenIntensity = parseFloat(e.target.value);
+            document.getElementById('sharpenValue').textContent = sharpenIntensity;
+            applySharpen(sharpenIntensity);
+        });
+
+        // Function to apply blur filter with intensity
+        document.getElementById('blurSlider').addEventListener('input', (e) => {
+            const blurIntensity = parseFloat(e.target.value);
+            document.getElementById('blurValue').textContent = blurIntensity;
+            applyBlur(blurIntensity);
+        });
+
+        // Function to apply edge detection with intensity
+        document.getElementById('edgeSlider').addEventListener('input', (e) => {
+            const edgeIntensity = parseFloat(e.target.value);
+            document.getElementById('edgeValue').textContent = edgeIntensity;
+            applyEdgeDetection(edgeIntensity);
+        });
+
+        // Function to apply sharpen filter
+        function applySharpen(intensity) {
+            const sharpenMatrix = [
+                0, -intensity, 0,
+                -intensity, 5 + intensity, -intensity,
+                0, -intensity, 0
+            ];
+            applyConvoluteFilter(sharpenMatrix);
+        }
+
+        // Function to apply blur filter
+        function applyBlur(intensity) {
+            const blurMatrix = Array(9).fill(1 / (9 * intensity)); // Adjusting the intensity
+            applyConvoluteFilter(blurMatrix);
+        }
+
+        // Function to apply edge detection filter
+        function applyEdgeDetection(intensity) {
+            const edgeDetectionMatrix = [
+                -intensity, -intensity, -intensity,
+                -intensity, 8 + intensity * 2, -intensity,
+                -intensity, -intensity, -intensity
+            ];
+            applyConvoluteFilter(edgeDetectionMatrix);
+        }
+
+        // Helper function to apply the convolute filter with the given matrix
+        function applyConvoluteFilter(matrix) {
+            if (imgObj) {
+                // Remove existing filters to avoid additive effects
+                imgObj.filters = [];
+
+                const convoluteFilter = new fabric.Image.filters.Convolute({
+                    matrix: matrix,
+                    opaque: false
+                });
+
+                imgObj.filters.push(convoluteFilter);
+                imgObj.applyFilters();
+                canvas.renderAll();
+            }
+        }
+    </script>
+
+</body>
+
+</html>
