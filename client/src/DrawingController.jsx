@@ -777,7 +777,7 @@ const DrawingController = () => {
     canvas
       .getActiveObjects()
       .forEach((item) => {
-        item.set({ fontFamily: e.target.value });
+        item.set({ fontFamily: `'${e.target.value}'` });
       })
     canvas.requestRenderAll();
   };
@@ -2435,7 +2435,7 @@ const DrawingController = () => {
           setSkewYSize(element.skewY.toFixed(0));
         }
         if (element.fontFamily) {
-          setCurrentFont(element.fontFamily);
+          setCurrentFont((element.fontFamily).replaceAll("'", ""));
         }
         if (element.fontSize) {
           setFontSize(element.fontSize);
