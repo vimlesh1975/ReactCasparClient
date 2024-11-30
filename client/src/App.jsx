@@ -43,7 +43,8 @@ import ColorGradient2 from "./ColorGradient2.jsx";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import Threejs from "./Threejs.jsx";
+// import Threejs from "./Threejs.jsx";
+import Crop from "./Crop";
 import CodeImport from "./CodeImport.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
@@ -545,7 +546,7 @@ const App = () => {
               <Tab>Effects</Tab>
               <Tab>JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
-              <Tab>Threejs</Tab>
+              <Tab>Crop</Tab>
               <Tab>CodeImport</Tab>
               <Tab>Tsparticles</Tab>
               <Tab>Data</Tab>
@@ -666,7 +667,7 @@ const App = () => {
               <JsonReader />
             </TabPanel>
             <TabPanel>
-              <Threejs />
+              <Crop />
             </TabPanel>
             <TabPanel>
               <CodeImport />
