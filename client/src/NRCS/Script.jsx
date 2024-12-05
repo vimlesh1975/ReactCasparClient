@@ -2,6 +2,9 @@
 import { useEffect, useState } from 'react';
 import { addressmysql } from '../common'
 
+
+import TTS from '../google/TTS';
+
 export default function Home({ ScriptID, title, currentSlugSlugName }) {
     const [content, setContent] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
@@ -61,12 +64,13 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
                     disabled
                     value={content}
                     onChange={handleContentChange}
-                    rows="25"
+                    rows="19"
                     cols="37"
                     style={{ fontSize: 20 }}
 
                 />
             </div>
+            <TTS content={content} />
 
         </div>
     );

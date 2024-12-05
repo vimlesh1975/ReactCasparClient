@@ -2063,6 +2063,14 @@ export const rgbaCol = (color, opacity) =>
 export var address1 = "https://" + window.location.host.split(":")[0] + ":9000";
 export const screenSizes = [1024, 1280, 1920, 2048, 3840, 4096];
 
+export const addressgoogleapi = () => {
+  if (window.location.host === "localhost:10000") {
+    return "https://localhost:9000";
+  } else {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
+  }
+};
+
 export const addressmysql = () => {
   if (window.location.host === "localhost:10000") {
     return "https://localhost:9000";
@@ -2070,6 +2078,7 @@ export const addressmysql = () => {
     return "https://octopus-app-gzws3.ondigitalocean.app";
   }
 };
+
 
 export const clieentPublicFolder = () => {
   if (window.location.host === "localhost:10000") {

@@ -728,3 +728,80 @@ app.post("/updateContent", async (req, res) => {
   }
 });
 // NRCS code ends
+
+// TTS code starts here
+
+const { TextToSpeechClient } = require('@google-cloud/text-to-speech');
+const client = new TextToSpeechClient({
+  credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON),
+});
+app.get('/list-voices', async (req, res) => {
+  try {
+    const [result] = await client.listVoices({});
+    const languages = result.voices.map((voice) => ({
+      code: voice.languageCodes[0],
+      name: voice.name,
+      ssmlGender: voice.ssmlGender,
+    }));
+
+    res.json({ languages });
+  } catch (error) {
+    console.error('Error listing voices:', error);
+    res.status(500).json({ error: 'Failed to fetch voices.' });
+  }
+});
+
+// Helper function to split text into chunks
+function splitText(text, maxBytes = 4900) {
+  const chunks = [];
+  let currentChunk = '';
+
+  text.split(/(?<=\.)/g).forEach((sentence) => {
+    if (new TextEncoder().encode(currentChunk + sentence).length > maxBytes) {
+      chunks.push(currentChunk);
+      currentChunk = sentence;
+    } else {
+      currentChunk += sentence;
+    }
+  });
+
+  if (currentChunk) chunks.push(currentChunk);
+  return chunks;
+}
+
+// Route to handle text-to-speech requests
+app.post('/speak', async (req, res) => {
+  const { text, languageCode, name } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: 'No text provided.' });
+  }
+
+  try {
+    // Split text into manageable chunks
+    const chunks = splitText(text);
+    const audioChunks = [];
+
+    // Generate speech for each chunk
+    for (const chunk of chunks) {
+      const [response] = await client.synthesizeSpeech({
+        input: { text: chunk },
+        voice: { languageCode, name },
+        audioConfig: { audioEncoding: 'MP3' },
+      });
+      audioChunks.push(response.audioContent);
+    }
+
+    // Combine audio chunks
+    const combinedAudio = Buffer.concat(audioChunks.map((chunk) => Buffer.from(chunk, 'base64')));
+
+    // Send combined audio as response
+    res.set('Content-Type', 'audio/mpeg');
+    res.send(combinedAudio);
+  } catch (error) {
+    console.error('Error synthesizing speech:', error);
+    res.status(500).json({ error: 'Error synthesizing speech.' });
+  }
+});
+
+// TTS code end here
