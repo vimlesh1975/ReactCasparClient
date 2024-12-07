@@ -125,7 +125,10 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
             var updatedcanvasList = [...canvasList]
             for (let file of files) {
                 const content = await readFile(file)
-                var aa = content.split('\r\n')
+                var aa = content.split('\r\n');
+                if (aa.length === 1) {
+                    aa = content.split('\n')
+                }
                 aa.splice(-1)
                 aa.forEach(element => {
                     var cc = JSON.parse(element)
@@ -215,11 +218,13 @@ const SavePannel = ({ importHtml, deleteAllObjects, playtoCasparcg }) => {
         setCurrentFileName(aa);
         currentFile = aa.name
         dispatch({ type: 'CHANGE_CURRENT_PAGE', payload: '' })
-        console.log(aa)
         if (aa) {
             const file = await aa.getFile();
             const content = await file.text();
-            var aa1 = content.split('\r\n')
+            var aa1 = content.split('\r\n');
+            if (aa1.length === 1) {
+                aa1 = content.split('\n')
+            }
             aa1.splice(-1)
             var updatedcanvasList = []
             aa1.forEach(element => {
