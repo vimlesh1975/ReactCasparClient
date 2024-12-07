@@ -292,6 +292,9 @@ const SavePannel = () => {
     }
     const processContent = (content) => {
         var aa1 = content.split('\r\n')
+        if (aa1.length === 1) {
+            aa1 = content.split('\n')
+        }
         aa1.splice(-1)
         var updatedcanvasList = []
         aa1.forEach(element => {
