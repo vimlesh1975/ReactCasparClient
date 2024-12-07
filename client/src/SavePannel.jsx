@@ -169,6 +169,9 @@ const SavePannel = () => {
             for (let file of files) {
                 const content = await readFile(file)
                 var aa = content.split('\r\n')
+                if (aa.length === 1) {
+                    aa = content.split('\n')
+                }
                 aa.splice(-1)
                 aa.forEach(element => {
                     var cc = JSON.parse(element)
