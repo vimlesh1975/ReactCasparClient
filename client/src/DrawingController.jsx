@@ -1739,11 +1739,9 @@ const DrawingController = () => {
 
   const exportAllPngFullPage = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
       canvas.discardActiveObject();
       canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-      let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();
 
       for (const val of canvasList) {
@@ -1761,13 +1759,12 @@ const DrawingController = () => {
         });
 
         const fileHandle = await directoryHandle.getFileHandle(
-          `${ss}_${iii}.png`,
+          `${val.pageName}.png`,
           { create: true }
         );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
-        iii++;
       }
     } catch (err) {
       console.error("Folder selection or file save failed:", err);
@@ -1776,11 +1773,9 @@ const DrawingController = () => {
 
   const exportAllPng = async (canvas) => {
     try {
-      const ss = generalFileName().replace(/[^a-z0-9_\\-]/gi, "_");
       canvas.discardActiveObject();
       canvas.renderAll();
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-      let iii = 1;
       const directoryHandle = await window.showDirectoryPicker();
 
       for (const val of canvasList) {
@@ -1810,13 +1805,12 @@ const DrawingController = () => {
         const data = await (await fetch(data1)).blob();
 
         const fileHandle = await directoryHandle.getFileHandle(
-          `${ss}_${iii}.png`,
+          `${val.pageName}.png`,
           { create: true }
         );
         const writable = await fileHandle.createWritable();
         await writable.write(data);
         await writable.close();
-        iii++;
       }
     } catch (err) {
       console.error("Folder selection or file save failed:", err);
