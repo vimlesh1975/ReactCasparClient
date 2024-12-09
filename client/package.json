@@ -11,6 +11,8 @@
     "@react-three/drei": "^9.80.2",
     "@react-three/fiber": "^8.13.6",
     "@reduxjs/toolkit": "^1.8.2",
+    "@remotion/cli": "^4.0.236",
+    "@remotion/zod-types": "4.0.236",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
@@ -62,7 +64,8 @@
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.4",
     "worker-loader": "^3.0.8",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.3"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -72,7 +75,7 @@
     "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "remotion": "remotion studio src/remotion/index.js",
+    "remotion": "remotion studio src/remotion/index.js --port=11000",
     "prod": "serve -s build"
   },
   "eslintConfig": {
