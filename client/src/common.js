@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "091224_1";
+export const buildDate = "091224_2";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -1293,52 +1293,244 @@ export const putatCenter = (canvas) => {
   canvas.requestRenderAll();
 };
 export const selectedatCenter = (canvas) => {
+  // Reset the canvas viewport to default transformation
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
   const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
   canvas.discardActiveObject();
+
+  // Center each selected object horizontally and vertically
   selectedItems.forEach((item) => {
-    // Center horizontally
-    item.set({
-      left: (canvas.width - item.width) / 2,
-    });
-    // Center vertically
-    item.set({
-      top: (canvas.height - item.height) / 2,
-    });
+    const boundingBox = item.getBoundingRect(true); // Get the transformed bounding box
+
+    // Calculate horizontal shift
+    const shiftX = (canvas.width - boundingBox.width) / 2 - boundingBox.left;
+
+    // Calculate vertical shift
+    const shiftY = (canvas.height - boundingBox.height) / 2 - boundingBox.top;
+
+    // Apply the shifts to the object's position
+    item.left += shiftX;
+    item.top += shiftY;
+
+    // Update object coordinates
+    item.setCoords();
   });
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
   canvas.requestRenderAll();
 };
+
 export const selectedatCenterH = (canvas) => {
+  // Reset the canvas viewport to default transformation
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
   const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
   canvas.discardActiveObject();
+
+  // Center each selected object horizontally
   selectedItems.forEach((item) => {
-    // Center horizontally
-    item.set({
-      left: (canvas.width - item.width) / 2,
-    });
+    const boundingBox = item.getBoundingRect(true); // Get the transformed bounding box
+    const shiftX = (canvas.width - boundingBox.width) / 2 - boundingBox.left; // Center horizontally
+
+    // Apply the horizontal shift to the object's position
+    item.left += shiftX;
+
+    // Update object coordinates
+    item.setCoords();
   });
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
   canvas.requestRenderAll();
 };
 
 export const selectedatCenterV = (canvas) => {
+  // Reset the canvas viewport to default transformation
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
   const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
   canvas.discardActiveObject();
+
+  // Center each selected object vertically
   selectedItems.forEach((item) => {
-    // Center vertically
-    item.set({
-      top: (canvas.height - item.height) / 2,
-    });
+    const boundingBox = item.getBoundingRect(true); // Get the transformed bounding box
+    const shiftY = (canvas.height - boundingBox.height) / 2 - boundingBox.top; // Center vertically
+
+    // Apply the vertical shift to the object's position
+    item.top += shiftY;
+
+    // Update object coordinates
+    item.setCoords();
   });
-  var sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
-  canvas.setActiveObject(sel);
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
   canvas.requestRenderAll();
 };
+
+export const selectedatlet0 = (canvas) => {
+  // Reset the canvas viewport to default transformation
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
+  const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
+  canvas.discardActiveObject();
+
+  // Align each selected object's bounding box to the left edge
+  selectedItems.forEach((item) => {
+    const boundingBox = item.getBoundingRect(true); // Get the bounding box in the canvas coordinates
+
+    // Calculate the shift needed to align the bounding box's left edge to the canvas's left edge
+    const shiftX = -boundingBox.left;
+
+    // Apply the shift to the object's position
+    item.left += shiftX;
+
+    // Update object coordinates
+    item.setCoords();
+  });
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
+  canvas.requestRenderAll();
+};
+
+export const selectedatright0 = (canvas) => {
+  // Reset the canvas viewport to default transformation
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
+  const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
+  canvas.discardActiveObject();
+
+  // Align each selected object's bounding box to the right edge
+  selectedItems.forEach((item) => {
+    const boundingBox = item.getBoundingRect(true); // Get the bounding box in the canvas coordinates
+
+    // Calculate the shift needed to align the bounding box's right edge to the canvas's right edge
+    const shiftX = canvas.width - boundingBox.left - boundingBox.width;
+
+    // Apply the shift to the object's position
+    item.left += shiftX;
+
+    // Update object coordinates
+    item.setCoords();
+  });
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
+  canvas.requestRenderAll();
+};
+
+export const selectedattop0 = (canvas) => {
+  // Reset the canvas viewport to default transformation
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
+  const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
+  canvas.discardActiveObject();
+
+  // Align each selected object's bounding box to the top edge
+  selectedItems.forEach((item) => {
+    const boundingBox = item.getBoundingRect(true); // Get the bounding box in the canvas coordinates
+
+    // Calculate the shift needed to align the bounding box's top edge to the canvas's top edge
+    const shiftY = -boundingBox.top;
+
+    // Apply the shift to the object's position
+    item.top += shiftY;
+
+    // Update object coordinates
+    item.setCoords();
+  });
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
+  canvas.requestRenderAll();
+};
+export const selectedatbottom0 = (canvas) => {
+  // Reset the canvas viewport to default transformation
+  canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+  // Get all active objects on the canvas
+  const selectedItems = canvas.getActiveObjects();
+
+  // Clear the current active selection
+  canvas.discardActiveObject();
+
+  // Align each selected object's bounding box to the bottom edge
+  selectedItems.forEach((item) => {
+    const boundingBox = item.getBoundingRect(true); // Get the bounding box in the canvas coordinates
+
+    // Calculate the shift needed to align the bounding box's bottom edge to the canvas's bottom edge
+    const shiftY = canvas.height - boundingBox.top - boundingBox.height;
+
+    // Apply the shift to the object's position
+    item.top += shiftY;
+
+    // Update object coordinates
+    item.setCoords();
+  });
+
+  // Create a new active selection with the updated objects
+  if (selectedItems.length > 0) {
+    const sel = new fabric.ActiveSelection(selectedItems, { canvas: canvas });
+    canvas.setActiveObject(sel);
+  }
+
+  // Re-render the canvas to reflect changes
+  canvas.requestRenderAll();
+};
+
+
+
 export const alignAllLeft = (canvas) => {
   const arr = [];
   canvas.getActiveObjects().forEach((item) => {

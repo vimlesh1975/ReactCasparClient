@@ -76,7 +76,7 @@ import {
   generalFileName,
   address1,
   setclipPathWhileImporting,
-  exportEachPagetoHTML
+  exportEachPagetoHTML, selectedatlet0, selectedatright0, selectedattop0, selectedatbottom0
 } from "./common";
 import { useSelector, useDispatch } from "react-redux";
 // import "fabric-history";
@@ -2627,29 +2627,36 @@ const DrawingController = () => {
             <button onClick={() => selectedatCenter(canvas)}>Center</button>
             <button onClick={() => selectedatCenterH(canvas)}>H Center</button>
             <button onClick={() => selectedatCenterV(canvas)}>V Center</button>
+            <button onClick={() => selectedatlet0(canvas)}>Left 0</button>
+            <button onClick={() => selectedatright0(canvas)}>Right 0</button>
+            <button onClick={() => selectedattop0(canvas)}>Top 0</button>
+            <button onClick={() => selectedatbottom0(canvas)}>Bottom 0</button>
+
+
+
           </div>
           <div className="drawingToolsRow">
-            <button title="Align Left" onClick={() => alignAllLeft(canvas)}>
+            <button title="Align Left with each other" onClick={() => alignAllLeft(canvas)}>
               <FaAlignLeft />
             </button>
-            <button title="Align Right" onClick={() => alignAllRight(canvas)}>
+            <button title="Align Right with each other" onClick={() => alignAllRight(canvas)}>
               <FaAlignRight />
             </button>
-            <button title="Align Top" onClick={() => alignAllTop(canvas)}>
+            <button title="Align Top with each other" onClick={() => alignAllTop(canvas)}>
               <AiOutlineVerticalAlignTop /> <AiOutlineVerticalAlignTop />{" "}
             </button>
-            <button title="Align Bottom" onClick={() => alignAllButtom(canvas)}>
+            <button title="Align Bottom with each other" onClick={() => alignAllButtom(canvas)}>
               <AiOutlineVerticalAlignBottom />
               <AiOutlineVerticalAlignBottom />
             </button>
             <button
-              title=" Make Vertical Equidistant"
+              title=" Make Vertical Equidistant with each other"
               onClick={() => makeVerticalEquidistant(canvas)}
             >
               =
             </button>
             <button
-              title=" Make Horizontal Equidistant"
+              title=" Make Horizontal Equidistant with each other"
               onClick={() => makeHorizontalEquidistant(canvas)}
             >
               ||
