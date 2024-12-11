@@ -13,12 +13,12 @@ import pg10 from './png/pg10.png';
 import aa from './aa.mp3';
 import background from './png/background.png'; // Static background image
 
-import { z } from "zod";
+// import { z } from "zod";
 
-export const myCompSchema = z.object({
-  durationPerImage: z.number(),
-  transitionDuration: z.number(),
-});
+// export const myCompSchema = z.object({
+//   durationPerImage: z.number(),
+//   transitionDuration: z.number(),
+// });
 
 const images = [pg1, pg2, pg3, pg4, pg5, pg6, pg7, pg8, pg9, pg10];
 
@@ -47,7 +47,7 @@ export const MyComposition = ({ durationPerImage, transitionDuration }) => {
         return (
           <Sequence
             key={index}
-            from={index * durationPerImage}
+            from={25 + (index * durationPerImage)}
             durationInFrames={durationPerImage}
           >
             <SlidingImage

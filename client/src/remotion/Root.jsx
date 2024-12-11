@@ -1,20 +1,17 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { MyComposition, myCompSchema } from './MyComposition';
-// const durationPerImage = 100;
-// const transitionDuration = 5;
-
+import { MyComposition } from './MyComposition';
+const durationPerImage = 100;
+const transitionDuration = 10;
 export const RemotionRoot = () => {
-  const durationPerImage = 100;
-  const transitionDuration = 5;
+
   return (
     <>
       <Composition
-        id="video"
+        id="Top10"
         component={MyComposition}
-        durationInFrames={durationPerImage * 10}
+        durationInFrames={25 + durationPerImage * 10 + 25}
         fps={25}
-        schema={myCompSchema}
         width={1920}
         height={1080}
         defaultProps={{ durationPerImage, transitionDuration }}
