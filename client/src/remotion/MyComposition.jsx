@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Audio, Sequence, AbsoluteFill, Img, useCurrentFrame, interpolate } from 'remotion';
 import pg1 from './png/pg1.png';
 import pg2 from './png/pg2.png';
@@ -12,6 +12,13 @@ import pg9 from './png/pg9.png';
 import pg10 from './png/pg10.png';
 import aa from './aa.mp3';
 import background from './png/background.png'; // Static background image
+import background2 from './png/BG2.gif'; // Static background image
+
+import { Gif } from "@remotion/gif";
+
+
+import { continueRender, delayRender } from "remotion";
+
 
 // import { z } from "zod";
 
@@ -23,6 +30,16 @@ import background from './png/background.png'; // Static background image
 const images = [pg1, pg2, pg3, pg4, pg5, pg6, pg7, pg8, pg9, pg10];
 
 export const MyComposition = ({ durationPerImage, transitionDuration }) => {
+
+  const [handle] = useState(() => delayRender());
+  const ref = useRef(null);
+
+  useEffect(() => {
+    continueRender(handle);
+  }, [])
+
+
+
   // const durationPerImage = 100; // Frames per image (4 seconds at 25 FPS)
   // const transitionDuration = 5; // Frames for the slide animation
 
@@ -37,6 +54,15 @@ export const MyComposition = ({ durationPerImage, transitionDuration }) => {
           height: '100%',
           zIndex: -1, // Place it behind all other elements
         }}
+      />
+
+      <Gif
+        ref={ref}
+        src={background2}
+        width={1920}
+        height={1080}
+        fit="cover"
+        playbackRate={1}
       />
 
       {/* Render the audio */}
