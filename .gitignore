@@ -3,3 +3,5 @@ build
 .env
 out
 client\src\remotion\png\TOP10.mp4
+
+*.mp4

@@ -134,7 +134,7 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
     return (
         <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
             <div style={{ fontSize: 70, position: 'absolute', top: 220, textAlign: 'center', width: 1920 }}>{slug.SlugName}</div>
-            <div style={{ fontSize: 120, marginTop: 350, marginLeft: 160, maxWidth: 1600, maxHeight: 480, overflow: 'hidden' }}>{slug.Script}</div>
+            <div style={{ fontSize: 120, marginTop: 350, marginLeft: 160, maxWidth: 1600, maxHeight: 476, overflow: 'hidden' }}>{slug.Script}</div>
         </div>
     );
 };
