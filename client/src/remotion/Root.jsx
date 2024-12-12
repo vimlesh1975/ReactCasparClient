@@ -2,6 +2,9 @@ import React from 'react';
 import { Composition } from 'remotion';
 import { MyComposition } from './MyComposition';
 import NrcsScripts from './NrcsScripts';
+import Top10ddnews from './Top10ddnews';
+
+
 
 
 const durationPerImage = 100;
@@ -28,9 +31,24 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
         defaultProps={{ durationPerImage, transitionDuration }}
-
       />
+      {/* {
+      comming 60
+      stating 337
+      stay 337-60=277
+      gap 60
 
+      
+      } */}
+      <Composition
+        id="Top10ddnews"
+        component={Top10ddnews}
+        durationInFrames={3922}
+        fps={25}
+        width={1920}
+        height={1080}
+        defaultProps={{ durationPerImage: 277, transitionDuration }}
+      />
     </>
   );
 };
