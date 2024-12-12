@@ -6,6 +6,8 @@ import video from './png/TOP10.mp4'; // Static background image
 import audio2 from './png/videoplayback.m4a'; // Static background image
 
 import { continueRender, delayRender } from "remotion";
+import ScaledText from './ScaledText';
+import ScaledText2 from './ScaledText2';
 
 const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
     const [slugs, setSlugs] = useState([]);
@@ -72,11 +74,18 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
 
         return (
             <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
-                <div style={{ fontSize: 70, position: 'absolute', top: 200, left: 250, textAlign: 'left', width: 1920 }}>{slug[index]?.SlugName}</div>
-                <div style={{ fontSize: 70, position: 'absolute', top: 340, left: 250, textAlign: 'left', width: 1920 }}>{slug[index + 1]?.SlugName}</div>
-                <div style={{ fontSize: 70, position: 'absolute', top: 480, left: 250, textAlign: 'left', width: 1920 }}>{slug[index + 2]?.SlugName}</div>
-                <div style={{ fontSize: 70, position: 'absolute', top: 620, left: 250, textAlign: 'left', width: 1920 }}>{slug[index + 3]?.SlugName}</div>
-                <div style={{ fontSize: 70, position: 'absolute', top: 760, left: 250, textAlign: 'left', width: 1920 }}>{slug[index + 4]?.SlugName}</div>
+                {[...Array(5)].map((val, i) => {
+                    return (
+                        <div style={{ fontSize: 70, position: 'absolute', top: (i * 140 + 200), left: 250, }}>
+                            <ScaledText2
+                                text={slug[index + i] && slug[index + i]?.SlugName}
+                                // text={slug[index + i] && slug[index + i]?.SlugName + slug[index + i]?.SlugName + slug[index + i]?.SlugName }
+                                containerWidth={1400}
+                                alignment="left"
+                            />
+                        </div>
+                    )
+                })}
             </div >
         );
     };
@@ -90,10 +99,8 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
             </AbsoluteFill>
 
             {/* Render the audio */}
-            <Audio src={audio2} volume={0.1} />
-            {/* <Sequence from={3624}>
-                <Audio src={aa} volume={0.1} />
-            </Sequence> */}
+            <Audio src={audio2} volume={1} />
+    
             {/* Sequence images with slide effect */}
             {slugs.map((slug, index) => {
                 return (
@@ -133,7 +140,13 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
 
     return (
         <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
-            <div style={{ fontSize: 70, position: 'absolute', top: 220, textAlign: 'center', width: 1920 }}>{slug.SlugName}</div>
+            <div style={{ fontSize: 70, position: 'absolute', top: 220, textAlign: 'center', left: 230, maxWidth: 1500 }}>
+                <ScaledText
+                    // text={slug.SlugName + slug.SlugName + slug.SlugName}
+                    text={slug.SlugName }
+                    containerWidth={1500}
+                />
+            </div>
             <div style={{ fontSize: 120, marginTop: 350, marginLeft: 160, maxWidth: 1600, maxHeight: 476, overflow: 'hidden' }}>{slug.Script}</div>
         </div>
     );
