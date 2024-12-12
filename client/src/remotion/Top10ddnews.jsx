@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { addressmysql } from '../common'
 import { Audio, Sequence, AbsoluteFill, Img, useCurrentFrame, interpolate, Video } from 'remotion';
-import aa from './aa.mp3';
 import video from './png/TOP10.mp4'; // Static background image
 import audio2 from './png/videoplayback.m4a'; // Static background image
 
 import { continueRender, delayRender } from "remotion";
-import ScaledText from './ScaledText';
 import ScaledText2 from './ScaledText2';
 
 const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
@@ -140,11 +138,13 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
 
     return (
         <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
-            <div style={{ fontSize: 70, position: 'absolute', top: 220, textAlign: 'center', left: 230, maxWidth: 1500 }}>
-                <ScaledText
+            <div style={{ fontSize: 85, position: 'absolute', top: 217, textAlign: 'center', left: 230, maxWidth: 1500 }}>
+                <ScaledText2
                     // text={slug.SlugName + slug.SlugName + slug.SlugName}
                     text={slug.SlugName }
                     containerWidth={1500}
+                    alignment="center"
+
                 />
             </div>
             <div style={{ fontSize: 120, marginTop: 350, marginLeft: 160, maxWidth: 1600, maxHeight: 476, overflow: 'hidden' }}>{slug.Script}</div>
