@@ -15,7 +15,7 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorder?param1=${'C1_2108_1900'}`
+                addressmysql() + `/show_runorder?param1=${'EXPRESS 100'}`
             );
             const data = await res.json();
             setSlugs(data.slice(0, 10)); // Take only the first 10 elements
@@ -67,7 +67,7 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
         const translateX = interpolate(
             frame,
             [0, transitionDuration, durationPerImage - transitionDuration, durationPerImage],
-            [1920, 0, 0, -1920], // Slide in from right, stay, then slide out to left
+            [1920, 0, 0, 1920], // Slide in from right, stay, then slide out to left
             { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
         );
 
@@ -133,13 +133,13 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
     const translateX = interpolate(
         frame,
         [0, transitionDuration, durationPerImage - transitionDuration, durationPerImage],
-        [1920, 0, 0, -1920], // Slide in from right, stay, then slide out to left
+        [1920, 0, 0, 1920], // Slide in from right, stay, then slide out to left
         { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
     );
 
     return (
         <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
-            <div style={{ fontSize: 85, position: 'absolute', top: 217, left: 230 }}>
+            <div style={{ fontSize: 85, position: 'absolute', top: 214, left: 230 }}>
                 <ScaledText2
                     // text={slug.SlugName + slug.SlugName + slug.SlugName}
                     text={slug.SlugName}
@@ -152,6 +152,8 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
 
             <div style={{  position: 'absolute', top: 350, left: 130,  }}>
             <ScaledMultilineText
+                    // text={slug.Script + slug.Script }
+                    // text={'पोलंडमध्ये पंतप्रधानांनी मॉन्टे कॅसिनो इथल्या युद्धस्मारकाला देखील दिली भेट'} 
                     text={slug.Script }
                     containerWidth={1650}
                     containerHeight={480}
