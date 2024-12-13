@@ -6,6 +6,7 @@ import audio2 from './png/videoplayback.m4a'; // Static background image
 
 import { continueRender, delayRender } from "remotion";
 import ScaledText2 from './ScaledText2';
+import ScaledMultilineText from './ScaledMultilineText';
 
 const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
     const [slugs, setSlugs] = useState([]);
@@ -98,7 +99,7 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
 
             {/* Render the audio */}
             <Audio src={audio2} volume={1} />
-    
+
             {/* Sequence images with slide effect */}
             {slugs.map((slug, index) => {
                 return (
@@ -138,16 +139,25 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
 
     return (
         <div style={{ transform: `translateX(${translateX}px)`, fontWeight: 'bold', }}>
-            <div style={{ fontSize: 85, position: 'absolute', top: 217, textAlign: 'center', left: 230, maxWidth: 1500 }}>
+            <div style={{ fontSize: 85, position: 'absolute', top: 217, left: 230 }}>
                 <ScaledText2
                     // text={slug.SlugName + slug.SlugName + slug.SlugName}
-                    text={slug.SlugName }
+                    text={slug.SlugName}
                     containerWidth={1500}
                     alignment="center"
-
                 />
             </div>
-            <div style={{ fontSize: 120, marginTop: 350, marginLeft: 160, maxWidth: 1600, maxHeight: 476, overflow: 'hidden' }}>{slug.Script}</div>
+
+            {/* <div style={{ fontSize: 120, position: 'absolute', top: 350, left: 110, maxWidth: 1700, width: 1800, maxHeight: 476, overflow: 'hidden', textAlign: 'center' }}>{slug.Script}</div> */}
+
+            <div style={{  position: 'absolute', top: 350, left: 130,  }}>
+            <ScaledMultilineText
+                    text={slug.Script }
+                    containerWidth={1650}
+                    containerHeight={480}
+                    alignment="center"
+                />
+            </div>
         </div>
     );
 };
