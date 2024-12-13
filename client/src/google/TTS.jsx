@@ -1,6 +1,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { addressgoogleapi } from '../common'
+import {languages} from './list-voices'
+const languagesLoading=false;
 
 export default function TTS({ content }) {
     const [language, setLanguage] = useState('mr-IN');
@@ -9,27 +11,27 @@ export default function TTS({ content }) {
     const [loading, setLoading] = useState(false);
     const [autoPlay, setAutoPlay] = useState(true);
     const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
-    const [languages, setLanguages] = useState([]);
-    const [languagesLoading, setLanguagesLoading] = useState(true);
+    // const [languages, setLanguages] = useState(list_voices);
+    // const [languagesLoading, setLanguagesLoading] = useState(false);
     const audioRef = useRef(null);
 
-    useEffect(() => {
-        const fetchLanguages = async () => {
-            try {
-                const response = await fetch(addressgoogleapi() + '/list-voices'); // Update for Express.js
-                if (!response.ok) {
-                    throw new Error('Failed to fetch languages.');
-                }
-                const data = await response.json();
-                setLanguages(data.languages);
-            } catch (error) {
-                console.error('Error fetching languages:', error);
-            } finally {
-                setLanguagesLoading(false);
-            }
-        };
-        fetchLanguages();
-    }, []);
+    // useEffect(() => {
+    //     const fetchLanguages = async () => {
+    //         try {
+    //             const response = await fetch(addressgoogleapi() + '/list-voices'); // Update for Express.js
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to fetch languages.');
+    //             }
+    //             const data = await response.json();
+    //             setLanguages(data.languages);
+    //         } catch (error) {
+    //             console.error('Error fetching languages:', error);
+    //         } finally {
+    //             setLanguagesLoading(false);
+    //         }
+    //     };
+    //     fetchLanguages();
+    // }, []);
 
     const handleSpeak = async () => {
         if (!content.trim()) {
