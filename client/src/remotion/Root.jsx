@@ -3,8 +3,8 @@ import { Composition } from 'remotion';
 import { MyComposition } from './MyComposition';
 import NrcsScripts from './NrcsScripts';
 import Top10ddnews from './Top10ddnews';
-
-
+import MaskedRevealText from './MaskedRevealText';
+import MaskedRevealText2 from './MaskedRevealText2';
 
 
 const durationPerImage = 100;
@@ -48,6 +48,24 @@ export const RemotionRoot = () => {
         width={1920}
         height={1080}
         defaultProps={{ durationPerImage: 277, transitionDuration }}
+      />
+     <Composition
+        id="MaskedRevealText"
+        component={MaskedRevealText}
+        durationInFrames={100}
+        fps={25}
+        width={1920}
+        height={1080}
+        defaultProps={{ durationPerImage: 277, transitionDuration , text:'भारत अतिशय मोठी झेप घेणार'}}
+      />
+  <Composition
+        id="MaskedRevealText2"
+        component={MaskedRevealText2}
+        durationInFrames={100}
+        fps={25}
+        width={1920}
+        height={1080}
+        defaultProps={{ durationPerImage: 277, transitionDuration , text:'भारत अतिशय मोठी झेप घेणार भारत अतिशय मोठी झेप घेणार भारत अतिशय मोठी झेप घेणार भारत अतिशय मोठी झेप घेणार'}}
       />
     </>
   );
