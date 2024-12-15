@@ -35,8 +35,11 @@ const MaskedRevealText2 = ({
           width: `${textWidth}px`,
           fontSize: fontSize,
           color: textColor,
-          overflow: "hidden", // Ensures that the text is revealed within bounds
-          clipPath: `inset(0 ${clipPathValue}% 80% 0)`, // Clip the right side of the text
+          overflow: "hidden", 
+          clipPath: `inset(0 ${clipPathValue}% 75% 0)`, // 1st line
+          // clipPath: `inset(25% ${clipPathValue}% 50% 0%)`, // 2nd line
+          // clipPath: `inset(50% ${clipPathValue}% 25% 0%)`, // 3rd line
+          // clipPath: `inset(75% ${clipPathValue}% 0% 0%)`, // 4th line
         }}
       >
         {text}
