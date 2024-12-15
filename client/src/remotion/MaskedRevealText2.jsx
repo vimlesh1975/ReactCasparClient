@@ -3,46 +3,62 @@ import { useCurrentFrame, interpolate, AbsoluteFill } from "remotion";
 
 const MaskedRevealText2 = ({
   text,
-  duration = 10,   // Duration in frames
+  duration = 40,    // Total duration in frames
   fontSize = 120,    // Font size of the text
-  textWidth = 1800,  // The width of the text container
+  textWidth = 1800,  // Width of the text container
   textColor = "black",
+  lines = 4,         // Number of lines to reveal
 }) => {
   const frame = useCurrentFrame();
-
-  // Calculate the clip-path value to reveal the text gradually
-  const clipPathValue = interpolate(
-    frame,
-    [0, duration], // From 0 to duration frames
-    [100, 0],      // Start with the text fully clipped (100%) and reveal it to 0% (fully visible)
-    {
-      extrapolateRight: "clamp",
-      extrapolateLeft: "clamp",
-    }
-  );
 
   return (
     <AbsoluteFill
       style={{
         justifyContent: "center",
         alignItems: "center",
-        // backgroundColor: backgroundColor,
       }}
     >
       <div
         style={{
-          position: "relative",
+          // position: "relative",
           width: `${textWidth}px`,
           fontSize: fontSize,
           color: textColor,
-          overflow: "hidden", 
-          clipPath: `inset(0 ${clipPathValue}% 75% 0)`, // 1st line
-          // clipPath: `inset(25% ${clipPathValue}% 50% 0%)`, // 2nd line
-          // clipPath: `inset(50% ${clipPathValue}% 25% 0%)`, // 3rd line
-          // clipPath: `inset(75% ${clipPathValue}% 0% 0%)`, // 4th line
+          overflow: "hidden",
         }}
       >
-        {text}
+        {/* Loop through the lines and dynamically calculate `clipPath` for each line */}
+        {Array.from({ length: lines }).map((_, index) => {
+          const clipPathValue = interpolate(
+            frame,
+            [
+              (index * duration) / lines,         // Start time for this line
+              ((index + 1) * duration) / lines, // End time for this line
+            ],
+            [100, 0], // Reveal from 100% hidden to 0% visible
+            {
+              extrapolateRight: "clamp",
+              extrapolateLeft: "clamp",
+            }
+          );
+
+          return (
+            <div
+              key={index}
+              style={{
+                position: "absolute",
+                // top: `${index * 25}%`, // Vertical position for each line
+                // left: 0,
+                top:0,
+                width: "100%",
+                clipPath: `inset(${index * 25}% ${clipPathValue}% ${(lines - index - 1) * 25}% 0)`,
+                // lineHeight: `${fontSize * 1.2}px`,
+              }}
+            >
+              {text}
+            </div>
+          );
+        })}
       </div>
     </AbsoluteFill>
   );
