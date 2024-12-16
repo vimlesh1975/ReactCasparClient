@@ -30,8 +30,8 @@ const MaskedRevealText2 = ({
       >
         {/* Loop through the lines and dynamically calculate `clipPath` for each line */}
         {Array.from({ length: lines }).map((_, index) => {
-          const totalholdframe = 4 * holdFrames + ((holdFrames * (lines - index)) / 2 - 70);
-          const totalDuration = (((index + 1) * duration) / lines) + totalholdframe + (((index + 1) * duration) / lines);
+          const totalholdframe = (2 * holdFrames) + ((holdFrames * (lines - index)) / 3.5);
+          const totalDuration = (((index + 1) * duration) / lines) + totalholdframe + 8;
 
           const clipPathValue = interpolate(
             frame,
