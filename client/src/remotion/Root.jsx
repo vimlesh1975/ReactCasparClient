@@ -61,7 +61,7 @@ export const RemotionRoot = () => {
   <Composition
         id="MaskedRevealText2"
         component={MaskedRevealText2}
-        durationInFrames={100}
+        durationInFrames={300}
         fps={25}
         width={1920}
         height={1080}
