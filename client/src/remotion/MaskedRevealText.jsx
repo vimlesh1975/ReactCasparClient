@@ -44,7 +44,7 @@ const MaskedRevealText = ({
           fontSize: fontSize,
           color: textColor,
           overflow: "hidden", // Ensures the text is revealed within bounds
-          clipPath: `inset(0 ${clipPathValue}% 0 0)`, // Dynamic reveal effect
+          clipPath: (duration + holdFrames)>=frame?`inset(0 ${clipPathValue}% 0 0)`:`inset(0 0 0 ${clipPathValue}%)`, // Reveal and reverse from left to right
         }}
       >
         {text}
