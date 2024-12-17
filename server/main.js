@@ -531,13 +531,16 @@ app.post("/fetch-proxy", async (req, res) => {
 const mysql = require("mysql2/promise");
 var pool;
 
+var newdatabase = true;
+//  newdatabase = false;
+const dbanme = newdatabase ? 'nrcsnew' : 'c1news';
+
 try {
   pool = mysql.createPool({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "itmaint",
     password: process.env.DB_PASSWORD || "itddkchn",
-    database: process.env.DB_DATABASE || "c1news",
-    // database: process.env.DB_DATABASE || "urdu",
+    database: process.env.DB_DATABASE || dbanme,
   });
   console.log("Connected to MySQL database");
 } catch (error) {
@@ -554,9 +557,10 @@ async function safeQuery(query, params = []) {
 }
 
 app.get("/getNewsID", async (req, res) => {
+  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' order by bulletintime asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
   try {
     const [rows] = await safeQuery(
-      `SELECT distinct title FROM newsid where title != '' order by title asc`
+      query
     );
     res.send(rows);
   } catch (error) {
@@ -566,14 +570,21 @@ app.get("/getNewsID", async (req, res) => {
 });
 
 app.get("/show_runorder", async (req, res) => {
-  const param1 = req.query.param1;
+  // const param1 = req.query.param1;
+  const param1 = newdatabase ? '0700 Hrs' : req.query.param1;
+  // const param2 = req.query.param2;
+  const param2 = '2024-12-05';
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
     return;
   }
+  const query = newdatabase ? `SELECT *, slno as RunOrder, createdtime as CreatedTime,approved as Approval , dropstory as DropStory,  from script 
+  WHERE bulletinname = ? AND bulletindate = ? ORDER BY RunOrder` : `CALL show_runorder(?)`
   try {
-    const [rows] = await safeQuery(`CALL show_runorder(?)`, [param1]);
-    res.send(rows[0]);
+    const [rows] = await safeQuery(query, [param1, param2]);
+    console.log(newdatabase ? rows : rows[0]);
+
+    res.send(newdatabase ? rows : rows[0]);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching run order");
