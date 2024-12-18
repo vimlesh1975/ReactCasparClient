@@ -626,7 +626,7 @@ app.post("/updateContent", async (req, res) => {
 });
 app.get("/getGraphics", async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const query = newdatabase ? `SELECT *,slno as GraphicsOrder  FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
+  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate   FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
   try {
     const [rows] = await safeQuery(
       query,
@@ -668,10 +668,10 @@ app.post("/insertGraphics", async (req, res) => {
     ScriptID,
     GraphicsTemplate,
   ];
-
+const query =newdatabase ?  `INSERT INTO graphics (GraphicsID, gfxtemplatetext, slno, ScriptID, gfxtemplatename) VALUES (?, ?, ?, ?, ?)`: `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`;
   try {
     await safeQuery(
-      `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`,
+      query,
       values
     );
     res.send("");
