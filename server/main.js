@@ -641,9 +641,10 @@ app.get("/getGraphics", async (req, res) => {
 
 app.post("/setGraphics", async (req, res) => {
   const { content, graphicsID } = req.body;
+  const query=newdatabase ? `UPDATE graphics SET gfxtemplatetext = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`;
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`,
+      query,
       [content, graphicsID]
     );
     res.send("");
@@ -702,9 +703,10 @@ app.post("/updateCGEntry", async (req, res) => {
 
 app.post("/updateGraphicsOrder", async (req, res) => {
   const { GraphicsID, GraphicsOrder } = req.body;
+  const query=newdatabase?`UPDATE graphics SET slno = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`;
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`,
+      query,
       [GraphicsOrder, GraphicsID]
     );
     res.send("");
