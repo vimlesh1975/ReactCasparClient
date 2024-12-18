@@ -528,7 +528,6 @@ app.post("/fetch-proxy", async (req, res) => {
 // rss feed code  ends
 
 //NRCS code starts-----------
-// rss feed code  ends
 const mysql = require("mysql2/promise");
 var pool;
 
@@ -571,10 +570,12 @@ app.get("/getNewsID", async (req, res) => {
 });
 
 app.get("/show_runorder", async (req, res) => {
-  // const param1 = req.query.param1;
-  const param1 = newdatabase ? '0700 Hrs' : req.query.param1;
-  // const param2 = req.query.param2;
-  const param2 = '2024-12-05';
+  // const param1 = newdatabase ? '0700 Hrs' : req.query.param1;
+  // const param2 = newdatabase ? '2024-12-05': req.query.param2;
+
+  const param1 =  req.query.param1;
+  const param2 = req.query.param2;
+
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
     return;
