@@ -407,7 +407,6 @@ const Graphics = () => {
   };
 
   const updateCGEntry = async (deleteCG = false) => {
-    if (newdatabase) {
       var cgValue = '';
       if (deleteCG) {
         if (slugs[currentSlug].MediaInsert === 'Visuals') {
@@ -461,64 +460,6 @@ const Graphics = () => {
       } catch (error) {
         // console.error('Error saving content:', error);
       }
-
-    }
-    else {
-      var cgValue = '';
-      if (deleteCG) {
-        if (slugs[currentSlug].MediaInsert === 'Visuals') {
-          return;
-        }
-        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-          return;
-        }
-        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-          cgValue = 'Visuals';
-        }
-        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-          cgValue = null;
-        }
-        else {
-          return;
-        }
-      }
-      else {
-        if (slugs[currentSlug].MediaInsert === 'Visuals') {
-          cgValue = 'Visuals/CG';
-        }
-        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-          cgValue = 'CG';
-        }
-        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-          return;
-        }
-        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-          return
-        }
-        else {
-          return;
-        }
-      }
-      const updatedSlugs = [...slugs];
-      updatedSlugs[currentSlug].MediaInsert = cgValue;
-      setSlugs(updatedSlugs);
-      try {
-        await fetch(addressmysql() + "/updateCGEntry", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cgValue,
-            ScriptID,
-            NewsId: selectedRunOrderTitle
-          }),
-        });
-      } catch (error) {
-        // console.error('Error saving content:', error);
-      }
-    }
-
   }
 
   const deleteGraphic = async (GraphicsID) => {
@@ -808,7 +749,7 @@ const Graphics = () => {
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
-          <div style={{ minWidth: 450, maxWidth: 450, marginTop: newdatabase ? 30 : 45 }}>
+          <div style={{ minWidth: 450, maxWidth: 450, marginTop:45 }}>
             <div>
               {newdatabase &&
                 <div>
@@ -1207,7 +1148,7 @@ const Graphics = () => {
     </div>
     {isLoading && <Spinner />}
     {flashMessage && <FlashMessage message={flashMessage} />}
-    {newdatabase}
+    {/* {newdatabase} */}
   </div>);
 };
 
