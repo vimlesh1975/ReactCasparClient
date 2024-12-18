@@ -628,7 +628,7 @@ app.post("/updateContent", async (req, res) => {
 });
 app.get("/getGraphics", async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate   FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
+  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate, graphicsid as MediaInsert   FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
   try {
     const [rows] = await safeQuery(
       query,
@@ -686,12 +686,14 @@ const query =newdatabase ?  `INSERT INTO graphics (GraphicsID, gfxtemplatetext, 
 
 app.post("/updateCGEntry", async (req, res) => {
   const { cgValue, ScriptID, NewsId } = req.body;
+  console.log(cgValue);
+
   const values = [
     cgValue,
     ScriptID,
     NewsId,
   ];
-  const query=newdatabase? `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `: `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
+  const query=newdatabase? `UPDATE script SET graphicsid = ? WHERE ScriptID=?`: `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
   try {
     await safeQuery(
      query,
