@@ -173,6 +173,12 @@ const App = () => {
     socket.on("Fromccgsocket", (data) => {
       setmediaPath(data);
     });
+
+    
+    socket.on("newdatabase", (data) => {
+      dispatch({ type: "NEWDATABASE", payload:data });
+    });
+
     socket.on("connectionStatus", (data) => {
       if (data === "true") {
         connectbutton.current.style.backgroundColor = "green";
@@ -203,7 +209,7 @@ const App = () => {
       socket.close();
     };
 
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (window.location.origin !== "https://vimlesh1975.github.io") {

@@ -395,6 +395,7 @@ global.app = app;
 io.on("connection", (socket) => {
   console.log("New Web Socket client connected");
   socket.emit("connectionStatus", aa.connected.toString());
+  socket.emit("newdatabase", newdatabase.toString());
   socket.on("disconnect", () => {
     console.log("client disconnected");
   });
@@ -689,9 +690,10 @@ app.post("/updateCGEntry", async (req, res) => {
     ScriptID,
     NewsId,
   ];
+  const query=newdatabase? `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `: `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
   try {
     await safeQuery(
-      `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `,
+     query,
       values
     );
     res.send("");
@@ -717,13 +719,14 @@ app.post("/updateGraphicsOrder", async (req, res) => {
 });
 
 app.post("/updateGraphicTemplate", async (req, res) => {
+  const query=newdatabase? `UPDATE graphics SET gfxtemplatename = ? where GraphicsID=?`: `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`;
   const { GraphicsID, GraphicsTemplate } = req.body;
   if (!GraphicsID) {
     return res.status(400).send("GraphicsID is required");
   }
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`,
+     query,
       [GraphicsTemplate, GraphicsID]
     );
     res.send("Graphic updated successfully");

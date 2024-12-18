@@ -30,6 +30,7 @@ import FlashMessage from "../FlashMessage";
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
+  const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
   // const textNodes = useSelector(state => state.textNodesReducer.textNodes);
 
   const [pageName, setPageName] = useState("new Graphics");
@@ -1109,7 +1110,7 @@ const Graphics = () => {
     </div>
     {isLoading && <Spinner />}
     {flashMessage && <FlashMessage message={flashMessage} />}
-
+    {newdatabase}
   </div>);
 };
 
