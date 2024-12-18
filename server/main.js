@@ -578,24 +578,58 @@ app.get("/show_runorder", async (req, res) => {
     res.status(500).send("Error fetching run order");
     return;
   }
-  const query = newdatabase ? `SELECT *, slno as RunOrder, createdtime as CreatedTime,approved as Approval , dropstory as DropStory,  from script 
-  WHERE bulletinname = ? AND bulletindate = ? ORDER BY RunOrder` : `CALL show_runorder(?)`
+  const query = newdatabase ? `SELECT *, 
+  slno AS RunOrder, 
+  createdtime AS CreatedTime, 
+  approved AS Approval, 
+  dropstory AS DropStory
+  FROM script 
+  WHERE bulletinname = ? AND bulletindate = ? 
+  ORDER BY RunOrder;`: `CALL show_runorder(?)`
+    
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
-    console.log(newdatabase ? rows : rows[0]);
-
     res.send(newdatabase ? rows : rows[0]);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching run order");
   }
 });
-
-app.get("/getGraphics", async (req, res) => {
+app.get("/getContent", async (req, res) => {
   const ScriptID = req.query.ScriptID;
+  const NewsId = req.query.NewsId;
+  const query = newdatabase ? `SELECT Script FROM script WHERE ScriptID=?`: `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`;
   try {
     const [rows] = await safeQuery(
-      `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`,
+      query ,
+      [ScriptID, NewsId]
+    );
+    res.send(rows[0]);
+  } catch (error) {
+    res.status(500).send("Error fetching content");
+  }
+});
+
+app.post("/updateContent", async (req, res) => {
+  const { content, ScriptID, NewsId } = req.body;
+  const query = newdatabase ? `UPDATE script SET Script = ? WHERE ScriptID=?`:`UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`;
+  try {
+    await safeQuery(
+      query,
+      [content, ScriptID, NewsId]
+    );
+    res.send("");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating content");
+  }
+});
+app.get("/getGraphics", async (req, res) => {
+  const ScriptID = req.query.ScriptID;
+  const query = newdatabase ? `SELECT *,slno as GraphicsOrder  FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
+  try {
+    const [rows] = await safeQuery(
+      query,
       [ScriptID]
     );
     res.send(rows);
@@ -711,31 +745,5 @@ app.post("/deleteGraphics", async (req, res) => {
   }
 });
 
-app.get("/getContent", async (req, res) => {
-  const ScriptID = req.query.ScriptID;
-  const NewsId = req.query.NewsId;
-  try {
-    const [rows] = await safeQuery(
-      `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`,
-      [ScriptID, NewsId]
-    );
-    res.send(rows[0]);
-  } catch (error) {
-    res.status(500).send("Error fetching content");
-  }
-});
 
-app.post("/updateContent", async (req, res) => {
-  const { content, ScriptID, NewsId } = req.body;
-  try {
-    await safeQuery(
-      `UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`,
-      [content, ScriptID, NewsId]
-    );
-    res.send("");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Error updating content");
-  }
-});
 // NRCS code ends
