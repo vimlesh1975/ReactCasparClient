@@ -532,15 +532,15 @@ const mysql = require("mysql2/promise");
 var pool;
 
 var newdatabase = true;
-//  newdatabase = false;
-const dbanme = newdatabase ? 'nrcsnew' : 'c1news';
+ newdatabase = false;
+const dbname = newdatabase ? 'nrcsnew' : 'c1news';
 
 try {
   pool = mysql.createPool({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "itmaint",
     password: process.env.DB_PASSWORD || "itddkchn",
-    database: process.env.DB_DATABASE || dbanme,
+    database: process.env.DB_DATABASE || dbname,
   });
   console.log("Connected to MySQL database");
 } catch (error) {
