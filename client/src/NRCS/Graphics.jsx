@@ -25,11 +25,10 @@ import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
 import FlashMessage from "../FlashMessage";
 
-
-
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
+  const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
   // const textNodes = useSelector(state => state.textNodesReducer.textNodes);
 
   const [pageName, setPageName] = useState("new Graphics");
@@ -37,8 +36,8 @@ const Graphics = () => {
   const refPageName = useRef();
 
   const [runOrderTitles, setRunOrderTitles] = useState([]);
-  const [selectedRunOrderTitle, setSelectedRunOrderTitle] = useState("");
-  const [selectedRunOrderTitle2, setSelectedRunOrderTitle2] = useState("");
+  const [selectedRunOrderTitle, setSelectedRunOrderTitle] = useState("0700 Hrs");
+  const [selectedRunOrderTitle2, setSelectedRunOrderTitle2] = useState("0600 Hrs");
   const [slugs, setSlugs] = useState([]);
   const [slugs2, setSlugs2] = useState([]);
   const [ScriptID, setScriptID] = useState("");
@@ -60,7 +59,20 @@ const Graphics = () => {
 
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
+  const [selectedDate, setSelectedDate] = useState('2024-12-05');
+  const [selectedDate2, setSelectedDate2] = useState('2024-12-05');
   // const [allGraphics, setAllGraphics] = useState([]);
+
+  const handleDateChange = (event) => {
+    const date = event.target.value;
+    console.log(date)
+    setSelectedDate(date)
+  };
+
+  const handleDateChange2 = (event) => {
+    const date = event.target.value;
+    setSelectedDate2(date)
+  };
 
   const showMessage = (msg) => {
     setFlashMessage(msg);
@@ -248,14 +260,14 @@ const Graphics = () => {
     }
     try {
       const res = await fetch(
-        addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle}`
+        addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle}&param2=${selectedDate}`
       );
       const data = await res.json();
       setSlugs(data);
     } catch (error) {
       // console.error('Error fetching data:', error);
     }
-  }, [selectedRunOrderTitle, setSlugs]);
+  }, [selectedRunOrderTitle, setSlugs, selectedDate]);
 
 
 
@@ -271,7 +283,7 @@ const Graphics = () => {
     async function fetchData() {
       try {
         const res = await fetch(
-          addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle2}`
+          addressmysql() + `/show_runorder?param1=${selectedRunOrderTitle2}&param2=${selectedDate2}`
         );
         const data = await res.json();
         setSlugs2(data);
@@ -281,7 +293,7 @@ const Graphics = () => {
     }
 
     fetchData();
-  }, [selectedRunOrderTitle2]);
+  }, [selectedRunOrderTitle2, selectedDate2]);
 
   useEffect(() => {
     async function fetchData() {
@@ -395,59 +407,59 @@ const Graphics = () => {
   };
 
   const updateCGEntry = async (deleteCG = false) => {
-    var cgValue = '';
-    if (deleteCG) {
-      if (slugs[currentSlug].MediaInsert === 'Visuals') {
-        return;
-      }
-      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-        return;
-      }
-      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-        cgValue = 'Visuals';
-      }
-      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-        cgValue = null;
-      }
-      else {
-        return;
-      }
-    }
-    else {
-      if (slugs[currentSlug].MediaInsert === 'Visuals') {
-        cgValue = 'Visuals/CG';
-      }
-      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-        cgValue = 'CG';
-      }
-      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-        return;
-      }
-      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-        return
+      var cgValue = '';
+      if (deleteCG) {
+        if (slugs[currentSlug].MediaInsert === 'Visuals') {
+          return;
+        }
+        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
+          return;
+        }
+        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+          cgValue = 'Visuals';
+        }
+        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+          cgValue = null;
+        }
+        else {
+          return;
+        }
       }
       else {
-        return;
+        if (slugs[currentSlug].MediaInsert === 'Visuals') {
+          cgValue = 'Visuals/CG';
+        }
+        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
+          cgValue = 'CG';
+        }
+        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+          return;
+        }
+        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+          return
+        }
+        else {
+          return;
+        }
       }
-    }
-    const updatedSlugs = [...slugs];
-    updatedSlugs[currentSlug].MediaInsert = cgValue;
-    setSlugs(updatedSlugs);
-    try {
-      await fetch(addressmysql() + "/updateCGEntry", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cgValue,
-          ScriptID,
-          NewsId: selectedRunOrderTitle
-        }),
-      });
-    } catch (error) {
-      // console.error('Error saving content:', error);
-    }
+      const updatedSlugs = [...slugs];
+      updatedSlugs[currentSlug].MediaInsert = cgValue;
+      setSlugs(updatedSlugs);
+      try {
+        await fetch(addressmysql() + "/updateCGEntry", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cgValue,
+            ScriptID,
+            NewsId: selectedRunOrderTitle
+          }),
+        });
+      } catch (error) {
+        // console.error('Error saving content:', error);
+      }
   }
 
   const deleteGraphic = async (GraphicsID) => {
@@ -737,7 +749,20 @@ const Graphics = () => {
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
-          <div style={{ minWidth: 450, maxWidth: 450, marginTop: 45 }}>
+          <div style={{ minWidth: 450, maxWidth: 450, marginTop:45 }}>
+            <div>
+              {newdatabase &&
+                <div>
+                  <label htmlFor="date-selector">Select a date: </label>
+                  <input
+                    id="date-selector"
+                    type="date"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                  />
+                </div>
+              }
+            </div>
             <div>
               Run Orders:
               <select
@@ -762,7 +787,7 @@ const Graphics = () => {
                   checked={live}
                   onChange={() => setLive(val => !val)}
                 />
-                Live Mode
+                Live
               </label>
 
             </div>
@@ -958,6 +983,20 @@ const Graphics = () => {
               </TabPanel>
               <TabPanel>
                 <div style={{ minWidth: 450, maxWidth: 450 }}>
+                  <div>
+                    {newdatabase &&
+                      <div>
+                        <label htmlFor="date-selector">Select a date: </label>
+                        <input
+                          id="date-selector"
+                          type="date"
+                          value={selectedDate2}
+                          onChange={handleDateChange2}
+                        />
+                      </div>
+                    }
+                  </div>
+
                   Run Orders:
                   <select
                     value={selectedRunOrderTitle2}
@@ -1109,7 +1148,7 @@ const Graphics = () => {
     </div>
     {isLoading && <Spinner />}
     {flashMessage && <FlashMessage message={flashMessage} />}
-
+    {/* {newdatabase} */}
   </div>);
 };
 

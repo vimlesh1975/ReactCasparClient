@@ -395,6 +395,7 @@ global.app = app;
 io.on("connection", (socket) => {
   console.log("New Web Socket client connected");
   socket.emit("connectionStatus", aa.connected.toString());
+  socket.emit("newdatabase", newdatabase);
   socket.on("disconnect", () => {
     console.log("client disconnected");
   });
@@ -527,17 +528,19 @@ app.post("/fetch-proxy", async (req, res) => {
 // rss feed code  ends
 
 //NRCS code starts-----------
-// rss feed code  ends
 const mysql = require("mysql2/promise");
 var pool;
+
+var newdatabase = true;
+//  newdatabase = false;
+const dbname = newdatabase ? 'nrcsnew' : 'c1news';
 
 try {
   pool = mysql.createPool({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "itmaint",
     password: process.env.DB_PASSWORD || "itddkchn",
-    database: process.env.DB_DATABASE || "c1news",
-    // database: process.env.DB_DATABASE || "urdu",
+    database: process.env.DB_DATABASE || dbname,
   });
   console.log("Connected to MySQL database");
 } catch (error) {
@@ -554,9 +557,10 @@ async function safeQuery(query, params = []) {
 }
 
 app.get("/getNewsID", async (req, res) => {
+  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' and bulletintype !='Pool' order by bulletintime asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
   try {
     const [rows] = await safeQuery(
-      `SELECT distinct title FROM newsid where title != '' order by title asc`
+      query
     );
     res.send(rows);
   } catch (error) {
@@ -566,25 +570,69 @@ app.get("/getNewsID", async (req, res) => {
 });
 
 app.get("/show_runorder", async (req, res) => {
-  const param1 = req.query.param1;
+  // const param1 = newdatabase ? '0700 Hrs' : req.query.param1;
+  // const param2 = newdatabase ? '2024-12-05': req.query.param2;
+
+  const param1 =  req.query.param1;
+  const param2 = req.query.param2;
+
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
     return;
   }
+  const query = newdatabase ? `SELECT *, 
+  slno AS RunOrder, 
+  createdtime AS CreatedTime, 
+  approved AS Approval, 
+  graphicsid as MediaInsert,
+  dropstory AS DropStory
+  FROM script 
+  WHERE bulletinname = ? AND bulletindate = ? 
+  ORDER BY RunOrder;`: `CALL show_runorder(?)`
+    
   try {
-    const [rows] = await safeQuery(`CALL show_runorder(?)`, [param1]);
-    res.send(rows[0]);
+    const [rows] = await safeQuery(query, [param1, param2]);
+    res.send(newdatabase ? rows : rows[0]);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching run order");
   }
 });
-
-app.get("/getGraphics", async (req, res) => {
+app.get("/getContent", async (req, res) => {
   const ScriptID = req.query.ScriptID;
+  const NewsId = req.query.NewsId;
+  const query = newdatabase ? `SELECT Script FROM script WHERE ScriptID=?`: `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`;
   try {
     const [rows] = await safeQuery(
-      `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`,
+      query ,
+      [ScriptID, NewsId]
+    );
+    res.send(rows[0]);
+  } catch (error) {
+    res.status(500).send("Error fetching content");
+  }
+});
+
+app.post("/updateContent", async (req, res) => {
+  const { content, ScriptID, NewsId } = req.body;
+  const query = newdatabase ? `UPDATE script SET Script = ? WHERE ScriptID=?`:`UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`;
+  try {
+    await safeQuery(
+      query,
+      [content, ScriptID, NewsId]
+    );
+    res.send("");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating content");
+  }
+});
+app.get("/getGraphics", async (req, res) => {
+  const ScriptID = req.query.ScriptID;
+  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate  FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
+  try {
+    const [rows] = await safeQuery(
+      query,
       [ScriptID]
     );
     res.send(rows);
@@ -596,9 +644,10 @@ app.get("/getGraphics", async (req, res) => {
 
 app.post("/setGraphics", async (req, res) => {
   const { content, graphicsID } = req.body;
+  const query=newdatabase ? `UPDATE graphics SET gfxtemplatetext = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`;
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`,
+      query,
       [content, graphicsID]
     );
     res.send("");
@@ -623,10 +672,10 @@ app.post("/insertGraphics", async (req, res) => {
     ScriptID,
     GraphicsTemplate,
   ];
-
+const query =newdatabase ?  `INSERT INTO graphics (GraphicsID, gfxtemplatetext, slno, ScriptID, gfxtemplatename) VALUES (?, ?, ?, ?, ?)`: `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`;
   try {
     await safeQuery(
-      `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`,
+      query,
       values
     );
     res.send("");
@@ -643,9 +692,10 @@ app.post("/updateCGEntry", async (req, res) => {
     ScriptID,
     NewsId,
   ];
+  const query=newdatabase? `UPDATE script SET graphicsid = ? WHERE ScriptID=?`: `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
   try {
     await safeQuery(
-      `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `,
+     query,
       values
     );
     res.send("");
@@ -657,9 +707,10 @@ app.post("/updateCGEntry", async (req, res) => {
 
 app.post("/updateGraphicsOrder", async (req, res) => {
   const { GraphicsID, GraphicsOrder } = req.body;
+  const query=newdatabase?`UPDATE graphics SET slno = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`;
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`,
+      query,
       [GraphicsOrder, GraphicsID]
     );
     res.send("");
@@ -670,13 +721,14 @@ app.post("/updateGraphicsOrder", async (req, res) => {
 });
 
 app.post("/updateGraphicTemplate", async (req, res) => {
+  const query=newdatabase? `UPDATE graphics SET gfxtemplatename = ? where GraphicsID=?`: `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`;
   const { GraphicsID, GraphicsTemplate } = req.body;
   if (!GraphicsID) {
     return res.status(400).send("GraphicsID is required");
   }
   try {
     await safeQuery(
-      `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`,
+     query,
       [GraphicsTemplate, GraphicsID]
     );
     res.send("Graphic updated successfully");
@@ -700,31 +752,5 @@ app.post("/deleteGraphics", async (req, res) => {
   }
 });
 
-app.get("/getContent", async (req, res) => {
-  const ScriptID = req.query.ScriptID;
-  const NewsId = req.query.NewsId;
-  try {
-    const [rows] = await safeQuery(
-      `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`,
-      [ScriptID, NewsId]
-    );
-    res.send(rows[0]);
-  } catch (error) {
-    res.status(500).send("Error fetching content");
-  }
-});
 
-app.post("/updateContent", async (req, res) => {
-  const { content, ScriptID, NewsId } = req.body;
-  try {
-    await safeQuery(
-      `UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`,
-      [content, ScriptID, NewsId]
-    );
-    res.send("");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Error updating content");
-  }
-});
 // NRCS code ends

@@ -34,10 +34,9 @@ export default function Home({ ScriptID, title, currentSlugSlugName }) {
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
-
         const newTimeoutId = setTimeout(async () => {
             try {
-                await fetch(addressmysql + '/updateContent', {
+                await fetch(addressmysql() + '/updateContent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

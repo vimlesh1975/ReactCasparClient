@@ -474,7 +474,18 @@ const textNodesReducer = (state = initialTextNodes, action) => {
       return state;
   }
 };
-
+const initialnewdatabase = false;
+const newdatabaseReducer = (state = initialnewdatabase, action) => {
+  switch (action.type) {
+    case 'NEWDATABASE':
+      return {
+        ...state,
+        newdatabase: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
 
 const rootReducer = combineReducers({
@@ -507,7 +518,8 @@ const rootReducer = combineReducers({
   speechRecognitionReducer,
   clientIdReducer,
   FPSReducer,
-  textNodesReducer
+  textNodesReducer,
+  newdatabaseReducer
 });
 const store = createStore(
   rootReducer,
