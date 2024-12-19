@@ -174,9 +174,9 @@ const App = () => {
       setmediaPath(data);
     });
 
-    
+
     socket.on("newdatabase", (data) => {
-      dispatch({ type: "NEWDATABASE", payload:data });
+      dispatch({ type: "NEWDATABASE", payload: data });
     });
 
     socket.on("connectionStatus", (data) => {
@@ -220,7 +220,8 @@ const App = () => {
   }, [mediaPath]);
 
   const onTabChange = (index, prevIndex) => {
-    // changepannelEnable(index);
+    console.log(index)
+
     settabindex(index);
     switch (index) {
       case 0:
@@ -536,29 +537,32 @@ const App = () => {
             forceRenderTabPanel={true}
             onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}
           >
+            {/* <div className="tabHidden">
+              <Tab>VDO</Tab>
+            </div> */}
             <TabList>
               <Tab>Graphics</Tab>
-              <Tab>VDO</Tab>
-              <Tab>VDO Playlist</Tab>
+              <Tab className="tabHidden">VDO</Tab>
+              <Tab className="tabHidden">VDO Playlist</Tab>
               <Tab>Layers</Tab>
-              <Tab>Gradient</Tab>
-              <Tab>BreakingNews</Tab>
-              <Tab>ImgSequence</Tab>
-              <Tab>Scroll</Tab>
+              <Tab >Gradient</Tab>
+              <Tab className="tabHidden">BreakingNews</Tab>
+              <Tab className="tabHidden">ImgSequence</Tab>
+              <Tab className="tabHidden">Scroll</Tab>
               <Tab>Shapes</Tab>
-              <Tab>Games</Tab>
-              <Tab>Charts</Tab>
-              <Tab>Path Modifier</Tab>
-              <Tab>Effects</Tab>
-              <Tab>JsonReader</Tab>
+              <Tab className="tabHidden">Games</Tab>
+              <Tab className="tabHidden">Charts</Tab>
+              <Tab className="tabHidden">Path Modifier</Tab>
+              <Tab className="tabHidden">Effects</Tab>
+              <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab>CodeImport</Tab>
-              <Tab>Tsparticles</Tab>
-              <Tab>Data</Tab>
+              <Tab className="tabHidden">CodeImport</Tab>
+              <Tab className="tabHidden">Tsparticles</Tab>
+              <Tab  className="tabHidden">Data</Tab>
 
-              <Tab>Help</Tab>
-              <Tab>GA</Tab>
+              <Tab >Help</Tab>
+              <Tab className="tabHidden">GA</Tab>
               <Tab>NRCS</Tab>
 
             </TabList>
