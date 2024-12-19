@@ -532,7 +532,7 @@ const mysql = require("mysql2/promise");
 var pool;
 
 var newdatabase = true;
- newdatabase = false;
+//  newdatabase = false;
 const dbname = newdatabase ? 'nrcsnew' : 'c1news';
 
 try {
@@ -557,7 +557,7 @@ async function safeQuery(query, params = []) {
 }
 
 app.get("/getNewsID", async (req, res) => {
-  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' order by bulletintime asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
+  const query = newdatabase ? `SELECT distinct bulletinname as title FROM bulletin where bulletinname != '' and bulletintype !='Pool' order by bulletintime asc` : `SELECT distinct title FROM newsid where title != '' order by title asc`
   try {
     const [rows] = await safeQuery(
       query
