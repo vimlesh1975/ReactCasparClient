@@ -474,7 +474,7 @@ const textNodesReducer = (state = initialTextNodes, action) => {
       return state;
   }
 };
-const initialnewdatabase = false;
+const initialnewdatabase = true;
 const newdatabaseReducer = (state = initialnewdatabase, action) => {
   switch (action.type) {
     case 'NEWDATABASE':
