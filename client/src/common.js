@@ -2275,7 +2275,8 @@ export const addressmysql = () => {
 
 
 export const clieentPublicFolder = () => {
-  if (window.location.host === "localhost:10000") {
+  const aa = window.location.host.split(':');
+  if (aa[1] === "10000" || aa[1] === "11000") {
     return "https://localhost:10000/ReactCasparClient";
   } else {
     return "https://vimlesh1975.github.io/ReactCasparClient";
