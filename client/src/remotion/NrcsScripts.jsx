@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { addressmysql } from '../common'
+// import { addressmysql } from '../common'
 import { Audio, Sequence, AbsoluteFill, Img, useCurrentFrame, interpolate } from 'remotion';
 import aa from './aa.mp3';
 import background from './png/background2.png'; // Static background image
@@ -10,11 +10,11 @@ const NrcsScripts = ({ durationPerImage, transitionDuration }) => {
     const [handle] = useState(() => delayRender());
 
     const fetchRO = useCallback(async () => {
-        console.log('first')
-        console.log(addressmysql())
+        // console.log('first')
+        // console.log(addressmysql())
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderremotion?param1=${'C1_2108_1900'}`
+          `https://localhost:9000/show_runorderremotion?param1=${'C1_2108_1900'}`
             );
             const data = await res.json();
             setSlugs(data);
@@ -82,7 +82,7 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
         <div style={{ transform: `translateX(${translateX}px)`, }}>
             <AbsoluteFill  >
                 <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" >
-                    <circle cx="200" cy="200" r="100" fill="#1faabd" stroke="white" stroke-width="3" />
+                    <circle cx="200" cy="200" r="100" fill="#1faabd" stroke="white" strokeWidth="3" />
                 </svg>
 
             </AbsoluteFill>

@@ -2266,7 +2266,7 @@ export const addressgoogleapi = () => {
 
 export const addressmysql = () => {
   const aa = window.location.host.split(':');
-  if (aa[1] === "10000" || aa[1] === "11000") {
+  if (aa[1] === "10000" || aa[1] === "11000" || aa[1] === "12000") {
     return `https://localhost:9000`;
   } else {
     return "https://octopus-app-gzws3.ondigitalocean.app";

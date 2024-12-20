@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { addressmysql } from '../common'
 import { Audio, Sequence, AbsoluteFill, Img, useCurrentFrame, interpolate, Video } from 'remotion';
 import video from './png/TOP10.mp4'; // Static background image
+
 import audio2 from './png/videoplayback.m4a'; // Static background image
 
 import { continueRender, delayRender } from "remotion";
@@ -15,7 +16,8 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderremotion?param1=${'EXPRESS 100'}`
+                `https://localhost:9000/show_runorderremotion?param1=${'express 100'}`
+
             );
             const data = await res.json();
             setSlugs(data.slice(0, 10)); // Take only the first 10 elements
@@ -150,11 +152,11 @@ const SlidingImage = ({ slug, index, durationPerImage, transitionDuration }) => 
 
             {/* <div style={{ fontSize: 120, position: 'absolute', top: 350, left: 110, maxWidth: 1700, width: 1800, maxHeight: 476, overflow: 'hidden', textAlign: 'center' }}>{slug.Script}</div> */}
 
-            <div style={{  position: 'absolute', top: 350, left: 130,  }}>
-            <ScaledMultilineText
+            <div style={{ position: 'absolute', top: 350, left: 130, }}>
+                <ScaledMultilineText
                     // text={slug.Script + slug.Script }
                     // text={'पोलंडमध्ये पंतप्रधानांनी मॉन्टे कॅसिनो इथल्या युद्धस्मारकाला देखील दिली भेट'} 
-                    text={slug.Script }
+                    text={slug.Script}
                     containerWidth={1650}
                     containerHeight={480}
                     alignment="center"
