@@ -10,9 +10,11 @@ const NrcsScripts = ({ durationPerImage, transitionDuration }) => {
     const [handle] = useState(() => delayRender());
 
     const fetchRO = useCallback(async () => {
+        console.log('first')
+        console.log(addressmysql())
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorder?param1=${'C1_2108_1900'}`
+                addressmysql() + `/show_runorderremotion?param1=${'C1_2108_1900'}`
             );
             const data = await res.json();
             setSlugs(data);

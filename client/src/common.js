@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "191224_1";
+export const buildDate = "201224_1";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -2265,8 +2265,9 @@ export const addressgoogleapi = () => {
 };
 
 export const addressmysql = () => {
-  if (window.location.host === "localhost:10000") {
-    return "https://localhost:9000";
+  const aa = window.location.host.split(':');
+  if (aa[1] === "10000" || aa[1] === "11000") {
+    return `https://localhost:9000`;
   } else {
     return "https://octopus-app-gzws3.ondigitalocean.app";
   }

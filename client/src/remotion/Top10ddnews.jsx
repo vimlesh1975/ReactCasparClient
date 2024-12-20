@@ -15,7 +15,7 @@ const Top10ddnews = ({ durationPerImage, transitionDuration }) => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorder?param1=${'EXPRESS 100'}`
+                addressmysql() + `/show_runorderremotion?param1=${'EXPRESS 100'}`
             );
             const data = await res.json();
             setSlugs(data.slice(0, 10)); // Take only the first 10 elements

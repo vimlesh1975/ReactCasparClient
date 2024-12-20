@@ -754,3 +754,25 @@ app.post("/deleteGraphics", async (req, res) => {
 
 
 // NRCS code ends
+
+// start code for remotion
+app.get("/show_runorderremotion", async (req, res) => {
+  const param1 =  req.query.param1;
+  if (param1 === "") {
+    res.status(500).send("Error fetching run order");
+    return;
+  }
+  const query = `CALL c1news.show_runorder(?)`
+  try {
+    const [rows] = await safeQuery(query, [param1]);
+    res.send(rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching run order");
+  }
+});
+
+// end code for remotion
+
+
+

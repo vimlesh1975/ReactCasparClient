@@ -13,7 +13,6 @@
     "@reduxjs/toolkit": "^1.8.2",
     "@remotion/cli": "4.0.240",
     "@remotion/gif": "4.0.240",
-    "@remotion/lambda": "4.0.240",
     "@remotion/zod-types": "4.0.240",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
