@@ -5,7 +5,8 @@ import {
   getFormattedDatetimeNumber,
   addressmysql,
   templateLayers,
-  selectAll
+  selectAll,
+  endpoint
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -407,59 +408,59 @@ const Graphics = () => {
   };
 
   const updateCGEntry = async (deleteCG = false) => {
-      var cgValue = '';
-      if (deleteCG) {
-        if (slugs[currentSlug].MediaInsert === 'Visuals') {
-          return;
-        }
-        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-          return;
-        }
-        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-          cgValue = 'Visuals';
-        }
-        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-          cgValue = null;
-        }
-        else {
-          return;
-        }
+    var cgValue = '';
+    if (deleteCG) {
+      if (slugs[currentSlug].MediaInsert === 'Visuals') {
+        return;
+      }
+      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
+        return;
+      }
+      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+        cgValue = 'Visuals';
+      }
+      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+        cgValue = null;
       }
       else {
-        if (slugs[currentSlug].MediaInsert === 'Visuals') {
-          cgValue = 'Visuals/CG';
-        }
-        else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-          cgValue = 'CG';
-        }
-        else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
-          return;
-        }
-        else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-          return
-        }
-        else {
-          return;
-        }
+        return;
       }
-      const updatedSlugs = [...slugs];
-      updatedSlugs[currentSlug].MediaInsert = cgValue;
-      setSlugs(updatedSlugs);
-      try {
-        await fetch(addressmysql() + "/updateCGEntry", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cgValue,
-            ScriptID,
-            NewsId: selectedRunOrderTitle
-          }),
-        });
-      } catch (error) {
-        // console.error('Error saving content:', error);
+    }
+    else {
+      if (slugs[currentSlug].MediaInsert === 'Visuals') {
+        cgValue = 'Visuals/CG';
       }
+      else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
+        cgValue = 'CG';
+      }
+      else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
+        return;
+      }
+      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
+        return
+      }
+      else {
+        return;
+      }
+    }
+    const updatedSlugs = [...slugs];
+    updatedSlugs[currentSlug].MediaInsert = cgValue;
+    setSlugs(updatedSlugs);
+    try {
+      await fetch(addressmysql() + "/updateCGEntry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cgValue,
+          ScriptID,
+          NewsId: selectedRunOrderTitle
+        }),
+      });
+    } catch (error) {
+      // console.error('Error saving content:', error);
+    }
   }
 
   const deleteGraphic = async (GraphicsID) => {
@@ -701,6 +702,18 @@ const Graphics = () => {
     }
   };
 
+  const playScroll = () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
+    const aa = slugs.map((val) => "'" + val.SlugName + "'")
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "startScroll([${aa}])"`);
+  }
+  const stopScroll = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsscroll}`
+    );
+  }
+
+
   const setDirectory = async () => {
     try {
       const handle = await window.showDirectoryPicker();
@@ -749,7 +762,7 @@ const Graphics = () => {
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
         <div style={{ display: "flex" }}>
-          <div style={{ minWidth: 450, maxWidth: 450, marginTop:45 }}>
+          <div style={{ minWidth: 450, maxWidth: 450, marginTop: 45 }}>
             <div>
               {newdatabase &&
                 <div>
@@ -795,17 +808,19 @@ const Graphics = () => {
 
             <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
-                slugs?.map((val, i) => (<div key={i} style={{
-                  display: 'flex', color: currentSlug === i ? "white" : "black",
-                  backgroundColor: currentSlug === i ? "green" : "#E7DBD8",
-                  margin: 10,
-                }}>
+                slugs?.map((val, i) => (<div
+                  onClick={() => {
+                    setScriptID(val.ScriptID);
+                    setCurrentSlug(i);
+                    setCurrentSlugSlugName(val.SlugName);
+                  }}
+                  key={i} style={{
+                    display: 'flex', color: currentSlug === i ? "white" : "black",
+                    backgroundColor: currentSlug === i ? "green" : "#E7DBD8",
+                    margin: 10,
+                  }}>
                   <div
-                    onClick={() => {
-                      setScriptID(val.ScriptID);
-                      setCurrentSlug(i);
-                      setCurrentSlugSlugName(val.SlugName);
-                    }}
+
 
                     style={{
                       minWidth: 320,
@@ -974,6 +989,7 @@ const Graphics = () => {
                 <Tab>DataUpdater</Tab>
                 <Tab>Copy </Tab>
                 <Tab>Script</Tab>
+                <Tab>Scroll</Tab>
               </TabList>
               <TabPanel>
                 <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} directoryHandle={directoryHandle} exportEachPagetoHTML={exportEachPagetoHTML} />
@@ -1131,6 +1147,10 @@ const Graphics = () => {
                     currentSlugSlugName={currentSlugSlugName}
                   />
                 </div>
+              </TabPanel>
+              <TabPanel>
+                <button onClick={playScroll}>Play Scroll</button>
+                <button onClick={stopScroll}>Stop Scroll</button>
               </TabPanel>
 
             </Tabs>

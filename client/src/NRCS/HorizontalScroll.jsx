@@ -1,0 +1,137 @@
+import React, { useEffect, useRef, useState } from 'react';
+
+var data = [
+  '1   दिल्ली में',
+  '2   मुख्यमंत्री योगी आदित्यनाथ',
+  '3   चलने नहीं देंगे रामायण',
+  '4   मंत्रिमंडल विस्तार ',
+  '5   Shaurya Chakra:',
+  '6   पाक को खदेड़ने ',
+];
+var gap = 50;
+
+const HorizontalScroll = () => {
+  // State for active items
+  const [activeItems, setActiveItems] = useState([]);
+
+  // Refs to store the speed value and the data
+  const speedRef = useRef(0);
+  const dataRef = useRef(data); // Use a ref to store the data
+  const itemRefs = useRef({}); // Create ref to store item references
+
+  // Function to start the scroll with new data
+  const startScroll = (newData) => {
+    // Update the dataRef with the new data
+    dataRef.current = newData;
+
+    // Reset active items to reflect only the new data
+    setActiveItems([
+      { id: 0, text: newData[0], position: window.innerWidth },
+    ]);
+
+    speedRef.current = 5; // Reset the speed
+  };
+
+  window.setSpeed = (newSpeed) => {
+    speedRef.current = newSpeed; // Update the speedRef value
+  };
+
+  window.startScroll=startScroll;
+
+  window.setData1 = (newData) => {
+    // Update dataRef and reset active items when new data is passed
+    dataRef.current = newData;
+    setActiveItems([
+      { id: 0, text: newData[0], position: window.innerWidth },
+    ]);
+  };
+
+  useEffect(() => {
+    const scroll = () => {
+      setActiveItems((prevItems) => {
+        const updatedItems = prevItems.map((item) => ({
+          ...item,
+          position: item.position - speedRef.current, // Use the speed from the ref
+        }));
+
+        // Remove items that are completely out of view
+        const visibleItems = updatedItems.filter(
+          (item) => item.position + (itemRefs.current[item.id]?.offsetWidth || 0) > 0
+        );
+
+        // Add new item if the last item is fully visible
+        if (
+          visibleItems.length &&
+          visibleItems[visibleItems.length - 1].position <=
+            window.innerWidth - (itemRefs.current[visibleItems[visibleItems.length - 1].id]?.offsetWidth || 0)
+        ) {
+          const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
+          if (nextIndex < dataRef.current.length) {
+            visibleItems.push({
+              id: nextIndex,
+              text: dataRef.current[nextIndex],
+              position: window.innerWidth + gap,
+            });
+          } else {
+            visibleItems.push({
+              id: 0,
+              text: dataRef.current[0],
+              position: window.innerWidth + gap,
+            });
+          }
+        }
+
+        return visibleItems;
+      });
+
+      requestAnimationFrame(scroll);
+    };
+
+    const animationFrame = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationFrame);
+  }, []); // Only set this effect once
+
+  return (
+    <div>
+      <div
+        style={{
+          overflow: 'hidden',
+          position: 'absolute',
+          top:window.innerHeight-80,
+          width: '100%',
+          height: 80,
+          backgroundColor: 'blue',
+          color: 'white',
+          zIndex:-1
+        }}
+      >
+        {activeItems.length > 0 &&
+          activeItems.map((item) => (
+            <div
+              key={`${item.id}-${item.position}`} // Use both id and position to ensure uniqueness
+              ref={(el) => (itemRefs.current[item.id] = el)}
+              style={{
+                position: 'absolute',
+                left: item.position,
+                fontSize: 50,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.text}
+            </div>
+          ))}
+      </div>
+
+      <div style={{display:(window.screen.colorDepth === 0)?'none':'block'}}>
+        <button onClick={() => speedRef.current += 1}>Increase Speed</button>
+        <button onClick={() => speedRef.current -= 1}>Decrease Speed</button>
+        <button onClick={() => startScroll(['New Data 1', 'New Data 2', 'New Data 3'])}>
+          Set New Data and Start Scroll
+        </button>
+        <div>Current Speed: {speedRef.current} activeItems={activeItems.length} </div>
+      </div>
+    </div>
+  );
+};
+
+export default HorizontalScroll;
