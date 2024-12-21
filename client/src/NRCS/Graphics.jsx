@@ -704,8 +704,8 @@ const Graphics = () => {
 
   const playScroll = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    const aa = slugs.map((val) => "'" + val.SlugName + "'")
-    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "startScroll([${aa}])"`);
+    const aa = slugs.map((val) => "'" + (val.Script).replaceAll("'", "") + "'")
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll([${aa}])`);
   }
   const stopScroll = () => {
     endpoint(

@@ -36,7 +36,7 @@ const HorizontalScroll = () => {
     speedRef.current = newSpeed; // Update the speedRef value
   };
 
-  window.startScroll=startScroll;
+  window.startScroll = startScroll;
 
   window.setData1 = (newData) => {
     // Update dataRef and reset active items when new data is passed
@@ -63,7 +63,7 @@ const HorizontalScroll = () => {
         if (
           visibleItems.length &&
           visibleItems[visibleItems.length - 1].position <=
-            window.innerWidth - (itemRefs.current[visibleItems[visibleItems.length - 1].id]?.offsetWidth || 0)
+          window.innerWidth - (itemRefs.current[visibleItems[visibleItems.length - 1].id]?.offsetWidth || 0)
         ) {
           const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
           if (nextIndex < dataRef.current.length) {
@@ -91,38 +91,31 @@ const HorizontalScroll = () => {
     return () => cancelAnimationFrame(animationFrame);
   }, []); // Only set this effect once
 
-  return (
-    <div>
-      <div
-        style={{
-          overflow: 'hidden',
-          position: 'absolute',
-          top:window.innerHeight-80,
-          width: '100%',
-          height: 80,
-          backgroundColor: 'blue',
-          color: 'white',
-          zIndex:-1
-        }}
-      >
-        {activeItems.length > 0 &&
-          activeItems.map((item) => (
-            <div
-              key={`${item.id}-${item.position}`} // Use both id and position to ensure uniqueness
-              ref={(el) => (itemRefs.current[item.id] = el)}
-              style={{
-                position: 'absolute',
-                left: item.position,
-                fontSize: 50,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {item.text}
-            </div>
-          ))}
-      </div>
+  return (<div>
+    <div style={{ backgroundColor: 'blue', minHeight: 80, width: window.innerWidth, position: 'absolute', top: window.innerHeight - 80, }}>
+    </div>
 
-      <div style={{display:(window.screen.colorDepth === 0)?'none':'block'}}>
+    <div>
+      {activeItems.length > 0 &&
+        activeItems.map((item) => (
+          <div
+            key={`${item.id}-${item.position}`} // Use both id and position to ensure uniqueness
+            ref={(el) => (itemRefs.current[item.id] = el)}
+            style={{
+              position: 'absolute',
+              left: item.position,
+              top: window.innerHeight - 80,
+              fontSize: 50,
+              whiteSpace: 'nowrap',
+              zIndex: 2,
+              color: 'white',
+            }}
+          >
+            {item.text}
+          </div>
+        ))}
+
+      <div style={{ display: (window.screen.colorDepth === 0) ? 'none' : 'block' }}>
         <button onClick={() => speedRef.current += 1}>Increase Speed</button>
         <button onClick={() => speedRef.current -= 1}>Decrease Speed</button>
         <button onClick={() => startScroll(['New Data 1', 'New Data 2', 'New Data 3'])}>
@@ -131,7 +124,7 @@ const HorizontalScroll = () => {
         <div>Current Speed: {speedRef.current} activeItems={activeItems.length} </div>
       </div>
     </div>
-  );
+  </div>);
 };
 
 export default HorizontalScroll;
