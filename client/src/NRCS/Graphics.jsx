@@ -713,6 +713,19 @@ const Graphics = () => {
     );
   }
 
+  const playBreakingNews = () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews`);
+    const aa = slugs.map((val) => "'" + (val.SlugName).replaceAll("'", "") + "'")
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsBreakingNews} startScroll([${aa}])`);
+  }
+  const stopBreakingNews = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsBreakingNews}`
+    );
+  }
+
+  
+
 
   const setDirectory = async () => {
     try {
@@ -1149,8 +1162,14 @@ const Graphics = () => {
                 </div>
               </TabPanel>
               <TabPanel>
+                <div>
                 <button onClick={playScroll}>Play Scroll</button>
                 <button onClick={stopScroll}>Stop Scroll</button>
+                </div>
+                <div>
+                <button onClick={playBreakingNews}>Play BreakingNews</button>
+                <button onClick={stopBreakingNews}>Stop BreakingNews</button>
+                </div>
               </TabPanel>
 
             </Tabs>

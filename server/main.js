@@ -532,7 +532,7 @@ const mysql = require("mysql2/promise");
 var pool;
 
 var newdatabase = true;
-//  newdatabase = false;
+ newdatabase = false;
 const dbname = newdatabase ? 'nrcsnew' : 'c1news';
 
 try {
