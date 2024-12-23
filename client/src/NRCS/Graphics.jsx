@@ -704,7 +704,19 @@ const Graphics = () => {
 
   const playScroll = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    const aa = slugs.map((val) => "'" + (val.Script).replaceAll("'", "") + "'")
+    // const aa = slugs.map((val) => "'" + (val.Script).replaceAll("'", "") + "'");
+
+    const aa = [];
+    slugs.forEach((val) => {
+      if (val && val.OneLinerText) {
+        const splitText = (val.OneLinerText)?.split(newdatabase ? "$$$" : "\n");
+        // Add single quotes around each element and push to 'aa'
+        splitText.forEach((item) => {
+          aa.push(`'${item.replaceAll("'", "") }'`);
+        });
+      }
+    });
+
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll([${aa}])`);
   }
   const stopScroll = () => {
@@ -715,7 +727,19 @@ const Graphics = () => {
 
   const playBreakingNews = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews`);
-    const aa = slugs.map((val) => "'" + (val.SlugName).replaceAll("'", "") + "'")
+    // const aa = slugs.map((val) => "'" + (val.SlugName).replaceAll("'", "") + "'");
+    const aa = [];
+    slugs.forEach((val) => {
+      if (val && val.OneLinerText) {
+        const splitText = (val.OneLinerText)?.split(newdatabase ? "$$$" : "\n");
+        // Add single quotes around each element and push to 'aa'
+        splitText.forEach((item) => {
+          aa.push(`'${item.replaceAll("'", "") }'`);
+        });
+      }
+    });
+    
+    // console.log(aa)
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsBreakingNews} startScroll([${aa}])`);
   }
   const stopBreakingNews = () => {
@@ -724,7 +748,7 @@ const Graphics = () => {
     );
   }
 
-  
+
 
 
   const setDirectory = async () => {
@@ -1163,12 +1187,12 @@ const Graphics = () => {
               </TabPanel>
               <TabPanel>
                 <div>
-                <button onClick={playScroll}>Play Scroll</button>
-                <button onClick={stopScroll}>Stop Scroll</button>
+                  <button onClick={playScroll}>Play Scroll</button>
+                  <button onClick={stopScroll}>Stop Scroll</button>
                 </div>
                 <div>
-                <button onClick={playBreakingNews}>Play BreakingNews</button>
-                <button onClick={stopBreakingNews}>Stop BreakingNews</button>
+                  <button onClick={playBreakingNews}>Play BreakingNews</button>
+                  <button onClick={stopBreakingNews}>Stop BreakingNews</button>
                 </div>
               </TabPanel>
 
