@@ -532,7 +532,7 @@ const mysql = require("mysql2/promise");
 var pool;
 
 var newdatabase = true;
- newdatabase = false;
+//  newdatabase = false;
 const dbname = newdatabase ? 'nrcsnew' : 'c1news';
 
 try {
@@ -570,12 +570,9 @@ app.get("/getNewsID", async (req, res) => {
 });
 
 app.get("/show_runorder", async (req, res) => {
-  // const param1 = newdatabase ? '0700 Hrs' : req.query.param1;
-  // const param2 = newdatabase ? '2024-12-05': req.query.param2;
-
-  const param1 =  req.query.param1;
+  const param1 = req.query.param1;
   const param2 = req.query.param2;
-
+  console.log(param2)
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
     return;
@@ -589,7 +586,6 @@ app.get("/show_runorder", async (req, res) => {
   FROM script 
   WHERE bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`: `CALL show_runorder(?)`
-    
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
     res.send(newdatabase ? rows : rows[0]);
@@ -598,13 +594,72 @@ app.get("/show_runorder", async (req, res) => {
     res.status(500).send("Error fetching run order");
   }
 });
+
+app.get("/show_runorderScroll", async (req, res) => {
+  // const param1 =  req.query.param1;
+  // const param2 = req.query.param2;
+  const param1 = 'Scroll';
+  const param2 = '2024-12-23';
+
+  if (param1 === "") {
+    res.status(500).send("Error fetching run order");
+    return;
+  }
+  const query = `SELECT *, 
+  slno AS RunOrder, 
+  createdtime AS CreatedTime, 
+  approved AS Approval, 
+  graphicsid as MediaInsert,
+  dropstory AS DropStory
+  FROM nrcsnew.script 
+  WHERE bulletinname = ? AND bulletindate = ? 
+  ORDER BY RunOrder;`
+  try {
+    const [rows] = await safeQuery(query, [param1, param2]);
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching run order");
+  }
+});
+
+app.get("/show_runorderBreakingNews", async (req, res) => {
+  // const param1 =  req.query.param1;
+  // const param2 = req.query.param2;
+  const param1 = 'Breaking News';
+  const param2 = '2024-12-23';
+
+  if (param1 === "") {
+    res.status(500).send("Error fetching run order");
+    return;
+  }
+  const query = `SELECT *, 
+  slno AS RunOrder, 
+  createdtime AS CreatedTime, 
+  approved AS Approval, 
+  graphicsid as MediaInsert,
+  dropstory AS DropStory
+  FROM nrcsnew.script 
+  WHERE bulletinname = ? AND bulletindate = ? 
+  ORDER BY RunOrder;`
+  try {
+    const [rows] = await safeQuery(query, [param1, param2]);
+    console.log(rows)
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching run order");
+  }
+});
+
+
 app.get("/getContent", async (req, res) => {
   const ScriptID = req.query.ScriptID;
   const NewsId = req.query.NewsId;
-  const query = newdatabase ? `SELECT Script FROM script WHERE ScriptID=?`: `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`;
+  const query = newdatabase ? `SELECT Script FROM script WHERE ScriptID=?` : `SELECT Script FROM script WHERE ScriptID=? AND NewsId=?`;
   try {
     const [rows] = await safeQuery(
-      query ,
+      query,
       [ScriptID, NewsId]
     );
     res.send(rows[0]);
@@ -613,9 +668,10 @@ app.get("/getContent", async (req, res) => {
   }
 });
 
+
 app.post("/updateContent", async (req, res) => {
   const { content, ScriptID, NewsId } = req.body;
-  const query = newdatabase ? `UPDATE script SET Script = ? WHERE ScriptID=?`:`UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`;
+  const query = newdatabase ? `UPDATE script SET Script = ? WHERE ScriptID=?` : `UPDATE script SET Script = ? WHERE ScriptID=? AND NewsId=?`;
   try {
     await safeQuery(
       query,
@@ -629,7 +685,7 @@ app.post("/updateContent", async (req, res) => {
 });
 app.get("/getGraphics", async (req, res) => {
   const ScriptID = req.query.ScriptID;
-  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate  FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder`: `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
+  const query = newdatabase ? `SELECT *, slno as GraphicsOrder, gfxtemplatetext as Graphicstext1, gfxtemplatename as GraphicsTemplate  FROM graphics where ScriptID=? AND gfxtemplatetext IS NOT NULL order by GraphicsOrder` : `SELECT * FROM graphics where ScriptID=? AND GraphicsText1 IS NOT NULL order by GraphicsOrder`;
   try {
     const [rows] = await safeQuery(
       query,
@@ -644,7 +700,7 @@ app.get("/getGraphics", async (req, res) => {
 
 app.post("/setGraphics", async (req, res) => {
   const { content, graphicsID } = req.body;
-  const query=newdatabase ? `UPDATE graphics SET gfxtemplatetext = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`;
+  const query = newdatabase ? `UPDATE graphics SET gfxtemplatetext = ? where GraphicsID=?` : `UPDATE graphics SET GraphicsText1 = ? where GraphicsID=?`;
   try {
     await safeQuery(
       query,
@@ -672,7 +728,7 @@ app.post("/insertGraphics", async (req, res) => {
     ScriptID,
     GraphicsTemplate,
   ];
-const query =newdatabase ?  `INSERT INTO graphics (GraphicsID, gfxtemplatetext, slno, ScriptID, gfxtemplatename) VALUES (?, ?, ?, ?, ?)`: `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`;
+  const query = newdatabase ? `INSERT INTO graphics (GraphicsID, gfxtemplatetext, slno, ScriptID, gfxtemplatename) VALUES (?, ?, ?, ?, ?)` : `INSERT INTO graphics (GraphicsID, Graphicstext1, GraphicsOrder, ScriptID, GraphicsTemplate) VALUES (?, ?, ?, ?, ?)`;
   try {
     await safeQuery(
       query,
@@ -692,10 +748,10 @@ app.post("/updateCGEntry", async (req, res) => {
     ScriptID,
     NewsId,
   ];
-  const query=newdatabase? `UPDATE script SET graphicsid = ? WHERE ScriptID=?`: `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
+  const query = newdatabase ? `UPDATE script SET graphicsid = ? WHERE ScriptID=?` : `UPDATE runorder SET MediaInsert = ? WHERE ScriptID=? AND NewsId=? `;
   try {
     await safeQuery(
-     query,
+      query,
       values
     );
     res.send("");
@@ -707,7 +763,7 @@ app.post("/updateCGEntry", async (req, res) => {
 
 app.post("/updateGraphicsOrder", async (req, res) => {
   const { GraphicsID, GraphicsOrder } = req.body;
-  const query=newdatabase?`UPDATE graphics SET slno = ? where GraphicsID=?`:`UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`;
+  const query = newdatabase ? `UPDATE graphics SET slno = ? where GraphicsID=?` : `UPDATE graphics SET GraphicsOrder = ? where GraphicsID=?`;
   try {
     await safeQuery(
       query,
@@ -721,14 +777,14 @@ app.post("/updateGraphicsOrder", async (req, res) => {
 });
 
 app.post("/updateGraphicTemplate", async (req, res) => {
-  const query=newdatabase? `UPDATE graphics SET gfxtemplatename = ? where GraphicsID=?`: `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`;
+  const query = newdatabase ? `UPDATE graphics SET gfxtemplatename = ? where GraphicsID=?` : `UPDATE graphics SET GraphicsTemplate = ? where GraphicsID=?`;
   const { GraphicsID, GraphicsTemplate } = req.body;
   if (!GraphicsID) {
     return res.status(400).send("GraphicsID is required");
   }
   try {
     await safeQuery(
-     query,
+      query,
       [GraphicsTemplate, GraphicsID]
     );
     res.send("Graphic updated successfully");
@@ -757,7 +813,7 @@ app.post("/deleteGraphics", async (req, res) => {
 
 // start code for remotion
 app.get("/show_runorderremotion", async (req, res) => {
-  const param1 =  req.query.param1;
+  const param1 = req.query.param1;
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
     return;

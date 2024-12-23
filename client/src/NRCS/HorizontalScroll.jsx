@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { addressmysql } from '../common'
 
 var data = [
   '1   दिल्ली में',
@@ -11,6 +12,7 @@ var data = [
 var gap = 50;
 
 const HorizontalScroll = () => {
+
   // State for active items
   const [activeItems, setActiveItems] = useState([]);
 
@@ -45,6 +47,33 @@ const HorizontalScroll = () => {
       { id: 0, text: newData[0], position: window.innerWidth },
     ]);
   };
+
+  const fetchRO = useCallback(async () => {
+    try {
+      const res = await fetch(
+        addressmysql() + `/show_runorderScroll`
+      );
+      const data = await res.json();
+      const aa = [];
+      data.forEach((val) => {
+        if (val && val.Script) {
+          const splitText = (val.Script)?.split("$$$$");
+          splitText.forEach((item) => {
+            aa.push(`${item.replaceAll("'", "")}`);
+          });
+        }
+      });
+
+      startScroll(aa);
+
+    } catch (error) {
+      // console.error('Error fetching data:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchRO();
+  }, [fetchRO]);
 
   useEffect(() => {
     const scroll = () => {

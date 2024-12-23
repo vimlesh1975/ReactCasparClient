@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { addressmysql } from '../common'
+
 
 const data = [
     '1   दिल्ली में',
@@ -14,6 +16,7 @@ const BreakingNews = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(-100%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
+
 
     useEffect(() => {
         if (!isStarted || dataList.length === 0) return;
@@ -41,6 +44,33 @@ const BreakingNews = () => {
         setIsStarted(true); // Start scrolling
     };
     window.startScroll = startScroll;
+
+
+    const fetchRO = useCallback(async () => {
+        try {
+            const res = await fetch(
+                addressmysql() + `/show_runorderBreakingNews`
+            );
+            const data = await res.json();
+            const aa = [];
+            data.forEach((val) => {
+                if (val && val.Script) {
+                    const splitText = (val.Script)?.split("$$$$");
+                    // Add single quotes around each element and push to 'aa'
+                    splitText.forEach((item) => {
+                        aa.push(`${item.replaceAll("'", "")}`);
+                    });
+                }
+            });
+            startScroll(aa);
+        } catch (error) {
+            // console.error('Error fetching data:', error);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchRO();
+    }, [fetchRO]);
 
     return (
         <div>
@@ -74,9 +104,9 @@ const BreakingNews = () => {
             )}
 
             {/* Button to Start Scrolling */}
-            <div style={{display: (window.screen.colorDepth === 0) ? 'none' : 'block', marginTop: 20, textAlign: 'center' }}>
+            <div style={{ display: (window.screen.colorDepth === 0) ? 'none' : 'block', marginTop: 20, textAlign: 'center' }}>
                 <button
-                    onClick={() => startScroll(['new data 1','new data 2','new data 3','new data 4','new data 5' ])}
+                    onClick={() => startScroll(['new data 1', 'new data 2', 'new data 3', 'new data 4', 'new data 5'])}
                     style={{
                         padding: '10px 20px',
                         fontSize: '16px',
