@@ -644,7 +644,7 @@ app.get("/show_runorderBreakingNews", async (req, res) => {
   ORDER BY RunOrder;`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
-    console.log(rows)
+    // console.log(rows)
     res.send(rows);
   } catch (error) {
     console.log(error);

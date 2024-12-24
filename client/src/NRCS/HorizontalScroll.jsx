@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { addressmysql } from '../common'
+import aa from './doordarshan-logo.png'
 
 var data = [
   '1   दिल्ली में',
@@ -141,7 +142,7 @@ const HorizontalScroll = () => {
               color: 'white',
             }}
           >
-            {item.text}
+            {item.text} <img src={aa} alt='dd logo' width={50}/>
           </div>
         ))}
 
@@ -151,7 +152,7 @@ const HorizontalScroll = () => {
         <button onClick={() => startScroll(['New Data 1', 'New Data 2', 'New Data 3'])}>
           Set New Data and Start Scroll
         </button>
-        <div>Current Speed: {speedRef.current} activeItems={activeItems.length} </div>
+        <div>Current Speed: {speedRef.current} activeItems={activeItems.length}</div>
       </div>
     </div>
   </div>);
