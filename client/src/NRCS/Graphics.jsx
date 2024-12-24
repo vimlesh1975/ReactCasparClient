@@ -703,21 +703,9 @@ const Graphics = () => {
   };
 
   const playScroll = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    // const aa = slugs.map((val) => "'" + (val.Script).replaceAll("'", "") + "'");
-
-    // const aa = [];
-    // slugs.forEach((val) => {
-    //   if (val && val.OneLinerText) {
-    //     const splitText = (val.OneLinerText)?.split(newdatabase ? "$$$" : "\n");
-    //     // Add single quotes around each element and push to 'aa'
-    //     splitText.forEach((item) => {
-    //       aa.push(`'${item.replaceAll("'", "") }'`);
-    //     });
-    //   }
-    // });
-
-    // endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll([${aa}])`);
+    // endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
   }
   const stopScroll = () => {
     endpoint(
@@ -727,20 +715,8 @@ const Graphics = () => {
 
   const playBreakingNews = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews`);
-    // const aa = slugs.map((val) => "'" + (val.SlugName).replaceAll("'", "") + "'");
-    // const aa = [];
-    // slugs.forEach((val) => {
-    //   if (val && val.OneLinerText) {
-    //     const splitText = (val.OneLinerText)?.split(newdatabase ? "$$$" : "\n");
-    //     // Add single quotes around each element and push to 'aa'
-    //     splitText.forEach((item) => {
-    //       aa.push(`'${item.replaceAll("'", "") }'`);
-    //     });
-    //   }
-    // });
-    
-    // // console.log(aa)
-    // endpoint(`call ${window.chNumber}-${templateLayers.nrcsBreakingNews} startScroll([${aa}])`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 0 0.97 1`);
+
   }
   const stopBreakingNews = () => {
     endpoint(

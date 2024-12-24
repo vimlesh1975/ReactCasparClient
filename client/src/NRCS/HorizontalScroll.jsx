@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { addressmysql } from '../common'
-import aa from './doordarshan-logo.png'
+import logo from './doordarshan-logo.png'
 
 var data = [
   '1   दिल्ली में',
@@ -142,7 +142,7 @@ const HorizontalScroll = () => {
               color: 'white',
             }}
           >
-            {item.text} <img src={aa} alt='dd logo' width={50}/>
+            {item.text} <img src={logo} alt='dd logo' width={50}/>
           </div>
         ))}
 

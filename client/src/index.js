@@ -18,6 +18,7 @@ import CanvasPlayer from './CanvasPlayer';
 import Tsparticles2 from './tsparticles/Tsparticles2';
 import GddTemplatePlayer from './GddTemplatePlayer/GddTemplatePlayer';
 import HorizontalScroll from './NRCS/HorizontalScroll'
+import HorizontalScrollWithTopic from './NRCS/HorizontalScrollWithTopic'
 import BreakingNews from './NRCS/BreakingNews'
 
 
@@ -44,6 +45,7 @@ root.render(
         <Route exact path="/Tsparticles2" element={<Tsparticles2 />} />
         <Route exact path="/GddTemplatePlayer" element={<GddTemplatePlayer />} />
         <Route exact path="/HorizontalScroll" element={<HorizontalScroll />} />
+        <Route exact path="/HorizontalScrollWithTopic" element={<HorizontalScrollWithTopic />} />
         <Route exact path="/BreakingNews" element={<BreakingNews />} />
       </Routes>
     </Router>

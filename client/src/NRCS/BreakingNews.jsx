@@ -79,7 +79,7 @@ const BreakingNews = () => {
             {/* Background Bar */}
             <div
                 style={{
-                    backgroundColor: 'yellow',
+                    backgroundColor: '#ff8000',
                     minHeight: 80,
                     width: '100%',
                     position: 'fixed',
