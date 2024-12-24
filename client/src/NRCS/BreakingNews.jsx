@@ -94,6 +94,7 @@ const BreakingNews = () => {
                         bottom: 85,
                         color: 'black',
                         fontSize: 50,
+                        fontWeight: 'bolder',
                         whiteSpace: 'nowrap',
                         width: '100%',
                         textAlign: 'center',
