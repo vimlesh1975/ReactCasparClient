@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { addressmysql } from '../common'
+import STFSingleLine from './STFSingleLine'
+
 
 
 const data = [
@@ -91,16 +93,18 @@ const BreakingNews = () => {
                     style={{
                         ...animationStyle,
                         position: 'fixed',
-                        bottom: 85,
+                        bottom: 80,
+                        left:25,
                         color: 'black',
-                        fontSize: 50,
+                        fontSize: 75,
                         fontWeight: 'bolder',
                         whiteSpace: 'nowrap',
                         width: '100%',
                         textAlign: 'center',
                     }}
                 >
-                    {dataList[currentIndex]}
+                    {/* {dataList[currentIndex]} */}
+                    <STFSingleLine text={dataList[currentIndex]} containerWidth={window.innerWidth-50} />
                 </div>
             )}
 
