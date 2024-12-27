@@ -735,6 +735,17 @@ const Graphics = () => {
     );
   }
 
+  const playTwoliner= () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
+
+  }
+  const stopTwoliner= () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsTwoliner}`
+    );
+  }
+
 
 
   const setDirectory = async () => {
@@ -1185,7 +1196,11 @@ const Graphics = () => {
                   <button onClick={stopDateTimeSwitcher}>Stop DateTimeSwitcher</button>
                 </div>
 
-
+                <div>
+                  <button onClick={playTwoliner}>Play Twoliner</button>
+                  <button onClick={stopTwoliner}>Stop Twoliner</button>
+                </div>
+                
 
               </TabPanel>
 

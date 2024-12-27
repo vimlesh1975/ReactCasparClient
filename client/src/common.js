@@ -2338,6 +2338,7 @@ export const templateLayers = {
   nrcsscroll: 551,
   nrcsBreakingNews: 552,
   nrcsDateTimeSwitcher: 553,
+  nrcsTwoliner: 554,
 };
 export const theatreLayers = [171, 172, 173, 174, 175];
 

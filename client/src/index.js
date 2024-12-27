@@ -21,6 +21,7 @@ import HorizontalScroll from './NRCS/HorizontalScroll'
 import HorizontalScrollWithTopic from './NRCS/HorizontalScrollWithTopic'
 import BreakingNews from './NRCS/BreakingNews'
 import DateTimeSwitcher from './NRCS/DateTimeSwitcher'
+import Twoliner from './NRCS/Twoliner'
 
 
 
@@ -49,6 +50,7 @@ root.render(
         <Route exact path="/HorizontalScrollWithTopic" element={<HorizontalScrollWithTopic />} />
         <Route exact path="/BreakingNews" element={<BreakingNews />} />
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
+        <Route exact path="/Twoliner" element={<Twoliner />} />
       </Routes>
     </Router>
   </Provider>
