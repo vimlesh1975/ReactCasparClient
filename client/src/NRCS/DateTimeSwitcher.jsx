@@ -52,8 +52,8 @@ const DateTimeSwitcher = () => {
         minWidth: 300,
         fontWeight: 'bolder',
         fontFamily: 'Arial, sans-serif',
-        color: 'white',
-        backgroundColor: 'blue',
+        color: 'black',
+        backgroundColor: 'white',
       }}
     >
       <div
