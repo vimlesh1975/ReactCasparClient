@@ -724,6 +724,16 @@ const Graphics = () => {
     );
   }
 
+  const playDateTimeSwitcher = () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] https://localhost:10000/ReactCasparClient/DateTimeSwitcher`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 0 0.97 1`);
+
+  }
+  const stopDateTimeSwitcher = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher}`
+    );
+  }
 
 
 
@@ -1170,6 +1180,13 @@ const Graphics = () => {
                   <button onClick={playBreakingNews}>Play BreakingNews</button>
                   <button onClick={stopBreakingNews}>Stop BreakingNews</button>
                 </div>
+                <div>
+                  <button onClick={playDateTimeSwitcher}>Play DateTimeSwitcher</button>
+                  <button onClick={stopDateTimeSwitcher}>Stop DateTimeSwitcher</button>
+                </div>
+
+
+
               </TabPanel>
 
             </Tabs>
