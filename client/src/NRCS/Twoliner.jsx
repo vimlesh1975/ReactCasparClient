@@ -35,7 +35,7 @@ const data = [
 
 const Twoliner = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(-100%)' });
+    const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(100%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
 
@@ -104,7 +104,7 @@ const Twoliner = () => {
                     minHeight: 80,
                     width: '100%',
                     position: 'fixed',
-                    // bottom: 80,
+                    top:red? 42:15,
                 }}
             >
                 {/* <img src={red_news_update} alt="red_news_update.gif" /> */}
@@ -122,7 +122,7 @@ const Twoliner = () => {
                     style={{
                         ...animationStyle,
                         position: 'fixed',
-                        top: red ? 800 : 850,
+                        top: red ? 842 : 865,
                         left: red ? 500 : 40,
                         color: 'black',
                         fontWeight: 'bolder',
@@ -132,7 +132,7 @@ const Twoliner = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={150} fs={red?140:40} />
+                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={150} fs={red?180:40} />
                 </div>
             )}
 
