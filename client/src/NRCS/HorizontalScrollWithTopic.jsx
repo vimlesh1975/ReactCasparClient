@@ -143,9 +143,10 @@ const HorizontalScrollWithTopic = () => {
         backgroundColor: 'black',
         color: 'white',
         overflow: 'hidden',
+        animation: 'fadeIn 0.5s ease-in-out', // Fade-in effect for the entire strip
       }}
     >
-      {/* Category Name */}
+      {/* Category Name with Animation */}
       <div
         style={{
           width: categoryWidth,
@@ -158,11 +159,13 @@ const HorizontalScrollWithTopic = () => {
           fontSize: 50,
           fontWeight: 'bolder',
           whiteSpace: 'nowrap',
+          transform: 'translateX(-100%)', // Start off-screen
+          animation: 'slideIn 0.5s ease-in-out forwards', // Slide-in effect
         }}
       >
         <STFSingleLine text={currentCategory} containerWidth={categoryWidth - 10} />
       </div>
-
+  
       {/* Scrolling Items */}
       <div
         style={{
@@ -170,6 +173,7 @@ const HorizontalScrollWithTopic = () => {
           flexGrow: 1,
           height: '100%',
           overflow: 'hidden',
+          animation: 'fadeIn 0.5s ease-in-out', // Optional fade-in for the scrolling strip
         }}
       >
         {activeItems.map((item) => (
@@ -186,6 +190,7 @@ const HorizontalScrollWithTopic = () => {
               textOverflow: 'clip',
               fontFamily: 'Arial, Helvetica, sans-serif',
               lineHeight: 'normal',
+              animation: 'fadeIn 0.5s ease-in-out', // Fade-in effect for each item
             }}
           >
             {item.text + ' | '}
@@ -194,6 +199,7 @@ const HorizontalScrollWithTopic = () => {
       </div>
     </div>
   );
+  
 };
 
 export default HorizontalScrollWithTopic;
