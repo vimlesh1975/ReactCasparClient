@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 const DateTimeSwitcher = () => {
   const [isShowingDate, setIsShowingDate] = useState(true); // Toggle state for date and time
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [fadeState, setFadeState] = useState('fade-in'); // Track animation state
 
   useEffect(() => {
     // Update time every second
@@ -12,8 +13,13 @@ const DateTimeSwitcher = () => {
 
     // Switch between date and time every 2 seconds
     const switcher = setInterval(() => {
-      setIsShowingDate((prev) => !prev);
-    }, 2000);
+      // Trigger fade-out animation before switching
+      setFadeState('fade-out');
+      setTimeout(() => {
+        setIsShowingDate((prev) => !prev); // Switch content
+        setFadeState('fade-in'); // Trigger fade-in animation
+      }, 500); // Match fade-out duration
+    }, 5000);
 
     // Cleanup intervals on unmount
     return () => {
@@ -22,7 +28,14 @@ const DateTimeSwitcher = () => {
     };
   }, []);
 
-  const formatDate = (date) => date.toLocaleDateString();
+  // Format the date in Indian style (e.g., 27 Dec 2024)
+  const formatDate = (date) =>
+    date.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
   const formatTime = (date) => date.toLocaleTimeString();
 
   return (
@@ -31,19 +44,26 @@ const DateTimeSwitcher = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        position:'absolute',
+        position: 'absolute',
         height: 80,
-        top:window.innerHeight-80,
-        left:window.innerWidth - 300,
+        top: window.innerHeight - 80,
+        left: window.innerWidth - 300,
         fontSize: 50,
-        minWidth:300,
+        minWidth: 300,
         fontWeight: 'bolder',
         fontFamily: 'Arial, sans-serif',
         color: 'white',
-        backgroundColor:'blue'
+        backgroundColor: 'blue',
       }}
     >
-      {isShowingDate ? formatDate(currentTime) : formatTime(currentTime)}
+      <div
+        style={{
+          transition: 'opacity 0.5s ease', // Animation duration and easing
+          opacity: fadeState === 'fade-in' ? 1 : 0, // Apply fade-in/out effect
+        }}
+      >
+        {isShowingDate ? formatDate(currentTime) : formatTime(currentTime)}
+      </div>
     </div>
   );
 };
