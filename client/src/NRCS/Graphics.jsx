@@ -26,6 +26,8 @@ import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
 import FlashMessage from "../FlashMessage";
 
+import Mixerfill from "./Mixerfill";
+
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
@@ -735,12 +737,12 @@ const Graphics = () => {
     );
   }
 
-  const playTwoliner= () => {
+  const playTwoliner = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
 
   }
-  const stopTwoliner= () => {
+  const stopTwoliner = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsTwoliner}`
     );
@@ -1184,23 +1186,52 @@ const Graphics = () => {
               </TabPanel>
               <TabPanel>
                 <div>
-                  <button onClick={playScroll}>Play Scroll</button>
-                  <button onClick={stopScroll}>Stop Scroll</button>
-                </div>
-                <div>
-                  <button onClick={playBreakingNews}>Play BreakingNews</button>
-                  <button onClick={stopBreakingNews}>Stop BreakingNews</button>
-                </div>
-                <div>
-                  <button onClick={playDateTimeSwitcher}>Play DateTimeSwitcher</button>
-                  <button onClick={stopDateTimeSwitcher}>Stop DateTimeSwitcher</button>
-                </div>
+                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'left' }}>Feature</th>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Scroll</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopScroll}>Stop</button>
+                          <Mixerfill  layer={templateLayers.nrcsscroll }/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopBreakingNews}>Stop</button>
+                          <Mixerfill  layer={templateLayers.nrcsBreakingNews }/>
 
-                <div>
-                  <button onClick={playTwoliner}>Play Twoliner</button>
-                  <button onClick={stopTwoliner}>Stop Twoliner</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopDateTimeSwitcher}>Stop</button>
+                          <Mixerfill  layer={templateLayers.nrcsDateTimeSwitcher }/>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Twoliner</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopTwoliner}>Stop</button>
+                          <Mixerfill  layer={templateLayers.nrcsTwoliner }/>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-                
 
               </TabPanel>
 
