@@ -1211,21 +1211,22 @@ const Graphics = () => {
 
                         </td>
                       </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopDateTimeSwitcher}>Stop</button>
-                          <Mixerfill  layer={templateLayers.nrcsDateTimeSwitcher }/>
-
-                        </td>
-                      </tr>
+                     
                       <tr>
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Twoliner</td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopTwoliner}>Stop</button>
                           <Mixerfill  layer={templateLayers.nrcsTwoliner }/>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopDateTimeSwitcher}>Stop</button>
+                          <Mixerfill  layer={templateLayers.nrcsDateTimeSwitcher }/>
 
                         </td>
                       </tr>
