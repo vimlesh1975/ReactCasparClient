@@ -748,7 +748,17 @@ const Graphics = () => {
     );
   }
 
+  const playFullPageBreakingNews= () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews`);
 
+  }
+  const stopFullPageBreakingNews = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews}`
+    );
+  }
+
+  
 
   const setDirectory = async () => {
     try {
@@ -1227,9 +1237,17 @@ const Graphics = () => {
                           <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopDateTimeSwitcher}>Stop</button>
                           <Mixerfill  layer={templateLayers.nrcsDateTimeSwitcher }/>
-
                         </td>
                       </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopFullPageBreakingNews}>Stop</button>
+                        </td>
+                      </tr>
+
+                      
                     </tbody>
                   </table>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
-const STFMultine = ({ text, containerWidth, containerHeight,fs }) => {
+const STFMultine = ({ text, containerWidth, containerHeight, fs }) => {
   const containerRef = useRef(null);
   const textRef = useRef(null);
   const [fontSize, setFontSize] = useState(fs); // Default font size
@@ -57,7 +57,7 @@ const STFMultine = ({ text, containerWidth, containerHeight,fs }) => {
         ref={textRef}
         style={{
           whiteSpace: 'normal', // Allow multi-line text
-          textAlign: 'left', // Center-align text
+          textAlign: 'center', // Center-align text
           fontSize: `${fontSize}px`,
         }}
       >

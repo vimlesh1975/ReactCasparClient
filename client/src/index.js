@@ -20,8 +20,11 @@ import GddTemplatePlayer from './GddTemplatePlayer/GddTemplatePlayer';
 import HorizontalScroll from './NRCS/HorizontalScroll'
 import HorizontalScrollWithTopic from './NRCS/HorizontalScrollWithTopic'
 import BreakingNews from './NRCS/BreakingNews'
+import FullPageBreakingNews from './NRCS/FullPageBreakingNews'
 import DateTimeSwitcher from './NRCS/DateTimeSwitcher'
 import Twoliner from './NRCS/Twoliner'
+import YellowNewsUpdate from './test/YellowNewsUpdate'
+
 
 
 
@@ -49,8 +52,10 @@ root.render(
         <Route exact path="/HorizontalScroll" element={<HorizontalScroll />} />
         <Route exact path="/HorizontalScrollWithTopic" element={<HorizontalScrollWithTopic />} />
         <Route exact path="/BreakingNews" element={<BreakingNews />} />
+        <Route exact path="/FullPageBreakingNews" element={<FullPageBreakingNews />} />
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
         <Route exact path="/Twoliner" element={<Twoliner />} />
+        <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
       </Routes>
     </Router>
   </Provider>

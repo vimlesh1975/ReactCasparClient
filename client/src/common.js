@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "301224_1";
+export const buildDate = "311224_1";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -2335,10 +2335,12 @@ export const templateLayers = {
   hockeyclockLayer: 502,
 
   breakingneslayer: 550,
-  nrcsscroll: 551,
-  nrcsBreakingNews: 552,
-  nrcsTwoliner: 553,
-  nrcsDateTimeSwitcher: 554,
+
+  nrcsFullPageBreakingNews:555,
+  nrcsscroll: 560,
+  nrcsBreakingNews: 565,
+  nrcsTwoliner: 570,
+  nrcsDateTimeSwitcher: 575,
 
 };
 export const theatreLayers = [171, 172, 173, 174, 175];

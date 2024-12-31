@@ -1,0 +1,84 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Adjust based on design */
+  background-color: rgb(70, 70, 70);
+  overflow: hidden;
+}
+
+.news-bar {
+  display: flex;
+  position: absolute;
+  bottom: 50px; /* Adjust based on design */
+  left: 0;
+  width: 100%;
+  height: 50px;
+}
+
+.yellow-box {
+  width: 100px;
+  height: 100%;
+  background-color: yellow;
+  animation: slide-in 3s ease-in-out infinite;
+}
+
+.blue-bar {
+  flex: 1;
+  height: 100%;
+  background-color: blue;
+  animation: slide-in-blue 3s ease-in-out infinite;
+}
+
+.background {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: rgb(62, 3, 201);
+  opacity: 0.8;
+  overflow: hidden;
+}
+
+.white-flair {
+  position: absolute;
+  width: 8px;
+  height: 1000%;
+  /* rotate :45deg; */
+  background: linear-gradient(to right, transparent, white, transparent);
+  animation: move-flair 2s linear infinite alternate;
+}
+
+/* Animations */
+@keyframes slide-in {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in-blue {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes move-flair {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX((1800%));
+  }
+}
