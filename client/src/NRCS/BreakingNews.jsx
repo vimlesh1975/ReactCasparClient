@@ -42,7 +42,7 @@ const BreakingNews = () => {
     }, [dataList, isStarted]);
 
     const startScroll = (newData) => {
-        // setDataList(newData);
+        setDataList(newData);
         setCurrentIndex(0); // Reset index to start from the beginning
         setIsStarted(true); // Start scrolling
     };
