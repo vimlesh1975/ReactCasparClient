@@ -8,17 +8,17 @@ import BN_Full from './gif/BN_Full.gif'
 
 
 const data = [
-    '1   दिल्ली में',
+    '1   Lucknow Kisan Mahapanchayat: कृषि कानूनों की वापसी 70 साल में किसान आंदोलनों की सबसे बड़ी जीत',
     '2   मुख्यमंत्री योगी आदित्यनाथ',
-    '3   चलने नहीं देंगे रामायण',
+    '3   अमेरिका में डॉलर की बारिश: चलते ट्रक से सड़क पर नोटों से भरे कई बैग उड़े, हाईवे पर कारें खड़ी कर लूटने लगे लोग , चलने नहीं देंगे रामायण एक्सप्रेस, संतों की वेशभूषा में वेटरों पर साधुओं की चेतावनी',
     '4   मंत्रिमंडल विस्तार ',
-    '5   Shaurya Chakra:',
+    '5   अनुपमा सीरियल में Rupali Ganguly की मां का किरदार निभा चुकीं एक्ट्रेस Madhavi Gogate का निधन',
     '6   पाक को खदेड़ने ',
 ];
 
 const FullPageBreakingNews = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(-100%)' });
+    const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(-10%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
 
@@ -31,7 +31,7 @@ const FullPageBreakingNews = () => {
 
         const interval = setInterval(() => {
             // Reset animation to the starting position
-            setAnimationStyle({ opacity: 0, transform: 'translateX(-100%)', transition: 'none' });
+            setAnimationStyle({ opacity: 0, transform: 'translateX(-10%)', transition: 'none' });
 
             // Update text and start the reveal animation
             setTimeout(() => {
@@ -44,7 +44,7 @@ const FullPageBreakingNews = () => {
     }, [dataList, isStarted]);
 
     const startScroll = (newData) => {
-        setDataList(newData);
+        // setDataList(newData);
         setCurrentIndex(0); // Reset index to start from the beginning
         setIsStarted(true); // Start scrolling
     };
@@ -109,7 +109,7 @@ const FullPageBreakingNews = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth-600} containerHeight={window.innerHeight-500} fs={200} />
+                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth-600} containerHeight={window.innerHeight-500} fs={200} textAlign={'center'} />
                 </div>
             )}
         </div>
