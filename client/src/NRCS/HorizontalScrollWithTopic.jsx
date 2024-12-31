@@ -183,6 +183,7 @@ const HorizontalScrollWithTopic = () => {
             style={{
               position: 'absolute',
               left: Math.round(item.position), // Avoid fractional pixels
+              top: 10,
               fontSize: 50,
               fontWeight: 'bolder',
               whiteSpace: 'nowrap',
@@ -193,7 +194,7 @@ const HorizontalScrollWithTopic = () => {
               animation: 'fadeIn 0.5s ease-in-out', // Fade-in effect for each item
             }}
           >
-            {item.text + ' | '}
+            {item.text + ' |'}
           </div>
         ))}
       </div>
