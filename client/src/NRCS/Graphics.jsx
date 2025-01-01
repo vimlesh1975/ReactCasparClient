@@ -64,6 +64,8 @@ const Graphics = () => {
   const [flashMessage, setFlashMessage] = useState("");
   const [selectedDate, setSelectedDate] = useState('2024-12-05');
   const [selectedDate2, setSelectedDate2] = useState('2024-12-05');
+  const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
+
   // const [allGraphics, setAllGraphics] = useState([]);
 
   const handleDateChange = (event) => {
@@ -726,6 +728,18 @@ const Graphics = () => {
     );
   }
 
+  const playNewsUpdate = () => {
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 0 0.97 1`);
+
+  }
+  const stopNewsUpdate = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.nrcsNewsUpdate}`
+    );
+  }
+
+
   const playDateTimeSwitcher = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] https://localhost:10000/ReactCasparClient/DateTimeSwitcher`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 0 0.97 1`);
@@ -739,6 +753,7 @@ const Graphics = () => {
 
   const playTwoliner = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
 
   }
@@ -748,7 +763,7 @@ const Graphics = () => {
     );
   }
 
-  const playFullPageBreakingNews= () => {
+  const playFullPageBreakingNews = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews`);
 
   }
@@ -758,7 +773,7 @@ const Graphics = () => {
     );
   }
 
-  
+
 
   const setDirectory = async () => {
     try {
@@ -803,6 +818,11 @@ const Graphics = () => {
     }
   }
 
+
+  const handleChange = (event) => {
+    const value = event.target.value === 'true';  // Convert string to boolean
+    dispatch({ type: 'NRCSBREAKINGTEXT', payload: value });
+  };
 
   return (<div>
     <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -1209,25 +1229,60 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopScroll}>Stop</button>
-                          <Mixerfill  layer={templateLayers.nrcsscroll }/>
+                          <Mixerfill layer={templateLayers.nrcsscroll} />
                         </td>
                       </tr>
                       <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews</td>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopBreakingNews}>Stop</button>
-                          <Mixerfill  layer={templateLayers.nrcsBreakingNews }/>
+                          <Mixerfill layer={templateLayers.nrcsBreakingNews} />
 
                         </td>
                       </tr>
-                     
+
                       <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Twoliner</td>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopNewsUpdate}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsNewsUpdate} />
+
+                        </td>
+                      </tr>
+
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Twoliner
+                          <br />
+
+                          <label>
+                            <input
+                              type="radio"
+                              value={true}
+                              checked={NrcsBreakingText === true}
+                              onChange={handleChange}
+                            />
+                            Breaking News
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              value={false}
+                              checked={NrcsBreakingText === false}
+                              onChange={handleChange}
+                            />
+                            News Update
+                          </label>
+
+
+                        </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopTwoliner}>Stop</button>
-                          <Mixerfill  layer={templateLayers.nrcsTwoliner }/>
+                          <Mixerfill layer={templateLayers.nrcsTwoliner} />
 
                         </td>
                       </tr>
@@ -1236,7 +1291,7 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopDateTimeSwitcher}>Stop</button>
-                          <Mixerfill  layer={templateLayers.nrcsDateTimeSwitcher }/>
+                          <Mixerfill layer={templateLayers.nrcsDateTimeSwitcher} />
                         </td>
                       </tr>
                       <tr>
@@ -1247,7 +1302,7 @@ const Graphics = () => {
                         </td>
                       </tr>
 
-                      
+
                     </tbody>
                   </table>
                 </div>

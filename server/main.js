@@ -650,6 +650,36 @@ app.get("/show_runorderBreakingNews", async (req, res) => {
     res.status(500).send("Error fetching run order");
   }
 });
+
+app.get("/show_runorderNewsUpdate", async (req, res) => {
+  // const param1 =  req.query.param1;
+  // const param2 = req.query.param2;
+  const param1 = 'News Update';
+  const param2 = '2025-01-01';
+
+  if (param1 === "") {
+    res.status(500).send("Error fetching run order");
+    return;
+  }
+  const query = `SELECT *, 
+  slno AS RunOrder, 
+  createdtime AS CreatedTime, 
+  approved AS Approval, 
+  graphicsid as MediaInsert,
+  dropstory AS DropStory
+  FROM nrcsnew.script 
+  WHERE bulletinname = ? AND bulletindate = ? 
+  ORDER BY RunOrder;`
+  try {
+    const [rows] = await safeQuery(query, [param1, param2]);
+    // console.log(rows)
+    res.send(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching run order");
+  }
+});
+
 app.get("/show_runorderTwoliner", async (req, res) => {
   // const param1 =  req.query.param1;
   // const param2 = req.query.param2;

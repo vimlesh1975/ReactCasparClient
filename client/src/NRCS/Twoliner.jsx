@@ -14,6 +14,9 @@ import red_breaking_news from './gif/red_breaking_news.gif'
 // eslint-disable-next-line
 import yellow_breaking_news from './gif/yellow_breaking_news.gif'
 
+import { useSelector, useDispatch } from "react-redux";
+
+
 var red = true;
 red = false
 
@@ -38,7 +41,10 @@ const Twoliner = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(100%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
+    const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
 
+    const dispatch = useDispatch();
+    window.dispatch=dispatch;
 
     useEffect(() => {
         if (!isStarted || dataList.length === 0) return;
@@ -104,14 +110,14 @@ const Twoliner = () => {
                     minHeight: 80,
                     width: '100%',
                     position: 'fixed',
-                    top:red? 42:15,
+                    top: red ? 42 : 15,
                 }}
             >
                 {/* <img src={red_news_update} alt="red_news_update.gif" /> */}
                 {/* <img src={red_breaking_news} alt="red_breaking_news.gif" /> */}
 
-
-                <img src={yellow_news_update} alt="yellow_news_update.gif" />
+                {NrcsBreakingText ? <img src={yellow_breaking_news} alt="yellow_breaking_news.gif" /> : <img src={yellow_news_update} alt="yellow_news_update.gif" />}
+                {/* <img src={yellow_news_update} alt="yellow_news_update.gif" /> */}
                 {/* <img src={yellow_breaking_news} alt="yellow_breaking_news.gif" /> */}
 
             </div>
@@ -132,7 +138,7 @@ const Twoliner = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={150} fs={red?180:40} />
+                    <STFMultine text={ dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={150} fs={red ? 180 : 40} />
                 </div>
             )}
 

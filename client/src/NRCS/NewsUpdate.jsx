@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { addressmysql } from '../common'
 import STFSingleLine from './STFSingleLine'
-import breaking_news from './gif/breaking_news.gif'
+import news_update from './gif/news_update.gif'
 
 
 
@@ -15,7 +15,7 @@ const data = [
 ];
 
 
-const BreakingNews = () => {
+const NewsUpdate = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(0%)' });
     const [dataList, setDataList] = useState(data);
@@ -56,7 +56,7 @@ const BreakingNews = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderBreakingNews`
+                addressmysql() + `/show_runorderNewsUpdate`
             );
             const data = await res.json();
             const aa = [];
@@ -91,7 +91,7 @@ const BreakingNews = () => {
                     bottom: 52,
                 }}
             >
-                            <img src={breaking_news} alt="breaking_news" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)'  }} />
+                            <img src={news_update} alt="news_update" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)'  }} />
             
             </div>
 
@@ -101,14 +101,14 @@ const BreakingNews = () => {
                     style={{
                         ...animationStyle,
                         position: 'fixed',
-                        bottom: 82,
+                        bottom: 80,
                         left:25,
-                        fontSize: 55,
+                        color: 'black',
+                        fontSize: 53,
                         fontWeight: 'bolder',
                         whiteSpace: 'nowrap',
                         width: '100%',
                         textAlign: 'center',
-                        color:'yellow',
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
@@ -121,4 +121,4 @@ const BreakingNews = () => {
     );
 };
 
-export default BreakingNews;
+export default NewsUpdate;

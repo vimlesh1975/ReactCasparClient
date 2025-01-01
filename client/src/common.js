@@ -2339,6 +2339,7 @@ export const templateLayers = {
   nrcsFullPageBreakingNews:555,
   nrcsscroll: 560,
   nrcsBreakingNews: 565,
+  nrcsNewsUpdate: 567,
   nrcsTwoliner: 570,
   nrcsDateTimeSwitcher: 575,
 

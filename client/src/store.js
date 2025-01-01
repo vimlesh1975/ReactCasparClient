@@ -487,6 +487,19 @@ const newdatabaseReducer = (state = initialnewdatabase, action) => {
   }
 };
 
+const initialNrcsBreakingText = { NrcsBreakingText: false }; // Set initial state as an object
+const NrcsBreakingTextReducer = (state = initialNrcsBreakingText, action) => {
+  switch (action.type) {
+    case 'NRCSBREAKINGTEXT':
+      return {
+        ...state,
+        NrcsBreakingText: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
 
 const rootReducer = combineReducers({
   canvasListReducer,
@@ -519,7 +532,8 @@ const rootReducer = combineReducers({
   clientIdReducer,
   FPSReducer,
   textNodesReducer,
-  newdatabaseReducer
+  newdatabaseReducer,
+  NrcsBreakingTextReducer
 });
 const store = createStore(
   rootReducer,
