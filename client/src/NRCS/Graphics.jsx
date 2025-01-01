@@ -753,9 +753,10 @@ const Graphics = () => {
 
   const playTwoliner = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
-    endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
-
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} "dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })"`);
+    }, 100);
   }
   const stopTwoliner = () => {
     endpoint(
