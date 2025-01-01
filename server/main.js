@@ -533,7 +533,10 @@ var pool;
 
 var newdatabase = true;
 //  newdatabase = false;
-const dbname = newdatabase ? 'nrcsnew' : 'c1news';
+
+const oldDatabaseName='c1news';
+const newDatabasename='nrcsnew';
+const dbname = newdatabase ? newDatabasename : oldDatabaseName;
 
 try {
   pool = mysql.createPool({
@@ -610,7 +613,7 @@ app.get("/show_runorderScroll", async (req, res) => {
   approved AS Approval, 
   graphicsid as MediaInsert,
   dropstory AS DropStory
-  FROM nrcsnew.script 
+  FROM ${newDatabasename}.script 
   WHERE bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
@@ -638,7 +641,7 @@ app.get("/show_runorderBreakingNews", async (req, res) => {
   approved AS Approval, 
   graphicsid as MediaInsert,
   dropstory AS DropStory
-  FROM nrcsnew.script 
+  FROM ${newDatabasename}.script 
   WHERE bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
@@ -667,7 +670,7 @@ app.get("/show_runorderNewsUpdate", async (req, res) => {
   approved AS Approval, 
   graphicsid as MediaInsert,
   dropstory AS DropStory
-  FROM nrcsnew.script 
+  FROM ${newDatabasename}.script 
   WHERE bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
@@ -696,7 +699,7 @@ app.get("/show_runorderTwoliner", async (req, res) => {
   approved AS Approval, 
   graphicsid as MediaInsert,
   dropstory AS DropStory
-  FROM nrcsnew.script 
+  FROM ${newDatabasename}.script 
   WHERE bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {

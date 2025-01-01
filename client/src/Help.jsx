@@ -110,7 +110,7 @@ const Help = () => {
           </ol>
 
         </div>
-        <div style={{ maxHeight: 800, width: 220, display: 'none1', overflow: 'auto' }}>
+        <div style={{ maxHeight: 800, width: 320, display: 'none1', overflow: 'auto' }}>
           <table border="1">
             <tbody>
               <tr>
