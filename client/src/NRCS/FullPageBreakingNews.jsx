@@ -38,7 +38,7 @@ const FullPageBreakingNews = () => {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % dataList.length);
                 setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
             }, 50); // Slight delay for smooth transition
-        }, 10000); // Change text every 1 second
+        }, 4250); // Change text every 1 second
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, [dataList, isStarted]);
