@@ -20,16 +20,6 @@ import { useSelector, useDispatch } from "react-redux";
 var red = true;
 red = false
 
-
-// const data = [
-//     '1   दिल्ली में',
-//     '2   मुख्यमंत्री योगी आदित्यनाथ',
-//     '3   चलने नहीं देंगे रामायण',
-//     '4   मंत्रिमंडल विस्तार ',
-//     '5   Shaurya Chakra:',
-//     '6   पाक को खदेड़ने ',
-// ];
-
 const data = [
     "रायगड जिल्ह्यातील उरण तालुक्यात राहणारे उरण तालुक्याचे सुपुत्र रोहित शरद घरत यांनी उत्कृष्ट कामगिरी करत कास्य पदक पटकाविले आहे.\n\n",
     "कौलालमपूर, मलेशिया येथे गोशीन रियू कराटे असोसिएशन (इंडिया )तर्फे आयोजित केलेल्या आंतरराष्ट्रीय कराटे स्पर्धेत ८४ ",
@@ -91,9 +81,8 @@ const Twoliner = () => {
                 }
             });
             startScroll(aa);
-            console.log(aa)
         } catch (error) {
-            // console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
         }
     }, []);
 

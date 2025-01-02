@@ -14,8 +14,64 @@ const HorizontalScrollWithTopic = () => {
   const isScrolling = useRef(false); // Flag for scrolling state
   const animationFrameId = useRef(null); // For canceling the animation
   const speedRef = useRef(6); // Scrolling speed reference
+  const [categoryShow, SetCategoryShow] = useState(true);
+
+
+  const [isShowingDate, setIsShowingDate] = useState(true); // Toggle state for date and time
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const [showdateandTime, setShowdateandTime] = useState(true);
+  window.setShowdateandTime = setShowdateandTime;
+  // const [fadeState, setFadeState] = useState('fade-in'); // Track animation state
+
 
   window.speedRef = speedRef;
+
+
+  useEffect(() => {
+    // Update time every second
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // Switch between date and time every 2 seconds
+    const switcher = setInterval(() => {
+      // Trigger fade-out animation before switching
+      // setFadeState('fade-out');
+      setTimeout(() => {
+        setIsShowingDate((prev) => !prev); // Switch content
+        // setFadeState('fade-in'); // Trigger fade-in animation
+      }, 0); // Match fade-out duration
+    }, 5000);
+
+    // Cleanup intervals on unmount
+    return () => {
+      clearInterval(timer);
+      clearInterval(switcher);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showdateandTime){
+      const bb = setInterval(() => {
+        SetCategoryShow(prev => !prev);
+      }, 10000);
+      // Cleanup intervals on unmount
+      return () => {
+        clearInterval(bb);
+      };
+    }
+  }, [showdateandTime]);
+
+  // Format the date in Indian style (e.g., 27 Dec 2024)
+  const formatDate = (date) =>
+    date.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+  const formatTime = (date) => date.toLocaleTimeString();
 
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {
@@ -140,7 +196,7 @@ const HorizontalScrollWithTopic = () => {
         height: 80,
         position: 'absolute',
         top: window.innerHeight - 80,
-        backgroundColor: 'black',
+        backgroundColor: '#1a1f01',
         color: 'white',
         overflow: 'hidden',
         animation: 'fadeIn 0.5s ease-in-out', // Fade-in effect for the entire strip
@@ -151,7 +207,7 @@ const HorizontalScrollWithTopic = () => {
         style={{
           width: categoryWidth,
           height: '100%',
-          backgroundColor: '#333',
+          backgroundColor: '#150129',
           color: 'white',
           display: 'flex',
           justifyContent: 'center',
@@ -163,9 +219,9 @@ const HorizontalScrollWithTopic = () => {
           animation: 'slideIn 0.5s ease-in-out forwards', // Slide-in effect
         }}
       >
-        <STFSingleLine text={currentCategory} containerWidth={categoryWidth - 10} />
+        <STFSingleLine text={(categoryShow ? currentCategory : (isShowingDate ? formatDate(currentTime) : formatTime(currentTime)))} containerWidth={categoryWidth - 10} />
       </div>
-  
+
       {/* Scrolling Items */}
       <div
         style={{
@@ -200,7 +256,7 @@ const HorizontalScrollWithTopic = () => {
       </div>
     </div>
   );
-  
+
 };
 
 export default HorizontalScrollWithTopic;

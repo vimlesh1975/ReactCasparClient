@@ -65,6 +65,8 @@ const Graphics = () => {
   const [selectedDate, setSelectedDate] = useState('2024-12-05');
   const [selectedDate2, setSelectedDate2] = useState('2024-12-05');
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
+  const [showdateandTime, setShowdateandTime] = useState(true);
+
 
   // const [allGraphics, setAllGraphics] = useState([]);
 
@@ -710,6 +712,7 @@ const Graphics = () => {
     // endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
   }
   const stopScroll = () => {
     endpoint(
@@ -754,9 +757,13 @@ const Graphics = () => {
   const playTwoliner = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} "dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })"`);
     }, 100);
+    setTimeout(() => {
+      endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 1`);
+    }, 3000);
   }
   const stopTwoliner = () => {
     endpoint(
@@ -1226,7 +1233,12 @@ const Graphics = () => {
                     </thead>
                     <tbody>
                       <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Scroll</td>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Scroll
+                          <br />
+                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={()=>setShowdateandTime(val=>!val)} />
+                          <label for="vehicle1">Show Dtae and Time Also</label>
+                          </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopScroll}>Stop</button>
