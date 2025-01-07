@@ -5,7 +5,9 @@ const Mixer = ({ layer }) => {
     const [y, setY] = useState(0.00);
 
     useEffect(() => {
-        endpoint(`mixer ${window.chNumber}-${layer} fill ${0.015} ${y} ${0.97} ${1} `);
+        if (window.chNumber){
+            endpoint(`mixer ${window.chNumber}-${layer} fill ${0.015} ${y} ${0.97} ${1} `);
+        }
     }, [y, layer])
     return (
         <div style={{ border: '1px solid red', margin: 5 }}>

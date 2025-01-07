@@ -29,7 +29,7 @@ const BreakingNews = () => {
         setTimeout(() => {
         setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
             
-        }, 3000);
+        }, 1700);
 
         const interval = setInterval(() => {
             // Reset animation to the starting position
@@ -39,7 +39,7 @@ const BreakingNews = () => {
             setTimeout(() => {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % dataList.length);
                 setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
-            }, 3000); // Slight delay for smooth transition
+            }, 1700); // Slight delay for smooth transition
         }, 9000); // Change text every 1 second
 
         return () => clearInterval(interval); // Cleanup on unmount

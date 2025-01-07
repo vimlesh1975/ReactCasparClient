@@ -8,13 +8,15 @@ const Mixer = ({ layer, setLayer, layerVisisble }) => {
     const [scaleY, setScaleY] = useState(1.00);
 
     useEffect(() => {
-        endpoint(`mixer ${window.chNumber}-${layer} fill ${x} ${y} ${scaleX} ${scaleY} `);
-        const script = `
-        const element = document.getElementById('divid_${layer}');
-        element.style.transformOrigin = 'top left';
-        element.style.transform = \`translate(${x * 1920}px, ${y * 1080}px) scale(${scaleX}, ${scaleY})\`;
-        `
-        executeScript(`${script}`)
+        if (window.chNumber){
+            endpoint(`mixer ${window.chNumber}-${layer} fill ${x} ${y} ${scaleX} ${scaleY} `);
+            const script = `
+            const element = document.getElementById('divid_${layer}');
+            element.style.transformOrigin = 'top left';
+            element.style.transform = \`translate(${x * 1920}px, ${y * 1080}px) scale(${scaleX}, ${scaleY})\`;
+            `
+            executeScript(`${script}`)
+        }
     }, [x, y, scaleX, scaleY, layer])
     return (
         <div style={{ border: '1px solid red', margin: 10 }}>

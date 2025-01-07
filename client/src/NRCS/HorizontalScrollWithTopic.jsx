@@ -207,7 +207,7 @@ const HorizontalScrollWithTopic = () => {
         style={{
           width: categoryWidth,
           height: '100%',
-          backgroundColor: '#150129',
+          backgroundColor: 'blue',
           color: 'white',
           display: 'flex',
           justifyContent: 'center',
