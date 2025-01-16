@@ -335,7 +335,7 @@ export const createTextBox = (
 export const createIText = (canvas) => {
   const id = generateUniqueId({ type: "itext" });
   const text = new fabric.IText(
-    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Next Training is from 01 August 2022.",
+    "à¤…à¤—à¤²à¤¾ à¤ªà¥à¤°à¤¶à¤¿à¤•à¥à¤·à¤£ 01 à¤…à¤—à¤¸à¥à¤¤ 2022 à¤¸à¥‡ à¤¹à¥ˆ| Next Training is from 01 August 2022.",
     {
       shadow: shadowOptions,
       id: id,
@@ -363,7 +363,7 @@ export const createText = (canvas) => {
   const id = generateUniqueId({ type: "text" });
 
   const text = new fabric.FabricText(
-    "अगला प्रशिक्षण 01 अगस्त 2022 से है| Timeline has been shifted from main tab to below tab.",
+    "à¤…à¤—à¤²à¤¾ à¤ªà¥à¤°à¤¶à¤¿à¤•à¥à¤·à¤£ 01 à¤…à¤—à¤¸à¥à¤¤ 2022 à¤¸à¥‡ à¤¹à¥ˆ| Timeline has been shifted from main tab to below tab.",
     {
       id: id,
       class: id,
@@ -2267,7 +2267,7 @@ export const addressgoogleapi = () => {
 export const addressmysql = () => {
   const aa = window.location.host.split(':');
   if (aa[1] === "10000" || aa[1] === "11000" || aa[1] === "12000") {
-    return `https://localhost:9000`;
+    return `https://${aa[0]}:9000`;
   } else {
     return "https://octopus-app-gzws3.ondigitalocean.app";
   }
