@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { addressmysql } from '../common';
 import STFSingleLine from './STFSingleLine';
+import { useParams } from 'react-router-dom';
+
 
 const gap = 50; // Space between items
 const categoryWidth = 250;
 
 const HorizontalScrollWithTopic = () => {
+  const { selectedDate } = useParams();
   const [data2, setData2] = useState({}); // Data fetched from the API
   const [categories, setCategories] = useState([]); // Categories to scroll
   const [activeItems, setActiveItems] = useState([]); // Items to display in the scroll
@@ -52,7 +55,7 @@ const HorizontalScrollWithTopic = () => {
   }, []);
 
   useEffect(() => {
-    if (showdateandTime){
+    if (showdateandTime) {
       const bb = setInterval(() => {
         SetCategoryShow(prev => !prev);
       }, 10000);
@@ -76,7 +79,7 @@ const HorizontalScrollWithTopic = () => {
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {
     try {
-      const res = await fetch(addressmysql() + `/show_runorderScroll`);
+      const res = await fetch(addressmysql() + `/show_runorderScroll?param1=${'Scroll'}&param2=${selectedDate}`);
       const data = await res.json();
       const processedData = {};
 
@@ -97,7 +100,7 @@ const HorizontalScrollWithTopic = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }, []);
+  }, [selectedDate]);
 
   const startScroll = useCallback(() => {
     if (isScrolling.current || categories.length === 0) return; // Don't start if already scrolling

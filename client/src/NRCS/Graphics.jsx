@@ -62,8 +62,22 @@ const Graphics = () => {
 
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [flashMessage, setFlashMessage] = useState("");
-  const [selectedDate, setSelectedDate] = useState('2024-12-05');
-  const [selectedDate2, setSelectedDate2] = useState('2024-12-05');
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  });
+  
+  const [selectedDate2, setSelectedDate2] = useState(() => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  });
+  
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
 
@@ -710,7 +724,7 @@ const Graphics = () => {
 
   const playScroll = () => {
     // endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
   }
@@ -721,7 +735,7 @@ const Graphics = () => {
   }
 
   const playBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 0 0.97 1`);
 
   }
