@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { addressmysql } from '../common'
 import STFMultine from './STFMultine'
+import { useParams } from 'react-router-dom';
 
 // eslint-disable-next-line
 import red_news_update from './gif/red_news_update.gif'
@@ -32,6 +33,7 @@ const Twoliner = () => {
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
     const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
+    const { selectedDate } = useParams();
 
     const dispatch = useDispatch();
     window.dispatch=dispatch;
@@ -67,7 +69,7 @@ const Twoliner = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderTwoliner`
+                addressmysql() + `/show_runorderTwoliner?param1=${'Two Liner'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];
@@ -84,7 +86,7 @@ const Twoliner = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    }, []);
+    }, [selectedDate]);
 
     useEffect(() => {
         fetchRO();

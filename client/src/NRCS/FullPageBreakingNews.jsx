@@ -3,6 +3,7 @@ import { addressmysql } from '../common'
 import STFMultine from './STFMultine'
 
 import BN_Full from './gif/BN_Full.gif'
+import { useParams } from 'react-router-dom';
 
 
 
@@ -21,6 +22,7 @@ const FullPageBreakingNews = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(-10%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
+    const { selectedDate } = useParams();
 
 
     useEffect(() => {
@@ -54,7 +56,7 @@ const FullPageBreakingNews = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderBreakingNews`
+                addressmysql() + `/show_runorderBreakingNews?param1=${'Breaking News'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];
@@ -71,7 +73,7 @@ const FullPageBreakingNews = () => {
         } catch (error) {
             // console.error('Error fetching data:', error);
         }
-    }, []);
+    }, [selectedDate]);
 
     useEffect(() => {
         fetchRO();
@@ -101,15 +103,15 @@ const FullPageBreakingNews = () => {
                         whiteSpace: 'nowrap',
                         width: '100%',
                         textAlign: 'center',
-                        left:300,
-                        top:200,
-                        position:'absolute',
-                        color:'white',
-                        
+                        left: 300,
+                        top: 200,
+                        position: 'absolute',
+                        color: 'white',
+
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth-600} containerHeight={window.innerHeight-500} fs={200} textAlign={'center'} />
+                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth - 600} containerHeight={window.innerHeight - 500} fs={200} textAlign={'center'} />
                 </div>
             )}
         </div>

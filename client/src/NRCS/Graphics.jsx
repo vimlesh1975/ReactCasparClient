@@ -769,7 +769,7 @@ const Graphics = () => {
   }
 
   const playTwoliner = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
     setTimeout(() => {
@@ -786,7 +786,7 @@ const Graphics = () => {
   }
 
   const playFullPageBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews/${selectedDate}`);
 
   }
   const stopFullPageBreakingNews = () => {

@@ -684,10 +684,10 @@ app.get("/show_runorderNewsUpdate", async (req, res) => {
 });
 
 app.get("/show_runorderTwoliner", async (req, res) => {
-  // const param1 =  req.query.param1;
-  // const param2 = req.query.param2;
-  const param1 = 'Two Liner';
-  const param2 = '2024-12-23';
+  const param1 =  req.query.param1;
+  const param2 = req.query.param2;
+  // const param1 = 'Two Liner';
+  // const param2 = '2024-12-23';
 
   if (param1 === "") {
     res.status(500).send("Error fetching run order");

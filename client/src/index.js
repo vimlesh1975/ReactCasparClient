@@ -54,9 +54,9 @@ root.render(
         <Route path="/HorizontalScrollWithTopic/:selectedDate" element={<HorizontalScrollWithTopic />} />
         <Route path="/BreakingNews/:selectedDate" element={<BreakingNews />} />
         <Route exact path="/NewsUpdate/:selectedDate" element={<NewsUpdate />} />
-        <Route exact path="/FullPageBreakingNews" element={<FullPageBreakingNews />} />
+        <Route exact path="/FullPageBreakingNews/:selectedDate" element={<FullPageBreakingNews />} />
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
-        <Route exact path="/Twoliner" element={<Twoliner />} />
+        <Route exact path="/Twoliner/:selectedDate" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
       </Routes>
     </Router>
