@@ -746,7 +746,7 @@ const Graphics = () => {
   }
 
   const playNewsUpdate = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate`);
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 0 0.97 1`);
 
   }

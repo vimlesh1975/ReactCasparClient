@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { addressmysql } from '../common'
 import STFSingleLine from './STFSingleLine'
 import news_update from './gif/news_update.gif'
+import { useParams } from 'react-router-dom';
 
 
 
@@ -20,6 +21,7 @@ const NewsUpdate = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(0%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
+    const { selectedDate } = useParams();
 
 
     useEffect(() => {
@@ -56,7 +58,7 @@ const NewsUpdate = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderNewsUpdate`
+                addressmysql() + `/show_runorderNewsUpdate?param1=${'News Update'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];
@@ -73,7 +75,7 @@ const NewsUpdate = () => {
         } catch (error) {
             // console.error('Error fetching data:', error);
         }
-    }, []);
+    }, [selectedDate]);
 
     useEffect(() => {
         fetchRO();

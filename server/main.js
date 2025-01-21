@@ -655,10 +655,10 @@ app.get("/show_runorderBreakingNews", async (req, res) => {
 });
 
 app.get("/show_runorderNewsUpdate", async (req, res) => {
-  // const param1 =  req.query.param1;
-  // const param2 = req.query.param2;
-  const param1 = 'News Update';
-  const param2 = '2025-01-01';
+  const param1 =  req.query.param1;
+  const param2 = req.query.param2;
+  // const param1 = 'News Update';
+  // const param2 = '2025-01-01';
 
   if (param1 === "") {
     res.status(500).send("Error fetching run order");

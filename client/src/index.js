@@ -53,7 +53,7 @@ root.render(
         <Route exact path="/HorizontalScroll" element={<HorizontalScroll />} />
         <Route path="/HorizontalScrollWithTopic/:selectedDate" element={<HorizontalScrollWithTopic />} />
         <Route path="/BreakingNews/:selectedDate" element={<BreakingNews />} />
-        <Route exact path="/NewsUpdate" element={<NewsUpdate />} />
+        <Route exact path="/NewsUpdate/:selectedDate" element={<NewsUpdate />} />
         <Route exact path="/FullPageBreakingNews" element={<FullPageBreakingNews />} />
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
         <Route exact path="/Twoliner" element={<Twoliner />} />
