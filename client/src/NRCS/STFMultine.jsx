@@ -10,7 +10,7 @@ const STFMultine = ({ text, containerWidth, containerHeight, fs, textAlign='left
 
     const textElement = textRef.current;
 
-    let currentFontSize = fontSize;
+    let currentFontSize = fs;
     textElement.style.fontSize = `${currentFontSize}px`;
 
     // Reduce font size until the text fits within the container height
@@ -20,7 +20,7 @@ const STFMultine = ({ text, containerWidth, containerHeight, fs, textAlign='left
     }
 
     setFontSize(currentFontSize);
-  }, [fontSize, containerHeight]);
+  }, [fs, containerHeight]);
 
   useEffect(() => {
     adjustFontSize();
