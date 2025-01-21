@@ -119,7 +119,8 @@ const Twoliner = () => {
                     style={{
                         ...animationStyle,
                         position: 'fixed',
-                        top: red ? 842 : 865,
+                        // top: red ? 842 : 865,
+                        top: red ? 842 : 885,
                         left: red ? 500 : 40,
                         color: 'black',
                         fontWeight: 'bolder',
@@ -129,7 +130,7 @@ const Twoliner = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={ dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={150} fs={red ? 180 : 40} />
+                    <STFMultine text={ dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={110} fs={red ? 180 : 60} />
                 </div>
             )}
 
