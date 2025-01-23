@@ -69,7 +69,7 @@ const Twoliner = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderTwoliner?param1=${'Two Liner'}&param2=${selectedDate}`
+                addressmysql() + `/show_runorderSpecial?param1=${'Two Liner'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];

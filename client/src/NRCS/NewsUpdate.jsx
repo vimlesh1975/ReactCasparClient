@@ -58,7 +58,7 @@ const NewsUpdate = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                addressmysql() + `/show_runorderNewsUpdate?param1=${'News Update'}&param2=${selectedDate}`
+                addressmysql() + `/show_runorderSpecial?param1=${'News Update'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];

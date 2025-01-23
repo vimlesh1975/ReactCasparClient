@@ -79,7 +79,7 @@ const HorizontalScrollWithTopic = () => {
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {
     try {
-      const res = await fetch(addressmysql() + `/show_runorderScroll?param1=${'Scroll'}&param2=${selectedDate}`);
+      const res = await fetch(addressmysql() + `/show_runorderSpecial?param1=${'Scroll'}&param2=${selectedDate}`);
       const data = await res.json();
       const processedData = {};
 

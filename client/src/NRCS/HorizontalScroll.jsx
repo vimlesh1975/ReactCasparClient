@@ -52,7 +52,7 @@ const HorizontalScroll = () => {
   const fetchRO = useCallback(async () => {
     try {
       const res = await fetch(
-        addressmysql() + `/show_runorderScroll`
+        addressmysql() + `/show_runorderSpecial`
       );
       const data = await res.json();
       const aa = [];
