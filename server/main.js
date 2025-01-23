@@ -586,7 +586,7 @@ app.get("/show_runorder", async (req, res) => {
   graphicsid as MediaInsert,
   dropstory AS DropStory
   FROM script 
-  WHERE bulletinname = ? AND bulletindate = ? 
+  WHERE deleted = 0 AND bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`: `CALL show_runorder(?)`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
@@ -614,7 +614,7 @@ app.get("/show_runorderScroll", async (req, res) => {
   graphicsid as MediaInsert,
   dropstory AS DropStory
   FROM ${newDatabasename}.script 
-  WHERE bulletinname = ? AND bulletindate = ? 
+  WHERE deleted = 0 AND bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
@@ -642,7 +642,7 @@ app.get("/show_runorderBreakingNews", async (req, res) => {
   graphicsid as MediaInsert,
   dropstory AS DropStory
   FROM ${newDatabasename}.script 
-  WHERE bulletinname = ? AND bulletindate = ? 
+  WHERE deleted = 0 AND bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
@@ -671,7 +671,7 @@ app.get("/show_runorderNewsUpdate", async (req, res) => {
   graphicsid as MediaInsert,
   dropstory AS DropStory
   FROM ${newDatabasename}.script 
-  WHERE bulletinname = ? AND bulletindate = ? 
+  WHERE deleted = 0 AND bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
@@ -700,7 +700,7 @@ app.get("/show_runorderTwoliner", async (req, res) => {
   graphicsid as MediaInsert,
   dropstory AS DropStory
   FROM ${newDatabasename}.script 
-  WHERE bulletinname = ? AND bulletindate = ? 
+  WHERE deleted = 0 AND bulletinname = ? AND bulletindate = ? 
   ORDER BY RunOrder;`
   try {
     const [rows] = await safeQuery(query, [param1, param2]);
