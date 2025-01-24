@@ -544,24 +544,24 @@ const App = () => {
               <Tab>Graphics</Tab>
               <Tab className="tabHidden">VDO</Tab>
               <Tab className="tabHidden">VDO Playlist</Tab>
-              <Tab>Layers</Tab>
-              <Tab >Gradient</Tab>
+              <Tab className="tabHidden">Layers</Tab>
+              <Tab className="tabHidden">Gradient</Tab>
               <Tab className="tabHidden">BreakingNews</Tab>
               <Tab className="tabHidden">ImgSequence</Tab>
               <Tab className="tabHidden">Scroll</Tab>
-              <Tab>Shapes</Tab>
+              <Tab className="tabHidden">Shapes</Tab>
               <Tab className="tabHidden">Games</Tab>
               <Tab className="tabHidden">Charts</Tab>
               <Tab className="tabHidden">Path Modifier</Tab>
               <Tab className="tabHidden">Effects</Tab>
               <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
-              <Tab>Crop</Tab>
+              <Tab className="tabHidden">Crop</Tab>
               <Tab className="tabHidden">CodeImport</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab  className="tabHidden">Data</Tab>
 
-              <Tab >Help</Tab>
+              <Tab className="tabHidden">Help</Tab>
               <Tab className="tabHidden">GA</Tab>
               <Tab>NRCS</Tab>
 

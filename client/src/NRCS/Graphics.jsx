@@ -69,7 +69,7 @@ const Graphics = () => {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  
+
   const [selectedDate2, setSelectedDate2] = useState(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -77,7 +77,7 @@ const Graphics = () => {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  
+
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
 
@@ -864,7 +864,105 @@ const Graphics = () => {
                 </div>
               }
             </div>
+
+
             <div>
+                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'left' }}>Feature</th>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Scroll
+                          <br />
+                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
+                          <label for="vehicle1">Show Dtae and Time Also</label>
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopScroll}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsscroll} />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopBreakingNews}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsBreakingNews} />
+
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopNewsUpdate}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsNewsUpdate} />
+
+                        </td>
+                      </tr>
+
+
+                      {/* <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Twoliner
+                          <br />
+
+                          <label>
+                            <input
+                              type="radio"
+                              value={true}
+                              checked={NrcsBreakingText === true}
+                              onChange={handleChange}
+                            />
+                            Breaking News
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              value={false}
+                              checked={NrcsBreakingText === false}
+                              onChange={handleChange}
+                            />
+                            News Update
+                          </label>
+
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopTwoliner}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsTwoliner} />
+
+                        </td>
+                      </tr> */}
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopDateTimeSwitcher}>Stop</button>
+                          <Mixerfill layer={templateLayers.nrcsDateTimeSwitcher} />
+                        </td>
+                      </tr>
+                      {/* <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopFullPageBreakingNews}>Stop</button>
+                        </td>
+                      </tr> */}
+
+
+                    </tbody>
+                  </table>
+                </div>
+                
+            {/* <div>
               Run Orders:
               <select
                 value={selectedRunOrderTitle}
@@ -891,10 +989,10 @@ const Graphics = () => {
                 Live
               </label>
 
-            </div>
+            </div> */}
 
 
-            <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
+            {/* <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
                 slugs?.map((val, i) => (<div
                   onClick={() => {
@@ -921,13 +1019,13 @@ const Graphics = () => {
                   <div>{val.MediaInsert}</div>
                 </div>
                 ))}
-            </div>
+            </div> */}
 
             {/* <h4>Graphics</h4> */}
-            <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
+            {/* <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
               <GsapPlayer layer1={templateLayers.NRCSgsap} inline={false} />
-            </div >
-            <div style={{ border: '1px solid red' }}>
+            </div > */}
+            {/* <div style={{ border: '1px solid red' }}>
               <button onClick={updateGraphicsToDatabase}>
                 Update Graphics
               </button>
@@ -969,9 +1067,9 @@ const Graphics = () => {
                   );
                 })}
               </select>
-            </div>
+            </div> */}
 
-            <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}>
+            {/* <div style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}>
               {loading ? <img src="/ReactCasparClient/loader.gif" alt="Loading..." /> :
                 <Droppable droppableId="graphics1">
                   {(provided) => (
@@ -1050,19 +1148,14 @@ const Graphics = () => {
                   )}
                 </Droppable>
               }
-            </div>
+            </div> */}
 
 
             <div style={{ border: "1px solid red" }}>
-              {/* <button onClick={addToCanvas}>
-                Add Sripts to canvas for Teleprompting
-              </button> */}
-              <div>
-                {/* <VerticalScrollPlayer /> */}
-
+              {/* <div>
                 {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button> <button onClick={deleteOllFiles}>Delete Old files</button> </>}
                 <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
-              </div>
+              </div> */}
 
             </div>
           </div>
@@ -1073,13 +1166,13 @@ const Graphics = () => {
               onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}
             >
               <TabList>
-                <Tab>Thumbnailview</Tab>
+                {/* <Tab>Thumbnailview</Tab>
                 <Tab>DataUpdater</Tab>
                 <Tab>Copy </Tab>
-                <Tab>Script</Tab>
+                <Tab>Script</Tab> */}
                 <Tab>Scroll</Tab>
               </TabList>
-              <TabPanel>
+              {/* <TabPanel>
                 <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} directoryHandle={directoryHandle} exportEachPagetoHTML={exportEachPagetoHTML} />
               </TabPanel>
               <TabPanel>
@@ -1235,104 +1328,9 @@ const Graphics = () => {
                     currentSlugSlugName={currentSlugSlugName}
                   />
                 </div>
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel>
-                <div>
-                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-                    <thead>
-                      <tr>
-                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'left' }}>Feature</th>
-                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
-                          Scroll
-                          <br />
-                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={()=>setShowdateandTime(val=>!val)} />
-                          <label for="vehicle1">Show Dtae and Time Also</label>
-                          </td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopScroll}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsscroll} />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopBreakingNews}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsBreakingNews} />
-
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopNewsUpdate}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsNewsUpdate} />
-
-                        </td>
-                      </tr>
-
-
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
-                          Twoliner
-                          <br />
-
-                          <label>
-                            <input
-                              type="radio"
-                              value={true}
-                              checked={NrcsBreakingText === true}
-                              onChange={handleChange}
-                            />
-                            Breaking News
-                          </label>
-                          <label>
-                            <input
-                              type="radio"
-                              value={false}
-                              checked={NrcsBreakingText === false}
-                              onChange={handleChange}
-                            />
-                            News Update
-                          </label>
-
-
-                        </td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopTwoliner}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsTwoliner} />
-
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopDateTimeSwitcher}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsDateTimeSwitcher} />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopFullPageBreakingNews}>Stop</button>
-                        </td>
-                      </tr>
-
-
-                    </tbody>
-                  </table>
-                </div>
+                
 
               </TabPanel>
 
