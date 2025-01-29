@@ -29,7 +29,7 @@
     "d3": "^7.4.4",
     "fabric": "^6.3.0",
     "fabric-history": "^2.0.0",
-    "fabricjs-react": "^1.2.2",
+    "fabricjs-react": "^2.1.0",
     "faker": "^5.5.0",
     "file-saver": "^2.0.5",
     "geopattern": "^1.2.3",
