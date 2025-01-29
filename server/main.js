@@ -1,5 +1,8 @@
 require("dotenv").config(); // Load environment variables from .env file
 // console.log(process.env.DB_HOST);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+const { request } = require('undici');
 
 const express = require("express");
 const app = express();
@@ -269,7 +272,7 @@ const options2 = {
 
 const server2 = https.createServer(options2, app);
 
-server2.listen(port, () => {
+server2.listen(port, '::', () => {
   console.log(`Node server is listening on port ${port} with HTTPS`);
 });
 // server2.timeout = 300000;  // 5 minutes, adjust as necessary
@@ -486,6 +489,50 @@ app.post("/loadHtml", (req, res) => {
   });
 });
 
+const puppeteer = require('puppeteer');
+
+app.post("/loadHtmlAddress", async (req, res) => {
+  const url = req.body.url; // The URL you're trying to access
+
+  try {
+    // Launch Puppeteer in headless mode
+    const browser = await puppeteer.launch({
+      headless: true, // Set to false if you want to see the browser in action
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      ignoreHTTPSErrors: true, // Ignore SSL certificate errors
+    });
+    
+    // Create a new page within the browser
+    const page = await browser.newPage();
+
+    // Navigate to the URL, wait until the page is fully loaded
+    await page.goto(url, { waitUntil: 'networkidle0' });
+
+    // Extract the rendered HTML content from the page
+    const html  = await page.content();
+    // console.log('HTML Content:', html );
+
+    // Emit the HTML content via WebSocket
+    io.emit("loadHtmlAddress", {
+      html: html ,
+      clientId: req.body.clientId,
+    });
+
+    // Close the browser
+    await browser.close();
+    res.end("");
+
+
+    // res.status(200).send('HTML fetched successfully');
+  } catch (error) {
+    console.error('Error fetching HTML:', error);
+    res.status(500).send('Error fetching HTML');
+  }
+});
+
+
+
+
 app.post("/callScript", (req, res) => {
   io.emit("callScript", req.body);
   res.end("");
@@ -534,8 +581,8 @@ var pool;
 var newdatabase = true;
 //  newdatabase = false;
 
-const oldDatabaseName='c1news';
-const newDatabasename='nrcsnew';
+const oldDatabaseName = 'c1news';
+const newDatabasename = 'nrcsnew';
 const dbname = newdatabase ? newDatabasename : oldDatabaseName;
 
 try {
@@ -598,7 +645,7 @@ app.get("/show_runorder", async (req, res) => {
 });
 
 app.get("/show_runorderSpecial", async (req, res) => {
-  const param1 =  req.query.param1;
+  const param1 = req.query.param1;
   const param2 = req.query.param2;
   // const param1 = 'Scroll';
   // const param2 = '2024-12-23';

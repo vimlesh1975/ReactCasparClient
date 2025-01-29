@@ -220,8 +220,6 @@ const App = () => {
   }, [mediaPath]);
 
   const onTabChange = (index, prevIndex) => {
-    console.log(index)
-
     settabindex(index);
     switch (index) {
       case 0:

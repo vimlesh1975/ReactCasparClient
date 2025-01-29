@@ -28,11 +28,13 @@ import FlashMessage from "../FlashMessage";
 
 import Mixerfill from "./Mixerfill";
 
+
+
 const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
   const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
-  // const textNodes = useSelector(state => state.textNodesReducer.textNodes);
+  const clientId = useSelector((state) => state.clientIdReducer.clientId);
 
   const [pageName, setPageName] = useState("new Graphics");
   const dispatch = useDispatch();
@@ -69,7 +71,7 @@ const Graphics = () => {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  
+
   const [selectedDate2, setSelectedDate2] = useState(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -77,16 +79,12 @@ const Graphics = () => {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   });
-  
+
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
 
-
-  // const [allGraphics, setAllGraphics] = useState([]);
-
   const handleDateChange = (event) => {
     const date = event.target.value;
-    console.log(date)
     setSelectedDate(date)
   };
 
@@ -722,11 +720,25 @@ const Graphics = () => {
     }
   };
 
+  const sendtohtml = ({ url, clientId }) => {
+    const url2 = 'https://localhost:9000/loadHtmlAddress'; // Replace with your API endpoint
+    fetch(url2, {
+      method: 'POST', // HTTP method
+      headers: {
+        'Content-Type': 'application/json', // Tells the server you're sending JSON
+      },
+      body: JSON.stringify({ url, clientId }), // Convert JavaScript object to JSON string
+    })
+  }
+
   const playScroll = () => {
-    // endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`);
+    const url = `https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
+
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
+
+    sendtohtml({ url, clientId });
   }
   const stopScroll = () => {
     endpoint(
@@ -758,8 +770,11 @@ const Graphics = () => {
 
 
   const playDateTimeSwitcher = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] https://localhost:10000/ReactCasparClient/DateTimeSwitcher`);
+    const url = `https://localhost:10000/ReactCasparClient/DateTimeSwitcher`;
+
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 0 0.97 1`);
+    sendtohtml({ url, clientId });
 
   }
   const stopDateTimeSwitcher = () => {
@@ -1250,9 +1265,9 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
                           Scroll
                           <br />
-                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={()=>setShowdateandTime(val=>!val)} />
+                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
                           <label for="vehicle1">Show Dtae and Time Also</label>
-                          </td>
+                        </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopScroll}>Stop</button>

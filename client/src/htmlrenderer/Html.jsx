@@ -197,14 +197,64 @@ const Html = () => {
             }
         });
         socket.on("loadHtml", data => {
-            // console.log(data)
             if (data.clientId === clientId) {
                 refhtml.current.innerHTML = data.html;
-                scriptEval()
-                updateHtml(data.data)
+                scriptEval();
+                updateHtml(data.data);
             }
 
         });
+
+
+        const scriptEvalforaddress = () => {
+            var scripts = refhtml.current.getElementsByTagName("script");
+            for (var i = 0; i < scripts.length; i++) {
+                const script = scripts[i];
+                if (script.src) {
+                    // Handle external scripts
+                    const newScript = document.createElement('script');
+                    newScript.src = script.src;
+                    newScript.onload = () => {
+                        console.log(`${script.src} loaded successfully`);
+                    };
+                    document.head.appendChild(newScript);
+                } else {
+                    // Handle inline scripts
+                    const newScript = document.createElement('script');
+                    newScript.text = script.innerText;
+                    document.head.appendChild(newScript);
+                    console.log(script.innerText);
+                }
+            }
+        }
+
+        const loadScripts = () => {
+            const scripts = refhtml.current.getElementsByTagName("script");
+        
+            // Loop through the script elements
+            for (let i = 0; i < scripts.length; i++) {
+                const script = scripts[i];
+                
+                // Create a new script element
+                const newScript = document.createElement("script");
+                newScript.type = "text/javascript";
+                newScript.src = script.src;  // Handle external script sources
+                newScript.innerHTML = script.innerHTML;  // Handle inline scripts
+        
+                // Append to the document head or body to execute
+                document.body.appendChild(newScript);
+            }
+        };
+
+        socket.on("loadHtmlAddress", data => {
+            console.log(data)
+            if (data.clientId === clientId) {
+                refhtml.current.innerHTML = data.html;
+                // scriptEvalforaddress();
+                // loadScripts();
+            }
+        });
+
         socket.on("callScript", data => {
             if (data.clientId === clientId) {
                 callScript(data.data)
