@@ -791,7 +791,7 @@ const Graphics = () => {
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
 
-    sendtohtml({ url, clientId });
+    // sendtohtml({ url, clientId });
   }
 
 
@@ -840,7 +840,7 @@ const Graphics = () => {
 
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${yDateTimeSwitcher} 0.97 1`);
-    sendtohtml({ url, clientId });
+    // sendtohtml({ url, clientId });
 
   }
   const stopDateTimeSwitcher = () => {
