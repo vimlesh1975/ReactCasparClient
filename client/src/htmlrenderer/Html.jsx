@@ -205,7 +205,7 @@ const Html = () => {
 
         });
 
-
+// eslint-disable-next-line
         const scriptEvalforaddress = () => {
             var scripts = refhtml.current.getElementsByTagName("script");
             for (var i = 0; i < scripts.length; i++) {
@@ -228,6 +228,7 @@ const Html = () => {
             }
         }
 
+        // eslint-disable-next-line
         const loadScripts = () => {
             const scripts = refhtml.current.getElementsByTagName("script");
         

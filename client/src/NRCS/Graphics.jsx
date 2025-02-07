@@ -26,11 +26,16 @@ import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
 import FlashMessage from "../FlashMessage";
 
-import Mixerfill from "./Mixerfill";
-
-
 
 const Graphics = () => {
+
+  const [yScroll, setYScroll] = useState(0.00);
+  const [yBreakingNewsLowerthird, setYBreakingNewsLowerthird] = useState(0.00);
+  const [yNewsUpdateLowerthird, setYyNewsUpdateLowerthird] = useState(0.00);
+  const [yTwoliner, setYTwoliner] = useState(0.00);
+  const [yDateTimeSwitcher, setYDateTimeSwitcher] = useState(0.00);
+
+
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
   const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
@@ -735,7 +740,7 @@ const Graphics = () => {
     const url = `https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
 
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
 
     sendtohtml({ url, clientId });
@@ -748,7 +753,7 @@ const Graphics = () => {
 
   const playBreakingNews = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${yBreakingNewsLowerthird} 0.97 1`);
 
   }
   const stopBreakingNews = () => {
@@ -759,7 +764,7 @@ const Graphics = () => {
 
   const playNewsUpdate = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${yNewsUpdateLowerthird} 0.97 1`);
 
   }
   const stopNewsUpdate = () => {
@@ -773,7 +778,7 @@ const Graphics = () => {
     const url = `https://localhost:10000/ReactCasparClient/DateTimeSwitcher`;
 
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${yDateTimeSwitcher} 0.97 1`);
     sendtohtml({ url, clientId });
 
   }
@@ -785,7 +790,7 @@ const Graphics = () => {
 
   const playTwoliner = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} "dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })"`);
@@ -1271,7 +1276,18 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopScroll}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsscroll} />
+                          {/* <Mixerfill layer={templateLayers.nrcsscroll} /> */}
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
+                                setYScroll(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
+
                         </td>
                       </tr>
                       <tr>
@@ -1279,7 +1295,16 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopBreakingNews}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsBreakingNews} />
+                          {/* <Mixerfill layer={templateLayers.nrcsBreakingNews} /> */}
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yBreakingNewsLowerthird} onChange={e => {
+                                setYBreakingNewsLowerthird(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
 
                         </td>
                       </tr>
@@ -1289,8 +1314,15 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopNewsUpdate}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsNewsUpdate} />
-
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yNewsUpdateLowerthird} onChange={e => {
+                                setYyNewsUpdateLowerthird(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
                         </td>
                       </tr>
 
@@ -1324,7 +1356,16 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopTwoliner}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsTwoliner} />
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yTwoliner} onChange={e => {
+                                setYTwoliner(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
 
                         </td>
                       </tr>
@@ -1333,7 +1374,17 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopDateTimeSwitcher}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsDateTimeSwitcher} />
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yDateTimeSwitcher} onChange={e => {
+                                setYDateTimeSwitcher(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
+
                         </td>
                       </tr>
                       <tr>
