@@ -35,6 +35,8 @@ const Graphics = () => {
   const [yTwoliner, setYTwoliner] = useState(0.00);
   const [yDateTimeSwitcher, setYDateTimeSwitcher] = useState(0.00);
 
+  const [lines, setLines] = useState([]);
+  const [fileHandle, setFileHandle] = useState(null); // Store file handle
 
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
@@ -87,6 +89,52 @@ const Graphics = () => {
 
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
+
+  const readFile = async (handle) => {
+    if (!handle) return;
+
+    try {
+      const file = await handle.getFile(); // Get a fresh file object
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const content = e.target.result;
+        const linesArray = content.split(/\r?\n/);
+        setLines(linesArray);
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error("Error reading file:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
+  }, [lines])
+
+  const handleFileSelection = async () => {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: "Text Files", accept: { "text/plain": [".txt"] } }],
+        multiple: false,
+      });
+
+      setFileHandle(handle); // Store handle for later updates
+      await readFile(handle); // Read file immediately
+    } catch (error) {
+      console.error("File selection cancelled or failed:", error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (fileHandle) {
+      await readFile(fileHandle);
+    } else {
+      console.warn("No file selected.");
+    }
+  };
 
   const handleDateChange = (event) => {
     const date = event.target.value;
@@ -745,6 +793,19 @@ const Graphics = () => {
 
     sendtohtml({ url, clientId });
   }
+
+
+
+  const playScrollfromtextfile = () => {
+    const url = `https://localhost:10000/ReactCasparClient/HorizontalScroll`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
+
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
+    }, 1000);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
+  }
+
   const stopScroll = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsscroll}`
@@ -1276,8 +1337,6 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopScroll}>Stop</button>
-                          {/* <Mixerfill layer={templateLayers.nrcsscroll} /> */}
-
                           <div style={{ border: '1px solid red', margin: 5 }}>
                             <div>
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
@@ -1287,7 +1346,36 @@ const Graphics = () => {
                               } />
                             </div>
                           </div>
-
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Scroll from text file
+                          <br />
+                          <button
+                            onClick={handleFileSelection}
+                          >
+                            Select File
+                          </button>
+                            {fileHandle && fileHandle.name}
+                         {fileHandle && <button
+                            onClick={handleUpdate}
+                          >
+                            Update
+                          </button>} 
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playScrollfromtextfile} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopScroll}>Stop</button>
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
+                                setYScroll(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+                              }
+                              } />
+                            </div>
+                          </div>
                         </td>
                       </tr>
                       <tr>

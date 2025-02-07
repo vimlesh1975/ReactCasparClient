@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { addressmysql } from '../common'
+import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
 
 var data = [
@@ -49,32 +48,6 @@ const HorizontalScroll = () => {
     ]);
   };
 
-  const fetchRO = useCallback(async () => {
-    try {
-      const res = await fetch(
-        addressmysql() + `/show_runorderSpecial`
-      );
-      const data = await res.json();
-      const aa = [];
-      data.forEach((val) => {
-        if (val && val.Script) {
-          const splitText = (val.Script)?.split("$$$$");
-          splitText.forEach((item) => {
-            aa.push(`${item.replaceAll("'", "")}`);
-          });
-        }
-      });
-
-      startScroll(aa);
-
-    } catch (error) {
-      // console.error('Error fetching data:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchRO();
-  }, [fetchRO]);
 
   useEffect(() => {
     const scroll = () => {
@@ -142,6 +115,7 @@ const HorizontalScroll = () => {
               color: 'white',
             }}
           >
+            {/* {item.text}  */}
             {item.text} <img src={logo} alt='dd logo' width={50}/>
           </div>
         ))}
