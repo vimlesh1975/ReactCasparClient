@@ -6,7 +6,7 @@ import {
   addressmysql,
   templateLayers,
   selectAll,
-  endpoint, executeScript
+  endpoint, executeScript, addressnrcsscroll
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -732,7 +732,7 @@ const Graphics = () => {
 
 
   const playScroll = () => {
-    const url = `https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
@@ -758,7 +758,7 @@ const Graphics = () => {
   }
 
   const playScrollfromtextfile = () => {
-    const url = `https://localhost:10000/ReactCasparClient/HorizontalScroll`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScroll`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
 
     setTimeout(() => {
@@ -796,7 +796,7 @@ const Graphics = () => {
   }
 
   const playBreakingNews = () => {
-    const url=`https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`;
+    const url=`${addressnrcsscroll()}/ReactCasparClient/BreakingNews/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${yBreakingNewsLowerthird} 0.97 1`);
 
@@ -824,7 +824,7 @@ const Graphics = () => {
   }
 
   const playNewsUpdate = () => {
-    const url=`https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`;
+    const url=`${addressnrcsscroll()}/ReactCasparClient/NewsUpdate/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${yNewsUpdateLowerthird} 0.97 1`);
 
@@ -854,7 +854,7 @@ const Graphics = () => {
 
 
   const playDateTimeSwitcher = () => {
-    const url = `https://localhost:10000/ReactCasparClient/DateTimeSwitcher`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/DateTimeSwitcher`;
 
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${yDateTimeSwitcher} 0.97 1`);
@@ -884,7 +884,7 @@ const Graphics = () => {
   }
 
   const playTwoliner = () => {
-    const url=`https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`;
+    const url=`${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
@@ -921,7 +921,7 @@ const Graphics = () => {
   }
 
   const playFullPageBreakingNews = () => {
-    const url=`https://localhost:10000/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
+    const url=`${addressnrcsscroll()}/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] ${url}`);
     const script = `
     document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();

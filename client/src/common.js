@@ -2283,6 +2283,15 @@ export const clieentPublicFolder = () => {
   }
 };
 
+export const addressnrcsscroll=()=>{
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://octopus-app-gzws3.ondigitalocean.app";
+  } else {
+ var address2 = "https://" + window.location.host.split(":")[0] + ":10000";
+    return address2;
+  }
+}
+
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
