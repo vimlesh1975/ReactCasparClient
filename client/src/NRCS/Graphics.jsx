@@ -6,7 +6,7 @@ import {
   addressmysql,
   templateLayers,
   selectAll,
-  endpoint
+  endpoint, executeScript
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -41,7 +41,6 @@ const Graphics = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
   const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
-  const clientId = useSelector((state) => state.clientIdReducer.clientId);
 
   const [pageName, setPageName] = useState("new Graphics");
   const dispatch = useDispatch();
@@ -719,48 +718,6 @@ const Graphics = () => {
     updateGraphicTemplate(GraphicsID, newTemplate);
   }, 100);
 
-  // const fetchAllContent = async () => {
-  //   const data1 = new Array(slugs.length * 2); // Creating an array with double the length to store index and script content
-  //   slugs.forEach((slug, i) => {
-  //     data1[i * 2] = `${i + 1} ${slug.SlugName}`;
-  //     data1[i * 2 + 1] = `${slug.Script}\n_ _ _ _ _ _ _\n`;
-  //   });
-  //   return data1.filter((item) => item !== undefined); // Filter out any undefined entries
-  // };
-
-  // const addToCanvas = async () => {
-  //   const allContent = await fetchAllContent();
-
-  //   let currentTop = 500; // Initial top position
-  //   for (let i = 0; i < allContent.length; i++) {
-  //     const id = generateUniqueId({ type: "textbox" });
-  //     const fillColor = i % 2 === 0 ? "#ffff00" : "#ffffff";
-  //     const backgroundColor = i % 2 === 0 ? "#0000ff" : ""; // Alternate background color
-  //     const textbox = new fabric.Textbox(allContent[i], {
-  //       id: id,
-  //       class: id,
-  //       shadow: { ...shadowOptions, blur: 0 },
-  //       left: 100,
-  //       top: currentTop,
-  //       width: 1700,
-  //       fill: fillColor,
-  //       backgroundColor,
-  //       fontFamily: "Arial",
-  //       fontWeight: "bold",
-  //       fontSize: 90,
-  //       editable: true,
-  //       objectCaching: false,
-  //       textAlign: "left",
-  //       stroke: "#000000",
-  //       strokeWidth: 2,
-  //     });
-  //     canvas.add(textbox);
-  //     canvas.requestRenderAll();
-  //     currentTop += textbox.getBoundingRect().height + 10; // 10 is the spacing between textboxes
-  //   }
-  // };
-
-
   const onTabChange = (index, prevIndex) => {
     switch (index) {
       case 0:
@@ -773,28 +730,32 @@ const Graphics = () => {
     }
   };
 
-  const sendtohtml = ({ url, clientId }) => {
-    const url2 = 'https://localhost:9000/loadHtmlAddress'; // Replace with your API endpoint
-    fetch(url2, {
-      method: 'POST', // HTTP method
-      headers: {
-        'Content-Type': 'application/json', // Tells the server you're sending JSON
-      },
-      body: JSON.stringify({ url, clientId }), // Convert JavaScript object to JSON string
-    })
-  }
 
   const playScroll = () => {
     const url = `https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
-
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
+    window.Scrollfromtextfile = document.createElement('div');
+    Scrollfromtextfile.style.position='absolute';
+    Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
+    Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
+    document.body.appendChild(Scrollfromtextfile);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    Scrollfromtextfile.appendChild(iframe);
+    `
+   executeScript(script);
 
-    // sendtohtml({ url, clientId });
+   setTimeout(() => {
+    executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${showdateandTime} }, '*')`);
+  }, 2000);
+
   }
-
-
 
   const playScrollfromtextfile = () => {
     const url = `https://localhost:10000/ReactCasparClient/HorizontalScroll`;
@@ -804,34 +765,91 @@ const Graphics = () => {
       endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
     }, 1000);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
+
+    const script = `
+     document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
+     window.Scrollfromtextfile = document.createElement('div');
+     Scrollfromtextfile.style.position='absolute';
+     Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
+     Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
+     document.body.appendChild(Scrollfromtextfile);
+     window.iframe=document.createElement('iframe');
+     iframe.src = '${url}';
+     iframe.width = '1920';
+     iframe.height = '1080';
+     Scrollfromtextfile.appendChild(iframe);
+     `
+    executeScript(script);
+    setTimeout(() => {
+      executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+    }, 2000);
+
   }
 
   const stopScroll = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsscroll}`
     );
+
+    const script = `document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();`
+    executeScript(script);
   }
 
   const playBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`);
+    const url=`https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${yBreakingNewsLowerthird} 0.97 1`);
 
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsBreakingNews}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsBreakingNews}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsBreakingNews}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+   executeScript(script);
   }
   const stopBreakingNews = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsBreakingNews}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsBreakingNews}')?.remove();`
+    executeScript(script);
   }
 
   const playNewsUpdate = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`);
+    const url=`https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${yNewsUpdateLowerthird} 0.97 1`);
 
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsNewsUpdate}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsNewsUpdate}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsNewsUpdate}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+   executeScript(script);
   }
   const stopNewsUpdate = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsNewsUpdate}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsNewsUpdate}')?.remove();`
+    executeScript(script);
+
   }
 
 
@@ -840,17 +858,34 @@ const Graphics = () => {
 
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${yDateTimeSwitcher} 0.97 1`);
-    // sendtohtml({ url, clientId });
+
+    const script = `
+     document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}')?.remove();
+     window.DateTimeSwitcher = document.createElement('div');
+     DateTimeSwitcher.style.position='absolute';
+     DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsDateTimeSwitcher}';
+     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsDateTimeSwitcher}');
+     document.body.appendChild(DateTimeSwitcher);
+     window.iframe=document.createElement('iframe');
+     iframe.src = '${url}';
+     iframe.width = '1920';
+     iframe.height = '1080';
+     DateTimeSwitcher.appendChild(iframe);
+     `
+    executeScript(script);
 
   }
   const stopDateTimeSwitcher = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}')?.remove();`
+    executeScript(script);
   }
 
   const playTwoliner = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`);
+    const url=`https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
     setTimeout(() => {
@@ -859,21 +894,56 @@ const Graphics = () => {
     setTimeout(() => {
       endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 1`);
     }, 3000);
+
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsTwoliner}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+   executeScript(script);
+
+
   }
   const stopTwoliner = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsTwoliner}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();`
+    executeScript(script);
   }
 
   const playFullPageBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews/${selectedDate}`);
-
+    const url=`https://localhost:10000/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] ${url}`);
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsFullPageBreakingNews}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsFullPageBreakingNews}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+   executeScript(script);
   }
   const stopFullPageBreakingNews = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();`
+    executeScript(script);
   }
 
 
@@ -1357,12 +1427,12 @@ const Graphics = () => {
                           >
                             Select File
                           </button>
-                            {fileHandle && fileHandle.name}
-                         {fileHandle && <button
+                          {fileHandle && fileHandle.name}
+                          {fileHandle && <button
                             onClick={handleUpdate}
                           >
                             Update
-                          </button>} 
+                          </button>}
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScrollfromtextfile} style={{ marginRight: '8px' }}>Play</button>

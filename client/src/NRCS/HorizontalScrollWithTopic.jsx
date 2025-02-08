@@ -66,6 +66,20 @@ const HorizontalScrollWithTopic = () => {
     }
   }, [showdateandTime]);
 
+    useEffect(() => {
+      function handleMessage(event) {
+        // Security check: Ensure the message is from the expected parent domain
+        // if (event.origin !== "https://your-parent-website.com") return;
+  
+        if (event.data?.action === "callFunction") {
+          setShowdateandTime(event.data.data);
+        }
+      }
+  
+      window.addEventListener("message", handleMessage);
+      return () => window.removeEventListener("message", handleMessage);
+    }, []);
+
   // Format the date in Indian style (e.g., 27 Dec 2024)
   const formatDate = (date) =>
     date.toLocaleDateString('en-IN', {

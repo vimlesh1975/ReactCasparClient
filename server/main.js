@@ -37,10 +37,6 @@ fontList
     // console.log(err)
   });
 
-// const bodyParser = require('body-parser');
-// app.use(bodyParser({limit: '50mb'}));
-// const jsonParser = bodyParser.json();
-
 app.use(express.json({ limit: "50mb" }));
 app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
@@ -410,25 +406,6 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "client/public", "index.html"));
 });
 
-// app.post('/startGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('startGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
-
-// app.post('/pauseGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('pauseGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
-// app.post('/resumeGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('resumeGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
 
 app.post("/recallPage", (req, res) => {
   const data = req.body;
@@ -488,50 +465,6 @@ app.post("/loadHtml", (req, res) => {
     res.end("");
   });
 });
-
-const puppeteer = require('puppeteer');
-
-app.post("/loadHtmlAddress", async (req, res) => {
-  const url = req.body.url; // The URL you're trying to access
-
-  try {
-    // Launch Puppeteer in headless mode
-    const browser = await puppeteer.launch({
-      headless: true, // Set to false if you want to see the browser in action
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      ignoreHTTPSErrors: true, // Ignore SSL certificate errors
-    });
-    
-    // Create a new page within the browser
-    const page = await browser.newPage();
-
-    // Navigate to the URL, wait until the page is fully loaded
-    await page.goto(url, { waitUntil: 'networkidle0' });
-
-    // Extract the rendered HTML content from the page
-    const html  = await page.content();
-    // console.log('HTML Content:', html );
-
-    // Emit the HTML content via WebSocket
-    io.emit("loadHtmlAddress", {
-      html: html ,
-      clientId: req.body.clientId,
-    });
-
-    // Close the browser
-    await browser.close();
-    res.end("");
-
-
-    // res.status(200).send('HTML fetched successfully');
-  } catch (error) {
-    console.error('Error fetching HTML:', error);
-    res.status(500).send('Error fetching HTML');
-  }
-});
-
-
-
 
 app.post("/callScript", (req, res) => {
   io.emit("callScript", req.body);

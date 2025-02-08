@@ -134,23 +134,6 @@ const Twoliner = () => {
                 </div>
             )}
 
-            {/* Button to Start Scrolling */}
-            <div style={{ display: (window.screen.colorDepth === 0) ? 'none' : 'block', marginTop: 20, textAlign: 'center' }}>
-                <button
-                    onClick={() => startScroll(['new data 1', 'new data 2', 'new data 3', 'new data 4', 'new data 5'])}
-                    style={{
-                        padding: '10px 20px',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        backgroundColor: 'blue',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 5,
-                    }}
-                >
-                    Start Breaking News
-                </button>
-            </div>
         </div>
     );
 };

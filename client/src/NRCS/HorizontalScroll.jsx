@@ -48,6 +48,19 @@ const HorizontalScroll = () => {
     ]);
   };
 
+  useEffect(() => {
+    function handleMessage(event) {
+      // Security check: Ensure the message is from the expected parent domain
+      // if (event.origin !== "https://your-parent-website.com") return;
+
+      if (event.data?.action === "callFunction") {
+        startScroll(event.data.data);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   useEffect(() => {
     const scroll = () => {
@@ -109,25 +122,16 @@ const HorizontalScroll = () => {
               left: item.position,
               top: window.innerHeight - 80,
               fontSize: 50,
-              fontWeight:'bolder',
+              fontWeight: 'bolder',
               whiteSpace: 'nowrap',
               zIndex: 2,
               color: 'white',
             }}
           >
             {/* {item.text}  */}
-            {item.text} <img src={logo} alt='dd logo' width={50}/>
+            {item.text} <img src={logo} alt='dd logo' width={50} />
           </div>
         ))}
-
-      <div style={{ display: (window.screen.colorDepth === 0) ? 'none' : 'block' }}>
-        <button onClick={() => speedRef.current += 1}>Increase Speed</button>
-        <button onClick={() => speedRef.current -= 1}>Decrease Speed</button>
-        <button onClick={() => startScroll(['New Data 1', 'New Data 2', 'New Data 3'])}>
-          Set New Data and Start Scroll
-        </button>
-        <div>Current Speed: {speedRef.current} activeItems={activeItems.length}</div>
-      </div>
     </div>
   </div>);
 };

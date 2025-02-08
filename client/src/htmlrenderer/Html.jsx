@@ -123,15 +123,6 @@ function update(str) {
 }
 window.update = update;
 
-// insert data from CasparCg client when activated
-// function play(str) {
-//     parseCaspar(str); // Parse templateData into an XML object
-//     dataInsert(dataCaspar); // Insert data
-//     // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
-// }
-
-
-
 
 // eslint-disable-next-line 
 function stop() {
@@ -140,7 +131,6 @@ function stop() {
 const clientId = window.location.pathname.replace('/ReactCasparClient/html/', '');
 
 const Html = () => {
-    // console.log(clientId);
     const refhtml = useRef();
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))
@@ -153,7 +143,6 @@ const Html = () => {
         }
     }
     const callScript = data => {
-        // console.log(JSON.parse(data))
         const ff = JSON.parse(data)
         // eslint-disable-next-line 
         eval(ff[0])
@@ -205,57 +194,6 @@ const Html = () => {
 
         });
 
-// eslint-disable-next-line
-        const scriptEvalforaddress = () => {
-            var scripts = refhtml.current.getElementsByTagName("script");
-            for (var i = 0; i < scripts.length; i++) {
-                const script = scripts[i];
-                if (script.src) {
-                    // Handle external scripts
-                    const newScript = document.createElement('script');
-                    newScript.src = script.src;
-                    newScript.onload = () => {
-                        console.log(`${script.src} loaded successfully`);
-                    };
-                    document.head.appendChild(newScript);
-                } else {
-                    // Handle inline scripts
-                    const newScript = document.createElement('script');
-                    newScript.text = script.innerText;
-                    document.head.appendChild(newScript);
-                    console.log(script.innerText);
-                }
-            }
-        }
-
-        // eslint-disable-next-line
-        const loadScripts = () => {
-            const scripts = refhtml.current.getElementsByTagName("script");
-        
-            // Loop through the script elements
-            for (let i = 0; i < scripts.length; i++) {
-                const script = scripts[i];
-                
-                // Create a new script element
-                const newScript = document.createElement("script");
-                newScript.type = "text/javascript";
-                newScript.src = script.src;  // Handle external script sources
-                newScript.innerHTML = script.innerHTML;  // Handle inline scripts
-        
-                // Append to the document head or body to execute
-                document.body.appendChild(newScript);
-            }
-        };
-
-        socket.on("loadHtmlAddress", data => {
-            console.log(data)
-            if (data.clientId === clientId) {
-                refhtml.current.innerHTML = data.html;
-                // scriptEvalforaddress();
-                // loadScripts();
-            }
-        });
-
         socket.on("callScript", data => {
             if (data.clientId === clientId) {
                 callScript(data.data)
@@ -264,6 +202,7 @@ const Html = () => {
 
         socket.on("executeScript", data => {
             if (data.clientId === clientId) {
+                console.log(data);
                 executeScript(data.data1)
             }
         });

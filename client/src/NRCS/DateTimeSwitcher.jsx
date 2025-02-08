@@ -9,7 +9,7 @@ const DateTimeSwitcher = () => {
     // Update time every second
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 1000);
+    }, 5000);
 
     // Switch between date and time every 2 seconds
     const switcher = setInterval(() => {
@@ -19,7 +19,7 @@ const DateTimeSwitcher = () => {
         setIsShowingDate((prev) => !prev); // Switch content
         setFadeState('fade-in'); // Trigger fade-in animation
       }, 500); // Match fade-out duration
-    }, 5000);
+    }, 1000);
 
     // Cleanup intervals on unmount
     return () => {
