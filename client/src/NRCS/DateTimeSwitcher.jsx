@@ -19,7 +19,7 @@ const DateTimeSwitcher = () => {
         setIsShowingDate((prev) => !prev); // Switch content
         setFadeState('fade-in'); // Trigger fade-in animation
       }, 500); // Match fade-out duration
-    }, 1000);
+    }, 5000);
 
     // Cleanup intervals on unmount
     return () => {
