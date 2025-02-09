@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "080225_1";
+export const buildDate = "090225_1";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -2285,7 +2285,7 @@ export const clieentPublicFolder = () => {
 
 export const addressnrcsscroll=()=>{
   if (window.location.origin === "https://vimlesh1975.github.io") {
-    return "https://octopus-app-gzws3.ondigitalocean.app";
+    return "https://vimlesh1975.github.io";
   } else {
  var address2 = "https://" + window.location.host.split(":")[0] + ":10000";
     return address2;
