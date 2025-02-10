@@ -111,6 +111,8 @@ const Graphics = () => {
 
   useEffect(() => {
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
+    executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+
   }, [lines])
 
   const handleFileSelection = async () => {
