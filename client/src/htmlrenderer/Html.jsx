@@ -209,7 +209,7 @@ const Html = () => {
 
         socket.on("executeScript", data => {
             if (data.clientId === clientId) {
-                console.log(data);
+                // console.log(data);
                 executeScript(data.data1)
             }
         });
