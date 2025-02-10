@@ -749,11 +749,18 @@ const Graphics = () => {
     iframe.height = '1080';
     Scrollfromtextfile.appendChild(iframe);
     `
-   executeScript(script);
+    executeScript(script);
 
-   setTimeout(() => {
-    executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${showdateandTime} }, '*')`);
-  }, 2000);
+    setTimeout(() => {
+      executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${showdateandTime} }, '*')`);
+    }, 2000);
+
+    const scriptmixer = `
+              const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+              element.style.transformOrigin = 'top left';
+              element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
+              `
+    executeScript(`${scriptmixer}`)
 
   }
 
@@ -784,6 +791,14 @@ const Graphics = () => {
       executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
     }, 2000);
 
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
+
   }
 
   const stopScroll = () => {
@@ -796,7 +811,7 @@ const Graphics = () => {
   }
 
   const playBreakingNews = () => {
-    const url=`${addressnrcsscroll()}/ReactCasparClient/BreakingNews/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/BreakingNews/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${yBreakingNewsLowerthird} 0.97 1`);
 
@@ -813,7 +828,14 @@ const Graphics = () => {
     iframe.height = '1080';
     DateTimeSwitcher.appendChild(iframe);
     `
-   executeScript(script);
+    executeScript(script);
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsBreakingNews}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yBreakingNewsLowerthird * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
   }
   const stopBreakingNews = () => {
     endpoint(
@@ -824,7 +846,7 @@ const Graphics = () => {
   }
 
   const playNewsUpdate = () => {
-    const url=`${addressnrcsscroll()}/ReactCasparClient/NewsUpdate/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/NewsUpdate/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${yNewsUpdateLowerthird} 0.97 1`);
 
@@ -841,7 +863,15 @@ const Graphics = () => {
     iframe.height = '1080';
     DateTimeSwitcher.appendChild(iframe);
     `
-   executeScript(script);
+    executeScript(script);
+
+    const scriptmixer = `
+              const element = document.getElementById('divid_${templateLayers.nrcsNewsUpdate}');
+              element.style.transformOrigin = 'top left';
+              element.style.transform = \`translate(${0.008 * 1920}px, ${yNewsUpdateLowerthird * 1080}px) scale(${0.97}, ${1})\`;
+              `
+    executeScript(`${scriptmixer}`)
+
   }
   const stopNewsUpdate = () => {
     endpoint(
@@ -873,6 +903,14 @@ const Graphics = () => {
      DateTimeSwitcher.appendChild(iframe);
      `
     executeScript(script);
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yDateTimeSwitcher * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
+
 
   }
   const stopDateTimeSwitcher = () => {
@@ -884,7 +922,7 @@ const Graphics = () => {
   }
 
   const playTwoliner = () => {
-    const url=`${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
@@ -908,7 +946,7 @@ const Graphics = () => {
     iframe.height = '1080';
     DateTimeSwitcher.appendChild(iframe);
     `
-   executeScript(script);
+    executeScript(script);
 
 
   }
@@ -921,7 +959,7 @@ const Graphics = () => {
   }
 
   const playFullPageBreakingNews = () => {
-    const url=`${addressnrcsscroll()}/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] ${url}`);
     const script = `
     document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();
@@ -936,7 +974,7 @@ const Graphics = () => {
     iframe.height = '1080';
     DateTimeSwitcher.appendChild(iframe);
     `
-   executeScript(script);
+    executeScript(script);
   }
   const stopFullPageBreakingNews = () => {
     endpoint(
@@ -1412,6 +1450,14 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
                                 setYScroll(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
                               }
                               } />
                             </div>
@@ -1442,6 +1488,14 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
                                 setYScroll(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
                               }
                               } />
                             </div>
@@ -1459,6 +1513,14 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yBreakingNewsLowerthird} onChange={e => {
                                 setYBreakingNewsLowerthird(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsBreakingNews}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
                               }
                               } />
                             </div>
@@ -1477,6 +1539,13 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yNewsUpdateLowerthird} onChange={e => {
                                 setYyNewsUpdateLowerthird(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsNewsUpdate}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
                               }
                               } />
                             </div>
@@ -1520,6 +1589,13 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yTwoliner} onChange={e => {
                                 setYTwoliner(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsTwoliner}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
                               }
                               } />
                             </div>
@@ -1538,6 +1614,12 @@ const Graphics = () => {
                               <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yDateTimeSwitcher} onChange={e => {
                                 setYDateTimeSwitcher(e.target.value);
                                 endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
                               }
                               } />
                             </div>
