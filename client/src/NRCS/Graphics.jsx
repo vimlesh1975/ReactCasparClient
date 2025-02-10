@@ -942,17 +942,18 @@ const Graphics = () => {
 
     const script = `
     document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();
-    window.DateTimeSwitcher = document.createElement('div');
-    DateTimeSwitcher.style.position='absolute';
-    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsTwoliner}';
-    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
-    document.body.appendChild(DateTimeSwitcher);
+    window.Twoliner = document.createElement('div');
+    Twoliner.style.position='absolute';
+    Twoliner.style.opacity=0;
+    Twoliner.style.zIndex = '${templateLayers.nrcsTwoliner}';
+    Twoliner.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
+    document.body.appendChild(Twoliner);
     window.iframe=document.createElement('iframe');
     iframe.frameBorder = '0';
     iframe.src = '${url}';
     iframe.width = '1920';
     iframe.height = '1080';
-    DateTimeSwitcher.appendChild(iframe);
+    Twoliner.appendChild(iframe);
     `
     executeScript(script);
 
@@ -961,9 +962,15 @@ const Graphics = () => {
     element.style.transformOrigin = 'top left';
     element.style.transform = \`translate(${0.008 * 1920}px, ${yTwoliner * 1080}px) scale(${0.97}, ${1})\`;
     `
-executeScript(`${scriptmixer}`)
+    executeScript(`${scriptmixer}`)
 
+    setTimeout(() => {
+    executeScript(`Twoliner.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${NrcsBreakingText} }, '*')`);
+    }, 1000);
 
+    setTimeout(() => {
+      executeScript(`Twoliner.style.opacity=1;`)
+      }, 1500);
 
   }
   const stopTwoliner = () => {

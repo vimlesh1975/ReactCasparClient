@@ -36,7 +36,7 @@ const Twoliner = () => {
     const { selectedDate } = useParams();
 
     const dispatch = useDispatch();
-    window.dispatch=dispatch;
+    window.dispatch = dispatch;
 
     useEffect(() => {
         if (!isStarted || dataList.length === 0) return;
@@ -65,6 +65,16 @@ const Twoliner = () => {
     };
     window.startScroll = startScroll;
 
+    useEffect(() => {
+        function handleMessage(event) {
+            if (!event.data.data) return;
+            if (event.data?.action === "callFunction") {
+               dispatch({ type: "NRCSBREAKINGTEXT", payload: event.data.data });
+            }
+        }
+        window.addEventListener("message", handleMessage);
+        return () => window.removeEventListener("message", handleMessage);
+    }, [dispatch]);
 
     const fetchRO = useCallback(async () => {
         try {
@@ -130,7 +140,7 @@ const Twoliner = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFMultine text={ dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={110} fs={red ? 180 : 60} />
+                    <STFMultine text={dataList[currentIndex]} containerWidth={window.innerWidth - (red ? 550 : 100)} containerHeight={110} fs={red ? 180 : 60} />
                 </div>
             )}
 

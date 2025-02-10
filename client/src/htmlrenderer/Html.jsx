@@ -3,8 +3,11 @@ import { socketAddress, getModifiedObject } from '../common'
 import socketIOClient from "socket.io-client";
 import Tsparticles2 from '../tsparticles/Tsparticles2';
 import * as fabric from 'fabric'
+import {  useDispatch } from "react-redux";
+
 
 window.fabric = fabric;
+
 
 window.getModifiedObject = getModifiedObject;
 window.hexToRGB = hex => {
@@ -131,6 +134,10 @@ function stop() {
 const clientId = window.location.pathname.replace('/ReactCasparClient/html/', '');
 
 const Html = () => {
+
+      const dispatch = useDispatch();
+      window.dispatch = dispatch;
+    
     const refhtml = useRef();
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))
