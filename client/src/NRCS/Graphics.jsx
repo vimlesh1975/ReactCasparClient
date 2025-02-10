@@ -744,6 +744,7 @@ const Graphics = () => {
     Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
     document.body.appendChild(Scrollfromtextfile);
     window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
     iframe.src = '${url}';
     iframe.width = '1920';
     iframe.height = '1080';
@@ -781,6 +782,7 @@ const Graphics = () => {
      Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
      document.body.appendChild(Scrollfromtextfile);
      window.iframe=document.createElement('iframe');
+     iframe.frameBorder = '0';
      iframe.src = '${url}';
      iframe.width = '1920';
      iframe.height = '1080';
@@ -823,6 +825,7 @@ const Graphics = () => {
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsBreakingNews}');
     document.body.appendChild(DateTimeSwitcher);
     window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
     iframe.src = '${url}';
     iframe.width = '1920';
     iframe.height = '1080';
@@ -858,6 +861,7 @@ const Graphics = () => {
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsNewsUpdate}');
     document.body.appendChild(DateTimeSwitcher);
     window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
     iframe.src = '${url}';
     iframe.width = '1920';
     iframe.height = '1080';
@@ -897,6 +901,7 @@ const Graphics = () => {
      DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsDateTimeSwitcher}');
      document.body.appendChild(DateTimeSwitcher);
      window.iframe=document.createElement('iframe');
+     iframe.frameBorder = '0';
      iframe.src = '${url}';
      iframe.width = '1920';
      iframe.height = '1080';
@@ -941,12 +946,21 @@ const Graphics = () => {
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
     document.body.appendChild(DateTimeSwitcher);
     window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
     iframe.src = '${url}';
     iframe.width = '1920';
     iframe.height = '1080';
     DateTimeSwitcher.appendChild(iframe);
     `
     executeScript(script);
+
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsTwoliner}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yTwoliner * 1080}px) scale(${0.97}, ${1})\`;
+    `
+executeScript(`${scriptmixer}`)
+
 
 
   }
