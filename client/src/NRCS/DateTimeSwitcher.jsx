@@ -9,19 +9,17 @@ const DateTimeSwitcher = () => {
     // Update time every second
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-    }, 5000);
+    }, 1000); // Change to 1 second for continuous second updates
 
-    // Switch between date and time every 2 seconds
+    // Switch between date and time every 5 seconds
     const switcher = setInterval(() => {
-      // Trigger fade-out animation before switching
-      setFadeState('fade-out');
+      setFadeState('fade-out'); // Start fade-out effect
       setTimeout(() => {
-        setIsShowingDate((prev) => !prev); // Switch content
-        setFadeState('fade-in'); // Trigger fade-in animation
+        setIsShowingDate((prev) => !prev); // Toggle display
+        setFadeState('fade-in'); // Start fade-in effect
       }, 500); // Match fade-out duration
     }, 5000);
 
-    // Cleanup intervals on unmount
     return () => {
       clearInterval(timer);
       clearInterval(switcher);
@@ -36,7 +34,13 @@ const DateTimeSwitcher = () => {
       year: 'numeric',
     });
 
-  const formatTime = (date) => date.toLocaleTimeString();
+  const formatTime = (date) =>
+    date.toLocaleTimeString('en-US', {
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
 
   return (
     <div

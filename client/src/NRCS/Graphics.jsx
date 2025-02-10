@@ -1402,7 +1402,7 @@ const Graphics = () => {
                           Scroll
                           <br />
                           <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
-                          <label for="vehicle1">Show Dtae and Time Also</label>
+                          <label for="vehicle1">Show Date and Time Also</label>
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>

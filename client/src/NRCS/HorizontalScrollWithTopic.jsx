@@ -88,7 +88,14 @@ const HorizontalScrollWithTopic = () => {
       year: 'numeric',
     });
 
-  const formatTime = (date) => date.toLocaleTimeString();
+    const formatTime = (date) =>
+      date.toLocaleTimeString('en-US', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+  
 
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {
