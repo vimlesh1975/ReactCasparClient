@@ -5,7 +5,7 @@ const Mixer = ({ layer }) => {
     const [y, setY] = useState(0.00);
 
     useEffect(() => {
-        if (window.chNumber){
+        if (window.chNumber) {
             endpoint(`mixer ${window.chNumber}-${layer} fill ${0.015} ${y} ${0.97} ${1} `);
         }
     }, [y, layer])
@@ -17,9 +17,6 @@ const Mixer = ({ layer }) => {
                 }
                 } />
             </div>
-
-
-
         </div>
     )
 }

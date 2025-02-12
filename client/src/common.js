@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "210125_1";
+export const buildDate = "100225_2";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
@@ -2282,6 +2282,15 @@ export const clieentPublicFolder = () => {
     return "https://vimlesh1975.github.io/ReactCasparClient";
   }
 };
+
+export const addressnrcsscroll=()=>{
+  if (window.location.origin === "https://vimlesh1975.github.io") {
+    return "https://vimlesh1975.github.io";
+  } else {
+ var address2 = "https://" + window.location.host.split(":")[0] + ":10000";
+    return address2;
+  }
+}
 
 export const getFormattedDatetimeNumber = (date = new Date()) => {
   const year = date.getFullYear();

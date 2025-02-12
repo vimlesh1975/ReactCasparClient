@@ -6,7 +6,7 @@ import {
   addressmysql,
   templateLayers,
   selectAll,
-  endpoint
+  endpoint, executeScript, addressnrcsscroll
 } from "../common";
 import { useSelector, useDispatch } from "react-redux";
 import GsapPlayer from "../GsapPlayer";
@@ -26,13 +26,21 @@ import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
 import FlashMessage from "../FlashMessage";
 
-import Mixerfill from "./Mixerfill";
 
 const Graphics = () => {
+
+  const [yScroll, setYScroll] = useState(0.00);
+  const [yBreakingNewsLowerthird, setYBreakingNewsLowerthird] = useState(0.00);
+  const [yNewsUpdateLowerthird, setYyNewsUpdateLowerthird] = useState(0.00);
+  const [yTwoliner, setYTwoliner] = useState(0.00);
+  const [yDateTimeSwitcher, setYDateTimeSwitcher] = useState(0.00);
+
+  const [lines, setLines] = useState([]);
+  const [fileHandle, setFileHandle] = useState(null); // Store file handle
+
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
   const newdatabase = useSelector((state) => state.newdatabaseReducer.newdatabase);
-  // const textNodes = useSelector(state => state.textNodesReducer.textNodes);
 
   const [pageName, setPageName] = useState("new Graphics");
   const dispatch = useDispatch();
@@ -81,12 +89,56 @@ const Graphics = () => {
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
 
+  const readFile = async (handle) => {
+    if (!handle) return;
 
-  // const [allGraphics, setAllGraphics] = useState([]);
+    try {
+      const file = await handle.getFile(); // Get a fresh file object
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const content = e.target.result;
+        const linesArray = content.split(/\r?\n/);
+        setLines(linesArray);
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error("Error reading file:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
+    executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+
+  }, [lines])
+
+  const handleFileSelection = async () => {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: "Text Files", accept: { "text/plain": [".txt"] } }],
+        multiple: false,
+      });
+
+      setFileHandle(handle); // Store handle for later updates
+      await readFile(handle); // Read file immediately
+    } catch (error) {
+      console.error("File selection cancelled or failed:", error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (fileHandle) {
+      await readFile(fileHandle);
+    } else {
+      console.warn("No file selected.");
+    }
+  };
 
   const handleDateChange = (event) => {
     const date = event.target.value;
-    console.log(date)
     setSelectedDate(date)
   };
 
@@ -668,48 +720,6 @@ const Graphics = () => {
     updateGraphicTemplate(GraphicsID, newTemplate);
   }, 100);
 
-  // const fetchAllContent = async () => {
-  //   const data1 = new Array(slugs.length * 2); // Creating an array with double the length to store index and script content
-  //   slugs.forEach((slug, i) => {
-  //     data1[i * 2] = `${i + 1} ${slug.SlugName}`;
-  //     data1[i * 2 + 1] = `${slug.Script}\n_ _ _ _ _ _ _\n`;
-  //   });
-  //   return data1.filter((item) => item !== undefined); // Filter out any undefined entries
-  // };
-
-  // const addToCanvas = async () => {
-  //   const allContent = await fetchAllContent();
-
-  //   let currentTop = 500; // Initial top position
-  //   for (let i = 0; i < allContent.length; i++) {
-  //     const id = generateUniqueId({ type: "textbox" });
-  //     const fillColor = i % 2 === 0 ? "#ffff00" : "#ffffff";
-  //     const backgroundColor = i % 2 === 0 ? "#0000ff" : ""; // Alternate background color
-  //     const textbox = new fabric.Textbox(allContent[i], {
-  //       id: id,
-  //       class: id,
-  //       shadow: { ...shadowOptions, blur: 0 },
-  //       left: 100,
-  //       top: currentTop,
-  //       width: 1700,
-  //       fill: fillColor,
-  //       backgroundColor,
-  //       fontFamily: "Arial",
-  //       fontWeight: "bold",
-  //       fontSize: 90,
-  //       editable: true,
-  //       objectCaching: false,
-  //       textAlign: "left",
-  //       stroke: "#000000",
-  //       strokeWidth: 2,
-  //     });
-  //     canvas.add(textbox);
-  //     canvas.requestRenderAll();
-  //     currentTop += textbox.getBoundingRect().height + 10; // 10 is the spacing between textboxes
-  //   }
-  // };
-
-
   const onTabChange = (index, prevIndex) => {
     switch (index) {
       case 0:
@@ -722,55 +732,206 @@ const Graphics = () => {
     }
   };
 
+
   const playScroll = () => {
-    // endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScroll`);
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] https://localhost:10000/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 0 0.97 1`);
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollWithTopic/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} "setShowdateandTime(${showdateandTime})"`);
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
+    window.Scrollfromtextfile = document.createElement('div');
+    Scrollfromtextfile.style.position='absolute';
+    Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
+    Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
+    document.body.appendChild(Scrollfromtextfile);
+    window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    Scrollfromtextfile.appendChild(iframe);
+    `
+    executeScript(script);
+
+    setTimeout(() => {
+      executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${showdateandTime} }, '*')`);
+    }, 2000);
+
+    const scriptmixer = `
+              const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+              element.style.transformOrigin = 'top left';
+              element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
+              `
+    executeScript(`${scriptmixer}`)
+
   }
+
+  const playScrollfromtextfile = () => {
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScroll`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsscroll} [html] ${url}`);
+
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
+    }, 1000);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
+
+    const script = `
+     document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
+     window.Scrollfromtextfile = document.createElement('div');
+     Scrollfromtextfile.style.position='absolute';
+     Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
+     Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
+     document.body.appendChild(Scrollfromtextfile);
+     window.iframe=document.createElement('iframe');
+     iframe.frameBorder = '0';
+     iframe.src = '${url}';
+     iframe.width = '1920';
+     iframe.height = '1080';
+     Scrollfromtextfile.appendChild(iframe);
+     `
+    executeScript(script);
+    setTimeout(() => {
+      executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+    }, 2000);
+
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
+
+  }
+
   const stopScroll = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsscroll}`
     );
+
+    const script = `document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();`
+    executeScript(script);
   }
 
   const playBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] https://localhost:10000/ReactCasparClient/BreakingNews/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 0 0.97 1`);
+    const url = `${addressnrcsscroll()}/ReactCasparClient/BreakingNews/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] ${url}`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${yBreakingNewsLowerthird} 0.97 1`);
+
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsBreakingNews}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsBreakingNews}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsBreakingNews}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+    executeScript(script);
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsBreakingNews}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yBreakingNewsLowerthird * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
 
   }
   const stopBreakingNews = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsBreakingNews}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsBreakingNews}')?.remove();`
+    executeScript(script);
   }
 
   const playNewsUpdate = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] https://localhost:10000/ReactCasparClient/NewsUpdate/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 0 0.97 1`);
+    const url = `${addressnrcsscroll()}/ReactCasparClient/NewsUpdate/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsNewsUpdate} [html] ${url}`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${yNewsUpdateLowerthird} 0.97 1`);
+
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsNewsUpdate}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsNewsUpdate}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsNewsUpdate}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+    executeScript(script);
+
+    const scriptmixer = `
+              const element = document.getElementById('divid_${templateLayers.nrcsNewsUpdate}');
+              element.style.transformOrigin = 'top left';
+              element.style.transform = \`translate(${0.008 * 1920}px, ${yNewsUpdateLowerthird * 1080}px) scale(${0.97}, ${1})\`;
+              `
+    executeScript(`${scriptmixer}`)
 
   }
   const stopNewsUpdate = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsNewsUpdate}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsNewsUpdate}')?.remove();`
+    executeScript(script);
+
   }
 
 
   const playDateTimeSwitcher = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] https://localhost:10000/ReactCasparClient/DateTimeSwitcher`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 0 0.97 1`);
+    const url = `${addressnrcsscroll()}/ReactCasparClient/DateTimeSwitcher`;
+
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} [html] ${url}`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${yDateTimeSwitcher} 0.97 1`);
+
+    const script = `
+     document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}')?.remove();
+     window.DateTimeSwitcher = document.createElement('div');
+     DateTimeSwitcher.style.position='absolute';
+     DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsDateTimeSwitcher}';
+     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsDateTimeSwitcher}');
+     document.body.appendChild(DateTimeSwitcher);
+     window.iframe=document.createElement('iframe');
+     iframe.frameBorder = '0';
+     iframe.src = '${url}';
+     iframe.width = '1920';
+     iframe.height = '1080';
+     DateTimeSwitcher.appendChild(iframe);
+     `
+    executeScript(script);
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yDateTimeSwitcher * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
+
 
   }
   const stopDateTimeSwitcher = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}')?.remove();`
+    executeScript(script);
   }
 
   const playTwoliner = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] https://localhost:10000/ReactCasparClient/Twoliner/${selectedDate}`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 0 0.97 1`);
+    const url = `${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] ${url}`);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} "dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })"`);
@@ -778,21 +939,72 @@ const Graphics = () => {
     setTimeout(() => {
       endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 1`);
     }, 3000);
+
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();
+    window.Twoliner = document.createElement('div');
+    Twoliner.style.position='absolute';
+    Twoliner.style.opacity=0;
+    Twoliner.style.zIndex = '${templateLayers.nrcsTwoliner}';
+    Twoliner.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
+    document.body.appendChild(Twoliner);
+    window.iframe=document.createElement('iframe');
+    iframe.frameBorder = '0';
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    Twoliner.appendChild(iframe);
+    `
+    executeScript(script);
+
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.nrcsTwoliner}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yTwoliner * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    executeScript(`${scriptmixer}`)
+
+    setTimeout(() => {
+      executeScript(`Twoliner.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${NrcsBreakingText} }, '*')`);
+    }, 1000);
+
+    setTimeout(() => {
+      executeScript(`Twoliner.style.opacity=1;`)
+    }, 1500);
+
   }
   const stopTwoliner = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsTwoliner}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();`
+    executeScript(script);
   }
 
   const playFullPageBreakingNews = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] https://localhost:10000/ReactCasparClient/FullPageBreakingNews/${selectedDate}`);
-
+    const url = `${addressnrcsscroll()}/ReactCasparClient/FullPageBreakingNews/${selectedDate}`;
+    endpoint(`play ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews} [html] ${url}`);
+    const script = `
+    document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();
+    window.DateTimeSwitcher = document.createElement('div');
+    DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsFullPageBreakingNews}';
+    DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsFullPageBreakingNews}');
+    document.body.appendChild(DateTimeSwitcher);
+    window.iframe=document.createElement('iframe');
+    iframe.src = '${url}';
+    iframe.width = '1920';
+    iframe.height = '1080';
+    DateTimeSwitcher.appendChild(iframe);
+    `
+    executeScript(script);
   }
   const stopFullPageBreakingNews = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsFullPageBreakingNews}`
     );
+    const script = `document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();`
+    executeScript(script);
   }
 
 
@@ -851,117 +1063,7 @@ const Graphics = () => {
       <div>
         <div style={{ display: "flex" }}>
           <div style={{ minWidth: 450, maxWidth: 450, marginTop: 45 }}>
-            <div>
-              {newdatabase &&
-                <div>
-                  <label htmlFor="date-selector">Select a date: </label>
-                  <input
-                    id="date-selector"
-                    type="date"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                  />
-                </div>
-              }
-            </div>
 
-
-            <div>
-                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-                    <thead>
-                      <tr>
-                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'left' }}>Feature</th>
-                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
-                          Scroll
-                          <br />
-                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
-                          <label for="vehicle1">Show Dtae and Time Also</label>
-                        </td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopScroll}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsscroll} />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopBreakingNews}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsBreakingNews} />
-
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopNewsUpdate}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsNewsUpdate} />
-
-                        </td>
-                      </tr>
-
-
-                      {/* <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
-                          Twoliner
-                          <br />
-
-                          <label>
-                            <input
-                              type="radio"
-                              value={true}
-                              checked={NrcsBreakingText === true}
-                              onChange={handleChange}
-                            />
-                            Breaking News
-                          </label>
-                          <label>
-                            <input
-                              type="radio"
-                              value={false}
-                              checked={NrcsBreakingText === false}
-                              onChange={handleChange}
-                            />
-                            News Update
-                          </label>
-
-                        </td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopTwoliner}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsTwoliner} />
-
-                        </td>
-                      </tr> */}
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopDateTimeSwitcher}>Stop</button>
-                          <Mixerfill layer={templateLayers.nrcsDateTimeSwitcher} />
-                        </td>
-                      </tr>
-                      {/* <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopFullPageBreakingNews}>Stop</button>
-                        </td>
-                      </tr> */}
-
-
-                    </tbody>
-                  </table>
-                </div>
-                
             {/* <div>
               Run Orders:
               <select
@@ -1020,9 +1122,8 @@ const Graphics = () => {
                 </div>
                 ))}
             </div> */}
-
-            {/* <h4>Graphics</h4> */}
-            {/* <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
+            {/* 
+            <div style={{ border: "1px solid red", height: 60, padding: 5 }}>
               <GsapPlayer layer1={templateLayers.NRCSgsap} inline={false} />
             </div > */}
             {/* <div style={{ border: '1px solid red' }}>
@@ -1151,13 +1252,12 @@ const Graphics = () => {
             </div> */}
 
 
-            <div style={{ border: "1px solid red" }}>
-              {/* <div>
+            {/* <div style={{ border: "1px solid red" }}>
+              <div>
                 {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button> <button onClick={deleteOllFiles}>Delete Old files</button> </>}
                 <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
-              </div> */}
-
-            </div>
+              </div>
+            </div> */}
           </div>
           <div>
             <Tabs
@@ -1166,13 +1266,241 @@ const Graphics = () => {
               onSelect={(index, prevIndex) => onTabChange(index, prevIndex)}
             >
               <TabList>
-                {/* <Tab>Thumbnailview</Tab>
-                <Tab>DataUpdater</Tab>
-                <Tab>Copy </Tab>
-                <Tab>Script</Tab> */}
-                <Tab>Scroll</Tab>
+              <Tab>Scroll</Tab>
+                <Tab className="tabHidden">Thumbnailview</Tab>
+                <Tab className="tabHidden">DataUpdater</Tab>
+                <Tab className="tabHidden">Copy </Tab>
+                <Tab className="tabHidden">Script</Tab>
               </TabList>
-              {/* <TabPanel>
+              <TabPanel>
+                <div>
+                  {newdatabase &&
+                    <div>
+                      <label htmlFor="date-selector">Select a date: </label>
+                      <input
+                        id="date-selector"
+                        type="date"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                      />
+                    </div>
+                  }
+                </div>
+                <div>
+                  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <thead>
+                      <tr>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'left' }}>Feature</th>
+                        <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Scroll
+                          <br />
+                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
+                          <label for="vehicle1">Show Date and Time Also</label>
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopScroll}>Stop</button>
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
+                                setYScroll(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
+                              }
+                              } />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Scroll from text file
+                          <br />
+                          <button
+                            onClick={handleFileSelection}
+                          >
+                            Select File
+                          </button>
+                          {fileHandle && fileHandle.name}
+                          {fileHandle && <button
+                            onClick={handleUpdate}
+                          >
+                            Update
+                          </button>}
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playScrollfromtextfile} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopScroll}>Stop</button>
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
+                                setYScroll(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
+                              }
+                              } />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopBreakingNews}>Stop</button>
+                          {/* <Mixerfill layer={templateLayers.nrcsBreakingNews} /> */}
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yBreakingNewsLowerthird} onChange={e => {
+                                setYBreakingNewsLowerthird(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsBreakingNews} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsBreakingNews}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
+                              }
+                              } />
+                            </div>
+                          </div>
+
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopNewsUpdate}>Stop</button>
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yNewsUpdateLowerthird} onChange={e => {
+                                setYyNewsUpdateLowerthird(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsNewsUpdate} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsNewsUpdate}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
+                              }
+                              } />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Twoliner
+                          <br />
+
+                          <label>
+                            <input
+                              type="radio"
+                              value={true}
+                              checked={NrcsBreakingText === true}
+                              onChange={handleChange}
+                            />
+                            Breaking News
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              value={false}
+                              checked={NrcsBreakingText === false}
+                              onChange={handleChange}
+                            />
+                            News Update
+                          </label>
+
+
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playTwoliner} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopTwoliner}>Stop</button>
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yTwoliner} onChange={e => {
+                                setYTwoliner(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsTwoliner}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+
+                              }
+                              } />
+                            </div>
+                          </div>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopDateTimeSwitcher}>Stop</button>
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yDateTimeSwitcher} onChange={e => {
+                                setYDateTimeSwitcher(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+                              }
+                              } />
+                            </div>
+                          </div>
+
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopFullPageBreakingNews}>Stop</button>
+                        </td>
+                      </tr>
+
+
+                    </tbody>
+                  </table>
+                </div>
+              </TabPanel>
+              <TabPanel>
                 <Thumbnailview graphics={graphics} currentPage={currentGraphics} setCurrentGraphics={setCurrentGraphics} getAllKeyValue={getAllKeyValue} loading={loading} directoryHandle={directoryHandle} exportEachPagetoHTML={exportEachPagetoHTML} />
               </TabPanel>
               <TabPanel>
@@ -1328,11 +1656,8 @@ const Graphics = () => {
                     currentSlugSlugName={currentSlugSlugName}
                   />
                 </div>
-              </TabPanel> */}
-              <TabPanel>
-                
-
               </TabPanel>
+             
 
             </Tabs>
           </div>

@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { addressmysql } from '../common'
+import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
 
 var data = [
@@ -49,32 +48,19 @@ const HorizontalScroll = () => {
     ]);
   };
 
-  const fetchRO = useCallback(async () => {
-    try {
-      const res = await fetch(
-        addressmysql() + `/show_runorderSpecial`
-      );
-      const data = await res.json();
-      const aa = [];
-      data.forEach((val) => {
-        if (val && val.Script) {
-          const splitText = (val.Script)?.split("$$$$");
-          splitText.forEach((item) => {
-            aa.push(`${item.replaceAll("'", "")}`);
-          });
-        }
-      });
-
-      startScroll(aa);
-
-    } catch (error) {
-      // console.error('Error fetching data:', error);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchRO();
-  }, [fetchRO]);
+    function handleMessage(event) {
+      // Security check: Ensure the message is from the expected parent domain
+      // if (event.origin !== "https://your-parent-website.com") return;
+
+      if (event.data?.action === "callFunction") {
+        startScroll(event.data.data);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   useEffect(() => {
     const scroll = () => {
@@ -136,24 +122,16 @@ const HorizontalScroll = () => {
               left: item.position,
               top: window.innerHeight - 80,
               fontSize: 50,
-              fontWeight:'bolder',
+              fontWeight: 'bolder',
               whiteSpace: 'nowrap',
               zIndex: 2,
               color: 'white',
             }}
           >
-            {item.text} <img src={logo} alt='dd logo' width={50}/>
+            {/* {item.text}  */}
+            {item.text} <img src={logo} alt='dd logo' width={50} />
           </div>
         ))}
-
-      <div style={{ display: (window.screen.colorDepth === 0) ? 'none' : 'block' }}>
-        <button onClick={() => speedRef.current += 1}>Increase Speed</button>
-        <button onClick={() => speedRef.current -= 1}>Decrease Speed</button>
-        <button onClick={() => startScroll(['New Data 1', 'New Data 2', 'New Data 3'])}>
-          Set New Data and Start Scroll
-        </button>
-        <div>Current Speed: {speedRef.current} activeItems={activeItems.length}</div>
-      </div>
     </div>
   </div>);
 };

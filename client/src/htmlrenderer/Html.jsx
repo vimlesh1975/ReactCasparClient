@@ -3,8 +3,11 @@ import { socketAddress, getModifiedObject } from '../common'
 import socketIOClient from "socket.io-client";
 import Tsparticles2 from '../tsparticles/Tsparticles2';
 import * as fabric from 'fabric'
+import {  useDispatch } from "react-redux";
+
 
 window.fabric = fabric;
+
 
 window.getModifiedObject = getModifiedObject;
 window.hexToRGB = hex => {
@@ -123,15 +126,6 @@ function update(str) {
 }
 window.update = update;
 
-// insert data from CasparCg client when activated
-// function play(str) {
-//     parseCaspar(str); // Parse templateData into an XML object
-//     dataInsert(dataCaspar); // Insert data
-//     // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
-// }
-
-
-
 
 // eslint-disable-next-line 
 function stop() {
@@ -140,7 +134,10 @@ function stop() {
 const clientId = window.location.pathname.replace('/ReactCasparClient/html/', '');
 
 const Html = () => {
-    // console.log(clientId);
+
+      const dispatch = useDispatch();
+      window.dispatch = dispatch;
+    
     const refhtml = useRef();
     const updateHtml = (data) => {
         update(data.replaceAll("\\", ""))
@@ -153,7 +150,6 @@ const Html = () => {
         }
     }
     const callScript = data => {
-        // console.log(JSON.parse(data))
         const ff = JSON.parse(data)
         // eslint-disable-next-line 
         eval(ff[0])
@@ -197,14 +193,14 @@ const Html = () => {
             }
         });
         socket.on("loadHtml", data => {
-            // console.log(data)
             if (data.clientId === clientId) {
                 refhtml.current.innerHTML = data.html;
-                scriptEval()
-                updateHtml(data.data)
+                scriptEval();
+                updateHtml(data.data);
             }
 
         });
+
         socket.on("callScript", data => {
             if (data.clientId === clientId) {
                 callScript(data.data)
@@ -213,6 +209,7 @@ const Html = () => {
 
         socket.on("executeScript", data => {
             if (data.clientId === clientId) {
+                // console.log(data);
                 executeScript(data.data1)
             }
         });

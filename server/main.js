@@ -1,5 +1,8 @@
 require("dotenv").config(); // Load environment variables from .env file
 // console.log(process.env.DB_HOST);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+const { request } = require('undici');
 
 const express = require("express");
 const app = express();
@@ -33,10 +36,6 @@ fontList
   .catch((err) => {
     // console.log(err)
   });
-
-// const bodyParser = require('body-parser');
-// app.use(bodyParser({limit: '50mb'}));
-// const jsonParser = bodyParser.json();
 
 app.use(express.json({ limit: "50mb" }));
 app.use(
@@ -269,7 +268,7 @@ const options2 = {
 
 const server2 = https.createServer(options2, app);
 
-server2.listen(port, () => {
+server2.listen(port, '::', () => {
   console.log(`Node server is listening on port ${port} with HTTPS`);
 });
 // server2.timeout = 300000;  // 5 minutes, adjust as necessary
@@ -407,25 +406,6 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "client/public", "index.html"));
 });
 
-// app.post('/startGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('startGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
-
-// app.post('/pauseGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('pauseGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
-// app.post('/resumeGameTimer', (req, res) => {
-//   const data = req.body;
-//   console.log(data);
-//   io.emit('resumeGameTimer', req.body);
-//   res.end('Sent The Commands:' + JSON.stringify(req.body));
-// });
 
 app.post("/recallPage", (req, res) => {
   const data = req.body;
@@ -534,8 +514,8 @@ var pool;
 var newdatabase = true;
 //  newdatabase = false;
 
-const oldDatabaseName='c1news';
-const newDatabasename='nrcsnew';
+const oldDatabaseName = 'c1news';
+const newDatabasename = 'nrcsnew';
 const dbname = newdatabase ? newDatabasename : oldDatabaseName;
 
 try {
@@ -598,7 +578,7 @@ app.get("/show_runorder", async (req, res) => {
 });
 
 app.get("/show_runorderSpecial", async (req, res) => {
-  const param1 =  req.query.param1;
+  const param1 = req.query.param1;
   const param2 = req.query.param2;
   // const param1 = 'Scroll';
   // const param2 = '2024-12-23';

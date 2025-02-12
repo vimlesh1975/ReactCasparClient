@@ -66,6 +66,20 @@ const HorizontalScrollWithTopic = () => {
     }
   }, [showdateandTime]);
 
+    useEffect(() => {
+      function handleMessage(event) {
+        // Security check: Ensure the message is from the expected parent domain
+        // if (event.origin !== "https://your-parent-website.com") return;
+  
+        if (event.data?.action === "callFunction") {
+          setShowdateandTime(event.data.data);
+        }
+      }
+  
+      window.addEventListener("message", handleMessage);
+      return () => window.removeEventListener("message", handleMessage);
+    }, []);
+
   // Format the date in Indian style (e.g., 27 Dec 2024)
   const formatDate = (date) =>
     date.toLocaleDateString('en-IN', {
@@ -74,7 +88,14 @@ const HorizontalScrollWithTopic = () => {
       year: 'numeric',
     });
 
-  const formatTime = (date) => date.toLocaleTimeString();
+    const formatTime = (date) =>
+      date.toLocaleTimeString('en-US', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+  
 
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {
