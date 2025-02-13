@@ -2528,6 +2528,10 @@ const DrawingController = () => {
     // }, 1000);
   };
 
+  const playReactComponenetWithWebSocket=()=>{
+    endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] https://localhost:10000/ReactCasparClient/Xyz`);
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <div
@@ -4008,6 +4012,9 @@ const DrawingController = () => {
             <button onClick={() => stopClock2(templateLayers.gameTimer2)}>
               <FaStop />
             </button>
+          </div>
+          <div className="drawingToolsRow">
+           React Componenet with Web Socket: <button onClick={playReactComponenetWithWebSocket}><FaPlay /></button>
           </div>
         </div>
       </div>

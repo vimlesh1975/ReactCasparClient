@@ -25,6 +25,7 @@ import FullPageBreakingNews from './NRCS/FullPageBreakingNews'
 import DateTimeSwitcher from './NRCS/DateTimeSwitcher'
 import Twoliner from './NRCS/Twoliner'
 import YellowNewsUpdate from './test/YellowNewsUpdate'
+import Xyz from './Xyz'
 
 
 
@@ -58,6 +59,7 @@ root.render(
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
         <Route exact path="/Twoliner/:selectedDate" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
+        <Route exact path="/Xyz" element={<Xyz />} />
       </Routes>
     </Router>
   </Provider>
