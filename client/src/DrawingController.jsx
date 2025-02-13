@@ -115,7 +115,7 @@ import Spinner from './spinner/Spinner'
 
 import localforage from './localForageConfig';
 import { io } from "socket.io-client";
-const socket = io("https://localhost:9000"); // Replace with your server URL
+// const socket = io("https://localhost:9000"); // Replace with your server URL
 
 
 var intervalGameTimer1;
@@ -221,6 +221,9 @@ class EraserBrush extends fabric.PencilBrush {
     this._resetShadow();
   }
 }
+
+let socket;
+
 
 const DrawingController = () => {
   const showId = useSelector((state) => state.showIdReducer.showId);
@@ -330,6 +333,21 @@ const DrawingController = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+
+  useEffect(() => {
+
+    if (window.location.origin !== "https://vimlesh1975.github.io") {
+      socket = io(":9000");
+    } else {
+      socket = io("https://octopus-app-gzws3.ondigitalocean.app");
+    }
+
+    return () => {
+      if (socket) {
+        socket.disconnect(); // Properly close the socket connection
+      }
+    };
+  }, []);
   // Create debounced function
   const debouncedSetCurrentFillColor = debounce(value => {
     setCurrentFillColor(value);
@@ -2527,14 +2545,14 @@ const DrawingController = () => {
     window.open(new URL(aa), "_blank");
   };
 
-  const playReactComponenetWithWebSocket=()=>{
+  const playReactComponenetWithWebSocket = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] https://localhost:10000/ReactCasparClient/Xyz`);
-   setTimeout(() => {
-    socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
-   }, 2000);
-  }
-  const sendsocketdata=()=>{
+    setTimeout(() => {
       socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
+    }, 2000);
+  }
+  const sendsocketdata = () => {
+    socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
   }
 
   return (
@@ -4019,9 +4037,9 @@ const DrawingController = () => {
             </button>
           </div>
           <div className="drawingToolsRow">
-           React Componenet with Web Socket: <button onClick={playReactComponenetWithWebSocket}><FaPlay /></button>
-           <button onClick={sendsocketdata}>Update</button>
-           <button onClick={()=>endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`)}><FaStop /></button>
+            React Componenet with Web Socket: <button onClick={playReactComponenetWithWebSocket}><FaPlay /></button>
+            <button onClick={sendsocketdata}>Update</button>
+            <button onClick={() => endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`)}><FaStop /></button>
           </div>
         </div>
       </div>
