@@ -99,15 +99,15 @@ const Thumbnailview = ({ graphics, currentPage, setCurrentGraphics, getAllKeyVal
                                             }}>U</button>
                                         </div>
                                         {directoryHandle && <div >
-                                            <button title='Template Renedr' onClick={() => exportEachPagetoHTML([val], i)}>R</button>
+                                            <button title='Template Render' onClick={() => exportEachPagetoHTML([val], i)}>R</button>
                                         </div>}
-                                        <div>
+                                        {directoryHandle && <div >
                                             <button title='Template Play' onClick={() => {
                                                 endpoint(
-                                                    `play ${window.chNumber}-${templateLayers.NRCSThumnailplayer} [HTML] "${val.ScriptID}_${i + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}" mix 40`
+                                                    `play ${window.chNumber}-${templateLayers.NRCSThumnailplayer} [HTML] "${val.scriptid}_${i + 1}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}" mix 40`
                                                 );
                                             }}>TP</button>
-                                        </div>
+                                        </div>}
 
 
                                         <div>

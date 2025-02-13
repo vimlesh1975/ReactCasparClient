@@ -258,7 +258,7 @@ const Graphics = () => {
 
         if (val.Graphicstext1) {
           const htmlContent = await processAndSaveCanvasItem(val, index);
-          const fileName = `${val.ScriptID}_${(number === '') ? (index + 1) : (number + 1)}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
+          const fileName = `${val.scriptid}_${(number === '') ? (index + 1) : (number + 1)}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
           const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
           const writable = await fileHandle.createWritable();
           await writable.write(htmlContent);
@@ -1109,6 +1109,7 @@ const Graphics = () => {
             <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
                 slugs?.map((val, i) => (<div
+                title={val.ScriptID}
                   onClick={() => {
                     setScriptID(val.ScriptID);
                     setCurrentSlug(i);
@@ -1680,7 +1681,7 @@ const Graphics = () => {
     </div>
     {isLoading && <Spinner />}
     {flashMessage && <FlashMessage message={flashMessage} />}
-    {/* {newdatabase} */}
+    {/* {JSON.stringify(graphics)} */}
   </div>);
 };
 
