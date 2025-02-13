@@ -398,6 +398,9 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("client disconnected");
   });
+  socket.on("DataFromCanvas", (data) => {
+    io.emit("DataFromCanvas2", data);
+  });
 });
 
 const path = require("path");

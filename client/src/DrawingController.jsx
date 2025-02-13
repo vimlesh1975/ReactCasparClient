@@ -114,6 +114,8 @@ import VerticalScrollPlayer from "./VerticalScrollPlayer";
 import Spinner from './spinner/Spinner'
 
 import localforage from './localForageConfig';
+import { io } from "socket.io-client";
+const socket = io("https://localhost:9000"); // Replace with your server URL
 
 
 var intervalGameTimer1;
@@ -2523,13 +2525,16 @@ const DrawingController = () => {
   const openClientAddress = () => {
     const aa = clientAddress();
     window.open(new URL(aa), "_blank");
-    // setTimeout(() => {
-    //     sendtohtml(canvas);
-    // }, 1000);
   };
 
   const playReactComponenetWithWebSocket=()=>{
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] https://localhost:10000/ReactCasparClient/Xyz`);
+   setTimeout(() => {
+    socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
+   }, 2000);
+  }
+  const sendsocketdata=()=>{
+      socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
   }
 
   return (
@@ -4015,6 +4020,8 @@ const DrawingController = () => {
           </div>
           <div className="drawingToolsRow">
            React Componenet with Web Socket: <button onClick={playReactComponenetWithWebSocket}><FaPlay /></button>
+           <button onClick={sendsocketdata}>Update</button>
+           <button onClick={()=>endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`)}><FaStop /></button>
           </div>
         </div>
       </div>
