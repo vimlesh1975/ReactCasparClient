@@ -341,18 +341,19 @@ const DrawingController = () => {
     } else {
       socket = io("https://octopus-app-gzws3.ondigitalocean.app");
     }
-    socket.on("Iamready2", () => {
-      socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
-    }); // Emit event to server
 
+    socket.on("connect", () => {
+      socket.on("Iamready2", () => {
+        socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
+      }); // Emit event to server
+    });
 
     return () => {
       if (socket) {
         socket.disconnect(); // Properly close the socket connection
       }
     };
-     // eslint-disable-next-line 
-  }, []);
+  }, [canvas]);
   // Create debounced function
   const debouncedSetCurrentFillColor = debounce(value => {
     setCurrentFillColor(value);
@@ -4044,7 +4045,7 @@ const DrawingController = () => {
             <button onClick={() => {
               endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`);
               socket.emit("DataFromCanvas", null); // Emit event to server
-              }}><FaStop /></button>
+            }}><FaStop /></button>
           </div>
         </div>
       </div>

@@ -13,13 +13,16 @@ const Xyz = () => {
             socket = io("https://octopus-app-gzws3.ondigitalocean.app");
         }
 
-        socket.on("DataFromCanvas2", (data) => {
-            divRef.current.innerHTML = data;
-            // console.log("Received:", data);
+    
+
+        // Listen for connection event
+        socket.on("connect", () => {
+            socket.on("DataFromCanvas2", (data) => {
+                divRef.current.innerHTML = data;
+            });
+            socket.emit("Iamready", socket.id); // Emit after connection is established
         });
 
-        socket.emit("Iamready", socket.id);
-       
         return () => {
             socket.off("DataFromCanvas2");
         };
