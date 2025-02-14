@@ -341,12 +341,17 @@ const DrawingController = () => {
     } else {
       socket = io("https://octopus-app-gzws3.ondigitalocean.app");
     }
+    socket.on("Iamready2", () => {
+      socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
+    }); // Emit event to server
+
 
     return () => {
       if (socket) {
         socket.disconnect(); // Properly close the socket connection
       }
     };
+     // eslint-disable-next-line 
   }, []);
   // Create debounced function
   const debouncedSetCurrentFillColor = debounce(value => {
@@ -2547,9 +2552,6 @@ const DrawingController = () => {
 
   const playReactComponenetWithWebSocket = () => {
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] https://localhost:10000/ReactCasparClient/Xyz`);
-    setTimeout(() => {
-      socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
-    }, 2000);
   }
   const sendsocketdata = () => {
     socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
@@ -4039,7 +4041,10 @@ const DrawingController = () => {
           <div className="drawingToolsRow">
             React Componenet with Web Socket: <button onClick={playReactComponenetWithWebSocket}><FaPlay /></button>
             <button onClick={sendsocketdata}>Update</button>
-            <button onClick={() => endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`)}><FaStop /></button>
+            <button onClick={() => {
+              endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`);
+              socket.emit("DataFromCanvas", null); // Emit event to server
+              }}><FaStop /></button>
           </div>
         </div>
       </div>

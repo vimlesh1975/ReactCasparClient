@@ -18,6 +18,8 @@ const Xyz = () => {
             // console.log("Received:", data);
         });
 
+        socket.emit("Iamready", socket.id);
+       
         return () => {
             socket.off("DataFromCanvas2");
         };
