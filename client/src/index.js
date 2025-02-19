@@ -26,6 +26,8 @@ import DateTimeSwitcher from './NRCS/DateTimeSwitcher'
 import Twoliner from './NRCS/Twoliner'
 import YellowNewsUpdate from './test/YellowNewsUpdate'
 import Xyz from './Xyz'
+import UrduScroll from './NRCS/UrduScroll'
+
 
 
 
@@ -60,6 +62,8 @@ root.render(
         <Route exact path="/Twoliner/:selectedDate" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
+        <Route exact path="/UrduScroll" element={<UrduScroll />} />
+        
       </Routes>
     </Router>
   </Provider>

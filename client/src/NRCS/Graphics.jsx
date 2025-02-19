@@ -965,12 +965,12 @@ const Graphics = () => {
     executeScript(`${scriptmixer}`)
 
     setTimeout(() => {
-    executeScript(`Twoliner.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${NrcsBreakingText} }, '*')`);
+      executeScript(`Twoliner.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${NrcsBreakingText} }, '*')`);
     }, 1000);
 
     setTimeout(() => {
       executeScript(`Twoliner.style.opacity=1;`)
-      }, 1500);
+    }, 1500);
 
   }
   const stopTwoliner = () => {
@@ -1109,7 +1109,7 @@ const Graphics = () => {
             <div style={{ maxHeight: 332, minHeight: 332, overflow: "auto", border: '1px solid red' }}>
               {slugs &&
                 slugs?.map((val, i) => (<div
-                title={val.ScriptID}
+                  title={val.ScriptID}
                   onClick={() => {
                     setScriptID(val.ScriptID);
                     setCurrentSlug(i);
@@ -1505,25 +1505,27 @@ const Graphics = () => {
                           </button>}
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playScrollfromtextfile} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopScroll}>Stop</button>
-                          <div style={{ border: '1px solid red', margin: 5 }}>
-                            <div>
-                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
-                                setYScroll(e.target.value);
-                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
+                          {fileHandle && <>
+                            <button onClick={playScrollfromtextfile} style={{ marginRight: '8px' }}>Play</button>
+                            <button onClick={stopScroll}>Stop</button>
+                            <div style={{ border: '1px solid red', margin: 5 }}>
+                              <div>
+                                <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll} onChange={e => {
+                                  setYScroll(e.target.value);
+                                  endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${e.target.value} 0.97 1`);
 
-                                const scriptmixer = `
+                                  const scriptmixer = `
                                 const element = document.getElementById('divid_${templateLayers.nrcsscroll}');
                                 element.style.transformOrigin = 'top left';
                                 element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
                                 `
-                                executeScript(`${scriptmixer}`)
+                                  executeScript(`${scriptmixer}`)
 
-                              }
-                              } />
+                                }
+                                } />
+                              </div>
                             </div>
-                          </div>
+                          </>}
                         </td>
                       </tr>
                       <tr>
