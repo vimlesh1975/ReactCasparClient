@@ -15,19 +15,16 @@ const HorizontalScroll = () => {
 
   // State for active items
   const [activeItems, setActiveItems] = useState([]);
-  const [dataRef, setDataRef] = useState(data);
 
   // Refs to store the speed value and the data
   const speedRef = useRef(0);
-  // const dataRef = useRef(data); // Use a ref to store the data
+  const dataRef = useRef(data); // Use a ref to store the data
   const itemRefs = useRef({}); // Create ref to store item references
-  const itemRefs2 = useRef({}); // Create ref to store item references
 
   // Function to start the scroll with new data
   const startScroll = (newData) => {
     // Update the dataRef with the new data
-    // dataRef.current = newData;
-    setDataRef(newData);
+    dataRef.current = newData;
 
     // Reset active items to reflect only the new data
     setActiveItems([
@@ -44,7 +41,8 @@ const HorizontalScroll = () => {
   window.startScroll = startScroll;
 
   window.setData1 = (newData) => {
-    setDataRef(newData);
+    // Update dataRef and reset active items when new data is passed
+    dataRef.current = newData;
     setActiveItems([
       { id: 0, text: newData[0], position: window.innerWidth },
     ]);
@@ -52,6 +50,9 @@ const HorizontalScroll = () => {
 
   useEffect(() => {
     function handleMessage(event) {
+      // Security check: Ensure the message is from the expected parent domain
+      // if (event.origin !== "https://your-parent-website.com") return;
+
       if (event.data?.action === "callFunction") {
         startScroll(event.data.data);
       }
@@ -62,39 +63,36 @@ const HorizontalScroll = () => {
   }, []);
 
   useEffect(() => {
-    const aa = dataRef.map((val, i) => itemRefs2.current[i].offsetWidth);
-    console.log(aa)
-
     const scroll = () => {
       setActiveItems((prevItems) => {
         const updatedItems = prevItems.map((item) => ({
           ...item,
-          position: -aa[item.id] + speedRef.current, // Use the speed from the ref
+          position: item.position - speedRef.current, // Use the speed from the ref
         }));
 
         // Remove items that are completely out of view
         const visibleItems = updatedItems.filter(
-          (item) => 1920 > item.position > 0
+          (item) => item.position + (itemRefs.current[item.id]?.offsetWidth || 0) > 0
         );
 
         // Add new item if the last item is fully visible
         if (
           visibleItems.length &&
-          1920 > visibleItems[visibleItems.length - 1].position > 0
-
+          visibleItems[visibleItems.length - 1].position <=
+          window.innerWidth - (itemRefs.current[visibleItems[visibleItems.length - 1].id]?.offsetWidth || 0)
         ) {
           const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
-          if (nextIndex < dataRef.length) {
+          if (nextIndex < dataRef.current.length) {
             visibleItems.push({
               id: nextIndex,
-              text: dataRef[nextIndex],
-              position: -aa[nextIndex] - gap,
+              text: dataRef.current[nextIndex],
+              position: window.innerWidth + gap,
             });
           } else {
             visibleItems.push({
               id: 0,
-              text: dataRef[0],
-              position: -aa[0] - gap,
+              text: dataRef.current[0],
+              position: window.innerWidth + gap,
             });
           }
         }
@@ -107,37 +105,17 @@ const HorizontalScroll = () => {
 
     const animationFrame = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationFrame);
-  }, [dataRef]); // Only set this effect once
-
-
+  }, []); // Only set this effect once
 
   return (<div>
-    <div>
-      {dataRef.map((item, i) => <div
-        key={i}
-        ref={(el) => (itemRefs2.current[i] = el)}
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: window.innerHeight - 500,
-          fontSize: 50,
-          fontWeight: 'bolder',
-          whiteSpace: 'nowrap',
-          zIndex: 2,
-          color: 'white',
-        }}
-      >{item}
-      </div>)}
-
-    </div>
     <div style={{ backgroundColor: 'blue', minHeight: 80, width: window.innerWidth, position: 'absolute', top: window.innerHeight - 80, }}>
     </div>
 
     <div>
       {activeItems.length > 0 &&
-        activeItems.map((item, i) => (
+        activeItems.map((item) => (
           <div
-            key={`${item.id}-${i}`} // Use both id and position to ensure uniqueness
+            key={`${item.id}-${item.position}`} // Use both id and position to ensure uniqueness
             ref={(el) => (itemRefs.current[item.id] = el)}
             style={{
               position: 'absolute',
