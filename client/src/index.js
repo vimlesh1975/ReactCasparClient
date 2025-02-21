@@ -26,7 +26,7 @@ import DateTimeSwitcher from './NRCS/DateTimeSwitcher'
 import Twoliner from './NRCS/Twoliner'
 import YellowNewsUpdate from './test/YellowNewsUpdate'
 import Xyz from './Xyz'
-import UrduScroll from './NRCS/UrduScroll'
+import HorizontalScrollUrdu from './NRCS/HorizontalScrollUrdu'
 
 
 
@@ -54,6 +54,7 @@ root.render(
         <Route exact path="/Tsparticles2" element={<Tsparticles2 />} />
         <Route exact path="/GddTemplatePlayer" element={<GddTemplatePlayer />} />
         <Route exact path="/HorizontalScroll" element={<HorizontalScroll />} />
+        <Route exact path="/HorizontalScrollUrdu" element={<HorizontalScrollUrdu />} />
         <Route path="/HorizontalScrollWithTopic/:selectedDate" element={<HorizontalScrollWithTopic />} />
         <Route path="/BreakingNews/:selectedDate" element={<BreakingNews />} />
         <Route exact path="/NewsUpdate/:selectedDate" element={<NewsUpdate />} />
@@ -62,7 +63,7 @@ root.render(
         <Route exact path="/Twoliner/:selectedDate" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
-        <Route exact path="/UrduScroll" element={<UrduScroll />} />
+        {/* <Route exact path="/UrduScroll" element={<UrduScroll />} /> */}
         
       </Routes>
     </Router>

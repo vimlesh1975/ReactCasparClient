@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
-  // generateUniqueId,
-  // shadowOptions,
   getFormattedDatetimeNumber,
   addressmysql,
   templateLayers,
@@ -13,8 +11,6 @@ import GsapPlayer from "../GsapPlayer";
 import Script from "./Script";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { VscTrash, VscMove } from "react-icons/vsc";
-// import * as fabric from "fabric";
-// import VerticalScrollPlayer from "../VerticalScrollPlayer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Oneliner from "./Oneliner";
 import DataUpdater from "./DataUpdater";
@@ -30,13 +26,16 @@ import FlashMessage from "../FlashMessage";
 const Graphics = () => {
 
   const [yScroll, setYScroll] = useState(0.00);
+  const [yScroll2, setYScroll2] = useState(0.00);
   const [yBreakingNewsLowerthird, setYBreakingNewsLowerthird] = useState(0.00);
   const [yNewsUpdateLowerthird, setYyNewsUpdateLowerthird] = useState(0.00);
   const [yTwoliner, setYTwoliner] = useState(0.00);
   const [yDateTimeSwitcher, setYDateTimeSwitcher] = useState(0.00);
 
   const [lines, setLines] = useState([]);
+  const [lines2, setLines2] = useState([]);
   const [fileHandle, setFileHandle] = useState(null); // Store file handle
+  const [fileHandle2, setFileHandle2] = useState(null); // Store file handle
 
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const canvasList = useSelector((state) => state.canvasListReducer.canvasList);
@@ -108,12 +107,36 @@ const Graphics = () => {
     }
   };
 
+  const readFile2 = async (handle2) => {
+    if (!handle2) return;
+
+    try {
+      const file = await handle2.getFile(); // Get a fresh file object
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const content = e.target.result;
+        const linesArray = content.split(/\r?\n/).filter(line => line.trim() !== '');
+        setLines2(linesArray);
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error("Error reading file:", error);
+    }
+  };
+
 
   useEffect(() => {
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
-    executeScript(`document.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+    executeScript(`document.getElementById('hindi').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
 
   }, [lines])
+
+  useEffect(() => {
+    endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} startScroll(${JSON.stringify(lines2)})`);
+    executeScript(`document.getElementById('urdu').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines2)} }, '*')`);
+  }, [lines2])
 
   const handleFileSelection = async () => {
     try {
@@ -129,6 +152,20 @@ const Graphics = () => {
     }
   };
 
+  const handleFileSelection2 = async () => {
+    try {
+      const [handle2] = await window.showOpenFilePicker({
+        types: [{ description: "Text Files", accept: { "text/plain": [".txt"] } }],
+        multiple: false,
+      });
+
+      setFileHandle2(handle2); // Store handle for later updates
+      await readFile2(handle2); // Read file immediately
+    } catch (error) {
+      console.error("File selection cancelled or failed:", error);
+    }
+  };
+
   const handleUpdate = async () => {
     if (fileHandle) {
       await readFile(fileHandle);
@@ -136,6 +173,15 @@ const Graphics = () => {
       console.warn("No file selected.");
     }
   };
+
+  const handleUpdate2 = async () => {
+    if (fileHandle2) {
+      await readFile2(fileHandle2);
+    } else {
+      console.warn("No file selected.");
+    }
+  };
+
 
   const handleDateChange = (event) => {
     const date = event.target.value;
@@ -790,11 +836,12 @@ const Graphics = () => {
      iframe.src = '${url}';
      iframe.width = '1920';
      iframe.height = '1080';
+     iframe.id = 'hindi'; 
      Scrollfromtextfile.appendChild(iframe);
      `
     executeScript(script);
     setTimeout(() => {
-      executeScript(`document.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+      executeScript(`document.getElementById('hindi').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
     }, 2000);
 
     const scriptmixer = `
@@ -806,7 +853,44 @@ const Graphics = () => {
       executeScript(`${scriptmixer}`)
     }, 3000);
   }
+  const playScrollfromtextfile2 = () => {
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollUrdu`;
+    endpoint(`play ${window.chNumber}-${templateLayers.urduScroll} [html] ${url}`);
 
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} startScroll(${JSON.stringify(lines2)})`);
+    }, 2000);
+    endpoint(`mixer ${window.chNumber}-${templateLayers.urduScroll} fill 0.015 ${yScroll2} 0.97 1`);
+
+    const script = `
+     document.getElementById('divid_${templateLayers.urduScroll}')?.remove();
+     const Scrollfromtextfile = document.createElement('div');
+     Scrollfromtextfile.style.position='absolute';
+     Scrollfromtextfile.style.zIndex = '${templateLayers.urduScroll}';
+     Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.urduScroll}');
+     document.body.appendChild(Scrollfromtextfile);
+     const iframe=document.createElement('iframe');
+     iframe.frameBorder = '0';
+     iframe.src = '${url}';
+     iframe.width = '1920';
+     iframe.height = '1080';
+     iframe.id = 'urdu'; 
+     Scrollfromtextfile.appendChild(iframe);
+     `
+    executeScript(script);
+    setTimeout(() => {
+      executeScript(`document.getElementById('urdu').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines2)} }, '*')`);
+    }, 2000);
+
+    const scriptmixer = `
+    const element = document.getElementById('divid_${templateLayers.urduScroll}');
+    element.style.transformOrigin = 'top left';
+    element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll2 * 1080}px) scale(${0.97}, ${1})\`;
+    `
+    setTimeout(() => {
+      executeScript(`${scriptmixer}`)
+    }, 3000);
+  }
   const stopScroll = () => {
     endpoint(
       `stop ${window.chNumber}-${templateLayers.nrcsscroll}`
@@ -815,7 +899,14 @@ const Graphics = () => {
     const script = `document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();`
     executeScript(script);
   }
+  const stopScroll2 = () => {
+    endpoint(
+      `stop ${window.chNumber}-${templateLayers.urduScroll}`
+    );
 
+    const script = `document.getElementById('divid_${templateLayers.urduScroll}')?.remove();`
+    executeScript(script);
+  }
   const playBreakingNews = () => {
     const url = `${addressnrcsscroll()}/ReactCasparClient/BreakingNews/${selectedDate}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsBreakingNews} [html] ${url}`);
@@ -1530,6 +1621,49 @@ const Graphics = () => {
                           </>}
                         </td>
                       </tr>
+
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
+                          Urdu Scroll from text file
+                          <br />
+                          <button
+                            onClick={handleFileSelection2}
+                          >
+                            Select File
+                          </button>
+                          {fileHandle2 && fileHandle2.name}
+                          {fileHandle2 && <button
+                            onClick={handleUpdate2}
+                          >
+                            Update
+                          </button>}
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          {fileHandle2 && <>
+                            <button onClick={playScrollfromtextfile2} style={{ marginRight: '8px' }}>Play</button>
+                            <button onClick={stopScroll2}>Stop</button>
+                            <div style={{ border: '1px solid red', margin: 5 }}>
+                              <div>
+                                <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yScroll2} onChange={e => {
+                                  setYScroll2(e.target.value);
+                                  endpoint(`mixer ${window.chNumber}-${templateLayers.urduScroll} fill 0.015 ${e.target.value} 0.97 1`);
+
+                                  const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.urduScroll}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                  executeScript(`${scriptmixer}`)
+
+                                }
+                                } />
+                              </div>
+                            </div>
+                          </>}
+                        </td>
+                      </tr>
+
                       <tr>
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>

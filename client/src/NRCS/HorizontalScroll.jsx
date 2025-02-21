@@ -1,32 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
 
-// var data = [
-//   '1   दिल्ली में',
-//   '2   मुख्यमंत्री योगी आदित्यनाथ',
-//   '3   चलने नहीं देंगे रामायण',
-//   '4   मंत्रिमंडल विस्तार ',
-//   '5   Shaurya Chakra:',
-//   '6   पाक को खदेड़ने ',
-// ];
-var gap = 100;
+var data = [
+  '1   दिल्ली में',
+  '2   मुख्यमंत्री योगी आदित्यनाथ',
+  '3   चलने नहीं देंगे रामायण',
+  '4   मंत्रिमंडल विस्तार ',
+  '5   Shaurya Chakra:',
+  '6   पाक को खदेड़ने ',
+];
+var gap = 50;
 
 const HorizontalScroll = () => {
 
+  // State for active items
   const [activeItems, setActiveItems] = useState([]);
-  const dataRef = useRef([]);
-  const [widths, setWidths] = useState([]);
 
-  const speedRef = useRef(6);
-  // const dataRef = useRef(data); // Use a ref to store the data
+  // Refs to store the speed value and the data
+  const speedRef = useRef(0);
+  const dataRef = useRef(data); // Use a ref to store the data
   const itemRefs = useRef({}); // Create ref to store item references
-  const itemRefs2 = useRef({}); // Create ref to store item references
 
+  // Function to start the scroll with new data
   const startScroll = (newData) => {
+    // Update the dataRef with the new data
     dataRef.current = newData;
+
+    // Reset active items to reflect only the new data
     setActiveItems([
-      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
+      { id: 0, text: newData[0], position: window.innerWidth },
     ]);
+
+    speedRef.current = 6; // Reset the speed
   };
 
   window.setSpeed = (newSpeed) => {
@@ -36,14 +41,18 @@ const HorizontalScroll = () => {
   window.startScroll = startScroll;
 
   window.setData1 = (newData) => {
+    // Update dataRef and reset active items when new data is passed
     dataRef.current = newData;
     setActiveItems([
-      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
+      { id: 0, text: newData[0], position: window.innerWidth },
     ]);
   };
 
   useEffect(() => {
     function handleMessage(event) {
+      // Security check: Ensure the message is from the expected parent domain
+      // if (event.origin !== "https://your-parent-website.com") return;
+
       if (event.data?.action === "callFunction") {
         startScroll(event.data.data);
       }
@@ -53,37 +62,41 @@ const HorizontalScroll = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-
-  useEffect(() => {
-    setTimeout(() => {
-      setWidths(dataRef.current.map((_, i) => itemRefs2.current[i]?.offsetWidth || 100));
-    }, 2500);
-  }, []);
-
   useEffect(() => {
     const scroll = () => {
-      if (widths.length === 0) return;
       setActiveItems((prevItems) => {
-        const updatedItems = prevItems.map((item, i) => ({
+        const updatedItems = prevItems.map((item) => ({
           ...item,
-          position: item.position + speedRef.current
+          position: item.position - speedRef.current, // Use the speed from the ref
         }));
 
+        // Remove items that are completely out of view
         const visibleItems = updatedItems.filter(
-          (item) => 1920 > item.position
+          (item) => item.position + (itemRefs.current[item.id]?.offsetWidth || 0) > 0
         );
 
-        if (visibleItems.length) {
-          const lastItem = visibleItems[visibleItems.length - 1];
-          if (lastItem.position > 0) {
-            const nextIndex = (lastItem.id + 1) % dataRef.current.length;
+        // Add new item if the last item is fully visible
+        if (
+          visibleItems.length &&
+          visibleItems[visibleItems.length - 1].position <=
+          window.innerWidth - (itemRefs.current[visibleItems[visibleItems.length - 1].id]?.offsetWidth || 0)
+        ) {
+          const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
+          if (nextIndex < dataRef.current.length) {
             visibleItems.push({
               id: nextIndex,
               text: dataRef.current[nextIndex],
-              position: -widths[nextIndex] - gap,
+              position: window.innerWidth + gap,
+            });
+          } else {
+            visibleItems.push({
+              id: 0,
+              text: dataRef.current[0],
+              position: window.innerWidth + gap,
             });
           }
         }
+
         return visibleItems;
       });
 
@@ -92,37 +105,17 @@ const HorizontalScroll = () => {
 
     const animationFrame = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationFrame);
-  }, [widths]);
-
-
+  }, []); // Only set this effect once
 
   return (<div>
-    <div style={{ position: 'absolute', visibility: 'hidden' }}>
-      {dataRef.current.map((item, i) => <div
-        key={i}
-        ref={(el) => (itemRefs2.current[i] = el)}
-        style={{
-          position: 'absolute',
-          // left: 500,
-          top: window.innerHeight - 500,
-          fontSize: 50,
-          fontWeight: 'bolder',
-          whiteSpace: 'nowrap',
-          zIndex: 2,
-          color: 'white',
-        }}
-      >{item}
-      </div>)}
-
-    </div>
     <div style={{ backgroundColor: 'blue', minHeight: 80, width: window.innerWidth, position: 'absolute', top: window.innerHeight - 80, }}>
     </div>
 
     <div>
       {activeItems.length > 0 &&
-        activeItems.map((item, i) => (
+        activeItems.map((item) => (
           <div
-            key={`${item.id}-${i}`} // Use both id and position to ensure uniqueness
+            key={`${item.id}-${item.position}`} // Use both id and position to ensure uniqueness
             ref={(el) => (itemRefs.current[item.id] = el)}
             style={{
               position: 'absolute',
@@ -135,7 +128,7 @@ const HorizontalScroll = () => {
               color: 'white',
             }}
           >
-            {/* {item.text} */}
+            {/* {item.text}  */}
             {item.text} <img src={logo} alt='dd logo' width={50} />
           </div>
         ))}
