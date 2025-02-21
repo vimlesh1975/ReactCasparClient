@@ -98,7 +98,7 @@ const Graphics = () => {
 
       reader.onload = (e) => {
         const content = e.target.result;
-        const linesArray = content.split(/\r?\n/);
+        const linesArray = content.split(/\r?\n/).filter(line => line.trim() !== '');
         setLines(linesArray);
       };
 
@@ -111,7 +111,7 @@ const Graphics = () => {
 
   useEffect(() => {
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
-    executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+    executeScript(`document.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
 
   }, [lines])
 
@@ -763,7 +763,9 @@ const Graphics = () => {
               element.style.transformOrigin = 'top left';
               element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
               `
-    executeScript(`${scriptmixer}`)
+    setTimeout(() => {
+      executeScript(`${scriptmixer}`)
+    }, 3000);
 
   }
 
@@ -773,7 +775,7 @@ const Graphics = () => {
 
     setTimeout(() => {
       endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
-    }, 1000);
+    }, 2000);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsscroll} fill 0.015 ${yScroll} 0.97 1`);
 
     const script = `
@@ -801,7 +803,7 @@ const Graphics = () => {
     element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
     `
     setTimeout(() => {
-    executeScript(`${scriptmixer}`)
+      executeScript(`${scriptmixer}`)
     }, 3000);
   }
 

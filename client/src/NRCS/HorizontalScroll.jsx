@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
 
-var data = [
-  '1   दिल्ली में',
-  '2   मुख्यमंत्री योगी आदित्यनाथ',
-  '3   चलने नहीं देंगे रामायण',
-  '4   मंत्रिमंडल विस्तार ',
-  '5   Shaurya Chakra:',
-  '6   पाक को खदेड़ने ',
-];
+// var data = [
+//   '1   दिल्ली में',
+//   '2   मुख्यमंत्री योगी आदित्यनाथ',
+//   '3   चलने नहीं देंगे रामायण',
+//   '4   मंत्रिमंडल विस्तार ',
+//   '5   Shaurya Chakra:',
+//   '6   पाक को खदेड़ने ',
+// ];
 var gap = 100;
 
 const HorizontalScroll = () => {
@@ -17,15 +17,15 @@ const HorizontalScroll = () => {
   const dataRef = useRef([]);
   const [widths, setWidths] = useState([]);
 
-  const speedRef = useRef(3);
+  const speedRef = useRef(6);
   // const dataRef = useRef(data); // Use a ref to store the data
   const itemRefs = useRef({}); // Create ref to store item references
   const itemRefs2 = useRef({}); // Create ref to store item references
 
   const startScroll = (newData) => {
-    dataRef.current=newData;
+    dataRef.current = newData;
     setActiveItems([
-      { id: 0, text: newData[0], position: -100 },
+      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
     ]);
   };
 
@@ -36,9 +36,9 @@ const HorizontalScroll = () => {
   window.startScroll = startScroll;
 
   window.setData1 = (newData) => {
-    dataRef.current=newData;
+    dataRef.current = newData;
     setActiveItems([
-      { id: 0, text: newData[0], position: -100},
+      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
     ]);
   };
 
@@ -57,40 +57,30 @@ const HorizontalScroll = () => {
   useEffect(() => {
     setTimeout(() => {
       setWidths(dataRef.current.map((_, i) => itemRefs2.current[i]?.offsetWidth || 100));
-    }, 500);
-  }, [dataRef]);
+    }, 2500);
+  }, []);
 
   useEffect(() => {
-
-
     const scroll = () => {
+      if (widths.length === 0) return;
       setActiveItems((prevItems) => {
         const updatedItems = prevItems.map((item, i) => ({
           ...item,
-          position:  item.position + speedRef.current 
+          position: item.position + speedRef.current
         }));
 
         const visibleItems = updatedItems.filter(
           (item) => 1920 > item.position
         );
 
-        if (
-          visibleItems.length &&
-          visibleItems[visibleItems.length - 1].position > 0
-
-        ) {
-          const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
-          if (nextIndex < dataRef.current.length) {
+        if (visibleItems.length) {
+          const lastItem = visibleItems[visibleItems.length - 1];
+          if (lastItem.position > 0) {
+            const nextIndex = (lastItem.id + 1) % dataRef.current.length;
             visibleItems.push({
               id: nextIndex,
               text: dataRef.current[nextIndex],
               position: -widths[nextIndex] - gap,
-            });
-          } else {
-            visibleItems.push({
-              id: 0,
-              text: dataRef.current[0],
-              position: -widths[0] - gap,
             });
           }
         }
@@ -102,12 +92,12 @@ const HorizontalScroll = () => {
 
     const animationFrame = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationFrame);
-  }, [widths]); 
+  }, [widths]);
 
 
 
   return (<div>
-      <div style={{ position: 'absolute', visibility: 'hidden' }}>
+    <div style={{ position: 'absolute', visibility: 'hidden' }}>
       {dataRef.current.map((item, i) => <div
         key={i}
         ref={(el) => (itemRefs2.current[i] = el)}
@@ -146,7 +136,7 @@ const HorizontalScroll = () => {
             }}
           >
             {/* {item.text} */}
-            { item.text } <img src={logo} alt='dd logo' width={50} />
+            {item.text} <img src={logo} alt='dd logo' width={50} />
           </div>
         ))}
     </div>
