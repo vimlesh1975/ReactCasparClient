@@ -778,12 +778,12 @@ const Graphics = () => {
 
     const script = `
      document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
-     window.Scrollfromtextfile = document.createElement('div');
+     const Scrollfromtextfile = document.createElement('div');
      Scrollfromtextfile.style.position='absolute';
      Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
      Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
      document.body.appendChild(Scrollfromtextfile);
-     window.iframe=document.createElement('iframe');
+     const iframe=document.createElement('iframe');
      iframe.frameBorder = '0';
      iframe.src = '${url}';
      iframe.width = '1920';
@@ -792,7 +792,7 @@ const Graphics = () => {
      `
     executeScript(script);
     setTimeout(() => {
-      executeScript(`Scrollfromtextfile.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
+      executeScript(`document.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
     }, 2000);
 
     const scriptmixer = `
@@ -800,9 +800,9 @@ const Graphics = () => {
     element.style.transformOrigin = 'top left';
     element.style.transform = \`translate(${0.008 * 1920}px, ${yScroll * 1080}px) scale(${0.97}, ${1})\`;
     `
+    setTimeout(() => {
     executeScript(`${scriptmixer}`)
-
-
+    }, 3000);
   }
 
   const stopScroll = () => {

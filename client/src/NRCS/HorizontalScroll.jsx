@@ -9,32 +9,24 @@ var data = [
   '5   Shaurya Chakra:',
   '6   पाक को खदेड़ने ',
 ];
-var gap = 50;
+var gap = 100;
 
 const HorizontalScroll = () => {
 
-  // State for active items
   const [activeItems, setActiveItems] = useState([]);
-  const [dataRef, setDataRef] = useState(data);
+  const dataRef = useRef([]);
+  const [widths, setWidths] = useState([]);
 
-  // Refs to store the speed value and the data
-  const speedRef = useRef(0);
+  const speedRef = useRef(3);
   // const dataRef = useRef(data); // Use a ref to store the data
   const itemRefs = useRef({}); // Create ref to store item references
   const itemRefs2 = useRef({}); // Create ref to store item references
 
-  // Function to start the scroll with new data
   const startScroll = (newData) => {
-    // Update the dataRef with the new data
-    // dataRef.current = newData;
-    setDataRef(newData);
-
-    // Reset active items to reflect only the new data
+    dataRef.current=newData;
     setActiveItems([
-      { id: 0, text: newData[0], position: window.innerWidth },
+      { id: 0, text: newData[0], position: -100 },
     ]);
-
-    speedRef.current = 6; // Reset the speed
   };
 
   window.setSpeed = (newSpeed) => {
@@ -44,9 +36,9 @@ const HorizontalScroll = () => {
   window.startScroll = startScroll;
 
   window.setData1 = (newData) => {
-    setDataRef(newData);
+    dataRef.current=newData;
     setActiveItems([
-      { id: 0, text: newData[0], position: window.innerWidth },
+      { id: 0, text: newData[0], position: -100},
     ]);
   };
 
@@ -61,44 +53,47 @@ const HorizontalScroll = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+
   useEffect(() => {
-    const aa = dataRef.map((val, i) => itemRefs2.current[i].offsetWidth);
-    console.log(aa)
+    setTimeout(() => {
+      setWidths(dataRef.current.map((_, i) => itemRefs2.current[i]?.offsetWidth || 100));
+    }, 500);
+  }, [dataRef]);
+
+  useEffect(() => {
+
 
     const scroll = () => {
       setActiveItems((prevItems) => {
-        const updatedItems = prevItems.map((item) => ({
+        const updatedItems = prevItems.map((item, i) => ({
           ...item,
-          position: -aa[item.id] + speedRef.current, // Use the speed from the ref
+          position:  item.position + speedRef.current 
         }));
 
-        // Remove items that are completely out of view
         const visibleItems = updatedItems.filter(
-          (item) => 1920 > item.position > 0
+          (item) => 1920 > item.position
         );
 
-        // Add new item if the last item is fully visible
         if (
           visibleItems.length &&
-          1920 > visibleItems[visibleItems.length - 1].position > 0
+          visibleItems[visibleItems.length - 1].position > 0
 
         ) {
           const nextIndex = visibleItems[visibleItems.length - 1].id + 1;
-          if (nextIndex < dataRef.length) {
+          if (nextIndex < dataRef.current.length) {
             visibleItems.push({
               id: nextIndex,
-              text: dataRef[nextIndex],
-              position: -aa[nextIndex] - gap,
+              text: dataRef.current[nextIndex],
+              position: -widths[nextIndex] - gap,
             });
           } else {
             visibleItems.push({
               id: 0,
-              text: dataRef[0],
-              position: -aa[0] - gap,
+              text: dataRef.current[0],
+              position: -widths[0] - gap,
             });
           }
         }
-
         return visibleItems;
       });
 
@@ -107,18 +102,18 @@ const HorizontalScroll = () => {
 
     const animationFrame = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationFrame);
-  }, [dataRef]); // Only set this effect once
+  }, [widths]); 
 
 
 
   return (<div>
-    <div>
-      {dataRef.map((item, i) => <div
+      <div style={{ position: 'absolute', visibility: 'hidden' }}>
+      {dataRef.current.map((item, i) => <div
         key={i}
         ref={(el) => (itemRefs2.current[i] = el)}
         style={{
           position: 'absolute',
-          left: 0,
+          // left: 500,
           top: window.innerHeight - 500,
           fontSize: 50,
           fontWeight: 'bolder',
@@ -150,8 +145,8 @@ const HorizontalScroll = () => {
               color: 'white',
             }}
           >
-            {/* {item.text}  */}
-            {item.text} <img src={logo} alt='dd logo' width={50} />
+            {/* {item.text} */}
+            { item.text } <img src={logo} alt='dd logo' width={50} />
           </div>
         ))}
     </div>
