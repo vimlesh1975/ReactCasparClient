@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "210225_1";
+export const buildDate = "240225_1";
 
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
