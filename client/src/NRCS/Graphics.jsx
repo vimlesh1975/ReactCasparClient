@@ -87,6 +87,7 @@ const Graphics = () => {
 
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(true);
+  const [ltr, setLtr] = useState(true);
 
   const readFile = async (handle) => {
     if (!handle) return;
@@ -854,7 +855,7 @@ const Graphics = () => {
     }, 3000);
   }
   const playScrollfromtextfile2 = () => {
-    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollUrdu/${encodeURIComponent(JSON.stringify(lines2))}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollUrdu/${encodeURIComponent(JSON.stringify(lines2))}/${ltr}`;
     endpoint(`play ${window.chNumber}-${templateLayers.urduScroll} [html] ${url}`);
 
     endpoint(`mixer ${window.chNumber}-${templateLayers.urduScroll} fill 0.015 ${yScroll2} 0.97 1`);
@@ -1550,8 +1551,9 @@ const Graphics = () => {
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
                           Scroll
                           <br />
-                          <input type="checkbox" id="vehicle1" name="vehicle1" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
-                          <label for="vehicle1">Show Date and Time Also</label>
+                          <label>
+                          <input type="checkbox"  checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
+                            Show Date and Time Also</label>
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playScroll} style={{ marginRight: '8px' }}>Play</button>
@@ -1632,6 +1634,10 @@ const Graphics = () => {
                           >
                             Update
                           </button>}
+                          <br />
+                          <label title="Left to right" >
+                          <input type="checkbox"  checked={ltr} onChange={() => setLtr(val => !val)} />
+                            LTR</label>
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           {fileHandle2 && <>

@@ -54,7 +54,7 @@ root.render(
         <Route exact path="/Tsparticles2" element={<Tsparticles2 />} />
         <Route exact path="/GddTemplatePlayer" element={<GddTemplatePlayer />} />
         <Route exact path="/HorizontalScroll" element={<HorizontalScroll />} />
-        <Route exact path="/HorizontalScrollUrdu/:data" element={<HorizontalScrollUrdu />} />
+        <Route exact path="/HorizontalScrollUrdu/:data/:ltr" element={<HorizontalScrollUrdu />} />
         <Route path="/HorizontalScrollWithTopic/:selectedDate" element={<HorizontalScrollWithTopic />} />
         <Route path="/BreakingNews/:selectedDate" element={<BreakingNews />} />
         <Route exact path="/NewsUpdate/:selectedDate" element={<NewsUpdate />} />

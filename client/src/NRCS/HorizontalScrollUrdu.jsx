@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom';
 
 var gap = 100;
 const HorizontalScrollUrdu = () => {
-  const { data } = useParams();
+  const { data, ltr } = useParams();
 
   const [activeItems, setActiveItems] = useState([]);
   const [data1, setData1] = useState(JSON.parse(decodeURIComponent(data)));
   const [widths, setWidths] = useState([]);
-  const [direction, setDirection] = useState('LTR')
+  const direction = ltr;
 
   const speedRef = useRef(6);
   const itemRefs = useRef({});
@@ -40,7 +40,7 @@ const HorizontalScrollUrdu = () => {
   useEffect(() => {
     requestAnimationFrame(() => {
       setActiveItems([
-        { id: 0, text: data1[0], position: (direction === 'LTR') ? -itemRefs2.current[0].offsetWidth : window.innerWidth },
+        { id: 0, text: data1[0], position: (direction === 'true') ? -itemRefs2.current[0].offsetWidth : window.innerWidth },
       ]);
       setWidths(data1.map((_, i) => itemRefs2.current[i].offsetWidth));
     });
@@ -52,7 +52,7 @@ const HorizontalScrollUrdu = () => {
       setActiveItems((prevItems) => {
         const updatedItems = prevItems.map((item, i) => ({
           ...item,
-          position: item.position + ((direction === 'LTR') ? speedRef.current : -speedRef.current)
+          position: item.position + ((direction === 'true') ? speedRef.current : -speedRef.current)
         }));
 
         const visibleItems = updatedItems.filter(
@@ -61,7 +61,7 @@ const HorizontalScrollUrdu = () => {
 
         if (visibleItems.length) {
           const lastItem = visibleItems[visibleItems.length - 1];
-          if (direction === 'LTR') {
+          if (direction === 'true') {
             if (lastItem.position > 0) {
               const nextIndex = (lastItem.id + 1) % data1.length;
               visibleItems.push({
