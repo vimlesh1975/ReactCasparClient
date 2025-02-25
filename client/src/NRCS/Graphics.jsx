@@ -134,7 +134,7 @@ const Graphics = () => {
   }, [lines])
 
   useEffect(() => {
-    endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} startScroll(${JSON.stringify(lines2)})`);
+    endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} setData1(${JSON.stringify(lines2)})`);
     executeScript(`document.getElementById('urdu').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines2)} }, '*')`);
   }, [lines2])
 
@@ -854,12 +854,9 @@ const Graphics = () => {
     }, 3000);
   }
   const playScrollfromtextfile2 = () => {
-    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollUrdu`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/HorizontalScrollUrdu/${encodeURIComponent(JSON.stringify(lines2))}`;
     endpoint(`play ${window.chNumber}-${templateLayers.urduScroll} [html] ${url}`);
 
-    setTimeout(() => {
-      endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} startScroll(${JSON.stringify(lines2)})`);
-    }, 2000);
     endpoint(`mixer ${window.chNumber}-${templateLayers.urduScroll} fill 0.015 ${yScroll2} 0.97 1`);
 
     const script = `
@@ -878,9 +875,6 @@ const Graphics = () => {
      Scrollfromtextfile.appendChild(iframe);
      `
     executeScript(script);
-    setTimeout(() => {
-      executeScript(`document.getElementById('urdu').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines2)} }, '*')`);
-    }, 2000);
 
     const scriptmixer = `
     const element = document.getElementById('divid_${templateLayers.urduScroll}');

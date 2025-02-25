@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
+import { useParams } from 'react-router-dom';
+
 
 // var data = [
 //   '1   दिल्ली में',
@@ -10,42 +12,36 @@ import logo from './doordarshan-logo.png'
 //   '6   पाक को खदेड़ने ',
 // ];
 var gap = 100;
-
 const HorizontalScrollUrdu = () => {
+  const { data } = useParams();
+  // try {
+  //   lines2 = JSON.parse(decodeURIComponent(data)); // Decode & Parse JSON
+  // } catch (error) {
+  //   console.error("Error parsing URL data:", error);
+  // }
 
   const [activeItems, setActiveItems] = useState([]);
-  const dataRef = useRef([]);
+  const [data1, setData1] = useState(JSON.parse(decodeURIComponent(data)));
   const [widths, setWidths] = useState([]);
 
   const speedRef = useRef(6);
-  // const dataRef = useRef(data); // Use a ref to store the data
-  const itemRefs = useRef({}); // Create ref to store item references
-  const itemRefs2 = useRef({}); // Create ref to store item references
-
-  const startScroll = (newData) => {
-    dataRef.current = newData;
-    setActiveItems([
-      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
-    ]);
-  };
+  const itemRefs = useRef({});
+  const itemRefs2 = useRef({});
+  const animationRef = useRef(null);
 
   window.setSpeed = (newSpeed) => {
     speedRef.current = newSpeed; // Update the speedRef value
   };
 
-  window.startScroll = startScroll;
-
-  window.setData1 = (newData) => {
-    dataRef.current = newData;
-    setActiveItems([
-      { id: 0, text: newData[0], position: (-gap - itemRefs2.current[0]?.offsetWidth) || -4000 },
-    ]);
-  };
+  
+  window.setData1=(newData)=>{
+    setData1(newData);
+  }
 
   useEffect(() => {
     function handleMessage(event) {
       if (event.data?.action === "callFunction") {
-        startScroll(event.data.data);
+        setData1(event.data.data);
       }
     }
 
@@ -55,10 +51,13 @@ const HorizontalScrollUrdu = () => {
 
 
   useEffect(() => {
-    setTimeout(() => {
-      setWidths(dataRef.current.map((_, i) => itemRefs2.current[i]?.offsetWidth || 100));
-    }, 2500);
-  }, []);
+    requestAnimationFrame(() => {
+      setActiveItems([
+        { id: 0, text: data1[0], position: (-gap - itemRefs2.current[0].offsetWidth) },
+      ]);
+      setWidths(data1.map((_, i) => itemRefs2.current[i].offsetWidth));
+    });
+  }, [data1]);
 
   useEffect(() => {
     const scroll = () => {
@@ -76,29 +75,33 @@ const HorizontalScrollUrdu = () => {
         if (visibleItems.length) {
           const lastItem = visibleItems[visibleItems.length - 1];
           if (lastItem.position > 0) {
-            const nextIndex = (lastItem.id + 1) % dataRef.current.length;
+            const nextIndex = (lastItem.id + 1) % data1.length;
             visibleItems.push({
               id: nextIndex,
-              text: dataRef.current[nextIndex],
+              text: data1[nextIndex],
               position: -widths[nextIndex] - gap,
             });
           }
         }
         return visibleItems;
       });
-
-      requestAnimationFrame(scroll);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      animationRef.current = requestAnimationFrame(scroll);
     };
 
-    const animationFrame = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [widths]);
+    animationRef.current = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationRef.current);
+  }, [widths, data1]);
+
+
 
 
 
   return (<div>
     <div style={{ position: 'absolute', visibility: 'hidden' }}>
-      {dataRef.current.map((item, i) => <div
+      {data1.map((item, i) => <div
         key={i}
         ref={(el) => (itemRefs2.current[i] = el)}
         style={{
