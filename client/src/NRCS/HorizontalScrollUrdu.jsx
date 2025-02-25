@@ -2,27 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import logo from './doordarshan-logo.png'
 import { useParams } from 'react-router-dom';
 
-
-// var data = [
-//   '1   दिल्ली में',
-//   '2   मुख्यमंत्री योगी आदित्यनाथ',
-//   '3   चलने नहीं देंगे रामायण',
-//   '4   मंत्रिमंडल विस्तार ',
-//   '5   Shaurya Chakra:',
-//   '6   पाक को खदेड़ने ',
-// ];
 var gap = 100;
 const HorizontalScrollUrdu = () => {
   const { data } = useParams();
-  // try {
-  //   lines2 = JSON.parse(decodeURIComponent(data)); // Decode & Parse JSON
-  // } catch (error) {
-  //   console.error("Error parsing URL data:", error);
-  // }
 
   const [activeItems, setActiveItems] = useState([]);
   const [data1, setData1] = useState(JSON.parse(decodeURIComponent(data)));
   const [widths, setWidths] = useState([]);
+  const [direction, setDirection] = useState('LTR')
 
   const speedRef = useRef(6);
   const itemRefs = useRef({});
@@ -33,8 +20,8 @@ const HorizontalScrollUrdu = () => {
     speedRef.current = newSpeed; // Update the speedRef value
   };
 
-  
-  window.setData1=(newData)=>{
+
+  window.setData1 = (newData) => {
     setData1(newData);
   }
 
@@ -53,11 +40,11 @@ const HorizontalScrollUrdu = () => {
   useEffect(() => {
     requestAnimationFrame(() => {
       setActiveItems([
-        { id: 0, text: data1[0], position: (-gap - itemRefs2.current[0].offsetWidth) },
+        { id: 0, text: data1[0], position: (direction === 'LTR') ? -itemRefs2.current[0].offsetWidth : window.innerWidth },
       ]);
       setWidths(data1.map((_, i) => itemRefs2.current[i].offsetWidth));
     });
-  }, [data1]);
+  }, [data1, direction]);
 
   useEffect(() => {
     const scroll = () => {
@@ -65,23 +52,36 @@ const HorizontalScrollUrdu = () => {
       setActiveItems((prevItems) => {
         const updatedItems = prevItems.map((item, i) => ({
           ...item,
-          position: item.position + speedRef.current
+          position: item.position + ((direction === 'LTR') ? speedRef.current : -speedRef.current)
         }));
 
         const visibleItems = updatedItems.filter(
-          (item) => 1920 > item.position
+          (item) => window.innerWidth > (item.position - gap)
         );
 
         if (visibleItems.length) {
           const lastItem = visibleItems[visibleItems.length - 1];
-          if (lastItem.position > 0) {
-            const nextIndex = (lastItem.id + 1) % data1.length;
-            visibleItems.push({
-              id: nextIndex,
-              text: data1[nextIndex],
-              position: -widths[nextIndex] - gap,
-            });
+          if (direction === 'LTR') {
+            if (lastItem.position > 0) {
+              const nextIndex = (lastItem.id + 1) % data1.length;
+              visibleItems.push({
+                id: nextIndex,
+                text: data1[nextIndex],
+                position: -(widths[nextIndex] + gap),
+              });
+            }
           }
+          else {
+            if (lastItem.position < (window.innerWidth - widths[lastItem.id])) {
+              const nextIndex = (lastItem.id + 1) % data1.length;
+              visibleItems.push({
+                id: nextIndex,
+                text: data1[nextIndex],
+                position: window.innerWidth + gap,
+              });
+            }
+          }
+
         }
         return visibleItems;
       });
@@ -93,7 +93,7 @@ const HorizontalScrollUrdu = () => {
 
     animationRef.current = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(animationRef.current);
-  }, [widths, data1]);
+  }, [widths, data1, direction]);
 
 
 
