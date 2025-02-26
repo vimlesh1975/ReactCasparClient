@@ -15,7 +15,7 @@ import red_breaking_news from './gif/red_breaking_news.gif'
 // eslint-disable-next-line
 import yellow_breaking_news from './gif/yellow_breaking_news.gif'
 
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 
 
 var red = true;
@@ -32,7 +32,6 @@ const Twoliner = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(100%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
-    // const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
     const { selectedDate, NrcsBreakingText } = useParams();
 
     const dispatch = useDispatch();
@@ -41,14 +40,11 @@ const Twoliner = () => {
     useEffect(() => {
         if (!isStarted || dataList.length === 0) return;
 
-        // Display the first item immediately
         setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
 
         const interval = setInterval(() => {
-            // Reset animation to the starting position
             setAnimationStyle({ opacity: 0, transform: 'translateX(100%)', transition: 'none' });
 
-            // Update text and start the reveal animation
             setTimeout(() => {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % dataList.length);
                 setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
@@ -86,7 +82,6 @@ const Twoliner = () => {
             data.forEach((val) => {
                 if (val && val.Script) {
                     const splitText = (val.Script)?.split("$$$$");
-                    // Add single quotes around each element and push to 'aa'
                     splitText.forEach((item) => {
                         aa.push(`${item.replaceAll("'", "")}`);
                     });

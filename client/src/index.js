@@ -8,7 +8,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 import Drawing2 from './Drawing2';
-// import Threejs from './Threejs';
 import Threejs2 from './Threejs2';
 import HTML from './htmlrenderer/Html';
 import Chat from './chat/Chat';
@@ -63,7 +62,6 @@ root.render(
         <Route exact path="/Twoliner/:selectedDate/:NrcsBreakingText" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
-        {/* <Route exact path="/UrduScroll" element={<UrduScroll />} /> */}
         
       </Routes>
     </Router>
