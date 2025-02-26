@@ -32,8 +32,8 @@ const Twoliner = () => {
     const [animationStyle, setAnimationStyle] = useState({ opacity: 0, transform: 'translateX(100%)' });
     const [dataList, setDataList] = useState(data);
     const [isStarted, setIsStarted] = useState(false);
-    const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
-    const { selectedDate } = useParams();
+    // const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
+    const { selectedDate, NrcsBreakingText } = useParams();
 
     const dispatch = useDispatch();
     window.dispatch = dispatch;
@@ -117,7 +117,7 @@ const Twoliner = () => {
                 {/* <img src={red_news_update} alt="red_news_update.gif" /> */}
                 {/* <img src={red_breaking_news} alt="red_breaking_news.gif" /> */}
 
-                {NrcsBreakingText ? <img src={yellow_breaking_news} alt="yellow_breaking_news.gif" /> : <img src={yellow_news_update} alt="yellow_news_update.gif" />}
+                {(NrcsBreakingText==='true' )? <img src={yellow_breaking_news} alt="yellow_breaking_news.gif" /> : <img src={yellow_news_update} alt="yellow_news_update.gif" />}
                 {/* <img src={yellow_news_update} alt="yellow_news_update.gif" /> */}
                 {/* <img src={yellow_breaking_news} alt="yellow_breaking_news.gif" /> */}
 

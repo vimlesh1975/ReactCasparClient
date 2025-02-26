@@ -1017,22 +1017,14 @@ const Graphics = () => {
   }
 
   const playTwoliner = () => {
-    const url = `${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}`;
+    const url = `${addressnrcsscroll()}/ReactCasparClient/Twoliner/${selectedDate}/${NrcsBreakingText}`;
     endpoint(`play ${window.chNumber}-${templateLayers.nrcsTwoliner} [html] ${url}`);
     endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} fill 0.015 ${yTwoliner} 0.97 1`);
-    endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 0`);
-    setTimeout(() => {
-      endpoint(`call ${window.chNumber}-${templateLayers.nrcsTwoliner} "dispatch({ type: 'NRCSBREAKINGTEXT', payload: ${NrcsBreakingText} })"`);
-    }, 100);
-    setTimeout(() => {
-      endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsTwoliner} opacity 1`);
-    }, 3000);
 
     const script = `
     document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();
     window.Twoliner = document.createElement('div');
     Twoliner.style.position='absolute';
-    Twoliner.style.opacity=0;
     Twoliner.style.zIndex = '${templateLayers.nrcsTwoliner}';
     Twoliner.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
     document.body.appendChild(Twoliner);
@@ -1051,15 +1043,6 @@ const Graphics = () => {
     element.style.transform = \`translate(${0.008 * 1920}px, ${yTwoliner * 1080}px) scale(${0.97}, ${1})\`;
     `
     executeScript(`${scriptmixer}`)
-
-    setTimeout(() => {
-      executeScript(`Twoliner.getElementsByTagName('iframe')[0].contentWindow.postMessage({ action: 'callFunction', data: ${NrcsBreakingText} }, '*')`);
-    }, 1000);
-
-    setTimeout(() => {
-      executeScript(`Twoliner.style.opacity=1;`)
-    }, 1500);
-
   }
   const stopTwoliner = () => {
     endpoint(
@@ -1094,8 +1077,6 @@ const Graphics = () => {
     const script = `document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();`
     executeScript(script);
   }
-
-
 
   const setDirectory = async () => {
     try {

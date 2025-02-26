@@ -60,7 +60,7 @@ root.render(
         <Route exact path="/NewsUpdate/:selectedDate" element={<NewsUpdate />} />
         <Route exact path="/FullPageBreakingNews/:selectedDate" element={<FullPageBreakingNews />} />
         <Route exact path="/DateTimeSwitcher" element={<DateTimeSwitcher />} />
-        <Route exact path="/Twoliner/:selectedDate" element={<Twoliner />} />
+        <Route exact path="/Twoliner/:selectedDate/:NrcsBreakingText" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
         {/* <Route exact path="/UrduScroll" element={<UrduScroll />} /> */}
