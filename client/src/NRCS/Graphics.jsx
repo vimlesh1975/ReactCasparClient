@@ -305,7 +305,7 @@ const Graphics = () => {
 
         if (val.Graphicstext1) {
           const htmlContent = await processAndSaveCanvasItem(val, index);
-          const fileName = `${val.scriptid}_${(number === '') ? (index + 1) : (number + 1)}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
+          const fileName = `${val.ScriptID}_${(number === '') ? (index + 1) : (number + 1)}_${(val.GraphicsTemplate).replace(/[\\/:*?"<>|]/g, "_")}.html`;
           const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
           const writable = await fileHandle.createWritable();
           await writable.write(htmlContent);
@@ -416,24 +416,43 @@ const Graphics = () => {
   }, [selectedRunOrderTitle2, selectedDate2]);
 
   useEffect(() => {
+    if (!ScriptID) {
+      setGraphics([]); // Clear graphics when ScriptID is falsy
+      return;
+    }
+  
+    const controller = new AbortController();
+    const signal = controller.signal;
+  
     async function fetchData() {
       try {
-        setLoading(true);  // Start loading
-        const res = await fetch(
-          addressmysql() + `/getGraphics?ScriptID=${ScriptID}`
-        );
+        setLoading(true);
+        setGraphics([]); // Clear graphics before fetching new data
+  
+        const res = await fetch(addressmysql() + `/getGraphics?ScriptID=${ScriptID}`, { signal });
+  
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+  
         const data = await res.json();
         setGraphics(data);
       } catch (error) {
-        // Handle the error (optional)
-        // console.error('Error fetching RunOrderTitles:', error);
+        if (error.name !== "AbortError") {
+          console.error("Error fetching graphics:", error);
+          setGraphics([]); // Ensure graphics is empty on error
+        }
       } finally {
-        setLoading(false);  // Stop loading when data is set or if an error occurs
+        setLoading(false);
       }
     }
-
+  
     fetchData();
+  
+    return () => controller.abort(); // Cleanup on component unmount or re-run
   }, [ScriptID]);
+  
+  
 
   useEffect(() => {
     async function fetchData() {
