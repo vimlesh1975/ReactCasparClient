@@ -64,7 +64,8 @@ const Graphics = () => {
   const [stopOnNext, setStopOnNext] = useState(false);
   const [live, setLive] = useState(false);
 
-  const [loading, setLoading] = useState(true);  // Initialize loading state to true
+  const [loading, setLoading] = useState(false);  // Initialize loading state to true
+  const [loading2, setLoading2] = useState(false);  // Initialize loading state to true
   const [isLoading, setIsLoading] = useState(false);
 
   const [directoryHandle, setDirectoryHandle] = useState(null);
@@ -129,12 +130,14 @@ const Graphics = () => {
 
 
   useEffect(() => {
+    if (!window.chNumber) return;
     endpoint(`call ${window.chNumber}-${templateLayers.nrcsscroll} startScroll(${JSON.stringify(lines)})`);
     executeScript(`document.getElementById('hindi').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines)} }, '*')`);
 
   }, [lines])
 
   useEffect(() => {
+    if (!window.chNumber) return;
     endpoint(`call ${window.chNumber}-${templateLayers.urduScroll} setData1(${JSON.stringify(lines2)})`);
     executeScript(`document.getElementById('urdu').contentWindow.postMessage({ action: 'callFunction', data: ${JSON.stringify(lines2)} }, '*')`);
   }, [lines2])
@@ -420,21 +423,21 @@ const Graphics = () => {
       setGraphics([]); // Clear graphics when ScriptID is falsy
       return;
     }
-  
+
     const controller = new AbortController();
     const signal = controller.signal;
-  
+
     async function fetchData() {
       try {
         setLoading(true);
         setGraphics([]); // Clear graphics before fetching new data
-  
+
         const res = await fetch(addressmysql() + `/getGraphics?ScriptID=${ScriptID}`, { signal });
-  
+
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
-  
+
         const data = await res.json();
         setGraphics(data);
       } catch (error) {
@@ -446,29 +449,61 @@ const Graphics = () => {
         setLoading(false);
       }
     }
-  
+
     fetchData();
-  
+
     return () => controller.abort(); // Cleanup on component unmount or re-run
   }, [ScriptID]);
-  
-  
 
   useEffect(() => {
+    if (!ScriptID2) {
+      setGraphics([]); // Clear graphics when ScriptID is falsy
+      return;
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchData() {
       try {
-        const res = await fetch(
-          addressmysql() + `/getGraphics?ScriptID=${ScriptID2}`
-        );
+        setLoading2(true);
+        setGraphics2([]); // Clear graphics before fetching new data
+        const res = await fetch(addressmysql() + `/getGraphics?ScriptID=${ScriptID2}`, { signal });
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
         const data = await res.json();
         setGraphics2(data);
       } catch (error) {
-        // console.error('Error fetching RunOrderTitles:', error);
+        if (error.name !== "AbortError") {
+          console.error("Error fetching graphics:", error);
+          setGraphics2([]); // Ensure graphics is empty on error
+        }
+      } finally {
+        setLoading2(false);
       }
     }
 
     fetchData();
+
+    return () => controller.abort(); // Cleanup on component unmount or re-run
   }, [ScriptID2]);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const res = await fetch(
+  //         addressmysql() + `/getGraphics?ScriptID=${ScriptID2}`
+  //       );
+  //       const data = await res.json();
+  //       setGraphics2(data);
+  //     } catch (error) {
+  //       // console.error('Error fetching RunOrderTitles:', error);
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, [ScriptID2]);
 
   const handleSelectionChange = (e) => {
     setSelectedRunOrderTitle(e.target.value);
@@ -1352,15 +1387,8 @@ const Graphics = () => {
                 </Droppable>
               }
             </div>
-
-
             <div style={{ border: "1px solid red" }}>
-              {/* <button onClick={addToCanvas}>
-                Add Sripts to canvas for Teleprompting
-              </button> */}
               <div>
-                {/* <VerticalScrollPlayer /> */}
-
                 {directoryHandle && <><button onClick={() => exportTotalEachPagetoHTML(graphics)}>exportTotalEachPagetoHTML</button><button onClick={() => exportEachPagetoHTML(graphics)}>exportEachPagetoHTML</button> <button onClick={deleteOllFiles}>Delete Old files</button> </>}
                 <button onClick={setDirectory}>Set Directory</button>{directoryHandle && directoryHandle.name}
               </div>
@@ -1452,77 +1480,79 @@ const Graphics = () => {
                 <div
                   style={{ maxHeight: 250, minHeight: 250, overflow: "auto", border: '1px solid red' }}
                 >
-                  <Droppable droppableId="graphics2">
-                    {(provided) => (
-                      <table
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                      >
-                        <tbody>
-                          {graphics2.length ? (
-                            graphics2.map((val, i) => (
-                              <Draggable
-                                key={val.GraphicsID}
-                                draggableId={val.GraphicsID.toString()}
-                                index={i}
-                              >
-                                {(provided, snapshot) => (
-                                  <tr
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    onClick={async () => {
-                                      setCurrentGraphics2(i);
-                                      setPageName(val.GraphicsTemplate + '_copy');
-                                      const parsedJSON = JSON.parse(
-                                        val.Graphicstext1
-                                      );
-                                      await canvas.loadFromJSON(
-                                        parsedJSON.pageValue
-                                      );
-                                      canvas.requestRenderAll();
-                                    }}
-                                    style={{
-                                      backgroundColor:
-                                        currentGraphics2 === i
-                                          ? "green"
-                                          : "#E7DBD8",
-                                      color:
-                                        currentGraphics2 === i
-                                          ? "white"
-                                          : "black",
-                                      margin: 10,
-                                      padding: 10,
-                                      ...provided.draggableProps.style,
-                                    }}
-                                  >
-                                    <td>{i}</td>
-                                    <td {...provided.dragHandleProps}>
-                                      <VscMove />
-                                    </td>
+                  {loading2 ? <img src="/ReactCasparClient/loader.gif" alt="Loading..." /> :
+                    <Droppable droppableId="graphics2">
+                      {(provided) => (
+                        <table
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          <tbody>
+                            {graphics2.length ? (
+                              graphics2.map((val, i) => (
+                                <Draggable
+                                  key={val.GraphicsID}
+                                  draggableId={val.GraphicsID.toString()}
+                                  index={i}
+                                >
+                                  {(provided, snapshot) => (
+                                    <tr
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      onClick={async () => {
+                                        setCurrentGraphics2(i);
+                                        setPageName(val.GraphicsTemplate + '_copy');
+                                        const parsedJSON = JSON.parse(
+                                          val.Graphicstext1
+                                        );
+                                        await canvas.loadFromJSON(
+                                          parsedJSON.pageValue
+                                        );
+                                        canvas.requestRenderAll();
+                                      }}
+                                      style={{
+                                        backgroundColor:
+                                          currentGraphics2 === i
+                                            ? "green"
+                                            : "#E7DBD8",
+                                        color:
+                                          currentGraphics2 === i
+                                            ? "white"
+                                            : "black",
+                                        margin: 10,
+                                        padding: 10,
+                                        ...provided.draggableProps.style,
+                                      }}
+                                    >
+                                      <td>{i}</td>
+                                      <td {...provided.dragHandleProps}>
+                                        <VscMove />
+                                      </td>
 
-                                    <td>
-                                      <input
-                                        style={{ pointerEvents: 'none', width: 370 }}
-                                        readonly
-                                        type="text"
-                                        value={val.GraphicsTemplate}
-                                      />
-                                    </td>
-                                  </tr>
-                                )}
-                              </Draggable>
-                            ))
-                          ) : (
-                            <tr>
-                              <td>No Graphics</td>
-                            </tr>
-                          )}
+                                      <td>
+                                        <input
+                                          style={{ pointerEvents: 'none', width: 370 }}
+                                          readonly
+                                          type="text"
+                                          value={val.GraphicsTemplate}
+                                        />
+                                      </td>
+                                    </tr>
+                                  )}
+                                </Draggable>
+                              ))
+                            ) : (
+                              <tr>
+                                <td>No Graphics</td>
+                              </tr>
+                            )}
 
-                          {provided.placeholder}
-                        </tbody>
-                      </table>
-                    )}
-                  </Droppable>
+                            {provided.placeholder}
+                          </tbody>
+                        </table>
+                      )}
+                    </Droppable>
+                  }
                 </div>
               </TabPanel>
               <TabPanel>
@@ -1552,7 +1582,7 @@ const Graphics = () => {
                           Scroll
                           <br />
                           <label>
-                          <input type="checkbox"  checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
+                            <input type="checkbox" checked={showdateandTime} onChange={() => setShowdateandTime(val => !val)} />
                             Show Date and Time Also</label>
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
@@ -1636,7 +1666,7 @@ const Graphics = () => {
                           </button>}
                           <br />
                           <label title="Left to right" >
-                          <input type="checkbox"  checked={ltr} onChange={() => setLtr(val => !val)} />
+                            <input type="checkbox" checked={ltr} onChange={() => setLtr(val => !val)} />
                             LTR</label>
                         </td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
