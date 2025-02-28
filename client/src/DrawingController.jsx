@@ -115,16 +115,17 @@ import Spinner from './spinner/Spinner'
 
 import localforage from './localForageConfig';
 import { io } from "socket.io-client";
-// const socket = io("https://localhost:9000"); // Replace with your server URL
-
 
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
 
 fabric.FabricObject.prototype.noScaleCache = false;
-// fabric.FabricObject.prototype.cornerSize = 18;
-// fabric.disableStyleCopyPaste = true;
+
+fabric.InteractiveFabricObject.ownDefaults = {
+  ...fabric.InteractiveFabricObject.ownDefaults,
+  cornerSize: 13,
+}
 
 class ErasedGroup extends fabric.Group {
   constructor(original, ErasedPath, options, isAlreadyGrouped) {
@@ -2805,12 +2806,38 @@ const DrawingController = () => {
               defaultValue={0}
               onChange={(e) => roundedCorners(e.target.value)}
             />
-            <span> Show ID:</span>{" "}
-            <input
-              type="checkbox"
-              checked={showId}
-              onChange={(e) => dispatch({ type: "SHOW_ID", payload: !showId })}
-            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showId}
+                  onChange={(e) => dispatch({ type: "SHOW_ID", payload: !showId })}
+                />
+                Show ID
+              </label>
+            </div>
+            <div style={{marginLeft: 10}}>
+              Corner Size:<input
+              onDoubleClick={(e) => {
+                canvas.forEachObject((obj) => {
+                  obj.cornerSize = 13;
+                  canvas.requestRenderAll();
+                })
+                e.target.value=13;
+              } }
+                type="number" min={0} max={100} step={1} style={{ width: 35 }}
+                defaultValue={13} onChange={(e) => {
+                  canvas.forEachObject((obj) => {
+                    obj.cornerSize = parseInt(e.target.value);
+                    canvas.requestRenderAll();
+                  })
+                }}
+              />
+            </div>
+
           </div>
           <div className="drawingToolsRow">
             <b> Export: </b>

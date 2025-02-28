@@ -10,11 +10,7 @@ import "react-tabs/style/react-tabs.css";
 import DrawingController from "./DrawingController.jsx";
 import ImageSequence from './imagesequence/ImageSequence';
 
-
-// eslint-disable-next-line
 import Graphics from "./NRCS/Graphics.jsx";
-
-
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -105,6 +101,23 @@ const App = () => {
 
   const [serverAlive, setServerAlive] = useState(false);
 
+  useEffect(() => {
+    const handleWheel = (event) => {
+      if (event.target.type === "number") {
+        event.stopPropagation(); // Stop scroll from affecting parent div/page
+      }
+    };
+
+    document.querySelectorAll("input[type=number]").forEach((input) => {
+      input.addEventListener("wheel", handleWheel);
+    });
+
+    return () => {
+      document.querySelectorAll("input[type=number]").forEach((input) => {
+        input.removeEventListener("wheel", handleWheel);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     setSolidcaption1(localStorage.getItem("RCC_solidCaption1"));
@@ -557,7 +570,7 @@ const App = () => {
               <Tab>Crop</Tab>
               <Tab className="tabHidden">CodeImport</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
-              <Tab  className="tabHidden">Data</Tab>
+              <Tab className="tabHidden">Data</Tab>
 
               <Tab >Help</Tab>
               <Tab className="tabHidden">GA</Tab>
