@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as fabric from 'fabric';
 import { useSelector } from 'react-redux';
 
@@ -16,6 +16,8 @@ const ImageFilterController = () => {
     const refColorRemove = useRef();
     const refDistance = useRef();
 
+    const tableRef = useRef(null);
+
     const removeFilter = () => {
         canvas.getActiveObjects().forEach(element => {
             if (element.type === 'image') {
@@ -24,6 +26,17 @@ const ImageFilterController = () => {
                 canvas.requestRenderAll();
             }
         });
+
+        if (tableRef.current) {
+            tableRef.current.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+                checkbox.checked = false;
+            });
+        }
+
+        tableRef.current.querySelectorAll("input[type='range']").forEach((slider) => {
+            slider.value = 0; // Reset value to 0
+        });
+
     }
 
     const applyFilter = (e, filterIndex, FilterClass, options = {}) => {
@@ -50,10 +63,30 @@ const ImageFilterController = () => {
         });
     }
 
+    useEffect(() => {
+        const handleTdClick = (event) => {
+            // Check if the clicked element is a <td> and contains a checkbox
+            if (event.target.tagName === "TD") {
+                const checkbox = event.target.querySelector("input[type='checkbox']");
+                if (checkbox) {
+                    checkbox.click(); // Toggle the checkbox
+                }
+            }
+        };
+
+        // Attach event listener to the table
+        document.addEventListener("click", handleTdClick);
+
+        return () => {
+            // Cleanup event listener when component unmounts
+            document.removeEventListener("click", handleTdClick);
+        };
+    }, []);
+
     return (
         <div>
             <div style={{}}>
-                <table border='1'>
+                <table ref={tableRef} border='1'>
                     <tbody>
                         <tr>
                             <td>Property</td>

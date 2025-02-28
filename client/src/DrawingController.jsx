@@ -103,8 +103,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import SavePannel from "./SavePannel";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import Images from "./Images";
 import SavedStyles from "./SavedStyles";
+import ImageFilterController from './ImageFilterController'
 
 import LayersAll from "./LayersAll";
 import CasparcgTools from "./CasparcgTools";
@@ -4099,7 +4099,7 @@ const DrawingController = () => {
             <CasparcgTools />
           </TabPanel>
           <TabPanel>
-            <Images />
+            <ImageFilterController />
           </TabPanel>
           <TabPanel>
             <SavedStyles />
