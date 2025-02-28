@@ -18,7 +18,7 @@ const Scroll = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const [scrollTextProperties, setScrollTextProperties] = useState({
         shadow: { ...shadowOptions, blur: 0 },
-        top: 980,
+        top: 995,
         fill: options.currentColor,
         fontFamily: options.currentFont,
         fontWeight: 'bold',
@@ -303,7 +303,7 @@ const Scroll = () => {
                                     // setNewplayerList1(updateddelemeterlogo)
 
 
-                                }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As ScrollText with logo</button>
+                                }}>Set all logo as first logo</button> <button onClick={setAsScrollText2}>Set As Scroll Text with logo</button>
                                     <button onClick={addStrip}>Add Strip with id scroll1_strip</button>
                                     <button onClick={addStrip2}>Add Strip with id scroll2_strip</button>
                                     <button onClick={deleteScroll}>Delete Scroll</button>

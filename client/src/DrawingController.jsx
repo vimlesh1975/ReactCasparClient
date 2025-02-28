@@ -2177,6 +2177,7 @@ const DrawingController = () => {
     
           const newDiv1 = document.createElement('div');
           newDiv1.style.position='absolute';
+          newDiv1.style.left='0px';
           newDiv1.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
 			    newDiv1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv1.appendChild(clonedSvg1);
@@ -2255,6 +2256,7 @@ const DrawingController = () => {
     
           const newDiv2 = document.createElement('div');
           newDiv2.style.position='absolute';
+          newDiv2.style.left='0px';
           newDiv2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv2.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
 
