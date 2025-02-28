@@ -2553,7 +2553,25 @@ const DrawingController = () => {
   };
 
   const playReactComponenetWithWebSocket = () => {
-    endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] https://localhost:10000/ReactCasparClient/Xyz`);
+    const url = `https://localhost:10000/ReactCasparClient/Xyz`;
+    endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] ${url}`);
+    const script = `
+         document.getElementById('divid_${templateLayers.reactComponent}')?.remove();
+         const reactComponent = document.createElement('div');
+         reactComponent.style.position='absolute';
+         reactComponent.style.zIndex = '${templateLayers.reactComponent}';
+         reactComponent.setAttribute('id','divid_' + '${templateLayers.reactComponent}');
+         document.body.appendChild(reactComponent);
+         const iframe=document.createElement('iframe');
+         iframe.frameBorder = '0';
+         iframe.src = '${url}';
+         iframe.width = '1920';
+         iframe.height = '1080';
+         iframe.id = 'urdu'; 
+         reactComponent.appendChild(iframe);
+         `
+    executeScript(script);
+
   }
   const sendsocketdata = () => {
     socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
@@ -2819,15 +2837,15 @@ const DrawingController = () => {
                 Show ID
               </label>
             </div>
-            <div style={{marginLeft: 10}}>
+            <div style={{ marginLeft: 10 }}>
               Corner Size:<input
-              onDoubleClick={(e) => {
-                canvas.forEachObject((obj) => {
-                  obj.cornerSize = 13;
-                  canvas.requestRenderAll();
-                })
-                e.target.value=13;
-              } }
+                onDoubleClick={(e) => {
+                  canvas.forEachObject((obj) => {
+                    obj.cornerSize = 13;
+                    canvas.requestRenderAll();
+                  })
+                  e.target.value = 13;
+                }}
                 type="number" min={0} max={100} step={1} style={{ width: 35 }}
                 defaultValue={13} onChange={(e) => {
                   canvas.forEachObject((obj) => {
@@ -4072,6 +4090,8 @@ const DrawingController = () => {
             <button onClick={() => {
               endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`);
               socket.emit("DataFromCanvas", null); // Emit event to server
+              const script = `document.getElementById('divid_${templateLayers.reactComponent}')?.remove();`
+              executeScript(script);
             }}><FaStop /></button>
           </div>
         </div>
