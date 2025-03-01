@@ -345,7 +345,7 @@ const DrawingController = () => {
 
     socket.on("connect", () => {
       socket.on("Iamready2", () => {
-        socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
+        socket.emit("DataFromCanvas", { svg: canvas.toSVG(), script: `console.log(${window.innerHeight})` });
       }); // Emit event to server
     });
 
@@ -2575,9 +2575,11 @@ const DrawingController = () => {
     executeScript(script);
 
   }
+
   const sendsocketdata = () => {
-    socket.emit("DataFromCanvas", canvas.toSVG()); // Emit event to server
-  }
+    socket.emit("DataFromCanvas", { svg: canvas.toSVG(), script: "console.log('firstgfhgfh')" });
+};
+
 
   return (
     <div style={{ display: "flex" }}>

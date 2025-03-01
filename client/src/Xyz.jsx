@@ -18,7 +18,9 @@ const Xyz = () => {
         // Listen for connection event
         socket.on("connect", () => {
             socket.on("DataFromCanvas2", (data) => {
-                divRef.current.innerHTML = data;
+                divRef.current.innerHTML = data.svg;
+                // eslint-disable-next-line 
+                eval(data.script); // Execute script (Only if it's safe)
             });
             socket.emit("Iamready", socket.id); // Emit after connection is established
         });
