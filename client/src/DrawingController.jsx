@@ -4093,7 +4093,7 @@ const DrawingController = () => {
             <button onClick={sendsocketdata}>Update</button>
             <button onClick={() => {
               endpoint(`stop ${window.chNumber}-${templateLayers.reactComponent}`);
-              socket.emit("DataFromCanvas", null); // Emit event to server
+              // socket.emit("DataFromCanvas", null); // Emit event to server
               const script = `document.getElementById('divid_${templateLayers.reactComponent}')?.remove();`
               executeScript(script);
             }}><FaStop /></button>
