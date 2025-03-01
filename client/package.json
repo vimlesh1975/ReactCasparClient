@@ -21,6 +21,7 @@
     "@theatre/dataverse": "^0.7.2",
     "@theatre/r3f": "^0.7.2",
     "@theatre/studio": "^0.7.2",
+    "animejs": "^3.2.2",
     "axios": "^1.4.0",
     "beautiful-react-hooks": "^5.0.2",
     "buffer": "^6.0.3",
