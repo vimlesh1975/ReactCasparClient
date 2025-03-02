@@ -2408,9 +2408,9 @@ const DrawingController = () => {
     setClock(localStorage.getItem("RCC_clock"));
     // setVerticalScroll(localStorage.getItem("RCC_verticalScroll"));
     setHorizontalScroll(localStorage.getItem("RCC_horizontalScroll"));
-    setHorizontalSpeed(localStorage.getItem("RCC_horizontalSpeed"));
+    setHorizontalSpeed(parseFloat(localStorage.getItem("RCC_horizontalSpeed")) || 1.0);
+    setHorizontalSpeed2(parseFloat(localStorage.getItem("RCC_horizontalSpeed2")) || 1.0);
     setHorizontalScroll2(localStorage.getItem("RCC_horizontalScroll2"));
-    setHorizontalSpeed2(localStorage.getItem("RCC_horizontalSpeed2"));
 
     if (window.location.origin !== "https://vimlesh1975.github.io") {
       axios
