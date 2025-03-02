@@ -6,6 +6,26 @@ import * as d from "@theatre/dataverse";
 
 export const buildDate = "020325_1";
 
+export const normalizeHexFillColor = (element, canvas) => {
+  const color = element.fill;
+  if (typeof color === "string" && color.startsWith("#")) {
+    if (/^#[0-9A-Fa-f]{1,2}$/.test(color)) {
+      // Convert #22 → #222222
+      let shortHex = color.substring(1); // Remove #
+      const aa = "#" + shortHex.repeat(3).substring(0, 6); // Repeat to make it six digits
+      element.set('fill', aa);
+      return aa;
+    } else if (/^#[0-9A-Fa-f]{3}$/.test(color)) {
+      // Convert #FFF → #FFFFFF
+      const aa = "#" + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+      element.set('fill', aa);
+      return aa;
+    }
+    canvas.requestRenderAll();
+  }
+  return color; // Return original if it's already valid or not a hex code
+}
+
 export const groupInteractive = (canvas, bool) => {
   canvas.getActiveObjects().forEach((element) => {
     if (element.type === 'group') {
@@ -25,7 +45,7 @@ export const importSvgCode = (ss, canvas) => {
 };
 
 export const parseSvg = (output, canvas) => {
-  console.log(output);
+  // console.log(output);
   // eslint-disable-next-line
   const { objects, elements, options, allElements } = output;
 
@@ -35,7 +55,7 @@ export const parseSvg = (output, canvas) => {
   );
 
   if (extrapropertyTags.length === 0) {
-    console.log("No extraproperty tags found. Using default values.");
+    // console.log("No extraproperty tags found. Using default values.");
   }
 
   var textNumber = 0;
@@ -2283,11 +2303,11 @@ export const clieentPublicFolder = () => {
   }
 };
 
-export const addressnrcsscroll=()=>{
+export const addressnrcsscroll = () => {
   if (window.location.origin === "https://vimlesh1975.github.io") {
     return "https://vimlesh1975.github.io";
   } else {
- var address2 = "https://" + window.location.host.split(":")[0] + ":10000";
+    var address2 = "https://" + window.location.host.split(":")[0] + ":10000";
     return address2;
   }
 }
@@ -2345,7 +2365,7 @@ export const templateLayers = {
 
   breakingneslayer: 550,
 
-  nrcsFullPageBreakingNews:555,
+  nrcsFullPageBreakingNews: 555,
   nrcsscroll: 560,
   nrcsBreakingNews: 565,
   nrcsNewsUpdate: 567,
@@ -2353,7 +2373,7 @@ export const templateLayers = {
   nrcsDateTimeSwitcher: 575,
   reactComponent: 580,
   urduScroll: 590,
-  
+
 
 };
 export const theatreLayers = [171, 172, 173, 174, 175];

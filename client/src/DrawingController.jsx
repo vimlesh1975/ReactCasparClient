@@ -3,6 +3,7 @@ import axios from "axios";
 import * as fabric from "fabric";
 import { debounce } from "lodash";
 import {
+  normalizeHexFillColor,
   importSvgCode,
   parseSvg,
   generateUniqueId,
@@ -2505,7 +2506,7 @@ const DrawingController = () => {
         if (element.fontWeight) {
           setfontWeight1(element.fontWeight);
         }
-        
+
         if (element.underline !== undefined) {
           setunderline1(element.underline ? "underline" : "none");
         }
@@ -2513,9 +2514,9 @@ const DrawingController = () => {
           setlinethrough1(element.linethrough ? "line-through" : "none");
         }
 
-        // console.log(element.underline)
+        console.log(element.fill);
 
-        setCurrentFillColor(element.fill);
+        setCurrentFillColor(normalizeHexFillColor( element, canvas));
 
         if (element.backgroundColor !== '') {
           setCurrentBGColor(element.backgroundColor);
