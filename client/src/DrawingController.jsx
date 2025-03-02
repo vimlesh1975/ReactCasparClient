@@ -345,7 +345,7 @@ const DrawingController = () => {
 
     socket.on("connect", () => {
       socket.on("Iamready2", (socketid) => {
-        socket.emit("DataFromCanvas", {socketid, svg: canvas.toSVG(), script: `console.log(${window.innerHeight})` });
+        socket.emit("DataFromCanvas", { socketid, svg: canvas.toSVG(), script: `console.log(${window.innerHeight})` });
       }); // Emit event to server
     });
 
@@ -2505,13 +2505,15 @@ const DrawingController = () => {
         if (element.fontWeight) {
           setfontWeight1(element.fontWeight);
         }
+        
+        if (element.underline !== undefined) {
+          setunderline1(element.underline ? "underline" : "none");
+        }
+        if (element.linethrough !== undefined) {
+          setlinethrough1(element.linethrough ? "line-through" : "none");
+        }
 
-        if (element.underline) {
-          setunderline1(element.underline ? "underline" : "");
-        }
-        if (element.linethrough) {
-          setlinethrough1(element.linethrough ? "line-through" : "");
-        }
+        // console.log(element.underline)
 
         setCurrentFillColor(element.fill);
 
@@ -2576,8 +2578,8 @@ const DrawingController = () => {
   }
 
   const sendsocketdata = () => {
-    socket.emit("DataFromCanvas", {socketid:'toAll', svg: canvas.toSVG(), script: "console.log('firstgfhgfh')" });
-};
+    socket.emit("DataFromCanvas", { socketid: 'toAll', svg: canvas.toSVG(), script: "console.log('firstgfhgfh')" });
+  };
 
 
   return (
@@ -2740,11 +2742,11 @@ const DrawingController = () => {
             <button
               title="Underline"
               style={{
-                textDecoration: underline1 === "underline" ? "underline" : "",
+                textDecoration: (underline1 === "underline") ? "underline" : "none",
               }}
               onClick={() => {
                 textUnderline(canvas);
-                setunderline1(underline1 === "underline" ? "" : "underline");
+                setunderline1((underline1 === "underline") ? "none" : "underline");
               }}
             >
               U
@@ -2753,12 +2755,12 @@ const DrawingController = () => {
               title="Linethrough"
               style={{
                 textDecoration:
-                  linethrough1 === "line-through" ? "line-through" : "",
+                  (linethrough1 === "line-through") ? "line-through" : "none",
               }}
               onClick={() => {
                 textLineThrough(canvas);
                 setlinethrough1(
-                  linethrough1 === "line-through" ? "" : "line-through"
+                  (linethrough1 === "line-through") ? "none" : "line-through"
                 );
               }}
             >
