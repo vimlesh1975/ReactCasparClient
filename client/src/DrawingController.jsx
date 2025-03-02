@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import * as fabric from "fabric";
 import { debounce } from "lodash";
-import {
+import {clieentPublicFolder,
   convertRgbaToHex,
   convertGradientToPercentage,
   normalizeHexFillColor,
@@ -2575,7 +2575,7 @@ const DrawingController = () => {
   };
 
   const playReactComponenetWithWebSocket = () => {
-    const url = `https://localhost:10000/ReactCasparClient/Xyz`;
+    const url = clieentPublicFolder() +`/Xyz`;
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] ${url}`);
     const script = `
          document.getElementById('divid_${templateLayers.reactComponent}')?.remove();
