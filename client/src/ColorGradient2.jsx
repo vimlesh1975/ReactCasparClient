@@ -120,7 +120,7 @@ const ColorGradient2 = () => {
                 <button onClick={() => {
                     canvas.getActiveObjects().forEach(element => { element.set('fill', backgroundImagetoFabricGradient) });
                     canvas.requestRenderAll();
-                }}>SetGradient Fill</button>
+                }}>Set Gradient Fill</button>
 
                 <button onClick={() => {
                     canvas.getActiveObjects().forEach(element => { element.set('stroke', backgroundImagetoFabricGradient) });

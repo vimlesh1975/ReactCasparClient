@@ -3,6 +3,8 @@ import axios from "axios";
 import * as fabric from "fabric";
 import { debounce } from "lodash";
 import {
+  convertRgbaToHex,
+  convertGradientToPercentage,
   normalizeHexFillColor,
   importSvgCode,
   parseSvg,
@@ -2514,9 +2516,25 @@ const DrawingController = () => {
           setlinethrough1(element.linethrough ? "line-through" : "none");
         }
 
-        console.log(element.fill);
+        // console.log(element.fill);
+        if (typeof element.fill === "string" && element.fill.startsWith("#")) {
+          setCurrentFillColor(normalizeHexFillColor(element, canvas));
+        }
+        if (element.fill.gradientUnits === "pixels") {
+          // console.log(convertGradientToPercentage(element.fill));
+          // setCurrentFillColor(convertGradientToPercentage(element.fill))
+          const aa = convertGradientToPercentage(element.fill, element.width, element.height);
+          setCurrentFillColor(aa)
+          element.set('fill', new fabric.Gradient(aa));
+          canvas.requestRenderAll();
+        }
+        if (element.fill.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)$/)) {
+          const aa = convertRgbaToHex(element.fill);
+          setCurrentFillColor(aa)
+          element.set('fill', aa);
+          canvas.requestRenderAll();
+        }
 
-        setCurrentFillColor(normalizeHexFillColor( element, canvas));
 
         if (element.backgroundColor !== '') {
           setCurrentBGColor(element.backgroundColor);
