@@ -2506,13 +2506,12 @@ const DrawingController = () => {
           setfontWeight1(element.fontWeight);
         }
 
-        if (element.undeline) {
+        if (element.underline) {
           setunderline1(element.underline ? "underline" : "");
         }
-        if (element.undeline) {
+        if (element.linethrough) {
           setlinethrough1(element.linethrough ? "line-through" : "");
         }
-
 
         setCurrentFillColor(element.fill);
 
