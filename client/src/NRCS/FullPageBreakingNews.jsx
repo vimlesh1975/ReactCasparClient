@@ -104,7 +104,7 @@ const FullPageBreakingNews = () => {
                         width: '100%',
                         textAlign: 'center',
                         left: 300,
-                        top: 200,
+                        top: 210,
                         position: 'absolute',
                         color: 'white',
 
