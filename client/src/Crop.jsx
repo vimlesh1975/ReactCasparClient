@@ -48,12 +48,23 @@ const Crop = () => {
             <h1>Fabric.js Image Cropping</h1>
             <p>After selecting an Image Click get values button</p>
             <button onClick={getwidthandHeight}>Get Values</button>
-            <div style={{ border: '1px solid red', width: 290, marginLeft: 10 }}>
+            <div style={{ border: '1px solid red', marginLeft: 10 }}>
                 <div>
-                    <label style={{ marginLeft: 115 }}>Top:</label>
+                    <label style={{ marginLeft: 350 }}>Top:</label>
+                    <div>
+                        <input style={{ width: 200, textAlign: 'center', marginLeft: 300, marginTop: 10 }}
+                            onChange={handleInputChange}
+                            type="range"
+                            name="cropY"
+                            min="-1000"
+                            max="1000"
+                            step="1"
+                            value={cropValues.cropY}
+                        />
+                    </div>
                 </div>
                 <div>
-                    <input style={{ width: 60, textAlign: 'center', marginLeft: 100, marginBottom: 10 }}
+                    <input style={{ width: 60, textAlign: 'center', marginLeft: 350, marginBottom: 10 }}
                         type="number"
                         name="cropY"
                         value={cropValues.cropY}
@@ -61,7 +72,17 @@ const Crop = () => {
                     />
                 </div>
                 <div>
-                    <label>Left:</label>
+                    <label style={{ marginLeft: 50 }}>Left:</label>
+
+                    <input style={{ width: 200, textAlign: 'center', marginLeft: 0, marginTop: 10 }}
+                        onChange={handleInputChange}
+                        type="range"
+                        name="cropX"
+                        min="-1000"
+                        max="1000"
+                        step="1"
+                        value={cropValues.cropX}
+                    />
                     <input style={style}
                         type="number"
                         name="cropX"
@@ -69,16 +90,29 @@ const Crop = () => {
                         onChange={handleInputChange}
                     />
 
-                    <input style={{ width: 60, textAlign: 'center', marginLeft: 80 }}
+                    <input style={{ width: 60, textAlign: 'center', marginLeft: 60 }}
                         type="number"
                         name="width"
                         value={cropValues.width}
                         onChange={handleInputChange}
                     />
+
+
+                    <input style={{ width: 200, textAlign: 'center', marginLeft: 20, marginTop: 10 }}
+                        onChange={handleInputChange}
+                        type="range"
+                        name="width"
+                        min="-1920"
+                        max="1920"
+                        step="1"
+                        value={cropValues.width}
+                    />
+
+
                     <label>Right</label>
                 </div>
                 <div>
-                    <input style={{ width: 60, textAlign: 'center', marginLeft: 100, marginTop: 10 }}
+                    <input style={{ width: 60, textAlign: 'center', marginLeft: 350, marginTop: 10 }}
                         type="number"
                         name="height"
                         value={cropValues.height}
@@ -86,7 +120,18 @@ const Crop = () => {
                     />
                 </div>
                 <div>
-                    <label style={{ marginLeft: 115 }}>Bottom:</label>
+                    <div>
+                        <input style={{ width: 200, textAlign: 'center', marginLeft: 300, marginTop: 10 }}
+                            onChange={handleInputChange}
+                            type="range"
+                            name="height"
+                            min="-1000"
+                            max="1000"
+                            step="1"
+                            value={cropValues.height}
+                        />
+                    </div>
+                    <label style={{ marginLeft: 350 }}>Bottom:</label>
                 </div>
 
             </div>
