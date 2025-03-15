@@ -46,8 +46,8 @@ const Graphics = () => {
   const refPageName = useRef();
 
   const [runOrderTitles, setRunOrderTitles] = useState([]);
-  const [selectedRunOrderTitle, setSelectedRunOrderTitle] = useState("0700 Hrs");
-  const [selectedRunOrderTitle2, setSelectedRunOrderTitle2] = useState("0600 Hrs");
+  const [selectedRunOrderTitle, setSelectedRunOrderTitle] = useState("0600 Hrs");
+  const [selectedRunOrderTitle2, setSelectedRunOrderTitle2] = useState("0700 Hrs");
   const [slugs, setSlugs] = useState([]);
   const [slugs2, setSlugs2] = useState([]);
   const [ScriptID, setScriptID] = useState("");
@@ -581,6 +581,7 @@ const Graphics = () => {
   };
 
   const updateCGEntry = async (deleteCG = false) => {
+    console.log(slugs[currentSlug].MediaInsert);
     var cgValue = '';
     if (deleteCG) {
       if (slugs[currentSlug].MediaInsert === 'Visuals') {
@@ -592,8 +593,9 @@ const Graphics = () => {
       else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
         cgValue = 'Visuals';
       }
-      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-        cgValue = null;
+      
+      else if (slugs[currentSlug].MediaInsert.includes("CG")) {
+        cgValue = (graphics.length===1)? null:`${graphics.length - 1} CG`;
       }
       else {
         return;
@@ -604,13 +606,13 @@ const Graphics = () => {
         cgValue = 'Visuals/CG';
       }
       else if (slugs[currentSlug].MediaInsert === '' || slugs[currentSlug].MediaInsert === null) {
-        cgValue = 'CG';
+        cgValue = '1 CG';
       }
       else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
         return;
       }
-      else if ((slugs[currentSlug].MediaInsert) === 'CG') {
-        return
+      else if (slugs[currentSlug].MediaInsert.includes("CG")) {
+        cgValue = `${graphics.length + 1} CG`;
       }
       else {
         return;
@@ -637,9 +639,9 @@ const Graphics = () => {
   }
 
   const deleteGraphic = async (GraphicsID) => {
-    if (graphics.length === 1) {
+    // if (graphics.length === 1) {
       await updateCGEntry(true);
-    }
+    // }
     const newGraphics = graphics.filter((val) => val.GraphicsID !== GraphicsID);
     const reorderedItemsWithNewOrder = newGraphics.map((item, index) => ({
       ...item,
