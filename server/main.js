@@ -587,8 +587,6 @@ app.get("/show_runorder", async (req, res) => {
 app.get("/show_runorderSpecial", async (req, res) => {
   const param1 = req.query.param1;
   const param2 = req.query.param2;
-  // const param1 = 'Scroll';
-  // const param2 = '2024-12-23';
 
   if (param1 === "") {
     res.status(500).send("Error fetching run order");
@@ -701,7 +699,9 @@ app.post("/insertGraphics", async (req, res) => {
 });
 
 app.post("/updateCGEntry", async (req, res) => {
-  const { cgValue, ScriptID, NewsId } = req.body;
+  const { cgValue, ScriptID, NewsId, selectedDate } = req.body;
+  const emitteddata={cgValue, ScriptID, NewsId, selectedDate};
+  io.emit("updateCGEntry", emitteddata);
   const values = [
     cgValue,
     ScriptID,

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.IO Client</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    #storyContainer {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      max-width: 600px;
+    }
+
+    #storyContainer h2 {
+      font-size: 24px;
+    }
+
+    #storyContainer p {
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Socket.IO Client</h1>
+  <div id="storyContainer">
+   
+    <h2>updateCGEntry</h2>
+    <p id="updateCGEntry">Waiting for updates...</p>
+    
+  </div>
+
+  <script>
+    // Connect to the Socket.IO server
+    const socket2 = io('https://localhost:9000');
+
+    socket2.on('updateCGEntry', (data) => {
+      console.log('updateCGEntry:', data);
+
+      // Update the content on the webpage with the new data
+      document.getElementById('updateCGEntry').innerText = `
+         updateCGEntry: ${JSON.stringify(data)}  
+      `;
+    });
+
+    // Optional: Handle connection and disconnection events
+    socket2.on('connect', () => {
+      console.log('Connected to the server');
+    });
+
+    socket2.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+  </script>
+</body>
+
+</html>

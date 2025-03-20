@@ -630,7 +630,8 @@ const Graphics = () => {
         body: JSON.stringify({
           cgValue,
           ScriptID,
-          NewsId: selectedRunOrderTitle
+          NewsId: selectedRunOrderTitle,
+          selectedDate
         }),
       });
     } catch (error) {
