@@ -41,6 +41,8 @@
   <script>
     // Connect to the Socket.IO server
     const socket2 = io('https://localhost:9000');
+    // const socket2 = io('https://octopus-app-gzws3.ondigitalocean.app');
+    
 
     socket2.on('updateCGEntry', (data) => {
       console.log('updateCGEntry:', data);
