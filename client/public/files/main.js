@@ -53,6 +53,7 @@ scriptgsap.onload = function () {
 
         }
     }, 100);
+    window.outAnimation=outAnimation;
 
     // setTimeout(() => {
     //     outAnimation();

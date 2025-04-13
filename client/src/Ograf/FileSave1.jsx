@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getGdd } from '../common';
+import { getGdd, selectAll, deSelectAll } from '../common';
 import { useSelector } from 'react-redux';
+
 var html;
 
 const FileSave1 = () => {
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [baseFolderName, setBaseFolderName] = useState('');
-
   const [subfolderName, setSubfolderName] = useState('');
 
   const [maincss, setMaincss] = useState('');
@@ -14,17 +14,13 @@ const FileSave1 = () => {
   const [mainjs, setMainjs] = useState('');
   const [main2js, setMain2js] = useState('');
   const [gsapjs, setGsapjs] = useState('');
-  // const [htmlString1, setHtmlString1] = useState('hello');
   const canvas = useSelector(state => state.canvasReducer.canvas);
 
   const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
 
-
-
   useEffect(() => {
     var res, text;
-
 
     const fetchFiles = async () => {
       try {
@@ -140,7 +136,7 @@ const FileSave1 = () => {
   
       iframe.style.width = '100%';
       iframe.style.height = '100%';
-      iframe.style.opacity = 0;
+      iframe.style.opacity = 1;
   
       this.shadowRoot.innerHTML = '';
       this.shadowRoot.appendChild(iframe);
@@ -160,8 +156,9 @@ const FileSave1 = () => {
     }
   
     async stopAction() {
-      this.elements.iframe.style.opacity = 0;
-      await this.dispose();
+    const iframeWindow = this.elements.iframe.contentWindow;
+    iframeWindow.outAnimation();
+      // await this.dispose();
       return { code: 200, message: 'Stopped' };
     }
   
@@ -207,8 +204,10 @@ const FileSave1 = () => {
     }
   ];
   const setHtmlString = () => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    selectAll(canvas);
     const gdd = getGdd(canvas, "RCC");
-     html = `<!DOCTYPE html>
+    html = `<!DOCTYPE html>
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
@@ -533,6 +532,9 @@ const FileSave1 = () => {
                             <script src="main.js"></script>
                             <script src="main2.js"></script>
                         </html>`;
+
+                            deSelectAll(canvas);
+                        
   };
 
 
@@ -584,8 +586,7 @@ const FileSave1 = () => {
 
       // HTML and TXT files
       const htmlName = `${subfolderName}.html`;
-       setHtmlString();
-       console.log(html);
+      setHtmlString();
       const htmlContent = html;
       // const htmlContent = 'htmlString1';
       const htmlHandle = await htmlFolderHandle.getFileHandle(htmlName, { create: true });
@@ -595,7 +596,21 @@ const FileSave1 = () => {
       console.log(`Overwritten: ${htmlName}`);
 
       const txtName = `${subfolderName}.txt`;
-      const txtContent = `hello world`;
+
+      const bb =
+      JSON.stringify({
+        pageName: subfolderName + '.txt',
+        pageValue: canvas.toJSON(["id", "class", "selectable"]),
+        animation: "",
+        jsfilename: 'main.js',
+        cssfilename: 'main.css',
+        jsfilename2: 'main2.js',
+        cssfilename2: 'main2.css',
+      }) + "\r\n";
+    // const file1 = new Blob([bb], { type: "text/plain" });
+
+
+      const txtContent = bb;
       const txtHandle = await htmlFolderHandle.getFileHandle(txtName, { create: true });
       const txtWritable = await txtHandle.createWritable();
       await txtWritable.write(txtContent);
