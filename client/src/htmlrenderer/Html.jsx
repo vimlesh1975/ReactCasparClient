@@ -6,6 +6,7 @@ import * as fabric from 'fabric'
 import {  useDispatch } from "react-redux";
 
 
+
 window.fabric = fabric;
 
 

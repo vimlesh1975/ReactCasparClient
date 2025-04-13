@@ -17,7 +17,8 @@ import { v4 as uuidv4 } from "uuid";
 import VideoController from "./VideoController.jsx";
 import Help from "./Help.jsx";
 
-import LayersAll from "./LayersAll.jsx";
+// import LayersAll from "./LayersAll.jsx";
+import Ograf from './Ograf/All.jsx'
 import VideoPlaylist from "./VideoPlaylist.jsx";
 import Scroll from "./Scroll.jsx";
 import Automation from "./Automation.jsx";
@@ -555,7 +556,7 @@ const App = () => {
               <Tab>Graphics</Tab>
               <Tab className="tabHidden">VDO</Tab>
               <Tab className="tabHidden">VDO Playlist</Tab>
-              <Tab>Layers</Tab>
+              <Tab>OGraf</Tab>
               <Tab >Gradient</Tab>
               <Tab className="tabHidden">BreakingNews</Tab>
               <Tab className="tabHidden">ImgSequence</Tab>
@@ -651,7 +652,7 @@ const App = () => {
               <VideoPlaylist />
             </TabPanel>
             <TabPanel>
-              <LayersAll compact={false} />
+              <Ograf />
             </TabPanel>
             <TabPanel>
               <ColorGradient2 />
