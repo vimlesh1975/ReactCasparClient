@@ -9,7 +9,7 @@ export const buildDate = "130425_1";
 export function convertRgbaToHex(color) {
   // Check if the color is in rgba(r,g,b,a) format
   let match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)$/);
-  
+
   if (!match) return color; // If not RGBA, return as is
 
   // Extract RGB values (ignore alpha)
@@ -21,49 +21,49 @@ export function convertRgbaToHex(color) {
 }
 
 
-export const convertGradientToPercentage = (gradient, objectWidth = 512, objectHeight = 512)=> {
+export const convertGradientToPercentage = (gradient, objectWidth = 512, objectHeight = 512) => {
   if (!gradient || gradient.gradientUnits !== "pixels") return gradient;
 
-    // Function to convert RGB to Hex
-    function rgbToHex(rgb) {
-        let match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        if (!match) return rgb; // Return as is if not RGB
-        return "#" + match.slice(1, 4)
-            .map(x => ("0" + parseInt(x).toString(16)).slice(-2))
-            .join("");
-    }
+  // Function to convert RGB to Hex
+  function rgbToHex(rgb) {
+    let match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (!match) return rgb; // Return as is if not RGB
+    return "#" + match.slice(1, 4)
+      .map(x => ("0" + parseInt(x).toString(16)).slice(-2))
+      .join("");
+  }
 
-    // Convert gradientUnits to percentage
-    let newGradient = { ...gradient, gradientUnits: "percentage" };
+  // Convert gradientUnits to percentage
+  let newGradient = { ...gradient, gradientUnits: "percentage" };
 
-    // Normalize coords to percentage scale (ENSURING IT REMAINS VALID)
-    if (newGradient.coords) {
-        newGradient.coords = {
-            x1: (newGradient.coords.x1 / objectWidth) * 100,  // Convert to %
-            y1: (newGradient.coords.y1 / objectHeight) * 100, // Convert to %
-            x2: (newGradient.coords.x2 / objectWidth) * 100,  // Convert to %
-            y2: (newGradient.coords.y2 / objectHeight) * 100  // Convert to %
-        };
-    }
+  // Normalize coords to percentage scale (ENSURING IT REMAINS VALID)
+  if (newGradient.coords) {
+    newGradient.coords = {
+      x1: (newGradient.coords.x1 / objectWidth) * 100,  // Convert to %
+      y1: (newGradient.coords.y1 / objectHeight) * 100, // Convert to %
+      x2: (newGradient.coords.x2 / objectWidth) * 100,  // Convert to %
+      y2: (newGradient.coords.y2 / objectHeight) * 100  // Convert to %
+    };
+  }
 
-    // Normalize gradientTransform properly
-    if (newGradient.gradientTransform) {
-        newGradient.gradientTransform = newGradient.gradientTransform.map((value, index) => {
-            return index < 4 
-                ? value / objectWidth * 100  // Scaling factors
-                : value / objectHeight * 100; // Translation factors
-        });
-    }
+  // Normalize gradientTransform properly
+  if (newGradient.gradientTransform) {
+    newGradient.gradientTransform = newGradient.gradientTransform.map((value, index) => {
+      return index < 4
+        ? value / objectWidth * 100  // Scaling factors
+        : value / objectHeight * 100; // Translation factors
+    });
+  }
 
-    // Convert colorStops colors from RGB to Hex
-    if (newGradient.colorStops) {
-        newGradient.colorStops = newGradient.colorStops.map(stop => ({
-            ...stop,
-            color: rgbToHex(stop.color) // Convert RGB to Hex
-        }));
-    }
+  // Convert colorStops colors from RGB to Hex
+  if (newGradient.colorStops) {
+    newGradient.colorStops = newGradient.colorStops.map(stop => ({
+      ...stop,
+      color: rgbToHex(stop.color) // Convert RGB to Hex
+    }));
+  }
 
-    return newGradient;
+  return newGradient;
 }
 
 
@@ -2005,6 +2005,38 @@ export const getGdd = (canvas, designerSoftware) => {
 `;
 };
 
+export const getGddProperties = (canvas) => {
+  const allObjects = canvas.getObjects().reduce((acc, object) => {
+    if (object.id.startsWith("ccg")) {
+      if (object.type === "textbox" || object.type === "image") {
+        let gddType = "single-line";
+        let default1 = "default";
+
+        if (object.type === "textbox") {
+          if (object.textLines.length > 1) {
+            gddType = "multi-line";
+          } else {
+            gddType = "single-line";
+          }
+          default1 = object.text;
+        } else if (object.type === "image") {
+          gddType = "file-path/image-path";
+          default1 = defaultImageSrc;
+        }
+        acc[object.id] = {
+          type: "string",
+          label: "label",
+          description: object.type,
+          default: default1,
+          gddType: gddType,
+          pattern: "",
+        };
+      }
+    }
+    return acc;
+  }, {});
+  return JSON.stringify(allObjects);
+}
 export const setclipPathWhileImporting = (canvas) => {
   const id = generateUniqueId({ type: "id" });
 

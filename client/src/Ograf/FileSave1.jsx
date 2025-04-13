@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { getGdd, selectAll, deSelectAll } from '../common';
+import { getGdd, getGddProperties, selectAll, deSelectAll } from '../common';
 import { useSelector } from 'react-redux';
 import Spinner from "../spinner/Spinner";
 
 
 var html;
+var gdd;
+var GddProperties;
 
 const FileSave1 = () => {
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [baseFolderName, setBaseFolderName] = useState('');
   const [subfolderName, setSubfolderName] = useState('');
   const [note, setNote] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const [maincss, setMaincss] = useState('');
   const [main2css, setMain2css] = useState('');
@@ -58,160 +60,11 @@ const FileSave1 = () => {
     fetchFiles();
   }, [])
 
-  const fileList = [
-    {
-      name: 'main.js',
-      content: mainjs
-    },
-    {
-      name: 'main2.js',
-      content: main2js
-    },
-    {
-      name: 'main.css',
-      content: maincss
-    },
-    {
-      name: 'main2.css',
-      content: main2css
-    },
-    {
-      name: 'gsap.min.js',
-      content: gsapjs
-    },
-    {
-      name: 'manifest.json',
-      content: `{
-    "$schema": "https://ograf.ebu.io/v1-draft-0/specification/json-schemas/graphics/schema.json",
-    "name": "Lower 3rd - Name",
-    "description": "Name lower third",
-    "id": "l3rd-name",
-    "version": "0",
-    "author": {
-        "name": "Johan Nyman, SuperFly.tv",
-        "email": "john.doe@foo.com"
-    },
-    "main": "graphic.mjs",
-    "customActions": [
-        {
-            "id": "highlight",
-            "name": "Highlight",
-            "description": "Highlight the name",
-            "schema": null
-        }
-    ],
-    "supportsRealTime": true,
-    "supportsNonRealTime": false,
-    "schema": {
-        "type": "object",
-        "properties": {
-            "ccgf0": {
-                "type": "string",
-                "title": "ccgf0",
-                "default": "John Doe"
-            },
-            "ccgf1": {
-                "type": "string",
-                "title": "ccgf1",
-                "default": "Engineering Assistant , DDK Mumbai"
-            },
-            "ccgf2": {
-                "type": "string",
-                "gddType": "file-path/image-path",
-                "title": "ccgf2",
-                "default": "C:/casparcg/mydata/flag/Antigua.png"
-            }
-        }
-    },
-    "v_asd": 123,
-    "v_myLittleNote": "Vendor-specific properties can be added using the 'v_' prefix, like this!"
-  }`
-    },
-    {
-      name: 'graphic.mjs',
-      content: `class IframeGraphic extends HTMLElement {
-    constructor() {
-      super();
-      this.attachShadow({ mode: 'open' });
-    }
-  
-    async load() {
-      const iframe = document.createElement('iframe');
-      iframe.src = new URL('./html/${subfolderName}.html', import.meta.url).toString();
-  
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.opacity = 1;
-  
-      this.shadowRoot.innerHTML = '';
-      this.shadowRoot.appendChild(iframe);
-      this.elements = { iframe };
-  
-      return { code: 200, message: 'Loaded iframe' };
-    }
-  
-    async dispose() {
-      this.shadowRoot.innerHTML = '';
-      return { code: 200, message: 'Disposed' };
-    }
-  
-    async playAction({ data }) {
-      this.elements.iframe.style.opacity = 1;
-      return { code: 200, message: 'Played' };
-    }
-  
-    async stopAction() {
-    const iframeWindow = this.elements.iframe.contentWindow;
-    iframeWindow.outAnimation();
-      // await this.dispose();
-      return { code: 200, message: 'Stopped' };
-    }
-  
-    async updateAction({ data }) {
-      console.log(data);
-  
-      const iframeWindow = this.elements.iframe.contentWindow;
-      let xml = '';
-      const aa = Object.entries(data).map(([key, value]) => ({ key, value }));
-      aa.forEach(val => {
-        var val1 = val.value;
-        if (val1) {
-          if (val1.includes("\\n")) {
-            val1 = val1.replace(/\\n/g, 'CRLF');
-          }
-        }
-        xml += \`<componentData id="\${val.key}"><data id="text" value="\${val1}" /></componentData>\`;
-      });
-  
-      xml = \`<templateData>\${xml}</templateData>\`;
-      iframeWindow.update(xml);
-      this.elements.iframe.style.opacity = 1;
-  
-      return { code: 200, message: 'Updated' };
-    }
-  
-    async customAction({ id, payload }) {
-      return { code: 400, message: 'No custom actions' };
-    }
-  
-    async getStatus() {
-      return {
-        code: 200,
-        message: 'OK',
-        result: {
-          status: 'ready'
-        }
-      };
-    }
-  }
-  
-  export default IframeGraphic;`
-    }
-  ];
+
   const setHtmlString = () => {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
-    const gdd = getGdd(canvas, "RCC");
+
     html = `<!DOCTYPE html>
         <html lang="en">
             <head>
@@ -538,8 +391,8 @@ const FileSave1 = () => {
                             <script src="main2.js"></script>
                         </html>`;
 
-                            deSelectAll(canvas);
-                        
+    deSelectAll(canvas);
+
   };
 
 
@@ -553,7 +406,137 @@ const FileSave1 = () => {
     }
   };
   const handleCreateFiles = async () => {
-    setIsLoading(true); // Show spinner
+
+    gdd = getGdd(canvas, "RCC");
+    GddProperties = getGddProperties(canvas);
+    console.log(GddProperties)
+
+    const fileList = [
+      {
+        name: 'main.js',
+        content: mainjs
+      },
+      {
+        name: 'main2.js',
+        content: main2js
+      },
+      {
+        name: 'main.css',
+        content: maincss
+      },
+      {
+        name: 'main2.css',
+        content: main2css
+      },
+      {
+        name: 'gsap.min.js',
+        content: gsapjs
+      },
+      {
+        name: 'manifest.json',
+        content: `{
+      "$schema": "https://ograf.ebu.io/v1-draft-0/specification/json-schemas/graphics/schema.json",
+      "name": "${subfolderName}",
+      "description": "IframeGraphic",
+      "id": "IframeGraphic1",
+      "version": "0",
+      "author": {
+          "name": "Vimlesh Kumar, DDK Mumbai",
+          "email": "vimlesh195@hotmail.com"
+      },
+      "main": "graphic.mjs",
+      "customActions": [],
+      "supportsRealTime": true,
+      "supportsNonRealTime": false,
+      "schema": {
+          "type": "object",
+          "properties": ${GddProperties}
+      },
+      "v_Designer_Software": "RCC",
+      "v_myLittleNote": "Vendor-specific properties can be added using the 'v_' prefix, like this!"
+    }`
+      },
+      {
+        name: 'graphic.mjs',
+        content: `class IframeGraphic extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+      }
+    
+      async load() {
+        const iframe = document.createElement('iframe');
+        iframe.src = new URL('./html/${subfolderName}.html', import.meta.url).toString();
+    
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.opacity = 1;
+    
+        this.shadowRoot.innerHTML = '';
+        this.shadowRoot.appendChild(iframe);
+        this.elements = { iframe };
+    
+        return { code: 200, message: 'Loaded iframe' };
+      }
+    
+      async dispose() {
+        this.shadowRoot.innerHTML = '';
+        return { code: 200, message: 'Disposed' };
+      }
+    
+      async playAction({ data }) {
+        this.elements.iframe.style.opacity = 1;
+        return { code: 200, message: 'Played' };
+      }
+    
+      async stopAction() {
+      const iframeWindow = this.elements.iframe.contentWindow;
+      iframeWindow.outAnimation();
+        // await this.dispose();
+        return { code: 200, message: 'Stopped' };
+      }
+    
+      async updateAction({ data }) {
+        console.log(data);
+    
+        const iframeWindow = this.elements.iframe.contentWindow;
+        let xml = '';
+        const aa = Object.entries(data).map(([key, value]) => ({ key, value }));
+        aa.forEach(val => {
+          var val1 = val.value;
+          if (val1) {
+            if (val1.includes("\\n")) {
+              val1 = val1.replace(/\\n/g, 'CRLF');
+            }
+          }
+          xml += \`<componentData id="\${val.key}"><data id="text" value="\${val1}" /></componentData>\`;
+        });
+    
+        xml = \`<templateData>\${xml}</templateData>\`;
+        iframeWindow.update(xml);
+        this.elements.iframe.style.opacity = 1;
+    
+        return { code: 200, message: 'Updated' };
+      }
+    
+      async customAction({ id, payload }) {
+        return { code: 400, message: 'No custom actions' };
+      }
+    
+      async getStatus() {
+        return {
+          code: 200,
+          message: 'OK',
+          result: {
+            status: 'ready'
+          }
+        };
+      }
+    }
+    
+    export default IframeGraphic;`
+      }
+    ];
     if (!directoryHandle) {
       alert('Please select a base folder first.');
       return;
@@ -562,7 +545,7 @@ const FileSave1 = () => {
       alert('Please enter a name for the subfolder.');
       return;
     }
-
+    setIsLoading(true); // Show spinner
     try {
       const subfolderHandle = await directoryHandle.getDirectoryHandle(subfolderName.trim(), { create: true });
       const htmlFolderHandle = await subfolderHandle.getDirectoryHandle('html', { create: true });
@@ -604,16 +587,16 @@ const FileSave1 = () => {
       const txtName = `${subfolderName}.txt`;
 
       const bb =
-      JSON.stringify({
-        pageName: subfolderName + '.txt',
-        pageValue: canvas.toJSON(["id", "class", "selectable"]),
-        animation: "",
-        jsfilename: 'main.js',
-        cssfilename: 'main.css',
-        jsfilename2: 'main2.js',
-        cssfilename2: 'main2.css',
-      }) + "\r\n";
-    // const file1 = new Blob([bb], { type: "text/plain" });
+        JSON.stringify({
+          pageName: subfolderName + '.txt',
+          pageValue: canvas.toJSON(["id", "class", "selectable"]),
+          animation: "",
+          jsfilename: 'main.js',
+          cssfilename: 'main.css',
+          jsfilename2: 'main2.js',
+          cssfilename2: 'main2.css',
+        }) + "\r\n";
+      // const file1 = new Blob([bb], { type: "text/plain" });
 
 
       const txtContent = bb;
@@ -634,7 +617,7 @@ const FileSave1 = () => {
   };
 
   return (
-    <div style={{ fontFamily: 'Arial', padding: '1rem' }}>
+    <div style={{ padding: '1rem' }}>
 
       <button onClick={handleChooseFolder}>Choose Base Folder</button>
       {baseFolderName && <p><strong>Selected Folder:</strong> {baseFolderName}</p>}
@@ -655,7 +638,7 @@ const FileSave1 = () => {
       <br /><br />
       <button onClick={handleCreateFiles}>✅ Create Folder and Files</button>
       {isLoading && <Spinner />}
-     <h3>{note}</h3> 
+      <h3>{note}</h3>
     </div>
   );
 }
