@@ -2574,6 +2574,7 @@ const DrawingController = () => {
     window.open(new URL(aa), "_blank");
   };
 
+  
   const playReactComponenetWithWebSocket = () => {
     const url = clieentPublicFolder() +`/Xyz`;
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] ${url}`);
