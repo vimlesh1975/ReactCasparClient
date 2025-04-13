@@ -1,0 +1,22 @@
+/* html{
+    zoom: 90%;
+
+}
+body{
+background-color: dimgrey;
+
+} */
+
+body {
+    opacity: 0;
+}
+
+text {
+    animation: txtsizeeffect 1s 1s infinite alternate;
+}
+
+/* @keyframes txtsizeeffect {
+    from {
+        transform: scale3d(1, 0.8, 1);
+    }
+} */
