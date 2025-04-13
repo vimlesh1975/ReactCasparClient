@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getGdd, selectAll, deSelectAll } from '../common';
 import { useSelector } from 'react-redux';
+import Spinner from "../spinner/Spinner";
+
 
 var html;
 
@@ -8,6 +10,9 @@ const FileSave1 = () => {
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [baseFolderName, setBaseFolderName] = useState('');
   const [subfolderName, setSubfolderName] = useState('');
+  const [note, setNote] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+  
 
   const [maincss, setMaincss] = useState('');
   const [main2css, setMain2css] = useState('');
@@ -548,6 +553,7 @@ const FileSave1 = () => {
     }
   };
   const handleCreateFiles = async () => {
+    setIsLoading(true); // Show spinner
     if (!directoryHandle) {
       alert('Please select a base folder first.');
       return;
@@ -617,10 +623,13 @@ const FileSave1 = () => {
       await txtWritable.close();
       console.log(`Overwritten: ${txtName}`);
 
-      alert(`✅ Files created in "${subfolderName}"!`);
+      setIsLoading(false); // Show spinner
+      setNote(`✅ Files created in "${subfolderName}"!`)
     } catch (error) {
       console.error('❌ Error creating files:', error);
-      alert('An error occurred. Check the console for details.');
+      // alert('An error occurred. Check the console for details.');
+      setIsLoading(false); // Show spinner
+      setNote(`❌ Error creating files:, ${error}`)
     }
   };
 
@@ -645,6 +654,8 @@ const FileSave1 = () => {
 
       <br /><br />
       <button onClick={handleCreateFiles}>✅ Create Folder and Files</button>
+      {isLoading && <Spinner />}
+     <h3>{note}</h3> 
     </div>
   );
 }
