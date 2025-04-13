@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { getGdd } from '../common';
+import { useSelector } from 'react-redux';
+var html;
 
-const  FileSave1=() =>{
+const FileSave1 = () => {
   const [directoryHandle, setDirectoryHandle] = useState(null);
   const [baseFolderName, setBaseFolderName] = useState('');
 
@@ -11,6 +14,12 @@ const  FileSave1=() =>{
   const [mainjs, setMainjs] = useState('');
   const [main2js, setMain2js] = useState('');
   const [gsapjs, setGsapjs] = useState('');
+  // const [htmlString1, setHtmlString1] = useState('hello');
+  const canvas = useSelector(state => state.canvasReducer.canvas);
+
+  const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
+
+
 
 
   useEffect(() => {
@@ -197,6 +206,335 @@ const  FileSave1=() =>{
   export default IframeGraphic;`
     }
   ];
+  const setHtmlString = () => {
+    const gdd = getGdd(canvas, "RCC");
+     html = `<!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Document</title>
+                            ${gdd}
+                            <link rel="stylesheet" href="main.css">
+                                <link rel="stylesheet" href="main2.css">
+                                </head>
+                                <body>
+                                    <script>
+                                        document.body.addEventListener('keypress', function(e) {
+                if(e.key.toUpperCase() === "S") {stop(); }
+              });
+                                        if (screen.colorDepth === 0) {
+                var css = '[id^=ccg] {display: none; }',
+                                        head = document.head || document.getElementsByTagName('head')[0],
+                                        style = document.createElement('style');
+                                        head.appendChild(style);
+                                        style.type = 'text/css';
+                                        if (style.styleSheet) {
+                                            // This is required for IE8 and below.
+                                            style.styleSheet.cssText = css;
+                } else {
+                                            style.appendChild(document.createTextNode(css));
+                }
+            }
+
+                                        const elementToObserve = document.body;
+            const observer = new MutationObserver(() => {
+                                            document.body.style.margin = '0';
+                                        document.body.style.padding = '0';
+                                        document.body.style.overflow = 'hidden';
+                                        var aa = document.getElementsByTagName('div')[0];
+                                        aa.style.zoom=(${currentscreenSize * 100
+      }/1920)+'%';
+                                        observer.disconnect();
+            });
+                                        observer.observe(elementToObserve, {subtree: true, childList: true })
+
+                                        var dataCaspar = { };
+
+                                        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+                                    // Parse templateData into an XML object
+                                    function parseCaspar(str) {
+            var xmlDoc;
+                                    if (window.DOMParser) {
+                                        parser = new DOMParser();
+                                    xmlDoc = parser.parseFromString(str, "text/xml");
+            }
+                                    dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+            }
+
+
+                                    // Make the XML templateData message into a more simple key:value object
+                                    function XML2JSON(node) {
+            var data = { }; // resulting object
+                                    for (k = 0; k < node.length; k++) {
+            var idCaspar = node[k].getAttribute("id");
+                                    var valCaspar = node[k].childNodes[0].getAttribute("value");
+                                    if (idCaspar != undefined && valCaspar != undefined) {
+                                        data[idCaspar] = valCaspar;
+            };
+            }
+                                    return data;
+            }
+
+                                    // Main function to insert data
+                                    function dataInsert(dataCaspar) {
+                                      for (var idCaspar in dataCaspar) {
+                                          var idTemplate = document.getElementById(idCaspar);
+                                          if (idTemplate != undefined) {
+                                              var idtext = idTemplate.getElementsByTagName('text')[0];
+                                              var idimage = idTemplate.getElementsByTagName('image')[0];
+                          
+                                              if (idtext != undefined) {
+                                                  const lines =idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+                                                  if (lines === '1') {
+                                                      idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                                                      idTemplate.style.display = "block";
+                                                      if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                                                          var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                                                          var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                          var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                                                          if (textalign1 == 'center') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                                                          }
+                                                          if (textalign1 == 'right') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                                                          }
+                                                          idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                                                          do {
+                                                              var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                                                              var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                                                          } while (width2 > width1);
+                                                      }
+                                                  }
+                                                  else {
+                                                    idTemplate.style.display = "block";
+                                                    var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = 1;
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
+                                                    var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                                                    var initialX = existingTspans[0].getAttribute('x');
+                                                    var initialY = existingTspans[0].getAttribute('y');
+                                                    var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                                                    var newData = escapeHtml(dataCaspar[idCaspar]);
+                                                    var dataSegments = newData.split('CRLF');
+                                                    var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                    var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
+                        
+                                                    function splitTextIntoLines(text, maxWidth) {
+                                                        var words = text.split(' ');
+                                                        var lines = [];
+                                                        var currentLine = '';
+                                                        words.forEach(function (word) {
+                                                            var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                                                            var testWidth = textElement.getSubStringLength(0, testLine.length);
+                        
+                                                            if (testWidth > maxWidth) {
+                                                                lines.push(currentLine);
+                                                                currentLine = word;
+                                                            } else {
+                                                                currentLine = testLine;
+                                                            }
+                                                        });
+                                                        lines.push(currentLine);
+                                                        return lines;
+                                                    }
+                        
+                                                    var tspans = [];
+                                                    var previoustxtlines = 0;
+                        
+                                                    dataSegments.forEach(function (segment, i) {
+                                                        if (segment.trim() === '') {
+                                                          segment=' ';
+                                                        }
+                                                        textElement.innerHTML = segment;
+                                                        var txtlines = splitTextIntoLines(segment, maxWidth);
+                                                        txtlines.forEach(function (line, j) {
+                                                            var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                            tspan.textContent = line;
+                                                            tspan.setAttribute('x', initialX);
+                                                            tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                                                            tspans.push(tspan);
+                                                        });
+                                                        previoustxtlines += txtlines.length;
+                                                    });
+                                                    textElement.innerHTML = '';
+                                                    if (tspans.length === 1) {
+                                                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                        tspan.textContent = ' ';
+                                                        tspan.setAttribute('x', initialX);
+                                                        tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                                                        tspans.push(tspan);
+                                                    }
+                        
+                                                    tspans.forEach(function (tspan) {
+                                                        textElement.appendChild(tspan);
+                                                    });
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = (maxHeight / textElement.getBBox().height);
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+                                                  }
+                                                  
+                                              }
+                          
+                                              else if (idimage != undefined) {
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                                  idTemplate.style.display = "block";
+                                              }
+                                          }
+                                      }
+                                  }
+
+                                    // Call for a update of data from CasparCG client
+                                    function update(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
+            }
+
+                                    // insert data from CasparCg client when activated
+                                    function play(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
+            // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
+            }
+                                    function stop() {
+                                        document.body.innerHTML = '' ;
+            }
+                                    function updatestring(str1, str2) {
+            var idTemplate = document.getElementById(str1);
+
+            const lines = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+            if (lines === '1') {
+                idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                idTemplate.style.display = "block";
+                if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                    if (textalign1 == 'center') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                    }
+                    if (textalign1 == 'right') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    }
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    do {
+                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
+                }
+            }
+            else {
+                idTemplate.style.display = "block";
+                var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = 1;
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
+                var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                var initialX = existingTspans[0].getAttribute('x');
+                var initialY = existingTspans[0].getAttribute('y');
+                var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                var newData = str2;
+                var dataSegments = newData.split('CRLF');
+                var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
+
+                function splitTextIntoLines(text, maxWidth) {
+                    var words = text.split(' ');
+                    var lines = [];
+                    var currentLine = '';
+                    words.forEach(function (word) {
+                        var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                        var testWidth = textElement.getSubStringLength(0, testLine.length);
+
+                        if (testWidth > maxWidth) {
+                            lines.push(currentLine);
+                            currentLine = word;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    lines.push(currentLine);
+                    return lines;
+                }
+
+                var tspans = [];
+                var previoustxtlines = 0;
+
+                dataSegments.forEach(function (segment, i) {
+                    if (segment.trim() === '') {
+                        segment = ' ';
+                    }
+                    textElement.innerHTML = segment;
+                    var txtlines = splitTextIntoLines(segment, maxWidth);
+                    txtlines.forEach(function (line, j) {
+                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = line;
+                        tspan.setAttribute('x', initialX);
+                        tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                        tspans.push(tspan);
+                    });
+                    previoustxtlines += txtlines.length;
+                });
+                textElement.innerHTML = '';
+                if (tspans.length === 1) {
+                    var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = ' ';
+                    tspan.setAttribute('x', initialX);
+                    tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                    tspans.push(tspan);
+                }
+
+                tspans.forEach(function (tspan) {
+                    textElement.appendChild(tspan);
+                });
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = (maxHeight / textElement.getBBox().height);
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+            }
+         
+        }
+                                    function updateimage(str1, str2) {
+                                        document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+                                    document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                    document.getElementById(str1).style.display = "block";
+            }
+
+                                </script>
+                                <div> ${canvas.toSVG([
+        "id",
+        "class",
+        "selectable",
+      ])}  </div>
+                            </body>
+                            <script src="main.js"></script>
+                            <script src="main2.js"></script>
+                        </html>`;
+  };
+
 
   const handleChooseFolder = async () => {
     try {
@@ -246,7 +584,10 @@ const  FileSave1=() =>{
 
       // HTML and TXT files
       const htmlName = `${subfolderName}.html`;
-      const htmlContent = `hello world`;
+       setHtmlString();
+       console.log(html);
+      const htmlContent = html;
+      // const htmlContent = 'htmlString1';
       const htmlHandle = await htmlFolderHandle.getFileHandle(htmlName, { create: true });
       const htmlWritable = await htmlHandle.createWritable();
       await htmlWritable.write(htmlContent);
@@ -286,9 +627,6 @@ const  FileSave1=() =>{
           />
         </label>
       </div>
-
-      <h3 style={{ marginTop: '1.5rem' }}>📄 Files to be Created:</h3>
-      <p>main.js, main2.js, main.css, main2.css will be created with no content.</p>
 
       <br /><br />
       <button onClick={handleCreateFiles}>✅ Create Folder and Files</button>
