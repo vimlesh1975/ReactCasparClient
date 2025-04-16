@@ -31,23 +31,24 @@ const FileSave1 = () => {
 
     const fetchFiles = async () => {
       try {
-        res = await fetch('ReactCasparClient/files/main.css');
+        res = await fetch(`${process.env.PUBLIC_URL}/files/main.css`);
         text = await res.text();
         setMaincss(text);
 
-        res = await fetch('ReactCasparClient/files/main2.css');
+        res = await fetch(`${process.env.PUBLIC_URL}/files/main2.css`);
         text = await res.text();
         setMain2css(text);
 
-        res = await fetch('ReactCasparClient/files/main.js');
+        res = await fetch(`${process.env.PUBLIC_URL}/files/main.js`);
         text = await res.text();
         setMainjs(text);
+        console.log(text)
 
-        res = await fetch('ReactCasparClient/files/main2.js');
+        res = await fetch(`${process.env.PUBLIC_URL}/files/main2.js`);
         text = await res.text();
         setMain2js(text);
 
-        res = await fetch('ReactCasparClient/files/gsap.min.js');
+        res = await fetch(`${process.env.PUBLIC_URL}/files/gsap.min.js`);
         text = await res.text();
         setGsapjs(text);
 
@@ -410,7 +411,7 @@ const FileSave1 = () => {
     gdd = getGdd(canvas, "RCC");
     GddProperties = getGddProperties(canvas);
     console.log(GddProperties)
-
+    console.log(mainjs);
     const fileList = [
       {
         name: 'main.js',
