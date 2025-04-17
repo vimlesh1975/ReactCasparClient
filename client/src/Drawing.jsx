@@ -3,6 +3,7 @@ import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
 import * as fabric from 'fabric';
 
+import useCanvasStore from './store/zustandStore';
 import {
   saveCanvasState,
   Uploaddropedfile,
@@ -92,6 +93,15 @@ const Drawing = ({ canvasOutput }) => {
 
   const showId = useSelector((state) => state.showIdReducer.showId);
   const showIdRef = useRef(showId);
+
+  const setActiveText = useCanvasStore((state) => state.setActiveText);
+  const transscript = useCanvasStore((state) => state.transscript);
+  // const setTranscript = useCanvasStore((state) => state.setTranscript);
+  const replace = useCanvasStore((state) => state.replace);
+  const setReplace = useCanvasStore((state) => state.setReplace);
+  // const setResetTranscript = useCanvasStore((state) => state.setResetTranscript);
+  const resetTranscript = useCanvasStore((state) => state.resetTranscript);
+
   window.editor = editor;
   function cancelZoomAndPan(canvas) {
     canvas.off("mouse:wheel");
@@ -101,8 +111,32 @@ const Drawing = ({ canvasOutput }) => {
   }
   function xyz(canvas) {
     canvas.on({
-      "selection:updated": window.getvalues,
-      "selection:created": window.getvalues,
+      "selection:updated": (e) => {
+        window.getvalues();
+        if (e.selected[0]?.type === 'textbox') {
+          setActiveText(e.selected[0].text);
+          console.log(resetTranscript);
+
+          if (resetTranscript) {
+            resetTranscript();
+            console.log('called');
+          } // ✅ Safer call
+        }
+      },
+      "selection:created": (e) => {
+        window.getvalues();
+        if (e.selected[0]?.type === 'textbox') {
+          setActiveText(e.selected[0].text);
+          console.log(resetTranscript);
+          if (resetTranscript) {
+            resetTranscript();
+            console.log('called');
+          }
+        }
+      },
+      "selection:cleared": () => {
+        setActiveText('');
+      },
       "object:modified": () => {
         window.getvalues();
         saveCanvasState(canvas);
@@ -265,6 +299,24 @@ const Drawing = ({ canvasOutput }) => {
     });
 
   };
+
+
+  useEffect(() => {
+    if (!window.editor?.canvas) return;
+
+    const activeObject = window.editor?.canvas.getActiveObject();
+    if (activeObject && activeObject.type === 'textbox') {
+      if (replace) {
+        activeObject.set({ text: transscript || '' });
+        setReplace(false);
+      } else {
+        activeObject.set({ text: (activeObject.text || '') + (transscript || '') });
+      }
+      setActiveText(activeObject.text); // Update the store
+      window.editor?.canvas.requestRenderAll();
+    }
+  }, [transscript, setActiveText, setReplace, replace]);
+
 
   return (
     <div>

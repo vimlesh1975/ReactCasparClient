@@ -42,7 +42,7 @@ const FileSave1 = () => {
         res = await fetch(`${process.env.PUBLIC_URL}/files/main.js`);
         text = await res.text();
         setMainjs(text);
-        console.log(text)
+        // console.log(text)
 
         res = await fetch(`${process.env.PUBLIC_URL}/files/main2.js`);
         text = await res.text();
@@ -410,8 +410,8 @@ const FileSave1 = () => {
 
     gdd = getGdd(canvas, "RCC");
     GddProperties = getGddProperties(canvas);
-    console.log(GddProperties)
-    console.log(mainjs);
+    // console.log(GddProperties)
+    // console.log(mainjs);
     const fileList = [
       {
         name: 'main.js',
