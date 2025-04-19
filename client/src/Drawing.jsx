@@ -96,8 +96,6 @@ const Drawing = ({ canvasOutput }) => {
 
   const setActiveText = useCanvasStore((state) => state.setActiveText);
   const transscript = useCanvasStore((state) => state.transscript);
-  const replace = useCanvasStore((state) => state.replace);
-  const setReplace = useCanvasStore((state) => state.setReplace);
   const resetTranscript = useCanvasStore((state) => state.resetTranscript);
 
   window.editor = editor;
@@ -117,7 +115,6 @@ const Drawing = ({ canvasOutput }) => {
 
           if (resetTranscript) {
             resetTranscript();
-            console.log('called');
           } // ✅ Safer call
         }
       },
@@ -125,10 +122,8 @@ const Drawing = ({ canvasOutput }) => {
         window.getvalues();
         if (e.selected[0]?.type === 'textbox') {
           setActiveText(e.selected[0].text);
-          console.log(resetTranscript);
           if (resetTranscript) {
             resetTranscript();
-            console.log('called');
           }
         }
       },
@@ -236,7 +231,8 @@ const Drawing = ({ canvasOutput }) => {
     return () => {
       clearTimeout(timeoutId2);
     };
-  })
+    // eslint-disable-next-line
+  }, [])
 
   useEffect(() => {
     const initCanvas = () => {
@@ -307,22 +303,24 @@ const Drawing = ({ canvasOutput }) => {
 
   };
 
-
   useEffect(() => {
     if (!window.editor?.canvas) return;
 
     const activeObject = window.editor?.canvas.getActiveObject();
     if (activeObject && activeObject.type === 'textbox') {
-      if (replace) {
-        activeObject.set({ text: transscript || '' });
-        setReplace(false);
+      console.log(transscript);
+      if (transscript.replace) {
+        console.log('replaced');
+        activeObject.set({ text: transscript.text || '' });
       } else {
-        activeObject.set({ text: (activeObject.text || '') + (transscript || '') });
+        console.log('addeed');
+        activeObject.set({ text: (activeObject.text || '') + ' ' + (transscript.text || '') });
       }
       setActiveText(activeObject.text); // Update the store
       window.editor?.canvas.requestRenderAll();
     }
-  }, [transscript, setActiveText, setReplace, replace]);
+  }, [transscript, setActiveText]);
+
 
 
   return (

@@ -4,16 +4,10 @@ const useCanvasStore = create((set) => ({
     activeText: '',
     setActiveText: (text) => set({ activeText: text }),
 
-    transscript: '',
-    setTranscript: (text) => set({ transscript: text }),
-    onResetTranscript: () => set({ transscript: '' }),
-
+    transscript: { text: '', replace: false },
+    setTranscript: ({ text, replace }) => set({ transscript: { text, replace } }),
     resetTranscript: null,
     setResetTranscript: (fn) => set({ resetTranscript: fn }),
-
-    replace: false,
-    setReplace: (value) => set({ replace: value }),
-
 
 }));
 

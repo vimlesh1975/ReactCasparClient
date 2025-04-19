@@ -85,10 +85,7 @@ function SpeechToText() {
     const [loading, setLoading] = useState(false);
     const activeText = useCanvasStore((state) => state.activeText);
     const setTranscript = useCanvasStore((state) => state.setTranscript);
-    const setReplace = useCanvasStore((state) => state.setReplace);
     const setResetTranscript = useCanvasStore((state) => state.setResetTranscript);
-
-
 
     useEffect(() => {
         // Store the function in Zustand
@@ -105,16 +102,15 @@ function SpeechToText() {
         debounceTimer.current = setTimeout(() => {
             if (directtoScript) {
                 const aa = transcript.slice(lastTranscript.length);
-                setTranscript(aa);
+                setTranscript({ text: aa, replace: false });
                 setLastTranscript(transcript);
             }
         }, 500);
         return () => clearTimeout(debounceTimer.current);
-    }, [transcript, lastTranscript, directtoScript, setTranscript, setReplace]);
+    }, [transcript, lastTranscript, directtoScript, setTranscript]);
 
 
     const handleTranslate = useCallback(async () => {
-        // const text = await requestParentText(); // Wait for responseclg
         const text = activeText; // Wait for responseclg
         console.log(text)
         if (!text || !targetLanguage) {
@@ -123,7 +119,7 @@ function SpeechToText() {
         }
         setLoading(true);
         try {
-            const response = await fetch('/api/translate', {
+            const response = await fetch('https://localhost:9000/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, targetLanguage }),
@@ -131,10 +127,8 @@ function SpeechToText() {
 
             if (response.ok) {
                 const { translatedText } = await response.json();
-                window.parent.postMessage({ replace: true, value: translatedText }, (window.location.origin).split(':4000')[0]);
-                setTranscript(translatedText);
+                setTranscript({ text: translatedText, replace: true });
                 console.log(translatedText)
-                setReplace(true);
             } else {
                 alert('Translation failed. Please try again.');
             }
@@ -144,7 +138,7 @@ function SpeechToText() {
         } finally {
             setLoading(false);
         }
-    }, [targetLanguage, activeText, setTranscript, setReplace]); // Add all dependencies
+    }, [targetLanguage, activeText, setTranscript]); // Add all dependencies
 
     return (<div style={{ border: '1px solid red', minHeight: 57 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', width: 875, maxWidth: 875 }}>

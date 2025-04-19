@@ -3,8 +3,6 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from "react";
 import { changeCurrentColor, changeBackGroundColor, changeStrokeCurrentColor, changeShadowCurrentColor, moveElement, deleteItemfromtimeline } from './common'
-// import ComSpeechRecognition from "./ComSpeechRecognition";
-import SpeechToText from "./SpeechToText";
 const LayersAll = ({ compact }) => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
     const layers = useSelector(state => state.canvasReducer.canvas?.getObjects());
@@ -189,8 +187,6 @@ const LayersAll = ({ compact }) => {
 
 
         </div>
-        {/* <ComSpeechRecognition /> */}
-        <SpeechToText />
 
     </div>)
 }
