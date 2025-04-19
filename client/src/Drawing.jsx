@@ -111,7 +111,7 @@ const Drawing = ({ canvasOutput }) => {
         window.getvalues();
         if (e.selected[0]?.type === 'textbox') {
           setActiveText(e.selected[0].text);
-          console.log(resetTranscript);
+          // console.log(resetTranscript);
 
           if (resetTranscript) {
             resetTranscript();

@@ -791,7 +791,7 @@ app.get("/show_runorderremotion", async (req, res) => {
 const { TranslationServiceClient } = require('@google-cloud/translate');
 const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
 
-const client = new TranslationServiceClient({
+const clientTranslation = new TranslationServiceClient({
   credentials: credentialsforgooglecloud,
 });
 
@@ -834,7 +834,7 @@ app.post('/translate', async (req, res) => {
 
     const translatedChunks = await Promise.all(
       textChunks.map(async (chunk) => {
-        const [response] = await client.translateText({
+        const [response] = await clientTranslation.translateText({
           contents: [chunk],
           targetLanguageCode: targetLanguage,
           parent,

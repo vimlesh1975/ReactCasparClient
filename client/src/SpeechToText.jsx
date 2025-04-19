@@ -89,7 +89,7 @@ function SpeechToText() {
 
     useEffect(() => {
         // Store the function in Zustand
-        console.log('resetTranscript stored in Zustand');
+        // console.log('resetTranscript stored in Zustand');
         setResetTranscript(() => resetTranscript());
     }, [resetTranscript, setResetTranscript]);
 
@@ -119,7 +119,7 @@ function SpeechToText() {
         }
         setLoading(true);
         try {
-            const response = await fetch('https://localhost:9000/translate', {
+            const response = await fetch('https://octopus-app-gzws3.ondigitalocean.app/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, targetLanguage }),
