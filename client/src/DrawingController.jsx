@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import SpeechToText from "./SpeechToText.jsx";
 import * as fabric from "fabric";
 import { debounce } from "lodash";
-import {clieentPublicFolder,
+import {
+  clieentPublicFolder,
   convertRgbaToHex,
   convertGradientToPercentage,
   normalizeHexFillColor,
@@ -2574,9 +2576,9 @@ const DrawingController = () => {
     window.open(new URL(aa), "_blank");
   };
 
-  
+
   const playReactComponenetWithWebSocket = () => {
-    const url = clieentPublicFolder() +`/Xyz`;
+    const url = clieentPublicFolder() + `/Xyz`;
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] ${url}`);
     const script = `
          document.getElementById('divid_${templateLayers.reactComponent}')?.remove();
@@ -2602,12 +2604,13 @@ const DrawingController = () => {
   };
 
 
-  return (
+  return (<div>
+    {isLoading && <Spinner />}
     <div style={{ display: "flex" }}>
       <div
         style={{
           width: 495,
-          height: 835,
+          height: 780,
           backgroundColor: "#f4f0e7",
           overflow: "scroll",
         }}
@@ -4121,7 +4124,7 @@ const DrawingController = () => {
           </div>
         </div>
       </div>
-      <div style={{ width: 380, backgroundColor: "#ddf0db" }}>
+      <div style={{ height: 780, width: 380, backgroundColor: "#ddf0db" }}>
         <Tabs
           selectedTabClassName="selectedTab"
           forceRenderTabPanel={true}
@@ -4151,9 +4154,10 @@ const DrawingController = () => {
           </TabPanel>
         </Tabs>
       </div>
-      {isLoading && <Spinner />}
     </div>
-  );
+    <SpeechToText />
+  </div>);
+
 };
 
 export default DrawingController;

@@ -96,10 +96,8 @@ const Drawing = ({ canvasOutput }) => {
 
   const setActiveText = useCanvasStore((state) => state.setActiveText);
   const transscript = useCanvasStore((state) => state.transscript);
-  // const setTranscript = useCanvasStore((state) => state.setTranscript);
   const replace = useCanvasStore((state) => state.replace);
   const setReplace = useCanvasStore((state) => state.setReplace);
-  // const setResetTranscript = useCanvasStore((state) => state.setResetTranscript);
   const resetTranscript = useCanvasStore((state) => state.resetTranscript);
 
   window.editor = editor;
@@ -167,8 +165,6 @@ const Drawing = ({ canvasOutput }) => {
     mousedownandmousemoveevent(canvas);
 
     canvas.on("mouse:up", function (opt) {
-      // on mouse up we want to recalculate new interaction
-      // for all objects, so we call setViewportTransform
       this.setViewportTransform(this.viewportTransform);
       this.isDragging = false;
       this.selection = true;
@@ -232,13 +228,24 @@ const Drawing = ({ canvasOutput }) => {
   }, [showId]);
 
   useEffect(() => {
+    const aaa = () => {
+      xyz(window.editor.canvas);
+      console.log('xyz set')
+    }
+    const timeoutId2 = setTimeout(aaa, 5000);
+    return () => {
+      clearTimeout(timeoutId2);
+    };
+  })
+
+  useEffect(() => {
     const initCanvas = () => {
       const { canvas } = window.editor;
       canvas.extraProps = ["id", "selectable", "class"];
       extendproperty();
       setZoomAndPan(canvas);
       canvas.preserveObjectStacking = true;
-      xyz(canvas);
+      // xyz(canvas);
       ddd(canvas);
     };
 

@@ -93,7 +93,7 @@ function SpeechToText() {
     useEffect(() => {
         // Store the function in Zustand
         console.log('resetTranscript stored in Zustand');
-        setResetTranscript(() => resetTranscript);
+        setResetTranscript(() => resetTranscript());
     }, [resetTranscript, setResetTranscript]);
 
     useEffect(() => {
@@ -146,8 +146,8 @@ function SpeechToText() {
         }
     }, [targetLanguage, activeText, setTranscript, setReplace]); // Add all dependencies
 
-    return (<div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: 940 }}>
+    return (<div style={{ border: '1px solid red', minHeight: 57 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', width: 875, maxWidth: 875 }}>
             <div >
                 <b>Languages:</b> <input style={{ width: 70 }} value={currentLanguage} onChange={e => {
                     setcurrentLanguage(e.target.value)
@@ -181,7 +181,7 @@ function SpeechToText() {
 
             </div>
             <div>
-                <span> Put to Script: </span> <input type="checkbox" checked={directtoScript} onChange={e => {
+                <span> Put to Text: </span> <input type="checkbox" checked={directtoScript} onChange={e => {
                     setDirecttoScript(val => !val);
                     resetTranscript();
                 }} />
@@ -227,7 +227,8 @@ function SpeechToText() {
             </div>
         </div>
         <div>
-            <p>Transcript: {transcript}</p>{activeText}
+            <span>Transcript: {transcript}</span>****
+            <span>activeText: {activeText}</span>
         </div>
     </div>);
 }
