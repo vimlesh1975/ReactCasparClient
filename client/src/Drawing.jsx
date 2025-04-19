@@ -3,6 +3,7 @@ import ContextMenu from "./ContextMenu";
 import { useState, useEffect, useRef } from "react";
 import * as fabric from 'fabric';
 
+import useCanvasStore from './store/zustandStore';
 import {
   saveCanvasState,
   Uploaddropedfile,
@@ -92,6 +93,11 @@ const Drawing = ({ canvasOutput }) => {
 
   const showId = useSelector((state) => state.showIdReducer.showId);
   const showIdRef = useRef(showId);
+
+  const setActiveText = useCanvasStore((state) => state.setActiveText);
+  const transscript = useCanvasStore((state) => state.transscript);
+  const resetTranscript = useCanvasStore((state) => state.resetTranscript);
+
   window.editor = editor;
   function cancelZoomAndPan(canvas) {
     canvas.off("mouse:wheel");
@@ -101,8 +107,29 @@ const Drawing = ({ canvasOutput }) => {
   }
   function xyz(canvas) {
     canvas.on({
-      "selection:updated": window.getvalues,
-      "selection:created": window.getvalues,
+      "selection:updated": (e) => {
+        window.getvalues();
+        if (e.selected[0]?.type === 'textbox') {
+          setActiveText(e.selected[0].text);
+          console.log(resetTranscript);
+
+          if (resetTranscript) {
+            resetTranscript();
+          } // ✅ Safer call
+        }
+      },
+      "selection:created": (e) => {
+        window.getvalues();
+        if (e.selected[0]?.type === 'textbox') {
+          setActiveText(e.selected[0].text);
+          if (resetTranscript) {
+            resetTranscript();
+          }
+        }
+      },
+      "selection:cleared": () => {
+        setActiveText('');
+      },
       "object:modified": () => {
         window.getvalues();
         saveCanvasState(canvas);
@@ -133,8 +160,6 @@ const Drawing = ({ canvasOutput }) => {
     mousedownandmousemoveevent(canvas);
 
     canvas.on("mouse:up", function (opt) {
-      // on mouse up we want to recalculate new interaction
-      // for all objects, so we call setViewportTransform
       this.setViewportTransform(this.viewportTransform);
       this.isDragging = false;
       this.selection = true;
@@ -198,13 +223,25 @@ const Drawing = ({ canvasOutput }) => {
   }, [showId]);
 
   useEffect(() => {
+    const aaa = () => {
+      xyz(window.editor.canvas);
+      console.log('xyz set')
+    }
+    const timeoutId2 = setTimeout(aaa, 5000);
+    return () => {
+      clearTimeout(timeoutId2);
+    };
+    // eslint-disable-next-line
+  }, [])
+
+  useEffect(() => {
     const initCanvas = () => {
       const { canvas } = window.editor;
       canvas.extraProps = ["id", "selectable", "class"];
       extendproperty();
       setZoomAndPan(canvas);
       canvas.preserveObjectStacking = true;
-      xyz(canvas);
+      // xyz(canvas);
       ddd(canvas);
     };
 
@@ -265,6 +302,26 @@ const Drawing = ({ canvasOutput }) => {
     });
 
   };
+
+  useEffect(() => {
+    if (!window.editor?.canvas) return;
+
+    const activeObject = window.editor?.canvas.getActiveObject();
+    if (activeObject && activeObject.type === 'textbox') {
+      console.log(transscript);
+      if (transscript.replace) {
+        console.log('replaced');
+        activeObject.set({ text: transscript.text || '' });
+      } else {
+        console.log('addeed');
+        activeObject.set({ text: (activeObject.text || '') + ' ' + (transscript.text || '') });
+      }
+      setActiveText(activeObject.text); // Update the store
+      window.editor?.canvas.requestRenderAll();
+    }
+  }, [transscript, setActiveText]);
+
+
 
   return (
     <div>

@@ -5,6 +5,7 @@
     "main": "main.js",
     "dependencies": {
         "@google-cloud/text-to-speech": "^5.6.0",
+        "@google-cloud/translate": "^9.0.1",
         "casparcg-connection": "^5.1.0",
         "cors": "^2.8.5",
         "directory-tree": "^2.2.6",

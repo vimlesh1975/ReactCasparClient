@@ -37,9 +37,7 @@ import JsonReader from "./JsonReader.jsx";
 // import UdpClock from './UdpClock';
 
 import ColorGradient2 from "./ColorGradient2.jsx";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
+
 // import Threejs from "./Threejs.jsx";
 import Crop from "./Crop";
 import CodeImport from "./CodeImport.jsx";
@@ -60,7 +58,6 @@ import {
   stopGraphics,
   templateLayers,
   clearHtml,
-  languages,
   buildDate,
   startGraphics
 } from "./common.js";
@@ -92,13 +89,6 @@ const App = () => {
   );
   const [solidcaption1, setSolidcaption1] = useState("");
   const [tabindex, settabindex] = useState(0);
-  const continuous1 = useSelector(
-    (state) => state.speechRecognitionReducer.continuous1
-  );
-  const currentLanguage = useSelector(
-    (state) => state.speechRecognitionReducer.currentLanguage
-  );
-  const { listening } = useSpeechRecognition();
 
   const [serverAlive, setServerAlive] = useState(false);
 
@@ -404,52 +394,10 @@ const App = () => {
           >
             <FaStop />
           </button>
-          <span> {solidcaption1} </span> <b>Languages:</b>{" "}
-          <input
-            style={{ width: 70 }}
-            value={currentLanguage}
-            onChange={(e) => {
-              dispatch({
-                type: "CHANGE_CURRENTLANGUAGE",
-                payload: e.target.value,
-              });
-              if (continuous1 && listening) {
-                SpeechRecognition.startListening({
-                  continuous: continuous1,
-                  language: e.target.value,
-                });
-              }
-            }}
-          />
-          {/* </div>
-      <div> */}
-          <select
-            style={{ width: 70 }}
-            value={currentLanguage}
-            onChange={(e) => {
-              dispatch({
-                type: "CHANGE_CURRENTLANGUAGE",
-                payload: e.target.value,
-              });
+          <span> {solidcaption1} </span>
 
-              if (continuous1 && listening) {
-                SpeechRecognition.startListening({
-                  continuous: continuous1,
-                  language: e.target.value,
-                });
-              }
-            }}
-          >
-            {languages
-              .filter((value, index, self) => {
-                return self.indexOf(value) === index;
-              })
-              .map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-          </select>
+
+
         </div>
         <div>
           Size:{" "}
@@ -569,7 +517,7 @@ const App = () => {
               <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab className="tabHidden">CodeImport</Tab>
+              <Tab className="tabHidden">Code import</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 
@@ -692,6 +640,7 @@ const App = () => {
               <Crop />
             </TabPanel>
             <TabPanel>
+              {/* <SpeechToText /> */}
               <CodeImport />
             </TabPanel>
             <TabPanel>
