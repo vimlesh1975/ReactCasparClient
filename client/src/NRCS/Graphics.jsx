@@ -87,7 +87,7 @@ const Graphics = () => {
   });
 
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
-  const [showdateandTime, setShowdateandTime] = useState(true);
+  const [showdateandTime, setShowdateandTime] = useState(false);
   const [ltr, setLtr] = useState(true);
 
   const readFile = async (handle) => {
@@ -593,9 +593,9 @@ const Graphics = () => {
       else if (slugs[currentSlug].MediaInsert === 'Visuals/CG') {
         cgValue = 'Visuals';
       }
-      
+
       else if (slugs[currentSlug].MediaInsert.includes("CG")) {
-        cgValue = (graphics.length===1)? null:`${graphics.length - 1} CG`;
+        cgValue = (graphics.length === 1) ? null : `${graphics.length - 1} CG`;
       }
       else {
         return;
@@ -641,7 +641,7 @@ const Graphics = () => {
 
   const deleteGraphic = async (GraphicsID) => {
     // if (graphics.length === 1) {
-      await updateCGEntry(true);
+    await updateCGEntry(true);
     // }
     const newGraphics = graphics.filter((val) => val.GraphicsID !== GraphicsID);
     const reorderedItemsWithNewOrder = newGraphics.map((item, index) => ({
@@ -1581,6 +1581,30 @@ const Graphics = () => {
                     </thead>
                     <tbody>
                       <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Date and Time</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopDateTimeSwitcher}>Stop</button>
+
+                          <div style={{ border: '1px solid red', margin: 5 }}>
+                            <div>
+                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yDateTimeSwitcher} onChange={e => {
+                                setYDateTimeSwitcher(e.target.value);
+                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${e.target.value} 0.97 1`);
+                                const scriptmixer = `
+                                const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
+                                element.style.transformOrigin = 'top left';
+                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
+                                `
+                                executeScript(`${scriptmixer}`)
+                              }
+                              } />
+                            </div>
+                          </div>
+
+                        </td>
+                      </tr>
+                      <tr>
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
                           Scroll
                           <br />
@@ -1698,7 +1722,7 @@ const Graphics = () => {
                       </tr>
 
                       <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>BreakingNews Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Lower Third  <br />Breaking News</td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playBreakingNews} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopBreakingNews}>Stop</button>
@@ -1725,7 +1749,15 @@ const Graphics = () => {
                       </tr>
 
                       <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update Lower Third</td>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>Full Pag<br />Breaking News</td>
+                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
+                          <button onClick={stopFullPageBreakingNews}>Stop</button>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>News Update</td>
                         <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                           <button onClick={playNewsUpdate} style={{ marginRight: '8px' }}>Play</button>
                           <button onClick={stopNewsUpdate}>Stop</button>
@@ -1751,10 +1783,11 @@ const Graphics = () => {
 
                       <tr>
                         <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>
-                          Twoliner
+                          Two Liner
                           <br />
-
+                          Header: <br />
                           <label>
+
                             <input
                               type="radio"
                               value={true}
@@ -1796,37 +1829,6 @@ const Graphics = () => {
                             </div>
                           </div>
 
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>DateTimeSwitcher</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playDateTimeSwitcher} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopDateTimeSwitcher}>Stop</button>
-
-                          <div style={{ border: '1px solid red', margin: 5 }}>
-                            <div>
-                              <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={yDateTimeSwitcher} onChange={e => {
-                                setYDateTimeSwitcher(e.target.value);
-                                endpoint(`mixer ${window.chNumber}-${templateLayers.nrcsDateTimeSwitcher} fill 0.015 ${e.target.value} 0.97 1`);
-                                const scriptmixer = `
-                                const element = document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}');
-                                element.style.transformOrigin = 'top left';
-                                element.style.transform = \`translate(${0.008 * 1920}px, ${e.target.value * 1080}px) scale(${0.97}, ${1})\`;
-                                `
-                                executeScript(`${scriptmixer}`)
-                              }
-                              } />
-                            </div>
-                          </div>
-
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ border: '1px solid black', padding: '8px', fontWeight: 'bolder' }}>FullPageBreakingNews</td>
-                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                          <button onClick={playFullPageBreakingNews} style={{ marginRight: '8px' }}>Play</button>
-                          <button onClick={stopFullPageBreakingNews}>Stop</button>
                         </td>
                       </tr>
 
