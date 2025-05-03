@@ -8,7 +8,7 @@ const Server = () => {
         };
 
         try {
-            const response = await fetch('https://localhost:9000/api/send-raw-from-client', {
+            const response = await fetch('https://localhost:9000/api/send-raw-from-server', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

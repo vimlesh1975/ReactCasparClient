@@ -5,6 +5,9 @@ const mosID = 'MOS_SERVER_ID';
 const mosDeviceID = 'NEWSROOM_ID';
 const mosPort = 10540;
 
+let connectedClient = null;
+
+
 async function startMosServer() {
     const mosConnection = new MosConnection({
         mosID,
@@ -22,6 +25,7 @@ async function startMosServer() {
 
     mosConnection.onConnection((mosDevice) => {
         console.log('📡 Connected to NRCS:', mosDevice.idPrimary);
+        connectedClient = mosDevice;
         const mosTypes = mosDevice.mosTypes // Could also be retrieved with getMosTypes(strict)
 
         mosDevice.onRequestMachineInfo(async () => {
@@ -46,8 +50,6 @@ async function startMosServer() {
         mosDevice.onMOSObjects(async (objs) => {
             // console.dir(objs, { depth: null });
             console.log('log fro mos server ' + objs[0]?.ID._mosString128);
-
-
             return {
                 ID: objs[0]?.ID,      // Use object ID from first object
                 Rev: 0,               // Revision number (you can adjust if needed)
@@ -87,10 +89,14 @@ async function startMosServer() {
         });
     });
 
+
+
     return mosConnection.init().then(() => {
         console.log(`🚀 MOS Server is running on port ${mosPort}`);
         return mosConnection;
     });
 }
-
-module.exports = startMosServer;
+function getMosClient() {
+    return connectedClient;
+}
+module.exports = { startMosServer, getMosClient };

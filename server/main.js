@@ -858,17 +858,20 @@ app.post('/translate', async (req, res) => {
 
 // code start for MOS
 // const mosServer = require("./mos-server.js")
-const startMosServer = require('./mos-server');
+const { startMosServer, getMosClient } = require('./mos-server');
 
 const { startMosClient, getMosDevice, MosModel, getMosPrimaryConnection } = require('./mos-client');
 
 var mosDevice;
+var mosClient;
 var mosPrimaryConnection; // 👈 global or exported variable
 // Start MOS Server
 startMosServer().then(async () => {
   console.log('✅ MOS Server ready');
   await startMosClient(); // Start the MOS Client
-  mosDevice = getMosDevice();
+  // mosDevice = getMosDevice();
+  // mosClient = getMosClient();
+
   mosPrimaryConnection = getMosPrimaryConnection(); // Get the primary connection reference
   console.log(mosPrimaryConnection)
 });
@@ -900,6 +903,35 @@ app.post('/api/send-raw-from-client', async (req, res) => {
     res.status(500).send('Error sending MOS Object: ' + err.message);
   }
 });
+
+app.post('/api/send-raw-from-server', async (req, res) => {
+  const { clip } = req.body;
+  console.log('from server code')
+  const mosDevice = getMosClient();
+  if (!mosDevice) return res.status(503).send('MOS Device not connected');
+
+  const mosTypes = mosDevice.mosTypes;
+
+  const mosObj = new MosModel.MosObj();
+  mosObj.ID = mosTypes.mosString128.create(clip); // Unique identifier
+  mosObj.Slug = mosTypes.mosString128.create('API Triggered Clip');
+  mosObj.Type = 'VIDEO';
+  mosObj.TimeBase = 25;
+  mosObj.Duration = 1200;
+  mosObj.Status = 'ACTIVE';
+  mosObj.AirStatus = 'READY';
+  mosObj.CreatedBy = mosTypes.mosString128.create('ReactCasparClient');
+  mosObj.Created = mosTypes.mosTime.create(new Date());
+
+  try {
+    mosDevice.sendMOSObject(mosObj);
+    res.send('✅ MOS Object sent');
+  } catch (err) {
+    console.error('❌ Error sending MOS Object:', err);
+    res.status(500).send('Error sending MOS Object: ' + err.message);
+  }
+});
+
 
 
 
