@@ -40,7 +40,8 @@ import ColorGradient2 from "./ColorGradient2.jsx";
 
 // import Threejs from "./Threejs.jsx";
 import Crop from "./Crop";
-import CodeImport from "./CodeImport.jsx";
+// import CodeImport from "./CodeImport.jsx";
+import Mos from "./MOS/Mos.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
 import HtmlOutput from "./HtmlOutput.jsx";
@@ -517,7 +518,7 @@ const App = () => {
               <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab className="tabHidden">Code import</Tab>
+              <Tab className="tabHidden">MOS</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 
@@ -641,7 +642,8 @@ const App = () => {
             </TabPanel>
             <TabPanel>
               {/* <SpeechToText /> */}
-              <CodeImport />
+              {/* <CodeImport /> */}
+              <Mos />
             </TabPanel>
             <TabPanel>
               <Tsparticles1 />
