@@ -931,18 +931,9 @@ app.post('/api/sendDeleteRunningOrder', async (req, res) => {
 
   try {
     const mosTypes = mosDevice.mosTypes
-    const story = {
-      ID: mosTypes.mosString128.create('STORY1'),
-      Slug: mosTypes.mosString128.create('First Story'),
-      Items: [] // Can add IMOSROItem objects here
-    };
-
     // Create the running order
     const runningOrder = {
       ID: mosTypes.mosString128.create('RO1234'),
-      Slug: mosTypes.mosString128.create('Sample Running Order'),
-      DefaultChannel: mosTypes.mosString128.create('A'),
-      Stories: [story]
     };
 
     // Send to client
