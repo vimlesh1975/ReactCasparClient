@@ -56,7 +56,14 @@ async function startMosServer() {
                 Status: 'OK'          // or 'NACK' for negative acknowledgment
             };
         });
-
+        mosDevice.onDeleteRunningOrder(async (RunningOrderID) => {
+            console.log('delete running order', RunningOrderID)
+            return {
+                ID: RunningOrderID,
+                Status: mosTypes.mosString128.create('OK'),
+                Stories: [],
+            }
+        })
 
         mosDevice.onCreateRunningOrder(async (ro) => {
             console.log('create running order', ro)

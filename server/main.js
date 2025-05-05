@@ -925,6 +925,38 @@ app.post('/api/sendRoCreate', async (req, res) => {
   }
 });
 
+app.post('/api/sendDeleteRunningOrder', async (req, res) => {
+  const mosDevice = getMosDevice();
+  if (!mosDevice) return res.status(503).send('MOS Device not connected');
+
+  try {
+    const mosTypes = mosDevice.mosTypes
+    const story = {
+      ID: mosTypes.mosString128.create('STORY1'),
+      Slug: mosTypes.mosString128.create('First Story'),
+      Items: [] // Can add IMOSROItem objects here
+    };
+
+    // Create the running order
+    const runningOrder = {
+      ID: mosTypes.mosString128.create('RO1234'),
+      Slug: mosTypes.mosString128.create('Sample Running Order'),
+      DefaultChannel: mosTypes.mosString128.create('A'),
+      Stories: [story]
+    };
+
+    // Send to client
+    mosDevice.sendDeleteRunningOrder(runningOrder)
+      .then((ack) => {
+        console.log('Client acknowledged:', ack);
+      })
+      .catch(console.error);
+    res.send('✅ MOS Object sent');
+  } catch (err) {
+    console.error('❌ Error sending MOS Object:', err);
+    res.status(500).send('Error sending MOS Object: ' + err.message);
+  }
+});
 
 
 

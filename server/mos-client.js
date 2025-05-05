@@ -28,6 +28,7 @@ async function startMosClient() {
     mosConnection.onConnection((mosDevice) => {
         console.log(`✅ Connected to MOS server on  ${mosDevice}`);
         connectedMosDevice = mosDevice;
+        // mosDevice.sendDeleteRunningOrder
     });
 
     // mosConnection.on('rawMessage', (_source, _type, _message) => {

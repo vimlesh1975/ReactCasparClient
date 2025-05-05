@@ -43,7 +43,26 @@ const Client = () => {
             console.error('Error sending Running Order:', error);
         }
     };
+    const sendRoDelete = async () => {
+        const dataToSend = {
+            clip: 'amb',
+        };
 
+        try {
+            const response = await fetch('https://localhost:9000/api/sendDeleteRunningOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            const result = await response.text();
+            console.log(result);
+        } catch (error) {
+            console.error('Error sending Running Order:', error);
+        }
+    };
 
     return (<div>
 
@@ -51,11 +70,15 @@ const Client = () => {
             Client
         </div>
         <div>
-            <button onClick={sendMosObject}> send to Mos Object</button>
+            <button onClick={sendMosObject}> send Mos Object</button>
         </div>
 
         <div>
-            <button onClick={sendRoCreate}> send to rocreate</button>
+            <button onClick={sendRoCreate}> send RO Create</button>
+        </div>
+
+        <div>
+            <button onClick={sendRoDelete}> send RO Delete</button>
         </div>
 
     </div>)
