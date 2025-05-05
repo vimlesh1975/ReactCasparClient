@@ -387,6 +387,8 @@ const io = require("socket.io")(server2, options);
 const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 global.app = app;
+global.io = io;
+// console.log(app)
 
 io.on("connection", (socket) => {
   console.log("New Web Socket client connected");

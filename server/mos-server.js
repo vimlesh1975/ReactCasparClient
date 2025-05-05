@@ -1,6 +1,6 @@
 // mos-server.js
 const { MosConnection, MosModel } = require('@mos-connection/connector');
-
+console.log('from mos server' + io);
 const mosID = 'MOS_SERVER_ID';
 const mosDeviceID = 'NEWSROOM_ID';
 const mosPort = 10540;
@@ -49,6 +49,7 @@ async function startMosServer() {
             }
         })
         mosDevice.onMOSObjects(async (objs) => {
+            io.emit("onMOSObjects", objs);
             console.log(objs);
             return {
                 ID: objs[0]?.ID,      // Use object ID from first object
