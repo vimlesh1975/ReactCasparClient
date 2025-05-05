@@ -857,31 +857,16 @@ app.post('/translate', async (req, res) => {
 
 
 // code start for MOS
-// const mosServer = require("./mos-server.js")
-const { startMosServer, getMosClient } = require('./mos-server');
-
-const { startMosClient, getMosDevice, MosModel, getMosPrimaryConnection } = require('./mos-client');
-
-var mosDevice;
-var mosClient;
-var mosPrimaryConnection; // 👈 global or exported variable
-// Start MOS Server
+const { startMosServer } = require('./mos-server');
+const { startMosClient, getMosDevice, MosModel } = require('./mos-client');
 startMosServer().then(async () => {
   console.log('✅ MOS Server ready');
   await startMosClient(); // Start the MOS Client
-  // mosDevice = getMosDevice();
-  // mosClient = getMosClient();
-
-  mosPrimaryConnection = getMosPrimaryConnection(); // Get the primary connection reference
-  console.log(mosPrimaryConnection)
 });
-
-
-app.post('/api/send-raw-from-client', async (req, res) => {
+app.post('/api/sendMosObject', async (req, res) => {
   const { clip } = req.body;
   const mosDevice = getMosDevice();
   if (!mosDevice) return res.status(503).send('MOS Device not connected');
-
   const mosTypes = mosDevice.mosTypes;
 
   const mosObj = new MosModel.MosObj();
@@ -896,7 +881,10 @@ app.post('/api/send-raw-from-client', async (req, res) => {
   mosObj.Created = mosTypes.mosTime.create(new Date());
 
   try {
-    mosDevice.sendMOSObject(mosObj);
+    mosDevice.sendMOSObject(mosObj).then((ack) => {
+      console.log('Client acknowledged:', ack);
+    })
+      .catch(console.error);
     res.send('✅ MOS Object sent');
   } catch (err) {
     console.error('❌ Error sending MOS Object:', err);
@@ -904,27 +892,32 @@ app.post('/api/send-raw-from-client', async (req, res) => {
   }
 });
 
-app.post('/api/send-raw-from-server', async (req, res) => {
-  const { clip } = req.body;
-  console.log('from server code')
-  const mosDevice = getMosClient();
+app.post('/api/sendRoCreate', async (req, res) => {
+  const mosDevice = getMosDevice();
   if (!mosDevice) return res.status(503).send('MOS Device not connected');
 
-  const mosTypes = mosDevice.mosTypes;
-
-  const mosObj = new MosModel.MosObj();
-  mosObj.ID = mosTypes.mosString128.create(clip); // Unique identifier
-  mosObj.Slug = mosTypes.mosString128.create('API Triggered Clip');
-  mosObj.Type = 'VIDEO';
-  mosObj.TimeBase = 25;
-  mosObj.Duration = 1200;
-  mosObj.Status = 'ACTIVE';
-  mosObj.AirStatus = 'READY';
-  mosObj.CreatedBy = mosTypes.mosString128.create('ReactCasparClient');
-  mosObj.Created = mosTypes.mosTime.create(new Date());
-
   try {
-    mosDevice.sendMOSObject(mosObj);
+    const mosTypes = mosDevice.mosTypes
+    const story = {
+      ID: mosTypes.mosString128.create('STORY1'),
+      Slug: mosTypes.mosString128.create('First Story'),
+      Items: [] // Can add IMOSROItem objects here
+    };
+
+    // Create the running order
+    const runningOrder = {
+      ID: mosTypes.mosString128.create('RO1234'),
+      Slug: mosTypes.mosString128.create('Sample Running Order'),
+      DefaultChannel: mosTypes.mosString128.create('A'),
+      Stories: [story]
+    };
+
+    // Send to client
+    mosDevice.sendCreateRunningOrder(runningOrder)
+      .then((ack) => {
+        console.log('Client acknowledged:', ack);
+      })
+      .catch(console.error);
     res.send('✅ MOS Object sent');
   } catch (err) {
     console.error('❌ Error sending MOS Object:', err);

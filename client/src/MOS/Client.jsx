@@ -8,7 +8,7 @@ const Client = () => {
         };
 
         try {
-            const response = await fetch('https://localhost:9000/api/send-raw-from-client', {
+            const response = await fetch('https://localhost:9000/api/sendMosObject', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,13 +23,39 @@ const Client = () => {
         }
     };
 
+    const sendRoCreate = async () => {
+        const dataToSend = {
+            clip: 'amb',
+        };
+
+        try {
+            const response = await fetch('https://localhost:9000/api/sendRoCreate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            const result = await response.text();
+            console.log(result);
+        } catch (error) {
+            console.error('Error sending Running Order:', error);
+        }
+    };
+
+
     return (<div>
 
         <div>
             Client
         </div>
         <div>
-            <button onClick={sendMosObject}> send to server</button>
+            <button onClick={sendMosObject}> send to Mos Object</button>
+        </div>
+
+        <div>
+            <button onClick={sendRoCreate}> send to rocreate</button>
         </div>
 
     </div>)

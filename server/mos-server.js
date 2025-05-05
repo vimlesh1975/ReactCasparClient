@@ -5,9 +5,6 @@ const mosID = 'MOS_SERVER_ID';
 const mosDeviceID = 'NEWSROOM_ID';
 const mosPort = 10540;
 
-let connectedClient = null;
-
-
 async function startMosServer() {
     const mosConnection = new MosConnection({
         mosID,
@@ -23,9 +20,13 @@ async function startMosServer() {
         isNCS: true,
     });
 
+    // mosConnection.on('rawMessage', (_source, _type, _message) => {
+    //     console.log('rawMessag in server', _source, _type, _message)
+    // })
+
+
     mosConnection.onConnection((mosDevice) => {
         console.log('📡 Connected to NRCS:', mosDevice.idPrimary);
-        connectedClient = mosDevice;
         const mosTypes = mosDevice.mosTypes // Could also be retrieved with getMosTypes(strict)
 
         mosDevice.onRequestMachineInfo(async () => {
@@ -48,14 +49,24 @@ async function startMosServer() {
             }
         })
         mosDevice.onMOSObjects(async (objs) => {
-            // console.dir(objs, { depth: null });
-            console.log('log fro mos server ' + objs[0]?.ID._mosString128);
+            console.log(objs);
             return {
                 ID: objs[0]?.ID,      // Use object ID from first object
                 Rev: 0,               // Revision number (you can adjust if needed)
                 Status: 'OK'          // or 'NACK' for negative acknowledgment
             };
         });
+
+
+        mosDevice.onCreateRunningOrder(async (ro) => {
+            console.log('create running order', ro)
+            return {
+                ID: ro.ID,
+                Status: mosTypes.mosString128.create('OK'),
+                Stories: [],
+            }
+        })
+
 
         mosDevice.onRequestMOSList((cb) => {
             console.log('🗂️ MOS List requested');
@@ -78,10 +89,6 @@ async function startMosServer() {
             cb();
         });
 
-        mosDevice.onCreateRunningOrder((ro, cb) => {
-            console.log(`📋 Create Running Order: ${ro.ID}`, ro);
-            cb();
-        });
 
         mosDevice.onDeleteRunningOrder((roID, cb) => {
             console.log(`❌ Delete Running Order: ${roID}`);
@@ -96,7 +103,4 @@ async function startMosServer() {
         return mosConnection;
     });
 }
-function getMosClient() {
-    return connectedClient;
-}
-module.exports = { startMosServer, getMosClient };
+module.exports = { startMosServer };
