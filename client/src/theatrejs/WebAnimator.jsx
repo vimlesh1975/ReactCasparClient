@@ -2471,7 +2471,8 @@ const WebAnimator = () => {
         const project = core.getProject('${projectId}', {state:${JSON.stringify(
       studio.createContentOfSaveFile(projectId)
     )}});
-        sheet = project.sheet('Sheet 1')
+        window.project=project;
+        sheet = project.sheet('Sheet 1');
         canvas.loadFromJSON(content).then(() => {
             ${strinSetclipPathWhileImporting("")}
             ${xx4}
