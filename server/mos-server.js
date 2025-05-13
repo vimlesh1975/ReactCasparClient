@@ -1,7 +1,7 @@
 // mos-server.js
 const { MosConnection, MosModel } = require('@mos-connection/connector');
 console.log('from mos server' + io);
-const mosID = 'MOS_SERVER_ID';
+const mosID = 'WTVISION.STUDIO.MOS';
 const mosDeviceID = 'NEWSROOM_ID';
 const mosPort = 10540;
 
