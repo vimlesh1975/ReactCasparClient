@@ -28,7 +28,7 @@
     "cross-env": "^7.0.3",
     "css": "^3.0.0",
     "d3": "^7.4.4",
-    "fabric": "^6.5.4",
+    "fabric": "^6.6.5",
     "fabric-history": "^2.0.0",
     "fabricjs-react": "^2.1.0",
     "faker": "^5.5.0",
