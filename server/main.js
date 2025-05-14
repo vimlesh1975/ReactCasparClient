@@ -1,6 +1,47 @@
 require("dotenv").config(); // Load environment variables from .env file
 // console.log(process.env.DB_HOST);
 
+//end code for google translation
+const { exec } = require('child_process');
+
+function killPort(port) {
+  return new Promise((resolve) => {
+    exec(`netstat -aon | findstr LISTENING | findstr :${port}`, (err, stdout) => {
+      if (err || !stdout) return resolve();
+
+      const lines = stdout.trim().split('\n');
+      const pids = new Set();
+
+      lines.forEach(line => {
+        const match = line.match(/\s+(\d+)$/); // PID is last column
+        if (match) {
+          const pid = match[1];
+          pids.add(pid);
+        }
+      });
+
+      if (pids.size === 0) return resolve();
+
+      let killed = 0;
+      pids.forEach(pid => {
+        exec(`taskkill /PID ${pid} /F`, (killErr, killStdout, killStderr) => {
+          if (!killErr) {
+            console.log(`✅ Killed process on port ${port} (PID ${pid})`);
+          } else {
+            console.warn(`⚠️ Failed to kill PID ${pid}:`, killStderr || killErr.message);
+          }
+
+          killed++;
+          if (killed === pids.size) resolve();
+        });
+      });
+    });
+  });
+}
+
+
+
+
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -265,10 +306,9 @@ const options2 = {
 
 const server2 = https.createServer(options2, app);
 
-server2.listen(port, '::', () => {
-  console.log(`Node server is listening on port ${port} with HTTPS`);
-});
-// server2.timeout = 300000;  // 5 minutes, adjust as necessary
+
+
+
 
 var aa = new CasparCG("127.0.0.1", 5250);
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
@@ -854,16 +894,29 @@ app.post('/translate', async (req, res) => {
   }
 });
 
-//end code for google translation
 
 
 
 // code start for MOS
-const { startMosServer } = require('./mos-server');
-startMosServer().then(async () => {
-  console.log('✅ MOS Server ready');
-});
 
+(async () => {
+  try {
+    await killPort(10540);
+    await killPort(9000);
+
+    console.log('✅ Ports cleared, starting server...');
+    server2.listen(port, '::', () => {
+      console.log(`✅ Node server is listening on port ${port} with HTTPS`);
+    });
+
+    const { startMosServer } = require('./mos-server');
+    console.log('🔧 Starting MOS server...');
+    await startMosServer();
+    console.log('✅ MOS Server ready');
+  } catch (err) {
+    console.error('❌ Error starting app:', err);
+  }
+})();
 
 
 // code end for MOS

@@ -22,9 +22,13 @@
         "undici": "^7.3.0"
     },
     "scripts": {
+        "prestart": "npx kill-port 9000",
         "start": "nodemon main"
     },
     "author": "vimlesh kumar",
     "email": "vimlesh1975@hotmail.com",
-    "license": "ISC"
+    "license": "ISC",
+    "devDependencies": {
+        "kill-port": "^2.0.1"
+    }
 }

@@ -102,6 +102,18 @@ async function startMosServer() {
             console.log(`❌ Delete Running Order: ${roID}`);
             cb();
         });
+
+        mosDevice.onRequestObjectList((cb) => {
+            console.log('🗂️ Object List requested');
+            return {
+                ID: 'ro.ID',
+                Status: mosTypes.mosString128.create('OK'),
+                Stories: [],
+            }
+
+        });
+
+
     });
 
 
