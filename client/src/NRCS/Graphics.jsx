@@ -104,12 +104,16 @@ const Graphics = () => {
     }
 
     socket.on('disconnect', () => {
-      console.log('Disconnected from server');
+      setDatabaseConnection('false');
     });
 
     socket.on('databaseConnection', data => {
       console.log('databaseConnection', data);
       setDatabaseConnection(data);
+    });
+
+    socket.on('connect_error', (error) => {
+      setDatabaseConnection('false');
     });
 
 
