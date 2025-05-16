@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.css";
-import React from "react";
 import Video from "./Video.jsx";
 import Drawing from "./Drawing.jsx";
 import axios from "axios";

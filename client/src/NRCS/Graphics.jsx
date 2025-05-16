@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   getFormattedDatetimeNumber,
   addressmysql,
@@ -21,6 +21,7 @@ import Timer from "./Timer";
 import Thumbnailview from "./Thumbnailview";
 import Spinner from "../spinner/Spinner";
 import FlashMessage from "../FlashMessage";
+import socketIOClient from "socket.io-client";
 
 
 const Graphics = () => {
@@ -89,6 +90,35 @@ const Graphics = () => {
   const NrcsBreakingText = useSelector((state) => state.NrcsBreakingTextReducer.NrcsBreakingText);
   const [showdateandTime, setShowdateandTime] = useState(false);
   const [ltr, setLtr] = useState(true);
+  const [databaseConnection, setDatabaseConnection] = useState('false');
+
+
+
+  useEffect(() => {
+    var socket;
+    if (window.location.origin !== "https://vimlesh1975.github.io") {
+      socket = new socketIOClient(":9000");
+    }
+    else {
+      socket = new socketIOClient("https://octopus-app-gzws3.ondigitalocean.app");
+    }
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    socket.on('databaseConnection', data => {
+      console.log('databaseConnection', data);
+      setDatabaseConnection(data);
+    });
+
+
+    return () => {
+      socket.disconnect();
+      socket.close();
+    };
+
+  }, []);
 
   const readFile = async (handle) => {
     if (!handle) return;
@@ -1199,6 +1229,7 @@ const Graphics = () => {
                     value={selectedDate}
                     onChange={handleDateChange}
                   />
+                  {(databaseConnection === 'true') ? 'Database 🟢' : 'Database 🔴'}
                 </div>
               }
             </div>

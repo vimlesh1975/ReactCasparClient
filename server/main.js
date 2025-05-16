@@ -39,9 +39,6 @@ function killPort(port) {
   });
 }
 
-
-
-
 const express = require("express");
 const app = express();
 const fs = require("fs");
@@ -430,10 +427,51 @@ global.app = app;
 global.io = io;
 // console.log(app)
 
+
+var newdatabase = true;
+//  newdatabase = false;
+
+const oldDatabaseName = 'c1news';
+const newDatabasename = 'nrcsnew';
+const dbname = newdatabase ? newDatabasename : oldDatabaseName;
+
+const mysql = require("mysql2/promise");
+let pool;
+let databaseConnection = 'false';
+
+async function initDB() {
+  try {
+    pool = mysql.createPool({
+      host: process.env.DB_HOST || "localhost",
+      user: process.env.DB_USER || "itmaint",
+      password: process.env.DB_PASSWORD || "itddkchn",
+      database: process.env.DB_DATABASE || dbname,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+
+    // Try to get a connection to verify
+    const connection = await pool.getConnection();
+    console.log("Connected to MySQL database");
+    databaseConnection = 'true';
+    io.emit('databaseConnection', 'true');
+    connection.release(); // Release back to pool
+  } catch (error) {
+    console.error("MySQL connection error:", error.message);
+    databaseConnection = 'false';
+    io.emit('databaseConnection', 'false');
+  }
+}
+
+initDB();
+
 io.on("connection", (socket) => {
   console.log("New Web Socket client connected");
   socket.emit("connectionStatus", aa.connected.toString());
   socket.emit("newdatabase", newdatabase);
+  socket.emit("databaseConnection", databaseConnection);
+
   socket.on("disconnect", () => {
     console.log("client disconnected");
   });
@@ -554,28 +592,8 @@ app.post("/fetch-proxy", async (req, res) => {
 // rss feed code  ends
 
 //NRCS code starts-----------
-const mysql = require("mysql2/promise");
-var pool;
 
-var newdatabase = true;
-//  newdatabase = false;
 
-const oldDatabaseName = 'c1news';
-const newDatabasename = 'nrcsnew';
-const dbname = newdatabase ? newDatabasename : oldDatabaseName;
-
-try {
-  pool = mysql.createPool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "itmaint",
-    password: process.env.DB_PASSWORD || "itddkchn",
-    database: process.env.DB_DATABASE || dbname,
-  });
-  console.log("Connected to MySQL database");
-} catch (error) {
-  console.error("MySQL connection error:", error.message);
-  // Handle the error (e.g., exit the process or continue with limited functionality)
-}
 
 // Helper function to handle database queries
 async function safeQuery(query, params = []) {
