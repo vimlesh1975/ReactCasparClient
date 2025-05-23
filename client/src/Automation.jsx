@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import socketIOClient from "socket.io-client";
 import { useSelector } from 'react-redux'
 import * as fabric from 'fabric';
 import { endpoint, stopGraphics } from './common'
-import DrawingAutomation from './DrawingAutomation';
 import axios from 'axios';
 
 const Automation = () => {
+    const canvas = useSelector((state) => state.canvasReducer.canvas);
+
     const canvasList = useSelector(state => state.canvasListReducer.canvasList);
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
@@ -23,12 +24,18 @@ const Automation = () => {
                     var a = new FileReader();
                     a.onload = function (e) {
                         if (window.location.origin !== 'https://vimlesh1975.github.io') {
-                            axios.post('http://localhost:9000/setCurrentCanvas', { data1: e.target.result }).then((aa) => {
+                            axios.post('https://localhost:9000/setCurrentCanvas', { data1: e.target.result }).then((aa) => {
                             }).catch((aa) => { console.log('Error', aa) });
                         }
                     }
                     a.readAsDataURL(blob);
                 })
+            });
+
+            socket.on("getTemplateList", data => {
+                console.log('getTemplateList');
+                socket.emit("templateList", { data: ['canvasList'] });
+                setDataReceived(JSON.stringify(data));
             });
             socket.on("recallPage", data => {
                 // console.log(data);
@@ -74,13 +81,16 @@ const Automation = () => {
     }, [allowAutomation, canvasList])
 
     const recallPage = (layerNumber, pageName, data) => {
+        console.log('object')
         try {
             const index = canvasList.findIndex(val => val.pageName.toLowerCase() === pageName.toLowerCase());
+            console.log(index)
+
             if (index !== -1) {
                 const data1 = data;
-                window.automationeditor[0].canvas.loadFromJSON(canvasList[index].pageValue, () => {
+                canvas.loadFromJSON(canvasList[index].pageValue, () => {
                     data1.forEach(data2 => {
-                        window.automationeditor[0].canvas.getObjects().forEach((element) => {
+                        canvas.getObjects().forEach((element) => {
                             try {
                                 element.set({ selectable: false, strokeUniform: true, strokeWidth: element.strokeWidth / 3 });
                                 if (element.id === data2.key) {
@@ -116,6 +126,7 @@ const Automation = () => {
                     });
                     sendToCasparcg(layerNumber)
                 });
+                canvas.requestRenderAll()
             }
             else { alert(`${pageName} page not found in canvas list. Make a page with this name, add ${data.length}  text and set id of texts as ${data.map(val => { return val.key })} then update the page`) }
         } catch (error) {
@@ -124,7 +135,7 @@ const Automation = () => {
     }
     const updateGraphics = layerNumber => {
         endpoint(`call ${window.chNumber}-${layerNumber} "
-        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
             "`)
     }
 
@@ -137,7 +148,7 @@ const Automation = () => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
         var aa = document.createElement('div');
         aa.style.position='absolute';
-        aa.innerHTML='${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}';
+        aa.innerHTML='${(canvas.toSVG()).replaceAll('"', '\\"')}';
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
@@ -157,7 +168,7 @@ const Automation = () => {
     const updateData = (layerNumber, data) => {
         const data1 = data;
         data1.forEach(data2 => {
-            window.automationeditor[0].canvas.getObjects().forEach((element) => {
+            canvas.getObjects().forEach((element) => {
                 try {
                     if (element.id === data2.key) {
                         if (data2.type === 'text') {
@@ -239,12 +250,10 @@ const Automation = () => {
     return (
         <div>
             <label><input type="checkbox" onChange={(e) => setAllowAutomation(val => !val)} defaultChecked={false} />Allow Automation</label>
-            <div style={{ opacity: 100 }} className='automation-preview-container' >
-                <DrawingAutomation i={0} />
-            </div>
+
             <div>
                 <span>Data Recieved</span>
-                <br />  <textarea cols={36} rows={5} value={dataReceived} />
+                <br />  <textarea cols={36} rows={45} value={dataReceived} />
             </div>
         </div>
     )

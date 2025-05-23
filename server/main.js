@@ -482,6 +482,10 @@ io.on("connection", (socket) => {
     io.emit("Iamready2", data);
   });
 
+  socket.on("templateList", data => {
+    console.log(data)
+  })
+
 });
 
 const path = require("path");
@@ -492,11 +496,17 @@ app.get("/", function (req, res) {
 
 
 app.post("/recallPage", (req, res) => {
-  const data = req.body;
-  // console.log(data)
   io.emit("recallPage", req.body);
   res.end("Sent The Commands:" + JSON.stringify(req.body));
 });
+
+app.post("/getTemplateList", (req, res) => {
+  console.log('getTemplateList')
+  io.emit("getTemplateList", req.body);
+  res.end("Sent The Commands:" + JSON.stringify(req.body));
+});
+
+
 
 app.post("/updateData", (req, res) => {
   const data = req.body;
