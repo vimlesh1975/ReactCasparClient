@@ -728,11 +728,11 @@ export default function WebTelePrompter() {
 
       })
       .catch((err) => console.error('Error reading file:', err));
-  }, [fetchAllContent, startPosition]);
+  }, []);
 
   useEffect(() => {
     readFile(file);
-  }, [singleScript, file, readFile])
+  }, [singleScript])
 
   useEffect(() => {
     const handleKeyPress = (event) => {
