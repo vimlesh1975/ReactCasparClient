@@ -1,0 +1,47 @@
+.controller-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background-color: #000;
+    color: white;
+    padding: 10px;
+}
+
+.controller-title {
+    font-size: 32px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.control-button {
+    width: 90%;
+    padding: 24px;
+    margin: 10px 0;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+}
+
+.control-button.start {
+    background-color: #28a745;
+}
+
+.control-button.start:hover {
+    background-color: #218838;
+}
+
+.control-button.stop {
+    background-color: #dc3545;
+}
+
+.control-button.stop:hover {
+    background-color: #c82333;
+}

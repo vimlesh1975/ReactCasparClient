@@ -1,0 +1,24 @@
+body {
+    overflow: hidden;
+}
+
+
+button {
+    border-radius: 2px;
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    margin: 1px 4px;
+
+
+
+    /* background-color: #007bff;
+    color: white;
+    border: none; */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #011327;
+    color: #ffffff;
+}
