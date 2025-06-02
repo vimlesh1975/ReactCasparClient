@@ -733,7 +733,7 @@ export default function WebTelePrompter() {
   }, [])
 
   useEffect(() => {
-    fetch('/example.txt')
+    fetch('/ReactCasparClient/example.txt')
       .then(res => {
         // Clone the response to read both text and blob
         const resClone = res.clone();

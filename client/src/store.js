@@ -1,9 +1,9 @@
-import { applyMiddleware } from 'redux';
-import { legacy_createStore as createStore } from 'redux';
+import { combineReducers, legacy_createStore as createStore, applyMiddleware } from 'redux';
 // import { configureStore} from  '@reduxjs/toolkit'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { combineReducers } from 'redux';
+
+import { storyLinesReducer, crossedLinesReducer } from './WebTelePrompter/store/store';
 
 const initialStateCanvasList = {
   canvasList: [
@@ -533,7 +533,9 @@ const rootReducer = combineReducers({
   FPSReducer,
   textNodesReducer,
   newdatabaseReducer,
-  NrcsBreakingTextReducer
+  NrcsBreakingTextReducer,
+  storyLinesReducer,
+  crossedLinesReducer,
 });
 const store = createStore(
   rootReducer,
