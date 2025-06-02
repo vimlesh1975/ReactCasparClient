@@ -113,7 +113,7 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
 
         animationFrameId = requestAnimationFrame(scrollText);
         return () => cancelAnimationFrame(animationFrameId);
-    }, [scaleFactor, speed, doubleClickedPosition, startPosition, loggedPositions, currentStoryNumber, storyLines]);
+    }, [scaleFactor, speed, doubleClickedPosition, startPosition, loggedPositions, currentStoryNumber, storyLines, dispatch, textRef, setCurrentStoryNumber, setCurrentSlug, setLoggedPositions, contentRefs, crossedLines, setSpeed, scale, setNewPosition]);
 
     const calculateNumberOfLines = (element) => {
         if (element) {
@@ -140,7 +140,7 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
         const result = moveZerosToFront(storiesLines);
         dispatch(changeStoryLines(result));
         socketRef.current.emit('storyLines', result);
-    }, [allContent, fontSize]);
+    }, [allContent, fontSize, contentRefs, slugs, dispatch]);
 
     return (
         <div style={{ width: scrollWidth, height: scrollHeight, overflow: 'hidden', border: '1px solid black' }}>

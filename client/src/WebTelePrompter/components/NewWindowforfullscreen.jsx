@@ -70,7 +70,7 @@ function NewWindowforfullscreen({ children, onClose, newWindowRef, scrollWidth, 
         return () => {
             newWindowRef.current.removeEventListener('beforeunload', onClose);
         };
-    }, []);
+    }, [newWindowRef, scrollWidth, scrollHeight, onClose]);
 
     const childrenWithProps = React.Children.map(children, (child) =>
         cloneElement(child, { scaleFactor })

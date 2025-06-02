@@ -19,7 +19,7 @@ function NewWindow({ children, onClose, newWindowRef, scrollWidth, scrollHeight 
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [newWindowRef]);
 
 
     const handleTitleBarDoubleClick = (e) => {
@@ -122,7 +122,7 @@ function NewWindow({ children, onClose, newWindowRef, scrollWidth, scrollHeight 
             newWindowRef.current.removeEventListener('contextmenu', handleRightClick);
             // Do not close the window here to keep it open for future updates
         };
-    }, [container, onClose, handleTitleBarDoubleClick]);
+    }, [container, onClose, handleTitleBarDoubleClick, handleRightClick, newWindowRef, scrollWidth, scrollHeight]);
 
     const childrenWithProps = React.Children.map(children, (child) =>
         cloneElement(child, { scaleFactor })

@@ -1,26 +1,25 @@
-"use client";
-import './page1.css'
+// import './page1.css'
 
 import { fontLists, fixdata } from "./common.js";
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import NewWindow from "./components/NewWindow";
-import NewWindowforfullscreen from "./components/NewWindowforfullscreen";
-import Scroll from "./components/Scroll";
+import NewWindow from "./components/NewWindow.jsx";
+import NewWindowforfullscreen from "./components/NewWindowforfullscreen.jsx";
+import Scroll from "./components/Scroll.jsx";
 import io from "socket.io-client";
-import Casparcg from "./Casparcg";
+import Casparcg from "./Casparcg.jsx";
 import TTS from './components/TTS.jsx'
-import ScrollView from './components/ScrollView';
+import ScrollView from './components/ScrollView.jsx';
 import mammoth from 'mammoth';
 import 'react-tabs/style/react-tabs.css';
-import { UseSocketControls } from "./components/UseSocketControls";
+import { UseSocketControls } from "./components/UseSocketControls.jsx";
 
 const scrollHeight = 460;
 const scrollWidth = 782;//scrollHeight * 16 / 9=782.22;
 
 const dummyScriptid = 200502071223160;
 
-export default function Home() {
+export default function WebTelePrompter() {
   const [ip, setIp] = useState(null)
   const [fontList, setFontList] = useState(fontLists);
   const [currentFont, setCurrentFont] = useState("Times New Roman");
@@ -139,28 +138,9 @@ export default function Home() {
     return () => {
       window.removeEventListener('message', messageHandler);
     };
-  }, [focusedInput, file]);
-  useEffect(() => {
-    readFile(file);
-  }, [singleScript])
-  useEffect(() => {
-    const handleKeyPress = (event) => {
-      if (event.key === 'Enter') {
-        handleDoubleClick(parseInt(keyPressed) - 1);
-        setKeyPressed('');
-      }
-      else {
-        if (!isNaN(event.key)) {
-          setKeyPressed(val => val + event.key);
-        }
-      }
-    };
+  }, [focusedInput, file, currentSlug, slugs]);
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [keyPressed]);
+
 
   const handleTextareaKeyDown = (event) => {
     if (event.code === 'Space') {
@@ -199,7 +179,7 @@ export default function Home() {
         JSON.stringify({ fontSize, startPosition, isRTL, bgColor, fontColor, fontBold, currentFont })
       );
     }
-  }, []);
+  }, [bgColor, fontBold, fontColor, fontSize, isRTL, startPosition, currentFont]);
   useEffect(() => {
     setTimeout(() => {
       const savedData = localStorage.getItem("WebTelePrompter");
@@ -252,19 +232,39 @@ export default function Home() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [speed, tempSpeed]);
-  const fetchNewsId = async () => {
-    try {
-      const res = await fetch("/api/newsid");
-      const data = await res.json();
-      setRunOrderTitles(data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
   const isVideoNndCGPresent = (slug) => {
     return ``;
   };
-  const fetchAllContent = (slicedSlugs, startNumber) => {
+  // const fetchAllContent = (slicedSlugs, startNumber) => {
+  //   if (!Array.isArray(slicedSlugs) || slicedSlugs.length === 0) {
+  //     return;
+  //   }
+
+  //   const data1 = new Array(slicedSlugs.length * 3);
+  //   try {
+  //     slicedSlugs.forEach((slug, i) => {
+
+  //       if ((slug.DropStory === 0 || slug.DropStory === 2) && (slug?.Approval)) {
+  //         data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}${isVideoNndCGPresent(slug)
+  //           }`;
+  //         data1[i * 3 + 1] = slug.Script ? `${slug.Script?.trim().split('$$$$')[0]}` : '';
+  //         data1[i * 3 + 2] = `--------------`;
+  //       } else {
+  //         data1[i * 3] = `${startNumber + i + 1} ${!(slug?.DropStory === 0 || slug?.DropStory === 2) ? "Story Dropped" : "Story UnApproved"}`;
+
+  //         data1[i * 3 + 1] = ` `;
+  //         data1[i * 3 + 2] = ``;
+  //       }
+  //     });
+
+  //     setAllContent(data1.filter((item) => item !== undefined));
+  //   } catch (error) {
+  //     console.error("Error fetching content:", error);
+  //   }
+  // };
+
+  const fetchAllContent = useCallback((slicedSlugs, startNumber) => {
     if (!Array.isArray(slicedSlugs) || slicedSlugs.length === 0) {
       return;
     }
@@ -272,15 +272,13 @@ export default function Home() {
     const data1 = new Array(slicedSlugs.length * 3);
     try {
       slicedSlugs.forEach((slug, i) => {
-
         if ((slug.DropStory === 0 || slug.DropStory === 2) && (slug?.Approval)) {
-          data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}${isVideoNndCGPresent(slug)
-            }`;
+          data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}${isVideoNndCGPresent(slug)}`;
           data1[i * 3 + 1] = slug.Script ? `${slug.Script?.trim().split('$$$$')[0]}` : '';
           data1[i * 3 + 2] = `--------------`;
         } else {
-          data1[i * 3] = `${startNumber + i + 1} ${!(slug?.DropStory === 0 || slug?.DropStory === 2) ? "Story Dropped" : "Story UnApproved"}`;
-
+          data1[i * 3] = `${startNumber + i + 1} ${!(slug?.DropStory === 0 || slug?.DropStory === 2) ? "Story Dropped" : "Story UnApproved"
+            }`;
           data1[i * 3 + 1] = ` `;
           data1[i * 3 + 2] = ``;
         }
@@ -290,14 +288,29 @@ export default function Home() {
     } catch (error) {
       console.error("Error fetching content:", error);
     }
-  };
+  }, [setAllContent]); // include any dependencies used inside
+  // const handleDoubleClick = (i) => {
+  //   if (i === 0) {
+  //     setUsedStory(val => [...val, slugs[0]?.ScriptID]);
+  //   }
+  //   // setStopOnNext(true); // Signal to skip the callback
+  //   if (i < slugs.length) {
+  //     const newSlugs = slugs.slice(i);
+  //     fetchAllContent(newSlugs, i);
+  //     setSpeed(0);
+  //     setCurrentStoryNumber(i + 1);
+  //     const newLoggedPositions = new Set();
+  //     setLoggedPositions(newLoggedPositions);
+  //     setDoubleClickedPosition(i);
+  //     setNewPosition(startPosition);
+  //   }
+  // };
 
-
-  const handleDoubleClick = (i) => {
+  const handleDoubleClick = useCallback((i) => {
     if (i === 0) {
       setUsedStory(val => [...val, slugs[0]?.ScriptID]);
     }
-    // setStopOnNext(true); // Signal to skip the callback
+
     if (i < slugs.length) {
       const newSlugs = slugs.slice(i);
       fetchAllContent(newSlugs, i);
@@ -308,7 +321,18 @@ export default function Home() {
       setDoubleClickedPosition(i);
       setNewPosition(startPosition);
     }
-  };
+  }, [
+    slugs,
+    fetchAllContent,
+    setSpeed,
+    setCurrentStoryNumber,
+    setLoggedPositions,
+    setDoubleClickedPosition,
+    setNewPosition,
+    setUsedStory,
+    startPosition
+  ]);
+
   const fromStart = () => {
     setCurrentSlug(0);
     handleDoubleClick(0);
@@ -368,7 +392,7 @@ export default function Home() {
     const updatedStories = [...usedStory, slugs[currentStoryNumber - 1]?.ScriptID];
     const uniqueStories = [...new Set(updatedStories.filter((item) => item !== null))];
     setUsedStory(uniqueStories);
-  }, [currentStoryNumber]);
+  }, [currentStoryNumber, slugs, usedStory]);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -459,8 +483,92 @@ export default function Home() {
       return 2;
     }
   }
-  const readFile = (selectedFile) => {
+  // const readFile = (selectedFile) => {
+  //   if (!selectedFile) return;
+  //   const reader = new FileReader();
+  //   let bb = [];
+
+  //   if (selectedFile.type !== 'text/plain') {
+  //     reader.onload = function (event) {
+  //       const arrayBuffer = event.target.result;
+
+  //       mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+  //         .then(function (result) {
+  //           const content = result.value; // extracted text
+  //           const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
+  //           if (singleScript) {
+  //             bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
+  //             setSlugs(bb);
+
+  //           }
+  //           else {
+  //             bb = lines.map((line, index) => {
+  //               const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
+  //               return {
+  //                 ...fixdata,
+  //                 ScriptID: dummyScriptid + index,
+  //                 SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
+  //                 Script: line
+  //               };
+  //             });
+  //             setSlugs(bb);
+
+  //           }
+
+  //         })
+  //         .catch(function (err) {
+  //           console.error("Error reading docx:", err);
+  //         });
+  //     };
+
+  //     reader.readAsArrayBuffer(selectedFile);
+
+  //   }
+  //   else {
+  //     reader.onload = (e) => {
+  //       const content = e.target.result;
+  //       const hasZXZX = /ZXZX/i.test(content);
+  //       if (hasZXZX) {
+  //         const aa = content.split(/ZCZC/i);
+  //         bb = aa.map((item, index) => {
+  //           const [SlugName, Script] = item.split(/ZXZX/i).map(str => str.trim().replace(/\r?\n/g, ''));
+  //           return {
+  //             ...fixdata,
+  //             ScriptID: dummyScriptid + index,
+  //             Approval: SlugName.includes('(Story UnApproved)') ? 0 : 1,
+  //             DropStory: SlugName.includes('(Story Dropped)') ? 1 : 0,
+  //             SlugName,
+  //             Script
+  //           };
+  //         });
+  //       } else {
+
+  //         const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
+  //         if (singleScript) {
+  //           bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
+  //         }
+  //         else {
+  //           bb = lines.map((line, index) => {
+  //             const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
+  //             return {
+  //               ...fixdata,
+  //               ScriptID: dummyScriptid + index,
+  //               SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
+  //               Script: line
+  //             };
+  //           });
+  //         }
+  //       }
+  //       setSlugs(bb);
+  //     };
+  //     reader.readAsText(selectedFile);
+  //   }
+  // };
+
+
+  const readFile = useCallback((selectedFile) => {
     if (!selectedFile) return;
+
     const reader = new FileReader();
     let bb = [];
 
@@ -468,42 +576,43 @@ export default function Home() {
       reader.onload = function (event) {
         const arrayBuffer = event.target.result;
 
-        mammoth.extractRawText({ arrayBuffer: arrayBuffer })
-          .then(function (result) {
-            const content = result.value; // extracted text
-            const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
-            if (singleScript) {
-              bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
-              setSlugs(bb);
+        mammoth.extractRawText({ arrayBuffer })
+          .then((result) => {
+            const content = result.value;
+            const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== "");
 
-            }
-            else {
+            if (singleScript) {
+              bb = [{
+                ...fixdata,
+                ScriptID: dummyScriptid,
+                SlugName: selectedFile.name,
+                Script: content
+              }];
+            } else {
               bb = lines.map((line, index) => {
-                const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
+                const words = line.split(/\s+/).slice(0, 3).join(" ");
                 return {
                   ...fixdata,
                   ScriptID: dummyScriptid + index,
-                  SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
+                  SlugName: words || `Slug${index + 1}`,
                   Script: line
                 };
               });
-              setSlugs(bb);
-
             }
 
+            setSlugs(bb);
           })
-          .catch(function (err) {
+          .catch(err => {
             console.error("Error reading docx:", err);
           });
       };
 
       reader.readAsArrayBuffer(selectedFile);
-
-    }
-    else {
+    } else {
       reader.onload = (e) => {
         const content = e.target.result;
         const hasZXZX = /ZXZX/i.test(content);
+
         if (hasZXZX) {
           const aa = content.split(/ZCZC/i);
           bb = aa.map((item, index) => {
@@ -518,28 +627,35 @@ export default function Home() {
             };
           });
         } else {
+          const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== "");
 
-          const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
           if (singleScript) {
-            bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
-          }
-          else {
+            bb = [{
+              ...fixdata,
+              ScriptID: dummyScriptid,
+              SlugName: selectedFile.name,
+              Script: content
+            }];
+          } else {
             bb = lines.map((line, index) => {
-              const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
+              const words = line.split(/\s+/).slice(0, 3).join(" ");
               return {
                 ...fixdata,
                 ScriptID: dummyScriptid + index,
-                SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
+                SlugName: words || `Slug${index + 1}`,
                 Script: line
               };
             });
           }
         }
+
         setSlugs(bb);
       };
+
       reader.readAsText(selectedFile);
     }
-  };
+  }, [setSlugs, singleScript]);
+
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -653,7 +769,30 @@ export default function Home() {
 
       })
       .catch((err) => console.error('Error reading file:', err));
-  }, []);
+  }, [fetchAllContent, startPosition]);
+
+  useEffect(() => {
+    readFile(file);
+  }, [singleScript, file, readFile])
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleDoubleClick(parseInt(keyPressed) - 1);
+        setKeyPressed('');
+      }
+      else {
+        if (!isNaN(event.key)) {
+          setKeyPressed(val => val + event.key);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [keyPressed, handleDoubleClick]);
 
   return (
     <div style={{ overflow: "hidden", backgroundColor: '#e0e0d2', }}>
@@ -877,7 +1016,6 @@ export default function Home() {
                   fontWeight: fontBold ? 'bold' : 'normal',
                 }}
                 onChange={(e) => {
-                  const aa = currentSlug;
                   const updatedSlugs = [...slugs]; // Create a copy of the array
                   updatedSlugs[currentSlug] = { ...updatedSlugs[currentSlug], Script: e.target.value }; // Modify the object at index i
                   setSlugs(updatedSlugs);

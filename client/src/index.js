@@ -26,6 +26,7 @@ import Twoliner from './NRCS/Twoliner'
 import YellowNewsUpdate from './test/YellowNewsUpdate'
 import Xyz from './Xyz'
 import HorizontalScrollUrdu from './NRCS/HorizontalScrollUrdu'
+import WebTelePrompter from './WebTelePrompter/WebTelePrompter.jsx'
 
 
 
@@ -62,7 +63,8 @@ root.render(
         <Route exact path="/Twoliner/:selectedDate/:NrcsBreakingText" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
-        
+        <Route exact path="/WebTelePrompter" element={<WebTelePrompter />} />
+
       </Routes>
     </Router>
   </Provider>

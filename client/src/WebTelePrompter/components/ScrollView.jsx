@@ -1,11 +1,8 @@
-'use client';
 
-import React from 'react';
+// import React, { lazy, Suspense } from 'react';
 import Count from './Count';
-import dynamic from 'next/dynamic';
 import Triangles from './Triangles';
-
-const Clock = dynamic(() => import('./Clock'), { ssr: false });
+import Clock from './Clock'
 
 const ScrollView = ({
     scrollContainerStyle, scrollingTextStyle, currentFont, fontBold,
