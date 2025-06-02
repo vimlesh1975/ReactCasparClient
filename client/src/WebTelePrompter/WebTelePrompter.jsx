@@ -87,14 +87,16 @@ export default function WebTelePrompter() {
   }), [newPosition, fontSize]);
   useEffect(() => {
     if (!window.location.origin.includes('vercel')) {
-      fetch('/api/fonts')
+      fetch('https://localhost:9000/getfonts', { method: 'POST' })
         .then((res) => res.json())
-        .then((data) => setFontList(data.fonts))
+        .then((data) => {
+          setFontList(data);
+        })
         .catch((err) => console.error(err));
     }
   }, []);
   useEffect(() => {
-    const addr = `${window.location.origin}/SpeechToText`;
+    const addr = `${window.location.origin}/ReactCasparClient/SpeechToText`;
     if (iframeRef.current) {
       iframeRef.current.src = addr;
     }
@@ -236,33 +238,6 @@ export default function WebTelePrompter() {
   const isVideoNndCGPresent = (slug) => {
     return ``;
   };
-  // const fetchAllContent = (slicedSlugs, startNumber) => {
-  //   if (!Array.isArray(slicedSlugs) || slicedSlugs.length === 0) {
-  //     return;
-  //   }
-
-  //   const data1 = new Array(slicedSlugs.length * 3);
-  //   try {
-  //     slicedSlugs.forEach((slug, i) => {
-
-  //       if ((slug.DropStory === 0 || slug.DropStory === 2) && (slug?.Approval)) {
-  //         data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}${isVideoNndCGPresent(slug)
-  //           }`;
-  //         data1[i * 3 + 1] = slug.Script ? `${slug.Script?.trim().split('$$$$')[0]}` : '';
-  //         data1[i * 3 + 2] = `--------------`;
-  //       } else {
-  //         data1[i * 3] = `${startNumber + i + 1} ${!(slug?.DropStory === 0 || slug?.DropStory === 2) ? "Story Dropped" : "Story UnApproved"}`;
-
-  //         data1[i * 3 + 1] = ` `;
-  //         data1[i * 3 + 2] = ``;
-  //       }
-  //     });
-
-  //     setAllContent(data1.filter((item) => item !== undefined));
-  //   } catch (error) {
-  //     console.error("Error fetching content:", error);
-  //   }
-  // };
 
   const fetchAllContent = useCallback((slicedSlugs, startNumber) => {
     if (!Array.isArray(slicedSlugs) || slicedSlugs.length === 0) {
@@ -288,23 +263,7 @@ export default function WebTelePrompter() {
     } catch (error) {
       console.error("Error fetching content:", error);
     }
-  }, [setAllContent]); // include any dependencies used inside
-  // const handleDoubleClick = (i) => {
-  //   if (i === 0) {
-  //     setUsedStory(val => [...val, slugs[0]?.ScriptID]);
-  //   }
-  //   // setStopOnNext(true); // Signal to skip the callback
-  //   if (i < slugs.length) {
-  //     const newSlugs = slugs.slice(i);
-  //     fetchAllContent(newSlugs, i);
-  //     setSpeed(0);
-  //     setCurrentStoryNumber(i + 1);
-  //     const newLoggedPositions = new Set();
-  //     setLoggedPositions(newLoggedPositions);
-  //     setDoubleClickedPosition(i);
-  //     setNewPosition(startPosition);
-  //   }
-  // };
+  }, [setAllContent]);
 
   const handleDoubleClick = useCallback((i) => {
     if (i === 0) {

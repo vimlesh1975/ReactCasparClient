@@ -18,15 +18,15 @@ function SpeechToText() {
     const [targetLanguage, setTargetLanguage] = useState('hi');
     const [loading, setLoading] = useState(false);
 
-    const punctuate = (text) => {
-        if (!text.trim()) return '';
-        let result = text.trim();
-        result = result.charAt(0).toUpperCase() + result.slice(1);
-        if (!/[.?!]$/.test(result)) {
-            result += '.';
-        }
-        return result + ' ';
-    };
+    // const punctuate = (text) => {
+    //     if (!text.trim()) return '';
+    //     let result = text.trim();
+    //     result = result.charAt(0).toUpperCase() + result.slice(1);
+    //     if (!/[.?!]$/.test(result)) {
+    //         result += '.';
+    //     }
+    //     return result + ' ';
+    // };
     useEffect(() => {
         if (transcript === lastTranscript) return;
 

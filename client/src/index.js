@@ -27,6 +27,7 @@ import YellowNewsUpdate from './test/YellowNewsUpdate'
 import Xyz from './Xyz'
 import HorizontalScrollUrdu from './NRCS/HorizontalScrollUrdu'
 import WebTelePrompter from './WebTelePrompter/WebTelePrompter.jsx'
+import SpeechToText from './WebTelePrompter/SpeechToText/page.jsx'
 
 
 
@@ -64,6 +65,7 @@ root.render(
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
         <Route exact path="/WebTelePrompter" element={<WebTelePrompter />} />
+        <Route exact path="/SpeechToText" element={<SpeechToText />} />
 
       </Routes>
     </Router>
