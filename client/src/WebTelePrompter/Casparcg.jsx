@@ -39,7 +39,7 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
       setSocketcurrentstory(data);
     });
 
-    socketRef.current.on('connect_error', (error) => {
+    socketRef.current.on('connect_error', () => {
       setConnected(false);
     });
 

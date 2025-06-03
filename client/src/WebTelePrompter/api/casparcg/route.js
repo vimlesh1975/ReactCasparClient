@@ -1,7 +1,7 @@
 import { CasparCG, Options, AMCP } from 'casparcg-connection';
 
 import io from 'socket.io-client';
-const socket = io('https://localhost:9000');
+const socket = io('http://localhost:5000');
 var aa = null;
 if (aa === null) { aa = new CasparCG(process.env.CASPAR_HOST, 5250); }
 aa.queueMode = Options.QueueMode.SEQUENTIAL;
@@ -18,7 +18,7 @@ aa.onConnected = () => {
 
 
 
-export async function POST(req, res) {
+export async function POST(req) {
   socket.emit('ServerConnectionStatus', aa.connected);
   const body = await req.json();
   // console.log(body)

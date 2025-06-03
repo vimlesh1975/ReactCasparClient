@@ -1,8 +1,9 @@
+'use client';
 
-// import React, { lazy, Suspense } from 'react';
 import Count from './Count';
 import Triangles from './Triangles';
-import Clock from './Clock'
+
+import Clock from './Clock';
 
 const ScrollView = ({
     scrollContainerStyle, scrollingTextStyle, currentFont, fontBold,

@@ -95,6 +95,7 @@ export const UseSocketControls = ({
         onclickSlug,
         previous,
         next,
+        setTempSpeed, speed, tempSpeed
     ]);
     return <></>
 };

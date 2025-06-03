@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import io from 'socket.io-client';
 import ScrollView from './ScrollView';
 import { changeStoryLines, changeCrossedLines } from '../store/store';
@@ -30,9 +30,9 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
 
     const baseWidth = 1920;
     const baseHeight = 1080;
-    const scaleX = scrollWidth / baseWidth;
-    const scaleY = scrollHeight / baseHeight;
-    const scale = Math.min(scaleX, scaleY); // keep aspect ratio
+
+    const scale = useMemo(() => Math.min(scrollWidth / baseWidth, scrollHeight / baseHeight), [scrollWidth, scrollHeight]);
+
 
     useEffect(() => {
         socketRef.current = io();
@@ -84,7 +84,12 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
                         const curstory = ((startPositionDivIndex) / 3) + 1 + doubleClickedPosition;
                         setCurrentStoryNumber(curstory);
                         setCurrentSlug(curstory - 1);
-                        setLoggedPositions((prev) => new Set(prev).add(startPositionDivIndex));
+                        setLoggedPositions((prev) => {
+                            const updated = new Set(prev);
+                            updated.add(startPositionDivIndex);
+                            return updated;
+                        });
+
                     }
                 }
 
@@ -113,7 +118,7 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
 
         animationFrameId = requestAnimationFrame(scrollText);
         return () => cancelAnimationFrame(animationFrameId);
-    }, [scaleFactor, speed, doubleClickedPosition, startPosition, loggedPositions, currentStoryNumber, storyLines, dispatch, textRef, setCurrentStoryNumber, setCurrentSlug, setLoggedPositions, contentRefs, crossedLines, setSpeed, scale, setNewPosition]);
+    }, [scale, scaleFactor, speed, doubleClickedPosition, startPosition, loggedPositions, currentStoryNumber, storyLines, contentRefs, textRef, setCurrentStoryNumber, setCurrentSlug, setLoggedPositions, dispatch, crossedLines, setNewPosition, setSpeed,]);
 
     const calculateNumberOfLines = (element) => {
         if (element) {
@@ -138,12 +143,18 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
         }
 
         const result = moveZerosToFront(storiesLines);
-        dispatch(changeStoryLines(result));
-        socketRef.current.emit('storyLines', result);
-    }, [allContent, fontSize, contentRefs, slugs, dispatch]);
+
+        // Only dispatch if result is different
+        const isEqual = result.length === storyLines.length && result.every((v, i) => v === storyLines[i]);
+        if (!isEqual) {
+            dispatch(changeStoryLines(result));
+            socketRef.current?.emit('storyLines', result);
+        }
+    }, [allContent, fontSize, contentRefs, slugs, dispatch, storyLines]);
+
 
     return (
-        <div style={{ width: scrollWidth, height: scrollHeight, overflow: 'hidden', border: '1px solid black' }}>
+        <div style={{ width: scrollWidth, height: scrollHeight, overflow: 'hidden', border: '1px solid #000000' }}>
             <div style={{
                 width: baseWidth,
                 height: baseHeight,

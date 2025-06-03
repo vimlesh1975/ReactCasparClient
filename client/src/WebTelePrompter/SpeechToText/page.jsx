@@ -18,15 +18,6 @@ function SpeechToText() {
     const [targetLanguage, setTargetLanguage] = useState('hi');
     const [loading, setLoading] = useState(false);
 
-    // const punctuate = (text) => {
-    //     if (!text.trim()) return '';
-    //     let result = text.trim();
-    //     result = result.charAt(0).toUpperCase() + result.slice(1);
-    //     if (!/[.?!]$/.test(result)) {
-    //         result += '.';
-    //     }
-    //     return result + ' ';
-    // };
     useEffect(() => {
         if (transcript === lastTranscript) return;
 
@@ -135,7 +126,7 @@ function SpeechToText() {
 
             </div>
             <div>
-                <span> Put to Script: </span> <input type="checkbox" checked={directtoScript} onChange={e => {
+                <span> Put to Script: </span> <input type="checkbox" checked={directtoScript} onChange={() => {
                     setDirecttoScript(val => !val);
                     resetTranscript();
                 }} />

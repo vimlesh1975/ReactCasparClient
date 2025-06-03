@@ -949,4 +949,28 @@ app.post('/translate', async (req, res) => {
 
 // code end for MOS
 
+//start code for web tele prompter
+
+const os = require('os');
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
+
+// GET endpoint for /getlocalip
+app.get('/getlocalip', (req, res) => {
+  const ip = getLocalIP();
+  res.json({ ip });
+});
+
+
+//end code for web tele prompter
 

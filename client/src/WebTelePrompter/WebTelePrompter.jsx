@@ -1,30 +1,31 @@
+"use client";
 // import './page1.css'
 
 import { fontLists, fixdata } from "./common.js";
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import NewWindow from "./components/NewWindow.jsx";
-import NewWindowforfullscreen from "./components/NewWindowforfullscreen.jsx";
-import Scroll from "./components/Scroll.jsx";
+import NewWindow from "./components/NewWindow";
+import NewWindowforfullscreen from "./components/NewWindowforfullscreen";
+import Scroll from "./components/Scroll";
 import io from "socket.io-client";
-import Casparcg from "./Casparcg.jsx";
+import Casparcg from "./Casparcg";
 import TTS from './components/TTS.jsx'
-import ScrollView from './components/ScrollView.jsx';
+import ScrollView from './components/ScrollView';
 import mammoth from 'mammoth';
 import 'react-tabs/style/react-tabs.css';
-import { UseSocketControls } from "./components/UseSocketControls.jsx";
+import { UseSocketControls } from "./components/UseSocketControls";
 
 const scrollHeight = 460;
 const scrollWidth = 782;//scrollHeight * 16 / 9=782.22;
 
 const dummyScriptid = 200502071223160;
 
-export default function WebTelePrompter() {
+export default function Home() {
   const [ip, setIp] = useState(null)
   const [fontList, setFontList] = useState(fontLists);
   const [currentFont, setCurrentFont] = useState("Times New Roman");
   const [isRTL, setIsRTL] = useState(false);
-  const [bgColor, setbgColor] = useState('black');
+  const [bgColor, setbgColor] = useState('#000000');
   const [fontColor, setFontColor] = useState('#ffffff');
   const [fontBold, setFontBold] = useState(false);
   const socketRef = useRef(null);
@@ -87,19 +88,22 @@ export default function WebTelePrompter() {
   }), [newPosition, fontSize]);
   useEffect(() => {
     if (!window.location.origin.includes('vercel')) {
-      fetch('https://localhost:9000/getfonts', { method: 'POST' })
+      fetch('/api/fonts')
         .then((res) => res.json())
-        .then((data) => {
-          setFontList(data);
-        })
+        .then((data) => setFontList(data.fonts))
         .catch((err) => console.error(err));
     }
   }, []);
+
   useEffect(() => {
     const addr = `${window.location.origin}/ReactCasparClient/SpeechToText`;
     if (iframeRef.current) {
       iframeRef.current.src = addr;
     }
+  }, [])
+
+  useEffect(() => {
+
     const handleFocus = (event) => {
       if (textarea1Ref.current) textarea1Ref.current.style.borderColor = 'red';
       event.target.style.borderColor = 'red';
@@ -144,11 +148,15 @@ export default function WebTelePrompter() {
 
 
 
+
+
   const handleTextareaKeyDown = (event) => {
     if (event.code === 'Space') {
       event.stopPropagation(); // Prevent spacebar from bubbling to document
     }
   };
+
+  // Read from localStorage ONLY ONCE when component mounts
   useEffect(() => {
     const savedData = localStorage.getItem("WebTelePrompter");
     if (savedData) {
@@ -175,24 +183,35 @@ export default function WebTelePrompter() {
       if (dataObject.currentFont !== undefined) {
         setCurrentFont(dataObject.currentFont);
       }
-    } else {
-      localStorage.setItem(
-        "WebTelePrompter",
-        JSON.stringify({ fontSize, startPosition, isRTL, bgColor, fontColor, fontBold, currentFont })
-      );
     }
-  }, [bgColor, fontBold, fontColor, fontSize, isRTL, startPosition, currentFont]);
+  }, []); // ⬅️ Run only once on mount
+
+  // Save to localStorage whenever relevant state changes (debounced)
   useEffect(() => {
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       const savedData = localStorage.getItem("WebTelePrompter");
       const dataObject = savedData ? JSON.parse(savedData) : {};
 
       localStorage.setItem(
         "WebTelePrompter",
-        JSON.stringify({ ...dataObject, fontSize, startPosition, isRTL, bgColor, fontColor, fontBold, currentFont })
+        JSON.stringify({
+          ...dataObject,
+          fontSize,
+          startPosition,
+          isRTL,
+          bgColor,
+          fontColor,
+          fontBold,
+          currentFont,
+        })
       );
-    }, 1000);
+    }, 500); // shorter debounce is usually enough
+
+    return () => clearTimeout(timeoutId); // cleanup previous timeout if values change rapidly
   }, [fontSize, startPosition, isRTL, bgColor, fontColor, fontBold, currentFont]);
+
+
+
   const handleCloseNewWindow = () => {
     setShowNewWindow(false);
   };
@@ -235,10 +254,6 @@ export default function WebTelePrompter() {
     };
   }, [speed, tempSpeed]);
 
-  const isVideoNndCGPresent = (slug) => {
-    return ``;
-  };
-
   const fetchAllContent = useCallback((slicedSlugs, startNumber) => {
     if (!Array.isArray(slicedSlugs) || slicedSlugs.length === 0) {
       return;
@@ -247,9 +262,9 @@ export default function WebTelePrompter() {
     const data1 = new Array(slicedSlugs.length * 3);
     try {
       slicedSlugs.forEach((slug, i) => {
-        if ((slug.DropStory === 0 || slug.DropStory === 2) && (slug?.Approval)) {
-          data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}${isVideoNndCGPresent(slug)}`;
-          data1[i * 3 + 1] = slug.Script ? `${slug.Script?.trim().split('$$$$')[0]}` : '';
+        if ((slug.DropStory === 0 || slug.DropStory === 2) && slug?.Approval) {
+          data1[i * 3] = `${startNumber + i + 1} ${slug?.SlugName}`;
+          data1[i * 3 + 1] = slug.Script ? `${slug.Script.trim().split('$$$$')[0]}` : '';
           data1[i * 3 + 2] = `--------------`;
         } else {
           data1[i * 3] = `${startNumber + i + 1} ${!(slug?.DropStory === 0 || slug?.DropStory === 2) ? "Story Dropped" : "Story UnApproved"
@@ -264,6 +279,7 @@ export default function WebTelePrompter() {
       console.error("Error fetching content:", error);
     }
   }, [setAllContent]);
+
 
   const handleDoubleClick = useCallback((i) => {
     if (i === 0) {
@@ -289,7 +305,7 @@ export default function WebTelePrompter() {
     setDoubleClickedPosition,
     setNewPosition,
     setUsedStory,
-    startPosition
+    startPosition,
   ]);
 
   const fromStart = () => {
@@ -345,13 +361,15 @@ export default function WebTelePrompter() {
 
 
   useEffect(() => {
-    if (slugs[currentStoryNumber - 1]?.DropStory === 1 || slugs[currentStoryNumber - 1]?.DropStory === 3) {
-      return;
-    }
-    const updatedStories = [...usedStory, slugs[currentStoryNumber - 1]?.ScriptID];
-    const uniqueStories = [...new Set(updatedStories.filter((item) => item !== null))];
-    setUsedStory(uniqueStories);
+    const slug = slugs[currentStoryNumber - 1];
+    if (!slug || slug.DropStory === 1 || slug.DropStory === 3) return;
+
+    const newScriptID = slug.ScriptID;
+    if (!newScriptID || usedStory.includes(newScriptID)) return;
+
+    setUsedStory(prev => [...prev, newScriptID]);
   }, [currentStoryNumber, slugs, usedStory]);
+
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -442,88 +460,6 @@ export default function WebTelePrompter() {
       return 2;
     }
   }
-  // const readFile = (selectedFile) => {
-  //   if (!selectedFile) return;
-  //   const reader = new FileReader();
-  //   let bb = [];
-
-  //   if (selectedFile.type !== 'text/plain') {
-  //     reader.onload = function (event) {
-  //       const arrayBuffer = event.target.result;
-
-  //       mammoth.extractRawText({ arrayBuffer: arrayBuffer })
-  //         .then(function (result) {
-  //           const content = result.value; // extracted text
-  //           const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
-  //           if (singleScript) {
-  //             bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
-  //             setSlugs(bb);
-
-  //           }
-  //           else {
-  //             bb = lines.map((line, index) => {
-  //               const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
-  //               return {
-  //                 ...fixdata,
-  //                 ScriptID: dummyScriptid + index,
-  //                 SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
-  //                 Script: line
-  //               };
-  //             });
-  //             setSlugs(bb);
-
-  //           }
-
-  //         })
-  //         .catch(function (err) {
-  //           console.error("Error reading docx:", err);
-  //         });
-  //     };
-
-  //     reader.readAsArrayBuffer(selectedFile);
-
-  //   }
-  //   else {
-  //     reader.onload = (e) => {
-  //       const content = e.target.result;
-  //       const hasZXZX = /ZXZX/i.test(content);
-  //       if (hasZXZX) {
-  //         const aa = content.split(/ZCZC/i);
-  //         bb = aa.map((item, index) => {
-  //           const [SlugName, Script] = item.split(/ZXZX/i).map(str => str.trim().replace(/\r?\n/g, ''));
-  //           return {
-  //             ...fixdata,
-  //             ScriptID: dummyScriptid + index,
-  //             Approval: SlugName.includes('(Story UnApproved)') ? 0 : 1,
-  //             DropStory: SlugName.includes('(Story Dropped)') ? 1 : 0,
-  //             SlugName,
-  //             Script
-  //           };
-  //         });
-  //       } else {
-
-  //         const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== ""); // Remove empty lines
-  //         if (singleScript) {
-  //           bb = [{ ...fixdata, ScriptID: dummyScriptid, SlugName: selectedFile.name, Script: content }];
-  //         }
-  //         else {
-  //           bb = lines.map((line, index) => {
-  //             const words = line.split(/\s+/).slice(0, 3).join(" "); // Extract first three words
-  //             return {
-  //               ...fixdata,
-  //               ScriptID: dummyScriptid + index,
-  //               SlugName: words || `Slug${index + 1}`, // Fallback if line is empty
-  //               Script: line
-  //             };
-  //           });
-  //         }
-  //       }
-  //       setSlugs(bb);
-  //     };
-  //     reader.readAsText(selectedFile);
-  //   }
-  // };
-
 
   const readFile = useCallback((selectedFile) => {
     if (!selectedFile) return;
@@ -532,11 +468,12 @@ export default function WebTelePrompter() {
     let bb = [];
 
     if (selectedFile.type !== 'text/plain') {
+      // DOCX file handling
       reader.onload = function (event) {
         const arrayBuffer = event.target.result;
 
-        mammoth.extractRawText({ arrayBuffer })
-          .then((result) => {
+        mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+          .then(function (result) {
             const content = result.value;
             const lines = content.split(/\r?\n/).map(line => line.trim()).filter(line => line !== "");
 
@@ -561,13 +498,15 @@ export default function WebTelePrompter() {
 
             setSlugs(bb);
           })
-          .catch(err => {
+          .catch(function (err) {
             console.error("Error reading docx:", err);
           });
       };
 
       reader.readAsArrayBuffer(selectedFile);
+
     } else {
+      // TXT file handling
       reader.onload = (e) => {
         const content = e.target.result;
         const hasZXZX = /ZXZX/i.test(content);
@@ -686,7 +625,7 @@ export default function WebTelePrompter() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/getlocalip')
+    fetch('https://localhost:9000/getlocalip')
       .then(res => res.json())
       .then(data => setIp(data.ip))
   }, [])
@@ -728,12 +667,7 @@ export default function WebTelePrompter() {
 
       })
       .catch((err) => console.error('Error reading file:', err));
-  }, []);
-
-  useEffect(() => {
-    readFile(file);
-  }, [singleScript])
-
+  }, [fetchAllContent, startPosition]);
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === 'Enter') {
@@ -752,6 +686,20 @@ export default function WebTelePrompter() {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [keyPressed, handleDoubleClick]);
+
+
+  useEffect(() => {
+    readFile(file);
+  }, [singleScript, file, readFile]);
+  const handleBgColorChange = (color) => {
+    setbgColor(color);
+    socketRef.current?.emit('bgColor', color);
+  };
+
+  const handleFontColorChange = (color) => {
+    setFontColor(color);
+    socketRef.current?.emit('fontColor', color);
+  };
 
   return (
     <div style={{ overflow: "hidden", backgroundColor: '#e0e0d2', }}>
@@ -821,7 +769,6 @@ export default function WebTelePrompter() {
                 >
                   {val.SlugName}{" "}
                 </label>{" "}
-                <label style={{ marginRight: 0, fontSize: 12 }}>{isVideoNndCGPresent(val)}</label>
                 <br />
               </div>
             ))}
@@ -955,7 +902,6 @@ export default function WebTelePrompter() {
                 }}
               >
                 {currentSlug + 1} {currentSlugName}
-                {isVideoNndCGPresent(slugs[currentSlug])}
               </div>
             )}
             <div>
@@ -1257,17 +1203,27 @@ export default function WebTelePrompter() {
                   <UseSocketControls speed={speed} setSpeed={setSpeed} tempSpeed={tempSpeed} setTempSpeed={setTempSpeed} fromStart={fromStart} handleDoubleClick={handleDoubleClick} slugs={slugs} currentStoryNumber={currentStoryNumber} onclickSlug={onclickSlug} previous={previous} next={next} />
                 </div>
               </div>
-              <div>
-                {currentStoryNumber}
-                Bg Color <input type="color" value={bgColor} onChange={e => {
-                  setbgColor(e.target.value);
-                  socketRef.current.emit('bgColor', e.target.value);
-                }} />
-                Font Color:<input type="color" value={fontColor} onChange={e => {
-                  setFontColor(e.target.value);
-                  socketRef.current.emit('fontColor', e.target.value);
-                }} />
-                <button onClick={() => window.open(`http://${ip}:5000/m`)}>Mobile controllerr</button>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ marginRight: '1rem' }}>
+                  Bg Color:
+                  <input
+                    type="color"
+                    value={bgColor}
+                    onChange={(e) => handleBgColorChange(e.target.value)}
+                    style={{ marginLeft: '0.5rem' }}
+                  />
+                </label>
+
+                <label>
+                  Font Color:
+                  <input
+                    type="color"
+                    value={fontColor}
+                    onChange={(e) => handleFontColorChange(e.target.value)}
+                    style={{ marginLeft: '0.5rem' }}
+                  />
+                </label>
+                <button onClick={() => window.open(`https://${ip}:10000/ReactCasparClient/WebTelePrompter/m`)}>Mobile controllerr</button>
               </div>
             </div>
           </div>

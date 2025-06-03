@@ -17,7 +17,7 @@ function NewWindowforfullscreen({ children, onClose, newWindowRef, scrollWidth, 
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [newWindowRef]);
 
     useEffect(() => {
         if (!newWindowRef.current || newWindowRef.current.closed) {

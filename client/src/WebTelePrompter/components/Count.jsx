@@ -9,7 +9,7 @@ const Count = ({ currentStoryNumber }) => {
     setCount(0);
   }, [currentStoryNumber])
   return (
-    <div style={{ color: 'black', backgroundColor: 'white', minWidth: 50, textAlign: 'center' }}>
+    <div style={{ color: '#000000', backgroundColor: 'white', minWidth: 50, textAlign: 'center' }}>
       {count}
     </div>
   )
