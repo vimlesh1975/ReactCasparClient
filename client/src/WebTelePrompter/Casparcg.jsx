@@ -6,14 +6,13 @@ import { endpoint } from '../common';
 
 export default function Home({ scrollingTextStyle, scrollContainerStyle, currentFont, fontBold, isRTL, fontColor, slugs, allContent, startPosition, currentStoryNumber, storyLines, crossedLines, showClock, newsReaderText, setSpeed }) {
 
-  const [connected, setConnected] = useState(false);
   const [fliped, setFliped] = useState(false);
   const [socketcurrentstory, setSocketcurrentstory] = useState('not set');
 
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io();
+    socketRef.current = io('https://localhost:9000');
 
     socketRef.current.on('connect', () => {
       console.log('SOCKET CONNECTED! from caparcg page', socketRef.current.id);
@@ -32,7 +31,6 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
       console.log('SOCKET CONNECTED! form casparcg connection', socketRef.current.id);
     });
     socketRef.current.on('ServerConnectionStatus2', (msg) => {
-      setConnected(msg);
     });
 
     socketRef.current.on('currentStoryBroadcast', (data) => {
@@ -40,12 +38,10 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
     });
 
     socketRef.current.on('connect_error', () => {
-      setConnected(false);
     });
 
     socketRef.current.on('disconnect', () => {
       console.log('Disconnected from server');
-      setConnected(false);
     });
 
     return () => {
@@ -61,14 +57,10 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
 
 
   const playOnSecondChannelinFlippedMode = () => {
-    endpoint({
-      action: 'endpoint',
-      command: `play 2-97 route://1`
-    });
-    endpoint({
-      action: 'endpoint',
-      command: `mixer 2-97 fill 1 0 -1 1`
-    });
+    endpoint(`play 2-97 route://1`
+    );
+    endpoint(`mixer 2-97 fill 1 0 -1 1`
+    );
   }
 
   return (
@@ -133,14 +125,10 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
           <div>
             <button
               onClick={() => {
-                endpoint({
-                  action: 'endpoint',
-                  command: `stop 1-97`,
-                });
-                endpoint({
-                  action: 'endpoint',
-                  command: `mixer 1-97 clear`,
-                });
+                endpoint(`stop 1-97`,
+                );
+                endpoint(`mixer 1-97 clear`,
+                );
               }
               }
             >
@@ -148,10 +136,8 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
             </button>
             <button
               onClick={() => {
-                endpoint({
-                  action: 'endpoint',
-                  command: !fliped ? 'mixer 1-97 fill 1 0 -1 1' : 'mixer 1-97 fill 0 0 1 1',
-                });
+                endpoint(!fliped ? 'mixer 1-97 fill 1 0 -1 1' : 'mixer 1-97 fill 0 0 1 1',
+                );
                 setFliped(val => !val);
               }}
             >
@@ -160,27 +146,19 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
           </div>
           <div >
             <button onClick={() => {
-              endpoint({
-                action: 'endpoint',
-                command: `play 2-97 route://1`
-              });
-              endpoint({
-                action: 'endpoint',
-                command: `mixer 2-97 fill 0 0 1 1`
-              });
+              endpoint(`play 2-97 route://1`
+              );
+              endpoint(`mixer 2-97 fill 0 0 1 1`
+              );
             }}>Play 2nd channel </button>
             <button onClick={() => {
               playOnSecondChannelinFlippedMode();
             }}>Play 2nd channel flip mode</button>
             <button onClick={() => {
-              endpoint({
-                action: 'endpoint',
-                command: `stop 2-97`
-              });
-              endpoint({
-                action: 'endpoint',
-                command: `mixer 2-97 clear`
-              });
+              endpoint(`stop 2-97`
+              );
+              endpoint(`mixer 2-97 clear`
+              );
             }}>Stop 2nd Channel</button>
           </div>
         </div>
