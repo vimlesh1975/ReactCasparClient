@@ -88,12 +88,14 @@ export default function Home() {
   }), [newPosition, fontSize]);
   useEffect(() => {
     if (!window.location.origin.includes('vercel')) {
-      fetch('/api/fonts')
+      fetch(`https://${ip}:9000/getfonts`, {
+        method: 'POST',
+      })
         .then((res) => res.json())
-        .then((data) => setFontList(data.fonts))
+        .then((data) => setFontList(data))
         .catch((err) => console.error(err));
     }
-  }, []);
+  }, [ip]);
 
   useEffect(() => {
     const addr = `${window.location.origin}/ReactCasparClient/SpeechToText`;
