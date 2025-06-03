@@ -35,7 +35,7 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
 
 
     useEffect(() => {
-        socketRef.current = io();
+        socketRef.current = io('https://localhost:9000');
         return () => {
             socketRef.current?.disconnect();
             socketRef.current = null;

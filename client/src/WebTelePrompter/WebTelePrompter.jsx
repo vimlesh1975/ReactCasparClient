@@ -86,16 +86,22 @@ export default function Home() {
     fontSize: parseInt(fontSize * 2.5),
     lineHeight: `${Math.floor(fontSize * 1.5 * 2.5)}px`,
   }), [newPosition, fontSize]);
+
   useEffect(() => {
-    if (!window.location.origin.includes('vercel')) {
-      fetch(`https://${ip}:9000/getfonts`, {
-        method: 'POST',
+    fetch('https://localhost:9000/getlocalip')
+      .then(res => res.json())
+      .then(data => {
+        setIp(data.ip);
+        if (!window.location.origin.includes('vercel')) {
+          fetch(`https://${data.ip}:9000/getfonts`, {
+            method: 'POST',
+          })
+            .then((res) => res.json())
+            .then((data) => setFontList(data))
+            .catch((err) => console.error(err));
+        }
       })
-        .then((res) => res.json())
-        .then((data) => setFontList(data))
-        .catch((err) => console.error(err));
-    }
-  }, [ip]);
+  }, [])
 
   useEffect(() => {
     const addr = `${window.location.origin}/ReactCasparClient/SpeechToText`;
@@ -587,7 +593,7 @@ export default function Home() {
   const fromStartRef = useRef();
   fromStartRef.current = fromStart;
   useEffect(() => {
-    socketRef.current = io();
+    socketRef.current = io('https://localhost:9000');
     const socket = socketRef.current;
     socket.on("connect", () => {
       console.log("SOCKET CONNECTED! from main page", socket.id);
@@ -626,11 +632,7 @@ export default function Home() {
     }
   }, [])
 
-  useEffect(() => {
-    fetch('https://localhost:9000/getlocalip')
-      .then(res => res.json())
-      .then(data => setIp(data.ip))
-  }, [])
+
 
   useEffect(() => {
     fetch('/ReactCasparClient/example.txt')

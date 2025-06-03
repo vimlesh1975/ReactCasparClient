@@ -23,7 +23,7 @@ const ScrollViewforcasparcg = () => {
     const contentRefs = useRef([]);
 
     useEffect(() => {
-        socketRef.current = io();
+        socketRef.current = io('https://localhost:9000');
 
         socketRef.current.on('connect', () => {
             console.log('SOCKET CONNECTED! from Scrollviewforcasparcg page', socketRef.current.id);
