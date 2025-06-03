@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-const IP = process.env.NEXT_PUBLIC_IP;
+import { endpoint } from '../common';
 
 export default function Home({ scrollingTextStyle, scrollContainerStyle, currentFont, fontBold, isRTL, fontColor, slugs, allContent, startPosition, currentStoryNumber, storyLines, crossedLines, showClock, newsReaderText, setSpeed }) {
 
@@ -58,19 +58,7 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const endpoint = async (str) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(str),
-    };
-    const aa = await fetch('/api/casparcg', requestOptions);
-    if (str.action === 'connect' || str.action === 'disconnect') {
-      setConnected(await aa.json());
-    }
-  };
+
 
   const playOnSecondChannelinFlippedMode = () => {
     endpoint({
@@ -87,25 +75,7 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
     <div>
       <div>
         <div>
-          For Casparcg Output <button
-            style={{ backgroundColor: connected ? 'green' : 'red' }}
-            onClick={() =>
-              endpoint({
-                action: 'connect',
-              })
-            }
-          >
-            Connect
-          </button>
-          <button
-            onClick={() =>
-              endpoint({
-                action: 'disconnect',
-              })
-            }
-          >
-            DisConnect
-          </button>
+          For Casparcg Output
           <button onClick={() => setSpeed(1)}> Start with Speed 1</button>
           {socketcurrentstory.ScriptID}
         </div>
@@ -113,10 +83,9 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
           Method 1:
           <button
             onClick={() => {
-              endpoint({
-                action: 'endpoint',
-                command: `Play 1-97 [html] "http://${IP}:5000/CasparcgOutput"`,
-              });
+              endpoint(
+                `Play 1-97 [html] "https://localhost:10000/ReactCasparClient/WebTelePrompter/CasparcgOutput`,
+              );
 
               playOnSecondChannelinFlippedMode();
               setTimeout(() => {
@@ -148,10 +117,8 @@ export default function Home({ scrollingTextStyle, scrollContainerStyle, current
           Method 2:
           <button
             onClick={() => {
-              endpoint({
-                action: 'endpoint',
-                command: `play 1-97 [html] http://${IP}:5000/webrtc.html`,
-              });
+              endpoint(`play 1-97 [html] https://localhost:10000/ReactCasparClient/webrtc.html`,
+              );
               playOnSecondChannelinFlippedMode();
             }
             }

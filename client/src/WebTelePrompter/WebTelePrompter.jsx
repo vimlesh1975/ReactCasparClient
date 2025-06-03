@@ -1154,7 +1154,7 @@ export default function Home() {
                 {showNewWindow3 ? "Close Full Screen" : "Open Full Screen"}
               </button>
               <button onClick={() => {
-                window.open('/WebSocketOutput', '', `width=${scrollWidth},height=${scrollHeight + 40}`);
+                window.open('/ReactCasparClient/WebTelePrompter/WebSocketOutput', '', `width=${scrollWidth},height=${scrollHeight + 40}`);
                 setTimeout(() => {
 
                   const socket = socketRef.current;

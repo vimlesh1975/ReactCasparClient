@@ -27,8 +27,8 @@ const Page = () => {
     if (!isMaximized) {
       // Maximize window (only works for popups)
       window.moveTo(0, 0);
-      window.resizeTo(screen.width, screen.height);
-      const screenHeight = screen.height;
+      window.resizeTo(window.screen.width, window.screen.height);
+      const screenHeight = window.screen.height;
 
       const knownOrigins = {
         1080: 160,

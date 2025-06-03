@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebRTC Screen Share</title>
     <style>
-        body{
+        body {
             overflow: hidden;
         }
+
         #localVideoContainer {
             width: 760px;
             height: 529px;
             overflow: hidden;
             position: relative;
             margin-top: -80px;
-            transform: scale(2.5,2.35); 
-            transform-origin: top left; 
+            transform: scale(2.5, 2.35);
+            transform-origin: top left;
         }
 
         #localVideo {
@@ -35,9 +36,9 @@
         <video id="localVideo" autoplay muted></video>
     </div>
     <button id="startButton">Start Sharing</button>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/socket.io.js"></script>
     <script>
-        const socket = io();
+        const socket = io('https://localhost:9000');
         const localVideo = document.getElementById('localVideo');
         const remoteVideo = document.getElementById('remoteVideo');
         const startButton = document.getElementById('startButton');
