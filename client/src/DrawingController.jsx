@@ -2961,6 +2961,9 @@ const DrawingController = () => {
             <button onClick={() => exportJSONforTheatrejs(canvas)}>
               Web Animator
             </button>
+            <button onClick={() => window.open("/ReactCasparClient/WebTelePrompter")}>
+              WebTelePrompter
+            </button>
             <button onClick={openGdd}>Gdd Template Player</button>
           </div>
           <div className="drawingToolsRow">

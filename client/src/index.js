@@ -26,6 +26,11 @@ import Twoliner from './NRCS/Twoliner'
 import YellowNewsUpdate from './test/YellowNewsUpdate'
 import Xyz from './Xyz'
 import HorizontalScrollUrdu from './NRCS/HorizontalScrollUrdu'
+import WebTelePrompter from './WebTelePrompter/WebTelePrompter.jsx'
+import SpeechToText from './WebTelePrompter/SpeechToText/page.jsx'
+import M from './WebTelePrompter/m/page.jsx'
+import WebSocketOutput from './WebTelePrompter/WebSocketOutput/page.jsx'
+import CasparcgOutput from './WebTelePrompter/CasparcgOutput/page.jsx'
 
 
 
@@ -62,7 +67,12 @@ root.render(
         <Route exact path="/Twoliner/:selectedDate/:NrcsBreakingText" element={<Twoliner />} />
         <Route exact path="/YellowNewsUpdate" element={<YellowNewsUpdate />} />
         <Route exact path="/Xyz" element={<Xyz />} />
-        
+        <Route exact path="/WebTelePrompter" element={<WebTelePrompter />} />
+        <Route exact path="/WebTelePrompter/m" element={<M />} />
+        <Route exact path="/SpeechToText" element={<SpeechToText />} />
+        <Route exact path="/WebTelePrompter/WebSocketOutput" element={<WebSocketOutput />} />
+        <Route exact path="/WebTelePrompter/CasparcgOutput" element={<CasparcgOutput />} />
+
       </Routes>
     </Router>
   </Provider>
