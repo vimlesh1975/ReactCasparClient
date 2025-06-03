@@ -1,5 +1,6 @@
 // socket.js
 import { io } from "socket.io-client";
+import { addressforwebteleprompter } from '../common';
 
-const socket = io('https://localhost:9000'); // You can provide your server URL here
+const socket = io(addressforwebteleprompter); // You can provide your server URL here
 export default socket;

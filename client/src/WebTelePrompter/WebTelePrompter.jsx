@@ -1,7 +1,7 @@
 "use client";
 // import './page1.css'
 
-import { fontLists, fixdata } from "./common.js";
+import { fontLists, fixdata, addressforwebteleprompter } from "./common.js";
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import NewWindow from "./components/NewWindow";
@@ -88,11 +88,11 @@ export default function Home() {
   }), [newPosition, fontSize]);
 
   useEffect(() => {
-    fetch('https://localhost:9000/getlocalip')
+    fetch(`${addressforwebteleprompter}/getlocalip`)
       .then(res => res.json())
       .then(data => {
         setIp(data.ip);
-        if (!window.location.origin.includes('vercel')) {
+        if (!window.location.origin.includes('https://vimlesh1975.github.io/')) {
           fetch(`https://${data.ip}:9000/getfonts`, {
             method: 'POST',
           })
@@ -593,7 +593,7 @@ export default function Home() {
   const fromStartRef = useRef();
   fromStartRef.current = fromStart;
   useEffect(() => {
-    socketRef.current = io('https://localhost:9000');
+    socketRef.current = io(addressforwebteleprompter);
     const socket = socketRef.current;
     socket.on("connect", () => {
       console.log("SOCKET CONNECTED! from main page", socket.id);

@@ -4,6 +4,7 @@ export const fontLists = [
     'Courier New', 'Lucida Console',
     'Segoe UI', 'Roboto', 'San Francisco', 'Ubuntu'
 ]
+export const addressforwebteleprompter = window.location.origin.includes('https://vimlesh1975.github.io') ? 'https://octopus-app-gzws3.ondigitalocean.app' : 'https://localhost:9000';
 
 export const fixdata = {
     "ScriptID": "202502071223160",

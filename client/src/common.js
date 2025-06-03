@@ -4,7 +4,8 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "060625_1";
+export const buildDate = "060325_1";
+
 
 export function convertRgbaToHex(color) {
   // Check if the color is in rgba(r,g,b,a) format

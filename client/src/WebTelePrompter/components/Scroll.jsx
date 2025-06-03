@@ -4,6 +4,8 @@ import { useEffect, useRef, useMemo } from 'react';
 import io from 'socket.io-client';
 import ScrollView from './ScrollView';
 import { changeStoryLines, changeCrossedLines } from '../store/store';
+import { addressforwebteleprompter } from '../common';
+
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -35,7 +37,7 @@ const Scroll = ({ scrollContainerStyle, scrollingTextStyle,
 
 
     useEffect(() => {
-        socketRef.current = io('https://localhost:9000');
+        socketRef.current = io(addressforwebteleprompter);
         return () => {
             socketRef.current?.disconnect();
             socketRef.current = null;

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import io from 'socket.io-client';
 import ScrollView from './ScrollView';
 
+import { addressforwebteleprompter } from '../common';
+
 const ScrollViewforcasparcg = () => {
     const [currentFont, setCurrentFont] = useState("Times New Roman");
     const [isRTL, setIsRTL] = useState(false);
@@ -23,7 +25,7 @@ const ScrollViewforcasparcg = () => {
     const contentRefs = useRef([]);
 
     useEffect(() => {
-        socketRef.current = io('https://localhost:9000');
+        socketRef.current = io(addressforwebteleprompter);
 
         socketRef.current.on('connect', () => {
             console.log('SOCKET CONNECTED! from Scrollviewforcasparcg page', socketRef.current.id);
