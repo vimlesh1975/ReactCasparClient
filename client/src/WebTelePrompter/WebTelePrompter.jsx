@@ -1227,7 +1227,7 @@ export default function Home() {
                     style={{ marginLeft: '0.5rem' }}
                   />
                 </label>
-                <button onClick={() => window.open(`https://${ip}:10000/ReactCasparClient/WebTelePrompter/m`)}>Mobile controllerr</button>
+                <button onClick={() => window.open(window.location.origin.includes('https://vimlesh1975.github.io') ? 'https://vimlesh1975.github.io/ReactCasparClient/WebTelePrompter/m' : `https://${ip}:10000/ReactCasparClient/WebTelePrompter/m`)}>Mobile controllerr</button>
               </div>
             </div>
           </div>

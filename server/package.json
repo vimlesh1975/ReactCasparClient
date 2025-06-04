@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "main": "main.js",
+    "engines": {
+        "node": "23.11.1"
+    },
     "dependencies": {
         "@google-cloud/text-to-speech": "^5.6.0",
         "@google-cloud/translate": "^9.0.1",
