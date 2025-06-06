@@ -321,14 +321,27 @@ const showIdReducer = (state = initialShowId, action) => {
   }
 };
 
-
-const initialShowHtmlOutput = { showHtmlOutput: false };
+const initialShowHtmlOutput = { showHtmlOutput: true };
 const showHtmlOutputReducer = (state = initialShowHtmlOutput, action) => {
   switch (action.type) {
     case 'SHOW_HTML_OUTPUT':
       return {
         ...state,
         showHtmlOutput: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
+const initialShowHtmlOutputrcc = { showHtmlOutputrcc: true };
+const showHtmlOutputReducerrcc = (state = initialShowHtmlOutputrcc, action) => {
+  switch (action.type) {
+    case 'SHOW_HTML_OUTPUT':
+      return {
+        ...state,
+        showHtmlOutputrcc: action.payload,
       };
     default:
       return state;
@@ -521,6 +534,7 @@ const rootReducer = combineReducers({
   pannelEnableReducer,
   showIdReducer,
   showHtmlOutputReducer,
+  showHtmlOutputReducerrcc,
   showDataTableReducer,
   showImgSeqReducer,
   showExtensionPanelReducer,

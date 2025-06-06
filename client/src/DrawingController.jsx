@@ -121,6 +121,8 @@ import Spinner from './spinner/Spinner'
 import localforage from './localForageConfig';
 import { io } from "socket.io-client";
 
+
+
 var intervalGameTimer1;
 var intervalGameTimer2;
 var html;
@@ -232,6 +234,7 @@ let socket;
 
 
 const DrawingController = () => {
+  const showHtmlOutputrcc = useSelector((state) => state.showHtmlOutputReducerrcc.showHtmlOutputrcc);
   const showId = useSelector((state) => state.showIdReducer.showId);
   const clientId = useSelector((state) => state.clientIdReducer.clientId);
 
@@ -2860,11 +2863,23 @@ const DrawingController = () => {
                 <input
                   type="checkbox"
                   checked={showId}
-                  onChange={(e) => dispatch({ type: "SHOW_ID", payload: !showId })}
+                  onChange={() => dispatch({ type: "SHOW_ID", payload: !showId })}
                 />
                 Show ID
               </label>
             </div>
+
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showHtmlOutputrcc}
+                  onChange={() => dispatch({ type: "SHOW_HTML_OUTPUT", payload: !showHtmlOutputrcc })}
+                />
+                Show Html Output
+              </label>
+            </div>
+
             <div style={{ marginLeft: 10 }}>
               Corner Size:<input
                 onDoubleClick={(e) => {

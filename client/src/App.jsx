@@ -62,7 +62,11 @@ import {
   startGraphics
 } from "./common.js";
 
+
+
+
 const App = () => {
+  const showHtmlOutputrcc = useSelector((state) => state.showHtmlOutputReducerrcc.showHtmlOutputrcc);
   const canvas = useSelector((state) => state.canvasReducer.canvas);
   const zoom = useSelector((state) => state.canvaszoomReducer.zoom);
 
@@ -481,7 +485,7 @@ const App = () => {
                   <TimeLine1 />
                 </div>
                 <div style={{ border: '1px solid red', zIndex: -1 }}>
-                  <HtmlOutput scale={0.315} />
+                  {showHtmlOutputrcc ? <HtmlOutput scale={0.315} /> : <div style={{ backgroundColor: 'grey', width: 600, height: 340, }}></div>}
                 </div>
                 <div style={{ display: 'none' }}>
                   <Automation />
