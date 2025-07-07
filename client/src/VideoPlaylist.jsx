@@ -93,14 +93,14 @@ const VideoPlaylist = () => {
             <div style={{ width: 400 }}>
                 File: <input style={{ width: 320 }} onChange={(e) => setfilename(e.target.value)} value={filename}></input>
                 <br /> <button className='palyButton' onClick={() => endpoint(`load ${window.chNumber}-${layerNumber} "${filename}"`)}>Cue</button>
-                <button className='palyButton' onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${filename}"`)}> Play</button>
+                <button className='palyButton' onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${filename}"  mix 10`)}> Play</button>
                 <button className='stopButton' onClick={() => endpoint(`pause ${window.chNumber}-${layerNumber}`)}>Pause</button>
                 <button className='stopButton' onClick={() => endpoint(`resume ${window.chNumber}-${layerNumber}`)}>Resume</button>
                 <button className='stopButton' onClick={() => endpoint(`stop ${window.chNumber}-${layerNumber}`)}>Stop</button>
                 <button className='palyButton' onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${filename}" loop`)}>Loop Play</button>
 
             </div>
-            <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia.length} files<br />
+            <button onClick={refreshMedia}>Refresh Media</button>{searchedMedia.length} files , Double Click to add in playlist<br />
             <span>search:</span><input style={{ width: 320 }} type='text' onChange={e => setSearchText(e.target.value)} />
             <div style={{ maxHeight: '750px', maxWidth: '400px', overflow: 'scroll' }}>
                 <table border='1' >
@@ -156,8 +156,17 @@ const VideoPlaylist = () => {
 
                                                                 }} key1={i} key2={'vimlesh'}  >{val.fileName}
                                                             </td>
-                                                            <td><button key1={i} onClick={() => endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`)} >Cue</button></td>
-                                                            <td><button key1={i} onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`)} ><FaPlay /></button></td>
+                                                            <td><button key1={i} onClick={() => {
+                                                                endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`);
+                                                                dispatch({ type: 'CHANGE_CURRENT_FILE', payload: i })
+
+                                                            }
+                                                            } >Cue</button></td>
+                                                            <td><button key1={i} onClick={() => {
+                                                                endpoint(`play ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`);
+                                                                dispatch({ type: 'CHANGE_CURRENT_FILE', payload: i });
+                                                            }
+                                                            } ><FaPlay /></button></td>
                                                             <td><button key1={i} onClick={() => endpoint(`Stop ${window.chNumber}-${layerNumber}`)} ><FaStop /></button></td>
                                                             <td><button key1={i} onClick={(e) => deletePage(e)} ><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
 
