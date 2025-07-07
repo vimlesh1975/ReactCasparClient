@@ -157,7 +157,7 @@ const VideoPlaylist = () => {
                                                                 }} key1={i} key2={'vimlesh'}  >{val.fileName}
                                                             </td>
                                                             <td><button key1={i} onClick={() => endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`)} >Cue</button></td>
-                                                            <td><button key1={i} onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`)} ><FaPlay /></button></td>
+                                                            <td><button key1={i} onClick={() => endpoint(`play ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`)} ><FaPlay /></button></td>
                                                             <td><button key1={i} onClick={() => endpoint(`Stop ${window.chNumber}-${layerNumber}`)} ><FaStop /></button></td>
                                                             <td><button key1={i} onClick={(e) => deletePage(e)} ><VscTrash style={{ pointerEvents: 'none' }} /></button></td>
 
