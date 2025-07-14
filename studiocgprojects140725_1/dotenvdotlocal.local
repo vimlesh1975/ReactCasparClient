@@ -1,0 +1,28 @@
+R3_HOST=localhost
+R3_PATH=C:/Users/Administrator/Documents/R3.Space.Projects/projects
+
+
+R3_PORT=9009 #   this is for program 
+# R3_PORT=9010 #   this is for preview
+
+
+# MOS_ID=SAMVAD
+MOS_ID=WTVISION.STUDIO.MOS
+MOS_DEVICE_ID=DDNRCS
+MOS_IP=127.0.0.1
+MOS_PORT=10540
+PROJECT_NAME=DD_TESTING
+
+
+credentialsfromenv=1
+
+DB_HOST=103.196.4.141
+# DB_HOST=localhost
+# DB_HOST=localhost
+DB_USER=itmaint
+DB_PASSWORD=itddkchn
+DB_NAME=nrcsnew
+CASPAR_HOST=127.0.0.1
+NEXT_PUBLIC_IP=localhost
+NEWDATABASE=true
+
