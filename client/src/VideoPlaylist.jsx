@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { endpoint, address1 } from './common'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +13,7 @@ import { videoLayers } from './common'
 const layerNumberList = videoLayers
 
 const VideoPlaylist = () => {
+    const ref1 = useRef(null);
     const [layerNumber, setLayerNumber] = useState(5);
 
 
@@ -85,7 +86,36 @@ const VideoPlaylist = () => {
             video.load();
         }
     }
-    return (<div style={{ display: 'flex' }}>
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowUp') {
+                if (currentFile === 0) return
+                dispatch({ type: 'CHANGE_CURRENT_FILE', payload: currentFile - 1 });
+                endpoint(`load ${window.chNumber}-${layerNumber} "${((playlist[currentFile - 1]?.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`);
+            }
+            if (e.key === 'ArrowDown') {
+                if (currentFile === playlist.length - 1) return
+                dispatch({ type: 'CHANGE_CURRENT_FILE', payload: currentFile + 1 });
+                endpoint(`load ${window.chNumber}-${layerNumber} "${((playlist[currentFile + 1]?.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`);
+
+            }
+            if (e.key === ' ') {
+                endpoint(`play ${window.chNumber}-${layerNumber} "${((playlist[currentFile]?.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`);
+            }
+        };
+
+        const current = ref1.current;
+        current?.addEventListener('keydown', handleKeyDown);
+        return () => {
+            current?.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [layerNumber, playlist, currentFile, dispatch]);
+
+    return (<div style={{ display: 'flex', outline: 'none' }}
+        ref={ref1}
+        tabIndex={0} // make it focusable
+    >
         <div style={{ border: '1px solid black' }}>
             <b>Layer: </b>  <select onChange={e => changelayerNumber(e)} value={layerNumber}>
                 {layerNumberList.map((val) => { return <option key={uuidv4()} value={val}>{val}</option> })}
@@ -157,7 +187,7 @@ const VideoPlaylist = () => {
                                                                 }} key1={i} key2={'vimlesh'}  >{val.fileName}
                                                             </td>
                                                             <td><button key1={i} onClick={() => {
-                                                                endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}"`);
+                                                                endpoint(`load ${window.chNumber}-${layerNumber} "${((val.fileName).replaceAll('\\', '/')).split('.')[0]}" mix 10`);
                                                                 dispatch({ type: 'CHANGE_CURRENT_FILE', payload: i })
 
                                                             }
