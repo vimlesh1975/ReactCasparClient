@@ -31,7 +31,7 @@ const HorizontalScroll = () => {
       { id: 0, text: newData[0], position: window.innerWidth },
     ]);
 
-    speedRef.current = 6; // Reset the speed
+    speedRef.current = 4; // Reset the speed
   };
 
   window.setSpeed = (newSpeed) => {

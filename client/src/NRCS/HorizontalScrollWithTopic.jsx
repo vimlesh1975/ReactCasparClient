@@ -16,7 +16,7 @@ const HorizontalScrollWithTopic = () => {
   const itemRefs = useRef({}); // Refs for items
   const isScrolling = useRef(false); // Flag for scrolling state
   const animationFrameId = useRef(null); // For canceling the animation
-  const speedRef = useRef(6); // Scrolling speed reference
+  const speedRef = useRef(4); // Scrolling speed reference
   const [categoryShow, SetCategoryShow] = useState(true);
 
 
@@ -66,19 +66,19 @@ const HorizontalScrollWithTopic = () => {
     }
   }, [showdateandTime]);
 
-    useEffect(() => {
-      function handleMessage(event) {
-        // Security check: Ensure the message is from the expected parent domain
-        // if (event.origin !== "https://your-parent-website.com") return;
-  
-        if (event.data?.action === "callFunction") {
-          setShowdateandTime(event.data.data);
-        }
+  useEffect(() => {
+    function handleMessage(event) {
+      // Security check: Ensure the message is from the expected parent domain
+      // if (event.origin !== "https://your-parent-website.com") return;
+
+      if (event.data?.action === "callFunction") {
+        setShowdateandTime(event.data.data);
       }
-  
-      window.addEventListener("message", handleMessage);
-      return () => window.removeEventListener("message", handleMessage);
-    }, []);
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   // Format the date in Indian style (e.g., 27 Dec 2024)
   const formatDate = (date) =>
@@ -88,14 +88,14 @@ const HorizontalScrollWithTopic = () => {
       year: 'numeric',
     });
 
-    const formatTime = (date) =>
-      date.toLocaleTimeString('en-US', {
-        hour12: true,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      });
-  
+  const formatTime = (date) =>
+    date.toLocaleTimeString('en-US', {
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
 
   // Function to fetch data and update categories
   const fetchRO = useCallback(async () => {

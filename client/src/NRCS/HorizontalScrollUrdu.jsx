@@ -11,7 +11,7 @@ const HorizontalScrollUrdu = () => {
   const [widths, setWidths] = useState([]);
   const direction = ltr;
 
-  const speedRef = useRef(6);
+  const speedRef = useRef(4);
   const itemRefs = useRef({});
   const itemRefs2 = useRef({});
   const animationRef = useRef(null);
