@@ -29,8 +29,8 @@ const BreakingNews = () => {
 
         // Display the first item immediately
         setTimeout(() => {
-        setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
-            
+            setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
+
         }, 1700);
 
         const interval = setInterval(() => {
@@ -58,7 +58,7 @@ const BreakingNews = () => {
     const fetchRO = useCallback(async () => {
         try {
             const res = await fetch(
-                 addressmysql() + `/show_runorderSpecial?param1=${'Breaking News'}&param2=${selectedDate}`
+                addressmysql() + `/show_runorderSpecial?param1=${'Breaking News'}&param2=${selectedDate}`
             );
             const data = await res.json();
             const aa = [];
@@ -93,8 +93,8 @@ const BreakingNews = () => {
                     bottom: 52,
                 }}
             >
-                            <img src={breaking_news} alt="breaking_news" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)'  }} />
-            
+                <img src={breaking_news} alt="breaking_news" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)' }} />
+
             </div>
 
             {/* Text with Inline Animation */}
@@ -104,21 +104,21 @@ const BreakingNews = () => {
                         ...animationStyle,
                         position: 'fixed',
                         bottom: 82,
-                        left:25,
-                        fontSize: 55,
+                        left: 25,
+                        fontSize: 50,
                         fontWeight: 'bolder',
                         whiteSpace: 'nowrap',
                         width: '100%',
                         textAlign: 'center',
-                        color:'yellow',
+                        color: 'yellow',
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFSingleLine text={dataList[currentIndex]} containerWidth={window.innerWidth-50} />
+                    <STFSingleLine text={dataList[currentIndex]} containerWidth={window.innerWidth - 50} />
                 </div>
             )}
 
-           
+
         </div>
     );
 };

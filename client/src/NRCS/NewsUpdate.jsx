@@ -29,8 +29,8 @@ const NewsUpdate = () => {
 
         // Display the first item immediately
         setTimeout(() => {
-        setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
-            
+            setAnimationStyle({ opacity: 1, transform: 'translateX(0)', transition: 'opacity 0.5s ease, transform 0.5s ease' });
+
         }, 1700);
 
         const interval = setInterval(() => {
@@ -93,8 +93,8 @@ const NewsUpdate = () => {
                     bottom: 52,
                 }}
             >
-                            <img src={news_update} alt="news_update" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)'  }} />
-            
+                <img src={news_update} alt="news_update" style={{ width: '100%', height: '100%', transform: 'scale(1, 0.6)' }} />
+
             </div>
 
             {/* Text with Inline Animation */}
@@ -104,9 +104,9 @@ const NewsUpdate = () => {
                         ...animationStyle,
                         position: 'fixed',
                         bottom: 80,
-                        left:25,
+                        left: 25,
                         color: 'black',
-                        fontSize: 53,
+                        fontSize: 45,
                         fontWeight: 'bolder',
                         whiteSpace: 'nowrap',
                         width: '100%',
@@ -114,11 +114,11 @@ const NewsUpdate = () => {
                     }}
                 >
                     {/* {dataList[currentIndex]} */}
-                    <STFSingleLine text={dataList[currentIndex]} containerWidth={window.innerWidth-50} />
+                    <STFSingleLine text={dataList[currentIndex]} containerWidth={window.innerWidth - 50} />
                 </div>
             )}
 
-           
+
         </div>
     );
 };

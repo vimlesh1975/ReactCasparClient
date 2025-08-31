@@ -220,7 +220,7 @@ const HorizontalScrollWithTopic = () => {
         height: 80,
         position: 'absolute',
         top: window.innerHeight - 80,
-        backgroundColor: '#1a1f01',
+        backgroundColor: '#181817ff',
         color: 'white',
         overflow: 'hidden',
         animation: 'fadeIn 0.5s ease-in-out', // Fade-in effect for the entire strip
@@ -264,7 +264,7 @@ const HorizontalScrollWithTopic = () => {
               position: 'absolute',
               left: Math.round(item.position), // Avoid fractional pixels
               top: 10,
-              fontSize: 50,
+              fontSize: 40,
               fontWeight: 'bolder',
               whiteSpace: 'nowrap',
               overflow: 'hidden',

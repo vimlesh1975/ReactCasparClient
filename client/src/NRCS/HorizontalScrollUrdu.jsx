@@ -108,7 +108,7 @@ const HorizontalScrollUrdu = () => {
           position: 'absolute',
           // left: 500,
           top: window.innerHeight - 500,
-          fontSize: 50,
+          fontSize: 40,
           fontWeight: 'bolder',
           whiteSpace: 'nowrap',
           zIndex: 2,

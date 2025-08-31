@@ -121,7 +121,7 @@ const HorizontalScroll = () => {
               position: 'absolute',
               left: item.position,
               top: window.innerHeight - 80,
-              fontSize: 50,
+              fontSize: 40,
               fontWeight: 'bolder',
               whiteSpace: 'nowrap',
               zIndex: 2,
