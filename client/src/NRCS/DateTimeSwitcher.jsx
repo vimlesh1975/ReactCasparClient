@@ -46,14 +46,14 @@ const DateTimeSwitcher = () => {
     <div
       style={{
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'left',
+        alignItems: 'left',
         position: 'absolute',
         height: 80,
         top: window.innerHeight - 80,
         left: window.innerWidth - 300,
         fontSize: 50,
-        minWidth: 300,
+        minWidth: 340,
         fontWeight: 'bolder',
         fontFamily: 'Arial, sans-serif',
         color: '#252525ff',
