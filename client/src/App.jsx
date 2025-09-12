@@ -20,7 +20,6 @@ import Help from "./Help.jsx";
 import Ograf from './Ograf/All.jsx'
 import VideoPlaylist from "./VideoPlaylist.jsx";
 import Scroll from "./Scroll.jsx";
-import Automation from "./Automation.jsx";
 import { videoLayers } from "./common.js";
 import Shapes from "./Shapes.jsx";
 import Games from "./Games/Games.jsx";
@@ -486,9 +485,7 @@ const App = () => {
                 <div style={{ border: '1px solid red', zIndex: -1 }}>
                   {showHtmlOutputrcc ? <HtmlOutput scale={0.315} /> : <div style={{ backgroundColor: 'grey', width: 600, height: 340, }}></div>}
                 </div>
-                <div style={{ display: 'none' }}>
-                  <Automation />
-                </div>
+
               </div>
             </div>
           </div>
@@ -520,7 +517,7 @@ const App = () => {
               <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab className="tabHidden">Automation</Tab>
+              <Tab className="tabHidden">Test</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 

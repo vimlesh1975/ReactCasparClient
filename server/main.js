@@ -55,7 +55,6 @@ app.use("/media", serveStatic("c:\\casparcg\\_media"));
 
 const {
   CasparCG,
-  CasparCGSocket,
   Options,
   AMCP,
 } = require("casparcg-connection");
@@ -421,7 +420,6 @@ app.post("/getPaths", (req, res) => {
 });
 
 const io = require("socket.io")(server2, options);
-const ccgsocket = new CasparCGSocket("localhost", 5250);
 
 global.app = app;
 global.io = io;
@@ -929,6 +927,9 @@ app.post('/translate', async (req, res) => {
 (async () => {
   try {
     await killPort(9000);
+    server2.listen(port, '::', () => {
+      console.log(`✅ Node server is listening on port ${port} with HTTPS`);
+    });
   } catch (err) {
     console.error('❌ Error starting app:', err);
   }
