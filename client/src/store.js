@@ -338,7 +338,7 @@ const showHtmlOutputReducer = (state = initialShowHtmlOutput, action) => {
 const initialShowHtmlOutputrcc = { showHtmlOutputrcc: true };
 const showHtmlOutputReducerrcc = (state = initialShowHtmlOutputrcc, action) => {
   switch (action.type) {
-    case 'SHOW_HTML_OUTPUT':
+    case 'SHOW_HTML_OUTPUT_RCC':
       return {
         ...state,
         showHtmlOutputrcc: action.payload,

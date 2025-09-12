@@ -43,7 +43,7 @@ export default function Home() {
   const [newsReaderText, setNewsReaderText] = useState("Continue...");
   const [showClock, setShowClock] = useState(true);
   const [newPosition, setNewPosition] = useState(startPosition);
-  const [tempSpeed, setTempSpeed] = useState(0);
+  const [tempSpeed, setTempSpeed] = useState(1);
   const [loggedPositions, setLoggedPositions] = useState(new Set());
   const [currentStoryNumber, setCurrentStoryNumber] = useState(-1);
   const [showNewWindow, setShowNewWindow] = useState(false);
@@ -705,8 +705,33 @@ export default function Home() {
     socketRef.current?.emit('fontColor', color);
   };
 
+  const handleWheel = (e) => {
+    if (e.target.tagName === "INPUT") return; // ignore if on input
+    if (e.deltaY > 0) {
+      setSpeed(speed - 1);
+    } else {
+      setSpeed(speed + 1);
+    }
+    e.preventDefault(); // Block default scroll if needed
+  };
+
+  const handleMouseUp = (event) => {
+    if (event.button === 3) {
+      // console.log("Back button pressed");
+      previous();
+      event.preventDefault();
+    }
+    if (event.button === 4) {
+      // console.log("Forward button pressed");
+      next();
+      event.preventDefault();
+    }
+  };
+
   return (
-    <div style={{ overflow: "hidden", backgroundColor: '#e0e0d2', }}>
+    <div
+      onMouseUp={handleMouseUp}
+      style={{ overflow: "hidden", backgroundColor: '#e0e0d2', }}>
       <div style={{ display: "flex" }}>
         <div style={{ height: '100vh' }}>
           <div>
@@ -1010,6 +1035,7 @@ export default function Home() {
           </div>
 
           <div
+            onWheel={handleWheel}
             onContextMenu={(e) => {
               e.preventDefault();
               if (speed === 0) {

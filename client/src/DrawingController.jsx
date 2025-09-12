@@ -2874,7 +2874,7 @@ const DrawingController = () => {
                 <input
                   type="checkbox"
                   checked={showHtmlOutputrcc}
-                  onChange={() => dispatch({ type: "SHOW_HTML_OUTPUT", payload: !showHtmlOutputrcc })}
+                  onChange={() => dispatch({ type: "SHOW_HTML_OUTPUT_RCC", payload: !showHtmlOutputrcc })}
                 />
                 Show Html Output
               </label>
