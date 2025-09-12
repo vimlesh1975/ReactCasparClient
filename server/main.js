@@ -925,29 +925,15 @@ app.post('/translate', async (req, res) => {
 
 
 
-// code start for MOS
 
 (async () => {
   try {
-    await killPort(10540);
     await killPort(9000);
-
-    console.log('✅ Ports cleared, starting server...');
-    server2.listen(port, '::', () => {
-      console.log(`✅ Node server is listening on port ${port} with HTTPS`);
-    });
-
-    const { startMosServer } = require('./mos-server');
-    console.log('🔧 Starting MOS server...');
-    await startMosServer();
-    console.log('✅ MOS Server ready');
   } catch (err) {
     console.error('❌ Error starting app:', err);
   }
 })();
 
-
-// code end for MOS
 
 //start code for web tele prompter
 

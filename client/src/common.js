@@ -4,7 +4,7 @@ import * as fabric from "fabric";
 import _ from "lodash";
 import * as d from "@theatre/dataverse";
 
-export const buildDate = "040925_1";
+export const buildDate = "120925_1";
 
 
 export function convertRgbaToHex(color) {

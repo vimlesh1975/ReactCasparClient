@@ -321,7 +321,7 @@ const showIdReducer = (state = initialShowId, action) => {
   }
 };
 
-const initialShowHtmlOutput = { showHtmlOutput: true };
+const initialShowHtmlOutput = { showHtmlOutput: false };
 const showHtmlOutputReducer = (state = initialShowHtmlOutput, action) => {
   switch (action.type) {
     case 'SHOW_HTML_OUTPUT':
