@@ -74,7 +74,7 @@ const Help = () => {
               </a>{" "}
             </li>
             <li>
-              <a href="https://bit.ly/3jRrhDL" target="_blank" rel="noreferrer">
+              <a href="https://bit.ly/4877FGu" target="_blank" rel="noreferrer">
                 Latest Build
               </a>{" "}
             </li>
@@ -110,7 +110,7 @@ const Help = () => {
           </ol>
 
         </div>
-        <div style={{ maxHeight: 800, width: 265, display: 'none1', overflow: 'scroll'}}>
+        <div style={{ maxHeight: 800, width: 265, display: 'none1', overflow: 'scroll' }}>
           <table border="1">
             <tbody>
               <tr>
