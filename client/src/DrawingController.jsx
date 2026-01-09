@@ -1115,6 +1115,7 @@ const DrawingController = () => {
 
   const sdToHD = () => {
     canvas.getObjects().forEach((element) => {
+      // console.log(element.type)
       if (
         element.type === "image" ||
         element.type === "path" ||

@@ -1,4 +1,6 @@
 import useContextMenu from "./useContextMenu";
+import * as fabric from "fabric";
+
 
 import {
   removeBgApi,
@@ -36,6 +38,7 @@ import {
   bringForward,
   shadowOptions,
   groupInteractive,
+  selectOnly
 } from "./common";
 
 import {
@@ -84,6 +87,7 @@ const ContextMenu = ({ canvas }) => {
   };
 
   window.showMenu = showMenu;
+
   return (
     <div>
       {showMenu ? (
@@ -154,6 +158,37 @@ const ContextMenu = ({ canvas }) => {
             <li onClick={() => startPath(canvas)}>Start Path</li>
             <li onClick={window.closePath}>Close Path</li>
             <li onClick={window.edit}>Edit Path</li>
+            <li>
+              Edit
+              <ul>
+                <li onClick={() => undo(canvas)}>
+                  Undo <AiOutlineUndo />
+                </li>
+                <li onClick={() => copy(canvas)}>Copy</li>
+                <li onClick={() => paste(canvas)}>Paste</li>
+                <li onClick={() => groupInteractive(canvas, true)}>Group interactive</li>
+                <li onClick={() => groupInteractive(canvas, false)}>Group not interactive </li>
+                <li onClick={() => selectOnly(canvas)}>select Only
+                  <ul>
+                    <li onClick={() => selectOnly(canvas)}>
+                      Rectangles
+                    </li>
+                    <li onClick={() => selectOnly(canvas, 'textbox')}>
+                      Text
+                    </li>
+                    <li onClick={() => selectOnly(canvas, 'image')}>
+                      Image
+                    </li>
+                    <li onClick={() => selectOnly(canvas, 'path')}>
+                      Path
+                    </li>
+                    <li onClick={() => selectOnly(canvas, 'group')}>
+                      Group
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
             <li onClick={() => bringToFront(canvas, kf, xpositions, dispatch)}>
               Bring To Front
             </li>
@@ -223,18 +258,7 @@ const ContextMenu = ({ canvas }) => {
               </ul>
             </li>
 
-            <li>
-              Edit
-              <ul>
-                <li onClick={() => undo(canvas)}>
-                  Undo <AiOutlineUndo />
-                </li>
-                <li onClick={() => copy(canvas)}>Copy</li>
-                <li onClick={() => paste(canvas)}>Paste</li>
-                <li onClick={() => groupInteractive(canvas, true)}>Group interactive</li>
-                <li onClick={() => groupInteractive(canvas, false)}>Group not interactive </li>
-              </ul>
-            </li>
+
 
             <li onClick={() => pasteClipboard(canvas)}>Paste from Clipboard</li>
             <li onClick={() => cloneAsImage(canvas)}>CloneAsImage</li>

@@ -7,6 +7,21 @@ import * as d from "@theatre/dataverse";
 export const buildDate = "290925_1";
 
 
+
+export const selectOnly = (canvas, type = 'rect') => {
+  const sel = canvas.getActiveObject();
+  if (!sel || sel.type !== "activeselection") return;
+  const objs = sel._objects.filter(o => o.type === type);
+  // alert(objs);
+  // console.log(objs)
+  canvas.discardActiveObject();
+  if (objs.length === 1) canvas.setActiveObject(objs[0]);
+  else if (objs.length > 1)
+    canvas.setActiveObject(new fabric.ActiveSelection(objs, { canvas }));
+  canvas.requestRenderAll();
+}
+
+
 export function convertRgbaToHex(color) {
   // Check if the color is in rgba(r,g,b,a) format
   let match = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)$/);
