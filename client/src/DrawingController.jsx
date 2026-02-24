@@ -701,7 +701,8 @@ const DrawingController = () => {
         class: "class_gameTimer1",
       }
     );
-    canvas.add(sss).setActiveObject(sss);
+    canvas.add(sss)
+    canvas.setActiveObject(sss);
     canvas.requestRenderAll();
   };
 
@@ -727,7 +728,8 @@ const DrawingController = () => {
         class: "class_gameTimer2"
       }
     );
-    canvas.add(sss).setActiveObject(sss);
+    canvas.add(sss);
+    canvas.setActiveObject(sss);
     canvas.requestRenderAll();
   };
 
