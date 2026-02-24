@@ -3117,6 +3117,9 @@ var timer = setInterval(function() {
             <button onClick={() => window.open("/ReactCasparClient/WebTelePrompter")}>
               WebTelePrompter
             </button>
+            <button onClick={() => window.open("https://soundrecorder-eta.vercel.app")}>
+              Sound Recorder
+            </button>
             <button onClick={openGdd}>Gdd Template Player</button>
           </div>
           <div className="drawingToolsRow">
