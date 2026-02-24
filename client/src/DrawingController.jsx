@@ -2227,7 +2227,7 @@ var timer = setInterval(function() {
     var remaining = duration - ${countUp2 ? '-elapsed' : 'elapsed'};
 
     // Stop at zero
-    if (remaining <= 0) {
+    if ((remaining <= 0) || (remaining >= 60000)) {
         cc.textContent = "";
         clearInterval(timer);
         return;
