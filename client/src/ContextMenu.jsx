@@ -1,6 +1,4 @@
 import useContextMenu from "./useContextMenu";
-import * as fabric from "fabric";
-
 
 import {
   removeBgApi,
