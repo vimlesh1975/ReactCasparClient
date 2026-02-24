@@ -2121,6 +2121,75 @@ const DrawingController = () => {
     saveFile(options, data);
   };
 
+  const exporGame1TimerAsHTML = (canvas) => {
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    var aa = `<!DOCTYPE html>
+                                                                        <html lang="en">
+                                                                            <head>
+                                                                                <meta charset="UTF-8">
+                                                                                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                                                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                                                            <title>Document</title>
+                                                                                        </head>
+
+                                                                                        <body>
+                                                                                            `;
+    aa += "<div>" + canvas.toSVG(["id", "class", "selectable"]) + "</div>";
+    aa += `
+                                                                                        </body>
+                                                                                        <script>
+                                                                                          document.body.style.margin = '0';
+document.body.style.padding = '0';
+document.body.style.overflow = 'hidden';
+
+var aa = document.getElementsByTagName('div')[0];
+aa.style.position = 'absolute';
+// Note: 192000/1920 is 100%. Adjust if you intended a different scale.
+aa.style.zoom = (192000 / 1920) + '%'; 
+
+var cc = document.getElementsByTagName('tspan')[0];
+cc.textContent = '';
+
+var startTime = new Date();
+var duration = (${initialMinute} * 60 + ${initialSecond}) * 1000; //  in milliseconds
+
+var timer = setInterval(function() {
+    var now = new Date();
+    var elapsed = now.getTime() - startTime.getTime();
+    var remaining = duration - ${countUp ? '-elapsed' : 'elapsed'};
+
+    // Stop at zero
+    if (remaining <= 0) {
+        cc.textContent = "";
+        clearInterval(timer);
+        return;
+    }
+
+    var countdownDate = new Date(remaining);
+    
+    // Formatting: MM:SS
+    var minutes = String(countdownDate.getUTCMinutes()).padStart(2, '0');
+    var seconds = String(countdownDate.getUTCSeconds()).padStart(2, '0');
+
+    cc.textContent = minutes + ':' + seconds;
+}, 1000); // Updated to 10ms for smoother millisecond tracking 
+                                                                                        </script>
+                                                                                    </html>`;
+    const data = new Blob([aa], { type: "text/html" });
+    const options = {
+      suggestedName: generalFileName(),
+      types: [
+        {
+          description: "HTML Files",
+          accept: {
+            "text/html": [".html"],
+          },
+        },
+      ],
+    };
+    saveFile(options, data);
+  };
+
   const startHorizontalScroll = (layerNumber) => {
     executeScript(`if(window.intervalHorizontalScroll1){clearInterval(intervalHorizontalScroll1)};
         document.getElementById('divid_${layerNumber}')?.remove();
@@ -4090,6 +4159,8 @@ const DrawingController = () => {
             <button onClick={() => stopClock(templateLayers.gameTimer)}>
               <FaStop />
             </button>
+            <button onClick={() => exporGame1TimerAsHTML(canvas)}>HTM</button>
+
           </div>
           <div className="drawingToolsRow">
             <b>Game Tmr2:</b>
