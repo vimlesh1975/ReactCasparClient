@@ -857,7 +857,7 @@ app.get("/show_runorderremotion", async (req, res) => {
 //code start  for google translation
 
 const { TranslationServiceClient } = require('@google-cloud/translate');
-const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '');
 
 const clientTranslation = new TranslationServiceClient({
   credentials: credentialsforgooglecloud,
