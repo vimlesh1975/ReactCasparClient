@@ -1,0 +1,15 @@
+<service>
+  <id>ReactCasparClientServer</id>
+  <name>React Caspar Client Server</name>
+  <description>Runs the React Caspar Client backend server.</description>
+  <executable>%BASE%\..\vendor\node-v23.11.1-win-x64\node.exe</executable>
+  <arguments>main.js</arguments>
+  <workingdirectory>%BASE%\..\..\server</workingdirectory>
+  <startmode>Automatic</startmode>
+  <stoptimeout>15000</stoptimeout>
+  <log mode="roll-by-size-time">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+    <pattern>yyyyMMdd</pattern>
+  </log>
+</service>

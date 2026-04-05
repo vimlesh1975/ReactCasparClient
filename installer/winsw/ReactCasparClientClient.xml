@@ -1,0 +1,20 @@
+<service>
+  <id>ReactCasparClientClient</id>
+  <name>React Caspar Client Client</name>
+  <description>Runs the React Caspar Client frontend on https://localhost:10000/ReactCasparClient.</description>
+  <env name="BROWSER" value="none" />
+  <env name="HTTPS" value="true" />
+  <env name="SSL_CRT_FILE" value="./cert.crt" />
+  <env name="SSL_KEY_FILE" value="./cert.key" />
+  <env name="PORT" value="10000" />
+  <executable>%BASE%\..\vendor\node-v23.11.1-win-x64\node.exe</executable>
+  <arguments>node_modules\@craco\craco\dist\bin\craco.js start</arguments>
+  <workingdirectory>%BASE%\..\..\client</workingdirectory>
+  <startmode>Automatic</startmode>
+  <stoptimeout>15000</stoptimeout>
+  <log mode="roll-by-size-time">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+    <pattern>yyyyMMdd</pattern>
+  </log>
+</service>
