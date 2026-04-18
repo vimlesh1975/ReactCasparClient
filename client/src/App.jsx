@@ -14,6 +14,7 @@ import Graphics from "./NRCS/Graphics.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 import VideoController from "./VideoController.jsx";
+import Leddisplay from "./leddisplay/Leddisplay.jsx";
 import Help from "./Help.jsx";
 
 // import LayersAll from "./LayersAll.jsx";
@@ -542,7 +543,7 @@ const App = () => {
                   <Tab>Single Channel Mutiple Layers</Tab>
                   <Tab>Four Channel</Tab>
                 </TabList>
-                <TabPanel>
+                {/*   <TabPanel>
                   <div
                     style={{
                       display: "flex",
@@ -566,7 +567,10 @@ const App = () => {
                     <VideoController layerNumber={videoLayers[3]} />
                   </div>
                 </TabPanel>
-
+*/}
+                <TabPanel>
+                  <Leddisplay />
+                </TabPanel>
                 <TabPanel>
                   <div
                     style={{
@@ -591,7 +595,6 @@ const App = () => {
                     <VideoController layerNumber={videoLayers[0]} channelNumber={4} />
                   </div>
                 </TabPanel>
-
               </Tabs>
 
 
