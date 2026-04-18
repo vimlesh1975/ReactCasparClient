@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.css";
-import Video from "./Video.jsx";
+// import Video from "./Video.jsx";
 import Drawing from "./Drawing.jsx";
 import axios from "axios";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -82,7 +82,7 @@ const App = () => {
   const [mediaPath, setmediaPath] = useState();
   const refPreviewContainer = useRef();
   const [chNumber, setChNumber] = useState(1);
-  const [currentTab, setCurrentTab] = useState("Drawing");
+  // const [currentTab, setCurrentTab] = useState("Drawing");
   const [animationMethod, setAnimationMethod] = useState("easenone");
   const [inAnimationMethod, setInAnimationMethod] = useState(
     "slide-in-bck-center"
@@ -240,14 +240,14 @@ const App = () => {
       case 10:
       case 11:
       case 20:
-        setCurrentTab("Drawing");
+        // setCurrentTab("Drawing");
         setTimeout(() => {
           window.dispatchEvent(new Event("resize"));
         }, 100);
         break;
       case 1:
       case 2:
-        setCurrentTab("Video");
+        // setCurrentTab("Video");
         break;
       default:
       //nothing
@@ -256,9 +256,9 @@ const App = () => {
 
   const onTabChangevdo = (index, prevIndex) => {
     if (index === 0) {
-      setCurrentTab("Video");
+      // setCurrentTab("Video");
     } else {
-      setCurrentTab("Drawing");
+      // setCurrentTab("Drawing");
     }
   };
 
@@ -451,21 +451,9 @@ const App = () => {
                 className="preview-container"
               >
                 <div
-                  style={{
-                    display: currentTab === "Drawing" ? "none" : "block",
-                  }}
                 >
-                  <Video video={""} layerNumber={videoLayers[0]} />
-                  <Video video={""} layerNumber={videoLayers[1]} />
-                  <Video video={""} layerNumber={videoLayers[2]} />
-                  <Video video={""} layerNumber={videoLayers[4]} />
-                  <Video video={""} layerNumber={videoLayers[3]} />
                 </div>
-                <div
-                  style={{
-                    display: currentTab === "Drawing" ? "block" : "none",
-                  }}
-                >
+                <div>
                   <span
                     style={{
                       position: "absolute",
