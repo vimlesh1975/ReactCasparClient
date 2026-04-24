@@ -2,7 +2,7 @@ This is a client for Casparcg server
 
 We need to have already installed nodejs.
 
-Download https://bit.ly/3jRrhDL and unzip with 7z.
+Download https://bit.ly/4877FGu and unzip with 7z.
 
 Right Click and Run As Administrator the file "Right_Click_Run_As_Administrator.bat" present in root folder.
 
