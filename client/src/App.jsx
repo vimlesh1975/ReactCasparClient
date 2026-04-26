@@ -471,7 +471,7 @@ const App = () => {
                 <div style={{ border: '1px solid red' }}>
                   <TimeLine1 />
                 </div>
-                <div style={{ border: '1px solid red', zIndex: -1 }}>
+                <div style={{ border: '1px solid red' }}>
                   {showHtmlOutputrcc ? <HtmlOutput scale={0.315} /> : <div style={{ backgroundColor: 'grey', width: 600, height: 340, }}></div>}
                 </div>
 

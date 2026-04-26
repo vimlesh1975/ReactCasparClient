@@ -1743,6 +1743,9 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
 
     const script = `
                                                                                   var bb = document.createElement('div');
+                                                                                  bb.style.position='absolute';
+                                                                                  bb.style.top='0';
+                                                                                  bb.style.left='0';
                                                                                   bb.style.perspective='1920px';
                                                                                   bb.style.transformStyle='preserve-3d';
                                                                                   document.body.appendChild(bb);
@@ -1800,6 +1803,9 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
 
   const scriptforhtml = `
                                                                                   var bb = document.createElement('div');
+                                                                                  bb.style.position='absolute';
+                                                                                  bb.style.top='0';
+                                                                                  bb.style.left='0';
                                                                                   bb.style.perspective='1920px';
                                                                                   bb.style.transformStyle='preserve-3d';
                                                                                   document.body.appendChild(bb);
