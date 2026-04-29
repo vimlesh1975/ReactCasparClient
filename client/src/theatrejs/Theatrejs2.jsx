@@ -1,7 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { rgbaObjectToHex, getModifiedObject } from '../common'
 
 const Theatrejs2 = () => {
+    useEffect(() => {
+        document.documentElement.style.background = 'transparent';
+        document.body.style.background = 'transparent';
+        document.body.style.margin = '0';
+        document.body.style.padding = '0';
+        document.body.style.overflow = 'hidden';
+        const root = document.getElementById('root');
+        if (root) {
+            root.style.background = 'transparent';
+        }
+    }, []);
+
     window.hexToRGB = hex => {
         const red = parseInt(hex.slice(1, 3), 16)
         const green = parseInt(hex.slice(3, 5), 16)

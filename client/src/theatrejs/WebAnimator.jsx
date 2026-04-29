@@ -1590,14 +1590,23 @@ const WebAnimator = () => {
             mouseDown = 0;
         };
 
-        document.getElementById('divid_${layerNumber}')?.remove();
+        document.getElementById('bbid_${layerNumber}')?.remove();
         var aa = document.createElement('div');
+        var bb = document.createElement('div');
+        bb.style.position='absolute';
+        bb.style.top='0';
+        bb.style.left='0';
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        bb.setAttribute('id','bbid_' + '${layerNumber}');
         aa.style.position='absolute';
         aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex='${layerNumber}';
         document.body.style.overflow='hidden';
         document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         aa.innerHTML += \`<canvas id='canvas_${layerNumber}' width='1920' height='1080'></canvas>;\`;
-        document.body.appendChild(aa);
+        document.body.appendChild(bb);
+        bb.appendChild(aa);
         var canvas_${layerNumber} = new fabric.Canvas('canvas_${layerNumber}');
        
         window.canvas_${layerNumber}=canvas_${layerNumber};
@@ -1862,16 +1871,25 @@ const WebAnimator = () => {
         document.body.onmouseup = function () {
             mouseDown = 0;
         };
-        if(document.getElementById('divid_${layerNumber}')){
-            document.getElementById('divid_${layerNumber}').remove();
+        if(document.getElementById('bbid_${layerNumber}')){
+            document.getElementById('bbid_${layerNumber}').remove();
         }
         var aa = document.createElement('div');
+        var bb = document.createElement('div');
+        bb.style.position='absolute';
+        bb.style.top='0';
+        bb.style.left='0';
+        bb.style.perspective='1920px';
+        bb.style.transformStyle='preserve-3d';
+        bb.setAttribute('id','bbid_' + '${layerNumber}');
         aa.style.position='absolute';
         aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex='${layerNumber}';
         document.body.style.overflow='hidden';
         document.body.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         aa.innerHTML += \`<canvas id='canvas' width='1920' height='1080'></canvas>;\`;
-        document.body.appendChild(aa);
+        document.body.appendChild(bb);
+        bb.appendChild(aa);
         var canvas = new fabric.Canvas('canvas');
 
         window.canvas=canvas;
