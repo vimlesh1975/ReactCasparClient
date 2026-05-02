@@ -1908,6 +1908,8 @@ export const playtoGsapCaspar = (
   const script = `
   var aa = document.createElement('div');
   aa.style.position='absolute';
+  aa.style.top=0;
+  aa.style.left=0;
   aa.setAttribute('id','divid_' + '${layerNumber}');
   document.body.style.opacity = 0;
   document.body.style.overflow='hidden';
@@ -1934,6 +1936,8 @@ export const playtoGsapCaspar = (
   document.getElementById('divid_${layerNumber}')?.remove();
   var aa = document.createElement('div');
   aa.style.position='absolute';
+    aa.style.top=0;
+  aa.style.left=0;
   aa.setAttribute('id','divid_' + '${layerNumber}');
   document.body.style.opacity = 1;
   document.body.style.overflow='hidden';
