@@ -3,6 +3,8 @@ import "./App.css";
 
 const API_BASE = "https://localhost:9000";
 const DEFAULT_CHANNEL = "1";
+const transparentDragImageSrc =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
 const defaultVideos = [
   {
@@ -133,10 +135,14 @@ function Leddisplay() {
   const [rows, setRows] = useState(7);
   const [fileHandle, setFileHandle] = useState(null);
   const [channel, setChannel] = useState(DEFAULT_CHANNEL);
+  const [isMediaDragging, setIsMediaDragging] = useState(false);
+  const [dropTargetVideoId, setDropTargetVideoId] = useState("");
 
   const stageRef = useRef(null);
   const interactionRef = useRef(null);
   const lastLiveSendRef = useRef(0);
+  const draggedMediaPathRef = useRef("");
+  const dragPreviewImageRef = useRef(null);
 
   const fetchMediaList = useCallback(async (rootOverride) => {
     try {
@@ -321,6 +327,28 @@ function Leddisplay() {
     };
   }, [connectAndRefreshMedia]);
 
+  useEffect(() => {
+    if (typeof Image !== "undefined") {
+      const previewImage = new Image();
+      previewImage.src = transparentDragImageSrc;
+      dragPreviewImageRef.current = previewImage;
+    }
+  }, []);
+
+  useEffect(() => {
+    function handleGlobalDragEnd() {
+      resetMediaDragState();
+    }
+
+    window.addEventListener("dragend", handleGlobalDragEnd, true);
+    window.addEventListener("drop", handleGlobalDragEnd, true);
+
+    return () => {
+      window.removeEventListener("dragend", handleGlobalDragEnd, true);
+      window.removeEventListener("drop", handleGlobalDragEnd, true);
+    };
+  }, []);
+
   function toggleFolder(folderPath) {
     setExpandedFolders((current) => {
       const next = new Set(current);
@@ -334,27 +362,62 @@ function Leddisplay() {
   }
 
   function handleMediaDragStart(event, mediaPath) {
-    event.dataTransfer.setData("text/plain", mediaPath);
-    event.dataTransfer.effectAllowed = "copy";
-  }
+    draggedMediaPathRef.current = mediaPath;
+    setIsMediaDragging(true);
+    setDropTargetVideoId("");
 
-  function handleVideoDragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "copy";
-  }
-
-  function handleVideoDrop(event, videoId) {
-    event.preventDefault();
-    const mediaPath =
-      event.dataTransfer.getData("text/plain") ||
-      event.dataTransfer.getData("text/uri-list");
-
-    if (!mediaPath) {
+    if (!event.dataTransfer) {
       return;
     }
 
-    updateVideo(videoId, { clip: mediaPath });
-    setSelectedVideoId(videoId);
+    event.dataTransfer.setData("text/plain", mediaPath);
+    event.dataTransfer.effectAllowed = "copy";
+
+    if (dragPreviewImageRef.current && event.dataTransfer.setDragImage) {
+      event.dataTransfer.setDragImage(dragPreviewImageRef.current, 0, 0);
+    }
+  }
+
+  function handleMediaDragEnd() {
+    resetMediaDragState();
+  }
+
+  function handleStageDragOver(event) {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = "copy";
+    }
+
+    if (!isMediaDragging) {
+      setIsMediaDragging(true);
+    }
+
+    const targetVideo = getVideoAtPointer(event);
+    setDropTargetVideoId((current) =>
+      current === (targetVideo?.id || "") ? current : targetVideo?.id || "",
+    );
+  }
+
+  function handleStageDragLeave(event) {
+    if (event.currentTarget.contains(event.relatedTarget)) {
+      return;
+    }
+    setDropTargetVideoId("");
+  }
+
+  function handleStageDrop(event) {
+    event.preventDefault();
+    const mediaPath = getDraggedMediaPath(event);
+    const targetVideo = getVideoAtPointer(event);
+
+    if (!mediaPath || !targetVideo) {
+      resetMediaDragState();
+      return;
+    }
+
+    updateVideo(targetVideo.id, { clip: mediaPath });
+    setSelectedVideoId(targetVideo.id);
+    resetMediaDragState();
   }
 
   function updateVideo(videoId, changes) {
@@ -425,6 +488,41 @@ function Leddisplay() {
       x: (event.clientX - rect.left) / rect.width,
       y: (event.clientY - rect.top) / rect.height,
     };
+  }
+
+  function getVideoAtPointer(event) {
+    const pointer = getStagePointer(event);
+    if (!pointer) return null;
+
+    const matches = videos
+      .map((video, index) => ({
+        video,
+        zIndex: selectedVideoId === video.id ? 5 : index + 1,
+      }))
+      .filter(({ video }) => (
+        pointer.x >= video.box.x &&
+        pointer.x <= video.box.x + video.box.width &&
+        pointer.y >= video.box.y &&
+        pointer.y <= video.box.y + video.box.height
+      ))
+      .sort((a, b) => b.zIndex - a.zIndex);
+
+    return matches[0]?.video || null;
+  }
+
+  function getDraggedMediaPath(event) {
+    return (
+      draggedMediaPathRef.current ||
+      event.dataTransfer?.getData("text/plain") ||
+      event.dataTransfer?.getData("text/uri-list") ||
+      ""
+    );
+  }
+
+  function resetMediaDragState() {
+    draggedMediaPathRef.current = "";
+    setIsMediaDragging(false);
+    setDropTargetVideoId("");
   }
 
   function nextBoxFromPointer(event) {
@@ -709,7 +807,7 @@ function Leddisplay() {
           </div>
           <div className="mediaTreeContainer">
             {mediaTree ? (
-              <TreeItem item={filteredMediaTree() || { name: "Media", type: "folder", children: {} }} level={0} path="Media" expandedFolders={expandedFolders} onToggle={toggleFolder} onDragStart={handleMediaDragStart} />
+              <TreeItem item={filteredMediaTree() || { name: "Media", type: "folder", children: {} }} level={0} path="Media" expandedFolders={expandedFolders} onToggle={toggleFolder} onDragStart={handleMediaDragStart} onDragEnd={handleMediaDragEnd} />
             ) : isMediaReady ? (
               <p className="noMedia">No media found.</p>
             ) : (
@@ -767,7 +865,17 @@ function Leddisplay() {
             <div className="leftStrip" style={{ gridTemplateRows: `repeat(${rows}, 1fr)` }}>
               {Array.from({ length: rows }, (_, i) => <div key={i} className="stripLabel">{i + 1}</div>)}
             </div>
-            <div className="stage" ref={stageRef} style={{ backgroundSize: `calc(100% / ${columns}) calc(100% / ${rows})` }}>
+            <div
+              className="stage"
+              ref={stageRef}
+              onDragOver={handleStageDragOver}
+              onDragLeave={handleStageDragLeave}
+              onDrop={handleStageDrop}
+              style={{
+                backgroundSize: `calc(100% / ${columns}) calc(100% / ${rows})`,
+                cursor: isMediaDragging ? "copy" : "default",
+              }}
+            >
               {videos.map((video, index) => (
                 <div
                   className={`videoBox ${selectedVideoId === video.id ? "selectedVideoBox" : ""}`}
@@ -776,14 +884,21 @@ function Leddisplay() {
                   onPointerMove={dragBox}
                   onPointerUp={endDrag}
                   onPointerCancel={endDrag}
-                  onDragOver={handleVideoDragOver}
-                  onDrop={(event) => handleVideoDrop(event, video.id)}
                   style={{
                     left: `${video.box.x * 100}%`,
                     top: `${video.box.y * 100}%`,
                     width: `${video.box.width * 100}%`,
                     height: `${video.box.height * 100}%`,
                     zIndex: selectedVideoId === video.id ? 5 : index + 1,
+                    pointerEvents: isMediaDragging ? "none" : "auto",
+                    outline:
+                      isMediaDragging && dropTargetVideoId === video.id
+                        ? "3px solid #7dd3fc"
+                        : undefined,
+                    outlineOffset:
+                      isMediaDragging && dropTargetVideoId === video.id
+                        ? "2px"
+                        : undefined,
                   }}
                 >
                   <span className="videoBoxLabel">
@@ -810,7 +925,15 @@ function Leddisplay() {
   );
 }
 
-function TreeItem({ item, level, path, expandedFolders, onToggle, onDragStart }) {
+function TreeItem({
+  item,
+  level,
+  path,
+  expandedFolders,
+  onToggle,
+  onDragStart,
+  onDragEnd,
+}) {
   const isExpanded = expandedFolders.has(path);
   const hasChildren = item.children && Object.keys(item.children).length > 0;
 
@@ -821,6 +944,7 @@ function TreeItem({ item, level, path, expandedFolders, onToggle, onDragStart })
         style={{ paddingLeft: `${level * 12 + 8}px` }}
         draggable={item.type === "file"}
         onDragStart={item.type === "file" ? (event) => onDragStart?.(event, item.path) : undefined}
+        onDragEnd={item.type === "file" ? onDragEnd : undefined}
         onClick={item.type === "folder" ? () => onToggle(path) : undefined}
       >
         <span className="expander">{item.type === "folder" ? (isExpanded ? "−" : "+") : ""}</span>
@@ -830,7 +954,7 @@ function TreeItem({ item, level, path, expandedFolders, onToggle, onDragStart })
       {item.type === "folder" && isExpanded && hasChildren && (
         <div className="treeSubItems">
           {Object.entries(item.children).map(([name, child]) => (
-            <TreeItem key={name} item={child} level={level + 1} path={`${path}/${name}`} expandedFolders={expandedFolders} onToggle={onToggle} onDragStart={onDragStart} />
+            <TreeItem key={name} item={child} level={level + 1} path={`${path}/${name}`} expandedFolders={expandedFolders} onToggle={onToggle} onDragStart={onDragStart} onDragEnd={onDragEnd} />
           ))}
         </div>
       )}
