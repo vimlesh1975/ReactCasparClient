@@ -1,7 +1,7 @@
-// src/AIPannel/AIPannel.jsx
 import React, { useState } from 'react';
-import { FiSend, FiMic, FiX } from 'react-icons/fi';
-import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2 } from '../common';
+import { FiSend, FiMic, FiX, FiTrash2 } from 'react-icons/fi';
+import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth } from '../common';
+import { presetPrompts } from './presetPrompts';
 
 
 
@@ -52,7 +52,7 @@ const AIPannel = () => {
         try {
             // Key is now handled securely on the backend
 
-            const systemPrompt = `You are a graphics component generator for a React Fabric.js canvas.
+            const systemPrompt = `You are an expert TV broadcast graphics component generator for a React Fabric.js canvas (Resolution: 1920x1080).
 The user wants to generate graphics based on their natural language prompt.
 Instead of returning raw Fabric JSON, you must return a JSON array of commands that map to local utility functions.
 
@@ -65,6 +65,18 @@ Available functions:
 For modification, use "modify" action and specify "type" (rect, circle, triangle, textbox, i-text, text) or omit to modify the active object.
 For deletion, use "delete" action and specify "type", or omit for active object.
 
+Standard Game Graphics Guidelines:
+1. Lower Third: Usually placed bottom-left (e.g. left: 100, top: 850). Needs a wide background rect for the main name, a smaller rect below or beside for the title, and high-contrast text.
+2. Football Score Bug: Usually placed top-left (e.g., left: 100, top: 80). Needs a dark background rect for the clock, two colored rects for team abbreviations (e.g. "MUN", "CHE"), and small rects for scores. Use high-contrast text.
+3. Cricket Score Bug: Usually placed bottom-center (e.g., left: 960, top: 950, centered). Needs a wide background bar. Include text for the batting team score (e.g., "IND 152/3"), overs ("OVERS 15.2"), and current batsmen.
+4. Cricket Lineup: Usually placed on the left or center. First, create a large background rect. Then create the title ("PLAYING XI") and 11 text boxes vertically. DO NOT set arbitrary large 'width' values on text boxes. Left-align all text (including the header) using 'originX': 'left' and consistent 'left' coordinates. At the very end of your JSON array, you MUST add the command {"action": "autoFitAll", "padding": 40} to resize the background rect perfectly!
+5. Swimming Graphics: Center or left-aligned leaderboard. Create a title background and multiple narrow horizontal rects representing lanes, with text boxes for lane number, swimmer name, and time. Use {"action": "autoFitAll", "padding": 30} at the end if you want the main background to fit the list.
+6. Tennis Score Bug: Bottom-left or bottom-right. Create a compact grid-like background with rects. Include text for player names, sets won, and current game points (e.g. "15", "30", "40").
+7. Volleyball Scoreboard: Usually top-center. Create rects for team names, current set score (large font), and sets won (small font below or beside).
+8. TV Breaking News Ticker: A very wide, thin rect at the absolute bottom (e.g., top: 1000, width: 1920) with scrolling or static text. Use bright reds or yellows.
+9. TV Live Bug: Top-right corner (e.g., left: 1700, top: 80). A small red rect with white text 'LIVE', often paired with another rect for the location.
+10. Split-Screen Interview Layout: Two or more large, transparent rectangles with thick borders (stroke) to frame camera feeds, plus nameplates below each frame.
+
 Format strictly as a JSON array of objects:
 [
   { 
@@ -74,15 +86,16 @@ Format strictly as a JSON array of objects:
   { 
     "action": "createTextBox", 
     "text": "Welcome to Football Participants", 
-    "options": { "fill": "gradient2", "left": 960, "top": 540, "fontSize": 80 } 
+    "options": { "fill": "white", "left": 960, "top": 540, "fontSize": 80 } 
   }
 ]
 
-Note: You can use "gradient" for a rainbow gradient fill, or "gradient2" for a random gradient fill.
+Note: You can use "gradient" for a rainbow gradient fill, "gradient2" for a random gradient fill, or standard hex colors/names for fill.
+IMPORTANT: BE EXTREMELY CREATIVE AND PREMIUM! Use multi-layered shapes, accent lines, varying opacities, rounded corners (rx, ry), rotations (angle), and distinct font weights/styles to construct visually stunning, professional broadcast graphics. Avoid flat, boring rectangles. Combine multiple overlapping shapes to create depth. For colors, mostly prefer dark themes (e.g., dark grays, blacks, deep blues, dark gradients) with bright, high-contrast text. When generating text content, always use realistic, authentic names for players, teams, and cities (e.g., "Marcus Johnson", "Manchester", "Eagles") rather than generic placeholders (like "Player 1", "Team A", or "City 1").
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
             const isOnline = window.location.origin.includes('github.io');
-            const apiUrl = isOnline 
+            const apiUrl = isOnline
                 ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
                 : `https://${window.location.hostname}:9000/api/ai/component`;
 
@@ -93,6 +106,7 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 },
                 body: JSON.stringify({
                     model: 'openai/gpt-4o-mini',
+                    temperature: 1.2,
                     messages: [
                         { role: 'system', content: systemPrompt },
                         { role: 'user', content: prompt }
@@ -143,6 +157,21 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 if (options.width !== undefined && options.width !== null) obj.set('width', options.width);
                 if (options.height !== undefined && options.height !== null) obj.set('height', options.height);
                 if (options.radius !== undefined && options.radius !== null) obj.set('radius', options.radius);
+                if (options.opacity !== undefined && options.opacity !== null) obj.set('opacity', options.opacity);
+                if (options.stroke !== undefined && options.stroke !== null) obj.set('stroke', options.stroke);
+                if (options.strokeWidth !== undefined && options.strokeWidth !== null) obj.set('strokeWidth', options.strokeWidth);
+                if (options.angle !== undefined && options.angle !== null) obj.set('angle', options.angle);
+                if (options.rx !== undefined && options.rx !== null) obj.set('rx', options.rx);
+                if (options.ry !== undefined && options.ry !== null) obj.set('ry', options.ry);
+                if (options.originX !== undefined && options.originX !== null) obj.set('originX', options.originX);
+                if (options.originY !== undefined && options.originY !== null) obj.set('originY', options.originY);
+
+                // Text specific options
+                if (options.fontFamily !== undefined && options.fontFamily !== null) obj.set('fontFamily', options.fontFamily);
+                if (options.fontWeight !== undefined && options.fontWeight !== null) obj.set('fontWeight', options.fontWeight);
+                if (options.fontStyle !== undefined && options.fontStyle !== null) obj.set('fontStyle', options.fontStyle);
+                if (options.textAlign !== undefined && options.textAlign !== null) obj.set('textAlign', options.textAlign);
+
                 if (options.fontSize !== undefined && options.fontSize !== null) {
                     if (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'text') {
                         obj.set('fontSize', options.fontSize);
@@ -176,6 +205,41 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                     getTargetObjects(cmd.type).forEach(obj => applyOptions(obj, cmd.options));
                 } else if (cmd.action === 'delete') {
                     getTargetObjects(cmd.type).forEach(obj => canvas.remove(obj));
+                } else if (cmd.action === 'autoFitAll') {
+                    const objects = canvas.getObjects();
+                    let maxArea = 0;
+                    let bgRect = null;
+                    objects.filter(o => o.type === 'rect').forEach(r => {
+                        const area = r.width * r.height;
+                        if (area > maxArea) { maxArea = area; bgRect = r; }
+                    });
+
+                    if (bgRect) {
+                        const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
+                        // Use the requested resizeTextWidth function to shrink their bounding box down to the actual text content width
+                        if (textObjects.length > 0) {
+                            resizeTextWidth(canvas, textObjects);
+                        }
+
+                        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                        textObjects.forEach(o => {
+                            const br = o.getBoundingRect();
+                            if (br.left < minX) minX = br.left;
+                            if (br.top < minY) minY = br.top;
+                            if (br.left + br.width > maxX) maxX = br.left + br.width;
+                            if (br.top + br.height > maxY) maxY = br.top + br.height;
+                        });
+                        const padding = cmd.padding || 30;
+                        if (minX !== Infinity) {
+                            bgRect.set({
+                                left: minX - padding,
+                                top: minY - padding,
+                                width: (maxX - minX) + (padding * 2),
+                                height: (maxY - minY) + (padding * 2)
+                            });
+                            bgRect.setCoords();
+                        }
+                    }
                 }
             });
 
@@ -192,6 +256,23 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
     return (
         <div className="aiPanel" style={{ padding: '12px', background: 'rgba(20,20,20,0.9)', borderRadius: '8px', color: '#fff' }}>
             <h3 style={{ margin: '0 0 8px 0' }}>AI Component Generator</h3>
+            <select
+                style={{ width: '100%', marginBottom: '8px', padding: '6px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
+                onChange={(e) => {
+                    if (e.target.value && e.target.value !== "Select a template...") {
+                        setPrompt(e.target.value);
+                    }
+                }}
+            >
+                <option value="Select a template...">Select a template...</option>
+                {Object.keys(presetPrompts).map((category, i) => (
+                    <optgroup key={i} label={category}>
+                        {presetPrompts[category].map((p, j) => (
+                            <option key={j} value={p}>{p}</option>
+                        ))}
+                    </optgroup>
+                ))}
+            </select>
             <textarea
                 rows={3}
                 style={{ width: '100%', resize: 'vertical', marginBottom: '8px', borderRadius: '4px', padding: '6px' }}
@@ -227,6 +308,19 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                     style={{ padding: '6px 12px', background: '#444', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <FiX size={16} />
+                </button>
+                <button
+                    onClick={() => {
+                        const canvas = window.editor?.canvas;
+                        if (canvas) {
+                            canvas.getObjects().forEach(obj => canvas.remove(obj));
+                            canvas.requestRenderAll();
+                        }
+                    }}
+                    title="Clear Canvas"
+                    style={{ padding: '6px 12px', background: '#cc0000', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                    <FiTrash2 size={16} />
                 </button>
             </div>
             {errorMessage && (

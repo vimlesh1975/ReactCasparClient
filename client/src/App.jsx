@@ -31,7 +31,7 @@ import TimeLine1 from "./TimeLine1.jsx";
 import PathModifier from "./PathModifier.jsx";
 import OnelinerAndBreakingNews from "./OnelinerAndBreakingNews.jsx";
 import Effects from "./Effects.jsx";
-import JsonReader from "./JsonReader.jsx";
+// import JsonReader from "./JsonReader.jsx";
 
 // import UdpClock from './UdpClock';
 
@@ -503,7 +503,7 @@ const App = () => {
               <Tab className="tabHidden">Charts</Tab>
               <Tab className="tabHidden">Path Modifier</Tab>
               <Tab className="tabHidden">Effects</Tab>
-              <Tab className="tabHidden">JsonReader</Tab>
+              <Tab className="tabHidden">test</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
               <Tab className="tabHidden">AI Paanel</Tab>
@@ -601,7 +601,7 @@ const App = () => {
               <Effects />
             </TabPanel>
             <TabPanel>
-              <JsonReader />
+              test
             </TabPanel>
             <TabPanel>
               <Crop />

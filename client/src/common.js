@@ -1303,14 +1303,20 @@ export const createVLine = (canvas) => {
   canvas.requestRenderAll();
 };
 
-export const resizeTextWidth = (canvas) => {
-  canvas.getActiveObjects().forEach((element) => {
+export const resizeTextWidth = (canvas, objects = null) => {
+  const targetObjects = objects || canvas.getActiveObjects();
+  targetObjects.forEach((element) => {
     if (
       element.type === "text" ||
       element.type === "i-text" ||
       element.type === "textbox"
     ) {
-      element.set({ width: element.__lineWidths[0] + 10 });
+      if (element.__lineWidths && element.__lineWidths.length > 0) {
+        element.set({ width: element.__lineWidths[0] + 10 });
+      } else {
+        // Fallback if lineWidths is not available yet
+        element.set({ width: element.calcTextWidth() + 10 });
+      }
     }
   });
   canvas.requestRenderAll();
