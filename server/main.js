@@ -184,6 +184,25 @@ app.get("/api/unsplash/search/photos", async (req, res) => {
 });
 //unsplash ends ----
 
+app.post("/api/ai/component", async (req, res) => {
+  try {
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      req.body,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        },
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error from OpenRouter API:", error.response?.data || error.message);
+    res.status(error.response?.status || 500).send(error.response?.data || "Internal Server Error");
+  }
+});
+
 //open Ai Starts --------------------------------------------------------------------------
 
 const { Configuration, OpenAIApi } = require("openai");

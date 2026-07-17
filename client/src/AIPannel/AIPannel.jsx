@@ -50,11 +50,7 @@ const AIPannel = () => {
             return;
         }
         try {
-            if (!process.env.REACT_APP_OPENROUTER_API_KEY) {
-                console.error('OpenRouter API key not set in env');
-                setStatus('error');
-                return;
-            }
+            // Key is now handled securely on the backend
 
             const systemPrompt = `You are a graphics component generator for a React Fabric.js canvas.
 The user wants to generate graphics based on their natural language prompt.
@@ -85,11 +81,10 @@ Format strictly as a JSON array of objects:
 Note: You can use "gradient" for a rainbow gradient fill, or "gradient2" for a random gradient fill.
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
-            const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            const resp = await fetch(`https://${window.location.hostname}:9000/api/ai/component`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${process.env.REACT_APP_OPENROUTER_API_KEY}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     model: 'openai/gpt-4o-mini',
@@ -103,6 +98,11 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
             if (!resp.ok) {
                 const errText = await resp.text();
                 throw new Error(`OpenRouter API error ${resp.status}: ${errText}`);
+            }
+
+            const contentType = resp.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") === -1) {
+                throw new Error("Server returned HTML instead of JSON. Did you restart the backend Node server after the update?");
             }
 
             const data = await resp.json();
