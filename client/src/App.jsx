@@ -39,7 +39,7 @@ import ColorGradient2 from "./ColorGradient2.jsx";
 
 // import Threejs from "./Threejs.jsx";
 import Crop from "./Crop";
-// import CodeImport from "./CodeImport.jsx";
+import AIPanel from "./AIPannel/AIPannel.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
 import HtmlOutput from "./HtmlOutput.jsx";
@@ -506,7 +506,7 @@ const App = () => {
               <Tab className="tabHidden">JsonReader</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab className="tabHidden">Test</Tab>
+              <Tab className="tabHidden">AI Paanel</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 
@@ -531,31 +531,7 @@ const App = () => {
                   <Tab>Single Channel Mutiple Layers</Tab>
                   <Tab>Four Channel</Tab>
                 </TabList>
-                {/*   <TabPanel>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      width: 900,
-                      marginBottom: 20,
-                    }}
-                  >
-                    <VideoController layerNumber={videoLayers[0]} />
-                    <VideoController layerNumber={videoLayers[1]} />
-                  </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      width: 900,
-                    }}
-                  >
-                    <VideoController layerNumber={videoLayers[2]} />
-                    <VideoController layerNumber={videoLayers[3]} />
-                  </div>
-                </TabPanel>
-*/}
                 <TabPanel>
                   <Leddisplay />
                 </TabPanel>
@@ -631,9 +607,7 @@ const App = () => {
               <Crop />
             </TabPanel>
             <TabPanel>
-              {/* <SpeechToText /> */}
-              {/* <CodeImport /> */}
-              test
+              <AIPanel />
             </TabPanel>
             <TabPanel>
               <Tsparticles1 />
