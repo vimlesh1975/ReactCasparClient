@@ -7,7 +7,7 @@ import { createRect, createCircle, createTriangle, createTextBox, gradient, grad
 
 const AIPannel = () => {
     // Default prompt now creates a blue circle with optional text
-    const [prompt, setPrompt] = useState('blue circle with the text "Hello"');
+    const [prompt, setPrompt] = useState('blue reactangle with the text "Vimlesh Kumar"');
     const [status, setStatus] = useState('idle'); // idle | generating | error | done
     const [errorMessage, setErrorMessage] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
@@ -81,7 +81,12 @@ Format strictly as a JSON array of objects:
 Note: You can use "gradient" for a rainbow gradient fill, or "gradient2" for a random gradient fill.
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
-            const resp = await fetch(`https://${window.location.hostname}:9000/api/ai/component`, {
+            const isOnline = window.location.origin.includes('github.io');
+            const apiUrl = isOnline 
+                ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
+                : `https://${window.location.hostname}:9000/api/ai/component`;
+
+            const resp = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
