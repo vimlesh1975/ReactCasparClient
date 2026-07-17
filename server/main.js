@@ -1,5 +1,5 @@
 require("dotenv").config(); // Load environment variables from .env file
-// console.log(process.env.DB_HOST);
+
 
 // import net from "node:net";
 const net = require("net");
@@ -444,7 +444,7 @@ let databaseConnection = 'false';
 async function initDB() {
   try {
     pool = mysql.createPool({
-      host: process.env.DB_HOST || "localhost",
+      host: process.env.DB_HOST || "103.196.4.141",
       user: process.env.DB_USER || "itmaint",
       password: process.env.DB_PASSWORD || "itddkchn",
       database: process.env.DB_DATABASE || dbname,
@@ -861,7 +861,7 @@ app.get("/show_runorderremotion", async (req, res) => {
 //code start  for google translation
 
 const { TranslationServiceClient } = require('@google-cloud/translate');
-const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '');
+const credentialsforgooglecloud = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON || '{}');
 
 const clientTranslation = new TranslationServiceClient({
   credentials: credentialsforgooglecloud,
