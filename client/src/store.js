@@ -374,6 +374,18 @@ const showImgSeqReducer = (state = initialShowImgSeq, action) => {
   }
 };
 
+const initialshowAIPanel = { showAIPanel: false };
+const showAIPanelReducer = (state = initialshowAIPanel, action) => {
+  switch (action.type) {
+    case 'SHOW_AI_PANEL':
+      return {
+        ...state,
+        showAIPanel: action.payload,
+      };
+    default:
+      return state;
+  }
+};
 
 
 const initialKf = {
@@ -537,6 +549,7 @@ const rootReducer = combineReducers({
   showHtmlOutputReducerrcc,
   showDataTableReducer,
   showImgSeqReducer,
+  showAIPanelReducer,
   showExtensionPanelReducer,
   showSavePanelReducer,
   showDataUpdatePanelReducer,

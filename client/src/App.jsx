@@ -496,7 +496,7 @@ const App = () => {
               <Tab>OGraf</Tab>
               <Tab >Gradient</Tab>
               <Tab className="tabHidden">BreakingNews</Tab>
-              <Tab className="tabHidden">ImgSequence</Tab>
+              <Tab className="tabHidden">ImgSeq</Tab>
               <Tab className="tabHidden">Scroll</Tab>
               <Tab>Shapes</Tab>
               <Tab className="tabHidden">Games</Tab>

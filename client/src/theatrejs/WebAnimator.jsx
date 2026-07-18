@@ -68,6 +68,8 @@ import HtmlOutput from "../HtmlOutput";
 import { Rnd } from "react-rnd";
 import * as d from "@theatre/dataverse";
 
+import AIPannel from "./AIPannel/AIPannel";
+
 // import split from 'graphemesplit'
 // fabric.util.string.graphemeSplit.prototype = split
 
@@ -277,6 +279,7 @@ const DrawingforTheatrejs = ({
     (state) => state.showDataTableReducer.showDataTable
   );
   const showImgSeq = useSelector((state) => state.showImgSeqReducer.showImgSeq);
+  const showAIPanel = useSelector((state) => state.showAIPanelReducer.showAIPanel);
 
   window.dispatch = dispatch;
   window.editor = editor;
@@ -338,6 +341,14 @@ const DrawingforTheatrejs = ({
             svgSource: `I S`,
             onClick: () => {
               dispatch({ type: "SHOW_IMG_SEQ", payload: !showImgSeq });
+            },
+          },
+          {
+            type: "Icon",
+            title: "AI Panel",
+            svgSource: `AI P`,
+            onClick: () => {
+              dispatch({ type: "SHOW_AI_PANEL", payload: !showAIPanel });
             },
           },
         ]);
@@ -528,6 +539,38 @@ const DrawingforTheatrejs = ({
           />
         </div>
       </Rnd>
+      <Rnd
+        enableResizing={{}}
+        default={{
+          x: 0,
+          y: 300,
+        }}
+        dragHandleClassName="my-drag-handle"
+      >
+        <div
+          style={{
+            backgroundColor: "#99c8d8",
+            display: showAIPanel ? "" : "none",
+          }}
+        >
+          <div
+            className="my-drag-handle"
+            style={{ width: 800, height: 20, backgroundColor: "white" }}
+          >
+            Drag me
+            <button
+              style={{ position: "absolute", right: 0 }}
+              onClick={() =>
+                dispatch({ type: "SHOW_AI_PANEL", payload: !showAIPanel })
+              }
+            >
+              X
+            </button>
+          </div>
+          <AIPannel />
+        </div>
+      </Rnd>
+
     </div>
   );
 };
