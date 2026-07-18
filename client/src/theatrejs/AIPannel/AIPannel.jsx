@@ -373,7 +373,24 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                     onClick={() => {
                         const canvas = window.editor?.canvas;
                         if (canvas) {
-                            canvas.getObjects().forEach(obj => canvas.remove(obj));
+                            const objects = [...canvas.getObjects()];
+                            objects.forEach(obj => {
+                                // 1. Detach from Theatre sheet
+                                if (window.sheet && obj.id) {
+                                    window.sheet.detachObject(obj.id);
+                                }
+                                // 2. Forget object in Theatre studio
+                                if (window.studio && window.arrObject && obj.id) {
+                                    const theatreObj = window.arrObject.find(o => o.address.objectKey === obj.id);
+                                    if (theatreObj) {
+                                        window.studio.transaction((api) => {
+                                            api.__experimental_forgetObject(theatreObj);
+                                        });
+                                    }
+                                }
+                                // 3. Remove from Fabric canvas
+                                canvas.remove(obj);
+                            });
                             canvas.requestRenderAll();
                         }
                     }}
