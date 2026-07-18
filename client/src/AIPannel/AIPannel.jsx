@@ -92,6 +92,7 @@ Format strictly as a JSON array of objects:
 
 Note: You can use "gradient" for a rainbow gradient fill, "gradient2" for a random gradient fill, or standard hex colors/names for fill.
 IMPORTANT: BE EXTREMELY CREATIVE AND PREMIUM! Use multi-layered shapes, accent lines, varying opacities, rounded corners (rx, ry), rotations (angle), and distinct font weights/styles to construct visually stunning, professional broadcast graphics. Avoid flat, boring rectangles. Combine multiple overlapping shapes to create depth. For colors, mostly prefer dark themes (e.g., dark grays, blacks, deep blues, dark gradients) with bright, high-contrast text. When generating text content, always use realistic, authentic names for players, teams, and cities (e.g., "Marcus Johnson", "Manchester", "Eagles") rather than generic placeholders (like "Player 1", "Team A", or "City 1").
+CRITICAL LAYOUT RULE: You MUST carefully calculate 'left' and 'top' coordinates so text falls securely INSIDE its background plate. TIP: For perfect alignment inside a rect, set the text's 'originX': 'center' and 'originY': 'center', and set its 'left' and 'top' to the exact center coordinates of the rect (e.g. rect.left + rect.width/2).
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
             const isOnline = window.location.origin.includes('github.io');
@@ -146,11 +147,18 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 return canvas.getObjects().filter(o => o.type === typeStr);
             };
 
+            const colorToHex = (color) => {
+                if (!color || color === 'gradient' || color === 'gradient2') return color;
+                const ctx = document.createElement('canvas').getContext('2d');
+                ctx.fillStyle = color;
+                return ctx.fillStyle; // Natively converts any valid CSS color name or short-hex into standard #RRGGBB hex
+            };
+
             const applyOptions = (obj, options = {}) => {
                 if (options.fill) {
                     if (options.fill === 'gradient') obj.set('fill', gradient);
                     else if (options.fill === 'gradient2') obj.set('fill', gradient2());
-                    else obj.set('fill', options.fill);
+                    else obj.set('fill', colorToHex(options.fill));
                 }
                 if (options.left !== undefined && options.left !== null) obj.set('left', options.left);
                 if (options.top !== undefined && options.top !== null) obj.set('top', options.top);
@@ -158,13 +166,27 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 if (options.height !== undefined && options.height !== null) obj.set('height', options.height);
                 if (options.radius !== undefined && options.radius !== null) obj.set('radius', options.radius);
                 if (options.opacity !== undefined && options.opacity !== null) obj.set('opacity', options.opacity);
-                if (options.stroke !== undefined && options.stroke !== null) obj.set('stroke', options.stroke);
+                if (options.stroke !== undefined && options.stroke !== null) obj.set('stroke', colorToHex(options.stroke));
                 if (options.strokeWidth !== undefined && options.strokeWidth !== null) obj.set('strokeWidth', options.strokeWidth);
                 if (options.angle !== undefined && options.angle !== null) obj.set('angle', options.angle);
                 if (options.rx !== undefined && options.rx !== null) obj.set('rx', options.rx);
                 if (options.ry !== undefined && options.ry !== null) obj.set('ry', options.ry);
                 if (options.originX !== undefined && options.originX !== null) obj.set('originX', options.originX);
                 if (options.originY !== undefined && options.originY !== null) obj.set('originY', options.originY);
+
+                // Sanitize ID and class names (replace spaces with _ and remove special characters)
+                const sanitizeString = (str) => String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+
+                if (options.id !== undefined && options.id !== null) obj.set('id_', sanitizeString(options.id));
+                if (options.id_ !== undefined && options.id_ !== null) obj.set('id_', sanitizeString(options.id_));
+                if (options.className !== undefined && options.className !== null) obj.set('className', sanitizeString(options.className));
+                if (options.class !== undefined && options.class !== null) obj.set('className', sanitizeString(options.class));
+
+                // Fallback: forcefully sanitize the object's existing id, class, id_ and className if they were derived from text with spaces/special characters
+                if (obj.id) obj.set('id', sanitizeString(obj.id));
+                if (obj.class) obj.set('class', sanitizeString(obj.class));
+                if (obj.id_) obj.set('id_', sanitizeString(obj.id_));
+                if (obj.className) obj.set('className', sanitizeString(obj.className));
 
                 // Text specific options
                 if (options.fontFamily !== undefined && options.fontFamily !== null) obj.set('fontFamily', options.fontFamily);
@@ -216,10 +238,6 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
 
                     if (bgRect) {
                         const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
-                        // Use the requested resizeTextWidth function to shrink their bounding box down to the actual text content width
-                        if (textObjects.length > 0) {
-                            resizeTextWidth(canvas, textObjects);
-                        }
 
                         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
                         textObjects.forEach(o => {
@@ -242,6 +260,16 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                     }
                 }
             });
+
+            // Automatically resize all text widths to match their actual content length.
+            // This guarantees that 'originX: center' will perfectly center the *text itself*, 
+            // not an arbitrarily wide bounding box generated by the LLM.
+            const allTextObjects = canvas.getObjects().filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
+            if (allTextObjects.length > 0) {
+                resizeTextWidth(canvas, allTextObjects);
+                // After resizing, update coordinates so originX offsets are recalculated
+                allTextObjects.forEach(o => o.setCoords());
+            }
 
             canvas.requestRenderAll();
             setStatus('done');

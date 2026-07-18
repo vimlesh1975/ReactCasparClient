@@ -20,10 +20,10 @@ body,
   overflow: hidden;
 }
 
-button,
+/* button,
 input {
   font: inherit;
-}
+} */
 
 .page {
   min-height: 100vh;
@@ -83,8 +83,13 @@ input {
   flex: none;
 }
 
-.surfaceActions button.loopButton { background: #316047; }
-.surfaceActions button.stopAllButton { background: #7b2f3b; }
+.surfaceActions button.loopButton {
+  background: #316047;
+}
+
+.surfaceActions button.stopAllButton {
+  background: #7b2f3b;
+}
 
 .surfaceActions .fileActionButton {
   position: relative;
@@ -200,14 +205,57 @@ input {
   border-radius: 3px;
 }
 
-.nw { top: -5px; left: -5px; cursor: nwse-resize; }
-.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
-.ne { top: -5px; right: -5px; cursor: nesw-resize; }
-.e { top: 50%; right: -5px; transform: translateY(-50%); cursor: ew-resize; }
-.se { right: -5px; bottom: -5px; cursor: nwse-resize; }
-.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
-.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
-.w { top: 50%; left: -5px; transform: translateY(-50%); cursor: ew-resize; }
+.nw {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.n {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.ne {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.e {
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+
+.se {
+  right: -5px;
+  bottom: -5px;
+  cursor: nwse-resize;
+}
+
+.s {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.sw {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
+
+.w {
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
 
 .mediaSidebar {
   width: 240px;
@@ -227,7 +275,10 @@ input {
   color: #ffffff;
 }
 
-.mediaSearchContainer { padding: 8px 14px; background: #233342; }
+.mediaSearchContainer {
+  padding: 8px 14px;
+  background: #233342;
+}
 
 .mediaSearchInput {
   width: 100%;
@@ -238,7 +289,10 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.mediaTreeContainer { overflow-y: auto; background: #ffffff; }
+.mediaTreeContainer {
+  overflow-y: auto;
+  background: #ffffff;
+}
 
 .treeItem {
   display: flex;
@@ -248,7 +302,9 @@ input {
   cursor: pointer;
 }
 
-.channelSelector, .snapToggle, .dimensionInput {
+.channelSelector,
+.snapToggle,
+.dimensionInput {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -260,24 +316,129 @@ input {
   font-weight: 700;
 }
 
-.hiddenFileInput { position: absolute; opacity: 0; width: 1px; }
+.hiddenFileInput {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+}
 
-.treeItemWrapper { display: flex; flex-direction: column; }
-.folderItem { font-weight: 700; color: #233342; }
-.fileItem { color: #4a5568; }
-.expander { width: 14px; text-align: center; color: #316047; font-weight: 700; }
-.itemIcon { font-size: 1rem; }
-.itemName { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.playingIndicator { display: flex; align-items: center; gap: 4px; color: #48bb78; font-size: 0.68rem; font-weight: 800; }
-.mediaRootPath { color: rgba(255, 255, 255, 0.7); font-size: 0.72rem; margin: 4px 0 0; }
-.refreshButton { background: transparent; border: 0; cursor: pointer; }
-.mediaExplorerHeader p { margin: 0; font-size: 0.9rem; font-weight: 700; }
-.mediaSearchContainer { position: relative; }
-.clearSearch { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: #ffffff; cursor: pointer; }
-.headerFilename { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #f1f4f9; border-radius: 6px; font-size: 0.86rem; margin-left: 4px; }
-.headerFilename span { color: #718096; text-transform: uppercase; font-size: 0.7rem; }
-.gridDimensionControls { display: flex; align-items: center; gap: 8px; }
-.dimensionInput span { color: #718096; text-transform: uppercase; font-size: 0.65rem; }
-.dimensionInput input { width: 48px; border: 1px solid #d9deea; border-radius: 4px; padding: 2px 4px; }
-.channelSelector span { color: #718096; text-transform: uppercase; font-size: 0.65rem; }
-.channelSelector select { border: 1px solid #d9deea; border-radius: 4px; padding: 2px 4px; }
+.treeItemWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.folderItem {
+  font-weight: 700;
+  color: #233342;
+}
+
+.fileItem {
+  color: #4a5568;
+}
+
+.expander {
+  width: 14px;
+  text-align: center;
+  color: #316047;
+  font-weight: 700;
+}
+
+.itemIcon {
+  font-size: 1rem;
+}
+
+.itemName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #48bb78;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.mediaRootPath {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  margin: 4px 0 0;
+}
+
+.refreshButton {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.mediaExplorerHeader p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.mediaSearchContainer {
+  position: relative;
+}
+
+.clearSearch {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.headerFilename {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f1f4f9;
+  border-radius: 6px;
+  font-size: 0.86rem;
+  margin-left: 4px;
+}
+
+.headerFilename span {
+  color: #718096;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.gridDimensionControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dimensionInput span {
+  color: #718096;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+}
+
+.dimensionInput input {
+  width: 48px;
+  border: 1px solid #d9deea;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.channelSelector span {
+  color: #718096;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+}
+
+.channelSelector select {
+  border: 1px solid #d9deea;
+  border-radius: 4px;
+  padding: 2px 4px;
+}

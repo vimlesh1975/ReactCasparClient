@@ -308,7 +308,7 @@ const showDataUpdatePanelReducer = (
   }
 };
 
-const initialShowId = { showId: true };
+const initialShowId = { showId: false };
 const showIdReducer = (state = initialShowId, action) => {
   switch (action.type) {
     case 'SHOW_ID':
