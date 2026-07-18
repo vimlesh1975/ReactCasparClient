@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { FiSend, FiMic, FiX, FiTrash2 } from 'react-icons/fi';
-import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth } from '../../common';
+import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth, setPrimitivePropAsSequenced } from '../../common';
 import { presetPrompts } from './presetPrompts';
 
 
 
-const AIPannel = () => {
+const AIPannel = ({ generateTheatreID }) => {
     // Default prompt now creates a blue circle with optional text
     const [prompt, setPrompt] = useState('blue reactangle with the text "Vimlesh Kumar"');
     const [status, setStatus] = useState('idle'); // idle | generating | error | done
@@ -61,6 +61,7 @@ Available functions:
 - createCircle
 - createTriangle
 - createTextBox (takes "text" parameter)
+- animate (Creates Theatre.js keyframe animations for an object by ID. Specify properties like left, top, scaleX, scaleY, opacity, etc.)
 
 For modification, use "modify" action and specify "type" (rect, circle, triangle, textbox, i-text, text) or omit to modify the active object.
 For deletion, use "delete" action and specify "type", or omit for active object.
@@ -86,13 +87,22 @@ Format strictly as a JSON array of objects:
   { 
     "action": "createTextBox", 
     "text": "Welcome to Football Participants", 
-    "options": { "fill": "white", "left": 960, "top": 540, "fontSize": 80 } 
+    "options": { "id": "main_text", "fill": "white", "left": 960, "top": 540, "fontSize": 80 } 
+  },
+  {
+    "action": "animate",
+    "id": "main_text",
+    "keyframes": {
+      "left": [{ "time": 0, "value": 500 }, { "time": 0.5, "value": 960 }, { "time": 6, "value": 960 }, { "time": 6.5, "value": 1500 }],
+      "opacity": [{ "time": 0, "value": 0 }, { "time": 0.5, "value": 1 }, { "time": 6, "value": 1 }, { "time": 6.5, "value": 0 }]
+    }
   }
 ]
 
 Note: You can use "gradient" for a rainbow gradient fill, "gradient2" for a random gradient fill, or standard hex colors/names for fill.
 IMPORTANT: BE EXTREMELY CREATIVE AND PREMIUM! Use multi-layered shapes, accent lines, varying opacities, rounded corners (rx, ry), rotations (angle), and distinct font weights/styles to construct visually stunning, professional broadcast graphics. Avoid flat, boring rectangles. Combine multiple overlapping shapes to create depth. For colors, mostly prefer dark themes (e.g., dark grays, blacks, deep blues, dark gradients) with bright, high-contrast text. When generating text content, always use realistic, authentic names for players, teams, and cities (e.g., "Marcus Johnson", "Manchester", "Eagles") rather than generic placeholders (like "Player 1", "Team A", or "City 1").
 CRITICAL LAYOUT RULE: You MUST carefully calculate 'left' and 'top' coordinates so text falls securely INSIDE its background plate. TIP: For perfect alignment inside a rect, set the text's 'originX': 'center' and 'originY': 'center', and set its 'left' and 'top' to the exact center coordinates of the rect (e.g. rect.left + rect.width/2).
+BROADCAST ANIMATION RULE: You MUST animate EVERY SINGLE GRAPHIC ELEMENT you create! Do not leave any element static. Even if the user doesn't ask for it, you must add an 'animate' action for every single object ID. Assume a 25fps timeline. Animate the intro VERY FAST from 0 to 0.5 seconds (0-12 frames). The graphic should hold in place until 6 seconds. The outro should animate out VERY FAST from 6 seconds to 6.5 seconds. Always set an ID in 'options' for objects. For the animation style, ALWAYS make elements slide in from the left (e.g. animate 'left' property from a negative value to its final position) and slide out to the right (e.g. animate 'left' from its final position to a large positive value off-screen). Combine this sliding motion with opacity fades (0 to 1, then 1 to 0).
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
             const isOnline = window.location.origin.includes('github.io');
@@ -177,7 +187,10 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 // Sanitize ID and class names (replace spaces with _ and remove special characters)
                 const sanitizeString = (str) => String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 
-                if (options.id !== undefined && options.id !== null) obj.set('id_', sanitizeString(options.id));
+                if (options.id !== undefined && options.id !== null) { 
+                    obj.set('id', sanitizeString(options.id)); 
+                    obj.set('id_', sanitizeString(options.id)); 
+                }
                 if (options.id_ !== undefined && options.id_ !== null) obj.set('id_', sanitizeString(options.id_));
                 if (options.className !== undefined && options.className !== null) obj.set('className', sanitizeString(options.className));
                 if (options.class !== undefined && options.class !== null) obj.set('className', sanitizeString(options.class));
@@ -210,19 +223,19 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 if (cmd.action === 'createRect') {
                     createRect(canvas);
                     const obj = canvas.getActiveObject();
-                    if (obj) applyOptions(obj, cmd.options);
+                    if (obj) { applyOptions(obj, cmd.options); if (generateTheatreID && obj.id) generateTheatreID(obj.id); }
                 } else if (cmd.action === 'createCircle') {
                     createCircle(canvas);
                     const obj = canvas.getActiveObject();
-                    if (obj) applyOptions(obj, cmd.options);
+                    if (obj) { applyOptions(obj, cmd.options); if (generateTheatreID && obj.id) generateTheatreID(obj.id); }
                 } else if (cmd.action === 'createTriangle') {
                     createTriangle(canvas);
                     const obj = canvas.getActiveObject();
-                    if (obj) applyOptions(obj, cmd.options);
+                    if (obj) { applyOptions(obj, cmd.options); if (generateTheatreID && obj.id) generateTheatreID(obj.id); }
                 } else if (cmd.action === 'createTextBox') {
                     createTextBox(canvas, cmd.text || 'Text');
                     const obj = canvas.getActiveObject();
-                    if (obj) applyOptions(obj, cmd.options);
+                    if (obj) { applyOptions(obj, cmd.options); if (generateTheatreID && obj.id) generateTheatreID(obj.id); }
                 } else if (cmd.action === 'modify') {
                     getTargetObjects(cmd.type).forEach(obj => applyOptions(obj, cmd.options));
                 } else if (cmd.action === 'delete') {
@@ -258,16 +271,35 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                             bgRect.setCoords();
                         }
                     }
+                } else if (cmd.action === 'animate') {
+                    const { id, keyframes } = cmd;
+                    if (id && keyframes) {
+                        const sanitizedId = String(id).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                        setTimeout(() => {
+                            if (!window.arrObject || !window.studio || !window.sheet) return;
+                            const theatreObj = window.arrObject.find(o => o.address.objectKey === sanitizedId);
+                            if (theatreObj) {
+                                Object.keys(keyframes).forEach(prop => {
+                                    if (theatreObj.props[prop] !== undefined) {
+                                        setPrimitivePropAsSequenced(theatreObj, theatreObj.props[prop]);
+                                        keyframes[prop].forEach(kf => {
+                                            window.sheet.sequence.position = kf.time;
+                                            window.studio.transaction(({ set }) => {
+                                                set(theatreObj.props[prop], kf.value);
+                                            });
+                                        });
+                                    }
+                                });
+                                window.sheet.sequence.position = 0;
+                            }
+                        }, 250);
+                    }
                 }
             });
 
-            // Automatically resize all text widths to match their actual content length.
-            // This guarantees that 'originX: center' will perfectly center the *text itself*, 
-            // not an arbitrarily wide bounding box generated by the LLM.
             const allTextObjects = canvas.getObjects().filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
             if (allTextObjects.length > 0) {
                 resizeTextWidth(canvas, allTextObjects);
-                // After resizing, update coordinates so originX offsets are recalculated
                 allTextObjects.forEach(o => o.setCoords());
             }
 

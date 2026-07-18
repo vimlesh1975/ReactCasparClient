@@ -567,7 +567,7 @@ const DrawingforTheatrejs = ({
               X
             </button>
           </div>
-          <AIPannel />
+          <AIPannel generateTheatreID={generateTheatreID} />
         </div>
       </Rnd>
 
