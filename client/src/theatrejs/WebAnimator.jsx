@@ -1711,10 +1711,7 @@ const WebAnimator = () => {
             window.studio=_studio;
            
             window.project = core.getProject('${"project" + generateUniqueNumber()
-      }', {state:${state1
-        .replaceAll("'", "\\'")
-        .replaceAll('"', "'")
-      }});
+      }', {state: JSON.parse(decodeURIComponent('${encodeURIComponent(state1).replace(/'/g, "%27")}'))});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
 
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
@@ -1997,10 +1994,7 @@ const WebAnimator = () => {
             window.studio=_studio;
 
             window.project = core.getProject('${"project" + generateUniqueNumber()
-      }', {state:${state1
-        .replaceAll("'", "\\'")
-        .replaceAll('"', "'")
-      }});
+      }', {state: JSON.parse(decodeURIComponent('${encodeURIComponent(state1).replace(/'/g, "%27")}'))});
             window.sheet = project.sheet('Sheet 1');
 
             core.onChange(sheet.sequence.pointer.position, (position) => {
