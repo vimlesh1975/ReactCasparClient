@@ -1712,8 +1712,9 @@ const WebAnimator = () => {
            
             window.project = core.getProject('${"project" + generateUniqueNumber()
       }', {state:${state1
+        .replaceAll("'", "\\'")
         .replaceAll('"', "'")
-        .replaceAll("\\'", '\\"')}});
+      }});
             window.sheet_${layerNumber} = project.sheet('Sheet 1');
 
             core.onChange(sheet_${layerNumber}.sequence.pointer.position, (position) => {
@@ -1997,8 +1998,9 @@ const WebAnimator = () => {
 
             window.project = core.getProject('${"project" + generateUniqueNumber()
       }', {state:${state1
+        .replaceAll("'", "\\'")
         .replaceAll('"', "'")
-        .replaceAll("\\'", '\\"')}});
+      }});
             window.sheet = project.sheet('Sheet 1');
 
             core.onChange(sheet.sequence.pointer.position, (position) => {

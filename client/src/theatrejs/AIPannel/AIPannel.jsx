@@ -105,11 +105,11 @@ CRITICAL LAYOUT RULE: You MUST carefully calculate 'left' and 'top' coordinates 
 BROADCAST ANIMATION RULE: You MUST animate EVERY SINGLE GRAPHIC ELEMENT you create! Do not leave any element static. Even if the user doesn't ask for it, you must add an 'animate' action for every single object ID. Assume a 25fps timeline. Animate the intro VERY FAST from 0 to 0.5 seconds (0-12 frames). The graphic should hold in place until 6 seconds. The outro should animate out VERY FAST from 6 seconds to 6.5 seconds. Always set an ID in 'options' for objects. For the animation style, ALWAYS make elements slide in from the left (e.g. animate 'left' property from a negative value to its final position) and slide out to the right (e.g. animate 'left' from its final position to a large positive value off-screen). Combine this sliding motion with opacity fades (0 to 1, then 1 to 0).
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
-            const isOnline = window.location.origin.includes('github.io');
-            const apiUrl = isOnline
-                ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
-                : `https://${window.location.hostname}:9000/api/ai/component`;
-
+            // const isOnline = window.location.origin.includes('github.io');
+            // const apiUrl = isOnline
+            //     ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
+            //     : `https://${window.location.hostname}:9000/api/ai/component`;
+            const apiUrl = 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component';
             const resp = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -187,9 +187,9 @@ Do not include markdown blocks or any other text. Output ONLY valid JSON array.`
                 // Sanitize ID and class names (replace spaces with _ and remove special characters)
                 const sanitizeString = (str) => String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 
-                if (options.id !== undefined && options.id !== null) { 
-                    obj.set('id', sanitizeString(options.id)); 
-                    obj.set('id_', sanitizeString(options.id)); 
+                if (options.id !== undefined && options.id !== null) {
+                    obj.set('id', sanitizeString(options.id));
+                    obj.set('id_', sanitizeString(options.id));
                 }
                 if (options.id_ !== undefined && options.id_ !== null) obj.set('id_', sanitizeString(options.id_));
                 if (options.className !== undefined && options.className !== null) obj.set('className', sanitizeString(options.className));

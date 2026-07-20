@@ -95,10 +95,11 @@ IMPORTANT: BE EXTREMELY CREATIVE AND PREMIUM! Use multi-layered shapes, accent l
 CRITICAL LAYOUT RULE: You MUST carefully calculate 'left' and 'top' coordinates so text falls securely INSIDE its background plate. TIP: For perfect alignment inside a rect, set the text's 'originX': 'center' and 'originY': 'center', and set its 'left' and 'top' to the exact center coordinates of the rect (e.g. rect.left + rect.width/2).
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 
-            const isOnline = window.location.origin.includes('github.io');
-            const apiUrl = isOnline
-                ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
-                : `https://${window.location.hostname}:9000/api/ai/component`;
+            // const isOnline = window.location.origin.includes('github.io');
+            // const apiUrl = isOnline
+            //     ? 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component'
+            //     : `https://${window.location.hostname}:9000/api/ai/component`;
+            const apiUrl = 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component';
 
             const resp = await fetch(apiUrl, {
                 method: 'POST',
