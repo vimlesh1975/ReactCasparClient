@@ -68,7 +68,7 @@ import HtmlOutput from "../HtmlOutput";
 import { Rnd } from "react-rnd";
 import * as d from "@theatre/dataverse";
 
-import AIPannel from "./AIPannel/AIPannel";
+import AIPannel from "../AIPannel/AIPannel";
 
 // import split from 'graphemesplit'
 // fabric.util.string.graphemeSplit.prototype = split
@@ -107,16 +107,29 @@ const strinSetclipPathWhileImporting = (layerNumber) => {
 export const deleteItem = (canvas) => {
   const aa = canvas.getActiveObjects();
   aa.forEach((element) => {
+    deleteTheatreID(element.id);
     canvas.remove(element);
-    sheet.detachObject(element.id);
-
-    // clearObjectsAllAnimation
-    studio.transaction((api) => {
-      api.__experimental_forgetObject(getObjectbyId(element.id));
-    });
   });
   canvas.discardActiveObject();
   canvas.requestRenderAll();
+};
+
+export const deleteTheatreID = (id) => {
+    if (sheet && id) {
+        sheet.detachObject(id);
+    }
+    if (studio && id) {
+        try {
+            studio.transaction((api) => {
+                const theatreObj = getObjectbyId(id);
+                if (theatreObj) {
+                    api.__experimental_forgetObject(theatreObj);
+                }
+            });
+        } catch (e) {
+            console.error("Error forgetting theatre object", e);
+        }
+    }
 };
 
 function getKeyframes(sheet, tracks, objectKey) {
@@ -567,7 +580,7 @@ const DrawingforTheatrejs = ({
               X
             </button>
           </div>
-          <AIPannel generateTheatreID={generateTheatreID} />
+          <AIPannel generateTheatreID={generateTheatreID} deleteTheatreID={deleteTheatreID} />
         </div>
       </Rnd>
 
@@ -3017,8 +3030,9 @@ const WebAnimator = () => {
     studio.setSelection([arrObject[i]]);
   };
 
-  const generateTheatreID = (id = idofElement) => {
-    const element = canvas.getActiveObjects()[0];
+  const generateTheatreID = (id = idofElement, el = null) => {
+    const element = el || canvas.getActiveObjects()[0];
+    if (!element) return;
     element.set({ id: id.toString(), text: id.toString() });
 
     if (element.type === "path") {

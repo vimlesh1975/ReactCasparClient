@@ -1,22 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FiSend, FiMic, FiX, FiTrash2 } from 'react-icons/fi';
+import { FiSend, FiMic, FiTrash2 } from 'react-icons/fi';
 import { presetPrompts } from './presetPrompts';
 import { creativeModes } from './CreativeModes';
 import { stylePresets } from './StylePresets';
 import { buildSystemPrompt } from './PromptEngine';
 import { dispatchCommand, postProcessCommands } from './CommandDispatcher';
 
-const AIPannel = () => {
+const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
     const [prompt, setPrompt] = useState('blue rectangle with the text "Vimlesh Kumar"');
     const [creativeMode, setCreativeMode] = useState('Professional');
     const [stylePreset, setStylePreset] = useState('BBC News');
-    const [status, setStatus] = useState('idle'); // idle | generating | error | done
+    const [chatHistory, setChatHistory] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-    const [responseMessage, setResponseMessage] = useState('');
+
+    useEffect(() => {
+        try {
+            const savedPrompt = localStorage.getItem('ai_temp_prompt');
+            const savedChat = localStorage.getItem('ai_temp_chat');
+            if (savedPrompt) {
+                setPrompt(savedPrompt);
+                localStorage.removeItem('ai_temp_prompt');
+            }
+            if (savedChat) {
+                setChatHistory(JSON.parse(savedChat));
+                localStorage.removeItem('ai_temp_chat');
+            }
+        } catch(e){}
+    }, []);
+    const [status, setStatus] = useState('idle'); // idle | generating | error | done
     const [isListening, setIsListening] = useState(false);
     
-    // Milestone 2: Chat History for Conversation Memory
-    const [chatHistory, setChatHistory] = useState([]);
     const chatContainerRef = useRef(null);
 
     // Auto-scroll chat to bottom
@@ -77,7 +90,6 @@ const AIPannel = () => {
         if (!textToGenerate.trim()) return;
         setStatus('generating');
         setErrorMessage('');
-        setResponseMessage('');
         
         const canvas = window.editor?.canvas;
         if (!canvas) {
@@ -143,7 +155,7 @@ const AIPannel = () => {
             }
 
             commands.forEach(cmd => {
-                dispatchCommand(canvas, cmd);
+                dispatchCommand(canvas, cmd, generateTheatreID, deleteTheatreID);
             });
 
             postProcessCommands(canvas);
@@ -154,7 +166,6 @@ const AIPannel = () => {
         } catch (e) {
             console.error('AI generation failed', e);
             setErrorMessage(e.message || String(e));
-            setResponseMessage("Failed before completing.");
             setChatHistory(prev => [...prev, { role: 'assistant', content: `Error: ${e.message || String(e)}` }]);
             setStatus('error');
         }
@@ -281,17 +292,25 @@ const AIPannel = () => {
                     <FiMic size={16} />
                 </button>
                 <button
-                    onClick={() => { setPrompt(''); setChatHistory([]); }}
-                    title="Clear Chat & Prompt"
-                    style={{ padding: '6px 12px', background: '#444', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    onClick={() => {
+                        setPrompt('');
+                        setChatHistory([]);
+                        localStorage.removeItem('ai_temp_prompt');
+                        localStorage.removeItem('ai_temp_chat');
+                    }}
+                    title="Clear Chat History"
+                    style={{ padding: '6px 12px', background: '#333', color: '#fff', border: '1px solid #555', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <FiX size={16} />
+                    <FiTrash2 size={16} />
                 </button>
                 <button
                     onClick={() => {
                         const canvas = window.editor?.canvas;
                         if (canvas) {
-                            canvas.getObjects().forEach(obj => canvas.remove(obj));
+                            canvas.getObjects().forEach(obj => {
+                                if (deleteTheatreID) deleteTheatreID(obj.id);
+                                canvas.remove(obj);
+                            });
                             canvas.requestRenderAll();
                             setChatHistory(prev => [...prev, { role: 'assistant', content: 'Canvas cleared.' }]);
                         }

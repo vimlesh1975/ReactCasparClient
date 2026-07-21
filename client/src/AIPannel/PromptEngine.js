@@ -14,6 +14,7 @@ Available functions:
 - createCircle
 - createTriangle
 - createTextBox (takes "text" parameter)
+- animate (Creates Theatre.js keyframe animations for an object by ID. Specify properties like left, top, scaleX, scaleY, opacity, etc.)
 
 For modification, use "modify" action and specify "type" (rect, circle, triangle, textbox, i-text, text) AND/OR "id_" to modify specific objects.
 For deletion, use "delete" action and specify "type" AND/OR "id_".
@@ -56,7 +57,15 @@ Format strictly as a JSON array of objects:
   { 
     "action": "createTextBox", 
     "text": "Marcus Johnson", 
-    "options": { "id_": "player_name_header", "fill": "white", "left": 960, "top": 540, "fontSize": 80 } 
+    "options": { "id_": "player_name_header", "id": "player_name_header", "fill": "white", "left": 960, "top": 540, "fontSize": 80 } 
+  },
+  {
+    "action": "animate",
+    "id": "player_name_header",
+    "keyframes": {
+      "left": [{ "time": 0, "value": 500 }, { "time": 1, "value": 960 }],
+      "opacity": [{ "time": 0, "value": 0 }, { "time": 1, "value": 1 }]
+    }
   }
 ]
 
@@ -64,5 +73,6 @@ Note: You can use "gradient" for a rainbow gradient fill, "gradient2" for a rand
 When generating text content, you MUST ALWAYS use realistic, authentic names for players, teams, and cities (e.g., "Marcus Johnson", "Manchester", "Eagles") rather than generic placeholders (like "Player 1", "Team A", or "City 1"). This is a strict requirement.
 
 CRITICAL LAYOUT RULE: You MUST carefully calculate 'left' and 'top' coordinates so text falls securely INSIDE its background plate. TIP: For perfect alignment inside a rect, set the text's 'originX': 'center' and 'originY': 'center', and set its 'left' and 'top' to the exact center coordinates of the rect (e.g. rect.left + rect.width/2).
+BROADCAST ANIMATION RULE: You MUST animate EVERY SINGLE GRAPHIC ELEMENT you create! Do not leave any element static. Even if the user doesn't ask for it, you must add an 'animate' action for every single object ID. Assume a 25fps timeline. Animate ONLY the intro (in-animation) from 0 to 1 second (0-25 frames). DO NOT add an outro animation. Always set an ID in 'options' for objects. For the animation style, ALWAYS make elements slide in from the left (e.g. animate 'left' property from a negative value to its final position). Combine this sliding motion with an opacity fade (0 to 1).
 Do not include markdown blocks or any other text. Output ONLY valid JSON array.`;
 };

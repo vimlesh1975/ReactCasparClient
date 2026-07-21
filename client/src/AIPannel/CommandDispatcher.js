@@ -1,4 +1,4 @@
-import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth } from '../common';
+import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth, setPrimitivePropAsSequenced } from '../common';
 
 const colorToHex = (color) => {
     if (!color || color === 'gradient' || color === 'gradient2') return color;
@@ -8,6 +8,14 @@ const colorToHex = (color) => {
 };
 
 const applyOptions = (obj, options = {}) => {
+    const sanitizeString = (str) => String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+
+    const newId = options.id_ !== undefined ? options.id_ : (options.id !== undefined ? options.id : null);
+    if (newId) {
+        obj.set('id', sanitizeString(newId));
+        obj.set('id_', sanitizeString(newId));
+    }
+
     if (options.fill) {
         if (options.fill === 'gradient') obj.set('fill', gradient);
         else if (options.fill === 'gradient2') obj.set('fill', gradient2());
@@ -27,16 +35,10 @@ const applyOptions = (obj, options = {}) => {
     if (options.originX !== undefined && options.originX !== null) obj.set('originX', options.originX);
     if (options.originY !== undefined && options.originY !== null) obj.set('originY', options.originY);
 
-    const sanitizeString = (str) => String(str).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-
-    if (options.id !== undefined && options.id !== null) obj.set('id_', sanitizeString(options.id));
-    if (options.id_ !== undefined && options.id_ !== null) obj.set('id_', sanitizeString(options.id_));
     if (options.className !== undefined && options.className !== null) obj.set('className', sanitizeString(options.className));
     if (options.class !== undefined && options.class !== null) obj.set('className', sanitizeString(options.class));
 
-    if (obj.id) obj.set('id', sanitizeString(obj.id));
     if (obj.class) obj.set('class', sanitizeString(obj.class));
-    if (obj.id_) obj.set('id_', sanitizeString(obj.id_));
     if (obj.className) obj.set('className', sanitizeString(obj.className));
 
     if (options.fontFamily !== undefined && options.fontFamily !== null) obj.set('fontFamily', options.fontFamily);
@@ -78,27 +80,45 @@ const getTargetObjects = (canvas, cmd) => {
     return targets;
 };
 
-export const dispatchCommand = (canvas, cmd) => {
+export const dispatchCommand = (canvas, cmd, generateTheatreID = null, deleteTheatreID = null) => {
     switch (cmd.action) {
         case 'createRect':
             createRect(canvas);
             const rect = canvas.getActiveObject();
-            if (rect) applyOptions(rect, cmd.options);
+            if (rect) { 
+                applyOptions(rect, cmd.options); 
+                if (generateTheatreID) generateTheatreID(rect.id, rect);
+            }
             break;
         case 'createCircle':
             createCircle(canvas);
-            const circle = canvas.getActiveObject();
-            if (circle) applyOptions(circle, cmd.options);
+            {
+                const circle = canvas.getActiveObject();
+                if (circle) { 
+                    applyOptions(circle, cmd.options); 
+                    if (generateTheatreID) generateTheatreID(circle.id, circle);
+                }
+            }
             break;
         case 'createTriangle':
             createTriangle(canvas);
-            const triangle = canvas.getActiveObject();
-            if (triangle) applyOptions(triangle, cmd.options);
+            {
+                const tri = canvas.getActiveObject();
+                if (tri) { 
+                    applyOptions(tri, cmd.options); 
+                    if (generateTheatreID) generateTheatreID(tri.id, tri);
+                }
+            }
             break;
         case 'createTextBox':
             createTextBox(canvas, cmd.text || 'Text');
-            const textbox = canvas.getActiveObject();
-            if (textbox) applyOptions(textbox, cmd.options);
+            {
+                const textbox = canvas.getActiveObject();
+                if (textbox) { 
+                    applyOptions(textbox, cmd.options); 
+                    if (generateTheatreID) generateTheatreID(textbox.id, textbox);
+                }
+            }
             break;
         case 'modify':
             getTargetObjects(canvas, cmd).forEach(obj => {
@@ -109,37 +129,85 @@ export const dispatchCommand = (canvas, cmd) => {
             });
             break;
         case 'delete':
-            getTargetObjects(canvas, cmd).forEach(obj => canvas.remove(obj));
+            getTargetObjects(canvas, cmd).forEach(obj => {
+                if (deleteTheatreID) deleteTheatreID(obj.id);
+                canvas.remove(obj);
+            });
             break;
         case 'autoFitAll':
-            const objects = canvas.getObjects();
-            let maxArea = 0;
-            let bgRect = null;
-            objects.filter(o => o.type === 'rect').forEach(r => {
-                const area = r.width * r.height;
-                if (area > maxArea) { maxArea = area; bgRect = r; }
-            });
-
-            if (bgRect) {
-                const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
-
-                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-                textObjects.forEach(o => {
-                    const br = o.getBoundingRect();
-                    if (br.left < minX) minX = br.left;
-                    if (br.top < minY) minY = br.top;
-                    if (br.left + br.width > maxX) maxX = br.left + br.width;
-                    if (br.top + br.height > maxY) maxY = br.top + br.height;
+            {
+                const objects = canvas.getObjects();
+                let maxArea = 0;
+                let bgRect = null;
+                objects.filter(o => o.type === 'rect').forEach(r => {
+                    const area = r.width * r.height;
+                    if (area > maxArea) { maxArea = area; bgRect = r; }
                 });
-                const padding = cmd.padding || 30;
-                if (minX !== Infinity) {
-                    bgRect.set({
-                        left: minX - padding,
-                        top: minY - padding,
-                        width: (maxX - minX) + (padding * 2),
-                        height: (maxY - minY) + (padding * 2)
+
+                if (bgRect) {
+                    const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'i-text' || o.type === 'text');
+
+                    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                    textObjects.forEach(o => {
+                        const br = o.getBoundingRect();
+                        if (br.left < minX) minX = br.left;
+                        if (br.top < minY) minY = br.top;
+                        if (br.left + br.width > maxX) maxX = br.left + br.width;
+                        if (br.top + br.height > maxY) maxY = br.top + br.height;
                     });
-                    bgRect.setCoords();
+                    const padding = cmd.padding || 30;
+                    if (minX !== Infinity) {
+                        bgRect.set({
+                            left: minX - padding,
+                            top: minY - padding,
+                            width: (maxX - minX) + (padding * 2),
+                            height: (maxY - minY) + (padding * 2)
+                        });
+                        bgRect.setCoords();
+                    }
+                }
+            }
+            break;
+        case 'animate':
+            {
+                const { id, keyframes } = cmd;
+                if (id && keyframes) {
+                    const sanitizedId = String(id).replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    console.log(`[AI Animate] Parsed cmd for ${sanitizedId}`, keyframes);
+                    setTimeout(() => {
+                        console.log(`[AI Animate] setTimeout fired for ${sanitizedId}`, window.arrObject, window.studio, window.sheet);
+                        if (!window.arrObject || !window.studio || !window.sheet) {
+                            console.warn('[AI Animate] Missing window.arrObject, studio, or sheet');
+                            return;
+                        }
+                        const allKeys = window.arrObject.map(o => o.address ? o.address.objectKey : 'NO_ADDRESS');
+                        console.log(`[AI Animate] Searching for ${sanitizedId}. Available keys in arrObject:`, allKeys);
+                        const theatreObj = window.arrObject.find(o => o.address && o.address.objectKey === sanitizedId);
+                        console.log(`[AI Animate] Found theatreObj for ${sanitizedId}:`, theatreObj);
+                        if (theatreObj) {
+                            Object.keys(keyframes).forEach(prop => {
+                                console.log(`[AI Animate] Checking prop ${prop} on theatreObj`);
+                                if (theatreObj.props[prop] !== undefined) {
+                                    console.log(`[AI Animate] Sequencing prop ${prop}`);
+                                    try {
+                                        setPrimitivePropAsSequenced(theatreObj, theatreObj.props[prop]);
+                                        keyframes[prop].forEach(kf => {
+                                            window.sheet.sequence.position = kf.time;
+                                            window.studio.transaction(({ set }) => {
+                                                set(theatreObj.props[prop], kf.value);
+                                            });
+                                        });
+                                    } catch (err) {
+                                        console.error(`[AI Animate] Error sequencing prop ${prop}:`, err);
+                                    }
+                                } else {
+                                    console.warn(`[AI Animate] Prop ${prop} is undefined on theatreObj.props`);
+                                }
+                            });
+                            window.sheet.sequence.position = 0;
+                            console.log(`[AI Animate] Completed animation for ${sanitizedId}`);
+                        }
+                    }, 250);
                 }
             }
             break;
