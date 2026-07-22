@@ -8,8 +8,22 @@ import './GamesAIPanel.css';
 const GamesAIPanel = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
 
+  const [selectedTemplateType, setSelectedTemplateType] = useState(null);
+  const [selectedTemplateObj, setSelectedTemplateObj] = useState(null);
+  
+  // Helper to map sub-category to template type keyword understood by generateBroadcastHTML
+  const mapSubCatToType = (subCat) => {
+    if (!subCat) return '';
+    const upper = subCat.toUpperCase();
+    if (upper.includes('LOWER')) return 'lower-third';
+    if (upper.includes('SPLITS')) return 'split-times';
+    if (upper.includes('SCORES')) return 'scoreboard';
+    if (upper.includes('RESULTS')) return 'results-table';
+    if (upper.includes('RECORDS') || upper.includes('BUG')) return 'event-bug';
+    return '';
+  };
+
   const [selectedSport, setSelectedSport] = useState(OLYMPIC_GAMES_DATA[0]);
-  const [selectedTemplateType, setSelectedTemplateType] = useState('sw-lt-swimmer');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [aiPrompt, setAiPrompt] = useState('Gold lower third Usain Bolt JAM 9.63s');
@@ -71,16 +85,24 @@ const GamesAIPanel = () => {
       const newTemplates = getSportTemplates(selectedSport);
       if (newTemplates && newTemplates.length > 0) {
         setSelectedTemplateType(newTemplates[0].id);
+        setSelectedTemplateObj(newTemplates[0]);
       }
     }
   }, [selectedSport]);
 
-  // Generate current HTML
+  // Derive the semantic template category from the selected template's subCat
+  const resolvedTemplateType = selectedTemplateObj
+    ? mapSubCatToType(selectedTemplateObj.subCat)
+    : (selectedTemplateType || '');
+
+  // Generate current HTML — pass the raw template ID so the generator
+  // can produce a distinct layout per numbered variant (e.g. CF001 vs CF002)
   const currentHTML = generateBroadcastHTML(
     selectedSport,
-    selectedTemplateType,
+    resolvedTemplateType,
     customFields,
-    customColors
+    customColors,
+    selectedTemplateType  // templateId e.g. "CF001"
   );
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -228,7 +250,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
     }
     const group = createFabricGraphicGroup(
       selectedSport,
-      selectedTemplateType,
+      resolvedTemplateType,
       customFields,
       customColors
     );
@@ -326,7 +348,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
                 <button
                   key={tt.id}
                   className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
-                  onClick={() => setSelectedTemplateType(tt.id)}
+                  onClick={() => { setSelectedTemplateType(tt.id); setSelectedTemplateObj(tt); }}
                   title={tt.name}
                 >
                   <span>{tt.icon}</span>
@@ -419,6 +441,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
           <div ref={previewContainerRef} className="preview-frame-container">
             <div className="preview-res-badge">1920 × 1080 (25 FPS)</div>
             <iframe
+              key={resolvedTemplateType + selectedTemplateType}
               ref={iframeRef}
               srcDoc={currentHTML}
               className="preview-iframe"

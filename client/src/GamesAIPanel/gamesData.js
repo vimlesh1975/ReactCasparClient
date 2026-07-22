@@ -1,3 +1,5 @@
+import * as RealTemplates from "./real_templates_output";
+
 export const OLYMPIC_GAMES_DATA = [
   {
     id: "aquatics-swimming",
@@ -682,14 +684,27 @@ export const OLYMPIC_GAMES_DATA = [
   }
 ];
 
-export const TEMPLATE_TYPES = [
-  { id: "lower-third", name: "Lower Third / Athlete ID", icon: "👤" },
-  { id: "scoreboard", name: "Live Match Bug / Scoreboard", icon: "⚽" },
-  { id: "start-list", name: "Start List / Heat Lineup", icon: "📋" },
-  { id: "results-table", name: "Results & Standings Table", icon: "📊" },
-  { id: "medal-tally", name: "Medal Tally Overlay", icon: "🥇" },
-  { id: "event-bug", name: "Venue & Event Title Bug", icon: "🏷️" }
-];
+// Import real template definitions
+
+
+// Consolidated registry mapping sport codes to their template arrays
+export const TEMPLATE_REGISTRY = {
+  SW: RealTemplates.SW_TEMPLATES,
+  AT: RealTemplates.AT_TEMPLATES,
+  AR: RealTemplates.AR_TEMPLATES,
+  BD: RealTemplates.BD_TEMPLATES,
+  BK: RealTemplates.BK_TEMPLATES,
+  BV: RealTemplates.BV_TEMPLATES,
+  BX: RealTemplates.BX_TEMPLATES,
+  CS: RealTemplates.CS_TEMPLATES,
+  CF: RealTemplates.CF_TEMPLATES,
+  CT: RealTemplates.CT_TEMPLATES,
+  CR: RealTemplates.CR_TEMPLATES,
+  // Add other sport exports as needed
+};
+
+// Compatibility export for any existing imports expecting a flat list
+export const TEMPLATE_TYPES = Object.values(TEMPLATE_REGISTRY).flat();
 
 /**
  * Olympic Broadcast Templates — numbered IDs per sport (e.g. SW001, AT001, BX001)
@@ -1440,45 +1455,22 @@ export const MA_TEMPLATES = [
 ];
 
 // ─── MASTER LOOKUP TABLE ─────────────────────────────────────────────────────
-const SPORT_TEMPLATE_MAP = {
-  SW: SW_TEMPLATES,
-  AT: AT_TEMPLATES,
-  MA: MA_TEMPLATES,
-  AR: AR_TEMPLATES,
-  BD: BD_TEMPLATES,
-  BK: BK_TEMPLATES,
-  BV: BV_TEMPLATES,
-  BX: BX_TEMPLATES,
-  CS: CS_TEMPLATES,
-  CF: CF_TEMPLATES,
-  CT: CT_TEMPLATES,
-  CR: CR_TEMPLATES,
-  CM: CM_TEMPLATES,
-  CB: CB_TEMPLATES,
-  EQ: EQ_TEMPLATES,
-  FE: FE_TEMPLATES,
-  FB: FB_TEMPLATES,
-  GA: GA_TEMPLATES,
-  GR: GR_TEMPLATES,
-  GT: GT_TEMPLATES,
-  HB: HB_TEMPLATES,
-  HO: HO_TEMPLATES,
-  JU: JU_TEMPLATES,
-  MP: MP_TEMPLATES,
-  RO: RO_TEMPLATES,
-  SA: SA_TEMPLATES,
-  SH: SH_TEMPLATES,
-  TT: TT_TEMPLATES,
-  TK: TK_TEMPLATES,
-  TE: TE_TEMPLATES,
-  TR: TR_TEMPLATES,
-  VO: VO_TEMPLATES,
-  WL: WL_TEMPLATES,
-  WR: WR_TEMPLATES,
-  DV: DV_TEMPLATES,
-  WP: WP_TEMPLATES,
-  SY: SY_TEMPLATES,
-};
+const SPORT_TEMPLATE_MAP = TEMPLATE_REGISTRY;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Get OBS-style numbered templates for any Olympic sport.
