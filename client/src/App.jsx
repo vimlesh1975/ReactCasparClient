@@ -506,7 +506,7 @@ const App = () => {
               <Tab className="tabHidden">test</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
-              <Tab className="tabHidden">AI Paanel</Tab>
+              <Tab className="tabHidden">AI Panel</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 

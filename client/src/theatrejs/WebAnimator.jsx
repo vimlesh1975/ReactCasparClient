@@ -1220,10 +1220,10 @@ const WebAnimator = () => {
           <li onClick={record}>Record</li>
           <li
             onClick={() => {
-              dispatch({ type: "SHOW_SAVEPANNEL", payload: !showSavePanel });
+              dispatch({ type: "SHOW_SAVEPANEL", payload: !showSavePanel });
             }}
           >
-            {showSavePanel ? "Hide Save Pannel" : "Show Save Panel"}
+            {showSavePanel ? "Hide Save Panel" : "Show Save Panel"}
           </li>
           <li onClick={allOutofScreen}>All Out of Screen</li>
         </ul>
