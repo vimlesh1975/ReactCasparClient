@@ -10,7 +10,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
   const [selectedTemplateObj, setSelectedTemplateObj] = useState(null);
-  
+
   // Helper to map sub-category to template type keyword understood by generateBroadcastHTML
   const mapSubCatToType = (subCat) => {
     if (!subCat) return '';
@@ -64,8 +64,8 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   // Filter sports list
   const filteredSports = OLYMPIC_GAMES_DATA.filter(sport => {
     const matchesSearch = sport.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          sport.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          sport.venue.toLowerCase().includes(searchTerm.toLowerCase());
+      sport.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sport.venue.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCat = categoryFilter === 'ALL' || sport.category === categoryFilter;
     return matchesSearch && matchesCat;
   });
@@ -272,7 +272,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
     <div className="games-ai-container">
       <div className="games-ai-header">
         <h2>
-          <span>🏆 Olympic Games AI Panel</span>
+          <span>Games AI Panel</span>
         </h2>
       </div>
 
@@ -326,7 +326,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
 
           <div>
             <div className="section-label">2. {selectedSport.name} OBS Templates ({filteredTemplates.length})</div>
-            
+
 
 
             <div className="template-types-grid">

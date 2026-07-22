@@ -1455,7 +1455,6 @@ export const MA_TEMPLATES = [
 ];
 
 // ─── MASTER LOOKUP TABLE ─────────────────────────────────────────────────────
-const SPORT_TEMPLATE_MAP = TEMPLATE_REGISTRY;
 
 
 
