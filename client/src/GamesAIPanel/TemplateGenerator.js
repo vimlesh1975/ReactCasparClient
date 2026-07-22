@@ -6,6 +6,22 @@
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
 
+export function resolveCategory(templateType) {
+  const normType = (templateType || "").toLowerCase();
+  if (normType.includes("wind")) return "wind-indicator";
+  if (normType.includes("split") || normType.includes("reaction") || normType.includes("500m")) return "split-times";
+  if (normType.includes("attempt") || normType.includes("light")) return "attempt-board";
+  if (normType.includes("stats") || normType.includes("player")) return "player-stats";
+  if (normType.includes("sub")) return "substitution";
+  if (normType.includes("breakdown") || normType.includes("apparatus")) return "score-breakdown";
+  if (normType.includes("target") || normType.includes("set") || normType.includes("serve")) return "target-score";
+  if (normType.includes("sb") || normType.includes("score")) return "scoreboard";
+  if (normType.includes("start") || normType.includes("list") || normType.includes("lineup") || normType.includes("formation")) return "start-list";
+  if (normType.includes("result") || normType.includes("tally") || normType.includes("rank") || normType.includes("standing") || normType.includes("order")) return "results-table";
+  if (normType.includes("bug")) return "event-bug";
+  return "lower-third";
+}
+
 export function generateBroadcastHTML(sport, templateType, customData = {}, styleOptions = {}) {
   const primaryColor = styleOptions.primaryColor || sport.primaryColor || "#005b96";
   const secondaryColor = styleOptions.secondaryColor || sport.secondaryColor || "#003366";
@@ -17,7 +33,116 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const venueTitle = sport.venue.toUpperCase();
   const code = sport.code;
 
-  switch (templateType) {
+  const category = resolveCategory(templateType);
+
+  switch (category) {
+    case "wind-indicator":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .wind-bug {
+              position: absolute; bottom: 90px; right: 90px;
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white; padding: 12px 24px; border-radius: 8px;
+              border-left: 6px solid ${accentColor}; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+              display: flex; align-items: center; gap: 15px; font-weight: 800;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="wind-bug">
+            <span style="color:${accentColor}; font-size: 24px;">💨 WIND</span>
+            <span style="font-size: 28px;">${data.wind || "+1.5 m/s"}</span>
+            <span style="font-size: 16px; opacity: 0.8;">${code}</span>
+          </div>
+        </body>
+        </html>
+      `;
+
+    case "split-times":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .split-card {
+              position: absolute; top: 150px; left: 90px; width: 650px;
+              background: rgba(15, 23, 42, 0.95); border-radius: 12px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.2); color: white;
+            }
+            .split-head {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              padding: 14px 20px; font-size: 22px; font-weight: 900; border-bottom: 4px solid ${accentColor};
+              display: flex; justify-content: space-between;
+            }
+            .split-row {
+              display: flex; justify-content: space-between; padding: 12px 20px;
+              border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 18px; font-weight: 700;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="split-card">
+            <div class="split-head">
+              <span>${data.athlete || "COMPETITOR"} (${data.country || code})</span>
+              <span style="color:${accentColor};">SPLIT TIMES</span>
+            </div>
+            <div class="split-row"><span>50m Split</span><span style="color:${accentColor};">23.45s</span></div>
+            <div class="split-row"><span>100m Split</span><span style="color:${accentColor};">48.12s (+0.10)</span></div>
+            <div class="split-row"><span>Reaction Time</span><span>0.64s</span></div>
+          </div>
+        </body>
+        </html>
+      `;
+
+    case "attempt-board":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .attempt-card {
+              position: absolute; bottom: 90px; left: 90px;
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white; padding: 16px 28px; border-radius: 10px;
+              border-bottom: 6px solid ${accentColor}; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+              display: flex; align-items: center; gap: 20px; font-weight: 800;
+            }
+            .light { width: 22px; height: 22px; border-radius: 50%; display: inline-block; }
+            .light-white { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+            .light-red { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+          </style>
+        </head>
+        <body>
+          <div class="attempt-card">
+            <div>
+              <div style="font-size: 26px;">${data.athlete || "COMPETITOR"} (${data.country || code})</div>
+              <div style="font-size: 16px; opacity: 0.8;">ATTEMPT: ${data.snatch || data.height || "175 kg"}</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="light light-white"></span>
+              <span class="light light-white"></span>
+              <span class="light light-red"></span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
     case "lower-third":
       return `
         <!DOCTYPE html>
@@ -559,7 +684,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     };
   };
 
-  switch (templateType) {
+  switch (resolveCategory(templateType)) {
     case 'lower-third': {
       const topBg = new fabric.Rect(createProps('rect', {
         left: 100, top: 850, width: 800, height: 70, fill: primaryColor, rx: 8, ry: 8

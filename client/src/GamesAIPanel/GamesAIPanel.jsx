@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { OLYMPIC_GAMES_DATA, TEMPLATE_TYPES } from './gamesData';
+import { OLYMPIC_GAMES_DATA, getSportTemplates } from './gamesData';
 import { generateBroadcastHTML, createFabricGraphicGroup } from './TemplateGenerator';
 import { FaPlus, FaMagic } from 'react-icons/fa';
 import './GamesAIPanel.css';
@@ -9,7 +9,7 @@ const GamesAIPanel = () => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
 
   const [selectedSport, setSelectedSport] = useState(OLYMPIC_GAMES_DATA[0]);
-  const [selectedTemplateType, setSelectedTemplateType] = useState('lower-third');
+  const [selectedTemplateType, setSelectedTemplateType] = useState('sw-lt-swimmer');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [aiPrompt, setAiPrompt] = useState('Gold lower third Usain Bolt JAM 9.63s');
@@ -19,6 +19,13 @@ const GamesAIPanel = () => {
     secondaryColor: OLYMPIC_GAMES_DATA[0].secondaryColor,
     accentColor: OLYMPIC_GAMES_DATA[0].accentColor
   });
+
+  const [subCatFilter, setSubCatFilter] = useState('ALL');
+
+  const sportTemplates = getSportTemplates(selectedSport);
+  const filteredTemplates = subCatFilter === 'ALL'
+    ? sportTemplates
+    : sportTemplates.filter(t => t.subCat === subCatFilter);
 
   const iframeRef = useRef(null);
   const previewContainerRef = useRef(null);
@@ -51,7 +58,7 @@ const GamesAIPanel = () => {
     return matchesSearch && matchesCat;
   });
 
-  // When sport changes, update fields & default colors
+  // When sport changes, update fields, default colors & sport-specific templates
   useEffect(() => {
     if (selectedSport) {
       setCustomFields({ ...selectedSport.dataFields });
@@ -60,6 +67,11 @@ const GamesAIPanel = () => {
         secondaryColor: selectedSport.secondaryColor,
         accentColor: selectedSport.accentColor
       });
+      setSubCatFilter('ALL');
+      const newTemplates = getSportTemplates(selectedSport);
+      if (newTemplates && newTemplates.length > 0) {
+        setSelectedTemplateType(newTemplates[0].id);
+      }
     }
   }, [selectedSport]);
 
@@ -286,16 +298,39 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
           </div>
 
           <div>
-            <div className="section-label">2. Template Type</div>
+            <div className="section-label">2. {selectedSport.name} OBS Templates ({filteredTemplates.length})</div>
+            
+            <div className="subcat-filter-bar" style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '8px' }}>
+              {['ALL', 'LOWER THIRDS', 'SPLITS & TIMES', 'SCORES & MATCH', 'RESULTS & STANDINGS', 'RECORDS & BUGS'].map(cat => (
+                <button
+                  key={cat}
+                  style={{
+                    background: subCatFilter === cat ? '#38bdf8' : '#1e293b',
+                    color: subCatFilter === cat ? '#0f172a' : '#94a3b8',
+                    border: '1px solid #334155',
+                    fontSize: '9px',
+                    fontWeight: '800',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setSubCatFilter(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
             <div className="template-types-grid">
-              {TEMPLATE_TYPES.map(tt => (
+              {filteredTemplates.map(tt => (
                 <button
                   key={tt.id}
                   className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
                   onClick={() => setSelectedTemplateType(tt.id)}
+                  title={tt.name}
                 >
                   <span>{tt.icon}</span>
-                  <span>{tt.name.split('/')[0]}</span>
+                  <span>{tt.name}</span>
                 </button>
               ))}
             </div>
