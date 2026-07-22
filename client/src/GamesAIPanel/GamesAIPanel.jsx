@@ -280,7 +280,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
         {/* Sidebar: Sport Selection & Template Types */}
         <div className="sidebar-panel">
           <div>
-            <div className="section-label">1. Select Olympic Sport</div>
+            <div className="section-label">1. Select Sport</div>
             <input
               type="text"
               className="search-input"
