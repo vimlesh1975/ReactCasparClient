@@ -717,9 +717,9 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 }
 
 /**
- * Generate Native Fabric.js Vector Graphic Objects
+ * Generate Native Fabric.js Vector Graphic Objects matching HTML preview variants
  */
-export function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}) {
+export function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}, templateId = '') {
   const primaryColor = customColors.primaryColor || sport.primaryColor || "#005b96";
   const secondaryColor = customColors.secondaryColor || sport.secondaryColor || "#003366";
   const accentColor = customColors.accentColor || sport.accentColor || "#ffd700";
@@ -728,6 +728,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   const sportTitle = sport.name.toUpperCase();
   const venueTitle = sport.venue.toUpperCase();
   const code = sport.code;
+
+  const category = resolveCategory(templateType);
+  const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
+  const variant = ((idNum - 1) % 5) + 1;
 
   const objects = [];
 
@@ -743,89 +747,404 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     };
   };
 
-  switch (resolveCategory(templateType)) {
-    case 'lower-third': {
-      const topBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 850, width: 800, height: 70, fill: primaryColor, rx: 8, ry: 8
+  switch (category) {
+    case 'wind-indicator': {
+      const bugBg = new fabric.Rect(createProps('rect', {
+        left: 1450, top: 890, width: 380, height: 80, fill: primaryColor, rx: 8, ry: 8
       }));
-      const accentBorder = new fabric.Rect(createProps('rect', {
-        left: 100, top: 850, width: 12, height: 70, fill: accentColor
+      const leftBorder = new fabric.Rect(createProps('rect', {
+        left: 1450, top: 890, width: 6, height: 80, fill: accentColor
       }));
-      const codePill = new fabric.Rect(createProps('rect', {
-        left: 125, top: 865, width: 65, height: 40, fill: accentColor, rx: 6, ry: 6
+      const labelText = new fabric.Textbox("💨 WIND", createProps('textbox', {
+        left: 1475, top: 912, fontSize: 24, fontWeight: 'bold', fill: accentColor, width: 140
+      }));
+      const valueText = new fabric.Textbox(data.wind || "+1.5 m/s", createProps('textbox', {
+        left: 1615, top: 910, fontSize: 28, fontWeight: 'bold', fill: '#ffffff', width: 140
       }));
       const codeText = new fabric.Textbox(code, createProps('textbox', {
-        left: 135, top: 872, fontSize: 20, fontWeight: 'bold', fill: '#000000', width: 45, textAlign: 'center'
+        left: 1755, top: 918, fontSize: 16, fontWeight: 'bold', fill: '#cbd5e1', width: 60, textAlign: 'right'
       }));
-      const nameText = new fabric.Textbox(data.athlete || data.athleteA || "COMPETITOR NAME", createProps('textbox', {
-        left: 205, top: 865, fontSize: 32, fontWeight: 'bold', fill: '#ffffff', width: 550
-      }));
-      const countryText = new fabric.Textbox(data.country || "", createProps('textbox', {
-        left: 770, top: 868, fontSize: 24, fontWeight: 'bold', fill: accentColor, width: 110, textAlign: 'right'
-      }));
+      objects.push(bugBg, leftBorder, labelText, valueText, codeText);
+      break;
+    }
 
-      const bottomBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 925, width: 750, height: 50, fill: '#0f172a', rx: 6, ry: 6
+    case 'split-times': {
+      if (variant <= 3) {
+        // Variant 1-3: Standard split times card
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 150, width: 650, height: 220, fill: '#0f172a', rx: 12, ry: 12
+        }));
+        const headBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 150, width: 650, height: 55, fill: primaryColor, rx: 12, ry: 12
+        }));
+        const headAccent = new fabric.Rect(createProps('rect', {
+          left: 90, top: 201, width: 650, height: 4, fill: accentColor
+        }));
+        const athleteText = new fabric.Textbox(`${(data.athlete || "COMPETITOR").toUpperCase()} (${(data.country || code).toUpperCase()})`, createProps('textbox', {
+          left: 110, top: 165, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 420
+        }));
+        const titleText = new fabric.Textbox("SPLIT TIMES", createProps('textbox', {
+          left: 540, top: 165, fontSize: 18, fontWeight: 'bold', fill: accentColor, width: 180, textAlign: 'right'
+        }));
+
+        const splitLabel1 = variant === 1 ? '50m Split' : variant === 2 ? '250m Split' : '500m Split';
+        const splitVal1 = data.time || '23.45s';
+        const splitLabel2 = variant === 1 ? '100m Split' : variant === 2 ? '500m Split' : '1000m Split';
+        const splitVal2 = variant === 1 ? '48.12s (+0.10)' : variant === 2 ? '1:52.40 (+0.15)' : '3:48.80';
+
+        const row1Bg = new fabric.Rect(createProps('rect', { left: 90, top: 205, width: 650, height: 45, fill: 'transparent' }));
+        const r1L = new fabric.Textbox(splitLabel1, createProps('textbox', { left: 110, top: 215, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 300 }));
+        const r1V = new fabric.Textbox(splitVal1, createProps('textbox', { left: 450, top: 215, fontSize: 18, fontWeight: 'bold', fill: accentColor, width: 270, textAlign: 'right' }));
+
+        const row2Bg = new fabric.Rect(createProps('rect', { left: 90, top: 250, width: 650, height: 45, fill: 'transparent' }));
+        const r2L = new fabric.Textbox(splitLabel2, createProps('textbox', { left: 110, top: 260, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 300 }));
+        const r2V = new fabric.Textbox(splitVal2, createProps('textbox', { left: 450, top: 260, fontSize: 18, fontWeight: 'bold', fill: accentColor, width: 270, textAlign: 'right' }));
+
+        const row3Bg = new fabric.Rect(createProps('rect', { left: 90, top: 295, width: 650, height: 45, fill: 'transparent' }));
+        const r3L = new fabric.Textbox("Reaction Time", createProps('textbox', { left: 110, top: 305, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 300 }));
+        const r3V = new fabric.Textbox("0.64s", createProps('textbox', { left: 450, top: 305, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 270, textAlign: 'right' }));
+
+        objects.push(cardBg, headBg, headAccent, athleteText, titleText, row1Bg, r1L, r1V, row2Bg, r2L, r2V, row3Bg, r3L, r3V);
+      } else if (variant === 4) {
+        // Variant 4: Reaction time bug
+        const bugBg = new fabric.Rect(createProps('rect', {
+          left: 1400, top: 880, width: 430, height: 110, fill: primaryColor, rx: 8, ry: 8
+        }));
+        const rightBorder = new fabric.Rect(createProps('rect', {
+          left: 1822, top: 880, width: 8, height: 110, fill: accentColor
+        }));
+        const labelText = new fabric.Textbox("START REACTION", createProps('textbox', {
+          left: 1425, top: 895, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 200
+        }));
+        const valText = new fabric.Textbox(`${data.time || '0.136'}s`, createProps('textbox', {
+          left: 1425, top: 920, fontSize: 42, fontWeight: 'bold', fill: '#ffffff', width: 200
+        }));
+        const infoText = new fabric.Textbox(`${(data.athlete || 'ATHLETE').toUpperCase()}\n${(data.country || code).toUpperCase()}`, createProps('textbox', {
+          left: 1650, top: 920, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 160
+        }));
+        objects.push(bugBg, rightBorder, labelText, valText, infoText);
+      } else {
+        // Variant 5: Speed trap bug
+        const bugBg = new fabric.Rect(createProps('rect', {
+          left: 1450, top: 70, width: 380, height: 90, fill: '#0a0e1e', rx: 8, ry: 8
+        }));
+        const topBorder = new fabric.Rect(createProps('rect', {
+          left: 1450, top: 70, width: 380, height: 4, fill: accentColor
+        }));
+        const codeText = new fabric.Textbox(code, createProps('textbox', {
+          left: 1470, top: 95, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 50
+        }));
+        const speedVal = new fabric.Textbox(data.time || '44.7', createProps('textbox', {
+          left: 1530, top: 85, fontSize: 36, fontWeight: 'bold', fill: accentColor, width: 100
+        }));
+        const speedLbl = new fabric.Textbox('km/h', createProps('textbox', {
+          left: 1530, top: 125, fontSize: 12, fontWeight: 'bold', fill: '#94a3b8', width: 100
+        }));
+        const infoText = new fabric.Textbox(`${(data.athlete || 'ATHLETE').toUpperCase()}\n${(data.country || 'NOC').toUpperCase()}`, createProps('textbox', {
+          left: 1650, top: 95, fontSize: 14, fontWeight: 'bold', fill: '#e2e8f0', width: 160
+        }));
+        objects.push(bugBg, topBorder, codeText, speedVal, speedLbl, infoText);
+      }
+      break;
+    }
+
+    case 'attempt-board': {
+      const cardBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 860, width: 600, height: 100, fill: primaryColor, rx: 10, ry: 10
       }));
       const bottomAccent = new fabric.Rect(createProps('rect', {
-        left: 100, top: 925, width: 12, height: 50, fill: '#ffffff', opacity: 0.5
+        left: 90, top: 954, width: 600, height: 6, fill: accentColor
       }));
-      const eventText = new fabric.Textbox(data.event || sportTitle, createProps('textbox', {
-        left: 125, top: 935, fontSize: 20, fontWeight: 'bold', fill: '#e2e8f0', width: 450
+      const athleteText = new fabric.Textbox(`${(data.athlete || "COMPETITOR").toUpperCase()} (${(data.country || code).toUpperCase()})`, createProps('textbox', {
+        left: 115, top: 875, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 420
       }));
-      const infoText = new fabric.Textbox(
-        data.rank ? `RANK: ${data.rank}` : (data.time ? `TIME: ${data.time}` : (data.score ? `SCORE: ${data.score}` : '')),
-        createProps('textbox', {
-          left: 580, top: 935, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 250, textAlign: 'right'
-        })
-      );
+      const attemptText = new fabric.Textbox(`ATTEMPT: ${data.snatch || data.height || "175 kg"}`, createProps('textbox', {
+        left: 115, top: 915, fontSize: 16, fontWeight: 'bold', fill: '#cbd5e1', width: 420
+      }));
 
-      objects.push(topBg, accentBorder, codePill, codeText, nameText, countryText, bottomBg, bottomAccent, eventText, infoText);
+      const light1 = new fabric.Circle(createProps('circle', { left: 550, top: 895, radius: 11, fill: '#ffffff' }));
+      const light2 = new fabric.Circle(createProps('circle', { left: 580, top: 895, radius: 11, fill: '#ffffff' }));
+      const light3 = new fabric.Circle(createProps('circle', { left: 610, top: 895, radius: 11, fill: '#ef4444' }));
+
+      objects.push(cardBg, bottomAccent, athleteText, attemptText, light1, light2, light3);
+      break;
+    }
+
+    case 'lower-third': {
+      if (variant === 1) {
+        // ── Variant 1: Standard Athlete ID (Name / Country / Event) ──
+        const topBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 860, width: 750, height: 60, fill: primaryColor, rx: 6, ry: 6
+        }));
+        const accentBorder = new fabric.Rect(createProps('rect', {
+          left: 90, top: 860, width: 8, height: 60, fill: accentColor
+        }));
+        const codePill = new fabric.Rect(createProps('rect', {
+          left: 110, top: 872, width: 55, height: 35, fill: accentColor, rx: 4, ry: 4
+        }));
+        const codeText = new fabric.Textbox(code, createProps('textbox', {
+          left: 110, top: 878, fontSize: 18, fontWeight: 'bold', fill: '#000000', width: 55, textAlign: 'center'
+        }));
+        const nameText = new fabric.Textbox((data.athlete || data.athleteA || "COMPETITOR NAME").toUpperCase(), createProps('textbox', {
+          left: 180, top: 872, fontSize: 34, fontWeight: 'bold', fill: '#ffffff', width: 450
+        }));
+        const countryText = new fabric.Textbox(`${data.flag || "🏳️"} ${data.country || ""}`, createProps('textbox', {
+          left: 630, top: 875, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 190, textAlign: 'right'
+        }));
+
+        const bottomBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 920, width: 700, height: 45, fill: '#0f172a', rx: 4, ry: 4
+        }));
+        const bottomAccent = new fabric.Rect(createProps('rect', {
+          left: 90, top: 920, width: 8, height: 45, fill: '#ffffff', opacity: 0.2
+        }));
+        const eventText = new fabric.Textbox(data.event || sportTitle, createProps('textbox', {
+          left: 115, top: 930, fontSize: 20, fontWeight: 'bold', fill: '#e2e8f0', width: 400
+        }));
+        const infoText = new fabric.Textbox(
+          data.rank ? `RANK: ${data.rank}` : (data.time ? `TIME: ${data.time}` : (data.score ? `SCORE: ${data.score}` : '')),
+          createProps('textbox', {
+            left: 520, top: 930, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 250, textAlign: 'right'
+          })
+        );
+        objects.push(topBg, accentBorder, codePill, codeText, nameText, countryText, bottomBg, bottomAccent, eventText, infoText);
+      } else if (variant === 2) {
+        // ── Variant 2: Crew / Team Profile Card ──
+        const flagCol = new fabric.Rect(createProps('rect', {
+          left: 90, top: 860, width: 80, height: 110, fill: accentColor, rx: 8, ry: 8
+        }));
+        const flagText = new fabric.Textbox(data.flag || "🏳️", createProps('textbox', {
+          left: 90, top: 890, fontSize: 44, width: 80, textAlign: 'center'
+        }));
+
+        const contentCol = new fabric.Rect(createProps('rect', {
+          left: 170, top: 860, width: 600, height: 110, fill: primaryColor, rx: 8, ry: 8
+        }));
+        const topBorder = new fabric.Rect(createProps('rect', {
+          left: 170, top: 860, width: 600, height: 4, fill: accentColor
+        }));
+        const sportTag = new fabric.Textbox(`${code} • ${data.country || "TEAM"}`, createProps('textbox', {
+          left: 195, top: 870, fontSize: 13, fontWeight: 'bold', fill: accentColor, width: 550
+        }));
+        const crewName = new fabric.Textbox((data.athlete || data.teamA || "CREW NAME").toUpperCase(), createProps('textbox', {
+          left: 195, top: 890, fontSize: 30, fontWeight: 'bold', fill: '#ffffff', width: 550
+        }));
+        const crewSub = new fabric.Textbox(`${data.event || sportTitle} ${data.rank ? '• RANK: ' + data.rank : ''}`, createProps('textbox', {
+          left: 195, top: 930, fontSize: 17, fontWeight: 'bold', fill: '#cbd5e1', width: 550
+        }));
+        objects.push(flagCol, flagText, contentCol, topBorder, sportTag, crewName, crewSub);
+      } else if (variant === 3) {
+        // ── Variant 3: Olympic / World Champion Card ──
+        const goldBar = new fabric.Rect(createProps('rect', {
+          left: 90, top: 855, width: 600, height: 6, fill: accentColor, rx: 3, ry: 3
+        }));
+        const nameRow = new fabric.Rect(createProps('rect', {
+          left: 90, top: 865, width: 650, height: 60, fill: '#050a14'
+        }));
+        const accentBorder = new fabric.Rect(createProps('rect', {
+          left: 90, top: 865, width: 8, height: 60, fill: accentColor
+        }));
+        const badgeBg = new fabric.Rect(createProps('rect', {
+          left: 110, top: 880, width: 110, height: 30, fill: accentColor, rx: 15, ry: 15
+        }));
+        const badgeText = new fabric.Textbox("🥇 CHAMPION", createProps('textbox', {
+          left: 110, top: 885, fontSize: 12, fontWeight: 'bold', fill: '#000000', width: 110, textAlign: 'center'
+        }));
+        const champName = new fabric.Textbox((data.athlete || "ATHLETE NAME").toUpperCase(), createProps('textbox', {
+          left: 235, top: 876, fontSize: 34, fontWeight: 'bold', fill: '#ffffff', width: 420
+        }));
+        const flagText = new fabric.Textbox(data.flag || "🏳️", createProps('textbox', {
+          left: 665, top: 878, fontSize: 28, width: 60, textAlign: 'center'
+        }));
+
+        const detailRow = new fabric.Rect(createProps('rect', {
+          left: 90, top: 925, width: 600, height: 45, fill: primaryColor
+        }));
+        const detailText = new fabric.Textbox(`${data.country || code} • ${data.event || sportTitle} ${data.time ? '• ' + data.time : ''} ${data.score ? '• ' + data.score : ''}`, createProps('textbox', {
+          left: 115, top: 935, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 560
+        }));
+        objects.push(goldBar, nameRow, accentBorder, badgeBg, badgeText, champName, flagText, detailRow, detailText);
+      } else if (variant === 4) {
+        // ── Variant 4: Coach / Official ID Card ──
+        const roleCol = new fabric.Rect(createProps('rect', {
+          left: 90, top: 850, width: 14, height: 120, fill: accentColor
+        }));
+        const infoBlock = new fabric.Rect(createProps('rect', {
+          left: 104, top: 850, width: 550, height: 120, fill: '#0a0e1e'
+        }));
+        const roleLabel = new fabric.Textbox(`HEAD COACH • ${code}`, createProps('textbox', {
+          left: 130, top: 862, fontSize: 13, fontWeight: 'bold', fill: accentColor, width: 500
+        }));
+        const personName = new fabric.Textbox((data.athlete || "COACH NAME").toUpperCase(), createProps('textbox', {
+          left: 130, top: 882, fontSize: 32, fontWeight: 'bold', fill: '#ffffff', width: 500
+        }));
+        const personSub = new fabric.Textbox(data.event || sportTitle, createProps('textbox', {
+          left: 130, top: 922, fontSize: 17, fontWeight: 'bold', fill: '#94a3b8', width: 500
+        }));
+        const countryTagBg = new fabric.Rect(createProps('rect', {
+          left: 130, top: 948, width: 100, height: 26, fill: primaryColor, rx: 4, ry: 4
+        }));
+        const countryTagText = new fabric.Textbox(`${data.flag || "🏳️"} ${data.country || "NOC"}`, createProps('textbox', {
+          left: 130, top: 952, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 100, textAlign: 'center'
+        }));
+        objects.push(roleCol, infoBlock, roleLabel, personName, personSub, countryTagBg, countryTagText);
+      } else {
+        // ── Variant 5: National Team / Country Profile Card ──
+        const headerBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 860, width: 600, height: 60, fill: primaryColor, rx: 8, ry: 8
+        }));
+        const topBorder = new fabric.Rect(createProps('rect', {
+          left: 90, top: 916, width: 600, height: 4, fill: accentColor
+        }));
+        const flagText = new fabric.Textbox(data.flag || "🏳️", createProps('textbox', {
+          left: 110, top: 870, fontSize: 38, width: 50
+        }));
+        const teamName = new fabric.Textbox((data.country || data.athlete || "TEAM").toUpperCase(), createProps('textbox', {
+          left: 170, top: 872, fontSize: 32, fontWeight: 'bold', fill: '#ffffff', width: 390
+        }));
+        const codeBadge = new fabric.Rect(createProps('rect', {
+          left: 580, top: 875, width: 80, height: 30, fill: accentColor, rx: 4, ry: 4
+        }));
+        const codeText = new fabric.Textbox(code, createProps('textbox', {
+          left: 580, top: 880, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 80, textAlign: 'center'
+        }));
+
+        const subRowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 920, width: 600, height: 45, fill: '#000000', opacity: 0.75
+        }));
+        const subRowText = new fabric.Textbox(`${data.event || sportTitle} ${data.rank ? '• RANK #' + data.rank : ''} ${data.time ? '• BEST ' + data.time : ''}`, createProps('textbox', {
+          left: 115, top: 932, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 550
+        }));
+        objects.push(headerBg, topBorder, flagText, teamName, codeBadge, codeText, subRowBg, subRowText);
+      }
       break;
     }
 
     case 'scoreboard': {
-      const mainBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 100, width: 750, height: 80, fill: '#0f172a', rx: 10, ry: 10
-      }));
-      const badgeBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 100, width: 100, height: 80, fill: primaryColor
-      }));
-      const badgeAccent = new fabric.Rect(createProps('rect', {
-        left: 196, top: 100, width: 4, height: 80, fill: accentColor
-      }));
-      const codeText = new fabric.Textbox(code, createProps('textbox', {
-        left: 100, top: 120, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 100, textAlign: 'center'
-      }));
-      const teamA = new fabric.Textbox(data.teamA || data.athleteA || "TEAM A", createProps('textbox', {
-        left: 215, top: 124, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 195
-      }));
-      const scoreABg = new fabric.Rect(createProps('rect', {
-        left: 420, top: 118, width: 55, height: 44, fill: secondaryColor, rx: 6, ry: 6
-      }));
-      const scoreAText = new fabric.Textbox(String(data.scoreA || "0"), createProps('textbox', {
-        left: 420, top: 124, fontSize: 26, fontWeight: 'bold', fill: accentColor, width: 55, textAlign: 'center'
-      }));
-      const scoreBBg = new fabric.Rect(createProps('rect', {
-        left: 490, top: 118, width: 55, height: 44, fill: secondaryColor, rx: 6, ry: 6
-      }));
-      const scoreBText = new fabric.Textbox(String(data.scoreB || "0"), createProps('textbox', {
-        left: 490, top: 124, fontSize: 26, fontWeight: 'bold', fill: accentColor, width: 55, textAlign: 'center'
-      }));
-      const teamB = new fabric.Textbox(data.teamB || data.athleteB || "TEAM B", createProps('textbox', {
-        left: 560, top: 124, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 165
-      }));
-      const clockBg = new fabric.Rect(createProps('rect', {
-        left: 730, top: 100, width: 120, height: 80, fill: '#1e293b'
-      }));
-      const periodText = new fabric.Textbox(data.period || "LIVE", createProps('textbox', {
-        left: 730, top: 115, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 120, textAlign: 'center'
-      }));
-      const clockText = new fabric.Textbox(data.clock || "00:00", createProps('textbox', {
-        left: 730, top: 140, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
-      }));
+      if (variant === 1 || variant === 4) {
+        // Variant 1 & 4: Classic team matchup scoreboard (horizontal bug)
+        const mainBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 70, width: 750, height: 80, fill: '#0f172a', rx: 8, ry: 8
+        }));
+        const badgeBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 70, width: 100, height: 80, fill: primaryColor
+        }));
+        const badgeAccent = new fabric.Rect(createProps('rect', {
+          left: 187, top: 70, width: 3, height: 80, fill: accentColor
+        }));
+        const codeText = new fabric.Textbox(code, createProps('textbox', {
+          left: 90, top: 90, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 100, textAlign: 'center'
+        }));
+        const subText = new fabric.Textbox("LOND 2012", createProps('textbox', {
+          left: 90, top: 115, fontSize: 11, fontWeight: 'bold', fill: '#94a3b8', width: 100, textAlign: 'center'
+        }));
 
-      objects.push(mainBg, badgeBg, badgeAccent, codeText, teamA, scoreABg, scoreAText, scoreBBg, scoreBText, teamB, clockBg, periodText, clockText);
+        const teamA = new fabric.Textbox((data.teamA || data.athleteA || "TEAM A").toUpperCase(), createProps('textbox', {
+          left: 205, top: 95, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 185
+        }));
+        const scoreABg = new fabric.Rect(createProps('rect', {
+          left: 395, top: 88, width: 55, height: 44, fill: secondaryColor, rx: 4, ry: 4
+        }));
+        const scoreAText = new fabric.Textbox(String(data.scoreA || "0"), createProps('textbox', {
+          left: 395, top: 94, fontSize: 28, fontWeight: 'bold', fill: accentColor, width: 55, textAlign: 'center'
+        }));
+        const scoreBBg = new fabric.Rect(createProps('rect', {
+          left: 465, top: 88, width: 55, height: 44, fill: secondaryColor, rx: 4, ry: 4
+        }));
+        const scoreBText = new fabric.Textbox(String(data.scoreB || "0"), createProps('textbox', {
+          left: 465, top: 94, fontSize: 28, fontWeight: 'bold', fill: accentColor, width: 55, textAlign: 'center'
+        }));
+        const teamB = new fabric.Textbox((data.teamB || data.athleteB || "TEAM B").toUpperCase(), createProps('textbox', {
+          left: 535, top: 95, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 185
+        }));
+        const clockBg = new fabric.Rect(createProps('rect', {
+          left: 720, top: 70, width: 120, height: 80, fill: '#1e293b'
+        }));
+        const periodText = new fabric.Textbox(data.period || "LIVE", createProps('textbox', {
+          left: 720, top: 85, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 120, textAlign: 'center'
+        }));
+        const clockText = new fabric.Textbox(data.clock || "00:00", createProps('textbox', {
+          left: 720, top: 110, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
+        }));
+        objects.push(mainBg, badgeBg, badgeAccent, codeText, subText, teamA, scoreABg, scoreAText, scoreBBg, scoreBText, teamB, clockBg, periodText, clockText);
+      } else if (variant === 2 || variant === 5) {
+        // Variant 2 & 5: Heat draw / start list compact card
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 1270, top: 120, width: 560, height: 350, fill: '#0a0e1e', rx: 10, ry: 10
+        }));
+        const headBg = new fabric.Rect(createProps('rect', {
+          left: 1270, top: 120, width: 560, height: 60, fill: primaryColor, rx: 10, ry: 10
+        }));
+        const headAccent = new fabric.Rect(createProps('rect', {
+          left: 1270, top: 176, width: 560, height: 4, fill: accentColor
+        }));
+        const headText = new fabric.Textbox(`HEAT DRAW • ${sportTitle}`, createProps('textbox', {
+          left: 1290, top: 135, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 400
+        }));
+        const headCode = new fabric.Textbox(code, createProps('textbox', {
+          left: 1730, top: 135, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 80, textAlign: 'right'
+        }));
+        objects.push(cardBg, headBg, headAccent, headText, headCode);
+
+        [1,2,3,4,5,6].forEach(n => {
+          const y = 180 + (n - 1) * 45;
+          const rowBg = new fabric.Rect(createProps('rect', {
+            left: 1270, top: y, width: 560, height: 44, fill: n % 2 === 0 ? '#1e293b' : '#0a0e1e'
+          }));
+          const circle = new fabric.Circle(createProps('circle', {
+            left: 1285, top: y + 7, radius: 15, fill: secondaryColor
+          }));
+          const laneText = new fabric.Textbox(String(n), createProps('textbox', {
+            left: 1285, top: y + 13, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 30, textAlign: 'center'
+          }));
+          const nameText = new fabric.Textbox(`COMPETITOR ${n}`, createProps('textbox', {
+            left: 1330, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 350
+          }));
+          const nocText = new fabric.Textbox(`NOC${n}`, createProps('textbox', {
+            left: 1730, top: y + 14, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 80, textAlign: 'right'
+          }));
+          objects.push(rowBg, circle, laneText, nameText, nocText);
+        });
+      } else {
+        // Variant 3: Live lane position bug
+        const posLabel = new fabric.Rect(createProps('rect', {
+          left: 90, top: 70, width: 110, height: 75, fill: primaryColor
+        }));
+        const posAccent = new fabric.Rect(createProps('rect', {
+          left: 197, top: 70, width: 3, height: 75, fill: accentColor
+        }));
+        const posLabelText = new fabric.Textbox("LIVE\nPOSITION", createProps('textbox', {
+          left: 90, top: 85, fontSize: 13, fontWeight: 'bold', fill: '#ffffff', width: 110, textAlign: 'center'
+        }));
+
+        const item1Bg = new fabric.Rect(createProps('rect', {
+          left: 200, top: 70, width: 220, height: 75, fill: secondaryColor
+        }));
+        const item1Name = new fabric.Textbox(`1. ${(data.athleteA || data.teamA || data.athlete || 'LEADER').toUpperCase()}`, createProps('textbox', {
+          left: 215, top: 82, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 190
+        }));
+        const item1Time = new fabric.Textbox(data.time || 'LEADING', createProps('textbox', {
+          left: 215, top: 112, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 190
+        }));
+
+        const item2Bg = new fabric.Rect(createProps('rect', {
+          left: 420, top: 70, width: 200, height: 75, fill: '#0f172a'
+        }));
+        const item2Name = new fabric.Textbox(`2. ${(data.athleteB || data.teamB || 'CHALLENGER').toUpperCase()}`, createProps('textbox', {
+          left: 435, top: 82, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 170
+        }));
+        const item2Time = new fabric.Textbox('+0.52', createProps('textbox', {
+          left: 435, top: 112, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 170
+        }));
+
+        const codeBadge = new fabric.Rect(createProps('rect', {
+          left: 620, top: 70, width: 70, height: 75, fill: accentColor
+        }));
+        const codeText = new fabric.Textbox(code, createProps('textbox', {
+          left: 620, top: 95, fontSize: 18, fontWeight: 'bold', fill: '#000000', width: 70, textAlign: 'center'
+        }));
+        objects.push(posLabel, posAccent, posLabelText, item1Bg, item1Name, item1Time, item2Bg, item2Name, item2Time, codeBadge, codeText);
+      }
       break;
     }
 
@@ -840,45 +1159,45 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       ];
 
       const cardBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 200, width: 800, height: 75 + lineup.length * 55, fill: '#0f172a', rx: 12, ry: 12
+        left: 90, top: 150, width: 800, height: 75 + lineup.length * 55, fill: '#0f172a', rx: 12, ry: 12
       }));
       const headerBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 200, width: 800, height: 75, fill: primaryColor, rx: 12, ry: 12
+        left: 90, top: 150, width: 800, height: 75, fill: primaryColor, rx: 12, ry: 12
       }));
       const headerAccent = new fabric.Rect(createProps('rect', {
-        left: 100, top: 270, width: 800, height: 5, fill: accentColor
+        left: 90, top: 220, width: 800, height: 5, fill: accentColor
       }));
       const titleText = new fabric.Textbox(sportTitle, createProps('textbox', {
-        left: 130, top: 215, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 550
+        left: 120, top: 165, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 550
       }));
       const subtitleText = new fabric.Textbox(data.event || 'START LIST', createProps('textbox', {
-        left: 130, top: 245, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 550
+        left: 120, top: 195, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 550
       }));
       const codeHeader = new fabric.Textbox(code, createProps('textbox', {
-        left: 750, top: 220, fontSize: 26, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
+        left: 740, top: 170, fontSize: 26, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
       }));
 
       objects.push(cardBg, headerBg, headerAccent, titleText, subtitleText, codeHeader);
 
       lineup.forEach((item, idx) => {
-        const y = 275 + idx * 55;
+        const y = 225 + idx * 55;
         const rowBg = new fabric.Rect(createProps('rect', {
-          left: 100, top: y, width: 800, height: 52, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
+          left: 90, top: y, width: 800, height: 52, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
         }));
         const circle = new fabric.Circle(createProps('circle', {
-          left: 120, top: y + 8, radius: 18, fill: secondaryColor
+          left: 110, top: y + 8, radius: 18, fill: secondaryColor
         }));
         const laneText = new fabric.Textbox(String(item.lane || item.rank || (idx + 1)), createProps('textbox', {
-          left: 120, top: y + 15, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 36, textAlign: 'center'
+          left: 110, top: y + 15, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 36, textAlign: 'center'
         }));
         const nameText = new fabric.Textbox(item.name.toUpperCase(), createProps('textbox', {
-          left: 175, top: y + 13, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 600
+          left: 165, top: y + 13, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 600
         }));
         const nocBg = new fabric.Rect(createProps('rect', {
-          left: 800, top: y + 12, width: 70, height: 28, fill: '#334155', rx: 4, ry: 4
+          left: 790, top: y + 12, width: 70, height: 28, fill: '#334155', rx: 4, ry: 4
         }));
         const nocText = new fabric.Textbox(item.country, createProps('textbox', {
-          left: 800, top: y + 16, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 70, textAlign: 'center'
+          left: 790, top: y + 16, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 70, textAlign: 'center'
         }));
 
         objects.push(rowBg, circle, laneText, nameText, nocBg, nocText);
@@ -887,74 +1206,166 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'results-table': {
-      const cardBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 200, width: 750, height: 270, fill: '#0f172a', rx: 12, ry: 12
-      }));
-      const headerBg = new fabric.Rect(createProps('rect', {
-        left: 100, top: 200, width: 750, height: 70, fill: primaryColor, rx: 12, ry: 12
-      }));
-      const headerAccent = new fabric.Rect(createProps('rect', {
-        left: 100, top: 265, width: 750, height: 5, fill: accentColor
-      }));
-      const titleText = new fabric.Textbox(`${sportTitle} RESULTS`, createProps('textbox', {
-        left: 130, top: 220, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 500
-      }));
-      const codeHeader = new fabric.Textbox(code, createProps('textbox', {
-        left: 720, top: 220, fontSize: 24, fontWeight: 'bold', fill: accentColor, width: 100, textAlign: 'center'
-      }));
+      if (variant === 1 || variant === 4) {
+        // Variant 1 & 4: Classic podium top-3 results card
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 150, width: 750, height: 260, fill: '#0f172a', rx: 12, ry: 12
+        }));
+        const headerBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 150, width: 750, height: 60, fill: primaryColor, rx: 12, ry: 12
+        }));
+        const headerAccent = new fabric.Rect(createProps('rect', {
+          left: 90, top: 206, width: 750, height: 4, fill: accentColor
+        }));
+        const titleText = new fabric.Textbox(`${sportTitle} RESULTS`, createProps('textbox', {
+          left: 115, top: 168, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', width: 500
+        }));
+        const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+          left: 715, top: 168, fontSize: 24, fontWeight: 'bold', fill: accentColor, width: 100, textAlign: 'right'
+        }));
 
-      // Gold
-      const goldPill = new fabric.Rect(createProps('rect', {
-        left: 125, top: 290, width: 90, height: 30, fill: '#ffd700', rx: 4, ry: 4
-      }));
-      const goldPillText = new fabric.Textbox("1 GOLD", createProps('textbox', {
-        left: 125, top: 295, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
-      }));
-      const goldAthlete = new fabric.Textbox(data.athlete || "ATHLETE A", createProps('textbox', {
-        left: 240, top: 292, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 400
-      }));
-      const goldNoc = new fabric.Textbox(data.country || "USA", createProps('textbox', {
-        left: 650, top: 292, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 80
-      }));
-      const goldTime = new fabric.Textbox(data.time || data.score || "1st", createProps('textbox', {
-        left: 730, top: 292, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 100, textAlign: 'right'
-      }));
+        // Gold
+        const goldPill = new fabric.Rect(createProps('rect', {
+          left: 115, top: 222, width: 90, height: 30, fill: '#ffd700', rx: 4, ry: 4
+        }));
+        const goldPillText = new fabric.Textbox("1 GOLD", createProps('textbox', {
+          left: 115, top: 227, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
+        }));
+        const goldAthlete = new fabric.Textbox((data.athlete || "ATHLETE A").toUpperCase(), createProps('textbox', {
+          left: 220, top: 224, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        }));
+        const goldNoc = new fabric.Textbox(data.country || "USA", createProps('textbox', {
+          left: 610, top: 224, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        }));
+        const goldTime = new fabric.Textbox(data.time || data.score || "1st", createProps('textbox', {
+          left: 680, top: 224, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 130, textAlign: 'right'
+        }));
 
-      // Silver
-      const silverPill = new fabric.Rect(createProps('rect', {
-        left: 125, top: 353, width: 90, height: 30, fill: '#c0c0c0', rx: 4, ry: 4
-      }));
-      const silverPillText = new fabric.Textbox("2 SILV", createProps('textbox', {
-        left: 125, top: 358, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
-      }));
-      const silverAthlete = new fabric.Textbox("COMPETITOR B", createProps('textbox', {
-        left: 240, top: 355, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 400
-      }));
-      const silverNoc = new fabric.Textbox("GBR", createProps('textbox', {
-        left: 650, top: 355, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 80
-      }));
-      const silverTime = new fabric.Textbox("+0.12", createProps('textbox', {
-        left: 730, top: 355, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 100, textAlign: 'right'
-      }));
+        // Silver
+        const silverPill = new fabric.Rect(createProps('rect', {
+          left: 115, top: 272, width: 90, height: 30, fill: '#c0c0c0', rx: 4, ry: 4
+        }));
+        const silverPillText = new fabric.Textbox("2 SILV", createProps('textbox', {
+          left: 115, top: 277, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
+        }));
+        const silverAthlete = new fabric.Textbox("COMPETITOR B", createProps('textbox', {
+          left: 220, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        }));
+        const silverNoc = new fabric.Textbox("GBR", createProps('textbox', {
+          left: 610, top: 274, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        }));
+        const silverTime = new fabric.Textbox("+0.12", createProps('textbox', {
+          left: 680, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right'
+        }));
 
-      // Bronze
-      const bronzePill = new fabric.Rect(createProps('rect', {
-        left: 125, top: 416, width: 90, height: 30, fill: '#cd7f32', rx: 4, ry: 4
-      }));
-      const bronzePillText = new fabric.Textbox("3 BRNZ", createProps('textbox', {
-        left: 125, top: 421, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
-      }));
-      const bronzeAthlete = new fabric.Textbox("COMPETITOR C", createProps('textbox', {
-        left: 240, top: 418, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 400
-      }));
-      const bronzeNoc = new fabric.Textbox("GER", createProps('textbox', {
-        left: 650, top: 418, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 80
-      }));
-      const bronzeTime = new fabric.Textbox("+0.35", createProps('textbox', {
-        left: 730, top: 418, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 100, textAlign: 'right'
-      }));
+        // Bronze
+        const bronzePill = new fabric.Rect(createProps('rect', {
+          left: 115, top: 322, width: 90, height: 30, fill: '#cd7f32', rx: 4, ry: 4
+        }));
+        const bronzePillText = new fabric.Textbox("3 BRNZ", createProps('textbox', {
+          left: 115, top: 327, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
+        }));
+        const bronzeAthlete = new fabric.Textbox("COMPETITOR C", createProps('textbox', {
+          left: 220, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        }));
+        const bronzeNoc = new fabric.Textbox("GER", createProps('textbox', {
+          left: 610, top: 324, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        }));
+        const bronzeTime = new fabric.Textbox("+0.35", createProps('textbox', {
+          left: 680, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right'
+        }));
 
-      objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, goldPill, goldPillText, goldAthlete, goldNoc, goldTime, silverPill, silverPillText, silverAthlete, silverNoc, silverTime, bronzePill, bronzePillText, bronzeAthlete, bronzeNoc, bronzeTime);
+        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, goldPill, goldPillText, goldAthlete, goldNoc, goldTime, silverPill, silverPillText, silverAthlete, silverNoc, silverTime, bronzePill, bronzePillText, bronzeAthlete, bronzeNoc, bronzeTime);
+      } else if (variant === 2 || variant === 5) {
+        // Variant 2 & 5: Extended 6-finisher results table
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 100, width: 900, height: 380, fill: '#0a0e1e', rx: 12, ry: 12
+        }));
+        const headerBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 100, width: 900, height: 55, fill: primaryColor, rx: 12, ry: 12
+        }));
+        const headerAccent = new fabric.Rect(createProps('rect', {
+          left: 90, top: 151, width: 900, height: 4, fill: accentColor
+        }));
+        const titleText = new fabric.Textbox(`${sportTitle} FINAL RESULTS`, createProps('textbox', {
+          left: 115, top: 116, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 600
+        }));
+        const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+          left: 860, top: 116, fontSize: 22, fontWeight: 'bold', fill: accentColor, width: 100, textAlign: 'right'
+        }));
+        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader);
+
+        const resultsData = [
+          { pos: '🥇 1', name: (data.athlete || 'ATHLETE A').toUpperCase(), noc: data.country || 'USA', res: data.time || '3:33.10' },
+          { pos: '2', name: 'COMPETITOR B', noc: 'GBR', res: '+0.12' },
+          { pos: '3', name: 'COMPETITOR C', noc: 'GER', res: '+0.35' },
+          { pos: '4', name: 'COMPETITOR D', noc: 'FRA', res: '+0.72' },
+          { pos: '5', name: 'COMPETITOR E', noc: 'AUS', res: '+1.01' },
+          { pos: '6', name: 'COMPETITOR F', noc: 'CHN', res: '+1.45' }
+        ];
+
+        resultsData.forEach((r, idx) => {
+          const y = 155 + idx * 52;
+          const rowBg = new fabric.Rect(createProps('rect', {
+            left: 90, top: y, width: 900, height: 50, fill: idx % 2 === 0 ? '#1e293b' : '#0a0e1e'
+          }));
+          const posText = new fabric.Textbox(r.pos, createProps('textbox', {
+            left: 110, top: y + 13, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 50
+          }));
+          const nameText = new fabric.Textbox(r.name, createProps('textbox', {
+            left: 170, top: y + 13, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 500
+          }));
+          const nocText = new fabric.Textbox(r.noc, createProps('textbox', {
+            left: 700, top: y + 14, fontSize: 15, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+          }));
+          const resText = new fabric.Textbox(r.res, createProps('textbox', {
+            left: 770, top: y + 13, fontSize: 18, fontWeight: 'bold', fill: accentColor, width: 190, textAlign: 'right'
+          }));
+          objects.push(rowBg, posText, nameText, nocText, resText);
+        });
+      } else {
+        // Variant 3: Split comparison table
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 1130, top: 120, width: 700, height: 260, fill: '#0a0e1e', rx: 12, ry: 12
+        }));
+        const headerBg = new fabric.Rect(createProps('rect', {
+          left: 1130, top: 120, width: 700, height: 55, fill: primaryColor, rx: 12, ry: 12
+        }));
+        const headerAccent = new fabric.Rect(createProps('rect', {
+          left: 1130, top: 171, width: 700, height: 4, fill: accentColor
+        }));
+        const titleText = new fabric.Textbox("SPLIT COMPARISON", createProps('textbox', {
+          left: 1150, top: 135, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 450
+        }));
+        const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+          left: 1730, top: 135, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 80, textAlign: 'right'
+        }));
+
+        const colHeadBg = new fabric.Rect(createProps('rect', {
+          left: 1130, top: 175, width: 700, height: 35, fill: '#1e293b'
+        }));
+        const col1 = new fabric.Textbox("ATHLETE", createProps('textbox', { left: 1150, top: 184, fontSize: 13, fontWeight: 'bold', fill: '#94a3b8', width: 250 }));
+        const col2 = new fabric.Textbox("250m", createProps('textbox', { left: 1410, top: 184, fontSize: 13, fontWeight: 'bold', fill: '#94a3b8', width: 120 }));
+        const col3 = new fabric.Textbox("500m", createProps('textbox', { left: 1540, top: 184, fontSize: 13, fontWeight: 'bold', fill: '#94a3b8', width: 120 }));
+        const col4 = new fabric.Textbox("FINISH", createProps('textbox', { left: 1670, top: 184, fontSize: 13, fontWeight: 'bold', fill: '#94a3b8', width: 140, textAlign: 'right' }));
+
+        const r1Name = new fabric.Textbox(`${(data.athlete || 'LEADER').toUpperCase()} #1`, createProps('textbox', { left: 1150, top: 222, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
+        const r1C2 = new fabric.Textbox(data.time || '52.3s', createProps('textbox', { left: 1410, top: 222, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 120 }));
+        const r1C3 = new fabric.Textbox('1:52.4', createProps('textbox', { left: 1540, top: 222, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
+        const r1C4 = new fabric.Textbox(data.score || '3:33.1', createProps('textbox', { left: 1670, top: 222, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 140, textAlign: 'right' }));
+
+        const r2Name = new fabric.Textbox("COMP B #2", createProps('textbox', { left: 1150, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
+        const r2C2 = new fabric.Textbox('52.8s', createProps('textbox', { left: 1410, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
+        const r2C3 = new fabric.Textbox('1:53.1', createProps('textbox', { left: 1540, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
+        const r2C4 = new fabric.Textbox('+0.12', createProps('textbox', { left: 1670, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 140, textAlign: 'right' }));
+
+        const r3Name = new fabric.Textbox("COMP C #3", createProps('textbox', { left: 1150, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
+        const r3C2 = new fabric.Textbox('53.0s', createProps('textbox', { left: 1410, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
+        const r3C3 = new fabric.Textbox('1:53.5', createProps('textbox', { left: 1540, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
+        const r3C4 = new fabric.Textbox('+0.35', createProps('textbox', { left: 1670, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 140, textAlign: 'right' }));
+
+        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, colHeadBg, col1, col2, col3, col4, r1Name, r1C2, r1C3, r1C4, r2Name, r2C2, r2C3, r2C4, r3Name, r3C2, r3C3, r3C4);
+      }
       break;
     }
 
@@ -1016,22 +1427,22 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     case 'event-bug':
     default: {
       const bugBg = new fabric.Rect(createProps('rect', {
-        left: 1250, top: 100, width: 550, height: 70, fill: primaryColor, rx: 8, ry: 8
+        left: 1280, top: 70, width: 550, height: 70, fill: primaryColor, rx: 6, ry: 6
       }));
       const rightBorder = new fabric.Rect(createProps('rect', {
-        left: 1792, top: 100, width: 8, height: 70, fill: accentColor
+        left: 1824, top: 70, width: 6, height: 70, fill: accentColor
       }));
       const codePill = new fabric.Rect(createProps('rect', {
-        left: 1270, top: 115, width: 50, height: 40, fill: accentColor, rx: 4, ry: 4
+        left: 1300, top: 85, width: 50, height: 40, fill: accentColor, rx: 4, ry: 4
       }));
       const codeText = new fabric.Textbox(code, createProps('textbox', {
-        left: 1270, top: 124, fontSize: 18, fontWeight: 'bold', fill: '#000000', width: 50, textAlign: 'center'
+        left: 1300, top: 94, fontSize: 18, fontWeight: 'bold', fill: '#000000', width: 50, textAlign: 'center'
       }));
       const titleText = new fabric.Textbox(sportTitle, createProps('textbox', {
-        left: 1340, top: 115, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 440
+        left: 1365, top: 85, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 440
       }));
       const venueText = new fabric.Textbox(venueTitle, createProps('textbox', {
-        left: 1340, top: 142, fontSize: 14, fontWeight: 'bold', fill: '#cbd5e1', width: 440
+        left: 1365, top: 110, fontSize: 13, fontWeight: 'bold', fill: '#cbd5e1', width: 440
       }));
 
       objects.push(bugBg, rightBorder, codePill, codeText, titleText, venueText);

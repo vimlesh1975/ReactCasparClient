@@ -1484,53 +1484,30 @@ export function getSportTemplates(sport) {
     return sport.templates;
   }
 
-  const code = sport.code || "";
+  const code = (sport.code || "").toUpperCase();
 
-  // Look up numbered templates from the master map
-  if (SPORT_TEMPLATE_MAP[code]) {
-    return SPORT_TEMPLATE_MAP[code];
+  // 1. Primary lookup from RealTemplates by sport code (e.g. AT_TEMPLATES, SW_TEMPLATES)
+  const realKey = `${code}_TEMPLATES`;
+  if (RealTemplates[realKey] && RealTemplates[realKey].length > 0) {
+    return RealTemplates[realKey];
   }
 
-  // Name-based fallback for partial matches
+  // 2. Name-based fallback for partial matches from RealTemplates
   const name = sport.name || "";
-  if (name.includes("Swimming")) return SW_TEMPLATES;
-  if (name.includes("Athletics") || name.includes("Track")) return AT_TEMPLATES;
-  if (name.includes("Marathon")) return MA_TEMPLATES;
-  if (name.includes("Archery")) return AR_TEMPLATES;
-  if (name.includes("Badminton")) return BD_TEMPLATES;
-  if (name.includes("Basketball")) return BK_TEMPLATES;
-  if (name.includes("Beach Volleyball")) return BV_TEMPLATES;
-  if (name.includes("Boxing")) return BX_TEMPLATES;
-  if (name.includes("Canoe Slalom") || name.includes("Slalom")) return CS_TEMPLATES;
-  if (name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) return CF_TEMPLATES;
-  if (name.includes("Cycling Track") || name.includes("Track Cycling")) return CT_TEMPLATES;
-  if (name.includes("Cycling Road") || name.includes("Road Cycling")) return CR_TEMPLATES;
-  if (name.includes("Mountain Bike")) return CM_TEMPLATES;
-  if (name.includes("BMX")) return CB_TEMPLATES;
-  if (name.includes("Cycling")) return CT_TEMPLATES;
-  if (name.includes("Equestrian")) return EQ_TEMPLATES;
-  if (name.includes("Fencing")) return FE_TEMPLATES;
-  if (name.includes("Football")) return FB_TEMPLATES;
-  if (name.includes("Artistic Gymnastics") || name.includes("Gymnastics")) return GA_TEMPLATES;
-  if (name.includes("Rhythmic")) return GR_TEMPLATES;
-  if (name.includes("Trampoline")) return GT_TEMPLATES;
-  if (name.includes("Handball")) return HB_TEMPLATES;
-  if (name.includes("Hockey") || name.includes("Field Hockey")) return HO_TEMPLATES;
-  if (name.includes("Judo")) return JU_TEMPLATES;
-  if (name.includes("Pentathlon")) return MP_TEMPLATES;
-  if (name.includes("Rowing")) return RO_TEMPLATES;
-  if (name.includes("Sailing")) return SA_TEMPLATES;
-  if (name.includes("Shooting")) return SH_TEMPLATES;
-  if (name.includes("Table Tennis")) return TT_TEMPLATES;
-  if (name.includes("Taekwondo")) return TK_TEMPLATES;
-  if (name.includes("Tennis")) return TE_TEMPLATES;
-  if (name.includes("Triathlon")) return TR_TEMPLATES;
-  if (name.includes("Volleyball")) return VO_TEMPLATES;
-  if (name.includes("Weightlifting")) return WL_TEMPLATES;
-  if (name.includes("Wrestling")) return WR_TEMPLATES;
-  if (name.includes("Diving")) return DV_TEMPLATES;
-  if (name.includes("Water Polo")) return WP_TEMPLATES;
-  if (name.includes("Synchronised") || name.includes("Synchronized")) return SY_TEMPLATES;
+  if (name.includes("Swimming") && RealTemplates.SW_TEMPLATES) return RealTemplates.SW_TEMPLATES;
+  if ((name.includes("Athletics") || name.includes("Track")) && RealTemplates.AT_TEMPLATES) return RealTemplates.AT_TEMPLATES;
+  if (name.includes("Archery") && RealTemplates.AR_TEMPLATES) return RealTemplates.AR_TEMPLATES;
+  if (name.includes("Badminton") && RealTemplates.BD_TEMPLATES) return RealTemplates.BD_TEMPLATES;
+  if (name.includes("Basketball") && RealTemplates.BK_TEMPLATES) return RealTemplates.BK_TEMPLATES;
+  if (name.includes("Beach Volleyball") && RealTemplates.BV_TEMPLATES) return RealTemplates.BV_TEMPLATES;
+  if (name.includes("Boxing") && RealTemplates.BX_TEMPLATES) return RealTemplates.BX_TEMPLATES;
+  if ((name.includes("Canoe Slalom") || name.includes("Slalom")) && RealTemplates.CS_TEMPLATES) return RealTemplates.CS_TEMPLATES;
+  if ((name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) && RealTemplates.CF_TEMPLATES) return RealTemplates.CF_TEMPLATES;
+  if ((name.includes("Cycling Track") || name.includes("Track Cycling")) && RealTemplates.CT_TEMPLATES) return RealTemplates.CT_TEMPLATES;
+  if ((name.includes("Cycling Road") || name.includes("Road Cycling")) && RealTemplates.CR_TEMPLATES) return RealTemplates.CR_TEMPLATES;
+  if (name.includes("Diving") && RealTemplates.DV_TEMPLATES) return RealTemplates.DV_TEMPLATES;
+  if (name.includes("Water Polo") && RealTemplates.WP_TEMPLATES) return RealTemplates.WP_TEMPLATES;
+  if ((name.includes("Synchronised") || name.includes("Synchronized")) && RealTemplates.SY_TEMPLATES) return RealTemplates.SY_TEMPLATES;
 
   // Generic fallback — build numbered templates dynamically
   const c = code.toUpperCase() || "XX";

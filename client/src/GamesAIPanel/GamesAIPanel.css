@@ -132,21 +132,24 @@
 }
 
 .template-types-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
+  padding-right: 4px;
 }
 
 .template-type-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
+  justify-content: space-between;
+  padding: 8px 10px;
   background: #0f172a;
   border: 1px solid #334155;
   border-radius: 6px;
   color: #cbd5e1;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -157,7 +160,7 @@
 }
 
 .template-type-btn.active {
-  background: #0284c7;
+  background: linear-gradient(135deg, #0284c7, #4f46e5);
   color: white;
   border-color: #38bdf8;
 }

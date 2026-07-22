@@ -68,7 +68,7 @@ import HtmlOutput from "../HtmlOutput";
 import { Rnd } from "react-rnd";
 import * as d from "@theatre/dataverse";
 
-import AIPannel from "../AIPannel/AIPannel";
+import AIPannel from "../GamesAIPanel/GamesAIPanel";
 
 // import split from 'graphemesplit'
 // fabric.util.string.graphemeSplit.prototype = split
@@ -115,21 +115,21 @@ export const deleteItem = (canvas) => {
 };
 
 export const deleteTheatreID = (id) => {
-    if (sheet && id) {
-        sheet.detachObject(id);
-    }
-    if (studio && id) {
-        try {
-            studio.transaction((api) => {
-                const theatreObj = getObjectbyId(id);
-                if (theatreObj) {
-                    api.__experimental_forgetObject(theatreObj);
-                }
-            });
-        } catch (e) {
-            console.error("Error forgetting theatre object", e);
+  if (sheet && id) {
+    sheet.detachObject(id);
+  }
+  if (studio && id) {
+    try {
+      studio.transaction((api) => {
+        const theatreObj = getObjectbyId(id);
+        if (theatreObj) {
+          api.__experimental_forgetObject(theatreObj);
         }
+      });
+    } catch (e) {
+      console.error("Error forgetting theatre object", e);
     }
+  }
 };
 
 function getKeyframes(sheet, tracks, objectKey) {

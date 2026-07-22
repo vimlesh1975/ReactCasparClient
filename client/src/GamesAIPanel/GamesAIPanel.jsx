@@ -34,12 +34,10 @@ const GamesAIPanel = () => {
     accentColor: OLYMPIC_GAMES_DATA[0].accentColor
   });
 
-  const [subCatFilter, setSubCatFilter] = useState('ALL');
+
 
   const sportTemplates = getSportTemplates(selectedSport);
-  const filteredTemplates = subCatFilter === 'ALL'
-    ? sportTemplates
-    : sportTemplates.filter(t => t.subCat === subCatFilter);
+  const filteredTemplates = sportTemplates;
 
   const iframeRef = useRef(null);
   const previewContainerRef = useRef(null);
@@ -81,7 +79,7 @@ const GamesAIPanel = () => {
         secondaryColor: selectedSport.secondaryColor,
         accentColor: selectedSport.accentColor
       });
-      setSubCatFilter('ALL');
+
       const newTemplates = getSportTemplates(selectedSport);
       if (newTemplates && newTemplates.length > 0) {
         setSelectedTemplateType(newTemplates[0].id);
@@ -248,11 +246,15 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
       alert("Canvas is not initialized yet. Please open the Drawing tab first!");
       return;
     }
+    // Resolve the template type based on the selected template ID
+    const templateInfo = filteredTemplates.find(t => t.id === selectedTemplateType);
+    const resolvedType = templateInfo ? mapSubCatToType(templateInfo.subCat) : selectedTemplateType;
     const group = createFabricGraphicGroup(
       selectedSport,
-      resolvedTemplateType,
+      resolvedType,
       customFields,
-      customColors
+      customColors,
+      selectedTemplateType
     );
 
     canvas.add(group);
@@ -268,7 +270,6 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
         <h2>
           <span>🏆 Olympic Games AI Panel</span>
         </h2>
-        <div className="header-badge">OBS London 2012 Specs • 1920x1080 25fps</div>
       </div>
 
       <div className="games-ai-grid">
@@ -322,26 +323,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
           <div>
             <div className="section-label">2. {selectedSport.name} OBS Templates ({filteredTemplates.length})</div>
             
-            <div className="subcat-filter-bar" style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginBottom: '8px' }}>
-              {['ALL', 'LOWER THIRDS', 'SPLITS & TIMES', 'SCORES & MATCH', 'RESULTS & STANDINGS', 'RECORDS & BUGS'].map(cat => (
-                <button
-                  key={cat}
-                  style={{
-                    background: subCatFilter === cat ? '#38bdf8' : '#1e293b',
-                    color: subCatFilter === cat ? '#0f172a' : '#94a3b8',
-                    border: '1px solid #334155',
-                    fontSize: '9px',
-                    fontWeight: '800',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => setSubCatFilter(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+
 
             <div className="template-types-grid">
               {filteredTemplates.map(tt => (
@@ -351,8 +333,11 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
                   onClick={() => { setSelectedTemplateType(tt.id); setSelectedTemplateObj(tt); }}
                   title={tt.name}
                 >
-                  <span>{tt.icon}</span>
-                  <span>{tt.name}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>{tt.icon}</span>
+                    <span>{tt.name}</span>
+                  </span>
+                  <span className="sport-code-badge">{tt.id}</span>
                 </button>
               ))}
             </div>
@@ -439,9 +424,8 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
 
           {/* Live 1920x1080 Scaled Broadcast Preview Canvas */}
           <div ref={previewContainerRef} className="preview-frame-container">
-            <div className="preview-res-badge">1920 × 1080 (25 FPS)</div>
             <iframe
-              key={resolvedTemplateType + selectedTemplateType}
+              key={selectedTemplateType}
               ref={iframeRef}
               srcDoc={currentHTML}
               className="preview-iframe"
