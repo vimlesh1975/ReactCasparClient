@@ -500,9 +500,8 @@ const App = () => {
               <Tab className="tabHidden">Charts</Tab>
               <Tab className="tabHidden">Path Modifier</Tab>
               <Tab className="tabHidden">Effects</Tab>
-              <Tab>Games AI</Tab>
-              {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
+              <Tab>Games AI</Tab>
               <Tab className="tabHidden">AI Panel</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
@@ -598,11 +597,12 @@ const App = () => {
               <Effects />
             </TabPanel>
             <TabPanel>
-              <GamesAIPanel />
-            </TabPanel>
-            <TabPanel>
               <Crop />
             </TabPanel>
+            <TabPanel>
+              <GamesAIPanel />
+            </TabPanel>
+
             <TabPanel>
               <AIPanel />
             </TabPanel>

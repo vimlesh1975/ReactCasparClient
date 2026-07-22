@@ -692,678 +692,867 @@ export const TEMPLATE_TYPES = [
 ];
 
 /**
- * Get OBS 2012 Sport-Specific Graphic Templates for any of the 36 Olympic Sports
+ * Olympic Broadcast Templates — numbered IDs per sport (e.g. SW001, AT001, BX001)
+ * Covers all 36 Olympic sports across 5 sub-categories:
+ *   LOWER THIRDS | SPLITS & TIMES | SCORES & MATCH | RESULTS & STANDINGS | RECORDS & BUGS
+ */
+
+// ─── AQUATICS – SWIMMING (SW) ───────────────────────────────────────────────
+export const SW_TEMPLATES = [
+  // LOWER THIRDS
+  { id: "SW001", name: "Swimmer ID Lower Third (Name / Country / Lane)", icon: "🏊", subCat: "LOWER THIRDS" },
+  { id: "SW002", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "SW003", name: "Relay Team Card (4 Swimmers + Split Order)", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "SW004", name: "Head Coach & Country ID", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "SW005", name: "National Team Profile & Best Time", icon: "🏳️", subCat: "LOWER THIRDS" },
+  // SPLITS & TIMES
+  { id: "SW006", name: "Start Reaction Time Bug (0.64s)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "SW007", name: "50m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SW008", name: "100m Turn Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SW009", name: "150m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SW010", name: "Relay Leg Split Times (All 4 Legs)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SW011", name: "15m Breakout / Turn Speed Bug", icon: "💧", subCat: "SPLITS & TIMES" },
+  // SCORES & MATCH
+  { id: "SW012", name: "8-Lane Heat Start List", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "SW013", name: "Relay Team Order of Start", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "SW014", name: "Heat / Semis / Finals Draw Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "SW015", name: "Live 8-Lane Race Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  // RESULTS & STANDINGS
+  { id: "SW016", name: "Finish Touch Order & Times Table (8 Lanes)", icon: "🏁", subCat: "RESULTS & STANDINGS" },
+  { id: "SW017", name: "Top 8 Final Results with PB / OR / WR Flags", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "SW018", name: "Heat Qualification Results & Progressions", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "SW019", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "SW020", name: "Swimming Day Medal Summary Table", icon: "🗓️", subCat: "RESULTS & STANDINGS" },
+  // RECORDS & BUGS
+  { id: "SW021", name: "World Record Pace Comparison Line", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "SW022", name: "Olympic Record Pace Comparison Line", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "SW023", name: "NEW WR / OR Flash Celebration Bug", icon: "🎉", subCat: "RECORDS & BUGS" },
+  { id: "SW024", name: "Disqualification / False Start Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "SW025", name: "Pool Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── ATHLETICS / TRACK & FIELD (AT) ─────────────────────────────────────────
+export const AT_TEMPLATES = [
+  // LOWER THIRDS
+  { id: "AT001", name: "Athlete ID Lower Third (Bib / Country / PB)", icon: "🏃", subCat: "LOWER THIRDS" },
+  { id: "AT002", name: "World Record Holder Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "AT003", name: "Olympic Champion / Defending Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "AT004", name: "4×100m / 4×400m Relay Team Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "AT005", name: "Race Walker / Road Event Profile", icon: "🚶", subCat: "LOWER THIRDS" },
+  // SPLITS & TIMES
+  { id: "AT006", name: "Start Reaction Time Bug (0.130s)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "AT007", name: "10m Sector Speed Splits Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AT008", name: "200m / 300m Intermediate Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AT009", name: "Sprint Speed Trap Bug (44.7 km/h)", icon: "💨", subCat: "SPLITS & TIMES" },
+  { id: "AT010", name: "Marathon 5km / 10km Checkpoint Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AT011", name: "Relay Leg Split Times (All 4 Legs)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AT012", name: "Decathlon Running Event Split & Points", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  // SCORES & MATCH
+  { id: "AT013", name: "8-Lane Track Start List (Lane / Name / Country / SB)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "AT014", name: "Field Event Attempt Order List", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "AT015", name: "Heat / Round Qualification Draw", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "AT016", name: "Decathlon / Heptathlon Running Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
+  // RESULTS & STANDINGS
+  { id: "AT017", name: "Track Final Results Table (Top 8)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "AT018", name: "Field Attempt Board (O X O Notation)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "AT019", name: "High Jump / Pole Vault Bar Heights Table", icon: "📏", subCat: "RESULTS & STANDINGS" },
+  { id: "AT020", name: "Decathlon / Heptathlon Final Points Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "AT021", name: "Road Race / Marathon Running Order", icon: "🗺️", subCat: "RESULTS & STANDINGS" },
+  { id: "AT022", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  // RECORDS & BUGS
+  { id: "AT023", name: "Wind Speed Bug (+1.5m/s / -0.3m/s)", icon: "💨", subCat: "RECORDS & BUGS" },
+  { id: "AT024", name: "World Record Pace Comparison Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "AT025", name: "Olympic Record Pace Comparison Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "AT026", name: "Lane Identifier Overlay Bug", icon: "🎽", subCat: "RECORDS & BUGS" },
+  { id: "AT027", name: "False Start / DQ Notification Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "AT028", name: "Event Venue & Title Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── ARCHERY (AR) ───────────────────────────────────────────────────────────
+export const AR_TEMPLATES = [
+  { id: "AR001", name: "Archer ID Lower Third (Name / Country / World Rank)", icon: "🎯", subCat: "LOWER THIRDS" },
+  { id: "AR002", name: "World Ranking & Personal Best Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "AR003", name: "Team Archery Country Profile Card", icon: "🏳️", subCat: "LOWER THIRDS" },
+  { id: "AR004", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "AR005", name: "Arrow Score Per End (10 / 9 / 8 Zones)", icon: "🎯", subCat: "SPLITS & TIMES" },
+  { id: "AR006", name: "End Running Total Scoreline", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AR007", name: "Shoot-Off Countdown Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "AR008", name: "Set Points Tracker (Set Score 6-2)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "AR009", name: "Cumulative Points Scoreboard (Match Total)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "AR010", name: "Match Schedule & Round Draw", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "AR011", name: "Ranking Round Live Scoreboard (72 Arrows)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "AR012", name: "Team Match Scoreboard (3 Archers per Team)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "AR013", name: "Elimination Bracket Tree (1/16 to Final)", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "AR014", name: "Ranking Round Final Standings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "AR015", name: "End-by-End Arrow Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "AR016", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "AR017", name: "World Record Score Bug (90+ pts)", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "AR018", name: "Olympic Record Score Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "AR019", name: "Inner 10-Ring (X) Hit Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
+  { id: "AR020", name: "Venue & Round Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── BADMINTON (BD) ──────────────────────────────────────────────────────────
+export const BD_TEMPLATES = [
+  { id: "BD001", name: "Player ID Lower Third (Name / Country / World Rank)", icon: "🏸", subCat: "LOWER THIRDS" },
+  { id: "BD002", name: "Doubles Pairing Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "BD003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "BD004", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "BD005", name: "Rally Length Counter Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BD006", name: "Service Speed Bug (km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "BD007", name: "Match Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BD008", name: "Live Sets & Points Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "BD009", name: "Group Phase Draw Schedule", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "BD010", name: "Court & Session Title Bug", icon: "🏟️", subCat: "SCORES & MATCH" },
+  { id: "BD011", name: "Game-by-Game Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "BD012", name: "Match Statistics (Points Won / Service %)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "BD013", name: "Tournament Knockout Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "BD014", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "BD015", name: "Video Challenge Review Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "BD016", name: "Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── BASKETBALL (BK) ────────────────────────────────────────────────────────
+export const BK_TEMPLATES = [
+  { id: "BK001", name: "Player ID Lower Third (Name / No. / Points)", icon: "🏀", subCat: "LOWER THIRDS" },
+  { id: "BK002", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "BK003", name: "Tournament MVP / Star Player Card", icon: "⭐", subCat: "LOWER THIRDS" },
+  { id: "BK004", name: "Team Profile & World Ranking Card", icon: "🏳️", subCat: "LOWER THIRDS" },
+  { id: "BK005", name: "24-Second Shot Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BK006", name: "Quarter / Half Game Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BK007", name: "Timeouts Remaining Bug", icon: "⏸️", subCat: "SPLITS & TIMES" },
+  { id: "BK008", name: "Live Scoreboard Bug (Score / Quarter / Shot Clock)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "BK009", name: "Starting 5 Lineup (Players / Numbers)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "BK010", name: "Pre-Game Matchup Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "BK011", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "BK012", name: "Quarter-by-Quarter Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "BK013", name: "Team Fouls & Player Foul Count Table", icon: "⚠️", subCat: "RESULTS & STANDINGS" },
+  { id: "BK014", name: "Player Box Score Stats (PTS / REB / AST / BLK)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "BK015", name: "Tournament Quarter / Semi / Final Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "BK016", name: "Team Statistical Comparison Chart", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "BK017", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "BK018", name: "Player Foul Disqualification Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "BK019", name: "Video Challenge Review Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "BK020", name: "Venue & Session Title Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── BEACH VOLLEYBALL (BV) ──────────────────────────────────────────────────
+export const BV_TEMPLATES = [
+  { id: "BV001", name: "Player Pair ID Lower Third (Names / Country)", icon: "🏖️", subCat: "LOWER THIRDS" },
+  { id: "BV002", name: "World Ranking & Seeding Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "BV003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "BV004", name: "Set Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BV005", name: "Technical Timeout Bug", icon: "⏸️", subCat: "SPLITS & TIMES" },
+  { id: "BV006", name: "Sets & Points Live Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "BV007", name: "Pairs Starting Lineup Card", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "BV008", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "BV009", name: "Set-by-Set Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "BV010", name: "Player Stats (Attack / Block / Ace)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "BV011", name: "Knockout Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "BV012", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "BV013", name: "Service Ace Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
+  { id: "BV014", name: "Video Challenge Review Bug (IN/OUT)", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "BV015", name: "Beach Venue & Court Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── BOXING (BX) ────────────────────────────────────────────────────────────
+export const BX_TEMPLATES = [
+  { id: "BX001", name: "Boxer ID Lower Third (Red / Blue Corner)", icon: "🥊", subCat: "LOWER THIRDS" },
+  { id: "BX002", name: "Tale of the Tape (Height / Weight / Reach)", icon: "📊", subCat: "LOWER THIRDS" },
+  { id: "BX003", name: "Olympic Champion / World Rank Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "BX004", name: "Corner Coach & Seconds ID", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "BX005", name: "3-Minute Round Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BX006", name: "Round Interval / Rest Period Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "BX007", name: "Bout Scoreboard Bug (Round 1 / 2 / 3)", icon: "🥊", subCat: "SCORES & MATCH" },
+  { id: "BX008", name: "Round Title Banner (Round 1 / 2 / 3)", icon: "🔔", subCat: "SCORES & MATCH" },
+  { id: "BX009", name: "Bout Schedule & Matchup List", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "BX010", name: "Weight Class Bug (Men's 69kg / Women's 57kg)", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "BX011", name: "5-Judges Score Card (10-9, 10-9)", icon: "⭐", subCat: "RESULTS & STANDINGS" },
+  { id: "BX012", name: "Official Decision (Unanimous / Split / KO / RSC)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "BX013", name: "Tournament Bracket Tree", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "BX014", name: "Podium Medallists (Gold + 2x Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "BX015", name: "Punches Landed / CompuBox Stats Bug", icon: "📊", subCat: "RECORDS & BUGS" },
+  { id: "BX016", name: "Referee Warning / Caution Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "BX017", name: "Venue & Weight Class Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CANOE SLALOM (CS) ──────────────────────────────────────────────────────
+export const CS_TEMPLATES = [
+  { id: "CS001", name: "Paddler ID Lower Third (Name / Country / World Rank)", icon: "🛶", subCat: "LOWER THIRDS" },
+  { id: "CS002", name: "World Champion / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CS003", name: "Boat Class & Discipline Card (K1 / C1 / C2)", icon: "🏷️", subCat: "LOWER THIRDS" },
+  { id: "CS004", name: "Gate-by-Gate Split Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CS005", name: "Time Penalty Accrual Bug (+2s / +50s Miss)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CS006", name: "Top Section / Bottom Section Split", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CS007", name: "Start List & Run Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CS008", name: "Live Gate Score Bug (Gates Cleared / Touched)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "CS009", name: "Run Schedule (Q1 / Q2 / Semi / Final)", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "CS010", name: "Intermediate Time Comparison Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "CS011", name: "Final Results Table (Run 1 + Run 2 + Penalty)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CS012", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CS013", name: "World Record / Best Time Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "CS014", name: "Gate Miss / Touch Penalty Flag Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "CS015", name: "Course & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CANOE FLATWATER SPRINT (CF) ────────────────────────────────────────────
+export const CF_TEMPLATES = [
+  { id: "CF001", name: "Paddler ID Lower Third (Name / Country / World Rank)", icon: "🚣", subCat: "LOWER THIRDS" },
+  { id: "CF002", name: "Crew / Boat Class Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "CF003", name: "Olympic Champion / World Record Holder Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CF004", name: "250m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CF005", name: "500m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CF006", name: "Stroke Rate Bug (strokes/min)", icon: "💧", subCat: "SPLITS & TIMES" },
+  { id: "CF007", name: "Heat Lane Draw & Start List", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CF008", name: "Live Lane Position Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "CF009", name: "Heat / Semis / Final Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "CF010", name: "Finish Order & Exact Times Table", icon: "🏁", subCat: "RESULTS & STANDINGS" },
+  { id: "CF011", name: "500m Split Comparison Table (All Crews)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "CF012", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CF013", name: "World Record / Best Time Pace Line", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "CF014", name: "Distance Remaining Bug (1000m / 500m Event)", icon: "📏", subCat: "RECORDS & BUGS" },
+  { id: "CF015", name: "Venue & Boat Class Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CYCLING TRACK (CT) ─────────────────────────────────────────────────────
+export const CT_TEMPLATES = [
+  { id: "CT001", name: "Rider ID Lower Third (Name / Country / World Rank)", icon: "🚴", subCat: "LOWER THIRDS" },
+  { id: "CT002", name: "Team Pursuit Rider Card (4 Riders)", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "CT003", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CT004", name: "250m Lap Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CT005", name: "500m Time Trial Split", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CT006", name: "1000m Time Trial Final Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CT007", name: "Team Pursuit 4km Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CT008", name: "Team Sprint 3-Lap Splits", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CT009", name: "Sprint 1v1 Match Scoreboard (Best of 3)", icon: "🥊", subCat: "SCORES & MATCH" },
+  { id: "CT010", name: "Keirin Starting Draw & Lineup", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CT011", name: "Heat Lineup & Lane Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CT012", name: "Keirin Final Finish Order", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CT013", name: "Omnium Overall Points Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "CT014", name: "Omnium Flying 250m Lap Results", icon: "⏱️", subCat: "RESULTS & STANDINGS" },
+  { id: "CT015", name: "Omnium Elimination Order", icon: "🚫", subCat: "RESULTS & STANDINGS" },
+  { id: "CT016", name: "Madison Points & Laps Gained Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "CT017", name: "Qualifying Round Standings", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CT018", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CT019", name: "Speed Trap Max Speed Bug (73.4 km/h)", icon: "⚡", subCat: "RECORDS & BUGS" },
+  { id: "CT020", name: "Velodrome Lap Counter Bug", icon: "🔢", subCat: "RECORDS & BUGS" },
+  { id: "CT021", name: "World Record Pace Line (1:00.255)", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "CT022", name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CYCLING ROAD (CR) ──────────────────────────────────────────────────────
+export const CR_TEMPLATES = [
+  { id: "CR001", name: "Rider ID Lower Third (Name / Country / Team)", icon: "🚴", subCat: "LOWER THIRDS" },
+  { id: "CR002", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CR003", name: "Peloton / Break Group Split Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CR004", name: "Time Trial Intermediate Split Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CR005", name: "Distance Remaining Bug (km to finish)", icon: "📏", subCat: "SPLITS & TIMES" },
+  { id: "CR006", name: "Road Race Start List / Start Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CR007", name: "Live Race Running Order Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "CR008", name: "Break Gap to Peloton Bug (+1'45\")", icon: "⚡", subCat: "RECORDS & BUGS" },
+  { id: "CR009", name: "Finish Order & Times (Road Race)", icon: "🏁", subCat: "RESULTS & STANDINGS" },
+  { id: "CR010", name: "Time Trial Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CR011", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CR012", name: "Venue & Route Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CYCLING MOUNTAIN BIKE (CM) ─────────────────────────────────────────────
+export const CM_TEMPLATES = [
+  { id: "CM001", name: "Rider ID Lower Third (Name / Country / World Rank)", icon: "🚵", subCat: "LOWER THIRDS" },
+  { id: "CM002", name: "Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CM003", name: "Lap Time Bug (Lap 1 of 5)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CM004", name: "Sector Split Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CM005", name: "Start List & Grid Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CM006", name: "Live Race Running Order Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "CM007", name: "Lap Standings Table (After Lap 3)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "CM008", name: "Final Results Table (Top 10)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CM009", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CM010", name: "World Record Lap Time Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "CM011", name: "Venue & Course Profile Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── CYCLING BMX (CB) ───────────────────────────────────────────────────────
+export const CB_TEMPLATES = [
+  { id: "CB001", name: "Rider ID Lower Third (Name / Country / Rank)", icon: "🚲", subCat: "LOWER THIRDS" },
+  { id: "CB002", name: "Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "CB003", name: "Run Time Bug (Heat 1 / 2 / 3)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "CB004", name: "Start List & Gate Draw Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "CB005", name: "Live Gate Start Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "CB006", name: "Best-of-3 Run Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "CB007", name: "Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "CB008", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "CB009", name: "DQ / Jump Start Penalty Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "CB010", name: "Venue & Track Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── EQUESTRIAN (EQ) ────────────────────────────────────────────────────────
+export const EQ_TEMPLATES = [
+  { id: "EQ001", name: "Rider & Horse ID Lower Third", icon: "🏇", subCat: "LOWER THIRDS" },
+  { id: "EQ002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "EQ003", name: "National Team Profile Card", icon: "🏳️", subCat: "LOWER THIRDS" },
+  { id: "EQ004", name: "Dressage Piaffe / Passage Mark Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "EQ005", name: "Show Jumping Time Allowed Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "EQ006", name: "Cross Country Elapsed Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "EQ007", name: "Start List & Order of Go", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "EQ008", name: "Dressage Score Breakdown (Judge Marks)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "EQ009", name: "Show Jumping Fault Counter Bug", icon: "⚠️", subCat: "SCORES & MATCH" },
+  { id: "EQ010", name: "Eventing Penalty Point Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "EQ011", name: "Final Results & Rankings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "EQ012", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "EQ013", name: "Fence/Rail Knockdown Penalty Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "EQ014", name: "Venue & Discipline Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── FENCING (FE) ───────────────────────────────────────────────────────────
+export const FE_TEMPLATES = [
+  { id: "FE001", name: "Fencer ID Lower Third (Name / Country / World Rank)", icon: "🤺", subCat: "LOWER THIRDS" },
+  { id: "FE002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "FE003", name: "Weapon & Discipline Card (Foil / Épée / Sabre)", icon: "🏷️", subCat: "LOWER THIRDS" },
+  { id: "FE004", name: "3-Minute Period Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "FE005", name: "Clock / Medical Timeout Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "FE006", name: "Live Touch Scoreboard Bug (15-Point Bout)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "FE007", name: "Bout Schedule & Tableau Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "FE008", name: "Period Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "FE009", name: "Tournament Tableau Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "FE010", name: "Team Relay Score Running Total", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "FE011", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "FE012", name: "Video Review / Challenge Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "FE013", name: "Red / Yellow Card Penalty Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "FE014", name: "Venue & Weapon Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── FOOTBALL (FB) ──────────────────────────────────────────────────────────
+export const FB_TEMPLATES = [
+  { id: "FB001", name: "Player ID Lower Third (Name / No. / Position)", icon: "⚽", subCat: "LOWER THIRDS" },
+  { id: "FB002", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "FB003", name: "Goal Scorer Announcement Card", icon: "⚽", subCat: "LOWER THIRDS" },
+  { id: "FB004", name: "Player Substitution IN/OUT Card", icon: "🔄", subCat: "LOWER THIRDS" },
+  { id: "FB005", name: "Yellow / Red Card Recipient Card", icon: "🟨", subCat: "LOWER THIRDS" },
+  { id: "FB006", name: "Match Clock Bug (45' + Added Time)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "FB007", name: "Added Time Announcement Bug (+3 MIN)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "FB008", name: "Half-Time Interval Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "FB009", name: "Live Scoreboard Bug (Score / Time / Cards)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "FB010", name: "Tactical Starting Lineup (4-4-2 / 4-3-3)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "FB011", name: "Penalty Shootout Scoreboard", icon: "🎯", subCat: "SCORES & MATCH" },
+  { id: "FB012", name: "Group Phase Table (P W D L Pts)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "FB013", name: "Pre-Match Team Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "FB014", name: "Full-Time Match Statistics (Poss / Shots / Corners)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "FB015", name: "Tournament Top Scorers Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "FB016", name: "Knockout Round Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "FB017", name: "Half-Time Scores All Groups", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "FB018", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "FB019", name: "VAR Review In Progress Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "FB020", name: "Offside Decision Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "FB021", name: "Venue & Match Day Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── GYMNASTICS ARTISTIC (GA) ───────────────────────────────────────────────
+export const GA_TEMPLATES = [
+  { id: "GA001", name: "Gymnast ID Lower Third (Name / Country / World Rank)", icon: "🤸", subCat: "LOWER THIRDS" },
+  { id: "GA002", name: "World Champion / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "GA003", name: "National Team Head Coach Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "GA004", name: "Team Profile & National Score Record", icon: "🏳️", subCat: "LOWER THIRDS" },
+  { id: "GA005", name: "Difficulty (D) Score Breakdown Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "GA006", name: "Execution (E) Score Deductions Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "GA007", name: "Neutral Deductions (ND) Bug", icon: "⚠️", subCat: "SPLITS & TIMES" },
+  { id: "GA008", name: "Full D+E+ND Score Breakdown Live", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "GA009", name: "Apparatus Event Bug (Vault / Beam / Bars / Floor)", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "GA010", name: "Apparatus Rotation Order Table", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "GA011", name: "Team Event Running Total Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "GA012", name: "All-Around Running Standings Bug", icon: "🤸", subCat: "SCORES & MATCH" },
+  { id: "GA013", name: "Apparatus Final Standings Table (Top 8)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "GA014", name: "All-Around Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "GA015", name: "Team Competition Final Scores Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "GA016", name: "Apparatus Score History per Gymnast", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "GA017", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "GA018", name: "World Record / All-Time Best Score Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "GA019", name: "Olympic Record Score Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "GA020", name: "Time Fault / Penalty Flag Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "GA021", name: "Venue & Apparatus Event Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── GYMNASTICS RHYTHMIC (GR) ───────────────────────────────────────────────
+export const GR_TEMPLATES = [
+  { id: "GR001", name: "Gymnast ID Lower Third (Name / Country / Event)", icon: "🎀", subCat: "LOWER THIRDS" },
+  { id: "GR002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "GR003", name: "D+E+ND Score Breakdown Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "GR004", name: "Apparatus Bug (Ball / Hoop / Clubs / Ribbon)", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "GR005", name: "Rotation Order & Schedule", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "GR006", name: "Individual Final Standings Table (Top 10)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "GR007", name: "Group Exercise Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "GR008", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "GR009", name: "Penalty / Boundary Fault Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "GR010", name: "Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── GYMNASTICS TRAMPOLINE (GT) ─────────────────────────────────────────────
+export const GT_TEMPLATES = [
+  { id: "GT001", name: "Trampolinist ID Lower Third (Name / Country)", icon: "🤸", subCat: "LOWER THIRDS" },
+  { id: "GT002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "GT003", name: "Flight Time Bug (Total Time of Flight)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "GT004", name: "D+E+HD Score Breakdown Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "GT005", name: "Start List & Competition Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "GT006", name: "Qualifying & Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "GT007", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "GT008", name: "Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── HANDBALL (HB) ──────────────────────────────────────────────────────────
+export const HB_TEMPLATES = [
+  { id: "HB001", name: "Player ID Lower Third (Name / No. / Position)", icon: "🤾", subCat: "LOWER THIRDS" },
+  { id: "HB002", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "HB003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "HB004", name: "Match Clock Bug (30-Min Half)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "HB005", name: "Live Scoreboard Bug (Score / Period / Time)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "HB006", name: "Starting Lineup Card (7 Players)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "HB007", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "HB008", name: "Half-Time Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "HB009", name: "Player Stats (Goals / Assists / Saves)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "HB010", name: "Tournament Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "HB011", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "HB012", name: "Goalkeeper Save % Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
+  { id: "HB013", name: "Red / Yellow Card Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "HB014", name: "Venue & Match Day Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── FIELD HOCKEY (HO) ──────────────────────────────────────────────────────
+export const HO_TEMPLATES = [
+  { id: "HO001", name: "Player ID Lower Third (Name / No. / Country)", icon: "🏑", subCat: "LOWER THIRDS" },
+  { id: "HO002", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "HO003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "HO004", name: "Match Clock Bug (15-Min Quarter)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "HO005", name: "Live Scoreboard Bug (Score / Quarter / PC)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "HO006", name: "Starting 11 Lineup Card", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "HO007", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "HO008", name: "Quarter-by-Quarter Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "HO009", name: "Match Statistics (Shots / PCs / Cards)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "HO010", name: "Tournament Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "HO011", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "HO012", name: "Video Review (Penalty Corner) Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "HO013", name: "Yellow / Green Card Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "HO014", name: "Venue & Match Day Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── JUDO (JU) ──────────────────────────────────────────────────────────────
+export const JU_TEMPLATES = [
+  { id: "JU001", name: "Judoka ID Lower Third (White / Blue Gi)", icon: "🥋", subCat: "LOWER THIRDS" },
+  { id: "JU002", name: "World Ranking & Weight Category Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "JU003", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "JU004", name: "National Coach & Country Profile", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "JU005", name: "4-Minute Contest Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "JU006", name: "Golden Score Extension Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "JU007", name: "Osaekomi (Hold) Timer Bug (25s = Ippon)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "JU008", name: "Contest Scoreboard (Ippon / Waza-ari / Shido)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "JU009", name: "Pool / Repechage Bracket Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "JU010", name: "Weight Category & Round Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "JU011", name: "Match Result & Winning Technique", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "JU012", name: "Pool Phase Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "JU013", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "JU014", name: "Podium Medallists (Gold + 2× Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "JU015", name: "Shido Penalty Count Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "JU016", name: "Video Review / Hansoku-Make Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "JU017", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── MODERN PENTATHLON (MP) ─────────────────────────────────────────────────
+export const MP_TEMPLATES = [
+  { id: "MP001", name: "Pentathlete ID Lower Third (Name / Country)", icon: "🏅", subCat: "LOWER THIRDS" },
+  { id: "MP002", name: "Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "MP003", name: "Event Points Running Total Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "MP004", name: "Fencing Hit Score & Ranking Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "MP005", name: "Combined Event Start Order (Laser Run)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "MP006", name: "Discipline Results (Riding / Fencing / Swim / Laser)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "MP007", name: "Combined Final Standings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "MP008", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "MP009", name: "Event Venue & Discipline Title Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── ROWING (RO) ────────────────────────────────────────────────────────────
+export const RO_TEMPLATES = [
+  { id: "RO001", name: "Crew ID Lower Third (Name / Country / Boat Class)", icon: "🚣", subCat: "LOWER THIRDS" },
+  { id: "RO002", name: "Pair / Four / Eight Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "RO003", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "RO004", name: "500m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "RO005", name: "1000m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "RO006", name: "1500m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "RO007", name: "Stroke Rate Bug (strokes/min)", icon: "💧", subCat: "SPLITS & TIMES" },
+  { id: "RO008", name: "Heat Lane Draw & Start List", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "RO009", name: "6-Boat Live Position Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "RO010", name: "Heat / Repechage / Final Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "RO011", name: "Boat Class & Event Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "RO012", name: "Finish Order & Exact Times Table", icon: "🏁", subCat: "RESULTS & STANDINGS" },
+  { id: "RO013", name: "Heat / Repechage Qualification Results", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "RO014", name: "500m Split Comparison Table (All 6 Crews)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "RO015", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "RO016", name: "World Record / Best Time Pace Line", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "RO017", name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "RO018", name: "Distance Remaining Bug (2000m Event)", icon: "📏", subCat: "RECORDS & BUGS" },
+  { id: "RO019", name: "Venue & Boat Class Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── SAILING (SA) ───────────────────────────────────────────────────────────
+export const SA_TEMPLATES = [
+  { id: "SA001", name: "Sailor ID Lower Third (Name / Country / Class)", icon: "⛵", subCat: "LOWER THIRDS" },
+  { id: "SA002", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "SA003", name: "Crew Pairing Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "SA004", name: "Race Elapsed Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SA005", name: "Boat Speed Bug (knots)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "SA006", name: "Start Line Countdown Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SA007", name: "Fleet Race Running Order Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "SA008", name: "Race Schedule & Course Draw", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "SA009", name: "Race-by-Race Points Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "SA010", name: "Medal Race Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "SA011", name: "Overall Points Standings Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "SA012", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "SA013", name: "OCS / DNS / DSQ Penalty Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
+  { id: "SA014", name: "Venue & Class Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── SHOOTING (SH) ──────────────────────────────────────────────────────────
+export const SH_TEMPLATES = [
+  { id: "SH001", name: "Shooter ID Lower Third (Name / Country / World Rank)", icon: "🎯", subCat: "LOWER THIRDS" },
+  { id: "SH002", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "SH003", name: "Discipline Card (10m Air Rifle / 25m Pistol / Skeet)", icon: "🏷️", subCat: "LOWER THIRDS" },
+  { id: "SH004", name: "Shot Score Bug (10.9 / Bull / Inner 10)", icon: "🎯", subCat: "SPLITS & TIMES" },
+  { id: "SH005", name: "Running Total Score Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "SH006", name: "Elimination Score Bug (Tie-Break Shot)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "SH007", name: "Start List & Lane / Position Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "SH008", name: "Qualification & Final Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "SH009", name: "Final Results Table (Qualification + Final)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "SH010", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "SH011", name: "World Record Bug (Score: 251.2)", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "SH012", name: "Olympic Record Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "SH013", name: "Venue & Discipline Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── TABLE TENNIS (TT) ──────────────────────────────────────────────────────
+export const TT_TEMPLATES = [
+  { id: "TT001", name: "Player ID Lower Third (Name / Country / World Rank)", icon: "🏓", subCat: "LOWER THIRDS" },
+  { id: "TT002", name: "Doubles Pairing Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "TT003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "TT004", name: "Service Speed Bug (km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "TT005", name: "Match Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TT006", name: "Live Sets & Points Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "TT007", name: "Service Order Bug (Who Serves)", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "TT008", name: "Game-by-Game Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "TT009", name: "Match Statistics (Points Won / Errors)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "TT010", name: "Tournament Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "TT011", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "TT012", name: "Video Review Bug (Edge Ball)", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "TT013", name: "Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── TAEKWONDO (TK) ─────────────────────────────────────────────────────────
+export const TK_TEMPLATES = [
+  { id: "TK001", name: "Fighter ID Lower Third (Red / Blue Trunk)", icon: "🥋", subCat: "LOWER THIRDS" },
+  { id: "TK002", name: "World Ranking & Weight Class Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "TK003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "TK004", name: "National Coach & Country Profile", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "TK005", name: "2-Minute Round Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TK006", name: "1-Minute Break Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TK007", name: "Video Review Countdown Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TK008", name: "Contest Scoreboard (Head / Body / Kick Points)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "TK009", name: "Weight Category Elimination Bracket", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "TK010", name: "Weight Class & Round Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "TK011", name: "Final Point Gap / RSC Decision Result", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "TK012", name: "Round-by-Round Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "TK013", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "TK014", name: "Podium Medallists (Gold + 2× Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "TK015", name: "Gam-jeom Penalty Deduction Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "TK016", name: "PSS Electronic Chest Guard Score Bug", icon: "⚡", subCat: "RECORDS & BUGS" },
+  { id: "TK017", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── TENNIS (TE) ────────────────────────────────────────────────────────────
+export const TE_TEMPLATES = [
+  { id: "TE001", name: "Player ID Lower Third (Name / Country / World Rank)", icon: "🎾", subCat: "LOWER THIRDS" },
+  { id: "TE002", name: "World Ranking & Olympic Record Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "TE003", name: "Coach & Support Team ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "TE004", name: "Doubles Pairing Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
+  { id: "TE005", name: "First Serve Speed Bug (210 km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "TE006", name: "Second Serve Speed Bug (165 km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
+  { id: "TE007", name: "Rally Length Counter Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TE008", name: "Match Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TE009", name: "Live Sets & Games Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "TE010", name: "Tie-Break Point Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "TE011", name: "Draw Bracket & Match Schedule", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "TE012", name: "Court Name & Match Number Bug", icon: "🏟️", subCat: "SCORES & MATCH" },
+  { id: "TE013", name: "Full Match Statistics (Aces / DFs / Points Won)", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "TE014", name: "Set-by-Set Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "TE015", name: "Service Statistics Table (1st Serve % / Winners)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "TE016", name: "Tournament Draw Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "TE017", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "TE018", name: "Ace Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
+  { id: "TE019", name: "Hawkeye Challenge Result Bug (IN / OUT)", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "TE020", name: "Break Point / Match Point Bug", icon: "⚡", subCat: "RECORDS & BUGS" },
+  { id: "TE021", name: "Venue & Surface Type Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── TRIATHLON (TR) ─────────────────────────────────────────────────────────
+export const TR_TEMPLATES = [
+  { id: "TR001", name: "Triathlete ID Lower Third (Name / Country / World Rank)", icon: "🏊🚴🏃", subCat: "LOWER THIRDS" },
+  { id: "TR002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "TR003", name: "Swim Split Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TR004", name: "Bike Split Time & Gap Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TR005", name: "Run Split & km-to-go Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TR006", name: "Transition T1 / T2 Time Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "TR007", name: "Start List & Wave Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "TR008", name: "Live Race Running Order Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "TR009", name: "Final Results Table (Swim + Bike + Run + T1 + T2)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "TR010", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "TR011", name: "World Record / Course Record Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "TR012", name: "Venue & Course Profile Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── VOLLEYBALL (VO) ────────────────────────────────────────────────────────
+export const VO_TEMPLATES = [
+  { id: "VO001", name: "Player ID Lower Third (Name / No. / Country)", icon: "🏐", subCat: "LOWER THIRDS" },
+  { id: "VO002", name: "Libero / Setter Specialist ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "VO003", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "VO004", name: "Team Profile & World Ranking Card", icon: "🏳️", subCat: "LOWER THIRDS" },
+  { id: "VO005", name: "Set Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "VO006", name: "Technical Timeout Bug", icon: "⏸️", subCat: "SPLITS & TIMES" },
+  { id: "VO007", name: "Video Challenge Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "VO008", name: "Sets & Points Live Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "VO009", name: "Court Service Rotation Grid", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "VO010", name: "6-Player Starting Lineup Card", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "VO011", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "VO012", name: "Pre-Match Team Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
+  { id: "VO013", name: "Set-by-Set Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "VO014", name: "Player Stats (Attack / Block / Ace)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "VO015", name: "Team Statistical Comparison Chart", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "VO016", name: "Knockout Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "VO017", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "VO018", name: "Service Ace Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
+  { id: "VO019", name: "Video Challenge Review Bug (IN/OUT)", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "VO020", name: "Venue & Match Day Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── WEIGHTLIFTING (WL) ─────────────────────────────────────────────────────
+export const WL_TEMPLATES = [
+  { id: "WL001", name: "Lifter ID Lower Third (Name / Country / Body Weight)", icon: "🏋️", subCat: "LOWER THIRDS" },
+  { id: "WL002", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "WL003", name: "National Coach & Delegation Card", icon: "👤", subCat: "LOWER THIRDS" },
+  { id: "WL004", name: "Body Weight Category Title Card", icon: "🏷️", subCat: "LOWER THIRDS" },
+  { id: "WL005", name: "Current Attempt Bar Weight Bug (175 kg)", icon: "🏋️", subCat: "SPLITS & TIMES" },
+  { id: "WL006", name: "Attempt Number Counter Bug (1 / 2 / 3)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WL007", name: "60-Second Lift Attempt Countdown Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WL008", name: "Live Snatch & Clean+Jerk Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "WL009", name: "Starting Weight & Lift Order Table", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "WL010", name: "Current Lifter On Platform Bug", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "WL011", name: "Next Lifter & Requested Weight Bug", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "WL012", name: "Running Total Weight Standings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "WL013", name: "Snatch Phase Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "WL014", name: "Clean & Jerk Phase Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "WL015", name: "Total Weight Final Rankings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "WL016", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "WL017", name: "3 Referee Decision Lights Bug (⚪⚪🔴)", icon: "🔴", subCat: "RECORDS & BUGS" },
+  { id: "WL018", name: "World Record Weight Bug (193 kg WR)", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "WL019", name: "Olympic Record Weight Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "WL020", name: "Good Lift / No Lift Announcement Bug", icon: "✅", subCat: "RECORDS & BUGS" },
+  { id: "WL021", name: "Venue & Weight Category Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── WRESTLING (WR) ─────────────────────────────────────────────────────────
+export const WR_TEMPLATES = [
+  { id: "WR001", name: "Wrestler ID Lower Third (Red / Blue Singlet)", icon: "🤼", subCat: "LOWER THIRDS" },
+  { id: "WR002", name: "World Ranking & Weight Class Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "WR003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "WR004", name: "Discipline Style Card (Freestyle / Greco-Roman)", icon: "🏷️", subCat: "LOWER THIRDS" },
+  { id: "WR005", name: "3-Minute Period Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WR006", name: "30-Second Passivity Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WR007", name: "Injury Timeout Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WR008", name: "Period Scoreboard (Takedowns / Exposure / Penalty)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "WR009", name: "Weight Category Elimination Bracket", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "WR010", name: "Weight Class & Style Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "WR011", name: "Victory Method Result (Fall / TFS / Decision)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "WR012", name: "Period-by-Period Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "WR013", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
+  { id: "WR014", name: "Podium Medallists (Gold + 2× Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "WR015", name: "Video Challenge Review Bug", icon: "📺", subCat: "RECORDS & BUGS" },
+  { id: "WR016", name: "Caution / Warning Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "WR017", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── AQUATICS – DIVING (DV) ─────────────────────────────────────────────────
+export const DV_TEMPLATES = [
+  { id: "DV001", name: "Diver ID Lower Third (Name / Country / World Rank)", icon: "🤿", subCat: "LOWER THIRDS" },
+  { id: "DV002", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "DV003", name: "Dive DD (Degree of Difficulty) Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "DV004", name: "7-Judge Score Display Bug", icon: "⭐", subCat: "SPLITS & TIMES" },
+  { id: "DV005", name: "Dive Running Total Score Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "DV006", name: "Start List & Dive Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "DV007", name: "Platform / Springboard Event Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
+  { id: "DV008", name: "Qualifying & Semi-Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "DV009", name: "Final Results Table (All 6 Dives)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "DV010", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "DV011", name: "World Record Score Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "DV012", name: "Venue & Board Height Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── AQUATICS – WATER POLO (WP) ─────────────────────────────────────────────
+export const WP_TEMPLATES = [
+  { id: "WP001", name: "Player ID Lower Third (Name / Cap No. / Country)", icon: "🤽", subCat: "LOWER THIRDS" },
+  { id: "WP002", name: "Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "WP003", name: "Match Clock Bug (8-Min Period)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WP004", name: "Shot Clock Bug (30 Seconds)", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "WP005", name: "Live Scoreboard Bug (Score / Period / Shot Clock)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "WP006", name: "Starting 7 Lineup Card", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "WP007", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "WP008", name: "Period-by-Period Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "WP009", name: "Player Stats (Goals / Assists / Saves)", icon: "📈", subCat: "RESULTS & STANDINGS" },
+  { id: "WP010", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "WP011", name: "Exclusion / Penalty Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
+  { id: "WP012", name: "Venue & Pool Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── AQUATICS – SYNCHRONISED SWIMMING (SY) ──────────────────────────────────
+export const SY_TEMPLATES = [
+  { id: "SY001", name: "Swimmer ID Lower Third (Duet / Team)", icon: "🤸", subCat: "LOWER THIRDS" },
+  { id: "SY002", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "SY003", name: "Technical / Free Routine Score Bug", icon: "📊", subCat: "SPLITS & TIMES" },
+  { id: "SY004", name: "Element-by-Element Mark Bug", icon: "⭐", subCat: "SPLITS & TIMES" },
+  { id: "SY005", name: "Start List & Rotation Order", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "SY006", name: "Duet / Team Standings Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
+  { id: "SY007", name: "Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "SY008", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "SY009", name: "Venue & Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── MARATHON / ATHLETICS ROAD (MA) ─────────────────────────────────────────
+export const MA_TEMPLATES = [
+  { id: "MA001", name: "Runner ID Lower Third (Name / Country / PB)", icon: "🏃", subCat: "LOWER THIRDS" },
+  { id: "MA002", name: "World Record Holder Card", icon: "🌍", subCat: "LOWER THIRDS" },
+  { id: "MA003", name: "Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
+  { id: "MA004", name: "5km Checkpoint Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "MA005", name: "10km Checkpoint Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "MA006", name: "Half-Marathon (21km) Split Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "MA007", name: "30km / 35km Checkpoint Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
+  { id: "MA008", name: "km-to-Go Distance Bug", icon: "📏", subCat: "SPLITS & TIMES" },
+  { id: "MA009", name: "Start List / Elite Start Wave Draw", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "MA010", name: "Live Race Running Order Bug (Top 5)", icon: "📊", subCat: "SCORES & MATCH" },
+  { id: "MA011", name: "Gap to Leader Bug (+1'23\")", icon: "⏱️", subCat: "SCORES & MATCH" },
+  { id: "MA012", name: "Final Results Table (Top 10)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
+  { id: "MA013", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
+  { id: "MA014", name: "World Record Pace Line", icon: "🏁", subCat: "RECORDS & BUGS" },
+  { id: "MA015", name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
+  { id: "MA016", name: "Course Venue & Distance Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" },
+];
+
+// ─── MASTER LOOKUP TABLE ─────────────────────────────────────────────────────
+const SPORT_TEMPLATE_MAP = {
+  SW: SW_TEMPLATES,
+  AT: AT_TEMPLATES,
+  MA: MA_TEMPLATES,
+  AR: AR_TEMPLATES,
+  BD: BD_TEMPLATES,
+  BK: BK_TEMPLATES,
+  BV: BV_TEMPLATES,
+  BX: BX_TEMPLATES,
+  CS: CS_TEMPLATES,
+  CF: CF_TEMPLATES,
+  CT: CT_TEMPLATES,
+  CR: CR_TEMPLATES,
+  CM: CM_TEMPLATES,
+  CB: CB_TEMPLATES,
+  EQ: EQ_TEMPLATES,
+  FE: FE_TEMPLATES,
+  FB: FB_TEMPLATES,
+  GA: GA_TEMPLATES,
+  GR: GR_TEMPLATES,
+  GT: GT_TEMPLATES,
+  HB: HB_TEMPLATES,
+  HO: HO_TEMPLATES,
+  JU: JU_TEMPLATES,
+  MP: MP_TEMPLATES,
+  RO: RO_TEMPLATES,
+  SA: SA_TEMPLATES,
+  SH: SH_TEMPLATES,
+  TT: TT_TEMPLATES,
+  TK: TK_TEMPLATES,
+  TE: TE_TEMPLATES,
+  TR: TR_TEMPLATES,
+  VO: VO_TEMPLATES,
+  WL: WL_TEMPLATES,
+  WR: WR_TEMPLATES,
+  DV: DV_TEMPLATES,
+  WP: WP_TEMPLATES,
+  SY: SY_TEMPLATES,
+};
+
+/**
+ * Get OBS-style numbered templates for any Olympic sport.
+ * Returns templates like SW001, AT001, BX001 etc.
  */
 export function getSportTemplates(sport) {
   if (!sport) return TEMPLATE_TYPES;
 
+  // Use inline templates on the sport object if provided
   if (sport.templates && sport.templates.length > 0) {
     return sport.templates;
   }
 
   const code = sport.code || "";
+
+  // Look up numbered templates from the master map
+  if (SPORT_TEMPLATE_MAP[code]) {
+    return SPORT_TEMPLATE_MAP[code];
+  }
+
+  // Name-based fallback for partial matches
   const name = sport.name || "";
-
-  if (code === "SW" || name.includes("Swimming")) {
-    return [
-      // LOWER THIRDS
-      { id: "sw-lt-swimmer", name: "Swimmer ID (Name, Country, Lane)", icon: "🏊", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-world-record-holder", name: "World Record Holder / Olympic Champion", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-relay-team", name: "Relay Team Swimmers Card (4 Swimmers)", icon: "👥", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-coach", name: "Head Coach & Country ID", icon: "👤", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "sw-split-50m", name: "50m Intermediate Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-split-100m", name: "100m Intermediate Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-split-200m", name: "200m Intermediate Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-reaction-time", name: "Reaction Time Bug (0.64s)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "sw-turn-time", name: "15m Breakout / Turn Speed Bug", icon: "💨", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "sw-start-list-8lane", name: "8-Lane Heat Start List", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "sw-start-list-relay", name: "Relay Team Order of Start", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "sw-heat-draw", name: "Heat Schedule & Lane Assignment", icon: "🗓️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "sw-finish-touch-order", name: "Finish Touch Order & Times (1st to 8th)", icon: "🏁", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-heat-results", name: "Heat Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-semi-final-qualifiers", name: "Top 8 Qualifiers for Final", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-podium-medallists", name: "Medallists & Podium Ceremony (Gold, Silver, Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "sw-wr-line", name: "World Record Pace Comparison Line (46.91s)", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "sw-or-line", name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "sw-record-broken", name: "NEW WORLD RECORD / OLYMPIC RECORD Flash Bug", icon: "🎉", subCat: "RECORDS & BUGS" },
-      { id: "sw-pool-title-bug", name: "Aquatics Centre Event Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "AT" || name.includes("Athletics") || name.includes("Track")) {
-    return [
-      // LOWER THIRDS
-      { id: "at-lt-athlete", name: "Athlete ID (Bib, Country, Event)", icon: "🏃", subCat: "LOWER THIRDS" },
-      { id: "at-lt-champion", name: "Olympic Champion / World Record Holder", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "at-lt-relay-team", name: "4x100m / 4x400m Relay Team Card", icon: "👥", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "at-split-100m", name: "100m / 200m Sector Splits", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "at-reaction-time", name: "Reaction Time Bug (0.145s)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "at-speed-trap", name: "Sprint Speed Trap (44.7 km/h)", icon: "💨", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "at-start-list", name: "8-Lane Track Start List", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "at-field-start", name: "Field Event Competitor Order", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "at-heat-schedule", name: "Round 1 / Semi-Final Heat Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "at-results", name: "100m/Final Results Table (1st to 8th)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "at-attempt-board", name: "High Jump / Pole Vault Attempts (O O X O)", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "at-field-standings", name: "Long Jump / Throw Standings", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "at-podium-medallists", name: "Podium Medallists (Gold, Silver, Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "at-wind-indicator", name: "Wind Speed Bug (+1.5 m/s)", icon: "💨", subCat: "RECORDS & BUGS" },
-      { id: "at-lane-id", name: "Lane Identifier Overlay", icon: "🎽", subCat: "RECORDS & BUGS" },
-      { id: "at-wr-line", name: "World Record Pace Line (9.58s)", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "at-or-line", name: "Olympic Record Line (9.63s)", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "at-false-start", name: "DQ / False Start Warning Bug", icon: "⚠️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "BK" || name.includes("Basketball")) {
-    return [
-      { id: "bk-scoreboard", name: "Scoreboard Bug (Shot Clock 24s)", icon: "🏀" },
-      { id: "bk-player-stats", name: "Player Stats (PTS/REB/AST)", icon: "👤" },
-      { id: "bk-lineup", name: "Starting Lineup (5 Players)", icon: "📋" },
-      { id: "bk-fouls-summary", name: "Team Fouls & Quarter Summary", icon: "📊" }
-    ];
-  }
-
-  if (code === "FB" || name.includes("Football")) {
-    return [
-      { id: "fb-scoreboard", name: "Scoreboard Bug (Added Time/Cards)", icon: "⚽" },
-      { id: "fb-lineup-formation", name: "Tactical Lineup (4-4-2)", icon: "📋" },
-      { id: "fb-substitution", name: "Player Substitution (IN/OUT)", icon: "🔄" },
-      { id: "fb-match-stats", name: "Match Statistics (Poss/Shots)", icon: "📊" }
-    ];
-  }
-
-  if (code === "AR" || name.includes("Archery")) {
-    return [
-      { id: "ar-target-score", name: "Target Arrow Score (10,9,8)", icon: "🎯" },
-      { id: "ar-set-points", name: "Set Points Tracker (6-2)", icon: "📊" },
-      { id: "ar-bracket", name: "Match Bracket Tree", icon: "🌿" }
-    ];
-  }
-
-  if (code === "GY" || name.includes("Gymnastics")) {
-    return [
-      { id: "gy-score-breakdown", name: "D & E Score Breakdown", icon: "🤸" },
-      { id: "gy-apparatus-bug", name: "Apparatus Bug (Vault/Beam)", icon: "🏷️" },
-      { id: "gy-rankings", name: "Apparatus Standings Table", icon: "🏆" }
-    ];
-  }
-
-  if (code === "WL" || name.includes("Weightlifting")) {
-    return [
-      { id: "wl-attempt", name: "Bar Weight Attempt (175 kg)", icon: "🏋️" },
-      { id: "wl-lights", name: "Referee Lights (⚪ ⚪ 🔴)", icon: "🔴" },
-      { id: "wl-standings", name: "Total Weight Standings", icon: "🏆" }
-    ];
-  }
-
-  if (code === "TE" || name.includes("Tennis")) {
-    return [
-      { id: "te-match-score", name: "Sets & Games Scoreboard", icon: "🎾" },
-      { id: "te-serve-speed", name: "Serve Speed Bug (210 km/h)", icon: "⚡" },
-      { id: "te-match-stats", name: "Aces & Double Faults Stats", icon: "📊" }
-    ];
-  }
-
-  if (code === "CT" || code === "CR" || code === "BM" || code === "MT" || name.includes("Cycling")) {
-    return [
-      // LOWER THIRDS
-      { id: "ct-lt-rider", name: "Rider ID Lower Third", icon: "🚴", subCat: "LOWER THIRDS" },
-      { id: "ct-lt-team", name: "Team Pursuit Lower Third", icon: "👥", subCat: "LOWER THIRDS" },
-      { id: "ct-lt-champion", name: "World Record Holder / Olympic Champion", icon: "🥇", subCat: "LOWER THIRDS" },
-      
-      // SPLITS & TIMES
-      { id: "ct-250m-split", name: "250m Lap Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ct-500m-split", name: "500m Time Trial Split", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ct-1000m-final", name: "1000m Time Trial Final Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ct-team-pursuit-split", name: "Team Pursuit 4km Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ct-team-sprint-split", name: "Team Sprint 3-Lap Splits", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      
-      // SCORES & MATCH
-      { id: "ct-sprint-1v1", name: "Sprint 1v1 Match Scoreboard (Best of 3)", icon: "🥊", subCat: "SCORES & MATCH" },
-      { id: "ct-keirin-draw", name: "Keirin Starting Draw & Lineup", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "ct-heat-lineup", name: "Heat Lineup & Lane Draw", icon: "📋", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "ct-keirin-result", name: "Keirin Final Finish Order", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-omnium-standings", name: "Omnium Overall Points Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-omnium-flying-lap", name: "Omnium Flying 250m Lap Results", icon: "⏱️", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-omnium-elimination", name: "Omnium Elimination Order", icon: "🚫", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-madison-points", name: "Madison Points & Laps Gained Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-qualifying-rankings", name: "Qualifying Round Standings", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "ct-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "ct-speed-trap", name: "Speed Trap Max Speed (73.4 km/h)", icon: "⚡", subCat: "RECORDS & BUGS" },
-      { id: "ct-lap-counter", name: "Velodrome Lap Counter Bug", icon: "🔢", subCat: "RECORDS & BUGS" },
-      { id: "ct-wr-line", name: "World Record Pace Line (1:00.255)", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "ct-or-line", name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "cr-time-gap", name: "Road Race Time Gap Bug (+1'45\")", icon: "⏱️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "SW" || name.includes("Swimming")) {
-    return [
-      // LOWER THIRDS
-      { id: "sw-lt-swimmer", name: "Swimmer ID Lower Third (Name / Country / Event)", icon: "🏊", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-world-record", name: "World Record Holder Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-olympic-champion", name: "Olympic Champion / Defending Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-coach", name: "Head Coach / Official ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "sw-lt-country-team", name: "Team Profile & National Record", icon: "🏳️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "sw-reaction-time", name: "Start Reaction Time Bug (0.64s)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "sw-split-50m", name: "50m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-split-100m", name: "100m Turn Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-split-150m", name: "150m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-relay-splits", name: "Relay Split Times (All 4 Legs)", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "sw-stroke-rate", name: "Stroke Rate & Cycle Bug", icon: "💧", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "sw-start-list", name: "8-Lane Heat Start List", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "sw-heat-schedule", name: "Heats / Semis / Finals Draw Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
-      { id: "sw-live-scoreboard", name: "Live 8-Lane Race Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "sw-relay-lineup", name: "4x100m / 4x200m Relay Lineup Order", icon: "📋", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "sw-lane-order", name: "Finish Order & Touch Times Table (8 Lanes)", icon: "🏁", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-top-8-results", name: "Top 8 Final Results with Pb/OR/WR Flags", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-heat-progression", name: "Heat Qualification Results & Progressions", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-      { id: "sw-day-medal-summary", name: "Swimming Day Medal Summary Table", icon: "🗓️", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "sw-wr-pace-line", name: "World Record Pace Comparison Line", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "sw-or-pace-line", name: "Olympic Record Pace Comparison Line", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "sw-pb-bug", name: "Personal Best Achievement Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
-      { id: "sw-dq-flag", name: "Disqualification / False Start Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
-      { id: "sw-pool-venue-bug", name: "Pool Venue & Event Corner Bug", icon: "🏊", subCat: "RECORDS & BUGS" },
-      { id: "sw-distance-bug", name: "Race Distance & Stroke Style Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "AT" || name.includes("Athletics") || name.includes("Track")) {
-    return [
-      // LOWER THIRDS
-      { id: "at-lt-athlete", name: "Athlete ID Lower Third (Name / Country / PB)", icon: "🏃", subCat: "LOWER THIRDS" },
-      { id: "at-lt-world-record", name: "World Record Holder Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "at-lt-olympic-champion", name: "Olympic Champion / Defending Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "at-lt-coach", name: "Head Coach / National Federation Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "at-lt-race-walker", name: "Race Walker / Road Event Profile", icon: "🚶", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "at-reaction-time", name: "Start Reaction Time Bug (0.130s)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "at-100m-split", name: "10m Sector Speed Splits Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "at-400m-split", name: "200m / 300m Intermediate Split Times", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "at-marathon-km", name: "Marathon 5km / 10km Checkpoint Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "at-relay-leg", name: "4x100m / 4x400m Relay Leg Splits", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "at-decathlon-points", name: "Decathlon Running Event Split & Points", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "at-start-list", name: "8-Lane Track Start List (Lane / Name / Country / SB)", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "at-field-start-list", name: "Field Event Attempt Order List", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "at-heat-draw", name: "Heat / Round Qualification Draw", icon: "🗓️", subCat: "SCORES & MATCH" },
-      { id: "at-decathlon-scoreboard", name: "Decathlon / Heptathlon Running Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "at-results", name: "Track Final Results Table (Top 8)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "at-attempt-board", name: "Field Attempt Board (O X O Notation)", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "at-height-bar", name: "High Jump / Pole Vault Bar Heights Table", icon: "📏", subCat: "RESULTS & STANDINGS" },
-      { id: "at-decathlon-final", name: "Decathlon / Heptathlon Final Points Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "at-road-race-standings", name: "Road Race / Marathon Running Order", icon: "🗺️", subCat: "RESULTS & STANDINGS" },
-      { id: "at-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "at-wind-indicator", name: "Wind Speed Bug (+1.5m/s / -0.3m/s)", icon: "💨", subCat: "RECORDS & BUGS" },
-      { id: "at-wr-line", name: "World Record Pace Comparison Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "at-or-line", name: "Olympic Record Pace Comparison Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "at-lane-id", name: "Lane Identifier Overlay Bug", icon: "🎽", subCat: "RECORDS & BUGS" },
-      { id: "at-false-start", name: "False Start / DQ Notification Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
-      { id: "at-event-venue-bug", name: "Event Venue & Title Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "BK" || name.includes("Basketball")) {
-    return [
-      // LOWER THIRDS
-      { id: "bk-lt-player", name: "Player ID Lower Third (Name / No. / Points)", icon: "🏀", subCat: "LOWER THIRDS" },
-      { id: "bk-lt-coach", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "bk-lt-mvp", name: "Tournament MVP / Star Player Card", icon: "⭐", subCat: "LOWER THIRDS" },
-      { id: "bk-lt-team-profile", name: "Team Profile & World Ranking Card", icon: "🏳️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "bk-shot-clock", name: "24-Second Shot Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "bk-game-clock", name: "Quarter / Half Game Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "bk-timeouts-remaining", name: "Timeouts Remaining Bug", icon: "⏸️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "bk-scoreboard", name: "Live Scoreboard Bug (Score / Quarter / Shot Clock)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "bk-lineup", name: "Starting 5 Lineup (Players / Numbers)", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "bk-matchup-preview", name: "Pre-Game Matchup Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
-      { id: "bk-group-standings", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "bk-quarter-summary", name: "Quarter-by-Quarter Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "bk-fouls-summary", name: "Team Fouls & Player Foul Count Table", icon: "⚠️", subCat: "RESULTS & STANDINGS" },
-      { id: "bk-player-stats", name: "Player Box Score Stats (PTS / REB / AST / BLK)", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "bk-tournament-bracket", name: "Tournament Quarter / Semi / Final Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "bk-team-stats", name: "Team Statistical Comparison Chart", icon: "📈", subCat: "RESULTS & STANDINGS" },
-      { id: "bk-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "bk-player-foul-bug", name: "Player Foul Disqualification Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
-      { id: "bk-challenge-bug", name: "Video Challenge Review Bug", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: "bk-venue-event-bug", name: "Venue & Session Title Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "FB" || name.includes("Football")) {
-    return [
-      // LOWER THIRDS
-      { id: "fb-lt-player", name: "Player ID Lower Third (Name / No. / Position)", icon: "⚽", subCat: "LOWER THIRDS" },
-      { id: "fb-lt-coach", name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "fb-lt-scorer", name: "Goal Scorer Announcement Card", icon: "⚽", subCat: "LOWER THIRDS" },
-      { id: "fb-substitution", name: "Player Substitution IN/OUT Card", icon: "🔄", subCat: "LOWER THIRDS" },
-      { id: "fb-lt-yellow-card", name: "Yellow / Red Card Recipient Card", icon: "🟨", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "fb-match-clock", name: "Match Clock Bug (45' + Added Time)", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "fb-added-time", name: "Added Time Announcement Bug (+3 MIN)", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "fb-halftime-clock", name: "Half-Time Interval Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "fb-scoreboard", name: "Live Scoreboard Bug (Score / Time / Cards)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "fb-lineup-formation", name: "Tactical Starting Lineup (4-4-2 / 4-3-3)", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "fb-penalty-shootout", name: "Penalty Shootout Scoreboard", icon: "🎯", subCat: "SCORES & MATCH" },
-      { id: "fb-group-standings", name: "Group Phase Table (P W D L Pts)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "fb-matchup-preview", name: "Pre-Match Team Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "fb-match-stats", name: "Full-Time Match Statistics (Poss / Shots / Corners)", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "fb-top-scorers", name: "Tournament Top Scorers Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "fb-tournament-bracket", name: "Knockout Round Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "fb-half-time-scores", name: "Half-Time Scores All Groups", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "fb-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "fb-var-bug", name: "VAR Review In Progress Bug", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: "fb-offside-bug", name: "Offside Decision Bug", icon: "🚫", subCat: "RECORDS & BUGS" },
-      { id: "fb-venue-event-bug", name: "Venue & Match Day Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "AR" || name.includes("Archery")) {
-    return [
-      // LOWER THIRDS
-      { id: "ar-lt-archer", name: "Archer ID Lower Third (Name / Country / World Rank)", icon: "🎯", subCat: "LOWER THIRDS" },
-      { id: "ar-lt-world-rank", name: "World Ranking & Personal Best Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "ar-lt-team", name: "Team Archery Country Profile Card", icon: "🏳️", subCat: "LOWER THIRDS" },
-      { id: "ar-lt-champion", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "ar-target-score", name: "Arrow Score Per End (10 / 9 / 8 Zones)", icon: "🎯", subCat: "SPLITS & TIMES" },
-      { id: "ar-end-total", name: "End Running Total Scoreline", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ar-shoot-off-timer", name: "Shoot-Off Countdown Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "ar-set-points", name: "Set Points Tracker (Set Score 6-2)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "ar-cumulative-score", name: "Cumulative Points Scoreboard (Match Total)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "ar-match-schedule", name: "Match Schedule & Round Draw", icon: "🗓️", subCat: "SCORES & MATCH" },
-      { id: "ar-ranking-round", name: "Ranking Round Live Scoreboard (72 Arrows)", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "ar-team-scoreboard", name: "Team Match Scoreboard (3 Archers per Team)", icon: "📊", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "ar-bracket", name: "Elimination Bracket Tree (1/16 to Final)", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "ar-ranking-results", name: "Ranking Round Final Standings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "ar-end-results", name: "End-by-End Arrow Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "ar-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "ar-wr-line", name: "World Record Score Bug (90+ pts)", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "ar-or-line", name: "Olympic Record Score Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "ar-10-ring-bug", name: "Inner 10-Ring (X) Hit Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
-      { id: "ar-venue-bug", name: "Venue & Round Title Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "GY" || name.includes("Gymnastics")) {
-    return [
-      // LOWER THIRDS
-      { id: "gy-lt-gymnast", name: "Gymnast ID Lower Third (Name / Country / World Rank)", icon: "🤸", subCat: "LOWER THIRDS" },
-      { id: "gy-lt-world-champion", name: "World Champion / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "gy-lt-coach", name: "National Team Head Coach Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "gy-lt-country-team", name: "Team Profile & National Score Record", icon: "🏳️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "gy-d-score", name: "Difficulty (D) Score Breakdown Bug", icon: "📊", subCat: "SPLITS & TIMES" },
-      { id: "gy-e-score", name: "Execution (E) Score Deductions Bug", icon: "📊", subCat: "SPLITS & TIMES" },
-      { id: "gy-neutral-deduction", name: "Neutral Deductions (ND) Bug", icon: "⚠️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "gy-score-breakdown", name: "Full D+E+ND Score Breakdown Live", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "gy-apparatus-bug", name: "Apparatus Event Bug (Vault / Beam / Bars / Floor)", icon: "🏷️", subCat: "SCORES & MATCH" },
-      { id: "gy-rotation-order", name: "Apparatus Rotation Order Table", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "gy-team-score", name: "Team Event Running Total Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "gy-aa-scoreboard", name: "All-Around Running Standings Bug", icon: "🤸", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "gy-rankings", name: "Apparatus Final Standings Table (Top 8)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "gy-all-around-table", name: "All-Around Final Results Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "gy-team-final-table", name: "Team Competition Final Scores Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "gy-score-history", name: "Apparatus Score History per Gymnast", icon: "📈", subCat: "RESULTS & STANDINGS" },
-      { id: "gy-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "gy-wr-line", name: "World Record / All-Time Best Score Bug", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "gy-or-line", name: "Olympic Record Score Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "gy-penalty-bug", name: "Time Fault / Penalty Flag Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
-      { id: "gy-venue-bug", name: "Venue & Apparatus Event Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "WL" || name.includes("Weightlifting")) {
-    return [
-      // LOWER THIRDS
-      { id: "wl-lt-lifter", name: "Lifter ID Lower Third (Name / Country / Body Weight)", icon: "🏋️", subCat: "LOWER THIRDS" },
-      { id: "wl-lt-world-champion", name: "World Record Holder / Olympic Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "wl-lt-coach", name: "National Coach & Delegation Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "wl-lt-category", name: "Body Weight Category Title Card", icon: "🏷️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "wl-attempt", name: "Current Attempt Bar Weight Bug (175 kg)", icon: "🏋️", subCat: "SPLITS & TIMES" },
-      { id: "wl-attempt-number", name: "Attempt Number Counter Bug (1/2/3)", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "wl-timer-bug", name: "60-Second Lift Attempt Countdown Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "wl-scoreboard", name: "Live Snatch & Clean+Jerk Scoreboard", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "wl-lift-order", name: "Starting Weight & Lift Order Table", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "wl-current-lifter", name: "Current Lifter On Platform Bug", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "wl-next-lifter", name: "Next Lifter & Requested Weight Bug", icon: "📋", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "wl-standings", name: "Running Total Weight Standings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "wl-snatch-results", name: "Snatch Phase Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "wl-cj-results", name: "Clean & Jerk Phase Final Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "wl-total-results", name: "Total Weight Final Rankings Table", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "wl-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "wl-lights", name: "3 Referee Decision Lights Bug (⚪⚪🔴)", icon: "🔴", subCat: "RECORDS & BUGS" },
-      { id: "wl-wr-line", name: "World Record Weight Bug (193 kg WR)", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: "wl-or-line", name: "Olympic Record Weight Bug", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: "wl-good-lift", name: "Good Lift / No Lift Announcement Bug", icon: "✅", subCat: "RECORDS & BUGS" },
-      { id: "wl-venue-bug", name: "Venue & Weight Category Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "TE" || name.includes("Tennis")) {
-    return [
-      // LOWER THIRDS
-      { id: "te-lt-player", name: "Player ID Lower Third (Name / Country / World Rank)", icon: "🎾", subCat: "LOWER THIRDS" },
-      { id: "te-lt-world-rank", name: "World Ranking & Olympic Record Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "te-lt-coach", name: "Coach & Support Team ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: "te-lt-doubles-pair", name: "Doubles Pairing Profile Card", icon: "👥", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "te-serve-speed", name: "First Serve Speed Bug (210 km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "te-second-serve-speed", name: "Second Serve Speed Bug (165 km/h)", icon: "⚡", subCat: "SPLITS & TIMES" },
-      { id: "te-rally-length", name: "Rally Length Counter Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "te-match-duration", name: "Match Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "te-match-score", name: "Live Sets & Games Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "te-tiebreak-score", name: "Tie-Break Point Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "te-draw-schedule", name: "Draw Bracket & Match Schedule", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "te-court-id", name: "Court Name & Match Number Bug", icon: "🏟️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "te-match-stats", name: "Full Match Statistics (Aces / DFs / Points Won)", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "te-set-scores", name: "Set-by-Set Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "te-serve-stats", name: "Service Statistics Table (1st Serve % / Winners)", icon: "📈", subCat: "RESULTS & STANDINGS" },
-      { id: "te-tournament-bracket", name: "Tournament Draw Bracket", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "te-podium-medallists", name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "te-ace-bug", name: "Ace Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
-      { id: "te-hawkeye-bug", name: "Hawkeye Challenge Result Bug (IN/OUT)", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: "te-break-point", name: "Break Point / Match Point Bug", icon: "⚡", subCat: "RECORDS & BUGS" },
-      { id: "te-venue-bug", name: "Venue & Surface Type Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "BX" || name.includes("Boxing")) {
-    return [
-      // LOWER THIRDS
-      { id: "bx-lt-boxer", name: "Boxer ID (Red / Blue Corner)", icon: "🥊", subCat: "LOWER THIRDS" },
-      { id: "bx-lt-tale-tape", name: "Tale of the Tape (Height/Weight/Reach)", icon: "📊", subCat: "LOWER THIRDS" },
-      { id: "bx-lt-champion", name: "Olympic Champion / World Rank Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "bx-lt-corner", name: "Corner Coach & Seconds ID", icon: "👤", subCat: "LOWER THIRDS" },
-
-      // SCORES & MATCH
-      { id: "bx-scoreboard", name: "Bout Scoreboard Bug (Round 1/2/3)", icon: "🥊", subCat: "SCORES & MATCH" },
-      { id: "bx-round-banner", name: "Round Title Banner (Round 1 / 2 / 3)", icon: "🔔", subCat: "SCORES & MATCH" },
-      { id: "bx-bout-schedule", name: "Bout Schedule & Matchup List", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "bx-weight-title", name: "Weight Class Bug (Men's 69kg)", icon: "🏷️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "bx-judges-scores", name: "5-Judges Score Card (10-9, 10-9)", icon: "⭐", subCat: "RESULTS & STANDINGS" },
-      { id: "bx-decision-result", name: "Official Decision (Unanimous/KO)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "bx-tournament-bracket", name: "Tournament Bracket Tree", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "bx-podium-medallists", name: "Podium Medallists (Gold, Silver, Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "bx-punch-stats", name: "Punches Landed / Compubox Stats", icon: "📊", subCat: "RECORDS & BUGS" },
-      { id: "bx-warning-bug", name: "Referee Warning / Caution Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
-      { id: "bx-clock-bug", name: "3-Minute Round Clock Bug", icon: "⏱️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "JU" || name.includes("Judo")) {
-    return [
-      // LOWER THIRDS
-      { id: "ju-lt-judoka", name: "Judoka ID Lower Third (White / Blue Gi)", icon: "🥋", subCat: "LOWER THIRDS" },
-      { id: "ju-lt-world-rank", name: "World Ranking & Weight Category Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "ju-lt-champion", name: "Olympic Champion / World Champion Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "ju-lt-coach", name: "National Coach & Country Profile", icon: "👤", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "ju-match-timer", name: "4-Minute Contest Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ju-golden-score-timer", name: "Golden Score Extension Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "ju-hold-timer", name: "Osaekomi (Hold) Timer Bug (25s Ippon)", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "ju-scoreboard", name: "Contest Scoreboard (Ippon / Waza-ari / Shido)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "ju-bracket", name: "Contest Pool / Repechage Bracket Draw", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "ju-weight-category", name: "Weight Category & Round Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "ju-results", name: "Match Result & Winning Technique", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "ju-pool-results", name: "Pool Phase Results Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "ju-tournament-bracket", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "ju-podium-medallists", name: "Podium Medallists (Gold + 2x Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "ju-penalty-bug", name: "Shido Penalty Count Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
-      { id: "ju-video-review-bug", name: "Video Review / Hansoku-Make Bug", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: "ju-venue-bug", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "TK" || name.includes("Taekwondo")) {
-    return [
-      // LOWER THIRDS
-      { id: "tk-lt-fighter", name: "Fighter ID Lower Third (Red / Blue Trunk)", icon: "🥋", subCat: "LOWER THIRDS" },
-      { id: "tk-lt-world-rank", name: "World Ranking & Weight Class Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "tk-lt-champion", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "tk-lt-coach", name: "National Coach & Country Profile", icon: "👤", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "tk-round-timer", name: "2-Minute Round Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "tk-break-timer", name: "1-Minute Break Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "tk-video-review-timer", name: "Video Review Countdown Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "tk-scoreboard", name: "Contest Scoreboard (Head / Body / Kick Points)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "tk-bracket", name: "Weight Category Elimination Bracket", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "tk-weight-category", name: "Weight Class & Round Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "tk-results", name: "Final Point Gap / RSC Decision Result", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "tk-round-scores", name: "Round-by-Round Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "tk-tournament-bracket", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "tk-podium-medallists", name: "Podium Medallists (Gold + 2x Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "tk-gam-jeom", name: "Gam-jeom Penalty Deduction Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
-      { id: "tk-pss-bug", name: "PSS Electronic Chest Guard Bug", icon: "⚡", subCat: "RECORDS & BUGS" },
-      { id: "tk-venue-bug", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "WR" || name.includes("Wrestling")) {
-    return [
-      // LOWER THIRDS
-      { id: "wr-lt-wrestler", name: "Wrestler ID Lower Third (Red / Blue Singlet)", icon: "🤼", subCat: "LOWER THIRDS" },
-      { id: "wr-lt-world-rank", name: "World Ranking & Weight Class Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: "wr-lt-champion", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
-      { id: "wr-lt-style", name: "Discipline Style Card (Freestyle / Greco-Roman)", icon: "🏷️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: "wr-period-timer", name: "3-Minute Period Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "wr-passivity-timer", name: "30-Second Passivity Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: "wr-injury-timer", name: "Injury Timeout Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: "wr-scoreboard", name: "Period Scoreboard (Takedowns / Exposure / Penalty)", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: "wr-bracket", name: "Weight Category Elimination Bracket", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: "wr-weight-style", name: "Weight Class & Style Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: "wr-results", name: "Victory Method Result (Fall / TFS / Decision)", icon: "🏆", subCat: "RESULTS & STANDINGS" },
-      { id: "wr-period-scores", name: "Period-by-Period Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: "wr-tournament-bracket", name: "Full Bracket from Repechage to Final", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: "wr-podium-medallists", name: "Podium Medallists (Gold + 2x Bronze)", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: "wr-challenge", name: "Video Challenge Review Bug", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: "wr-caution-bug", name: "Caution / Warning Bug", icon: "⚠️", subCat: "RECORDS & BUGS" },
-      { id: "wr-venue-bug", name: "Venue & Weight Division Corner Bug", icon: "🏷️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "RO" || code === "CS" || name.includes("Rowing") || name.includes("Canoe")) {
-    const isCanoe = code === "CS" || name.includes("Canoe");
-    const sportPrefix = isCanoe ? "cs" : "ro";
-    const sportIcon = isCanoe ? "🛶" : "🚣";
-    return [
-      // LOWER THIRDS
-      { id: `${sportPrefix}-lt-athlete`, name: `${name} Athlete ID Lower Third`, icon: sportIcon, subCat: "LOWER THIRDS" },
-      { id: `${sportPrefix}-lt-crew`, name: `${name} Crew / Boat Class Profile`, icon: "👥", subCat: "LOWER THIRDS" },
-      { id: `${sportPrefix}-lt-world-record`, name: "World Record Holder Card", icon: "🌍", subCat: "LOWER THIRDS" },
-      { id: `${sportPrefix}-lt-champion`, name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: `${sportPrefix}-split-500m`, name: "500m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: `${sportPrefix}-split-1000m`, name: "1000m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: `${sportPrefix}-split-1500m`, name: "1500m Intermediate Split Time", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: `${sportPrefix}-split-rate`, name: "Stroke Rate Bug (strokes/min)", icon: "💧", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: `${sportPrefix}-start-list`, name: `${name} Heat Lane Draw & Start List`, icon: "📋", subCat: "SCORES & MATCH" },
-      { id: `${sportPrefix}-position-bug`, name: `${isCanoe ? '10' : '6'}-Boat Live Position Bug`, icon: "📊", subCat: "SCORES & MATCH" },
-      { id: `${sportPrefix}-heat-schedule`, name: "Heat / Repechage / Final Schedule", icon: "🗓️", subCat: "SCORES & MATCH" },
-      { id: `${sportPrefix}-boat-class`, name: "Boat Class & Event Title Bug", icon: "🏷️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: `${sportPrefix}-finish-order`, name: "Finish Order & Exact Times Table", icon: "🏁", subCat: "RESULTS & STANDINGS" },
-      { id: `${sportPrefix}-heat-results`, name: "Heat / Repechage Qualification Results", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: `${sportPrefix}-split-table`, name: "500m Split Comparison Table (All Crews)", icon: "📈", subCat: "RESULTS & STANDINGS" },
-      { id: `${sportPrefix}-podium-medallists`, name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: `${sportPrefix}-wr-line`, name: "World Record / Best Time Pace Line", icon: "🏁", subCat: "RECORDS & BUGS" },
-      { id: `${sportPrefix}-or-line`, name: "Olympic Record Pace Line", icon: "🥇", subCat: "RECORDS & BUGS" },
-      { id: `${sportPrefix}-distance-bug`, name: `Distance Remaining Bug (${isCanoe ? '500m' : '2000m'} Event)`, icon: "📏", subCat: "RECORDS & BUGS" },
-      { id: `${sportPrefix}-venue-bug`, name: "Venue & Boat Class Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  if (code === "VB" || code === "BV" || name.includes("Volleyball")) {
-    const isBeach = code === "BV" || name.includes("Beach");
-    const prefix = isBeach ? "bv" : "vb";
-    const icon = isBeach ? "🏖️" : "🏐";
-    return [
-      // LOWER THIRDS
-      { id: `${prefix}-lt-player`, name: `${name} Player ID Lower Third`, icon: icon, subCat: "LOWER THIRDS" },
-      { id: `${prefix}-lt-libero`, name: "Libero / Setter Specialist ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: `${prefix}-lt-coach`, name: "Head Coach & Country ID Card", icon: "👤", subCat: "LOWER THIRDS" },
-      { id: `${prefix}-lt-team`, name: "Team Profile & World Ranking Card", icon: "🏳️", subCat: "LOWER THIRDS" },
-
-      // SPLITS & TIMES
-      { id: `${prefix}-set-clock`, name: "Set Duration Clock Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-      { id: `${prefix}-timeout-bug`, name: "Technical Timeout Bug", icon: "⏸️", subCat: "SPLITS & TIMES" },
-      { id: `${prefix}-challenge-timer`, name: "Video Challenge Timer Bug", icon: "⏱️", subCat: "SPLITS & TIMES" },
-
-      // SCORES & MATCH
-      { id: `${prefix}-set-scoreboard`, name: "Sets & Points Live Scoreboard Bug", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: `${prefix}-rotation`, name: "Court Service Rotation Grid", icon: "📋", subCat: "SCORES & MATCH" },
-      { id: `${prefix}-lineup`, name: `${isBeach ? 'Pairs' : '6-Player'} Starting Lineup`, icon: "📋", subCat: "SCORES & MATCH" },
-      { id: `${prefix}-group-standings`, name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
-      { id: `${prefix}-matchup-preview`, name: "Pre-Match Team Preview Card", icon: "🗓️", subCat: "SCORES & MATCH" },
-
-      // RESULTS & STANDINGS
-      { id: `${prefix}-set-summary`, name: "Set-by-Set Score Summary Table", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: `${prefix}-player-stats`, name: "Player Stats (Attack / Block / Ace)", icon: "📈", subCat: "RESULTS & STANDINGS" },
-      { id: `${prefix}-team-stats`, name: "Team Statistical Comparison Chart", icon: "📊", subCat: "RESULTS & STANDINGS" },
-      { id: `${prefix}-tournament-bracket`, name: "Knockout Bracket Draw", icon: "🌿", subCat: "RESULTS & STANDINGS" },
-      { id: `${prefix}-podium-medallists`, name: "Podium Medallists & Country Tally", icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-      // RECORDS & BUGS
-      { id: `${prefix}-ace-bug`, name: "Service Ace Highlight Bug", icon: "⭐", subCat: "RECORDS & BUGS" },
-      { id: `${prefix}-challenge-bug`, name: "Video Challenge Review Bug (IN/OUT)", icon: "📺", subCat: "RECORDS & BUGS" },
-      { id: `${prefix}-venue-bug`, name: "Venue & Match Day Corner Bug", icon: "🏟️", subCat: "RECORDS & BUGS" }
-    ];
-  }
-
-  const c = code.toLowerCase();
+  if (name.includes("Swimming")) return SW_TEMPLATES;
+  if (name.includes("Athletics") || name.includes("Track")) return AT_TEMPLATES;
+  if (name.includes("Marathon")) return MA_TEMPLATES;
+  if (name.includes("Archery")) return AR_TEMPLATES;
+  if (name.includes("Badminton")) return BD_TEMPLATES;
+  if (name.includes("Basketball")) return BK_TEMPLATES;
+  if (name.includes("Beach Volleyball")) return BV_TEMPLATES;
+  if (name.includes("Boxing")) return BX_TEMPLATES;
+  if (name.includes("Canoe Slalom") || name.includes("Slalom")) return CS_TEMPLATES;
+  if (name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) return CF_TEMPLATES;
+  if (name.includes("Cycling Track") || name.includes("Track Cycling")) return CT_TEMPLATES;
+  if (name.includes("Cycling Road") || name.includes("Road Cycling")) return CR_TEMPLATES;
+  if (name.includes("Mountain Bike")) return CM_TEMPLATES;
+  if (name.includes("BMX")) return CB_TEMPLATES;
+  if (name.includes("Cycling")) return CT_TEMPLATES;
+  if (name.includes("Equestrian")) return EQ_TEMPLATES;
+  if (name.includes("Fencing")) return FE_TEMPLATES;
+  if (name.includes("Football")) return FB_TEMPLATES;
+  if (name.includes("Artistic Gymnastics") || name.includes("Gymnastics")) return GA_TEMPLATES;
+  if (name.includes("Rhythmic")) return GR_TEMPLATES;
+  if (name.includes("Trampoline")) return GT_TEMPLATES;
+  if (name.includes("Handball")) return HB_TEMPLATES;
+  if (name.includes("Hockey") || name.includes("Field Hockey")) return HO_TEMPLATES;
+  if (name.includes("Judo")) return JU_TEMPLATES;
+  if (name.includes("Pentathlon")) return MP_TEMPLATES;
+  if (name.includes("Rowing")) return RO_TEMPLATES;
+  if (name.includes("Sailing")) return SA_TEMPLATES;
+  if (name.includes("Shooting")) return SH_TEMPLATES;
+  if (name.includes("Table Tennis")) return TT_TEMPLATES;
+  if (name.includes("Taekwondo")) return TK_TEMPLATES;
+  if (name.includes("Tennis")) return TE_TEMPLATES;
+  if (name.includes("Triathlon")) return TR_TEMPLATES;
+  if (name.includes("Volleyball")) return VO_TEMPLATES;
+  if (name.includes("Weightlifting")) return WL_TEMPLATES;
+  if (name.includes("Wrestling")) return WR_TEMPLATES;
+  if (name.includes("Diving")) return DV_TEMPLATES;
+  if (name.includes("Water Polo")) return WP_TEMPLATES;
+  if (name.includes("Synchronised") || name.includes("Synchronized")) return SY_TEMPLATES;
+
+  // Generic fallback — build numbered templates dynamically
+  const c = code.toUpperCase() || "XX";
   return [
-    // LOWER THIRDS
-    { id: `${c}-lt-athlete`, name: `${sport.name} Athlete ID Lower Third`, icon: "👤", subCat: "LOWER THIRDS" },
-    { id: `${c}-lt-team`, name: `${sport.name} Team & Country Profile`, icon: "🏳️", subCat: "LOWER THIRDS" },
-    { id: `${c}-lt-champion`, name: `${sport.name} Olympic Champion Card`, icon: "🥇", subCat: "LOWER THIRDS" },
-    
-    // SPLITS & TIMES
-    { id: `${c}-splits`, name: `${sport.name} Intermediate Split Times`, icon: "⏱️", subCat: "SPLITS & TIMES" },
-    { id: `${c}-reaction`, name: `${sport.name} Reaction / Sector Time Bug`, icon: "⚡", subCat: "SPLITS & TIMES" },
-    
-    // SCORES & MATCH
-    { id: `${c}-scoreboard`, name: `${sport.name} Live Match Scoreboard Bug`, icon: "📊", subCat: "SCORES & MATCH" },
-    { id: `${c}-start-list`, name: `${sport.name} Heat / Lane Lineup Draw`, icon: "📋", subCat: "SCORES & MATCH" },
-    { id: `${c}-match-schedule`, name: `${sport.name} Daily Schedule & Matchups`, icon: "🗓️", subCat: "SCORES & MATCH" },
-
-    // RESULTS & STANDINGS
-    { id: `${c}-results`, name: `${sport.name} Final Results & Standings Table`, icon: "🏆", subCat: "RESULTS & STANDINGS" },
-    { id: `${c}-bracket`, name: `${sport.name} Tournament Bracket Tree`, icon: "🌿", subCat: "RESULTS & STANDINGS" },
-    { id: `${c}-podium`, name: `${sport.name} Medal Ceremony & Country Tally`, icon: "🥇", subCat: "RESULTS & STANDINGS" },
-
-    // RECORDS & BUGS
-    { id: `${c}-wr-line`, name: `${sport.name} World Record Pace Line`, icon: "🏁", subCat: "RECORDS & BUGS" },
-    { id: `${c}-event-bug`, name: `${sport.name} Venue & Title Corner Bug`, icon: "🏷️", subCat: "RECORDS & BUGS" },
-    { id: `${c}-penalty-bug`, name: `${sport.name} Penalty / Caution Status Bug`, icon: "⚠️", subCat: "RECORDS & BUGS" }
+    { id: `${c}001`, name: `${sport.name} Athlete ID Lower Third`, icon: "👤", subCat: "LOWER THIRDS" },
+    { id: `${c}002`, name: `${sport.name} Olympic Champion Card`, icon: "🥇", subCat: "LOWER THIRDS" },
+    { id: `${c}003`, name: `${sport.name} Intermediate Split / Score Bug`, icon: "⏱️", subCat: "SPLITS & TIMES" },
+    { id: `${c}004`, name: `${sport.name} Live Scoreboard Bug`, icon: "📊", subCat: "SCORES & MATCH" },
+    { id: `${c}005`, name: `${sport.name} Heat / Start List Draw`, icon: "📋", subCat: "SCORES & MATCH" },
+    { id: `${c}006`, name: `${sport.name} Final Results & Standings Table`, icon: "🏆", subCat: "RESULTS & STANDINGS" },
+    { id: `${c}007`, name: `${sport.name} Tournament Bracket Tree`, icon: "🌿", subCat: "RESULTS & STANDINGS" },
+    { id: `${c}008`, name: `${sport.name} Podium Medallists & Country Tally`, icon: "🥇", subCat: "RESULTS & STANDINGS" },
+    { id: `${c}009`, name: `${sport.name} World Record Pace Line`, icon: "🏁", subCat: "RECORDS & BUGS" },
+    { id: `${c}010`, name: `${sport.name} Venue & Event Title Corner Bug`, icon: "🏷️", subCat: "RECORDS & BUGS" },
   ];
 }
+
