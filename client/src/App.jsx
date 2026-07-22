@@ -31,15 +31,12 @@ import TimeLine1 from "./TimeLine1.jsx";
 import PathModifier from "./PathModifier.jsx";
 import OnelinerAndBreakingNews from "./OnelinerAndBreakingNews.jsx";
 import Effects from "./Effects.jsx";
-// import JsonReader from "./JsonReader.jsx";
-
-// import UdpClock from './UdpClock';
 
 import ColorGradient2 from "./ColorGradient2.jsx";
 
-// import Threejs from "./Threejs.jsx";
 import Crop from "./Crop";
 import AIPanel from "./AIPannel/AIPannel.jsx";
+import GamesAIPanel from "./GamesAIPanel/GamesAIPanel.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
 import HtmlOutput from "./HtmlOutput.jsx";
@@ -503,7 +500,7 @@ const App = () => {
               <Tab className="tabHidden">Charts</Tab>
               <Tab className="tabHidden">Path Modifier</Tab>
               <Tab className="tabHidden">Effects</Tab>
-              <Tab className="tabHidden">test</Tab>
+              <Tab>Games AI</Tab>
               {/* <Tab >Udp Clock</Tab> */}
               <Tab>Crop</Tab>
               <Tab className="tabHidden">AI Panel</Tab>
@@ -601,7 +598,7 @@ const App = () => {
               <Effects />
             </TabPanel>
             <TabPanel>
-              test
+              <GamesAIPanel />
             </TabPanel>
             <TabPanel>
               <Crop />
