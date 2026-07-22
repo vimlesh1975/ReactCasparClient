@@ -1276,11 +1276,13 @@ const WebAnimator = () => {
       canvas.loadFromJSON(jsonContent).then((object) => {
         setclipPathWhileImportingWebAnimator(canvas);
         canvas.getObjects().forEach((element, i) => {
-          if (element.fill === null) {
-            element.set({ fill: "#555252" });
-          }
-          if (element.stroke === null) {
-            element.set({ stroke: "#000000" });
+          if (element.type !== "group" && element.type !== "Group") {
+            if (element.fill === null) {
+              element.set({ fill: "#555252" });
+            }
+            if (element.stroke === null) {
+              element.set({ stroke: "#000000" });
+            }
           }
           var obj1 = {};
           var isColorObjectfill;
@@ -2924,7 +2926,7 @@ const WebAnimator = () => {
 
   const setOnValueChange = (element, i) => {
     onChange(sheet.sequence.pointer.position, (position) => {
-      if (element.type === "group") {
+      if (element.id === "imgSeqGroup1") {
         element.getObjects().forEach((image, index) => {
           image.set({ opacity: index === parseInt(position * FPS) ? 1 : 0 });
         });
@@ -2933,55 +2935,70 @@ const WebAnimator = () => {
     });
 
     arrObject[i].onValuesChange((val) => {
-      var obj2 = {};
-
-      if (element.fill && element.fill.type === "linear") {
-        obj2 = {
-          ...obj2,
-          fill: new fabric.Gradient({
-            type: element.fill.type,
-            gradientUnits: element.fill.gradientUnits,
-            coords: {
-              x1: val.coords.x1,
-              y1: val.coords.y1,
-              x2: val.coords.x2,
-              y2: val.coords.y2,
-            },
-            colorStops: Array.from({
-              length: element.fill.colorStops.length,
-            }).map((_, i) => {
-              return {
-                offset: val[i].offset,
-                color: rgbaObjectToHex(val[i].color),
-                opacity: val[i].opacity,
-              };
-            }),
-            id: element.fill.id,
-          }),
-        };
+      const isGroup = element.type === "group" || element.type === "Group";
+      if (isGroup) {
+        element.set({
+          left: val.left,
+          top: val.top,
+          opacity: val.opacity,
+          scaleX: val.scaleX,
+          scaleY: val.scaleY,
+          angle: val.angle,
+          skewX: val.skewX,
+          skewY: val.skewY,
+        });
       } else {
-        obj2 = { fill: val.fill };
+        var obj2 = {};
+
+        if (element.fill && element.fill.type === "linear") {
+          obj2 = {
+            ...obj2,
+            fill: new fabric.Gradient({
+              type: element.fill.type,
+              gradientUnits: element.fill.gradientUnits,
+              coords: {
+                x1: val.coords.x1,
+                y1: val.coords.y1,
+                x2: val.coords.x2,
+                y2: val.coords.y2,
+              },
+              colorStops: Array.from({
+                length: element.fill.colorStops.length,
+              }).map((_, i) => {
+                return {
+                  offset: val[i].offset,
+                  color: rgbaObjectToHex(val[i].color),
+                  opacity: val[i].opacity,
+                };
+              }),
+              id: element.fill.id,
+            }),
+          };
+        } else {
+          obj2 = { fill: val.fill };
+        }
+
+        element.set({
+          left: val.left,
+          top: val.top,
+          opacity: val.opacity,
+          scaleX: val.scaleX,
+          scaleY: val.scaleY,
+          angle: val.angle,
+          rx: val.rx,
+          ry: val.ry,
+          strokeWidth: val.strokeWidth,
+          fontSize: val.fontSize,
+          strokeDashArray: [val.strkdsar, val.strkdsar],
+          strokeDashOffset: val.strkDsOfst,
+          shadow: val.shadow,
+          ...obj2,
+          stroke: val.stroke,
+          skewX: val.skewX,
+          skewY: val.skewY,
+        });
       }
 
-      element.set({
-        left: val.left,
-        top: val.top,
-        opacity: val.opacity,
-        scaleX: val.scaleX,
-        scaleY: val.scaleY,
-        angle: val.angle,
-        rx: val.rx,
-        ry: val.ry,
-        strokeWidth: val.strokeWidth,
-        fontSize: val.fontSize,
-        strokeDashArray: [val.strkdsar, val.strkdsar],
-        strokeDashOffset: val.strkDsOfst,
-        shadow: val.shadow,
-        ...obj2,
-        stroke: val.stroke,
-        skewX: val.skewX,
-        skewY: val.skewY,
-      });
       if (element.type === "path") {
         const newPath = [...element.path];
         newPath.forEach((_, i) => {
@@ -3041,25 +3058,28 @@ const WebAnimator = () => {
 
     setIdofElement(generateUniqueId({ type: "id" }));
 
-    if (element.fill === null) {
-      element.set({ fill: "#555252" });
-    }
-
-    if (element.stroke === null) {
-      element.set({ stroke: "#000000" });
-    }
+    const isGroup = element.type === "group" || element.type === "Group";
 
     var obj1 = {};
-    var isColorObjectfill;
-    var isColorObjectStroke;
+    if (!isGroup) {
+      if (element.fill === null || element.fill === undefined) {
+        element.set({ fill: "#555252" });
+      }
 
-    if (4 !== 5) {
-      isColorObjectfill = element.fill.type !== "linear";
-      isColorObjectStroke = element.stroke.type !== "linear";
+      if (element.stroke === null || element.stroke === undefined) {
+        element.set({ stroke: "#000000" });
+      }
 
-      if (element.fill.type === "pattern") {
+      if (!element.shadow) {
+        element.set({ shadow: { color: "#000000", blur: 0, offsetX: 0, offsetY: 0, affectStroke: false } });
+      }
+
+      var isColorObjectfill = element.fill ? element.fill.type !== "linear" : true;
+      var isColorObjectStroke = element.stroke ? element.stroke.type !== "linear" : true;
+
+      if (element.fill && element.fill.type === "pattern") {
         // do nothing
-      } else if (isColorObjectfill) {
+      } else if (isColorObjectfill && element.fill) {
         obj1 = {
           ...obj1,
           fill:
@@ -3072,34 +3092,8 @@ const WebAnimator = () => {
               ? types.rgba(element.fill)
               : types.rgba(rgbaArrayToObject(element.fill)),
         };
-      } else {
-        const colorStops = element.fill.colorStops.map((colorStop) => {
-          return {
-            offset: types.number(parseFloat(colorStop.offset), {
-              range: [0, 1],
-            }),
-            color: colorStop.color.toString().startsWith("rgb")
-              ? types.rgba(rgbaArrayToObject(colorStop.color))
-              : types.rgba(hexToRGB(colorStop.color)),
-            opacity: types.number(
-              colorStop.opacity ? parseFloat(colorStop.opacity) : 1,
-              { range: [0, 1] }
-            ),
-          };
-        });
-        obj1 = {
-          ...obj1,
-          ...colorStops,
-          coords: {
-            x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
-            y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
-            x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
-            y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
-          },
-        };
       }
-
-      if (isColorObjectStroke) {
+      if (isColorObjectStroke && element.stroke) {
         obj1 = {
           ...obj1,
           stroke:
@@ -3113,118 +3107,69 @@ const WebAnimator = () => {
               : types.rgba(rgbaArrayToObject(element.stroke)),
         };
       }
-      obj1 = {
-        ...obj1,
-        shadow: {
-          ...element.shadow,
-          color:
-            typeof element.shadow.color === "object" &&
-              element.shadow.color !== null &&
-              "r" in element.shadow.color &&
-              "g" in element.shadow.color &&
-              "b" in element.shadow.color &&
-              "a" in element.shadow.color
-              ? types.rgba(element.shadow.color)
-              : types.rgba(rgbaArrayToObject(element.shadow.color)),
-        },
-      };
-    } else {
-      if (!element.shadow?.color.toString().startsWith("#")) {
-        element.set({ shadow: { ...element.shadow, color: "#000000" } });
-      }
-      isColorObjectfill = typeof element.fill !== "object";
-      isColorObjectStroke = typeof element.stroke !== "object";
-      if (isColorObjectfill) {
+      if (element.shadow) {
         obj1 = {
           ...obj1,
-          fill: types.rgba(hexToRGB(element.fill ? element.fill : "#ff0000")),
-        };
-      } else if (element.fill.type === "pattern") {
-      } else {
-        const colorStops = element.fill.colorStops.map((colorStop) => {
-          return {
-            offset: types.number(parseFloat(colorStop.offset), {
-              range: [0, 1],
-            }),
-            color: colorStop.color.toString().startsWith("rgb")
-              ? types.rgba(rgbaArrayToObject(colorStop.color))
-              : types.rgba(hexToRGB(colorStop.color)),
-            opacity: types.number(
-              parseFloat(
-                colorStop.opacity === undefined ? 1 : colorStop.opacity
-              ),
-              { range: [0, 1] }
-            ),
-          };
-        });
-        obj1 = {
-          ...obj1,
-          ...colorStops,
-          coords: {
-            x1: types.number(element.fill.coords.x1, { range: [0, 1] }),
-            y1: types.number(element.fill.coords.y1, { range: [0, 1] }),
-            x2: types.number(element.fill.coords.x2, { range: [0, 1] }),
-            y2: types.number(element.fill.coords.y2, { range: [0, 1] }),
+          shadow: {
+            ...element.shadow,
+            color:
+              typeof element.shadow.color === "object" &&
+                element.shadow.color !== null &&
+                "r" in element.shadow.color &&
+                "g" in element.shadow.color &&
+                "b" in element.shadow.color &&
+                "a" in element.shadow.color
+                ? types.rgba(element.shadow.color)
+                : types.rgba(rgbaArrayToObject(element.shadow.color)),
           },
         };
       }
-
-      if (isColorObjectStroke) {
-        obj1 = {
-          ...obj1,
-          stroke: types.rgba(
-            hexToRGB(element.stroke ? element.stroke : "#000000")
-          ),
-        };
-      }
-      obj1 = {
-        ...obj1,
-        shadow: {
-          ...shadowOptions,
-          color: types.rgba(hexToRGB(element.shadow.color)),
-          blur: types.number(parseInt(element.shadow.blur), {
-            range: [0, 100],
-          }),
-        },
-      };
-    }
-
-    if (element.type === "path") {
-      const pathProps = getModifiedObject(element);
-      obj1 = { ...obj1, ...pathProps };
     }
 
     const i = arrObject.length;
-    arrObjectProps[i] = {
-      left: element.left,
-      top: element.top,
-      scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
-      scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
-      opacity: types.number(element.opacity, { range: [0, 1] }),
-      angle: element.angle,
-      rx: types.number(element.rx ? parseInt(element.rx) : 10, {
-        range: [-360, 360],
-      }),
-      ry: types.number(element.ry ? parseInt(element.rx) : 10, {
-        range: [-360, 360],
-      }),
-      fontSize: types.number(
-        element.fontSize ? parseInt(element.fontSize) : 30,
-        { range: [0, 100] }
-      ),
-      strkdsar: types.number(
-        element.strokeDashArray ? parseInt(element.strokeDashArray) : 0,
-        { range: [0, 1000] }
-      ),
-      strkDsOfst: types.number(
-        element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0,
-        { range: [-1000, 1000] }
-      ),
-      ...obj1,
-      strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
-      skewX: types.number(element.skewX, { range: [-88, 88] }),
-      skewY: types.number(element.skewY, { range: [-60, 60] }),
-    };
+    if (isGroup) {
+      arrObjectProps[i] = {
+        left: element.left,
+        top: element.top,
+        scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+        scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+        opacity: types.number(element.opacity, { range: [0, 1] }),
+        angle: element.angle,
+        skewX: types.number(element.skewX || 0, { range: [-88, 88] }),
+        skewY: types.number(element.skewY || 0, { range: [-60, 60] }),
+      };
+    } else {
+      arrObjectProps[i] = {
+        left: element.left,
+        top: element.top,
+        scaleX: types.number(element.scaleX, { nudgeMultiplier: 0.01 }),
+        scaleY: types.number(element.scaleY, { nudgeMultiplier: 0.01 }),
+        opacity: types.number(element.opacity, { range: [0, 1] }),
+        angle: element.angle,
+        rx: types.number(element.rx ? parseInt(element.rx) : 10, {
+          range: [-360, 360],
+        }),
+        ry: types.number(element.ry ? parseInt(element.rx) : 10, {
+          range: [-360, 360],
+        }),
+        fontSize: types.number(
+          element.fontSize ? parseInt(element.fontSize) : 30,
+          { range: [0, 100] }
+        ),
+        strkdsar: types.number(
+          element.strokeDashArray ? parseInt(element.strokeDashArray) : 0,
+          { range: [0, 1000] }
+        ),
+        strkDsOfst: types.number(
+          element.strokeDashOffset ? parseInt(element.strokeDashOffset) : 0,
+          { range: [-1000, 1000] }
+        ),
+        ...obj1,
+        strokeWidth: types.number(element.strokeWidth, { range: [0, 100] }),
+        skewX: types.number(element.skewX || 0, { range: [-88, 88] }),
+        skewY: types.number(element.skewY || 0, { range: [-60, 60] }),
+      };
+    }
     arrObject[i] = sheet.object(element.id, arrObjectProps[i]);
     setOnValueChange(element, i);
   };

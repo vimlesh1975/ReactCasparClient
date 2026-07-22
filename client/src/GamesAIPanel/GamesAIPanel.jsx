@@ -5,7 +5,7 @@ import { generateBroadcastHTML, createFabricGraphicGroup } from './TemplateGener
 import { FaPlus, FaMagic } from 'react-icons/fa';
 import './GamesAIPanel.css';
 
-const GamesAIPanel = () => {
+const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   const canvas = useSelector((state) => state.canvasReducer.canvas);
 
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
@@ -260,6 +260,10 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
     canvas.add(group);
     canvas.setActiveObject(group);
     canvas.requestRenderAll();
+
+    if (generateTheatreID) {
+      generateTheatreID(group.id, group);
+    }
   };
 
   const categories = ['ALL', 'Aquatics', 'Athletics', 'Ball Sports', 'Combat', 'Cycling', 'Gymnastics', 'Water', 'Precision', 'Multi-Sport'];
