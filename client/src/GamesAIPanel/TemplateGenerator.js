@@ -954,6 +954,39 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   };
 
   switch (category) {
+    case 'venue-id': {
+      const venueName = (data.venue || sport.venue || "OLYMPIC STADIUM").toUpperCase();
+      const locationName = (data.location || "LONDON, UNITED KINGDOM").toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 840, width: 640, height: 65, fill: primaryColor, rx: 6, ry: 6
+      }));
+      const accentBorder = new fabric.Rect(createProps('rect', {
+        left: 120, top: 840, width: 8, height: 110, fill: accentColor
+      }));
+      const iconText = new fabric.Textbox("🏟️", createProps('textbox', {
+        left: 140, top: 852, fontSize: 30, fill: accentColor, width: 50
+      }));
+      const titleText = new fabric.Textbox(venueName, createProps('textbox', {
+        left: 195, top: 854, fontSize: 28, fontWeight: 'bold', fill: '#ffffff', width: 540
+      }));
+
+      const subBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 905, width: 640, height: 45, fill: '#0f172a', rx: 4, ry: 4
+      }));
+      const subText = new fabric.Textbox(`📍 ${locationName}  •  ${sportTitle}`, createProps('textbox', {
+        left: 140, top: 917, fontSize: 16, fontWeight: 'bold', fill: '#cbd5e1', width: 520
+      }));
+      const codePill = new fabric.Rect(createProps('rect', {
+        left: 690, top: 914, width: 50, height: 26, fill: accentColor, rx: 4, ry: 4
+      }));
+      const codeText = new fabric.Textbox(code, createProps('textbox', {
+        left: 690, top: 919, fontSize: 13, fontWeight: 'bold', fill: '#000000', width: 50, textAlign: 'center'
+      }));
+
+      objects.push(mainBar, subBar, accentBorder, iconText, titleText, subText, codePill, codeText);
+      break;
+    }
     case 'event-schedule': {
       const cardBg = new fabric.Rect(createProps('rect', {
         left: 90, top: 140, width: 720, height: 320, fill: '#0f172a', rx: 12, ry: 12

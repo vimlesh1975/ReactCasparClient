@@ -73,7 +73,11 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   // When sport changes, update fields, default colors & sport-specific templates
   useEffect(() => {
     if (selectedSport) {
-      setCustomFields({ ...selectedSport.dataFields });
+      setCustomFields({
+        venue: selectedSport.venue || "Olympic Stadium",
+        location: "London, UK",
+        ...selectedSport.dataFields
+      });
       setCustomColors({
         primaryColor: selectedSport.primaryColor,
         secondaryColor: selectedSport.secondaryColor,
