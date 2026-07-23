@@ -51,9 +51,22 @@ export function resolveCategory(templateType, templateName = '') {
   const normName = (templateName || "").toLowerCase();
   const combined = `${normType} ${normName}`;
 
-  if (combined.includes("clock") || combined.includes("timer")) return "race-clock";
-  if (combined.includes("presenter")) return "medal-presenter";
+  if (combined.includes("sw024") || (combined.includes("clock") && combined.includes("at finish"))) return "clock-at-finish";
+  if (combined.includes("sw023") || (combined.includes("clock") && combined.includes("before finish"))) return "clock-before-finish";
+  if (combined.includes("sw022") || (combined.includes("clock") && combined.includes("at split"))) return "clock-at-split";
+  if (combined.includes("sw021") || (combined.includes("clock") && combined.includes("before split"))) return "clock-before-split";
+  if (combined.includes("clock") || combined.includes("timer") || combined.includes("sw020")) return "race-clock";
+  if (combined.includes("presenter") || combined.includes("sw018") || combined.includes("sw019")) return "medal-presenter";
   if (combined.includes("non-competition") || combined.includes("area") || combined.includes("warm up") || combined.includes("warm-up")) return "non-comp-area";
+  if (combined.includes("ceremony id") || combined.includes("ceremony") || combined.includes("sw015")) return "ceremony-id";
+  if (combined.includes("medal id") || combined.includes("medal-id") || combined.includes("sw016")) return "medal-id-single";
+  if (combined.includes("lane indicator") || combined.includes("lane-indicator") || combined.includes("sw009")) return "lane-indicator";
+  if (combined.includes("winner") || combined.includes("place id") || combined.includes("sw011")) return "winner-place-id";
+  if (combined.includes("advance") || combined.includes("sw013")) return "advance-all-to-phase";
+  if (combined.includes("result") || combined.includes("sw012")) return "event-results-full";
+  if (combined.includes("team list") || combined.includes("sw007") || (combined.includes("team") && combined.includes("lane"))) return "team-list-by-lane";
+  if (combined.includes("lane id") || combined.includes("lane-id") || combined.includes("sw006") || (combined.includes("lane") && !combined.includes("team"))) return "lane-id";
+  if (combined.includes("records") || combined.includes("sw008")) return "event-records";
   if (combined.includes("medal") || combined.includes("medals") || combined.includes("podium")) return "medal-tally";
   if (combined.includes("position")) return "position-on-screen";
   if (combined.includes("venue") || combined.includes("location")) return "venue-id";
@@ -988,14 +1001,1808 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="clock-bug">
             ${hasDelta ? `<div class="delta-box">${deltaTime}</div>` : ''}
             <div class="clock-time-box">${clockTime}</div>
-            <div class="clock-badge-box">
-              <span style="color:${accentColor};">${code}</span>
+            <div class="clock-badge-box" style="background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%); padding: 8px 18px; border: 1px solid #001f3f;">
+              <svg width="60" height="28" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
             </div>
           </div>
         </body>
         </html>
       `;
     }
+    case "clock-at-finish": {
+      const wrTime = data.wrTime || "3:40.08";
+      const orTime = data.orTime || "3:40.59";
+      const clockStr = data.time || "3:41.60";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .left-record-stack {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              animation: slideInLeft 0.4s ease-out;
+            }
+            @keyframes slideInLeft { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .record-row-bar {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              height: 42px;
+              width: 240px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              padding: 0 16px;
+            }
+            .wr-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+            }
+            .or-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+            }
+            .target-val {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+
+            .right-clock-group {
+              position: absolute;
+              bottom: 90px;
+              right: 90px;
+              display: flex;
+              align-items: center;
+              border-radius: 6px;
+              overflow: hidden;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              animation: slideInRight 0.4s ease-out;
+            }
+            @keyframes slideInRight { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .time-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              color: #002850;
+              padding: 8px 30px;
+              font-size: 34px;
+              font-weight: 900;
+              font-style: italic;
+              transform: skewX(-15deg);
+              z-index: 2;
+              border: 2px solid #001f3f;
+              border-right: none;
+              min-width: 170px;
+              text-align: center;
+            }
+            .rings-bar {
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              padding: 8px 20px 8px 28px;
+              transform: skewX(-15deg);
+              margin-left: -12px;
+              z-index: 1;
+              border: 2px solid #001f3f;
+              display: flex;
+              align-items: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="left-record-stack">
+            <div class="record-row-bar">
+              <span class="wr-badge">WR</span>
+              <span class="target-val">${wrTime}</span>
+            </div>
+            <div class="record-row-bar">
+              <span class="or-badge">OR</span>
+              <span class="target-val">${orTime}</span>
+            </div>
+          </div>
+
+          <div class="right-clock-group">
+            <div class="time-pill"><span style="transform: skewX(15deg); display: inline-block;">${clockStr}</span></div>
+            <div class="rings-bar">
+              <svg width="60" height="28" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="transform: skewX(15deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "clock-before-finish": {
+      const wrTime = data.wrTime || "47.24";
+      const orTime = data.orTime || "47.27";
+      const clockStr = data.time || "47.1";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .left-record-stack {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              animation: slideInLeft 0.4s ease-out;
+            }
+            @keyframes slideInLeft { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .record-row-bar {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              height: 42px;
+              width: 220px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              padding: 0 16px;
+            }
+            .wr-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+            }
+            .or-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+            }
+            .target-val {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+
+            .right-clock-group {
+              position: absolute;
+              bottom: 90px;
+              right: 90px;
+              display: flex;
+              align-items: center;
+              border-radius: 6px;
+              overflow: hidden;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              animation: slideInRight 0.4s ease-out;
+            }
+            @keyframes slideInRight { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .time-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              color: #002850;
+              padding: 8px 30px;
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              transform: skewX(-15deg);
+              z-index: 2;
+              border: 2px solid #001f3f;
+              border-right: none;
+              min-width: 140px;
+              text-align: center;
+            }
+            .rings-bar {
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              padding: 8px 20px 8px 28px;
+              transform: skewX(-15deg);
+              margin-left: -12px;
+              z-index: 1;
+              border: 2px solid #001f3f;
+              display: flex;
+              align-items: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="left-record-stack">
+            <div class="record-row-bar">
+              <span class="wr-badge">WR</span>
+              <span class="target-val">${wrTime}</span>
+            </div>
+            <div class="record-row-bar">
+              <span class="or-badge">OR</span>
+              <span class="target-val">${orTime}</span>
+            </div>
+          </div>
+
+          <div class="right-clock-group">
+            <div class="time-pill"><span style="transform: skewX(15deg); display: inline-block;">${clockStr}</span></div>
+            <div class="rings-bar">
+              <svg width="60" height="28" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="transform: skewX(15deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "clock-at-split": {
+      const laneNum = String(data.lane || "4");
+      const countryCode = (data.country || "AUS").toUpperCase();
+      const flagStr = data.flag || "🇦🇺";
+      const swimmerName = (data.athlete || data.swimmer || "SULLIVAN").toUpperCase();
+      const splitRecord = data.splitRecord || "22.48";
+      const deltaStr = data.delta || "-0.01";
+      const lapStr = data.lap || data.distance || "50M";
+      const clockStr = data.time || "22.47";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .top-swimmer-bug {
+              position: absolute;
+              top: 70px;
+              left: 90px;
+              display: flex;
+              align-items: center;
+              height: 42px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              padding: 0 20px;
+              animation: slideInTop 0.4s ease-out;
+            }
+            @keyframes slideInTop { from { transform: skewX(-15deg) translateY(-30px); opacity: 0; } to { transform: skewX(-15deg) translateY(0); opacity: 1; } }
+            .lane-num {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 12px;
+            }
+            .noc-code {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 10px;
+            }
+            .flag-box {
+              transform: skewX(15deg);
+              font-size: 22px;
+              margin-right: 16px;
+              color: #ffffff;
+            }
+            .swimmer-name {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+
+            .bottom-split-delta {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              display: flex;
+              align-items: center;
+              border-radius: 6px;
+              overflow: hidden;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              animation: slideInLeft 0.4s ease-out;
+            }
+            @keyframes slideInLeft { from { transform: translateX(-60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .split-main-bar {
+              display: flex;
+              align-items: center;
+              height: 48px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              transform: skewX(-15deg);
+              padding: 0 18px;
+              z-index: 2;
+            }
+            .wr-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+              margin-right: 12px;
+            }
+            .split-label {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 24px;
+            }
+            .split-time {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+            }
+            .delta-pill {
+              background: linear-gradient(135deg, ${deltaStr.startsWith('+') ? '#dc2626 0%, #991b1b 100%' : '#059669 0%, #047857 100%'});
+              color: #ffffff;
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 8px 24px;
+              transform: skewX(-15deg);
+              margin-left: -12px;
+              z-index: 1;
+              border: 2px solid ${deltaStr.startsWith('+') ? '#991b1b' : '#047857'};
+            }
+            .delta-txt { transform: skewX(15deg); display: inline-block; }
+
+            .right-clock-group {
+              position: absolute;
+              bottom: 90px;
+              right: 90px;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 3px;
+              animation: slideInRight 0.4s ease-out;
+            }
+            @keyframes slideInRight { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .top-lap-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 20px;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              letter-spacing: 1px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .lap-txt { transform: skewX(15deg); }
+            .clock-bottom-row {
+              display: flex;
+              align-items: center;
+              border-radius: 6px;
+              overflow: hidden;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+            .time-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              color: #002850;
+              padding: 8px 30px;
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              transform: skewX(-15deg);
+              z-index: 2;
+              border: 2px solid #001f3f;
+              border-right: none;
+              min-width: 140px;
+              text-align: center;
+            }
+            .rings-bar {
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              padding: 8px 20px 8px 28px;
+              transform: skewX(-15deg);
+              margin-left: -12px;
+              z-index: 1;
+              border: 2px solid #001f3f;
+              display: flex;
+              align-items: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="top-swimmer-bug">
+            <span class="lane-num">${laneNum}</span>
+            <span class="noc-code">${countryCode}</span>
+            <span class="flag-box">${flagStr}</span>
+            <span class="swimmer-name">${swimmerName}</span>
+          </div>
+
+          <div class="bottom-split-delta">
+            <div class="split-main-bar">
+              <span class="wr-badge">WR</span>
+              <span class="split-label">SPLIT</span>
+              <span class="split-time">${splitRecord}</span>
+            </div>
+            <div class="delta-pill"><span class="delta-txt">${deltaStr}</span></div>
+          </div>
+
+          <div class="right-clock-group">
+            <div class="top-lap-pill"><span class="lap-txt">${lapStr}</span></div>
+            <div class="clock-bottom-row">
+              <div class="time-pill"><span style="transform: skewX(15deg); display: inline-block;">${clockStr}</span></div>
+              <div class="rings-bar">
+                <svg width="60" height="28" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="transform: skewX(15deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "clock-before-split": {
+      const targetTime = data.targetTime || data.splitTime || "22.44";
+      const lapStr = data.lap || data.distance || "50M";
+      const clockStr = data.time || "19.4";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .left-split-target {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              display: flex;
+              align-items: center;
+              height: 48px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+              padding: 0 18px;
+              animation: slideInLeft 0.4s ease-out;
+            }
+            @keyframes slideInLeft { from { transform: skewX(-15deg) translateX(-60px); opacity: 0; } to { transform: skewX(-15deg) translateX(0); opacity: 1; } }
+            .wr-badge {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 10px;
+              border-radius: 10px;
+              margin-right: 12px;
+            }
+            .split-label {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 24px;
+              letter-spacing: 1px;
+            }
+            .target-time {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+
+            .right-clock-group {
+              position: absolute;
+              bottom: 90px;
+              right: 90px;
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 3px;
+              animation: slideInRight 0.4s ease-out;
+            }
+            @keyframes slideInRight { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .top-lap-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 20px;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              letter-spacing: 1px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .lap-txt { transform: skewX(15deg); }
+            .clock-bottom-row {
+              display: flex;
+              align-items: center;
+              border-radius: 6px;
+              overflow: hidden;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            }
+            .time-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              color: #002850;
+              padding: 8px 30px;
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              transform: skewX(-15deg);
+              z-index: 2;
+              border: 2px solid #001f3f;
+              border-right: none;
+              min-width: 140px;
+              text-align: center;
+            }
+            .rings-bar {
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              padding: 8px 20px 8px 28px;
+              transform: skewX(-15deg);
+              margin-left: -12px;
+              z-index: 1;
+              border: 2px solid #001f3f;
+              display: flex;
+              align-items: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="left-split-target">
+            <span class="wr-badge">WR</span>
+            <span class="split-label">SPLIT</span>
+            <span class="target-time">${targetTime}</span>
+          </div>
+
+          <div class="right-clock-group">
+            <div class="top-lap-pill"><span class="lap-txt">${lapStr}</span></div>
+            <div class="clock-bottom-row">
+              <div class="time-pill"><span style="transform: skewX(15deg); display: inline-block;">${clockStr}</span></div>
+              <div class="rings-bar">
+                <svg width="60" height="28" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="transform: skewX(15deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "ceremony-id": {
+      const eventTitle = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .ceremony-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
+              display: flex;
+              flex-direction: column;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .ceremony-head {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              height: 58px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+            }
+            .event-title {
+              transform: skewX(15deg);
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.5px;
+              display: flex;
+              align-items: center;
+              gap: 14px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .ceremony-sub {
+              transform: skewX(-15deg);
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 4px 20px;
+              border-radius: 4px;
+              margin-top: 3px;
+              width: fit-content;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .sub-txt {
+              transform: skewX(15deg);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="ceremony-wrapper">
+            <div class="ceremony-head">
+              <span class="event-title"><span>🏊</span> ${eventTitle}</span>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+            <div class="ceremony-sub">
+              <span class="sub-txt">${subTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "medal-id-single": {
+      const countryCode = (data.country || "CHN").toUpperCase();
+      const flagStr = data.flag || "🇨🇳";
+      const athleteName = (data.athlete || "LIU ZIGE").toUpperCase();
+      const medalType = (data.medal || "GOLD").toUpperCase();
+      const eventTitle = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .medal-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .medal-id-head {
+              display: flex;
+              align-items: center;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+            }
+            .country-code {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 12px;
+              letter-spacing: 1px;
+            }
+            .flag-box {
+              transform: skewX(15deg);
+              font-size: 28px;
+              margin-right: 20px;
+              display: flex;
+              align-items: center;
+              color: #ffffff;
+            }
+            .athlete-name {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              flex: 1;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+              margin-left: 12px;
+            }
+            .medal-sub-bar {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .medal-badge-icon {
+              transform: skewX(15deg);
+              font-size: 24px;
+              margin-right: 12px;
+            }
+            .sub-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="medal-id-wrapper">
+            <div class="medal-id-head">
+              <span class="country-code">${countryCode}</span>
+              <span class="flag-box">${flagStr}</span>
+              <span class="athlete-name">${athleteName}</span>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+            <div class="medal-sub-bar">
+              <span class="medal-badge-icon">${medalType.includes('SILVER') ? '🥈' : medalType.includes('BRONZE') ? '🥉' : '🥇'}</span>
+              <span class="sub-text">${medalType} - ${eventTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "advance-all-to-phase": {
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "SEMI-FINALS ➔ FINAL").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { rank: "1", noc: "CHN", flag: "🇨🇳", athlete: "LIU ZIGE", time: "2:06.25" },
+        { rank: "2", noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", time: "2:06.34" },
+        { rank: "3", noc: "CHN", flag: "🇨🇳", athlete: "JIAO LIUYANG", time: "2:06.78" },
+        { rank: "4", noc: "POL", flag: "🇵🇱", athlete: "OTYLIA JEDRZEJCZAK", time: "2:06.96" },
+        { rank: "4", noc: "JPN", flag: "🇯🇵", athlete: "YUKO NAKANISHI", time: "2:06.96" },
+        { rank: "6", noc: "USA", flag: "🇺🇸", athlete: "KATHLEEN HERSEY", time: "2:07.73" },
+        { rank: "7", noc: "FRA", flag: "🇫🇷", athlete: "AURORE MONGEL", time: "2:09.58" },
+        { rank: "8", noc: "USA", flag: "🇺🇸", athlete: "ELAINE BREEDEN", time: "2:10.60" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .adv-wrapper {
+              position: absolute;
+              bottom: 70px;
+              left: 90px;
+              width: 1120px;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .adv-head {
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 8px 24px;
+            }
+            .head-top-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .event-title {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .sub-adv-bar {
+              transform: skewX(15deg);
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 16px;
+              border-radius: 4px;
+              margin-top: 4px;
+              width: fit-content;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .adv-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 20px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .rank-badge {
+              transform: skewX(15deg);
+              background: #dc2626;
+              color: #ffffff;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              width: 24px;
+              height: 24px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 3px;
+              margin-right: 12px;
+            }
+            .adv-noc {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 8px;
+            }
+            .adv-flag {
+              transform: skewX(15deg);
+              font-size: 24px;
+              margin-right: 16px;
+              color: #ffffff;
+            }
+            .adv-name {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              flex: 1;
+              letter-spacing: 1px;
+            }
+            .adv-time {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="adv-wrapper">
+            <div class="adv-head">
+              <div class="head-top-row">
+                <span class="event-title"><span>🏊</span> ${eventName}</span>
+                <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+              <div class="sub-adv-bar">${subTitle}</div>
+            </div>
+            ${resultsList.slice(0, 8).map(r => `
+              <div class="adv-row">
+                <span class="rank-badge">${r.rank}</span>
+                <span class="adv-noc">${r.noc}</span>
+                <span class="adv-flag">${r.flag}</span>
+                <span class="adv-name">${r.athlete}</span>
+                <span class="adv-time">${r.time}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "event-results-full": {
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "RESULT - SEMI-FINAL 2").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { rank: "1", noc: "CHN", flag: "🇨🇳", athlete: "LIU ZIGE", time: "2:06.25" },
+        { rank: "2", noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", time: "2:06.34" },
+        { rank: "3", noc: "POL", flag: "🇵🇱", athlete: "OTYLIA JEDRZEJCZAK", time: "2:06.78" },
+        { rank: "4", noc: "JPN", flag: "🇯🇵", athlete: "YUKO NAKANISHI", time: "2:06.96" },
+        { rank: "4", noc: "USA", flag: "🇺🇸", athlete: "KATHLEEN HERSEY", time: "2:06.96" },
+        { rank: "6", noc: "USA", flag: "🇺🇸", athlete: "ELAINE BREEDEN", time: "2:07.73" },
+        { rank: "7", noc: "AUS", flag: "🇦🇺", athlete: "SAMANTHA HAMILL", time: "2:09.58" },
+        { rank: "8", noc: "GBR", flag: "🇬🇧", athlete: "ELLEN GANDY", time: "2:10.60" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .res-wrapper {
+              position: absolute;
+              bottom: 70px;
+              left: 90px;
+              width: 1120px;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .res-head {
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 8px 24px;
+            }
+            .head-top-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .event-title {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .sub-result-bar {
+              transform: skewX(15deg);
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 16px;
+              border-radius: 4px;
+              margin-top: 4px;
+              width: fit-content;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .res-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 20px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .rank-badge {
+              transform: skewX(15deg);
+              background: #dc2626;
+              color: #ffffff;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              width: 24px;
+              height: 24px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 3px;
+              margin-right: 12px;
+            }
+            .res-noc {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 8px;
+            }
+            .res-flag {
+              transform: skewX(15deg);
+              font-size: 24px;
+              margin-right: 16px;
+              color: #ffffff;
+            }
+            .res-name {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              flex: 1;
+              letter-spacing: 1px;
+            }
+            .res-time {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="res-wrapper">
+            <div class="res-head">
+              <div class="head-top-row">
+                <span class="event-title"><span>🏊</span> ${eventName}</span>
+                <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+              <div class="sub-result-bar">${subTitle}</div>
+            </div>
+            ${resultsList.slice(0, 8).map(r => `
+              <div class="res-row">
+                <span class="rank-badge">${r.rank}</span>
+                <span class="res-noc">${r.noc}</span>
+                <span class="res-flag">${r.flag}</span>
+                <span class="res-name">${r.athlete}</span>
+                <span class="res-time">${r.time}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "winner-place-id": {
+      const sportName = (sportTitle || "SWIMMING").toUpperCase();
+      const headerLabel = (data.headerLabel || "WINNER - MEN'S 4X200M FREESTYLE RELAY").toUpperCase();
+      const countryCode = (data.country || "USA").toUpperCase();
+      const flagStr = data.flag || "🇺🇸";
+      const winnerName = (data.winnerName || data.countryName || data.athlete || "UNITED STATES").toUpperCase();
+      const badgeText = data.badge || "WR";
+      const timeStr = data.time || "6:58.56";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .winner-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .winner-head {
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 10px 24px;
+            }
+            .head-top-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .sport-title {
+              transform: skewX(15deg);
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .sub-event-bar {
+              transform: skewX(15deg);
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 4px 16px;
+              border-radius: 4px;
+              margin-top: 6px;
+              width: fit-content;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .winner-row {
+              height: 52px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .win-noc {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 10px;
+            }
+            .win-flag {
+              transform: skewX(15deg);
+              font-size: 28px;
+              margin-right: 20px;
+              color: #ffffff;
+            }
+            .win-name {
+              transform: skewX(15deg);
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              flex: 1;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .badge-wr {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 12px;
+              border-radius: 12px;
+              margin-right: 16px;
+            }
+            .win-time {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.5px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="winner-wrapper">
+            <div class="winner-head">
+              <div class="head-top-row">
+                <span class="sport-title"><span>🏊</span> ${sportName}</span>
+                <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+              <div class="sub-event-bar">${headerLabel}</div>
+            </div>
+            <div class="winner-row">
+              <span class="win-noc">${countryCode}</span>
+              <span class="win-flag">${flagStr}</span>
+              <span class="win-name">${winnerName}</span>
+              <span class="badge-wr">${badgeText}</span>
+              <span class="win-time">${timeStr}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "lane-indicator": {
+      const laneText = `LANE ${data.lane || "1"}`;
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .lane-ind-bug {
+              position: absolute;
+              top: 70px;
+              left: 90px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 10px 42px;
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              border: 2px solid #0f172a;
+              border-radius: 20px;
+              transform: skewX(-14deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.9);
+              animation: fadeIn 0.4s ease-out;
+            }
+            @keyframes fadeIn { from { opacity: 0; transform: skewX(-14deg) translateY(-20px); } to { opacity: 1; transform: skewX(-14deg) translateY(0); } }
+            .lane-ind-text {
+              transform: skewX(14deg);
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #031b4e;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+              white-space: nowrap;
+              text-shadow: 0 1px 1px rgba(255,255,255,0.9);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="lane-ind-bug">
+            <span class="lane-ind-text">${laneText}</span>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "event-records": {
+      const sportName = (sportTitle || "SWIMMING").toUpperCase();
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+
+      const wrRow = { noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", year: "2006", badge: "WR", time: "2:05.40" };
+      const orRow = { noc: "USA", flag: "🇺🇸", athlete: "MISTY HYMAN", year: "2000", badge: "OR", time: "2:05.88" };
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .records-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .records-head {
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 10px 24px;
+            }
+            .head-top-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .sport-title {
+              transform: skewX(15deg);
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .sub-event-bar {
+              transform: skewX(15deg);
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 4px 16px;
+              border-radius: 4px;
+              margin-top: 6px;
+              width: fit-content;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .record-row {
+              height: 48px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .rec-noc {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 10px;
+            }
+            .rec-flag {
+              transform: skewX(15deg);
+              font-size: 26px;
+              margin-right: 18px;
+              color: #ffffff;
+            }
+            .rec-name {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              flex: 1;
+              letter-spacing: 1px;
+            }
+            .rec-year {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 14px;
+            }
+            .badge-wr {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #ffd700, #b8860b);
+              color: #000000;
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 10px;
+              border-radius: 12px;
+              margin-right: 16px;
+            }
+            .badge-or {
+              transform: skewX(15deg);
+              background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+              color: #000000;
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 10px;
+              border-radius: 12px;
+              margin-right: 16px;
+            }
+            .rec-time {
+              transform: skewX(15deg);
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="records-wrapper">
+            <div class="records-head">
+              <div class="head-top-row">
+                <span class="sport-title"><span>🏊</span> ${sportName}</span>
+                <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+              <div class="sub-event-bar">${eventName}</div>
+            </div>
+            ${[wrRow, orRow].map(r => `
+              <div class="record-row">
+                <span class="rec-noc">${r.noc}</span>
+                <span class="rec-flag">${r.flag}</span>
+                <span class="rec-name">${r.athlete}</span>
+                <span class="rec-year">${r.year}</span>
+                <span class="${r.badge === 'WR' ? 'badge-wr' : 'badge-or'}">${r.badge}</span>
+                <span class="rec-time">${r.time}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "team-list-by-lane": {
+      const laneNum = String(data.lane || "5");
+      const countryCode = (data.country || "AUS").toUpperCase();
+      const flagStr = data.flag || "🇦🇺";
+      const teamName = (data.teamName || data.countryName || "AUSTRALIA").toUpperCase();
+      const members = Array.isArray(data.members) ? data.members : ["NICK FFROST", "GRANT BRITS", "KIRK PALMER", "LEITH BRODIE"];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .team-lane-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .team-lane-head {
+              display: flex;
+              align-items: center;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+            }
+            .lane-num {
+              transform: skewX(15deg);
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 14px;
+              width: 24px;
+              text-align: center;
+            }
+            .country-code {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 14px;
+              letter-spacing: 1px;
+            }
+            .flag-box {
+              transform: skewX(15deg);
+              font-size: 28px;
+              margin-right: 20px;
+              display: flex;
+              align-items: center;
+              color: #ffffff;
+            }
+            .team-name {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              flex: 1;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+              margin-left: 12px;
+            }
+            .member-row {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 28px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .member-name {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="team-lane-wrapper">
+            <div class="team-lane-head">
+              <span class="lane-num">${laneNum}</span>
+              <span class="country-code">${countryCode}</span>
+              <span class="flag-box">${flagStr}</span>
+              <span class="team-name">${teamName}</span>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+            ${members.slice(0, 4).map(m => `
+              <div class="member-row">
+                <span class="member-name">${m}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "lane-id": {
+      const laneNum = String(data.lane || "4");
+      const countryCode = (data.country || "POL").toUpperCase();
+      const flagStr = data.flag || "🇵🇱";
+      const athleteName = (data.athlete || "OTYLIA JEDRZEJCZAK").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .lane-id-bar {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              display: flex;
+              align-items: center;
+              width: 1100px;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: skewX(-15deg) translateX(-80px); opacity: 0; } to { transform: skewX(-15deg) translateX(0); opacity: 1; } }
+            .lane-num {
+              transform: skewX(15deg);
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 14px;
+              width: 24px;
+              text-align: center;
+            }
+            .country-code {
+              transform: skewX(15deg);
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              margin-right: 14px;
+              letter-spacing: 1px;
+            }
+            .flag-box {
+              transform: skewX(15deg);
+              font-size: 28px;
+              margin-right: 20px;
+              display: flex;
+              align-items: center;
+              color: #ffffff;
+            }
+            .athlete-name {
+              transform: skewX(15deg);
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              flex: 1;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+              margin-left: 12px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="lane-id-bar">
+            <span class="lane-num">${laneNum}</span>
+            <span class="country-code">${countryCode}</span>
+            <span class="flag-box">${flagStr}</span>
+            <span class="athlete-name">${athleteName}</span>
+            <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+              <circle cx="20" cy="20" r="14" />
+              <circle cx="50" cy="20" r="14" />
+              <circle cx="80" cy="20" r="14" />
+              <circle cx="35" cy="32" r="14" />
+              <circle cx="65" cy="32" r="14" />
+            </svg>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
     case "non-comp-area": {
       const areaName = (data.areaName || "WARM UP POOL").toUpperCase();
       return `
@@ -1046,9 +2853,9 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "medal-presenter": {
-      const isFlower = (templateName || "").toLowerCase().includes("flower");
+      const isFlower = (templateName || "").toLowerCase().includes("flower") || (templateId || "").toLowerCase().includes("019");
       const defaultName = isFlower ? "MR BILL MATSON" : "JACQUES ROGGE";
-      const defaultTitle = isFlower ? "VICE-PRESIDENT, FINA" : "IOC PRESIDENT, BELGIUM";
+      const defaultTitle = isFlower ? "VICE PRESIDENT, FINA" : "IOC PRESIDENT, BELGIUM";
 
       const presenterName = (data.presenter || data.athlete || defaultName).toUpperCase();
       const presenterTitle = (data.title || data.designation || defaultTitle).toUpperCase();
@@ -1059,66 +2866,81 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         <head>
           <meta charset="utf-8">
           <style>
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            body {
-              width: 1920px;
-              height: 1080px;
-              overflow: hidden;
-              background: transparent;
-              font-family: ${font};
-            }
-            .presenter-container {
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .pres-wrapper {
               position: absolute;
-              bottom: 120px;
-              left: 120px;
-              width: 860px;
+              bottom: 90px;
+              left: 90px;
+              width: 1100px;
               display: flex;
               flex-direction: column;
-              box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
             }
-            .presenter-main-bar {
-              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
-              color: white;
-              padding: 14px 32px;
-              border-radius: 6px 6px 0 0;
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            .pres-head {
               display: flex;
-              justify-content: space-between;
               align-items: center;
-              clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
-              border-bottom: 2px solid rgba(255,255,255,0.2);
+              justify-content: space-between;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
             }
-            .presenter-name {
-              font-size: 32px;
+            .pres-name {
+              transform: skewX(15deg);
+              font-size: 30px;
               font-weight: 900;
-              letter-spacing: 1.5px;
               font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.5px;
               text-transform: uppercase;
-              text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
             }
-            .presenter-code { font-size: 24px; font-weight: 900; color: ${accentColor}; }
-            .presenter-sub-bar {
-              background: linear-gradient(180deg, #0a1329, #0f172a);
-              color: #cbd5e1;
-              padding: 10px 32px;
-              border-radius: 0 0 6px 6px;
-              font-size: 19px;
-              font-weight: 800;
-              letter-spacing: 1.5px;
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+            .pres-sub-bar {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .pres-title {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
               font-style: italic;
+              color: #ffffff;
               text-transform: uppercase;
-              border-top: 1px solid rgba(255,255,255,0.1);
+              letter-spacing: 1.2px;
             }
           </style>
         </head>
         <body>
-          <div class="presenter-container">
-            <div class="presenter-main-bar">
-              <span class="presenter-name">${presenterName}</span>
-              <span class="presenter-code">${code}</span>
+          <div class="pres-wrapper">
+            <div class="pres-head">
+              <span class="pres-name">${presenterName}</span>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
             </div>
-            <div class="presenter-sub-bar">
-              <span>${presenterTitle}</span>
+            <div class="pres-sub-bar">
+              <span class="pres-title">${presenterTitle}</span>
             </div>
           </div>
         </body>
@@ -2317,6 +4139,739 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       objects.push(timeBg, timeText, codeBg, codeText);
       break;
     }
+    case 'clock-at-finish': {
+      const wrTime = data.wrTime || "3:40.08";
+      const orTime = data.orTime || "3:40.59";
+      const clockStr = data.time || "3:41.60";
+
+      // Row 1 WR Target
+      const wrBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 870, width: 240, height: 40, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const wrBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 879, width: 42, height: 22, fill: '#ffd700', rx: 11, ry: 11, skewX: -15
+      }));
+      const wrTxt = new fabric.Textbox("WR", createProps('textbox', {
+        left: 105, top: 882, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const wrVal = new fabric.Textbox(wrTime, createProps('textbox', {
+        left: 170, top: 878, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+      }));
+
+      // Row 2 OR Target
+      const orBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 914, width: 240, height: 40, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const orBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 923, width: 42, height: 22, fill: '#e2e8f0', rx: 11, ry: 11, skewX: -15
+      }));
+      const orTxt = new fabric.Textbox("OR", createProps('textbox', {
+        left: 105, top: 926, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const orVal = new fabric.Textbox(orTime, createProps('textbox', {
+        left: 170, top: 922, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+      }));
+
+      // Right Clock Bar
+      const clockBg = new fabric.Rect(createProps('rect', {
+        left: 1510, top: 884, width: 180, height: 48, fill: '#dbeafe', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const clockTxt = new fabric.Textbox(clockStr, createProps('textbox', {
+        left: 1520, top: 893, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 160, textAlign: 'center'
+      }));
+      const ringsBg = new fabric.Rect(createProps('rect', {
+        left: 1675, top: 884, width: 100, height: 48, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1690, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1708, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1726, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1699, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1717, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(wrBg, wrBadge, wrTxt, wrVal, orBg, orBadge, orTxt, orVal, clockBg, clockTxt, ringsBg, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'clock-before-finish': {
+      const wrTime = data.wrTime || "47.24";
+      const orTime = data.orTime || "47.27";
+      const clockStr = data.time || "47.1";
+
+      // Row 1 WR Target
+      const wrBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 870, width: 220, height: 40, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const wrBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 879, width: 42, height: 22, fill: '#ffd700', rx: 11, ry: 11, skewX: -15
+      }));
+      const wrTxt = new fabric.Textbox("WR", createProps('textbox', {
+        left: 105, top: 882, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const wrVal = new fabric.Textbox(wrTime, createProps('textbox', {
+        left: 170, top: 878, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right'
+      }));
+
+      // Row 2 OR Target
+      const orBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 914, width: 220, height: 40, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const orBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 923, width: 42, height: 22, fill: '#e2e8f0', rx: 11, ry: 11, skewX: -15
+      }));
+      const orTxt = new fabric.Textbox("OR", createProps('textbox', {
+        left: 105, top: 926, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const orVal = new fabric.Textbox(orTime, createProps('textbox', {
+        left: 170, top: 922, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right'
+      }));
+
+      // Right Clock Bar
+      const clockBg = new fabric.Rect(createProps('rect', {
+        left: 1530, top: 884, width: 160, height: 48, fill: '#dbeafe', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const clockTxt = new fabric.Textbox(clockStr, createProps('textbox', {
+        left: 1540, top: 893, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+      const ringsBg = new fabric.Rect(createProps('rect', {
+        left: 1675, top: 884, width: 100, height: 48, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1690, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1708, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1726, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1699, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1717, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(wrBg, wrBadge, wrTxt, wrVal, orBg, orBadge, orTxt, orVal, clockBg, clockTxt, ringsBg, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'clock-at-split': {
+      const laneNum = String(data.lane || "4");
+      const countryCode = (data.country || "AUS").toUpperCase();
+      const flagStr = data.flag || "🇦🇺";
+      const swimmerName = (data.athlete || data.swimmer || "SULLIVAN").toUpperCase();
+      const splitRecord = data.splitRecord || "22.48";
+      const deltaStr = data.delta || "-0.01";
+      const lapStr = data.lap || data.distance || "50M";
+      const clockStr = data.time || "22.47";
+
+      // Top-Left Leader Bug
+      const topBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 70, width: 340, height: 42, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const laneTxt = new fabric.Textbox(laneNum, createProps('textbox', {
+        left: 105, top: 80, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 135, top: 80, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 190, top: 78, fontSize: 22, fill: '#ffffff', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(swimmerName, createProps('textbox', {
+        left: 235, top: 80, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 180
+      }));
+
+      // Bottom-Left Split Delta
+      const leftBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 260, height: 46, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const wrBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 901, width: 42, height: 22, fill: '#ffd700', rx: 11, ry: 11, skewX: -15
+      }));
+      const wrTxt = new fabric.Textbox("WR", createProps('textbox', {
+        left: 105, top: 904, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const splitTxt = new fabric.Textbox("SPLIT", createProps('textbox', {
+        left: 160, top: 901, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 70
+      }));
+      const timeTxt = new fabric.Textbox(splitRecord, createProps('textbox', {
+        left: 235, top: 900, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 100, textAlign: 'right'
+      }));
+
+      const deltaBg = new fabric.Rect(createProps('rect', {
+        left: 340, top: 890, width: 110, height: 46, fill: deltaStr.startsWith('+') ? '#dc2626' : '#059669', rx: 6, ry: 6,
+        stroke: '#047857', strokeWidth: 2, skewX: -15
+      }));
+      const deltaTxt = new fabric.Textbox(deltaStr, createProps('textbox', {
+        left: 340, top: 900, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 110, textAlign: 'center'
+      }));
+
+      // Right Top Lap Pill
+      const lapBg = new fabric.Rect(createProps('rect', {
+        left: 1640, top: 852, width: 100, height: 26, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const lapTxt = new fabric.Textbox(lapStr, createProps('textbox', {
+        left: 1640, top: 855, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 100, textAlign: 'center'
+      }));
+
+      // Right Clock Bar
+      const clockBg = new fabric.Rect(createProps('rect', {
+        left: 1530, top: 884, width: 160, height: 48, fill: '#dbeafe', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const clockTxt = new fabric.Textbox(clockStr, createProps('textbox', {
+        left: 1540, top: 893, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+      const ringsBg = new fabric.Rect(createProps('rect', {
+        left: 1675, top: 884, width: 100, height: 48, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1690, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1708, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1726, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1699, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1717, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(topBg, laneTxt, nocTxt, flagTxt, nameTxt, leftBg, wrBadge, wrTxt, splitTxt, timeTxt, deltaBg, deltaTxt, lapBg, lapTxt, clockBg, clockTxt, ringsBg, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'clock-before-split': {
+      const targetTime = data.targetTime || data.splitTime || "22.44";
+      const lapStr = data.lap || data.distance || "50M";
+      const clockStr = data.time || "19.4";
+
+      // Left Split Target Pill
+      const leftBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 280, height: 46, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const wrBadge = new fabric.Rect(createProps('rect', {
+        left: 105, top: 901, width: 42, height: 22, fill: '#ffd700', rx: 11, ry: 11, skewX: -15
+      }));
+      const wrTxt = new fabric.Textbox("WR", createProps('textbox', {
+        left: 105, top: 904, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 42, textAlign: 'center'
+      }));
+      const splitTxt = new fabric.Textbox("SPLIT", createProps('textbox', {
+        left: 160, top: 901, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 70
+      }));
+      const timeTxt = new fabric.Textbox(targetTime, createProps('textbox', {
+        left: 240, top: 900, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 110, textAlign: 'right'
+      }));
+
+      // Right Top Lap Pill
+      const lapBg = new fabric.Rect(createProps('rect', {
+        left: 1640, top: 852, width: 100, height: 26, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const lapTxt = new fabric.Textbox(lapStr, createProps('textbox', {
+        left: 1640, top: 855, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 100, textAlign: 'center'
+      }));
+
+      // Right Clock Bar
+      const clockBg = new fabric.Rect(createProps('rect', {
+        left: 1530, top: 884, width: 160, height: 48, fill: '#dbeafe', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const clockTxt = new fabric.Textbox(clockStr, createProps('textbox', {
+        left: 1540, top: 893, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+      const ringsBg = new fabric.Rect(createProps('rect', {
+        left: 1675, top: 884, width: 100, height: 48, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1690, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1708, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1726, top: 893, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1699, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1717, top: 901, radius: 8, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(leftBg, wrBadge, wrTxt, splitTxt, timeTxt, lapBg, lapTxt, clockBg, clockTxt, ringsBg, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'ceremony-id': {
+      const eventTitle = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 880, width: 1100, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 115, top: 890, fontSize: 26, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 891, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 750
+      }));
+
+      // Sub Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 938, width: 260, height: 26, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 165, top: 941, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 240
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(mainBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'medal-id-single': {
+      const countryCode = (data.country || "CHN").toUpperCase();
+      const flagStr = data.flag || "🇨🇳";
+      const athleteName = (data.athlete || "LIU ZIGE").toUpperCase();
+      const medalType = (data.medal || "GOLD").toUpperCase();
+      const eventTitle = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 880, width: 1100, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 894, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 60
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 180, top: 891, fontSize: 26, fill: '#ffffff', width: 45
+      }));
+      const nameTxt = new fabric.Textbox(athleteName, createProps('textbox', {
+        left: 235, top: 892, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 750
+      }));
+
+      // Sub Bar
+      const subBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 938, width: 1100, height: 42, fill: '#001c3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const medalBadge = new fabric.Textbox(medalType.includes('SILVER') ? '🥈' : medalType.includes('BRONZE') ? '🥉' : '🥇', createProps('textbox', {
+        left: 115, top: 946, fontSize: 20, width: 35
+      }));
+      const subTxt = new fabric.Textbox(`${medalType} - ${eventTitle}`, createProps('textbox', {
+        left: 155, top: 948, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 950
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(mainBar, nocTxt, flagTxt, nameTxt, subBar, medalBadge, subTxt, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'advance-all-to-phase': {
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "SEMI-FINALS ➔ FINAL").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { rank: "1", noc: "CHN", flag: "🇨🇳", athlete: "LIU ZIGE", time: "2:06.25" },
+        { rank: "2", noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", time: "2:06.34" },
+        { rank: "3", noc: "CHN", flag: "🇨🇳", athlete: "JIAO LIUYANG", time: "2:06.78" },
+        { rank: "4", noc: "POL", flag: "🇵🇱", athlete: "OTYLIA JEDRZEJCZAK", time: "2:06.96" },
+        { rank: "4", noc: "JPN", flag: "🇯🇵", athlete: "YUKO NAKANISHI", time: "2:06.96" },
+        { rank: "6", noc: "USA", flag: "🇺🇸", athlete: "KATHLEEN HERSEY", time: "2:07.73" },
+        { rank: "7", noc: "FRA", flag: "🇫🇷", athlete: "AURORE MONGEL", time: "2:09.58" },
+        { rank: "8", noc: "USA", flag: "🇺🇸", athlete: "ELAINE BREEDEN", time: "2:10.60" }
+      ];
+
+      // Header Bar
+      const headBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 580, width: 1120, height: 70, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 115, top: 587, fontSize: 26, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventName, createProps('textbox', {
+        left: 155, top: 586, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680
+      }));
+
+      // Sub-Header Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 618, width: 340, height: 24, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 165, top: 620, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 320
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1095, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1115, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1135, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1105, top: 599, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1125, top: 599, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      // 8 Result Rows
+      resultsList.slice(0, 8).forEach((r, idx) => {
+        const y = 654 + idx * 42;
+        const rowBar = new fabric.Rect(createProps('rect', {
+          left: 90, top: y, width: 1120, height: 38, fill: '#001c3d', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const rBadge = new fabric.Rect(createProps('rect', {
+          left: 105, top: y + 8, width: 24, height: 22, fill: '#dc2626', rx: 3, ry: 3, skewX: -15
+        }));
+        const rTxt = new fabric.Textbox(r.rank, createProps('textbox', {
+          left: 105, top: y + 10, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 24, textAlign: 'center'
+        }));
+        const nocTxt = new fabric.Textbox(r.noc, createProps('textbox', {
+          left: 140, top: y + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+        }));
+        const flagTxt = new fabric.Textbox(r.flag, createProps('textbox', {
+          left: 195, top: y + 7, fontSize: 22, fill: '#ffffff', width: 40
+        }));
+        const nameTxt = new fabric.Textbox(r.athlete, createProps('textbox', {
+          left: 245, top: y + 9, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+        }));
+        const timeTxt = new fabric.Textbox(r.time, createProps('textbox', {
+          left: 950, top: y + 8, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+        }));
+
+        objects.push(rowBar, rBadge, rTxt, nocTxt, flagTxt, nameTxt, timeTxt);
+      });
+      break;
+    }
+
+    case 'event-results-full': {
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+      const subTitle = (data.subTitle || "RESULT - SEMI-FINAL 2").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { rank: "1", noc: "CHN", flag: "🇨🇳", athlete: "LIU ZIGE", time: "2:06.25" },
+        { rank: "2", noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", time: "2:06.34" },
+        { rank: "3", noc: "POL", flag: "🇵🇱", athlete: "OTYLIA JEDRZEJCZAK", time: "2:06.78" },
+        { rank: "4", noc: "JPN", flag: "🇯🇵", athlete: "YUKO NAKANISHI", time: "2:06.96" },
+        { rank: "4", noc: "USA", flag: "🇺🇸", athlete: "KATHLEEN HERSEY", time: "2:06.96" },
+        { rank: "6", noc: "USA", flag: "🇺🇸", athlete: "ELAINE BREEDEN", time: "2:07.73" },
+        { rank: "7", noc: "AUS", flag: "🇦🇺", athlete: "SAMANTHA HAMILL", time: "2:09.58" },
+        { rank: "8", noc: "GBR", flag: "🇬🇧", athlete: "ELLEN GANDY", time: "2:10.60" }
+      ];
+
+      // Header Bar
+      const headBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 580, width: 1120, height: 70, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 115, top: 587, fontSize: 26, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventName, createProps('textbox', {
+        left: 155, top: 586, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680
+      }));
+
+      // Sub-Header Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 618, width: 340, height: 24, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 165, top: 620, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 320
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1095, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1115, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1135, top: 590, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1105, top: 599, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1125, top: 599, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      // 8 Result Rows
+      resultsList.slice(0, 8).forEach((r, idx) => {
+        const y = 654 + idx * 42;
+        const rowBar = new fabric.Rect(createProps('rect', {
+          left: 90, top: y, width: 1120, height: 38, fill: '#001c3d', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const rBadge = new fabric.Rect(createProps('rect', {
+          left: 105, top: y + 8, width: 24, height: 22, fill: '#dc2626', rx: 3, ry: 3, skewX: -15
+        }));
+        const rTxt = new fabric.Textbox(r.rank, createProps('textbox', {
+          left: 105, top: y + 10, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 24, textAlign: 'center'
+        }));
+        const nocTxt = new fabric.Textbox(r.noc, createProps('textbox', {
+          left: 140, top: y + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+        }));
+        const flagTxt = new fabric.Textbox(r.flag, createProps('textbox', {
+          left: 195, top: y + 7, fontSize: 22, fill: '#ffffff', width: 40
+        }));
+        const nameTxt = new fabric.Textbox(r.athlete, createProps('textbox', {
+          left: 245, top: y + 9, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+        }));
+        const timeTxt = new fabric.Textbox(r.time, createProps('textbox', {
+          left: 950, top: y + 8, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+        }));
+
+        objects.push(rowBar, rBadge, rTxt, nocTxt, flagTxt, nameTxt, timeTxt);
+      });
+      break;
+    }
+
+    case 'winner-place-id': {
+      const sportName = (sportTitle || "SWIMMING").toUpperCase();
+      const headerLabel = (data.headerLabel || "WINNER - MEN'S 4X200M FREESTYLE RELAY").toUpperCase();
+      const countryCode = (data.country || "USA").toUpperCase();
+      const flagStr = data.flag || "🇺🇸";
+      const winnerName = (data.winnerName || data.countryName || data.athlete || "UNITED STATES").toUpperCase();
+      const badgeText = data.badge || "WR";
+      const timeStr = data.time || "6:58.56";
+
+      // Header Bar
+      const headBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 670, width: 1100, height: 75, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 115, top: 678, fontSize: 28, fill: '#ffffff', width: 40
+      }));
+      const titleTxt = new fabric.Textbox(sportName, createProps('textbox', {
+        left: 160, top: 677, fontSize: 30, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 650
+      }));
+
+      // Sub-Header Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 160, top: 712, width: 480, height: 26, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(headerLabel, createProps('textbox', {
+        left: 170, top: 715, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 692, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 692, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Winner Row
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 752, width: 1100, height: 48, fill: '#001c3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 110, top: 762, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 165, top: 760, fontSize: 26, fill: '#ffffff', width: 45
+      }));
+      const nameTxt = new fabric.Textbox(winnerName, createProps('textbox', {
+        left: 220, top: 762, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 550
+      }));
+
+      // Badge
+      const badgeBg = new fabric.Rect(createProps('rect', {
+        left: 840, top: 763, width: 45, height: 24, fill: '#ffd700', rx: 12, ry: 12, skewX: -15
+      }));
+      const badgeTxt = new fabric.Textbox(badgeText, createProps('textbox', {
+        left: 840, top: 766, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 45, textAlign: 'center'
+      }));
+
+      const timeTxt = new fabric.Textbox(timeStr, createProps('textbox', {
+        left: 900, top: 761, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+      }));
+
+      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5, rowBar, nocTxt, flagTxt, nameTxt, badgeBg, badgeTxt, timeTxt);
+      break;
+    }
+
+    case 'lane-indicator': {
+      const laneText = `LANE ${data.lane || "1"}`;
+
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 70, width: 220, height: 50, fill: '#dbeafe', rx: 20, ry: 20,
+        stroke: '#0f172a', strokeWidth: 2, skewX: -14
+      }));
+      const mainText = new fabric.Textbox(laneText, createProps('textbox', {
+        left: 100, top: 82, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#031b4e', width: 200, textAlign: 'center'
+      }));
+
+      objects.push(pillBg, mainText);
+      break;
+    }
+
+    case 'event-records': {
+      const sportName = (sportTitle || "SWIMMING").toUpperCase();
+      const eventName = (data.event || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+
+      const wrRow = { noc: "AUS", flag: "🇦🇺", athlete: "JESSICAH SCHIPPER", year: "2006", badge: "WR", time: "2:05.40" };
+      const orRow = { noc: "USA", flag: "🇺🇸", athlete: "MISTY HYMAN", year: "2000", badge: "OR", time: "2:05.88" };
+
+      // Header Bar
+      const headBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 670, width: 1100, height: 75, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 115, top: 678, fontSize: 28, fill: '#ffffff', width: 40
+      }));
+      const titleTxt = new fabric.Textbox(sportName, createProps('textbox', {
+        left: 160, top: 677, fontSize: 30, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 650
+      }));
+
+      // Sub-Header Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 160, top: 712, width: 380, height: 26, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(eventName, createProps('textbox', {
+        left: 170, top: 715, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 360
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 683, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 692, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 692, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      // Record Rows (WR & OR)
+      [wrRow, orRow].forEach((rec, idx) => {
+        const y = 752 + idx * 48;
+        const rowBar = new fabric.Rect(createProps('rect', {
+          left: 90, top: y, width: 1100, height: 44, fill: '#001c3d', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const nocTxt = new fabric.Textbox(rec.noc, createProps('textbox', {
+          left: 110, top: y + 10, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+        }));
+        const flagTxt = new fabric.Textbox(rec.flag, createProps('textbox', {
+          left: 165, top: y + 8, fontSize: 24, fill: '#ffffff', width: 40
+        }));
+        const nameTxt = new fabric.Textbox(rec.athlete, createProps('textbox', {
+          left: 215, top: y + 10, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+        }));
+        const yearTxt = new fabric.Textbox(rec.year, createProps('textbox', {
+          left: 770, top: y + 10, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 60
+        }));
+
+        // Badge
+        const badgeBg = new fabric.Rect(createProps('rect', {
+          left: 840, top: y + 10, width: 45, height: 24, fill: rec.badge === 'WR' ? '#ffd700' : '#e2e8f0', rx: 12, ry: 12, skewX: -15
+        }));
+        const badgeTxt = new fabric.Textbox(rec.badge, createProps('textbox', {
+          left: 840, top: y + 13, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#000000', width: 45, textAlign: 'center'
+        }));
+
+        const timeTxt = new fabric.Textbox(rec.time, createProps('textbox', {
+          left: 900, top: y + 9, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
+        }));
+
+        objects.push(rowBar, nocTxt, flagTxt, nameTxt, yearTxt, badgeBg, badgeTxt, timeTxt);
+      });
+      break;
+    }
+
+    case 'team-list-by-lane': {
+      const laneNum = String(data.lane || "5");
+      const countryCode = (data.country || "AUS").toUpperCase();
+      const flagStr = data.flag || "🇦🇺";
+      const teamName = (data.teamName || data.countryName || "AUSTRALIA").toUpperCase();
+      const members = Array.isArray(data.members) ? data.members : ["NICK FFROST", "GRANT BRITS", "KIRK PALMER", "LEITH BRODIE"];
+
+      // Header Bar
+      const headBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 680, width: 1100, height: 52, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const laneTxt = new fabric.Textbox(laneNum, createProps('textbox', {
+        left: 110, top: 693, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 145, top: 693, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 60
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 215, top: 690, fontSize: 26, fill: '#ffffff', width: 45
+      }));
+      const nameTxt = new fabric.Textbox(teamName, createProps('textbox', {
+        left: 270, top: 691, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 750
+      }));
+
+      // 5 Gold Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 693, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 693, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 693, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 702, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 702, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBar, laneTxt, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5);
+
+      // Member Rows
+      members.slice(0, 4).forEach((m, idx) => {
+        const y = 738 + idx * 46;
+        const rowBar = new fabric.Rect(createProps('rect', {
+          left: 90, top: y, width: 1100, height: 42, fill: '#001c3d', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const memTxt = new fabric.Textbox(m.toUpperCase(), createProps('textbox', {
+          left: 120, top: y + 10, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 900
+        }));
+        objects.push(rowBar, memTxt);
+      });
+      break;
+    }
+
+    case 'lane-id': {
+      const laneNum = String(data.lane || "4");
+      const countryCode = (data.country || "POL").toUpperCase();
+      const flagStr = data.flag || "🇵🇱";
+      const athleteName = (data.athlete || "OTYLIA JEDRZEJCZAK").toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 90, top: 880, width: 1100, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const laneTxt = new fabric.Textbox(laneNum, createProps('textbox', {
+        left: 110, top: 894, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 145, top: 894, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 60
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 215, top: 891, fontSize: 26, fill: '#ffffff', width: 45
+      }));
+      const nameTxt = new fabric.Textbox(athleteName, createProps('textbox', {
+        left: 270, top: 892, fontSize: 28, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 750
+      }));
+
+      // 5 Gold Olympic Rings for Fabric Canvas
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 1075, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 1095, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 1115, top: 893, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 1085, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 1105, top: 902, radius: 9, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(mainBar, laneTxt, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5);
+      break;
+    }
+
     case 'non-comp-area': {
       const areaName = (data.areaName || "WARM UP POOL").toUpperCase();
 
