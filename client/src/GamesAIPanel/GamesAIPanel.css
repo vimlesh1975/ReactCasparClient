@@ -1,6 +1,7 @@
+/* ── Container ── */
 .games-ai-container {
-  width: 850px;
-  height: 800px;
+  width: 880px;
+  height: 850px;
   max-width: 100%;
   max-height: 100vh;
   box-sizing: border-box;
@@ -14,87 +15,86 @@
   gap: 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   border: 1px solid rgba(255,255,255,0.1);
-  overflow-y: auto;
+  overflow: hidden;
   margin: 0 auto;
 }
 
-.games-ai-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #334155;
-  padding-bottom: 10px;
-}
-
-.games-ai-header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #38bdf8, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.header-badge {
-  background: #1e293b;
-  color: #38bdf8;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}
-
-.games-ai-grid {
+/* ── Top Row: Sport list + Template grid side by side ── */
+.top-section-row {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 16px;
-  flex: 1;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  height: 300px;
+  max-height: 300px;
+  flex-shrink: 0;
 }
 
+/* ── Sport sidebar ── */
 .sidebar-panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   background: #1e293b;
-  padding: 14px;
+  padding: 12px;
   border-radius: 10px;
   border: 1px solid #334155;
 }
 
+/* ── Template panel (right of sport list) ── */
+.templates-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #1e293b;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  min-height: 0;
+}
+
+/* ── Bottom preview / graphics area ── */
+.main-preview-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Labels ── */
 .section-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   color: #94a3b8;
   letter-spacing: 1px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
+/* ── Search inputs ── */
 .search-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 7px 10px;
   background: #0f172a;
   border: 1px solid #475569;
   border-radius: 6px;
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   outline: none;
+  box-sizing: border-box;
 }
 
 .search-input:focus {
   border-color: #38bdf8;
 }
 
+/* ── Sports list ── */
 .sports-list {
-  max-height: 180px;
+  max-height: 200px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   padding-right: 4px;
 }
 
@@ -102,7 +102,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
+  padding: 6px 10px;
   background: #0f172a;
   border: 1px solid #334155;
   border-radius: 6px;
@@ -125,26 +125,29 @@
 
 .sport-code-badge {
   font-weight: 800;
-  font-size: 11px;
+  font-size: 10px;
   background: rgba(0,0,0,0.3);
   padding: 2px 6px;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
+/* ── Template grid inside templates-panel ── */
 .template-types-grid {
-  max-height: 220px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
   padding-right: 4px;
+  min-height: 0;
 }
 
 .template-type-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
+  padding: 7px 10px;
   background: #0f172a;
   border: 1px solid #334155;
   border-radius: 6px;
@@ -153,6 +156,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: left;
 }
 
 .template-type-btn:hover {
@@ -165,12 +169,7 @@
   border-color: #38bdf8;
 }
 
-.main-preview-area {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
+/* ── AI Controls box ── */
 .ai-controls-box {
   background: #1e293b;
   padding: 12px;
@@ -179,6 +178,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .prompt-bar {
@@ -194,6 +194,11 @@
   border-radius: 6px;
   color: white;
   font-size: 13px;
+  outline: none;
+}
+
+.prompt-input:focus {
+  border-color: #38bdf8;
 }
 
 .generate-btn {
@@ -209,16 +214,22 @@
   gap: 6px;
   font-size: 12px;
   transition: opacity 0.2s ease;
+  white-space: nowrap;
 }
 
 .generate-btn:hover {
   opacity: 0.9;
 }
 
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .field-inputs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 6px;
 }
 
 .field-input-group {
@@ -241,17 +252,24 @@
   border-radius: 4px;
   color: white;
   font-size: 12px;
+  outline: none;
 }
 
+/* ── Preview frame — fills all remaining space at 16:9 ── */
 .preview-frame-container {
   background: #000;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
   border: 2px solid #334155;
   box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+  flex: 1;
+  min-height: 0;
+  /* use height to drive width so we fill the full available height */
+  width: auto;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  align-self: center;
 }
 
 .preview-res-badge {
@@ -275,6 +293,7 @@
   background: repeating-conic-gradient(#1e293b 0% 25%, #0f172a 0% 50%) 50% / 20px 20px;
 }
 
+/* ── Action bar ── */
 .playout-actions-bar {
   display: flex;
   justify-content: space-between;
@@ -284,10 +303,11 @@
   border-radius: 10px;
   border: 1px solid #334155;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .action-btn {
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 6px;
   font-weight: 800;
   font-size: 11px;
@@ -303,22 +323,7 @@
   transform: scale(0.97);
 }
 
-.btn-play {
-  background: #16a34a;
-  color: white;
-}
-
-.btn-update {
-  background: #0284c7;
-  color: white;
-}
-
-.btn-stop {
-  background: #dc2626;
-  color: white;
-}
-
-.btn-add {
-  background: #4f46e5;
-  color: white;
-}
+.btn-play  { background: #16a34a; color: white; }
+.btn-update { background: #0284c7; color: white; }
+.btn-stop  { background: #dc2626; color: white; }
+.btn-add   { background: #4f46e5; color: white; }

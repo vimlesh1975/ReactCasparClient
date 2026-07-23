@@ -5,6 +5,7 @@
 
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
+import { generateGymnasticsArtisticHTML, generateGymnasticsArtisticFabric } from './sports/gymnasticsArtistic';
 
 const RANDOM_ATHLETES_POOL = [
   { name: "Usain Bolt", country: "JAM" },
@@ -51,6 +52,35 @@ export function resolveCategory(templateType, templateName = '', templateId = ''
   const normName = (templateName || "").toLowerCase();
   const normId = (templateId || "").toLowerCase();
   const combined = `${normType} ${normName} ${normId}`;
+
+  // ── Gymnastics - Artistic (GA) templates ──
+  if (combined.includes("ga002") || (combined.includes("gymnastics") && combined.includes("venue"))) return "ga002-venue-id";
+  if (combined.includes("ga003")) return "ga003-event-schedule";
+  if (combined.includes("ga004")) return "ga004-event-schedule-all";
+  if (combined.includes("ga005")) return "ga005-event-id";
+  if (combined.includes("ga006")) return "ga006-athlete-id";
+  if (combined.includes("ga007")) return "ga007-officials-list";
+  if (combined.includes("ga009")) return "ga009-ceremony-id";
+  if (combined.includes("ga010")) return "ga010-medal-id";
+  if (combined.includes("ga011")) return "ga011-medals-list";
+  if (combined.includes("ga012")) return "ga012-medal-presenter";
+  if (combined.includes("ga013")) return "ga013-flower-presenter";
+  if (combined.includes("ga014") || combined.includes("start list")) return "ga014a-start-list";
+  if (combined.includes("ga015")) return "ga015-team-list";
+  if (combined.includes("ga016")) return "ga016a-scorecard";
+  if (combined.includes("ga017")) return "ga017a-athlete-total";
+  if (combined.includes("ga018")) return "ga018a-build-women";
+  if (combined.includes("ga019")) return "ga019-build-men";
+  if (combined.includes("ga020")) return "ga020a-standings";
+  if (combined.includes("ga021")) return "ga021a-standings-apparatus";
+  if (combined.includes("ga022")) return "ga022a-vault-standings";
+  if (combined.includes("ga025")) return "ga025a-start-list-allaround";
+  if (combined.includes("ga026")) return "ga026a-winner-id";
+  if (combined.includes("ga027")) return "ga027a-top-leaderboard";
+  if (combined.includes("ga028")) return "ga028-scorecard-2nd-vault";
+  if (combined.includes("ga029")) return "ga029-scorecard-allaround";
+  if (combined.includes("ga030")) return "ga030-team-list";
+  if (combined.includes("ga031")) return "ga031a-2nd-vault-id";
 
   // ── Hockey (HO) templates → reuse Football (FB) graphic categories ──
   if (combined.includes("ho035") || (combined.includes("hockey") && combined.includes("flower") && combined.includes("presenter"))) return "football-flower-presenter";
@@ -180,6 +210,10 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
   // We use a 5-variant cycle so each template in a sub-category looks different
   const variant = ((idNum - 1) % 5) + 1;
+
+  if (code === 'GA' || (sport && sport.code === 'GA')) {
+    return generateGymnasticsArtisticHTML(templateId, templateName, data, sport, styleOptions);
+  }
 
   switch (category) {
     case "position-on-screen": {
@@ -7551,6 +7585,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       ...extra
     };
   };
+
+  if (code === 'GA' || (sport && sport.code === 'GA')) {
+    return generateGymnasticsArtisticFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
+  }
 
   switch (category) {
     case 'position-on-screen': {

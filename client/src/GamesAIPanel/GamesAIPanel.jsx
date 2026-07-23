@@ -34,6 +34,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     secondaryColor: OLYMPIC_GAMES_DATA[0].secondaryColor,
     accentColor: OLYMPIC_GAMES_DATA[0].accentColor
   });
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const sportTemplates = getSportTemplates(selectedSport);
   const filteredTemplates = sportTemplates.filter(t => {
@@ -57,12 +58,20 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         }
       }
     };
+
+    // ResizeObserver fires on initial layout AND whenever the element resizes
+    const ro = new ResizeObserver(() => updateScale());
+    if (previewContainerRef.current) {
+      ro.observe(previewContainerRef.current);
+    }
+
+    // Fallback immediate call + short delay for first paint
     updateScale();
-    const timer = setTimeout(updateScale, 150);
-    window.addEventListener('resize', updateScale);
+    const timer = setTimeout(updateScale, 50);
+
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('resize', updateScale);
+      ro.disconnect();
     };
   }, []);
 
@@ -79,8 +88,8 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   useEffect(() => {
     if (selectedSport) {
       setCustomFields({
-        venue: selectedSport.venue || "Olympic Stadium",
-        location: "London, UK",
+        venue: selectedSport.venue || 'Olympic Stadium',
+        location: 'London, UK',
         ...selectedSport.dataFields
       });
       setCustomColors({
@@ -103,18 +112,15 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     ? mapSubCatToType(selectedTemplateObj.subCat)
     : (selectedTemplateType || '');
 
-  // Generate current HTML — pass the raw template ID & name so the generator
-  // can produce a distinct layout per template type and variant
+  // Generate current HTML
   const currentHTML = generateBroadcastHTML(
     selectedSport,
     resolvedTemplateType,
     customFields,
     customColors,
-    selectedTemplateType,  // templateId e.g. "CF001"
+    selectedTemplateType,
     selectedTemplateObj?.name || ''
   );
-
-  const [isGenerating, setIsGenerating] = useState(false);
 
   // Advanced OpenRouter + Local NLP AI Prompt Generator
   const handleGenerateAI = async (overridePrompt) => {
@@ -157,7 +163,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
 
       if (response.ok) {
         const result = await response.json();
-        const rawContent = result?.choices?.[0]?.message?.content || result?.code || "";
+        const rawContent = result?.choices?.[0]?.message?.content || result?.code || '';
         const cleanJsonStr = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
         if (cleanJsonStr.startsWith('{')) {
           const parsed = JSON.parse(cleanJsonStr);
@@ -177,7 +183,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
         }
       }
     } catch (err) {
-      console.warn("OpenRouter API endpoint unavailable, using local AI NLP parser fallback");
+      console.warn('OpenRouter API endpoint unavailable, using local AI NLP parser fallback');
     }
 
     // Fallback: Intelligent Local NLP & Regex Extractor
@@ -227,7 +233,7 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
     const countryMatch = targetPrompt.match(/\b([A-Z]{3})\b/);
     if (countryMatch) newFields.country = countryMatch[1];
 
-    const timeMatch = targetPrompt.match(/(\d+[:.]\d+s?|\d+\.\d+s)/i);
+    const timeMatch = targetPrompt.match(/(\d+[:.]\\d+s?|\d+\\.\\d+s)/i);
     if (timeMatch) newFields.time = timeMatch[1];
 
     const scoreMatch = targetPrompt.match(/(\d+)\s*[-:]\s*(\d+)/);
@@ -254,10 +260,9 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
 
   const handleAddToCanvas = () => {
     if (!canvas) {
-      alert("Canvas is not initialized yet. Please open the Drawing tab first!");
+      alert('Canvas is not initialized yet. Please open the Drawing tab first!');
       return;
     }
-    // Resolve the template type based on the selected template ID
     const templateInfo = filteredTemplates.find(t => t.id === selectedTemplateType);
     const resolvedType = templateInfo ? mapSubCatToType(templateInfo.subCat) : selectedTemplateType;
     const group = createFabricGraphicGroup(
@@ -278,51 +283,22 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
     }
   };
 
-  const categories = ['ALL', 'Aquatics', 'Athletics', 'Ball Sports', 'Combat', 'Cycling', 'Gymnastics', 'Water', 'Precision', 'Multi-Sport'];
-
   return (
     <div className="games-ai-container">
-      <div className="games-ai-header">
-        <h2>
-          <span>Games AI Panel</span>
-        </h2>
-      </div>
 
-      <div className="games-ai-grid">
-        {/* Sidebar: Sport Selection & Template Types */}
+      {/* ── Top Row: Sport list (left) + Template grid (right) ── */}
+      <div className="top-section-row">
+
+        {/* Left Column: Select Sport */}
         <div className="sidebar-panel">
-          <div>
-            <div className="section-label">1. Select Sport</div>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search sports or venues..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategoryFilter(cat)}
-                style={{
-                  padding: '3px 8px',
-                  borderRadius: '12px',
-                  border: '1px solid #334155',
-                  background: categoryFilter === cat ? '#38bdf8' : '#0f172a',
-                  color: categoryFilter === cat ? '#000' : '#94a3b8',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
+          <div className="section-label">1. Select Sport</div>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search sports or venues..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
           <div className="sports-list">
             {filteredSports.map(sport => (
               <div
@@ -335,146 +311,71 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
               </div>
             ))}
           </div>
-
-          <div>
-            <div className="section-label">2. {selectedSport.name} OBS Templates ({filteredTemplates.length})</div>
-            <div style={{ marginBottom: '8px' }}>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search templates by ID (e.g. SW014, SW126) or keyword..."
-                value={templateSearchTerm}
-                onChange={e => setTemplateSearchTerm(e.target.value)}
-                style={{ width: '100%', padding: '6px 10px', fontSize: '12px' }}
-              />
-            </div>
-
-            <div className="template-types-grid">
-              {filteredTemplates.map(tt => (
-                <button
-                  key={tt.id}
-                  className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
-                  onClick={() => { setSelectedTemplateType(tt.id); setSelectedTemplateObj(tt); }}
-                  title={tt.name}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>{tt.icon}</span>
-                    <span>{tt.name}</span>
-                  </span>
-                  <span className="sport-code-badge">{tt.id}</span>
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
-        {/* Main Area: AI Controls & Live Preview */}
-        <div className="main-preview-area">
-          <div className="ai-controls-box">
-            <div className="section-label">3. AI Style & Data Generator</div>
-            <div className="prompt-bar">
-              <input
-                type="text"
-                className="prompt-input"
-                placeholder="Type AI prompt e.g. 'Gold lower third Usain Bolt JAM 9.63s'..."
-                value={aiPrompt}
-                onChange={e => setAiPrompt(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleGenerateAI()}
-              />
-              <button className="generate-btn" onClick={() => handleGenerateAI()} disabled={isGenerating}>
-                <FaMagic /> {isGenerating ? 'Generating...' : 'Generate'}
+        {/* Right Column: Templates */}
+        <div className="templates-panel">
+          <div className="section-label">2. Select Template</div>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search templates..."
+            value={templateSearchTerm}
+            onChange={e => setTemplateSearchTerm(e.target.value)}
+          />
+          <div className="template-types-grid">
+            {filteredTemplates.map(tt => (
+              <button
+                key={tt.id}
+                className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
+                onClick={() => { setSelectedTemplateType(tt.id); setSelectedTemplateObj(tt); }}
+                title={tt.name}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span>{tt.icon}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{tt.name}</span>
+                </span>
+                <span className="sport-code-badge">{tt.id}</span>
               </button>
-            </div>
-
-            <div className="sample-prompts-container" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 'bold' }}>QUICK TEST PROMPTS:</span>
-              {[
-                'Gold lower third Usain Bolt JAM 9.63s',
-                'Blue scoreboard BRA vs ARG 2-1',
-                'Red start list Swimming 100m',
-                'Dark medal tally USA 46 China 38 GBR 29'
-              ].map((sample, idx) => (
-                <button
-                  key={idx}
-                  className="sample-prompt-pill"
-                  style={{
-                    background: '#1e293b',
-                    border: '1px solid #334155',
-                    color: '#38bdf8',
-                    fontSize: '10px',
-                    padding: '2px 8px',
-                    borderRadius: '10px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                    setAiPrompt(sample);
-                    handleGenerateAI(sample);
-                  }}
-                >
-                  {sample}
-                </button>
-              ))}
-            </div>
-
-            <div className="field-inputs-grid">
-              {Object.keys(customFields).map(key => (
-                <div key={key} className="field-input-group">
-                  <label>{key}</label>
-                  <input
-                    type="text"
-                    value={customFields[key] || ''}
-                    onChange={e => handleFieldChange(key, e.target.value)}
-                  />
-                </div>
-              ))}
-              <div className="field-input-group">
-                <label>Primary Color</label>
-                <input
-                  type="color"
-                  value={customColors.primaryColor}
-                  onChange={e => setCustomColors(prev => ({ ...prev, primaryColor: e.target.value }))}
-                />
-              </div>
-              <div className="field-input-group">
-                <label>Accent Color</label>
-                <input
-                  type="color"
-                  value={customColors.accentColor}
-                  onChange={e => setCustomColors(prev => ({ ...prev, accentColor: e.target.value }))}
-                />
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* Live 1920x1080 Scaled Broadcast Preview Canvas */}
-          <div ref={previewContainerRef} className="preview-frame-container">
-            <iframe
-              key={selectedTemplateType}
-              ref={iframeRef}
-              srcDoc={currentHTML}
-              className="preview-iframe"
-              title="Broadcast Preview"
-              style={{
-                width: '1920px',
-                height: '1080px',
-                transform: `scale(${previewScale})`,
-                transformOrigin: '0 0',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                border: 'none'
-              }}
-            />
-          </div>
-
-          {/* Canvas Actions Bar */}
-          <div className="playout-actions-bar">
-            <button className="action-btn btn-add" style={{ width: '100%' }} onClick={handleAddToCanvas}>
-              <FaPlus /> ADD TO CANVAS
-            </button>
-          </div>
+          {/* Add to Canvas lives here, at the bottom of the template panel */}
+          <button className="action-btn btn-add" style={{ width: '100%', justifyContent: 'center', marginTop: 'auto' }} onClick={handleAddToCanvas}>
+            <FaPlus /> Add to Canvas
+          </button>
         </div>
+
       </div>
+
+      {/* ── Bottom: Graphics / Preview Area ── */}
+      <div className="main-preview-area">
+
+        {/* Live Preview */}
+        <div className="preview-frame-container" ref={previewContainerRef}>
+          <span className="preview-res-badge">1920 × 1080</span>
+          <iframe
+            ref={iframeRef}
+            className="preview-iframe"
+            title="Graphic Preview"
+            sandbox="allow-scripts"
+            srcDoc={currentHTML}
+            style={{
+              width: '1920px',
+              height: '1080px',
+              border: 'none',
+              transformOrigin: 'top left',
+              transform: `scale(${previewScale})`,
+              display: 'block',
+              pointerEvents: 'none'
+            }}
+          />
+        </div>
+
+
+
+      </div>
+
     </div>
   );
 };
