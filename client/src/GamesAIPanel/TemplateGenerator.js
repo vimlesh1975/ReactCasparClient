@@ -53,6 +53,7 @@ export function resolveCategory(templateType, templateName = '') {
 
   if (combined.includes("clock") || combined.includes("timer")) return "race-clock";
   if (combined.includes("presenter")) return "medal-presenter";
+  if (combined.includes("non-competition") || combined.includes("area") || combined.includes("warm up") || combined.includes("warm-up")) return "non-comp-area";
   if (combined.includes("medal") || combined.includes("medals") || combined.includes("podium")) return "medal-tally";
   if (combined.includes("position")) return "position-on-screen";
   if (combined.includes("venue") || combined.includes("location")) return "venue-id";
@@ -201,7 +202,18 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </body>
         </html>
       `;
-    case "event-schedule":
+    case "event-schedule": {
+      const scheduleEntries = [
+        { time: "09:00", name: "Opening Warm-Up & Practice Session", status: "COMPLETED", class: "status-done" },
+        { time: "09:30", name: data.event || "Preliminary Round / Heats", status: "COMPLETED", class: "status-done" },
+        { time: "10:45", name: "Quarter-Finals Phase 1", status: "COMPLETED", class: "status-done" },
+        { time: "11:30", name: "Quarter-Finals Phase 2", status: "COMPLETED", class: "status-done" },
+        { time: "14:00", name: "Semi-Finals Heat 1", status: "LIVE", class: "status-live" },
+        { time: "14:45", name: "Semi-Finals Heat 2", status: "UPCOMING", class: "status-next" },
+        { time: "16:30", name: "Gold Medal Final Match", status: "UPCOMING", class: "status-next" },
+        { time: "17:15", name: "Victory Ceremony & Medal Presentation", status: "UPCOMING", class: "status-next" }
+      ];
+
       return `
         <!DOCTYPE html>
         <html>
@@ -212,30 +224,31 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             * { box-sizing: border-box; margin: 0; padding: 0; }
             body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
             .sched-card {
-              position: absolute; top: 140px; left: 90px; width: 720px;
-              background: rgba(15,23,42,0.95); border-radius: 12px; overflow: hidden;
-              border: 1px solid rgba(255,255,255,0.2); color: white;
+              position: absolute; top: 100px; left: 90px; width: 780px;
+              background: rgba(15,23,42,0.96); border-radius: 12px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.18); color: white;
               box-shadow: 0 15px 40px rgba(0,0,0,0.6);
             }
             .sched-head {
               background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
-              padding: 16px 24px; font-size: 22px; font-weight: 900;
+              padding: 14px 24px; font-size: 22px; font-weight: 900;
               border-bottom: 4px solid ${accentColor}; display: flex; justify-content: space-between; align-items: center;
             }
-            .sched-body { padding: 12px 0; }
+            .sched-body { padding: 6px 0; }
             .sched-row {
               display: flex; align-items: center; justify-content: space-between;
-              padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 16px; font-weight: 700;
+              padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 15px; font-weight: 700;
             }
+            .sched-row:nth-child(even) { background: rgba(255,255,255,0.02); }
             .sched-row:last-child { border-bottom: none; }
-            .sched-time { color: ${accentColor}; font-weight: 900; width: 80px; }
+            .sched-time { color: ${accentColor}; font-weight: 900; width: 75px; }
             .sched-name { flex: 1; margin: 0 16px; color: #ffffff; }
             .sched-badge {
-              font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;
+              font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px;
               text-transform: uppercase; letter-spacing: 0.5px;
             }
             .status-done { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.4); }
-            .status-live { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid rgba(56,189,248,0.4); }
+            .status-live { background: rgba(56,189,248,0.25); color: #38bdf8; border: 1px solid rgba(56,189,248,0.5); }
             .status-next { background: rgba(250,204,21,0.2); color: #facc15; border: 1px solid rgba(250,204,21,0.4); }
           </style>
         </head>
@@ -243,34 +256,22 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="sched-card">
             <div class="sched-head">
               <span>🗓️ EVENT SCHEDULE</span>
-              <span style="font-size:16px; color:${accentColor};">${sportTitle} • ${venueTitle}</span>
+              <span style="font-size:15px; color:${accentColor};">${sportTitle} • ${venueTitle}</span>
             </div>
             <div class="sched-body">
-              <div class="sched-row">
-                <span class="sched-time">09:30</span>
-                <span class="sched-name">${data.event || "Preliminary Round / Heats"}</span>
-                <span class="sched-badge status-done">COMPLETED</span>
-              </div>
-              <div class="sched-row">
-                <span class="sched-time">10:45</span>
-                <span class="sched-name">Quarter-Finals Draw</span>
-                <span class="sched-badge status-done">COMPLETED</span>
-              </div>
-              <div class="sched-row">
-                <span class="sched-time">14:00</span>
-                <span class="sched-name">Semi-Finals Phase</span>
-                <span class="sched-badge status-live">LIVE / NEXT</span>
-              </div>
-              <div class="sched-row">
-                <span class="sched-time">16:30</span>
-                <span class="sched-name">Gold Medal Final & Victory Ceremony</span>
-                <span class="sched-badge status-next">UPCOMING</span>
-              </div>
+              ${scheduleEntries.map(e => `
+                <div class="sched-row">
+                  <span class="sched-time">${e.time}</span>
+                  <span class="sched-name">${e.name}</span>
+                  <span class="sched-badge ${e.class}">${e.status}</span>
+                </div>
+              `).join('')}
             </div>
           </div>
         </body>
         </html>
       `;
+    }
     case "weather":
       return `
         <!DOCTYPE html>
@@ -995,6 +996,55 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </html>
       `;
     }
+    case "non-comp-area": {
+      const areaName = (data.areaName || "WARM UP POOL").toUpperCase();
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .non-comp-bug {
+              position: absolute;
+              top: 70px;
+              left: 90px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              padding: 10px 42px;
+              background: linear-gradient(180deg, #ffffff 0%, #dbeafe 45%, #cbd5e1 100%);
+              border: 2px solid #0f172a;
+              border-radius: 20px;
+              transform: skewX(-14deg);
+              box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.9);
+              animation: fadeIn 0.4s ease-out;
+            }
+            @keyframes fadeIn { from { opacity: 0; transform: skewX(-14deg) translateY(-20px); } to { opacity: 1; transform: skewX(-14deg) translateY(0); } }
+            .non-comp-text {
+              transform: skewX(14deg);
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #031b4e;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+              white-space: nowrap;
+              text-shadow: 0 1px 1px rgba(255,255,255,0.9);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="non-comp-bug">
+            <span class="non-comp-text">${areaName}</span>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
     case "medal-presenter": {
       const isFlower = (templateName || "").toLowerCase().includes("flower");
       const defaultName = isFlower ? "MR BILL MATSON" : "JACQUES ROGGE";
@@ -1459,49 +1509,51 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       break;
     }
     case 'event-schedule': {
+      const scheduleEntries = [
+        { time: "09:00", name: "Opening Warm-Up Session", status: "COMPLETED", color: "#4ade80" },
+        { time: "09:30", name: data.event || "Preliminary Round / Heats", status: "COMPLETED", color: "#4ade80" },
+        { time: "10:45", name: "Quarter-Finals Phase 1", status: "COMPLETED", color: "#4ade80" },
+        { time: "11:30", name: "Quarter-Finals Phase 2", status: "COMPLETED", color: "#4ade80" },
+        { time: "14:00", name: "Semi-Finals Heat 1", status: "LIVE", color: "#38bdf8" },
+        { time: "14:45", name: "Semi-Finals Heat 2", status: "UPCOMING", color: "#facc15" },
+        { time: "16:30", name: "Gold Medal Final Match", status: "UPCOMING", color: "#facc15" },
+        { time: "17:15", name: "Victory Ceremony", status: "UPCOMING", color: "#facc15" }
+      ];
+
       const cardBg = new fabric.Rect(createProps('rect', {
-        left: 90, top: 140, width: 720, height: 320, fill: '#0f172a', rx: 12, ry: 12
+        left: 90, top: 100, width: 780, height: 450, fill: '#0f172a', rx: 12, ry: 12
       }));
       const headBg = new fabric.Rect(createProps('rect', {
-        left: 90, top: 140, width: 720, height: 55, fill: primaryColor, rx: 12, ry: 12
+        left: 90, top: 100, width: 780, height: 55, fill: primaryColor, rx: 12, ry: 12
       }));
       const headAccent = new fabric.Rect(createProps('rect', {
-        left: 90, top: 191, width: 720, height: 4, fill: accentColor
+        left: 90, top: 151, width: 780, height: 4, fill: accentColor
       }));
       const titleText = new fabric.Textbox("🗓️ EVENT SCHEDULE", createProps('textbox', {
-        left: 110, top: 155, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
+        left: 110, top: 115, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
       }));
       const venueText = new fabric.Textbox(`${sportTitle} • ${venueTitle}`, createProps('textbox', {
-        left: 420, top: 157, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 370, textAlign: 'right'
+        left: 420, top: 117, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 430, textAlign: 'right'
       }));
 
-      // Row 1
-      const r1Time = new fabric.Textbox("09:30", createProps('textbox', { left: 110, top: 215, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
-      const r1Name = new fabric.Textbox(data.event || "Preliminary Round / Heats", createProps('textbox', { left: 200, top: 215, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
-      const r1Badge = new fabric.Textbox("COMPLETED", createProps('textbox', { left: 600, top: 215, fontSize: 12, fontWeight: 'bold', fill: '#4ade80', width: 180, textAlign: 'right' }));
+      objects.push(cardBg, headBg, headAccent, titleText, venueText);
 
-      // Row 2
-      const r2Time = new fabric.Textbox("10:45", createProps('textbox', { left: 110, top: 265, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
-      const r2Name = new fabric.Textbox("Quarter-Finals Draw", createProps('textbox', { left: 200, top: 265, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
-      const r2Badge = new fabric.Textbox("COMPLETED", createProps('textbox', { left: 600, top: 265, fontSize: 12, fontWeight: 'bold', fill: '#4ade80', width: 180, textAlign: 'right' }));
-
-      // Row 3
-      const r3Time = new fabric.Textbox("14:00", createProps('textbox', { left: 110, top: 315, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
-      const r3Name = new fabric.Textbox("Semi-Finals Phase", createProps('textbox', { left: 200, top: 315, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
-      const r3Badge = new fabric.Textbox("LIVE / NEXT", createProps('textbox', { left: 600, top: 315, fontSize: 12, fontWeight: 'bold', fill: '#38bdf8', width: 180, textAlign: 'right' }));
-
-      // Row 4
-      const r4Time = new fabric.Textbox("16:30", createProps('textbox', { left: 110, top: 365, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
-      const r4Name = new fabric.Textbox("Gold Medal Final & Ceremony", createProps('textbox', { left: 200, top: 365, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
-      const r4Badge = new fabric.Textbox("UPCOMING", createProps('textbox', { left: 600, top: 365, fontSize: 12, fontWeight: 'bold', fill: '#facc15', width: 180, textAlign: 'right' }));
-
-      objects.push(
-        cardBg, headBg, headAccent, titleText, venueText,
-        r1Time, r1Name, r1Badge,
-        r2Time, r2Name, r2Badge,
-        r3Time, r3Name, r3Badge,
-        r4Time, r4Name, r4Badge
-      );
+      scheduleEntries.forEach((entry, idx) => {
+        const y = 165 + idx * 46;
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: y, width: 780, height: 44, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
+        }));
+        const timeTxt = new fabric.Textbox(entry.time, createProps('textbox', {
+          left: 110, top: y + 12, fontSize: 15, fontWeight: 'bold', fill: accentColor, width: 70
+        }));
+        const nameTxt = new fabric.Textbox(entry.name, createProps('textbox', {
+          left: 190, top: y + 12, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 460
+        }));
+        const badgeTxt = new fabric.Textbox(entry.status, createProps('textbox', {
+          left: 660, top: y + 13, fontSize: 12, fontWeight: 'bold', fill: entry.color, width: 190, textAlign: 'right'
+        }));
+        objects.push(rowBg, timeTxt, nameTxt, badgeTxt);
+      });
       break;
     }
     case 'weather': {
@@ -2265,6 +2317,21 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       objects.push(timeBg, timeText, codeBg, codeText);
       break;
     }
+    case 'non-comp-area': {
+      const areaName = (data.areaName || "WARM UP POOL").toUpperCase();
+
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 70, width: 340, height: 50, fill: '#dbeafe', rx: 20, ry: 20,
+        stroke: '#0f172a', strokeWidth: 2, skewX: -14
+      }));
+      const mainText = new fabric.Textbox(areaName, createProps('textbox', {
+        left: 110, top: 82, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#031b4e', width: 300, textAlign: 'center'
+      }));
+
+      objects.push(pillBg, mainText);
+      break;
+    }
+
     case 'medal-presenter': {
       const isFlower = (templateName || "").toLowerCase().includes("flower");
       const defaultName = isFlower ? "MR BILL MATSON" : "JACQUES ROGGE";

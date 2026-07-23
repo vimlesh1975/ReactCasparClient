@@ -25,6 +25,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
   const [selectedSport, setSelectedSport] = useState(OLYMPIC_GAMES_DATA[0]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [templateSearchTerm, setTemplateSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [aiPrompt, setAiPrompt] = useState('Gold lower third Usain Bolt JAM 9.63s');
   const [customFields, setCustomFields] = useState({});
@@ -34,10 +35,14 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     accentColor: OLYMPIC_GAMES_DATA[0].accentColor
   });
 
-
-
   const sportTemplates = getSportTemplates(selectedSport);
-  const filteredTemplates = sportTemplates;
+  const filteredTemplates = sportTemplates.filter(t => {
+    if (!templateSearchTerm || !templateSearchTerm.trim()) return true;
+    const term = templateSearchTerm.toLowerCase().trim();
+    return (t.id || '').toLowerCase().includes(term) ||
+           (t.name || '').toLowerCase().includes(term) ||
+           (t.subCat || '').toLowerCase().includes(term);
+  });
 
   const iframeRef = useRef(null);
   const previewContainerRef = useRef(null);
@@ -84,6 +89,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         accentColor: selectedSport.accentColor
       });
 
+      setTemplateSearchTerm('');
       const newTemplates = getSportTemplates(selectedSport);
       if (newTemplates && newTemplates.length > 0) {
         setSelectedTemplateType(newTemplates[0].id);
@@ -332,8 +338,16 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
 
           <div>
             <div className="section-label">2. {selectedSport.name} OBS Templates ({filteredTemplates.length})</div>
-
-
+            <div style={{ marginBottom: '8px' }}>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search templates by ID (e.g. SW014, SW126) or keyword..."
+                value={templateSearchTerm}
+                onChange={e => setTemplateSearchTerm(e.target.value)}
+                style={{ width: '100%', padding: '6px 10px', fontSize: '12px' }}
+              />
+            </div>
 
             <div className="template-types-grid">
               {filteredTemplates.map(tt => (
