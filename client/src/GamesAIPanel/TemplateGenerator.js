@@ -1397,8 +1397,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       const item1Bg = new fabric.Rect(createProps('rect', {
         left: 220, top: 70, width: 280, height: 50, fill: secondaryColor
       }));
-      const item1Text = new fabric.Textbox(`${rank1} ${athlete1.toUpperCase()} (${country1.toUpperCase()})`, createProps('textbox', {
-        left: 230, top: 83, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 260
+      const item1Text = new fabric.Textbox(`${rank1} ${athlete1.toUpperCase()} (${country1.toUpperCase()}) ${time1}`, createProps('textbox', {
+        left: 230, top: 83, fontSize: 15, fontWeight: 'bold', fill: accentColor, width: 260
       }));
 
       const item2Bg = new fabric.Rect(createProps('rect', {
