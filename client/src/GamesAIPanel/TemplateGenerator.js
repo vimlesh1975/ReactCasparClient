@@ -396,7 +396,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="split-card">
             <div class="split-head">
-              <span>${data.athlete || "COMPETITOR"} (${data.country || code})</span>
+              <span>${data.athlete || "MICHAEL PHELPS"} (${data.country || code})</span>
               <span style="color:${accentColor};">SPLIT TIMES</span>
             </div>
             <div class="split-row"><span>${variant === 1 ? '50m Split' : variant === 2 ? '250m Split' : '500m Split'}</span><span style="color:${accentColor};">${data.time || '23.45s'}</span></div>
@@ -422,7 +422,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
               <div class="rt-label">START REACTION</div>
               <div class="rt-value">${data.time || '0.136'}<span class="rt-unit">s</span></div>
             </div>
-            <div style="font-size:13px; color:#94a3b8; line-height:1.5;">${data.athlete || 'ATHLETE'}<br>${data.country || code}</div>
+            <div style="font-size:13px; color:#94a3b8; line-height:1.5;">${data.athlete || 'MICHAEL PHELPS'}<br>${data.country || code}</div>
           </div>
         </body></html>`;
 
@@ -447,7 +447,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
               <div class="speed-lbl">km/h</div>
             </div>
             <div class="divider"></div>
-            <div style="font-size:14px; color:#e2e8f0; font-weight:700; line-height:1.6;">${data.athlete || 'ATHLETE'}<br><span style="color:#94a3b8;">${data.country || 'NOC'}</span></div>
+            <div style="font-size:14px; color:#e2e8f0; font-weight:700; line-height:1.6;">${data.athlete || 'MICHAEL PHELPS'}<br><span style="color:#94a3b8;">${data.country || 'NOC'}</span></div>
           </div>
         </body></html>`;
     }
@@ -477,7 +477,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         <body>
           <div class="attempt-card">
             <div>
-              <div style="font-size: 26px;">${data.athlete || "COMPETITOR"} (${data.country || code})</div>
+              <div style="font-size: 26px;">${data.athlete || "MICHAEL PHELPS"} (${data.country || code})</div>
               <div style="font-size: 16px; opacity: 0.8;">ATTEMPT: ${data.snatch || data.height || "175 kg"}</div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -510,7 +510,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="lt-wrapper">
             <div class="top-bar">
               <span class="sport-code">${code}</span>
-              <span class="athlete-name">${data.athlete || data.athleteA || "COMPETITOR NAME"}</span>
+              <span class="athlete-name">${data.athlete || data.athleteA || "MICHAEL PHELPS"}</span>
               <span class="flag-badge">${data.flag || "🏳️"} ${data.country || ""}</span>
             </div>
             <div class="bottom-bar">
@@ -541,7 +541,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="flag-col">${data.flag || "🏳️"}</div>
             <div class="content-col">
               <div class="sport-tag">${code} • ${data.country || "TEAM"}</div>
-              <div class="crew-name">${data.athlete || data.teamA || "CREW NAME"}</div>
+              <div class="crew-name">${data.athlete || data.teamA || "DAVID DAVIES & K.A. PAYNE"}</div>
               <div class="crew-sub">${data.event || sportTitle} ${data.rank ? '• RANK: ' + data.rank : ''}</div>
             </div>
           </div>
@@ -567,7 +567,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="gold-bar"></div>
             <div class="name-row">
               <span class="champion-badge">🥇 CHAMPION</span>
-              <span class="champ-name">${data.athlete || "ATHLETE NAME"}</span>
+              <span class="champ-name">${data.athlete || "USAIN BOLT"}</span>
               <span style="font-size:28px;">${data.flag || "🏳️"}</span>
             </div>
             <div class="detail-row">
@@ -600,7 +600,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="role-col"></div>
             <div class="info-block">
               <div class="role-label">HEAD COACH • ${code}</div>
-              <div class="person-name">${data.athlete || "COACH NAME"}</div>
+              <div class="person-name">${data.athlete || "BOB BOWMAN"}</div>
               <div class="person-sub">${data.event || sportTitle}</div>
               <span class="country-tag">${data.flag || "🏳️"} ${data.country || "NOC"}</span>
             </div>
@@ -676,11 +676,18 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="draw-card">
             <div class="draw-head"><span>HEAT DRAW • ${sportTitle}</span><span style="color:${accentColor};">${code}</span></div>
-            ${[1,2,3,4,5,6].map(n => `
+            ${[
+              { name: "MICHAEL PHELPS", noc: "USA 🇺🇸" },
+              { name: "CHAD LE CLOS", noc: "RSA 🇿🇦" },
+              { name: "EVGENY KOROTYSHKIN", noc: "RUS 🇷🇺" },
+              { name: "MILORAD ČAVIĆ", noc: "SRB 🇷🇸" },
+              { name: "TYLER MCGILL", noc: "USA 🇺🇸" },
+              { name: "STEFFEN DEIBLER", noc: "GER 🇩🇪" }
+            ].map((ath, i) => `
               <div class="draw-row">
-                <div class="lane-badge">${n}</div>
-                <span style="flex:1;">COMPETITOR ${n}</span>
-                <span style="color:#94a3b8;font-size:14px;">NOC${n}</span>
+                <div class="lane-badge">${i + 1}</div>
+                <span style="flex:1;">${ath.name}</span>
+                <span style="color:#94a3b8;font-size:14px;">${ath.noc}</span>
               </div>`).join('')}
           </div>
         </body></html>`;
@@ -1227,9 +1234,9 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="res-card">
             <div class="res-head"><span>${sportTitle} RESULTS</span><span style="color:${accentColor};">${code}</span></div>
-            <div class="res-row"><span class="badge-gold">1 GOLD</span><span style="margin-left:20px;flex:1;">${data.athlete || "ATHLETE A"}</span><span>${data.country || "USA"}</span><span style="margin-left:20px;color:${accentColor};">${data.time || data.score || "1st"}</span></div>
-            <div class="res-row"><span class="badge-silver">2 SILV</span><span style="margin-left:20px;flex:1;">COMPETITOR B</span><span>GBR</span><span style="margin-left:20px;">+0.12</span></div>
-            <div class="res-row"><span class="badge-bronze">3 BRNZ</span><span style="margin-left:20px;flex:1;">COMPETITOR C</span><span>GER</span><span style="margin-left:20px;">+0.35</span></div>
+            <div class="res-row"><span class="badge-gold">1 GOLD</span><span style="margin-left:20px;flex:1;">${data.athlete || "MICHAEL PHELPS"}</span><span>${data.country || "USA"}</span><span style="margin-left:20px;color:${accentColor};">${data.time || data.score || "1st"}</span></div>
+            <div class="res-row"><span class="badge-silver">2 SILV</span><span style="margin-left:20px;flex:1;">CHAD LE CLOS</span><span>RSA</span><span style="margin-left:20px;">+0.12</span></div>
+            <div class="res-row"><span class="badge-bronze">3 BRNZ</span><span style="margin-left:20px;flex:1;">EVGENY KOROTYSHKIN</span><span>RUS</span><span style="margin-left:20px;">+0.35</span></div>
           </div>
         </body></html>`;
 
@@ -1250,7 +1257,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="full-card">
             <div class="full-head"><span>${sportTitle} FINAL RESULTS</span><span style="color:${accentColor};">${code}</span></div>
-            ${[{pos:'🥇 1',name:data.athlete||'ATHLETE A',noc:data.country||'USA',res:data.time||'3:33.10'},{pos:'2',name:'COMPETITOR B',noc:'GBR',res:'+0.12'},{pos:'3',name:'COMPETITOR C',noc:'GER',res:'+0.35'},{pos:'4',name:'COMPETITOR D',noc:'FRA',res:'+0.72'},{pos:'5',name:'COMPETITOR E',noc:'AUS',res:'+1.01'},{pos:'6',name:'COMPETITOR F',noc:'CHN',res:'+1.45'}].map(r => `
+            ${[{pos:'🥇 1',name:data.athlete||'MICHAEL PHELPS',noc:data.country||'USA',res:data.time||'3:33.10'},{pos:'2',name:'CHAD LE CLOS',noc:'RSA',res:'+0.12'},{pos:'3',name:'EVGENY KOROTYSHKIN',noc:'RUS',res:'+0.35'},{pos:'4',name:'MILORAD ČAVIĆ',noc:'SRB',res:'+0.72'},{pos:'5',name:'TYLER MCGILL',noc:'USA',res:'+1.01'},{pos:'6',name:'STEFFEN DEIBLER',noc:'GER',res:'+1.45'}].map(r => `
               <div class="full-row">
                 <span class="pos">${r.pos}</span>
                 <span style="flex:1;margin-left:12px;">${r.name}</span>
@@ -1276,9 +1283,9 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="cmp-card">
             <div class="cmp-head"><span>SPLIT COMPARISON</span><span style="color:${accentColor};">${code}</span></div>
             <div class="cmp-row head"><span>ATHLETE</span><span>250m</span><span>500m</span><span>FINISH</span></div>
-            <div class="cmp-row"><span>${data.athlete || 'LEADER'} <span class="pos">#1</span></span><span style="color:${accentColor};">${data.time || '52.3s'}</span><span>1:52.4</span><span style="color:${accentColor};">${data.score || '3:33.1'}</span></div>
-            <div class="cmp-row"><span>COMP B <span class="pos">#2</span></span><span>52.8s</span><span>1:53.1</span><span>+0.12</span></div>
-            <div class="cmp-row"><span>COMP C <span class="pos">#3</span></span><span>53.0s</span><span>1:53.5</span><span>+0.35</span></div>
+            <div class="cmp-row"><span>${data.athlete || 'MICHAEL PHELPS'} <span class="pos">#1</span></span><span style="color:${accentColor};">${data.time || '52.3s'}</span><span>1:52.4</span><span style="color:${accentColor};">${data.score || '3:33.1'}</span></div>
+            <div class="cmp-row"><span>CHAD LE CLOS <span class="pos">#2</span></span><span>52.8s</span><span>1:53.1</span><span>+0.12</span></div>
+            <div class="cmp-row"><span>EVGENY KOROTYSHKIN <span class="pos">#3</span></span><span>53.0s</span><span>1:53.5</span><span>+0.35</span></div>
           </div>
         </body></html>`;
     }
@@ -1661,7 +1668,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       const bottomAccent = new fabric.Rect(createProps('rect', {
         left: 90, top: 954, width: 600, height: 6, fill: accentColor
       }));
-      const athleteText = new fabric.Textbox(`${(data.athlete || "COMPETITOR").toUpperCase()} (${(data.country || code).toUpperCase()})`, createProps('textbox', {
+      const athleteText = new fabric.Textbox(`${(data.athlete || "MICHAEL PHELPS").toUpperCase()} (${(data.country || code).toUpperCase()})`, createProps('textbox', {
         left: 115, top: 875, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 420
       }));
       const attemptText = new fabric.Textbox(`ATTEMPT: ${data.snatch || data.height || "175 kg"}`, createProps('textbox', {
@@ -1691,7 +1698,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const codeText = new fabric.Textbox(code, createProps('textbox', {
           left: 110, top: 878, fontSize: 18, fontWeight: 'bold', fill: '#000000', width: 55, textAlign: 'center'
         }));
-        const nameText = new fabric.Textbox((data.athlete || data.athleteA || "COMPETITOR NAME").toUpperCase(), createProps('textbox', {
+        const nameText = new fabric.Textbox((data.athlete || data.athleteA || "MICHAEL PHELPS").toUpperCase(), createProps('textbox', {
           left: 180, top: 872, fontSize: 34, fontWeight: 'bold', fill: '#ffffff', width: 450
         }));
         const countryText = new fabric.Textbox(`${data.flag || "🏳️"} ${data.country || ""}`, createProps('textbox', {
@@ -1732,7 +1739,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const sportTag = new fabric.Textbox(`${code} • ${data.country || "TEAM"}`, createProps('textbox', {
           left: 195, top: 870, fontSize: 13, fontWeight: 'bold', fill: accentColor, width: 550
         }));
-        const crewName = new fabric.Textbox((data.athlete || data.teamA || "CREW NAME").toUpperCase(), createProps('textbox', {
+        const crewName = new fabric.Textbox((data.athlete || data.teamA || "DAVID DAVIES & K.A. PAYNE").toUpperCase(), createProps('textbox', {
           left: 195, top: 890, fontSize: 30, fontWeight: 'bold', fill: '#ffffff', width: 550
         }));
         const crewSub = new fabric.Textbox(`${data.event || sportTitle} ${data.rank ? '• RANK: ' + data.rank : ''}`, createProps('textbox', {
@@ -1756,7 +1763,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const badgeText = new fabric.Textbox("🥇 CHAMPION", createProps('textbox', {
           left: 110, top: 885, fontSize: 12, fontWeight: 'bold', fill: '#000000', width: 110, textAlign: 'center'
         }));
-        const champName = new fabric.Textbox((data.athlete || "ATHLETE NAME").toUpperCase(), createProps('textbox', {
+        const champName = new fabric.Textbox((data.athlete || "USAIN BOLT").toUpperCase(), createProps('textbox', {
           left: 235, top: 876, fontSize: 34, fontWeight: 'bold', fill: '#ffffff', width: 420
         }));
         const flagText = new fabric.Textbox(data.flag || "🏳️", createProps('textbox', {
@@ -1781,7 +1788,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const roleLabel = new fabric.Textbox(`HEAD COACH • ${code}`, createProps('textbox', {
           left: 130, top: 862, fontSize: 13, fontWeight: 'bold', fill: accentColor, width: 500
         }));
-        const personName = new fabric.Textbox((data.athlete || "COACH NAME").toUpperCase(), createProps('textbox', {
+        const personName = new fabric.Textbox((data.athlete || "BOB BOWMAN").toUpperCase(), createProps('textbox', {
           left: 130, top: 882, fontSize: 32, fontWeight: 'bold', fill: '#ffffff', width: 500
         }));
         const personSub = new fabric.Textbox(data.event || sportTitle, createProps('textbox', {
@@ -1892,8 +1899,17 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         }));
         objects.push(cardBg, headBg, headAccent, headText, headCode);
 
-        [1,2,3,4,5,6].forEach(n => {
-          const y = 180 + (n - 1) * 45;
+        const heatAthletes = [
+          { name: "MICHAEL PHELPS", noc: "USA" },
+          { name: "CHAD LE CLOS", noc: "RSA" },
+          { name: "EVGENY KOROTYSHKIN", noc: "RUS" },
+          { name: "MILORAD ČAVIĆ", noc: "SRB" },
+          { name: "TYLER MCGILL", noc: "USA" },
+          { name: "STEFFEN DEIBLER", noc: "GER" }
+        ];
+        heatAthletes.forEach((ath, idx) => {
+          const n = idx + 1;
+          const y = 180 + idx * 45;
           const rowBg = new fabric.Rect(createProps('rect', {
             left: 1270, top: y, width: 560, height: 44, fill: n % 2 === 0 ? '#1e293b' : '#0a0e1e'
           }));
@@ -1903,10 +1919,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
           const laneText = new fabric.Textbox(String(n), createProps('textbox', {
             left: 1285, top: y + 13, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 30, textAlign: 'center'
           }));
-          const nameText = new fabric.Textbox(`COMPETITOR ${n}`, createProps('textbox', {
+          const nameText = new fabric.Textbox(ath.name, createProps('textbox', {
             left: 1330, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 350
           }));
-          const nocText = new fabric.Textbox(`NOC${n}`, createProps('textbox', {
+          const nocText = new fabric.Textbox(ath.noc, createProps('textbox', {
             left: 1730, top: y + 14, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 80, textAlign: 'right'
           }));
           objects.push(rowBg, circle, laneText, nameText, nocText);
@@ -2030,7 +2046,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const goldPillText = new fabric.Textbox("1 GOLD", createProps('textbox', {
           left: 115, top: 227, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const goldAthlete = new fabric.Textbox((data.athlete || "ATHLETE A").toUpperCase(), createProps('textbox', {
+        const goldAthlete = new fabric.Textbox((data.athlete || "MICHAEL PHELPS").toUpperCase(), createProps('textbox', {
           left: 220, top: 224, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
         }));
         const goldNoc = new fabric.Textbox(data.country || "USA", createProps('textbox', {
@@ -2047,10 +2063,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const silverPillText = new fabric.Textbox("2 SILV", createProps('textbox', {
           left: 115, top: 277, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const silverAthlete = new fabric.Textbox("COMPETITOR B", createProps('textbox', {
+        const silverAthlete = new fabric.Textbox("CHAD LE CLOS", createProps('textbox', {
           left: 220, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
         }));
-        const silverNoc = new fabric.Textbox("GBR", createProps('textbox', {
+        const silverNoc = new fabric.Textbox("RSA", createProps('textbox', {
           left: 610, top: 274, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
         }));
         const silverTime = new fabric.Textbox("+0.12", createProps('textbox', {
@@ -2064,7 +2080,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const bronzePillText = new fabric.Textbox("3 BRNZ", createProps('textbox', {
           left: 115, top: 327, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const bronzeAthlete = new fabric.Textbox("COMPETITOR C", createProps('textbox', {
+        const bronzeAthlete = new fabric.Textbox("EVGENY KOROTYSHKIN", createProps('textbox', {
           left: 220, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
         }));
         const bronzeNoc = new fabric.Textbox("GER", createProps('textbox', {
@@ -2095,12 +2111,12 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader);
 
         const resultsData = [
-          { pos: '🥇 1', name: (data.athlete || 'ATHLETE A').toUpperCase(), noc: data.country || 'USA', res: data.time || '3:33.10' },
-          { pos: '2', name: 'COMPETITOR B', noc: 'GBR', res: '+0.12' },
-          { pos: '3', name: 'COMPETITOR C', noc: 'GER', res: '+0.35' },
-          { pos: '4', name: 'COMPETITOR D', noc: 'FRA', res: '+0.72' },
-          { pos: '5', name: 'COMPETITOR E', noc: 'AUS', res: '+1.01' },
-          { pos: '6', name: 'COMPETITOR F', noc: 'CHN', res: '+1.45' }
+          { pos: '🥇 1', name: (data.athlete || 'MICHAEL PHELPS').toUpperCase(), noc: data.country || 'USA', res: data.time || '3:33.10' },
+          { pos: '2', name: 'CHAD LE CLOS', noc: 'RSA', res: '+0.12' },
+          { pos: '3', name: 'EVGENY KOROTYSHKIN', noc: 'RUS', res: '+0.35' },
+          { pos: '4', name: 'MILORAD ČAVIĆ', noc: 'SRB', res: '+0.72' },
+          { pos: '5', name: 'TYLER MCGILL', noc: 'USA', res: '+1.01' },
+          { pos: '6', name: 'STEFFEN DEIBLER', noc: 'GER', res: '+1.45' }
         ];
 
         resultsData.forEach((r, idx) => {
@@ -2153,12 +2169,12 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const r1C3 = new fabric.Textbox('1:52.4', createProps('textbox', { left: 1540, top: 222, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
         const r1C4 = new fabric.Textbox(data.score || '3:33.1', createProps('textbox', { left: 1670, top: 222, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 140, textAlign: 'right' }));
 
-        const r2Name = new fabric.Textbox("COMP B #2", createProps('textbox', { left: 1150, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
+        const r2Name = new fabric.Textbox("CHAD LE CLOS #2", createProps('textbox', { left: 1150, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
         const r2C2 = new fabric.Textbox('52.8s', createProps('textbox', { left: 1410, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
         const r2C3 = new fabric.Textbox('1:53.1', createProps('textbox', { left: 1540, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
         const r2C4 = new fabric.Textbox('+0.12', createProps('textbox', { left: 1670, top: 262, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 140, textAlign: 'right' }));
 
-        const r3Name = new fabric.Textbox("COMP C #3", createProps('textbox', { left: 1150, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
+        const r3Name = new fabric.Textbox("EVGENY KOROTYSHKIN #3", createProps('textbox', { left: 1150, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 250 }));
         const r3C2 = new fabric.Textbox('53.0s', createProps('textbox', { left: 1410, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
         const r3C3 = new fabric.Textbox('1:53.5', createProps('textbox', { left: 1540, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 120 }));
         const r3C4 = new fabric.Textbox('+0.35', createProps('textbox', { left: 1670, top: 302, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 140, textAlign: 'right' }));
