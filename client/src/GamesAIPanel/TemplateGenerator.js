@@ -51,6 +51,9 @@ export function resolveCategory(templateType, templateName = '') {
   const normName = (templateName || "").toLowerCase();
   const combined = `${normType} ${normName}`;
 
+  if (combined.includes("clock") || combined.includes("timer")) return "race-clock";
+  if (combined.includes("presenter")) return "medal-presenter";
+  if (combined.includes("medal") || combined.includes("medals") || combined.includes("podium")) return "medal-tally";
   if (combined.includes("position")) return "position-on-screen";
   if (combined.includes("venue") || combined.includes("location")) return "venue-id";
   if (combined.includes("weather")) return "weather";
@@ -802,7 +805,197 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
       `;
     }
 
-    case "medal-tally":
+    case "race-clock": {
+      const normName = (templateName || "").toLowerCase();
+      const normId = (templateId || "").toLowerCase();
+
+      const isSW130 = normName.includes("finish with standings") || normId.includes("130");
+      const isSW129 = normName.includes("standings") || normId.includes("129");
+      const isSW128 = normName.includes("split point") || normName.includes("finish") || normName.includes("lap") || normId.includes("128");
+      const isSW126 = normName.includes("delta") || normId.includes("126");
+
+      const hasLeftLap = isSW128 || isSW129 || isSW130;
+      const hasDelta = isSW126 || isSW129 || isSW130;
+
+      const clockTime = data.time || data.clock || (isSW130 ? "1:59:27.7" : isSW129 ? "59:40" : isSW126 ? "1:21:14" : isSW128 ? "59:20" : "36:41");
+      const deltaTime = data.delta || (isSW130 ? "+0:01" : isSW129 ? "+0:12" : "+0:07");
+      const lapText = data.lap || data.splitInfo || (isSW130 ? "FINISH" : "LAP 3 OF 6");
+
+      const standingsList = data.standings || [
+        { rank: "1", country: "RUS", flag: "🇷🇺", bib: "12", name: "L. ILCHENKO", time: isSW130 ? "1:59:27.7" : "59:28.6" },
+        { rank: "2", country: "GBR", flag: "🇬🇧", bib: "21", name: "K.A. PAYNE", time: "+0.9" },
+        { rank: "3", country: "GBR", flag: "🇬🇧", bib: "2", name: "C. PATTEN", time: "+2.1" },
+        { rank: "4", country: "GER", flag: "🇩🇪", bib: "18", name: "A. MAURER", time: "+5.2" },
+        { rank: "5", country: "BRA", flag: "🇧🇷", bib: "1", name: "A. CUNHA", time: "+6.1" },
+        { rank: "6", country: "SUI", flag: "🇨🇭", bib: "15", name: "S. OBERSON", time: "+7.9" },
+        { rank: "7", country: "BRA", flag: "🇧🇷", bib: "20", name: "P. OKIMOTO", time: "+10.2" }
+      ];
+
+      const leaderRow = standingsList[0];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+              width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font};
+            }
+            .standings-container {
+              position: absolute; top: 70px; left: 90px;
+              display: flex; gap: 24px;
+            }
+            .standings-col {
+              display: flex; flex-direction: column; gap: 4px;
+              width: 500px;
+            }
+            .standings-row {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white; padding: 6px 18px; border-radius: 4px;
+              display: flex; align-items: center; justify-content: space-between;
+              font-size: 18px; font-weight: 900; font-style: italic;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+              clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
+            }
+            .single-leader-bar {
+              position: absolute; top: 70px; left: 90px;
+              width: 500px;
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white; padding: 6px 18px; border-radius: 4px;
+              display: flex; align-items: center; justify-content: space-between;
+              font-size: 18px; font-weight: 900; font-style: italic;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+              clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
+            }
+            .rank-badge { background: #dc2626; color: white; min-width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 3px; font-size: 15px; }
+            .row-left { display: flex; align-items: center; gap: 10px; }
+            .noc-flag { display: flex; align-items: center; gap: 4px; }
+            .bib-num { opacity: 0.8; font-size: 15px; }
+            .row-time { color: ${accentColor}; font-weight: 900; }
+
+            .left-lap-bug {
+              position: absolute; top: ${isSW129 ? '255px' : isSW130 ? '125px' : '70px'}; left: 90px;
+              background: linear-gradient(180deg, #ffffff, #cbd5e1);
+              color: #003366;
+              padding: 8px 24px;
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              letter-spacing: 1.5px;
+              border-radius: 6px;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+              clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+              border: 1px solid rgba(0,0,0,0.1);
+            }
+            .clock-bug {
+              position: absolute; top: ${isSW129 ? '250px' : isSW130 ? '125px' : '70px'}; ${isSW129 ? 'left: 614px;' : 'right: 90px;'}
+              display: flex; align-items: center; gap: 0;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+              border-radius: 8px; overflow: hidden;
+            }
+            .delta-box {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white;
+              padding: 10px 24px;
+              font-size: 32px;
+              font-weight: 900;
+              font-style: italic;
+              letter-spacing: 1px;
+              display: flex; align-items: center; justify-content: center;
+              clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+              z-index: 2;
+            }
+            .clock-time-box {
+              background: linear-gradient(180deg, #ffffff, #cbd5e1);
+              color: #003366;
+              padding: 10px 32px;
+              margin-left: ${hasDelta ? '-16px' : '0'};
+              font-size: 38px;
+              font-weight: 900;
+              font-style: italic;
+              letter-spacing: 2px;
+              display: flex; align-items: center; justify-content: center;
+              clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%);
+              min-width: 180px;
+              z-index: 1;
+            }
+            .clock-badge-box {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white;
+              padding: 10px 24px 10px 32px;
+              margin-left: -20px;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 24px; font-weight: 900; font-style: italic;
+              border-radius: 0 8px 8px 0;
+            }
+          </style>
+        </head>
+        <body>
+          ${isSW130 ? `
+            <div class="single-leader-bar">
+              <div class="row-left">
+                <span class="rank-badge">${leaderRow.rank}</span>
+                <span class="noc-flag">${leaderRow.country} ${leaderRow.flag}</span>
+                <span class="bib-num">${leaderRow.bib}</span>
+                <span>${leaderRow.name}</span>
+              </div>
+              <span class="row-time" style="color:#ffffff;">${leaderRow.time}</span>
+            </div>
+          ` : isSW129 ? `
+            <div class="standings-container">
+              <div class="standings-col">
+                ${standingsList.slice(0, 4).map((st, i) => `
+                  <div class="standings-row">
+                    <div class="row-left">
+                      <span class="rank-badge">${st.rank}</span>
+                      <span class="noc-flag">${st.country} ${st.flag}</span>
+                      <span class="bib-num">${st.bib}</span>
+                      <span>${st.name}</span>
+                    </div>
+                    <span class="row-time" style="${i > 0 ? 'color:#ffffff;' : ''}">${st.time}</span>
+                  </div>
+                `).join('')}
+              </div>
+              ${standingsList.length > 4 ? `
+                <div class="standings-col">
+                  ${standingsList.slice(4).map(st => `
+                    <div class="standings-row">
+                      <div class="row-left">
+                        <span class="rank-badge">${st.rank}</span>
+                        <span class="noc-flag">${st.country} ${st.flag}</span>
+                        <span class="bib-num">${st.bib}</span>
+                        <span>${st.name}</span>
+                      </div>
+                      <span class="row-time" style="color:#ffffff;">${st.time}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+          ${hasLeftLap ? `<div class="left-lap-bug">${lapText}</div>` : ''}
+          <div class="clock-bug">
+            ${hasDelta ? `<div class="delta-box">${deltaTime}</div>` : ''}
+            <div class="clock-time-box">${clockTime}</div>
+            <div class="clock-badge-box">
+              <span style="color:${accentColor};">${code}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+    case "medal-presenter": {
+      const isFlower = (templateName || "").toLowerCase().includes("flower");
+      const defaultName = isFlower ? "MR BILL MATSON" : "JACQUES ROGGE";
+      const defaultTitle = isFlower ? "VICE-PRESIDENT, FINA" : "IOC PRESIDENT, BELGIUM";
+
+      const presenterName = (data.presenter || data.athlete || defaultName).toUpperCase();
+      const presenterTitle = (data.title || data.designation || defaultTitle).toUpperCase();
+
       return `
         <!DOCTYPE html>
         <html>
@@ -818,75 +1011,204 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
               background: transparent;
               font-family: ${font};
             }
-            .tally-card {
+            .presenter-container {
               position: absolute;
-              top: 180px;
-              right: 100px;
-              width: 550px;
-              background: rgba(15, 23, 42, 0.95);
-              border-radius: 12px;
-              overflow: hidden;
-              border: 1px solid rgba(255,255,255,0.2);
-              box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+              bottom: 120px;
+              left: 120px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            }
+            .presenter-main-bar {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
               color: white;
-            }
-            .tally-head {
-              background: linear-gradient(135deg, ${primaryColor}, #0f172a);
-              padding: 18px 24px;
+              padding: 14px 32px;
+              border-radius: 6px 6px 0 0;
               display: flex;
-              align-items: center;
               justify-content: space-between;
-              border-bottom: 3px solid ${accentColor};
-            }
-            .head-title { font-size: 22px; font-weight: 900; letter-spacing: 1px; }
-            .item-row {
-              display: flex;
               align-items: center;
-              padding: 14px 24px;
-              border-bottom: 1px solid rgba(255,255,255,0.08);
-              font-weight: 700;
-              font-size: 20px;
+              clip-path: polygon(0 0, 96% 0, 100% 100%, 0 100%);
+              border-bottom: 2px solid rgba(255,255,255,0.2);
             }
-            .gold { color: #ffd700; }
-            .silver { color: #c0c0c0; }
-            .bronze { color: #cd7f32; }
-            .cnt { margin-left: auto; display: flex; gap: 20px; font-weight: 900; }
+            .presenter-name {
+              font-size: 32px;
+              font-weight: 900;
+              letter-spacing: 1.5px;
+              font-style: italic;
+              text-transform: uppercase;
+              text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            }
+            .presenter-code { font-size: 24px; font-weight: 900; color: ${accentColor}; }
+            .presenter-sub-bar {
+              background: linear-gradient(180deg, #0a1329, #0f172a);
+              color: #cbd5e1;
+              padding: 10px 32px;
+              border-radius: 0 0 6px 6px;
+              font-size: 19px;
+              font-weight: 800;
+              letter-spacing: 1.5px;
+              font-style: italic;
+              text-transform: uppercase;
+              border-top: 1px solid rgba(255,255,255,0.1);
+            }
           </style>
         </head>
         <body>
-          <div class="tally-card">
-            <div class="tally-head">
-              <span class="head-title">MEDAL STANDINGS • LONDON 2012</span>
-              <span style="color:${accentColor}; font-weight:900;">OBS</span>
+          <div class="presenter-container">
+            <div class="presenter-main-bar">
+              <span class="presenter-name">${presenterName}</span>
+              <span class="presenter-code">${code}</span>
             </div>
-            <div class="item-row">
-              <span>1. USA 🇺🇸</span>
-              <div class="cnt">
-                <span class="gold">46</span>
-                <span class="silver">28</span>
-                <span class="bronze">29</span>
-              </div>
-            </div>
-            <div class="item-row">
-              <span>2. CHINA 🇨🇳</span>
-              <div class="cnt">
-                <span class="gold">38</span>
-                <span class="silver">31</span>
-                <span class="bronze">22</span>
-              </div>
-            </div>
-            <div class="item-row">
-              <span>3. GREAT BRITAIN 🇬🇧</span>
-              <div class="cnt">
-                <span class="gold">29</span>
-                <span class="silver">17</span>
-                <span class="bronze">19</span>
-              </div>
+            <div class="presenter-sub-bar">
+              <span>${presenterTitle}</span>
             </div>
           </div>
         </body>
         </html>
       `;
+    }
+    case "medal-tally": {
+      const eventName = (data.event || `${sportTitle} FINAL`).toUpperCase();
+      const goldAthlete = (data.goldAthlete || data.athlete || "MAARTEN VAN DER WEIJDEN").toUpperCase();
+      const goldNoc = (data.goldCountry || data.country || "NED").toUpperCase();
+      const goldFlag = data.goldFlag || "🇳🇱";
+
+      const silverAthlete = (data.silverAthlete || "DAVID DAVIES").toUpperCase();
+      const silverNoc = (data.silverCountry || "GBR").toUpperCase();
+      const silverFlag = data.silverFlag || "🇬🇧";
+
+      const bronzeAthlete = (data.bronzeAthlete || "THOMAS LURZ").toUpperCase();
+      const bronzeNoc = (data.bronzeCountry || "GER").toUpperCase();
+      const bronzeFlag = data.bronzeFlag || "🇩🇪";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+              width: 1920px;
+              height: 1080px;
+              overflow: hidden;
+              background: transparent;
+              font-family: ${font};
+            }
+            .medal-card {
+              position: absolute;
+              bottom: 120px;
+              left: 120px;
+              width: 820px;
+              display: flex;
+              flex-direction: column;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            }
+            .medal-head-bar {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white;
+              padding: 14px 28px;
+              border-radius: 8px 8px 0 0;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              clip-path: polygon(0 0, 97% 0, 100% 100%, 0 100%);
+              border-bottom: 2px solid rgba(255,255,255,0.2);
+            }
+            .head-title {
+              font-size: 26px;
+              font-weight: 900;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              font-style: italic;
+              display: flex;
+              align-items: center;
+              gap: 15px;
+            }
+            .head-code { font-size: 22px; font-weight: 900; color: ${accentColor}; }
+            .medal-sub-bar {
+              background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+              color: #0f172a;
+              padding: 8px 28px;
+              font-size: 15px;
+              font-weight: 900;
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              font-style: italic;
+              border-bottom: 2px solid ${accentColor};
+            }
+            .medal-row {
+              background: linear-gradient(90deg, #0a1329, #0f172a);
+              color: white;
+              padding: 10px 20px;
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              border-bottom: 1px solid rgba(255,255,255,0.1);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+            }
+            .medal-row:last-child {
+              border-radius: 0 0 8px 8px;
+              border-bottom: none;
+            }
+            .medal-icon {
+              width: 34px;
+              height: 34px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 16px;
+              font-weight: 900;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            }
+            .gold-badge { background: linear-gradient(135deg, #ffd700, #b8860b); color: #000; border: 2px solid #fff; }
+            .silver-badge { background: linear-gradient(135deg, #e2e8f0, #64748b); color: #000; border: 2px solid #fff; }
+            .bronze-badge { background: linear-gradient(135deg, #d97706, #78350f); color: #fff; border: 2px solid #fff; }
+            .noc-text { color: #f8fafc; font-size: 18px; width: 45px; }
+            .flag-box { font-size: 20px; margin-right: 6px; }
+            .athlete-name { text-transform: uppercase; letter-spacing: 1px; flex: 1; }
+          </style>
+        </head>
+        <body>
+          <div class="medal-card">
+            <div class="medal-head-bar">
+              <div class="head-title">
+                <span>🏊</span>
+                <span>${eventName}</span>
+              </div>
+              <div class="head-code">${code}</div>
+            </div>
+            <div class="medal-sub-bar">
+              <span>VICTORY CEREMONY</span>
+            </div>
+            <div class="medal-row">
+              <div class="medal-icon gold-badge">🥇</div>
+              <div class="noc-text">${goldNoc}</div>
+              <div class="flag-box">${goldFlag}</div>
+              <div class="athlete-name">${goldAthlete}</div>
+            </div>
+            <div class="medal-row">
+              <div class="medal-icon silver-badge">🥈</div>
+              <div class="noc-text">${silverNoc}</div>
+              <div class="flag-box">${silverFlag}</div>
+              <div class="athlete-name">${silverAthlete}</div>
+            </div>
+            <div class="medal-row">
+              <div class="medal-icon bronze-badge">🥉</div>
+              <div class="noc-text">${bronzeNoc}</div>
+              <div class="flag-box">${bronzeFlag}</div>
+              <div class="athlete-name">${bronzeAthlete}</div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
 
     case "results-table": {
       // Variant 1 & 4: Classic podium top-3 results card
@@ -1059,6 +1381,43 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   };
 
   switch (category) {
+    case 'position-on-screen': {
+      const athlete1 = data.athlete || data.athleteA || "MICHAEL PHELPS";
+      const country1 = data.country || "USA";
+      const time1 = data.time || "50.58";
+      const rank1 = data.rank || "1st";
+
+      const posLabel = new fabric.Rect(createProps('rect', {
+        left: 90, top: 70, width: 130, height: 50, fill: primaryColor, rx: 6, ry: 6
+      }));
+      const posLabelText = new fabric.Textbox("LIVE POS", createProps('textbox', {
+        left: 90, top: 85, fontSize: 13, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'center'
+      }));
+
+      const item1Bg = new fabric.Rect(createProps('rect', {
+        left: 220, top: 70, width: 280, height: 50, fill: secondaryColor
+      }));
+      const item1Text = new fabric.Textbox(`${rank1} ${athlete1.toUpperCase()} (${country1.toUpperCase()})`, createProps('textbox', {
+        left: 230, top: 83, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 260
+      }));
+
+      const item2Bg = new fabric.Rect(createProps('rect', {
+        left: 500, top: 70, width: 240, height: 50, fill: '#0f172a'
+      }));
+      const item2Text = new fabric.Textbox("2nd CHAD LE CLOS (RSA)", createProps('textbox', {
+        left: 510, top: 83, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 220
+      }));
+
+      const codeBadge = new fabric.Rect(createProps('rect', {
+        left: 740, top: 70, width: 60, height: 50, fill: accentColor
+      }));
+      const codeText = new fabric.Textbox(code, createProps('textbox', {
+        left: 740, top: 85, fontSize: 15, fontWeight: 'bold', fill: '#000000', width: 60, textAlign: 'center'
+      }));
+
+      objects.push(posLabel, posLabelText, item1Bg, item1Text, item2Bg, item2Text, codeBadge, codeText);
+      break;
+    }
     case 'venue-id': {
       const venueName = (data.venue || sport.venue || "OLYMPIC STADIUM").toUpperCase();
       const locationName = (data.location || "LONDON, UNITED KINGDOM").toUpperCase();
@@ -1809,58 +2168,176 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       break;
     }
 
+    case 'race-clock': {
+      const normName = (templateName || "").toLowerCase();
+      const normId = (templateId || "").toLowerCase();
+
+      const isSW130 = normName.includes("finish with standings") || normId.includes("130");
+      const isSW129 = normName.includes("standings") || normId.includes("129");
+      const isSW128 = normName.includes("split point") || normName.includes("finish") || normName.includes("lap") || normId.includes("128");
+      const isSW126 = normName.includes("delta") || normId.includes("126");
+
+      const hasLeftLap = isSW128 || isSW129 || isSW130;
+      const hasDelta = isSW126 || isSW129 || isSW130;
+
+      const clockTime = data.time || data.clock || (isSW130 ? "1:59:27.7" : isSW129 ? "59:40" : isSW126 ? "1:21:14" : isSW128 ? "59:20" : "36:41");
+      const deltaTime = data.delta || (isSW130 ? "+0:01" : isSW129 ? "+0:12" : "+0:07");
+      const lapText = data.lap || data.splitInfo || (isSW130 ? "FINISH" : "LAP 3 OF 6");
+
+      const standingsList = data.standings || [
+        { rank: "1", country: "RUS", flag: "🇷🇺", bib: "12", name: "L. ILCHENKO", time: isSW130 ? "1:59:27.7" : "59:28.6" },
+        { rank: "2", country: "GBR", flag: "🇬🇧", bib: "21", name: "K.A. PAYNE", time: "+0.9" },
+        { rank: "3", country: "GBR", flag: "🇬🇧", bib: "2", name: "C. PATTEN", time: "+2.1" },
+        { rank: "4", country: "GER", flag: "🇩🇪", bib: "18", name: "A. MAURER", time: "+5.2" },
+        { rank: "5", country: "BRA", flag: "🇧🇷", bib: "1", name: "A. CUNHA", time: "+6.1" },
+        { rank: "6", country: "SUI", flag: "🇨🇭", bib: "15", name: "S. OBERSON", time: "+7.9" },
+        { rank: "7", country: "BRA", flag: "🇧🇷", bib: "20", name: "P. OKIMOTO", time: "+10.2" }
+      ];
+
+      const leaderRow = standingsList[0];
+      const clockY = isSW129 ? 250 : isSW130 ? 125 : 70;
+
+      if (isSW130) {
+        const leadBar = new fabric.Rect(createProps('rect', { left: 90, top: 70, width: 480, height: 38, fill: primaryColor, rx: 4, ry: 4 }));
+        const leadRankBg = new fabric.Rect(createProps('rect', { left: 98, top: 75, width: 24, height: 28, fill: '#dc2626', rx: 3, ry: 3 }));
+        const leadRankTxt = new fabric.Textbox(leaderRow.rank, createProps('textbox', { left: 98, top: 79, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 24, textAlign: 'center' }));
+        const leadInfo = new fabric.Textbox(`${leaderRow.country} ${leaderRow.flag}  ${leaderRow.bib} ${leaderRow.name}`, createProps('textbox', { left: 130, top: 79, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 290 }));
+        const leadTime = new fabric.Textbox(leaderRow.time, createProps('textbox', { left: 430, top: 79, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right' }));
+        objects.push(leadBar, leadRankBg, leadRankTxt, leadInfo, leadTime);
+      } else if (isSW129) {
+        standingsList.slice(0, 4).forEach((st, i) => {
+          const rowY = 70 + i * 44;
+          const leadBar = new fabric.Rect(createProps('rect', { left: 90, top: rowY, width: 480, height: 38, fill: primaryColor, rx: 4, ry: 4 }));
+          const leadRankBg = new fabric.Rect(createProps('rect', { left: 98, top: rowY + 5, width: 24, height: 28, fill: '#dc2626', rx: 3, ry: 3 }));
+          const leadRankTxt = new fabric.Textbox(st.rank, createProps('textbox', { left: 98, top: rowY + 9, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 24, textAlign: 'center' }));
+          const leadInfo = new fabric.Textbox(`${st.country} ${st.flag}  ${st.bib} ${st.name}`, createProps('textbox', { left: 130, top: rowY + 9, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 290 }));
+          const leadTime = new fabric.Textbox(st.time, createProps('textbox', { left: 430, top: rowY + 9, fontSize: 15, fontWeight: 'bold', fill: i === 0 ? accentColor : '#ffffff', width: 130, textAlign: 'right' }));
+          objects.push(leadBar, leadRankBg, leadRankTxt, leadInfo, leadTime);
+        });
+        standingsList.slice(4).forEach((st, i) => {
+          const rowY = 70 + i * 44;
+          const leadBar = new fabric.Rect(createProps('rect', { left: 614, top: rowY, width: 480, height: 38, fill: primaryColor, rx: 4, ry: 4 }));
+          const leadRankBg = new fabric.Rect(createProps('rect', { left: 622, top: rowY + 5, width: 24, height: 28, fill: '#dc2626', rx: 3, ry: 3 }));
+          const leadRankTxt = new fabric.Textbox(st.rank, createProps('textbox', { left: 622, top: rowY + 9, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 24, textAlign: 'center' }));
+          const leadInfo = new fabric.Textbox(`${st.country} ${st.flag}  ${st.bib} ${st.name}`, createProps('textbox', { left: 654, top: rowY + 9, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 290 }));
+          const leadTime = new fabric.Textbox(st.time, createProps('textbox', { left: 954, top: rowY + 9, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right' }));
+          objects.push(leadBar, leadRankBg, leadRankTxt, leadInfo, leadTime);
+        });
+      }
+
+      if (hasLeftLap) {
+        const lapBg = new fabric.Rect(createProps('rect', { left: 90, top: clockY, width: 180, height: 44, fill: '#e2e8f0', rx: 6, ry: 6 }));
+        const lapTxt = new fabric.Textbox(lapText, createProps('textbox', { left: 90, top: clockY + 10, fontSize: 18, fontWeight: 'bold', fill: '#003366', fontStyle: 'italic', width: 180, textAlign: 'center' }));
+        objects.push(lapBg, lapTxt);
+      }
+
+      let rightX = isSW129 ? 614 : 1720;
+      if (hasDelta) {
+        rightX = isSW129 ? 614 : 1600;
+        const deltaBg = new fabric.Rect(createProps('rect', { left: isSW129 ? 614 : 1480, top: clockY, width: 110, height: 48, fill: primaryColor, rx: 6, ry: 6 }));
+        const deltaTxt = new fabric.Textbox(deltaTime, createProps('textbox', { left: isSW129 ? 614 : 1480, top: clockY + 10, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', fontStyle: 'italic', width: 110, textAlign: 'center' }));
+        objects.push(deltaBg, deltaTxt);
+        rightX = isSW129 ? 710 : 1600;
+      }
+
+      const timeBg = new fabric.Rect(createProps('rect', { left: rightX, top: clockY, width: 140, height: 48, fill: '#e2e8f0', rx: 6, ry: 6 }));
+      const timeText = new fabric.Textbox(clockTime, createProps('textbox', { left: rightX, top: clockY + 8, fontSize: 24, fontWeight: 'bold', fill: '#003366', fontStyle: 'italic', width: 140, textAlign: 'center' }));
+
+      const codeBg = new fabric.Rect(createProps('rect', { left: rightX + 130, top: clockY, width: 80, height: 48, fill: primaryColor, rx: 6, ry: 6 }));
+      const codeText = new fabric.Textbox(code, createProps('textbox', { left: rightX + 130, top: clockY + 12, fontSize: 18, fontWeight: 'bold', fill: accentColor, fontStyle: 'italic', width: 80, textAlign: 'center' }));
+
+      objects.push(timeBg, timeText, codeBg, codeText);
+      break;
+    }
+    case 'medal-presenter': {
+      const isFlower = (templateName || "").toLowerCase().includes("flower");
+      const defaultName = isFlower ? "MR BILL MATSON" : "JACQUES ROGGE";
+      const defaultTitle = isFlower ? "VICE-PRESIDENT, FINA" : "IOC PRESIDENT, BELGIUM";
+
+      const presenterName = (data.presenter || data.athlete || defaultName).toUpperCase();
+      const presenterTitle = (data.title || data.designation || defaultTitle).toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 880, width: 780, height: 50, fill: primaryColor, rx: 6, ry: 6
+      }));
+      const nameText = new fabric.Textbox(presenterName, createProps('textbox', {
+        left: 145, top: 893, fontSize: 24, fontWeight: 'bold', fill: '#ffffff', fontStyle: 'italic', width: 640
+      }));
+      const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+        left: 810, top: 893, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 70, textAlign: 'right'
+      }));
+
+      const subBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 932, width: 780, height: 38, fill: '#0a1329', rx: 4, ry: 4
+      }));
+      const subText = new fabric.Textbox(presenterTitle, createProps('textbox', {
+        left: 145, top: 942, fontSize: 16, fontWeight: 'bold', fill: '#cbd5e1', fontStyle: 'italic', width: 730
+      }));
+
+      objects.push(mainBar, nameText, codeHeader, subBar, subText);
+      break;
+    }
     case 'medal-tally': {
-      const cardBg = new fabric.Rect(createProps('rect', {
-        left: 1150, top: 200, width: 620, height: 290, fill: '#0f172a', rx: 12, ry: 12
+      const eventName = (data.event || `${sportTitle} FINAL`).toUpperCase();
+      const goldAthlete = (data.goldAthlete || data.athlete || "MAARTEN VAN DER WEIJDEN").toUpperCase();
+      const goldNoc = (data.goldCountry || data.country || "NED").toUpperCase();
+      const goldFlag = data.goldFlag || "🇳🇱";
+
+      const silverAthlete = (data.silverAthlete || "DAVID DAVIES").toUpperCase();
+      const silverNoc = (data.silverCountry || "GBR").toUpperCase();
+      const silverFlag = data.silverFlag || "🇬🇧";
+
+      const bronzeAthlete = (data.bronzeAthlete || "THOMAS LURZ").toUpperCase();
+      const bronzeNoc = (data.bronzeCountry || "GER").toUpperCase();
+      const bronzeFlag = data.bronzeFlag || "🇩🇪";
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 820, width: 820, height: 50, fill: primaryColor, rx: 6, ry: 6
       }));
-      const headerBg = new fabric.Rect(createProps('rect', {
-        left: 1150, top: 200, width: 620, height: 70, fill: primaryColor, rx: 12, ry: 12
+      const iconText = new fabric.Textbox("🏊", createProps('textbox', {
+        left: 140, top: 832, fontSize: 24, fill: '#ffffff', width: 40
       }));
-      const headerAccent = new fabric.Rect(createProps('rect', {
-        left: 1150, top: 265, width: 620, height: 5, fill: accentColor
+      const titleText = new fabric.Textbox(eventName, createProps('textbox', {
+        left: 185, top: 833, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 680
       }));
-      const titleText = new fabric.Textbox("MEDAL STANDINGS • LONDON 2012", createProps('textbox', {
-        left: 1175, top: 222, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 480
-      }));
-      const codeHeader = new fabric.Textbox("OBS", createProps('textbox', {
-        left: 1680, top: 222, fontSize: 22, fontWeight: 'bold', fill: accentColor, width: 70, textAlign: 'center'
+      const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+        left: 870, top: 833, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 60, textAlign: 'right'
       }));
 
-      const goldHdr = new fabric.Textbox("GOLD", createProps('textbox', {
-        left: 1560, top: 280, fontSize: 14, fontWeight: 'bold', fill: '#ffd700', width: 60, textAlign: 'center'
+      const subBar = new fabric.Rect(createProps('rect', {
+        left: 120, top: 870, width: 820, height: 32, fill: '#cbd5e1', rx: 2, ry: 2
       }));
-      const silvHdr = new fabric.Textbox("SILV", createProps('textbox', {
-        left: 1620, top: 280, fontSize: 14, fontWeight: 'bold', fill: '#c0c0c0', width: 60, textAlign: 'center'
-      }));
-      const brnzHdr = new fabric.Textbox("BRNZ", createProps('textbox', {
-        left: 1680, top: 280, fontSize: 14, fontWeight: 'bold', fill: '#cd7f32', width: 60, textAlign: 'center'
+      const subText = new fabric.Textbox("VICTORY CEREMONY", createProps('textbox', {
+        left: 140, top: 877, fontSize: 14, fontWeight: 'bold', fill: '#0f172a', width: 780
       }));
 
-      // Row 1 USA
-      const row1Name = new fabric.Textbox("1. UNITED STATES (USA)", createProps('textbox', {
-        left: 1175, top: 310, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 370
-      }));
-      const row1G = new fabric.Textbox("46", createProps('textbox', { left: 1560, top: 310, fontSize: 20, fontWeight: 'bold', fill: '#ffd700', width: 60, textAlign: 'center' }));
-      const row1S = new fabric.Textbox("28", createProps('textbox', { left: 1620, top: 310, fontSize: 20, fontWeight: 'bold', fill: '#c0c0c0', width: 60, textAlign: 'center' }));
-      const row1B = new fabric.Textbox("29", createProps('textbox', { left: 1680, top: 310, fontSize: 20, fontWeight: 'bold', fill: '#cd7f32', width: 60, textAlign: 'center' }));
+      // Row 1 (Gold)
+      const r1Bg = new fabric.Rect(createProps('rect', { left: 120, top: 902, width: 820, height: 42, fill: '#0a1329' }));
+      const r1Badge = new fabric.Circle(createProps('circle', { left: 135, top: 908, radius: 15, fill: '#ffd700' }));
+      const r1BadgeTxt = new fabric.Textbox("🥇", createProps('textbox', { left: 135, top: 914, fontSize: 13, width: 30, textAlign: 'center' }));
+      const r1Noc = new fabric.Textbox(`${goldNoc} ${goldFlag}`, createProps('textbox', { left: 180, top: 913, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 110 }));
+      const r1Name = new fabric.Textbox(goldAthlete, createProps('textbox', { left: 300, top: 913, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 630 }));
 
-      // Row 2 CHN
-      const row2Name = new fabric.Textbox("2. CHINA (CHN)", createProps('textbox', {
-        left: 1175, top: 360, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 370
-      }));
-      const row2G = new fabric.Textbox("38", createProps('textbox', { left: 1560, top: 360, fontSize: 20, fontWeight: 'bold', fill: '#ffd700', width: 60, textAlign: 'center' }));
-      const row2S = new fabric.Textbox("31", createProps('textbox', { left: 1620, top: 360, fontSize: 20, fontWeight: 'bold', fill: '#c0c0c0', width: 60, textAlign: 'center' }));
-      const row2B = new fabric.Textbox("22", createProps('textbox', { left: 1680, top: 360, fontSize: 20, fontWeight: 'bold', fill: '#cd7f32', width: 60, textAlign: 'center' }));
+      // Row 2 (Silver)
+      const r2Bg = new fabric.Rect(createProps('rect', { left: 120, top: 944, width: 820, height: 42, fill: '#0f172a' }));
+      const r2Badge = new fabric.Circle(createProps('circle', { left: 135, top: 950, radius: 15, fill: '#e2e8f0' }));
+      const r2BadgeTxt = new fabric.Textbox("🥈", createProps('textbox', { left: 135, top: 956, fontSize: 13, width: 30, textAlign: 'center' }));
+      const r2Noc = new fabric.Textbox(`${silverNoc} ${silverFlag}`, createProps('textbox', { left: 180, top: 955, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 110 }));
+      const r2Name = new fabric.Textbox(silverAthlete, createProps('textbox', { left: 300, top: 955, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 630 }));
 
-      // Row 3 GBR
-      const row3Name = new fabric.Textbox("3. GREAT BRITAIN (GBR)", createProps('textbox', {
-        left: 1175, top: 410, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 370
-      }));
-      const row3G = new fabric.Textbox("29", createProps('textbox', { left: 1560, top: 410, fontSize: 20, fontWeight: 'bold', fill: '#ffd700', width: 60, textAlign: 'center' }));
-      const row3S = new fabric.Textbox("17", createProps('textbox', { left: 1620, top: 410, fontSize: 20, fontWeight: 'bold', fill: '#c0c0c0', width: 60, textAlign: 'center' }));
-      const row3B = new fabric.Textbox("19", createProps('textbox', { left: 1680, top: 410, fontSize: 20, fontWeight: 'bold', fill: '#cd7f32', width: 60, textAlign: 'center' }));
+      // Row 3 (Bronze)
+      const r3Bg = new fabric.Rect(createProps('rect', { left: 120, top: 986, width: 820, height: 42, fill: '#0a1329', rx: 6, ry: 6 }));
+      const r3Badge = new fabric.Circle(createProps('circle', { left: 135, top: 992, radius: 15, fill: '#d97706' }));
+      const r3BadgeTxt = new fabric.Textbox("🥉", createProps('textbox', { left: 135, top: 998, fontSize: 13, width: 30, textAlign: 'center' }));
+      const r3Noc = new fabric.Textbox(`${bronzeNoc} ${bronzeFlag}`, createProps('textbox', { left: 180, top: 997, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 110 }));
+      const r3Name = new fabric.Textbox(bronzeAthlete, createProps('textbox', { left: 300, top: 997, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 630 }));
 
-      objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, goldHdr, silvHdr, brnzHdr, row1Name, row1G, row1S, row1B, row2Name, row2G, row2S, row2B, row3Name, row3G, row3S, row3B);
+      objects.push(
+        mainBar, iconText, titleText, codeHeader, subBar, subText,
+        r1Bg, r1Badge, r1BadgeTxt, r1Noc, r1Name,
+        r2Bg, r2Badge, r2BadgeTxt, r2Noc, r2Name,
+        r3Bg, r3Badge, r3BadgeTxt, r3Noc, r3Name
+      );
       break;
     }
 

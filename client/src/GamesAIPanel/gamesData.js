@@ -1475,12 +1475,57 @@ export const MA_TEMPLATES = [
  * Get OBS-style numbered templates for any Olympic sport.
  * Returns templates like SW001, AT001, BX001 etc.
  */
+function fillMissingTemplates(list, sportCode, sportName) {
+  if (!list || list.length === 0) return [];
+  const code = (sportCode || "XX").toUpperCase();
+  const existingIds = new Set(list.map(t => t.id));
+
+  let maxId = 0;
+  list.forEach(t => {
+    const num = parseInt((t.id || "").replace(/\D/g, ""), 10);
+    if (!isNaN(num) && num > maxId) maxId = num;
+  });
+
+  const filledList = [...list];
+  const defaultNames = [
+    "Intermediate Split Time Bug",
+    "50m Lap Split Time",
+    "Stroke Rate & Pace Indicator",
+    "Relay Team Split Time",
+    "World Record Pace Line",
+    "Olympic Record Pace Line",
+    "Turn Indicator & Reaction Time",
+    "Speed & Velocity Corner Bug",
+    "Phase Qualifying Summary Table",
+    "Head-to-Head Comparison Card"
+  ];
+
+  for (let i = 1; i <= maxId; i++) {
+    const paddedId = `${code}${String(i).padStart(3, '0')}`;
+    if (!existingIds.has(paddedId)) {
+      const nameIndex = (i - 1) % defaultNames.length;
+      filledList.push({
+        id: paddedId,
+        name: `${sportName || code} ${defaultNames[nameIndex]}`,
+        icon: i % 2 === 0 ? "⏱️" : "📋",
+        subCat: i % 3 === 0 ? "SPLITS & TIMES" : i % 2 === 0 ? "SCORES & MATCH" : "RESULTS & STANDINGS"
+      });
+    }
+  }
+
+  return filledList.sort((a, b) => {
+    const numA = parseInt((a.id || "").replace(/\D/g, ""), 10) || 0;
+    const numB = parseInt((b.id || "").replace(/\D/g, ""), 10) || 0;
+    return numA - numB;
+  });
+}
+
 export function getSportTemplates(sport) {
-  if (!sport) return TEMPLATE_TYPES;
+  if (!sport) return fillMissingTemplates(TEMPLATE_TYPES, "MASTER", "Master");
 
   // Use inline templates on the sport object if provided
   if (sport.templates && sport.templates.length > 0) {
-    return sport.templates;
+    return fillMissingTemplates(sport.templates, sport.code, sport.name);
   }
 
   const code = (sport.code || "").toUpperCase();
@@ -1488,29 +1533,29 @@ export function getSportTemplates(sport) {
   // 1. Primary lookup from RealTemplates by sport code (e.g. AT_TEMPLATES, SW_TEMPLATES)
   const realKey = `${code}_TEMPLATES`;
   if (RealTemplates[realKey] && RealTemplates[realKey].length > 0) {
-    return RealTemplates[realKey];
+    return fillMissingTemplates(RealTemplates[realKey], code, sport.name);
   }
 
   // 2. Name-based fallback for partial matches from RealTemplates
   const name = sport.name || "";
-  if (name.includes("Swimming") && RealTemplates.SW_TEMPLATES) return RealTemplates.SW_TEMPLATES;
-  if ((name.includes("Athletics") || name.includes("Track")) && RealTemplates.AT_TEMPLATES) return RealTemplates.AT_TEMPLATES;
-  if (name.includes("Archery") && RealTemplates.AR_TEMPLATES) return RealTemplates.AR_TEMPLATES;
-  if (name.includes("Badminton") && RealTemplates.BD_TEMPLATES) return RealTemplates.BD_TEMPLATES;
-  if (name.includes("Basketball") && RealTemplates.BK_TEMPLATES) return RealTemplates.BK_TEMPLATES;
-  if (name.includes("Beach Volleyball") && RealTemplates.BV_TEMPLATES) return RealTemplates.BV_TEMPLATES;
-  if (name.includes("Boxing") && RealTemplates.BX_TEMPLATES) return RealTemplates.BX_TEMPLATES;
-  if ((name.includes("Canoe Slalom") || name.includes("Slalom")) && RealTemplates.CS_TEMPLATES) return RealTemplates.CS_TEMPLATES;
-  if ((name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) && RealTemplates.CF_TEMPLATES) return RealTemplates.CF_TEMPLATES;
-  if ((name.includes("Cycling Track") || name.includes("Track Cycling")) && RealTemplates.CT_TEMPLATES) return RealTemplates.CT_TEMPLATES;
-  if ((name.includes("Cycling Road") || name.includes("Road Cycling")) && RealTemplates.CR_TEMPLATES) return RealTemplates.CR_TEMPLATES;
-  if (name.includes("Diving") && RealTemplates.DV_TEMPLATES) return RealTemplates.DV_TEMPLATES;
-  if (name.includes("Water Polo") && RealTemplates.WP_TEMPLATES) return RealTemplates.WP_TEMPLATES;
-  if ((name.includes("Synchronised") || name.includes("Synchronized")) && RealTemplates.SY_TEMPLATES) return RealTemplates.SY_TEMPLATES;
+  if (name.includes("Swimming") && RealTemplates.SW_TEMPLATES) return fillMissingTemplates(RealTemplates.SW_TEMPLATES, "SW", sport.name);
+  if ((name.includes("Athletics") || name.includes("Track")) && RealTemplates.AT_TEMPLATES) return fillMissingTemplates(RealTemplates.AT_TEMPLATES, "AT", sport.name);
+  if (name.includes("Archery") && RealTemplates.AR_TEMPLATES) return fillMissingTemplates(RealTemplates.AR_TEMPLATES, "AR", sport.name);
+  if (name.includes("Badminton") && RealTemplates.BD_TEMPLATES) return fillMissingTemplates(RealTemplates.BD_TEMPLATES, "BD", sport.name);
+  if (name.includes("Basketball") && RealTemplates.BK_TEMPLATES) return fillMissingTemplates(RealTemplates.BK_TEMPLATES, "BK", sport.name);
+  if (name.includes("Beach Volleyball") && RealTemplates.BV_TEMPLATES) return fillMissingTemplates(RealTemplates.BV_TEMPLATES, "BV", sport.name);
+  if (name.includes("Boxing") && RealTemplates.BX_TEMPLATES) return fillMissingTemplates(RealTemplates.BX_TEMPLATES, "BX", sport.name);
+  if ((name.includes("Canoe Slalom") || name.includes("Slalom")) && RealTemplates.CS_TEMPLATES) return fillMissingTemplates(RealTemplates.CS_TEMPLATES, "CS", sport.name);
+  if ((name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) && RealTemplates.CF_TEMPLATES) return fillMissingTemplates(RealTemplates.CF_TEMPLATES, "CF", sport.name);
+  if ((name.includes("Cycling Track") || name.includes("Track Cycling")) && RealTemplates.CT_TEMPLATES) return fillMissingTemplates(RealTemplates.CT_TEMPLATES, "CT", sport.name);
+  if ((name.includes("Cycling Road") || name.includes("Road Cycling")) && RealTemplates.CR_TEMPLATES) return fillMissingTemplates(RealTemplates.CR_TEMPLATES, "CR", sport.name);
+  if (name.includes("Diving") && RealTemplates.DV_TEMPLATES) return fillMissingTemplates(RealTemplates.DV_TEMPLATES, "DV", sport.name);
+  if (name.includes("Water Polo") && RealTemplates.WP_TEMPLATES) return fillMissingTemplates(RealTemplates.WP_TEMPLATES, "WP", sport.name);
+  if ((name.includes("Synchronised") || name.includes("Synchronized")) && RealTemplates.SY_TEMPLATES) return fillMissingTemplates(RealTemplates.SY_TEMPLATES, "SY", sport.name);
 
   // Generic fallback — build numbered templates dynamically
   const c = code.toUpperCase() || "XX";
-  return [
+  return fillMissingTemplates([
     { id: `${c}001`, name: `${sport.name} Athlete ID Lower Third`, icon: "👤", subCat: "LOWER THIRDS" },
     { id: `${c}002`, name: `${sport.name} Olympic Champion Card`, icon: "🥇", subCat: "LOWER THIRDS" },
     { id: `${c}003`, name: `${sport.name} Intermediate Split / Score Bug`, icon: "⏱️", subCat: "SPLITS & TIMES" },
@@ -1521,6 +1566,6 @@ export function getSportTemplates(sport) {
     { id: `${c}008`, name: `${sport.name} Podium Medallists & Country Tally`, icon: "🥇", subCat: "RESULTS & STANDINGS" },
     { id: `${c}009`, name: `${sport.name} World Record Pace Line`, icon: "🏁", subCat: "RECORDS & BUGS" },
     { id: `${c}010`, name: `${sport.name} Venue & Event Title Corner Bug`, icon: "🏷️", subCat: "RECORDS & BUGS" },
-  ];
+  ], c, sport.name);
 }
 
