@@ -162,6 +162,17 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const locationName = (data.location || "LONDON, UNITED KINGDOM").toUpperCase();
   const code = sport.code;
 
+  // Sport code → emoji icon map for dynamic icon rendering
+  const SPORT_ICONS = {
+    FB: "⚽", HO: "🏑", BK: "🏀", VB: "🏐", HB: "🤾", WP: "🤽", BV: "🏖️",
+    BD: "🏸", TT: "🏓", TE: "🎾", BX: "🥊", JU: "🥋", WR: "🤼", TK: "🥋",
+    FE: "🤺", AT: "🏃", SW: "🏊", DV: "🤿", SY: "🤸", CT: "🚴", CF: "🚣",
+    CS: "🛶", SA: "⛵", RW: "🚣", GY: "🤸", AR: "🎯", SH: "🎯", EQ: "🐎",
+    WL: "🏋️", TR: "🏃", MP: "🏊", GT: "🤸", TF: "⚽", RU: "🏉", CR: "🏏",
+    GO: "⛳", SK: "⛷️", BI: "🎯", CU: "🥌", IH: "🏒", FS: "⛸️", SS: "⛸️",
+    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂"
+  };
+  const sportIcon = SPORT_ICONS[code] || "🏅";
   const category = resolveCategory(templateType, templateName, templateId);
 
   // Derive a 1-based variant index from the template ID numeric suffix
@@ -1261,7 +1272,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     case "football-bracket-semifinals":
     case "football-bracket-finals": {
       const isFinals = category === "football-bracket-finals";
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || (isFinals ? "SEMI-FINALS ➔ GOLD MEDAL MATCH" : "QUARTER-FINALS ➔ SEMI-FINALS")).toUpperCase();
 
       const pairsList = isFinals ? [
@@ -1387,7 +1398,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="bkt-wrapper">
             <div class="bkt-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill">
@@ -1439,7 +1450,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-final-rank": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FINAL RANK").toUpperCase();
 
       const rankList = Array.isArray(data.ranks) ? data.ranks : [
@@ -1560,7 +1571,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="rank-wrapper">
             <div class="rank-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill">
@@ -1594,7 +1605,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-ceremony-id": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
 
       return `
@@ -1673,7 +1684,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="c-wrapper">
             <div class="c-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <span class="event-title">${eventTitle}</span>
               </div>
               <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
@@ -1698,7 +1709,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
       const countryCode = (data.country || data.noc || "ARG").toUpperCase();
       const flagStr = data.flag || "🇦🇷";
       const teamName = (data.name || "ARGENTINA").toUpperCase();
-      const subTitle = (data.subTitle || "GOLD - MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD - MEN'S " + sportTitle).toUpperCase();
 
       return `
         <!DOCTYPE html>
@@ -1797,7 +1808,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-medals-list": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
 
       const winnersList = Array.isArray(data.winners) ? data.winners : [
@@ -1899,7 +1910,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="meds-wrapper">
             <div class="meds-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill">
@@ -2029,7 +2040,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-pso-scoreboard": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "GOLD MEDAL MATCH - PENALTY SHOOT-OUT").toUpperCase();
 
       const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
@@ -2159,7 +2170,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="pso-wrapper">
             <div class="pso-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill">
@@ -2210,7 +2221,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-advance-quarterfinals": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FIRST ROUND ➔ QUARTER-FINALS").toUpperCase();
 
       const teamsList = Array.isArray(data.teams) ? data.teams : [
@@ -2336,7 +2347,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="adv-wrapper">
             <div class="adv-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill-row">
@@ -2536,7 +2547,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-match-result": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const matchStage = (data.stage || data.subTitle || "BRONZE MEDAL MATCH").toUpperCase();
       const matchStatus = (data.status || data.period || "2ND HALF").toUpperCase();
 
@@ -2656,7 +2667,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="m-res-wrapper">
             <div class="m-res-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <div class="sub-pill-row">
@@ -3929,7 +3940,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-officials-list": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "OFFICIALS").toUpperCase();
       const officialsList = Array.isArray(data.officials) ? data.officials : [
         { noc: "URU", flag: "🇺🇾", name: "MARTIN VAZQUEZ", role: "REFEREE" },
@@ -4039,7 +4050,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="off-list-wrapper">
             <div class="off-list-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <span class="sub-pill">${subTitle}</span>
@@ -4786,7 +4797,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "football-group-standings": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "STANDINGS - GROUP D").toUpperCase();
       const standingsList = Array.isArray(data.standings) ? data.standings : [
         { rank: "1", noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "0", f: "6", a: "0", pts: "6" },
@@ -4942,7 +4953,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="fb-standings-wrapper">
             <div class="fb-standings-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <span class="sub-pill">${subTitle}</span>
@@ -4988,7 +4999,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "group-list-teams": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "GROUP C").toUpperCase();
       const teamsList = Array.isArray(data.teams) ? data.teams : [
         { noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
@@ -5102,7 +5113,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="group-list-wrapper">
             <div class="group-list-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <span class="sub-pill">${subTitle}</span>
@@ -5131,7 +5142,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     }
 
     case "match-id-teams": {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FIRST ROUND - GROUP A").toUpperCase();
       const team1Noc = (data.team1Noc || data.homeNoc || "AUS").toUpperCase();
       const team1Flag = data.team1Flag || data.homeFlag || "🇦🇺";
@@ -5253,7 +5264,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           <div class="match-id-wrapper">
             <div class="match-id-head">
               <div class="head-left">
-                <span class="sport-icon">⚽</span>
+                <span class="sport-icon">${sportIcon}</span>
                 <div class="title-box">
                   <span class="event-title">${eventTitle}</span>
                   <span class="sub-pill">${subTitle}</span>
@@ -7511,6 +7522,18 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   const venueTitle = sport.venue.toUpperCase();
   const code = sport.code;
 
+  // Sport code → emoji icon map for dynamic icon rendering
+  const SPORT_ICONS = {
+    FB: "⚽", HO: "🏑", BK: "🏀", VB: "🏐", HB: "🤾", WP: "🤽", BV: "🏖️",
+    BD: "🏸", TT: "🏓", TE: "🎾", BX: "🥊", JU: "🥋", WR: "🤼", TK: "🥋",
+    FE: "🤺", AT: "🏃", SW: "🏊", DV: "🤿", SY: "🤸", CT: "🚴", CF: "🚣",
+    CS: "🛶", SA: "⛵", RW: "🚣", GY: "🤸", AR: "🎯", SH: "🎯", EQ: "🐎",
+    WL: "🏋️", TR: "🏃", MP: "🏊", GT: "🤸", TF: "⚽", RU: "🏉", CR: "🏏",
+    GO: "⛳", SK: "⛷️", BI: "🎯", CU: "🥌", IH: "🏒", FS: "⛸️", SS: "⛸️",
+    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂"
+  };
+  const sportIcon = SPORT_ICONS[code] || "🏅";
+
   const category = resolveCategory(templateType, templateName, templateId);
   const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
   const variant = ((idNum - 1) % 5) + 1;
@@ -8467,7 +8490,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     case 'football-bracket-semifinals':
     case 'football-bracket-finals': {
       const isFinals = category === 'football-bracket-finals';
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || (isFinals ? "SEMI-FINALS ➔ GOLD MEDAL MATCH" : "QUARTER-FINALS ➔ SEMI-FINALS")).toUpperCase();
 
       const pairsList = isFinals ? [
@@ -8485,7 +8508,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 560, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 574, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', { left: 110, top: 574, fontSize: 24, fill: '#ffffff', width: 35 }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 568, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
       const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 594, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
       const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 596, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
@@ -8523,7 +8546,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-final-rank': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FINAL RANK").toUpperCase();
 
       const rankList = Array.isArray(data.ranks) ? data.ranks : [
@@ -8542,7 +8565,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 580, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 594, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', { left: 110, top: 594, fontSize: 24, fill: '#ffffff', width: 35 }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 588, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
       const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 614, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
       const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 616, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
@@ -8572,11 +8595,11 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-ceremony-id': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
 
       const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 115, top: 854, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', { left: 115, top: 854, fontSize: 24, fill: '#ffffff', width: 35 }));
       const eventTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 160, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
 
       const ringColor = '#ffd700';
@@ -8597,7 +8620,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       const countryCode = (data.country || data.noc || "ARG").toUpperCase();
       const flagStr = data.flag || "🇦🇷";
       const teamName = (data.name || "ARGENTINA").toUpperCase();
-      const subTitle = (data.subTitle || "GOLD - MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD - MEN'S " + sportTitle).toUpperCase();
 
       const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
       const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', { left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55 }));
@@ -8620,7 +8643,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-medals-list': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
 
       const winnersList = Array.isArray(data.winners) ? data.winners : [
@@ -8631,7 +8654,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
 
       // Header Bar
       const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 760, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 774, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', { left: 110, top: 774, fontSize: 24, fill: '#ffffff', width: 35 }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 768, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
       const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 794, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
       const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 796, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
@@ -8683,7 +8706,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-pso-scoreboard': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "GOLD MEDAL MATCH - PENALTY SHOOT-OUT").toUpperCase();
 
       const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
@@ -8701,7 +8724,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 820, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 834, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -8771,7 +8794,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-advance-quarterfinals': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FIRST ROUND ➔ QUARTER-FINALS").toUpperCase();
 
       const teamsList = Array.isArray(data.teams) ? data.teams : [
@@ -8790,7 +8813,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 580, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 594, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -8934,7 +8957,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-match-result': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const matchStage = (data.stage || data.subTitle || "BRONZE MEDAL MATCH").toUpperCase();
       const matchStatus = (data.status || data.period || "2ND HALF").toUpperCase();
 
@@ -8953,7 +8976,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 820, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 834, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -9536,7 +9559,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-officials-list': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "OFFICIALS").toUpperCase();
       const officialsList = Array.isArray(data.officials) ? data.officials : [
         { noc: "URU", flag: "🇺🇾", name: "MARTIN VAZQUEZ", role: "REFEREE" },
@@ -9550,7 +9573,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 740, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -9943,7 +9966,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'football-group-standings': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "STANDINGS - GROUP D").toUpperCase();
       const standingsList = Array.isArray(data.standings) ? data.standings : [
         { rank: "1", noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "0", f: "6", a: "0", pts: "6" },
@@ -9957,7 +9980,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 740, width: 950, height: 56, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -10032,7 +10055,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'group-list-teams': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "GROUP C").toUpperCase();
       const teamsList = Array.isArray(data.teams) ? data.teams : [
         { noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
@@ -10046,7 +10069,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 740, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
@@ -10091,7 +10114,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'match-id-teams': {
-      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const eventTitle = (data.event || "MEN'S " + sportTitle).toUpperCase();
       const subTitle = (data.subTitle || "FIRST ROUND - GROUP A").toUpperCase();
       const team1Noc = (data.team1Noc || data.homeNoc || "AUS").toUpperCase();
       const team1Flag = data.team1Flag || data.homeFlag || "🇦🇺";
@@ -10105,7 +10128,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 830, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
         stroke: '#001938', strokeWidth: 2, skewX: -15
       }));
-      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+      const iconTxt = new fabric.Textbox(sportIcon, createProps('textbox', {
         left: 110, top: 842, fontSize: 24, fill: '#ffffff', width: 35
       }));
       const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
