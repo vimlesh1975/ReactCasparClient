@@ -6,23 +6,29 @@
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
 
-export function resolveCategory(templateType) {
+export function resolveCategory(templateType, templateName = '') {
   const normType = (templateType || "").toLowerCase();
-  if (normType.includes("wind")) return "wind-indicator";
-  if (normType.includes("split") || normType.includes("reaction") || normType.includes("500m")) return "split-times";
-  if (normType.includes("attempt") || normType.includes("light")) return "attempt-board";
-  if (normType.includes("stats") || normType.includes("player")) return "player-stats";
-  if (normType.includes("sub")) return "substitution";
-  if (normType.includes("breakdown") || normType.includes("apparatus")) return "score-breakdown";
-  if (normType.includes("target") || normType.includes("set") || normType.includes("serve")) return "target-score";
-  if (normType.includes("sb") || normType.includes("score")) return "scoreboard";
-  if (normType.includes("start") || normType.includes("list") || normType.includes("lineup") || normType.includes("formation")) return "start-list";
-  if (normType.includes("result") || normType.includes("tally") || normType.includes("rank") || normType.includes("standing") || normType.includes("order")) return "results-table";
-  if (normType.includes("bug")) return "event-bug";
+  const normName = (templateName || "").toLowerCase();
+  const combined = `${normType} ${normName}`;
+
+  if (combined.includes("venue") || combined.includes("location")) return "venue-id";
+  if (combined.includes("weather")) return "weather";
+  if (combined.includes("schedule")) return "event-schedule";
+  if (combined.includes("wind")) return "wind-indicator";
+  if (combined.includes("split") || combined.includes("reaction") || combined.includes("500m")) return "split-times";
+  if (combined.includes("attempt") || combined.includes("light")) return "attempt-board";
+  if (combined.includes("stats") || combined.includes("player")) return "player-stats";
+  if (combined.includes("sub")) return "substitution";
+  if (combined.includes("breakdown") || combined.includes("apparatus")) return "score-breakdown";
+  if (combined.includes("target") || combined.includes("set") || combined.includes("serve")) return "target-score";
+  if (combined.includes("start") || combined.includes("list") || combined.includes("lineup") || combined.includes("formation")) return "start-list";
+  if (combined.includes("result") || combined.includes("tally") || combined.includes("rank") || combined.includes("standing") || combined.includes("order")) return "results-table";
+  if (combined.includes("bug")) return "event-bug";
+  if (combined.includes("sb") || combined.includes("score")) return "scoreboard";
   return "lower-third";
 }
 
-export function generateBroadcastHTML(sport, templateType, customData = {}, styleOptions = {}, templateId = '') {
+export function generateBroadcastHTML(sport, templateType, customData = {}, styleOptions = {}, templateId = '', templateName = '') {
   const primaryColor = styleOptions.primaryColor || sport.primaryColor || "#005b96";
   const secondaryColor = styleOptions.secondaryColor || sport.secondaryColor || "#003366";
   const accentColor = styleOptions.accentColor || sport.accentColor || "#ffd700";
@@ -30,10 +36,11 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 
   const data = { ...sport.dataFields, ...customData };
   const sportTitle = sport.name.toUpperCase();
-  const venueTitle = sport.venue.toUpperCase();
+  const venueTitle = (data.venue || sport.venue || "OLYMPIC STADIUM").toUpperCase();
+  const locationName = (data.location || "LONDON, UNITED KINGDOM").toUpperCase();
   const code = sport.code;
 
-  const category = resolveCategory(templateType);
+  const category = resolveCategory(templateType, templateName);
 
   // Derive a 1-based variant index from the template ID numeric suffix
   // e.g. CF001 → 1, AT003 → 3, SW007 → 7  → mapped to variant 1-5
@@ -42,6 +49,205 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const variant = ((idNum - 1) % 5) + 1;
 
   switch (category) {
+    case "venue-id":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .venue-container {
+              position: absolute; bottom: 120px; left: 120px;
+              display: flex; flex-direction: column;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            }
+            .venue-main-bar {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              color: white; padding: 16px 36px; border-radius: 8px 8px 0 0;
+              border-left: 8px solid ${accentColor};
+              display: flex; align-items: center; gap: 20px;
+            }
+            .venue-icon { font-size: 32px; color: ${accentColor}; }
+            .venue-title { font-size: 34px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+            .venue-sub-bar {
+              background: rgba(15,23,42,0.95); color: #cbd5e1;
+              padding: 10px 36px; border-radius: 0 0 8px 8px;
+              border-left: 8px solid ${primaryColor};
+              font-size: 18px; font-weight: 800; letter-spacing: 1.5px;
+              display: flex; justify-content: space-between; align-items: center; gap: 20px;
+            }
+            .venue-code { background: ${accentColor}; color: #000000; padding: 2px 8px; border-radius: 4px; font-weight: 900; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="venue-container">
+            <div class="venue-main-bar">
+              <span class="venue-icon">🏟️</span>
+              <span class="venue-title">${venueTitle}</span>
+            </div>
+            <div class="venue-sub-bar">
+              <span>📍 ${locationName} • ${sportTitle}</span>
+              <span class="venue-code">${code}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    case "event-schedule":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .sched-card {
+              position: absolute; top: 140px; left: 90px; width: 720px;
+              background: rgba(15,23,42,0.95); border-radius: 12px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.2); color: white;
+              box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            }
+            .sched-head {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              padding: 16px 24px; font-size: 22px; font-weight: 900;
+              border-bottom: 4px solid ${accentColor}; display: flex; justify-content: space-between; align-items: center;
+            }
+            .sched-body { padding: 12px 0; }
+            .sched-row {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 16px; font-weight: 700;
+            }
+            .sched-row:last-child { border-bottom: none; }
+            .sched-time { color: ${accentColor}; font-weight: 900; width: 80px; }
+            .sched-name { flex: 1; margin: 0 16px; color: #ffffff; }
+            .sched-badge {
+              font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;
+              text-transform: uppercase; letter-spacing: 0.5px;
+            }
+            .status-done { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.4); }
+            .status-live { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid rgba(56,189,248,0.4); }
+            .status-next { background: rgba(250,204,21,0.2); color: #facc15; border: 1px solid rgba(250,204,21,0.4); }
+          </style>
+        </head>
+        <body>
+          <div class="sched-card">
+            <div class="sched-head">
+              <span>🗓️ EVENT SCHEDULE</span>
+              <span style="font-size:16px; color:${accentColor};">${sportTitle} • ${venueTitle}</span>
+            </div>
+            <div class="sched-body">
+              <div class="sched-row">
+                <span class="sched-time">09:30</span>
+                <span class="sched-name">${data.event || "Preliminary Round / Heats"}</span>
+                <span class="sched-badge status-done">COMPLETED</span>
+              </div>
+              <div class="sched-row">
+                <span class="sched-time">10:45</span>
+                <span class="sched-name">Quarter-Finals Draw</span>
+                <span class="sched-badge status-done">COMPLETED</span>
+              </div>
+              <div class="sched-row">
+                <span class="sched-time">14:00</span>
+                <span class="sched-name">Semi-Finals Phase</span>
+                <span class="sched-badge status-live">LIVE / NEXT</span>
+              </div>
+              <div class="sched-row">
+                <span class="sched-time">16:30</span>
+                <span class="sched-name">Gold Medal Final & Victory Ceremony</span>
+                <span class="sched-badge status-next">UPCOMING</span>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    case "weather":
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .weather-card {
+              position: absolute; top: 150px; left: 90px; width: 680px;
+              background: rgba(15,23,42,0.95); border-radius: 12px; overflow: hidden;
+              border: 1px solid rgba(255,255,255,0.2); color: white;
+              box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            }
+            .weather-head {
+              background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
+              padding: 16px 24px; font-size: 22px; font-weight: 900;
+              border-bottom: 4px solid ${accentColor}; display: flex; justify-content: space-between; align-items: center;
+            }
+            .weather-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+            .weather-main { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .weather-temp { font-size: 44px; font-weight: 900; color: ${accentColor}; }
+            .weather-cond { font-size: 20px; font-weight: 700; color: #f1f5f9; display: flex; align-items: center; gap: 8px; }
+            .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .weather-item { background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; }
+            .weather-label { color: #94a3b8; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+          </style>
+        </head>
+        <body>
+          <div class="weather-card">
+            <div class="weather-head">
+              <span>☀️ WEATHER & CONDITIONS</span>
+              <span style="font-size:16px; color:${accentColor};">${venueTitle}</span>
+            </div>
+            <div class="weather-body">
+              <div class="weather-main">
+                <div>
+                  <div class="weather-label">AIR TEMPERATURE</div>
+                  <div class="weather-temp">${data.temp || data.temperature || "24°C / 75°F"}</div>
+                </div>
+                <div class="weather-cond">
+                  <span>⛅ ${data.condition || "Partly Cloudy"}</span>
+                </div>
+              </div>
+              <div class="weather-grid">
+                <div class="weather-item">
+                  <div>
+                    <div class="weather-label">WIND SPEED</div>
+                    <div style="color:#ffffff;">${data.wind || "12 km/h NW"}</div>
+                  </div>
+                  <span style="font-size: 20px;">💨</span>
+                </div>
+                <div class="weather-item">
+                  <div>
+                    <div class="weather-label">HUMIDITY</div>
+                    <div style="color:#ffffff;">${data.humidity || "58%"}</div>
+                  </div>
+                  <span style="font-size: 20px;">💧</span>
+                </div>
+                <div class="weather-item">
+                  <div>
+                    <div class="weather-label">TRACK / WATER TEMP</div>
+                    <div style="color:#ffffff;">${data.trackTemp || "26°C / 79°F"}</div>
+                  </div>
+                  <span style="font-size: 20px;">🌡️</span>
+                </div>
+                <div class="weather-item">
+                  <div>
+                    <div class="weather-label">BAROMETER</div>
+                    <div style="color:#ffffff;">${data.pressure || "1013 hPa"}</div>
+                  </div>
+                  <span style="font-size: 20px;">📊</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
     case "wind-indicator":
       return `
         <!DOCTYPE html>
@@ -719,7 +925,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 /**
  * Generate Native Fabric.js Vector Graphic Objects matching HTML preview variants
  */
-export function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}, templateId = '') {
+export function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}, templateId = '', templateName = '') {
   const primaryColor = customColors.primaryColor || sport.primaryColor || "#005b96";
   const secondaryColor = customColors.secondaryColor || sport.secondaryColor || "#003366";
   const accentColor = customColors.accentColor || sport.accentColor || "#ffd700";
@@ -729,7 +935,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   const venueTitle = sport.venue.toUpperCase();
   const code = sport.code;
 
-  const category = resolveCategory(templateType);
+  const category = resolveCategory(templateType, templateName);
   const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
   const variant = ((idNum - 1) % 5) + 1;
 
@@ -748,6 +954,109 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   };
 
   switch (category) {
+    case 'event-schedule': {
+      const cardBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 140, width: 720, height: 320, fill: '#0f172a', rx: 12, ry: 12
+      }));
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 140, width: 720, height: 55, fill: primaryColor, rx: 12, ry: 12
+      }));
+      const headAccent = new fabric.Rect(createProps('rect', {
+        left: 90, top: 191, width: 720, height: 4, fill: accentColor
+      }));
+      const titleText = new fabric.Textbox("🗓️ EVENT SCHEDULE", createProps('textbox', {
+        left: 110, top: 155, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
+      }));
+      const venueText = new fabric.Textbox(`${sportTitle} • ${venueTitle}`, createProps('textbox', {
+        left: 420, top: 157, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 370, textAlign: 'right'
+      }));
+
+      // Row 1
+      const r1Time = new fabric.Textbox("09:30", createProps('textbox', { left: 110, top: 215, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
+      const r1Name = new fabric.Textbox(data.event || "Preliminary Round / Heats", createProps('textbox', { left: 200, top: 215, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
+      const r1Badge = new fabric.Textbox("COMPLETED", createProps('textbox', { left: 600, top: 215, fontSize: 12, fontWeight: 'bold', fill: '#4ade80', width: 180, textAlign: 'right' }));
+
+      // Row 2
+      const r2Time = new fabric.Textbox("10:45", createProps('textbox', { left: 110, top: 265, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
+      const r2Name = new fabric.Textbox("Quarter-Finals Draw", createProps('textbox', { left: 200, top: 265, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
+      const r2Badge = new fabric.Textbox("COMPLETED", createProps('textbox', { left: 600, top: 265, fontSize: 12, fontWeight: 'bold', fill: '#4ade80', width: 180, textAlign: 'right' }));
+
+      // Row 3
+      const r3Time = new fabric.Textbox("14:00", createProps('textbox', { left: 110, top: 315, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
+      const r3Name = new fabric.Textbox("Semi-Finals Phase", createProps('textbox', { left: 200, top: 315, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
+      const r3Badge = new fabric.Textbox("LIVE / NEXT", createProps('textbox', { left: 600, top: 315, fontSize: 12, fontWeight: 'bold', fill: '#38bdf8', width: 180, textAlign: 'right' }));
+
+      // Row 4
+      const r4Time = new fabric.Textbox("16:30", createProps('textbox', { left: 110, top: 365, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 80 }));
+      const r4Name = new fabric.Textbox("Gold Medal Final & Ceremony", createProps('textbox', { left: 200, top: 365, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 380 }));
+      const r4Badge = new fabric.Textbox("UPCOMING", createProps('textbox', { left: 600, top: 365, fontSize: 12, fontWeight: 'bold', fill: '#facc15', width: 180, textAlign: 'right' }));
+
+      objects.push(
+        cardBg, headBg, headAccent, titleText, venueText,
+        r1Time, r1Name, r1Badge,
+        r2Time, r2Name, r2Badge,
+        r3Time, r3Name, r3Badge,
+        r4Time, r4Name, r4Badge
+      );
+      break;
+    }
+    case 'weather': {
+      const cardBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 150, width: 680, height: 280, fill: '#0f172a', rx: 12, ry: 12
+      }));
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 150, width: 680, height: 55, fill: primaryColor, rx: 12, ry: 12
+      }));
+      const headAccent = new fabric.Rect(createProps('rect', {
+        left: 90, top: 201, width: 680, height: 4, fill: accentColor
+      }));
+      const titleText = new fabric.Textbox("☀️ WEATHER & CONDITIONS", createProps('textbox', {
+        left: 110, top: 165, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
+      }));
+      const venueText = new fabric.Textbox(venueTitle, createProps('textbox', {
+        left: 450, top: 167, fontSize: 15, fontWeight: 'bold', fill: accentColor, width: 300, textAlign: 'right'
+      }));
+
+      const tempLabel = new fabric.Textbox("AIR TEMPERATURE", createProps('textbox', {
+        left: 110, top: 220, fontSize: 12, fontWeight: 'bold', fill: '#94a3b8', width: 250
+      }));
+      const tempVal = new fabric.Textbox(data.temp || data.temperature || "24°C / 75°F", createProps('textbox', {
+        left: 110, top: 238, fontSize: 38, fontWeight: 'bold', fill: accentColor, width: 250
+      }));
+      const condText = new fabric.Textbox(`⛅ ${data.condition || "Partly Cloudy"}`, createProps('textbox', {
+        left: 420, top: 242, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 330, textAlign: 'right'
+      }));
+
+      const divider = new fabric.Rect(createProps('rect', {
+        left: 110, top: 295, width: 640, height: 1, fill: '#334155'
+      }));
+
+      const item1Bg = new fabric.Rect(createProps('rect', { left: 110, top: 310, width: 305, height: 50, fill: 'rgba(255,255,255,0.05)', rx: 6, ry: 6 }));
+      const item1Lbl = new fabric.Textbox("WIND SPEED", createProps('textbox', { left: 120, top: 315, fontSize: 10, fontWeight: 'bold', fill: '#94a3b8', width: 200 }));
+      const item1Val = new fabric.Textbox(`💨  ${data.wind || "12 km/h NW"}`, createProps('textbox', { left: 120, top: 330, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 280 }));
+
+      const item2Bg = new fabric.Rect(createProps('rect', { left: 445, top: 310, width: 305, height: 50, fill: 'rgba(255,255,255,0.05)', rx: 6, ry: 6 }));
+      const item2Lbl = new fabric.Textbox("HUMIDITY", createProps('textbox', { left: 455, top: 315, fontSize: 10, fontWeight: 'bold', fill: '#94a3b8', width: 200 }));
+      const item2Val = new fabric.Textbox(`💧  ${data.humidity || "58%"}`, createProps('textbox', { left: 455, top: 330, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 280 }));
+
+      const item3Bg = new fabric.Rect(createProps('rect', { left: 110, top: 370, width: 305, height: 50, fill: 'rgba(255,255,255,0.05)', rx: 6, ry: 6 }));
+      const item3Lbl = new fabric.Textbox("TRACK / WATER TEMP", createProps('textbox', { left: 120, top: 375, fontSize: 10, fontWeight: 'bold', fill: '#94a3b8', width: 200 }));
+      const item3Val = new fabric.Textbox(`🌡️  ${data.trackTemp || "26°C / 79°F"}`, createProps('textbox', { left: 120, top: 390, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 280 }));
+
+      const item4Bg = new fabric.Rect(createProps('rect', { left: 445, top: 370, width: 305, height: 50, fill: 'rgba(255,255,255,0.05)', rx: 6, ry: 6 }));
+      const item4Lbl = new fabric.Textbox("BAROMETER", createProps('textbox', { left: 455, top: 375, fontSize: 10, fontWeight: 'bold', fill: '#94a3b8', width: 200 }));
+      const item4Val = new fabric.Textbox(`📊  ${data.pressure || "1013 hPa"}`, createProps('textbox', { left: 455, top: 390, fontSize: 15, fontWeight: 'bold', fill: '#ffffff', width: 280 }));
+
+      objects.push(
+        cardBg, headBg, headAccent, titleText, venueText,
+        tempLabel, tempVal, condText, divider,
+        item1Bg, item1Lbl, item1Val,
+        item2Bg, item2Lbl, item2Val,
+        item3Bg, item3Lbl, item3Val,
+        item4Bg, item4Lbl, item4Val
+      );
+      break;
+    }
     case 'wind-indicator': {
       const bugBg = new fabric.Rect(createProps('rect', {
         left: 1450, top: 890, width: 380, height: 80, fill: primaryColor, rx: 8, ry: 8

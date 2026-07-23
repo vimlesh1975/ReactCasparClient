@@ -93,14 +93,15 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     ? mapSubCatToType(selectedTemplateObj.subCat)
     : (selectedTemplateType || '');
 
-  // Generate current HTML — pass the raw template ID so the generator
-  // can produce a distinct layout per numbered variant (e.g. CF001 vs CF002)
+  // Generate current HTML — pass the raw template ID & name so the generator
+  // can produce a distinct layout per template type and variant
   const currentHTML = generateBroadcastHTML(
     selectedSport,
     resolvedTemplateType,
     customFields,
     customColors,
-    selectedTemplateType  // templateId e.g. "CF001"
+    selectedTemplateType,  // templateId e.g. "CF001"
+    selectedTemplateObj?.name || ''
   );
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -254,7 +255,8 @@ Return strictly a valid JSON object (with no markdown block or extra text) with 
       resolvedType,
       customFields,
       customColors,
-      selectedTemplateType
+      selectedTemplateType,
+      templateInfo?.name || ''
     );
 
     canvas.add(group);
