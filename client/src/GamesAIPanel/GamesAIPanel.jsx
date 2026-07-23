@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { OLYMPIC_GAMES_DATA, getSportTemplates } from './gamesData';
 import { generateBroadcastHTML, createFabricGraphicGroup } from './TemplateGenerator';
-import { FaPlus, FaMagic } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import './GamesAIPanel.css';
 
 const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
@@ -26,15 +26,12 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   const [selectedSport, setSelectedSport] = useState(OLYMPIC_GAMES_DATA[0]);
   const [searchTerm, setSearchTerm] = useState('');
   const [templateSearchTerm, setTemplateSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
-  const [aiPrompt, setAiPrompt] = useState('Gold lower third Usain Bolt JAM 9.63s');
   const [customFields, setCustomFields] = useState({});
   const [customColors, setCustomColors] = useState({
     primaryColor: OLYMPIC_GAMES_DATA[0].primaryColor,
     secondaryColor: OLYMPIC_GAMES_DATA[0].secondaryColor,
     accentColor: OLYMPIC_GAMES_DATA[0].accentColor
   });
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const sportTemplates = getSportTemplates(selectedSport);
   const filteredTemplates = sportTemplates.filter(t => {
@@ -76,13 +73,11 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   }, []);
 
   // Filter sports list
-  const filteredSports = OLYMPIC_GAMES_DATA.filter(sport => {
-    const matchesSearch = sport.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sport.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      sport.venue.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCat = categoryFilter === 'ALL' || sport.category === categoryFilter;
-    return matchesSearch && matchesCat;
-  });
+  const filteredSports = OLYMPIC_GAMES_DATA.filter(sport =>
+    sport.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sport.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sport.venue.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // When sport changes, update fields, default colors & sport-specific templates
   useEffect(() => {
@@ -122,141 +117,6 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     selectedTemplateObj?.name || ''
   );
 
-  // Advanced OpenRouter + Local NLP AI Prompt Generator
-  const handleGenerateAI = async (overridePrompt) => {
-    const targetPrompt = typeof overridePrompt === 'string' ? overridePrompt : aiPrompt;
-    if (!targetPrompt || !targetPrompt.trim()) return;
-    setIsGenerating(true);
-
-    try {
-      const response = await fetch('/api/ai/component', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'google/gemini-pro',
-          messages: [
-            {
-              role: 'user',
-              content: `Analyze this sports broadcast graphic request: "${targetPrompt}".
-Return strictly a valid JSON object (with no markdown block or extra text) with these keys:
-{
-  "templateType": "lower-third",
-  "primaryColor": "#hexColor",
-  "secondaryColor": "#hexColor",
-  "accentColor": "#hexColor",
-  "fields": {
-    "athlete": "Athlete Name",
-    "country": "Country Code",
-    "event": "Event Title",
-    "rank": "Rank",
-    "time": "Time",
-    "scoreA": "0",
-    "scoreB": "0",
-    "teamA": "Team A",
-    "teamB": "Team B"
-  }
-}`
-            }
-          ]
-        })
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        const rawContent = result?.choices?.[0]?.message?.content || result?.code || '';
-        const cleanJsonStr = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
-        if (cleanJsonStr.startsWith('{')) {
-          const parsed = JSON.parse(cleanJsonStr);
-          if (parsed.templateType) setSelectedTemplateType(parsed.templateType);
-          if (parsed.primaryColor || parsed.accentColor) {
-            setCustomColors(prev => ({
-              primaryColor: parsed.primaryColor || prev.primaryColor,
-              secondaryColor: parsed.secondaryColor || prev.secondaryColor,
-              accentColor: parsed.accentColor || prev.accentColor
-            }));
-          }
-          if (parsed.fields && typeof parsed.fields === 'object') {
-            setCustomFields(prev => ({ ...prev, ...parsed.fields }));
-          }
-          setIsGenerating(false);
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('OpenRouter API endpoint unavailable, using local AI NLP parser fallback');
-    }
-
-    // Fallback: Intelligent Local NLP & Regex Extractor
-    const lowerPrompt = targetPrompt.toLowerCase();
-    let newColors = { ...customColors };
-    let newFields = { ...customFields };
-    let newTemplateType = selectedTemplateType;
-
-    if (lowerPrompt.includes('score') || lowerPrompt.includes('match') || lowerPrompt.includes('vs') || lowerPrompt.includes('football') || lowerPrompt.includes('basketball')) {
-      newTemplateType = 'scoreboard';
-    } else if (lowerPrompt.includes('start list') || lowerPrompt.includes('lineup') || lowerPrompt.includes('lanes')) {
-      newTemplateType = 'start-list';
-    } else if (lowerPrompt.includes('medal') || lowerPrompt.includes('tally') || lowerPrompt.includes('standing')) {
-      newTemplateType = 'medal-tally';
-    } else if (lowerPrompt.includes('result') || lowerPrompt.includes('winner') || lowerPrompt.includes('1st') || lowerPrompt.includes('gold silver')) {
-      newTemplateType = 'results-table';
-    } else if (lowerPrompt.includes('bug') || lowerPrompt.includes('logo') || lowerPrompt.includes('watermark')) {
-      newTemplateType = 'event-bug';
-    } else if (lowerPrompt.includes('lower third') || lowerPrompt.includes('name') || lowerPrompt.includes('athlete')) {
-      newTemplateType = 'lower-third';
-    }
-
-    if (lowerPrompt.includes('gold') || lowerPrompt.includes('yellow')) {
-      newColors.accentColor = '#f1c40f';
-    } else if (lowerPrompt.includes('blue') || lowerPrompt.includes('cyan')) {
-      newColors.primaryColor = '#0284c7';
-      newColors.secondaryColor = '#0369a1';
-      newColors.accentColor = '#38bdf8';
-    } else if (lowerPrompt.includes('red') || lowerPrompt.includes('crimson')) {
-      newColors.primaryColor = '#dc2626';
-      newColors.secondaryColor = '#991b1b';
-      newColors.accentColor = '#fca5a5';
-    } else if (lowerPrompt.includes('green') || lowerPrompt.includes('emerald')) {
-      newColors.primaryColor = '#16a34a';
-      newColors.secondaryColor = '#15803d';
-      newColors.accentColor = '#86efac';
-    } else if (lowerPrompt.includes('purple') || lowerPrompt.includes('violet')) {
-      newColors.primaryColor = '#7c3aed';
-      newColors.secondaryColor = '#5b21b6';
-      newColors.accentColor = '#ddd6fe';
-    } else if (lowerPrompt.includes('dark') || lowerPrompt.includes('night') || lowerPrompt.includes('black')) {
-      newColors.primaryColor = '#0f172a';
-      newColors.secondaryColor = '#1e293b';
-      newColors.accentColor = '#38bdf8';
-    }
-
-    const countryMatch = targetPrompt.match(/\b([A-Z]{3})\b/);
-    if (countryMatch) newFields.country = countryMatch[1];
-
-    const timeMatch = targetPrompt.match(/(\d+[:.]\\d+s?|\d+\\.\\d+s)/i);
-    if (timeMatch) newFields.time = timeMatch[1];
-
-    const scoreMatch = targetPrompt.match(/(\d+)\s*[-:]\s*(\d+)/);
-    if (scoreMatch) {
-      newFields.scoreA = scoreMatch[1];
-      newFields.scoreB = scoreMatch[2];
-    }
-
-    const nameMatch = targetPrompt.match(/"([^"]+)"/) || targetPrompt.match(/\b([A-Z][a-z]+\s+[A-Z][a-z]+)\b/);
-    if (nameMatch) {
-      newFields.athlete = nameMatch[1];
-      newFields.athleteA = nameMatch[1];
-    }
-
-    setSelectedTemplateType(newTemplateType);
-    setCustomColors(newColors);
-    setCustomFields(newFields);
-    setIsGenerating(false);
-  };
-
-  const handleFieldChange = (key, value) => {
-    setCustomFields(prev => ({ ...prev, [key]: value }));
-  };
 
   const handleAddToCanvas = () => {
     if (!canvas) {

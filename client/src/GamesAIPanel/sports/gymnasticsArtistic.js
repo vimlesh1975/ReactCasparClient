@@ -29,8 +29,7 @@ function createFabricOlympicRings(createProps, fabric, rightX = 780, topY = 512)
 }
 
 export function generateGymnasticsArtisticHTML(templateId = '', templateName = '', data = {}, sport = {}, styleOptions = {}) {
-  const primaryColor = styleOptions.primaryColor || sport.primaryColor || "#0f172a";
-  const secondaryColor = styleOptions.secondaryColor || sport.secondaryColor || "#1e293b";
+
   const font = styleOptions.fontFamily || "'Roboto Condensed', sans-serif";
 
   const normId = (templateId || "").toLowerCase();
