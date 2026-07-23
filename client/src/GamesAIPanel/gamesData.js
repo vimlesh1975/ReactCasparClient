@@ -1137,7 +1137,7 @@ export const HO_TEMPLATES = [
   { id: "HO003", name: "Olympic Champion / World Title Card", icon: "🥇", subCat: "LOWER THIRDS" },
   { id: "HO004", name: "Match Clock Bug (15-Min Quarter)", icon: "⏱️", subCat: "SPLITS & TIMES" },
   { id: "HO005", name: "Live Scoreboard Bug (Score / Quarter / PC)", icon: "📊", subCat: "SCORES & MATCH" },
-  { id: "HO006", name: "Starting 11 Lineup Card", icon: "📋", subCat: "SCORES & MATCH" },
+  { id: "HO006", name: "Match ID", icon: "🏑", subCat: "LOWER THIRDS" },
   { id: "HO007", name: "Group Phase Standings Table", icon: "📊", subCat: "SCORES & MATCH" },
   { id: "HO008", name: "Quarter-by-Quarter Score Summary", icon: "📊", subCat: "RESULTS & STANDINGS" },
   { id: "HO009", name: "Match Statistics (Shots / PCs / Cards)", icon: "📈", subCat: "RESULTS & STANDINGS" },

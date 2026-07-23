@@ -46,11 +46,75 @@ export function get11PlayerLineup(sport) {
   return result;
 }
 
-export function resolveCategory(templateType, templateName = '') {
+export function resolveCategory(templateType, templateName = '', templateId = '') {
   const normType = (templateType || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
-  const combined = `${normType} ${normName}`;
+  const normId = (templateId || "").toLowerCase();
+  const combined = `${normType} ${normName} ${normId}`;
 
+  // ── Hockey (HO) templates → reuse Football (FB) graphic categories ──
+  if (combined.includes("ho035") || (combined.includes("hockey") && combined.includes("flower") && combined.includes("presenter"))) return "football-flower-presenter";
+  if (combined.includes("ho034") || (combined.includes("hockey") && combined.includes("medal") && combined.includes("presenter"))) return "football-medal-presenter";
+  if (combined.includes("ho033") || (combined.includes("hockey") && combined.includes("medals") && combined.includes("list"))) return "football-medals-list";
+  if (combined.includes("ho032") || (combined.includes("hockey") && combined.includes("medal") && combined.includes("id"))) return "football-medal-id";
+  if (combined.includes("ho031") || (combined.includes("hockey") && combined.includes("ceremony") && combined.includes("id"))) return "football-ceremony-id";
+  if (combined.includes("ho030") || (combined.includes("hockey") && combined.includes("final") && combined.includes("rank"))) return "football-final-rank";
+  if (combined.includes("ho029") || (combined.includes("hockey") && combined.includes("bracket") && combined.includes("gold"))) return "football-bracket-finals";
+  if (combined.includes("ho028") || (combined.includes("hockey") && combined.includes("advance") && combined.includes("semi"))) return "football-advance-quarterfinals";
+  if (combined.includes("ho027") || (combined.includes("hockey") && combined.includes("shoot-out") && combined.includes("crunch"))) return "football-pso-crunch";
+  if (combined.includes("ho026") || (combined.includes("hockey") && combined.includes("shoot-out") && combined.includes("scoreboard"))) return "football-pso-scoreboard";
+  if (combined.includes("ho025") || (combined.includes("hockey") && combined.includes("goal") && combined.includes("summary"))) return "football-goal-summary";
+  if (combined.includes("ho024") || (combined.includes("hockey") && combined.includes("scoreboard"))) return "football-match-result";
+  if (combined.includes("ho023") || (combined.includes("hockey") && combined.includes("match") && combined.includes("statistics"))) return "football-match-statistics";
+  if (combined.includes("ho022") || (combined.includes("hockey") && combined.includes("crunch") && combined.includes("stat"))) return "football-crunch-stats";
+  if (combined.includes("ho021") || (combined.includes("hockey") && combined.includes("tournament") && combined.includes("player") && combined.includes("stat"))) return "football-tournament-player-stats";
+  if (combined.includes("ho020") || (combined.includes("hockey") && combined.includes("match") && combined.includes("player") && combined.includes("stat"))) return "football-player-stats";
+  if (combined.includes("ho036") || (combined.includes("hockey") && combined.includes("crunch") && combined.includes("scoreboard"))) return "football-crunch-scoreboard";
+  if (combined.includes("ho015") || (combined.includes("hockey") && combined.includes("coach") && combined.includes("id"))) return "football-coach-id";
+  if (combined.includes("ho014") || (combined.includes("hockey") && combined.includes("captain") && combined.includes("id")) || (combined.includes("hockey") && combined.includes("goalkeeper") && combined.includes("id"))) return "football-captain-id";
+  if (combined.includes("ho013") || (combined.includes("hockey") && combined.includes("player") && combined.includes("id"))) return "football-player-id";
+  if (combined.includes("ho017") || (combined.includes("hockey") && combined.includes("umpires") && combined.includes("list"))) return "football-officials-list";
+  if (combined.includes("ho016") || (combined.includes("hockey") && combined.includes("umpire") && combined.includes("id"))) return "football-official-id";
+  if (combined.includes("ho012") || (combined.includes("hockey") && combined.includes("previous") && combined.includes("results"))) return "football-previous-results";
+  if (combined.includes("ho011") || (combined.includes("hockey") && combined.includes("substitutes") && combined.includes("list"))) return "football-substitutes-list";
+  if (combined.includes("ho010") || (combined.includes("hockey") && combined.includes("starting") && combined.includes("lineup"))) return "football-starting-lineup";
+  if (combined.includes("ho009") || (combined.includes("hockey") && combined.includes("team") && combined.includes("id"))) return "team-id-single";
+  if (combined.includes("ho008") || (combined.includes("hockey") && combined.includes("standings"))) return "football-group-standings";
+  if (combined.includes("ho007") || (combined.includes("hockey") && combined.includes("pool") && combined.includes("list"))) return "group-list-teams";
+  if (combined.includes("ho006") || (combined.includes("hockey") && combined.includes("match") && combined.includes("id"))) return "match-id-teams";
+  if (combined.includes("fb037") || (combined.includes("football") && combined.includes("flower") && combined.includes("presenter"))) return "football-flower-presenter";
+  if (combined.includes("fb036") || (combined.includes("football") && combined.includes("medal") && combined.includes("presenter"))) return "football-medal-presenter";
+  if (combined.includes("fb035") || (combined.includes("football") && combined.includes("medals") && combined.includes("list"))) return "football-medals-list";
+  if (combined.includes("fb034") || (combined.includes("football") && combined.includes("medal") && combined.includes("id"))) return "football-medal-id";
+  if (combined.includes("fb033") || (combined.includes("football") && combined.includes("ceremony") && combined.includes("id"))) return "football-ceremony-id";
+  if (combined.includes("fb032") || (combined.includes("football") && combined.includes("final") && combined.includes("rank"))) return "football-final-rank";
+  if (combined.includes("fb031") || (combined.includes("football") && combined.includes("bracket") && combined.includes("gold"))) return "football-bracket-finals";
+  if (combined.includes("fb030") || (combined.includes("football") && combined.includes("bracket") && combined.includes("semi"))) return "football-bracket-semifinals";
+  if (combined.includes("fb028") || (combined.includes("football") && combined.includes("shoot-out") && combined.includes("crunch"))) return "football-pso-crunch";
+  if (combined.includes("fb026") || (combined.includes("football") && combined.includes("additional") && combined.includes("time"))) return "football-additional-time";
+  if (combined.includes("fb029") || (combined.includes("football") && combined.includes("advance") && combined.includes("quarter-finals"))) return "football-advance-quarterfinals";
+  if (combined.includes("fb027") || (combined.includes("football") && combined.includes("penalty") && combined.includes("shoot-out"))) return "football-pso-scoreboard";
+  if (combined.includes("fb025") || (combined.includes("football") && combined.includes("goal") && combined.includes("summary"))) return "football-goal-summary";
+  if (combined.includes("fb024") || (combined.includes("football") && (combined.includes("result") || combined.includes("pso")))) return "football-match-result";
+  if (combined.includes("fb023") || (combined.includes("football") && combined.includes("match") && combined.includes("statistics"))) return "football-match-statistics";
+  if (combined.includes("fb022") || (combined.includes("football") && combined.includes("crunch") && combined.includes("stat"))) return "football-crunch-stats";
+  if (combined.includes("fb016") || (combined.includes("football") && combined.includes("coach") && combined.includes("id"))) return "football-coach-id";
+  if (combined.includes("fb015") || (combined.includes("football") && combined.includes("captain") && combined.includes("id")) || (combined.includes("football") && combined.includes("goalkeeper") && combined.includes("id"))) return "football-captain-id";
+  if (combined.includes("fb019") || (combined.includes("football") && combined.includes("substitution") && combined.includes("id"))) return "football-substitution-single";
+  if (combined.includes("fb018") || (combined.includes("football") && combined.includes("substitution"))) return "football-substitution-event";
+  if (combined.includes("fb021") || (combined.includes("football") && combined.includes("tournament") && combined.includes("player") && combined.includes("stat"))) return "football-tournament-player-stats";
+  if (combined.includes("fb020") || (combined.includes("football") && combined.includes("match") && combined.includes("player") && combined.includes("stat"))) return "football-player-stats";
+  if (combined.includes("fb017") || (combined.includes("football") && (combined.includes("crunch") || combined.includes("scoreboard")))) return "football-crunch-scoreboard";
+  if (combined.includes("fb014") || (combined.includes("football") && combined.includes("player") && combined.includes("id"))) return "football-player-id";
+  if (combined.includes("fb013") || (combined.includes("football") && combined.includes("officials") && combined.includes("list"))) return "football-officials-list";
+  if (combined.includes("fb012") || (combined.includes("football") && combined.includes("official") && combined.includes("id"))) return "football-official-id";
+  if (combined.includes("fb011") || (combined.includes("football") && combined.includes("previous") && combined.includes("results"))) return "football-previous-results";
+  if (combined.includes("fb010") || (combined.includes("football") && combined.includes("substitutes") && combined.includes("list"))) return "football-substitutes-list";
+  if (combined.includes("fb009") || (combined.includes("football") && combined.includes("starting") && combined.includes("lineup"))) return "football-starting-lineup";
+  if (combined.includes("fb008") || (combined.includes("football") && (combined.includes("team id") || combined.includes("team-id")))) return "team-id-single";
+  if (combined.includes("fb007") || (combined.includes("football") && (combined.includes("standings") || combined.includes("group standings")))) return "football-group-standings";
+  if (combined.includes("fb006") || (combined.includes("football") && (combined.includes("group list") || combined.includes("group-list")))) return "group-list-teams";
+  if (combined.includes("fb005") || (combined.includes("football") && (combined.includes("match id") || combined.includes("match-id")))) return "match-id-teams";
   if (combined.includes("sw024") || (combined.includes("clock") && combined.includes("at finish"))) return "clock-at-finish";
   if (combined.includes("sw023") || (combined.includes("clock") && combined.includes("before finish"))) return "clock-before-finish";
   if (combined.includes("sw022") || (combined.includes("clock") && combined.includes("at split"))) return "clock-at-split";
@@ -98,7 +162,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const locationName = (data.location || "LONDON, UNITED KINGDOM").toUpperCase();
   const code = sport.code;
 
-  const category = resolveCategory(templateType, templateName);
+  const category = resolveCategory(templateType, templateName, templateId);
 
   // Derive a 1-based variant index from the template ID numeric suffix
   // e.g. CF001 → 1, AT003 → 3, SW007 → 7  → mapped to variant 1-5
@@ -1015,6 +1079,4212 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </html>
       `;
     }
+
+    case "football-additional-time": {
+      const labelStr = (data.label || "ADDITIONAL TIME").toUpperCase();
+      const timeVal = data.time || data.value || "4:00";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .add-time-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 120px;
+              display: flex;
+              align-items: center;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .silver-label {
+              height: 38px;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 15px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 0 20px;
+              border-radius: 4px 0 0 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+              letter-spacing: 1px;
+            }
+            .time-val {
+              height: 38px;
+              background: linear-gradient(180deg, #004077 0%, #001f3f 100%);
+              border: 1px solid #001228;
+              color: #ffffff;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 0 24px;
+              border-radius: 0 4px 4px 0;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+              margin-left: 2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="add-time-wrapper">
+            <div class="silver-label"><span style="transform: skewX(15deg);">${labelStr}</span></div>
+            <div class="time-val"><span style="transform: skewX(15deg);">${timeVal}</span></div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-pso-crunch": {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Val = data.team1Val !== undefined ? data.team1Val : "2";
+
+      const team2Noc = (data.team2Noc || data.noc2 || "ARG").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇦🇷";
+      const team2Val = data.team2Val !== undefined ? data.team2Val : "1";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .pso-crunch-wrapper {
+              position: absolute;
+              top: 100px;
+              left: 120px;
+              width: 280px;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+            .pso-c-row {
+              height: 38px;
+              background: linear-gradient(180deg, #004077 0%, #001f3f 100%);
+              border: 1px solid #001228;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 14px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            }
+            .info-left {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              transform: skewX(15deg);
+            }
+            .noc-text { font-size: 17px; font-weight: 900; font-style: italic; color: #ffffff; }
+            .flag-box { font-size: 17px; }
+            .score-val { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; transform: skewX(15deg); }
+            
+            .shots-flex {
+              display: flex;
+              gap: 4px;
+              transform: skewX(15deg);
+            }
+            .s-box { width: 18px; height: 16px; border-radius: 2px; }
+            .s-box.g { background: #22c55e; }
+            .s-box.m { background: #ef4444; }
+
+            .sub-pill {
+              align-self: center;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              color: #ffffff;
+              font-size: 12px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 20px;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              margin-top: 1px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="pso-crunch-wrapper">
+            <div class="pso-c-row">
+              <div class="info-left">
+                <span class="noc-text">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+              </div>
+              <span class="score-val">${team1Val}</span>
+              <div class="shots-flex">
+                <div class="s-box m"></div>
+                <div class="s-box g"></div>
+                <div class="s-box g"></div>
+              </div>
+            </div>
+
+            <div class="pso-c-row">
+              <div class="info-left">
+                <span class="noc-text">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+              </div>
+              <span class="score-val">${team2Val}</span>
+              <div class="shots-flex">
+                <div class="s-box m"></div>
+                <div class="s-box g"></div>
+              </div>
+            </div>
+
+            <div class="sub-pill"><span style="transform: skewX(15deg); display:inline-block;">SHOOT-OUT</span></div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-bracket-semifinals":
+    case "football-bracket-finals": {
+      const isFinals = category === "football-bracket-finals";
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || (isFinals ? "SEMI-FINALS ➔ GOLD MEDAL MATCH" : "QUARTER-FINALS ➔ SEMI-FINALS")).toUpperCase();
+
+      const pairsList = isFinals ? [
+        { t1Noc: "NGR", t1Flag: "🇳🇬", t1Name: "NIGERIA", t2Noc: "BEL", t2Flag: "🇧🇪", t2Name: "BELGIUM", advNoc: "NGR", advFlag: "🇳🇬", advName: "NIGERIA" },
+        { t1Noc: "ARG", t1Flag: "🇦🇷", t1Name: "ARGENTINA", t2Noc: "BRA", t2Flag: "🇧🇷", t2Name: "BRAZIL", advNoc: "ARG", advFlag: "🇦🇷", advName: "ARGENTINA" }
+      ] : [
+        { t1Noc: "BRA", t1Flag: "🇧🇷", t1Name: "BRAZIL", t2Noc: "CMR", t2Flag: "🇨🇲", t2Name: "CAMEROON", advNoc: "BRA", advFlag: "🇧🇷", advName: "BRAZIL" },
+        { t1Noc: "ITA", t1Flag: "🇮🇹", t1Name: "ITALY", t2Noc: "BEL", t2Flag: "🇧🇪", t2Name: "BELGIUM", advNoc: "BEL", advFlag: "🇧🇪", advName: "BELGIUM" },
+        { t1Noc: "ARG", t1Flag: "🇦🇷", t1Name: "ARGENTINA", t2Noc: "NED", t2Flag: "🇳🇱", t2Name: "NETHERLANDS", advNoc: "ARG", advFlag: "🇦🇷", advName: "ARGENTINA" },
+        { t1Noc: "NGR", t1Flag: "🇳🇬", t1Name: "NIGERIA", t2Noc: "CIV", t2Flag: "🇨🇮", t2Name: "COTE D'IVOIRE", advNoc: "NGR", advFlag: "🇳🇬", advName: "NIGERIA" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .bkt-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .bkt-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 480px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .bkt-pair-container {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              margin-bottom: 4px;
+            }
+            .bkt-row {
+              height: 38px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 20px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .team-left {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; width: 40px; }
+            .flag-box { font-size: 20px; color: #ffffff; }
+            .team-fullname { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+
+            .adv-box {
+              position: absolute;
+              right: 20px;
+              width: 320px;
+              height: 44px;
+              background: linear-gradient(180deg, #003e73 0%, #001e3d 100%);
+              border: 1px solid #38bdf8;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 16px;
+              box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="bkt-wrapper">
+            <div class="bkt-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill">
+                    <span>${subTitle}</span>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${pairsList.map(p => `
+              <div style="position: relative; margin-bottom: 6px;">
+                <div class="bkt-pair-container">
+                  <div class="bkt-row" style="width: 580px;">
+                    <div class="team-left">
+                      <span class="noc-code">${p.t1Noc}</span>
+                      <span class="flag-box">${p.t1Flag}</span>
+                      <span class="team-fullname">${p.t1Name}</span>
+                    </div>
+                  </div>
+                  <div class="bkt-row" style="width: 580px;">
+                    <div class="team-left">
+                      <span class="noc-code">${p.t2Noc}</span>
+                      <span class="flag-box">${p.t2Flag}</span>
+                      <span class="team-fullname">${p.t2Name}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="adv-box" style="top: 20px;">
+                  <div class="team-left">
+                    <span class="noc-code">${p.advNoc}</span>
+                    <span class="flag-box">${p.advFlag}</span>
+                    <span class="team-fullname">${p.advName}</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-final-rank": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FINAL RANK").toUpperCase();
+
+      const rankList = Array.isArray(data.ranks) ? data.ranks : [
+        { rank: "1", noc: "ARG", flag: "🇦🇷", name: "ARGENTINA" },
+        { rank: "2", noc: "NGR", flag: "🇳🇬", name: "NIGERIA" },
+        { rank: "3", noc: "BRA", flag: "🇧🇷", name: "BRAZIL" },
+        { rank: "4", noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
+        { rank: "5", noc: "ITA", flag: "🇮🇹", name: "ITALY" },
+        { rank: "6", noc: "CIV", flag: "🇨🇮", name: "COTE D'IVOIRE" },
+        { rank: "7", noc: "NED", flag: "🇳🇱", name: "NETHERLANDS" },
+        { rank: "8", noc: "CMR", flag: "🇨🇲", name: "CAMEROON" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .rank-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .rank-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 480px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .rank-row {
+              height: 40px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .rank-badge {
+              width: 32px;
+              height: 28px;
+              background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+              color: #ffffff;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 3px;
+              transform: skewX(15deg);
+              box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            }
+            .row-info {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+              margin-left: 16px;
+            }
+            .noc-code { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .flag-box { font-size: 20px; color: #ffffff; }
+            .team-fullname { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+          </style>
+        </head>
+        <body>
+          <div class="rank-wrapper">
+            <div class="rank-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill">
+                    <span>${subTitle}</span>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${rankList.map(rk => `
+              <div class="rank-row">
+                <div class="rank-badge">${rk.rank}</div>
+                <div class="row-info">
+                  <span class="noc-code">${rk.noc}</span>
+                  <span class="flag-box">${rk.flag}</span>
+                  <span class="team-fullname">${rk.name}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-ceremony-id": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .c-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .c-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .event-title {
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .c-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .sub-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="c-wrapper">
+            <div class="c-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <span class="event-title">${eventTitle}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="c-sub">
+              <span class="sub-text">${subTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-medal-id": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const teamName = (data.name || "ARGENTINA").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD - MEN'S FOOTBALL").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .med-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .med-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .team-name { font-size: 28px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; }
+            .rings-svg { transform: skewX(15deg); }
+
+            .med-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .gold-badge { font-size: 22px; transform: skewX(15deg); }
+            .sub-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="med-wrapper">
+            <div class="med-head">
+              <div class="head-left">
+                <span class="noc-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="team-name">${teamName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="med-sub">
+              <span class="gold-badge">🥇</span>
+              <span class="sub-text">${subTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-medals-list": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      const winnersList = Array.isArray(data.winners) ? data.winners : [
+        { medal: "🥇", noc: "ARG", flag: "🇦🇷", name: "ARGENTINA" },
+        { medal: "🥈", noc: "NGR", flag: "🇳🇬", name: "NIGERIA" },
+        { medal: "🥉", noc: "BRA", flag: "🇧🇷", name: "BRAZIL" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .meds-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .meds-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 480px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .med-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .medal-icon { font-size: 22px; transform: skewX(15deg); }
+            .row-info {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+              margin-left: 16px;
+            }
+            .noc-code { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .flag-box { font-size: 22px; color: #ffffff; }
+            .team-fullname { font-size: 22px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+          </style>
+        </head>
+        <body>
+          <div class="meds-wrapper">
+            <div class="meds-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill">
+                    <span>${subTitle}</span>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${winnersList.map(w => `
+              <div class="med-row">
+                <span class="medal-icon">${w.medal}</span>
+                <div class="row-info">
+                  <span class="noc-code">${w.noc}</span>
+                  <span class="flag-box">${w.flag}</span>
+                  <span class="team-fullname">${w.name}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-medal-presenter":
+    case "football-flower-presenter": {
+      const isFlower = category === "football-flower-presenter";
+      const nameStr = (data.presenter || data.name || (isFlower ? "MR JULIO GRONDONA" : "JACQUES ROGGE")).toUpperCase();
+      const titleStr = (data.title || data.role || (isFlower ? "SENIOR VICE PRESIDENT, FIFA" : "IOC PRESIDENT, BELGIUM")).toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .pres-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .pres-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .pres-name {
+              transform: skewX(15deg);
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .pres-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .sub-title {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="pres-wrapper">
+            <div class="pres-head">
+              <span class="pres-name">${nameStr}</span>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="pres-sub">
+              <span class="sub-title">${titleStr}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-pso-scoreboard": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD MEDAL MATCH - PENALTY SHOOT-OUT").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Name = (data.team1Name || data.name1 || "NIGERIA").toUpperCase();
+      const team1Score = data.team1Score !== undefined ? data.team1Score : "2";
+      const team1Shots = Array.isArray(data.team1Shots) ? data.team1Shots : ["G", "M", "G"];
+
+      const team2Noc = (data.team2Noc || data.noc2 || "ARG").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇦🇷";
+      const team2Name = (data.team2Name || data.name2 || "ARGENTINA").toUpperCase();
+      const team2Score = data.team2Score !== undefined ? data.team2Score : "1";
+      const team2Shots = Array.isArray(data.team2Shots) ? data.team2Shots : ["M", "G"];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .pso-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .pso-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 520px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .pso-team-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .team-left {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .flag-box { font-size: 22px; color: #ffffff; }
+            .team-fullname { font-size: 22px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+            
+            .pso-right {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .pso-score { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; width: 30px; text-align: right; }
+
+            .shots-bar {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+            }
+            .shot-box {
+              width: 28px;
+              height: 22px;
+              border-radius: 3px;
+              transform: skewX(-15deg);
+              box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            }
+            .shot-box.goal { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border: 1px solid #16a34a; }
+            .shot-box.miss { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); border: 1px solid #dc2626; }
+          </style>
+        </head>
+        <body>
+          <div class="pso-wrapper">
+            <div class="pso-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill">
+                    <span>${subTitle}</span>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="pso-team-row">
+              <div class="team-left">
+                <span class="noc-code">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+                <span class="team-fullname">${team1Name}</span>
+              </div>
+              <div class="pso-right">
+                <span class="pso-score">${team1Score}</span>
+                <div class="shots-bar">
+                  ${team1Shots.map(s => `<div class="shot-box ${s === 'G' || s === true ? 'goal' : 'miss'}"></div>`).join('')}
+                </div>
+              </div>
+            </div>
+
+            <div class="pso-team-row">
+              <div class="team-left">
+                <span class="noc-code">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+                <span class="team-fullname">${team2Name}</span>
+              </div>
+              <div class="pso-right">
+                <span class="pso-score">${team2Score}</span>
+                <div class="shots-bar">
+                  ${team2Shots.map(s => `<div class="shot-box ${s === 'G' || s === true ? 'goal' : 'miss'}"></div>`).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-advance-quarterfinals": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FIRST ROUND ➔ QUARTER-FINALS").toUpperCase();
+
+      const teamsList = Array.isArray(data.teams) ? data.teams : [
+        { noc: "ARG", flag: "🇦🇷", name: "ARGENTINA", w: "3", l: "0", d: "0" },
+        { noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "1" },
+        { noc: "BRA", flag: "🇧🇷", name: "BRAZIL", w: "3", l: "0", d: "0" },
+        { noc: "NGR", flag: "🇳🇬", name: "NIGERIA", w: "2", l: "0", d: "1" },
+        { noc: "CIV", flag: "🇨🇮", name: "COTE D'IVOIRE", w: "2", l: "1", d: "0" },
+        { noc: "BEL", flag: "🇧🇪", name: "BELGIUM", w: "2", l: "1", d: "0" },
+        { noc: "NED", flag: "🇳🇱", name: "NETHERLANDS", w: "1", l: "0", d: "2" },
+        { noc: "CMR", flag: "🇨🇲", name: "CAMEROON", w: "1", l: "0", d: "2" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .adv-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .adv-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 580px;
+            }
+            .wld-col-hdr {
+              display: flex;
+              gap: 24px;
+              margin-right: 8px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .adv-row {
+              height: 40px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 28px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .team-left-info {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .flag-box { font-size: 20px; color: #ffffff; }
+            .team-fullname { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+            
+            .wld-vals {
+              display: flex;
+              align-items: center;
+              gap: 28px;
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+            }
+            .wld-vals span { width: 16px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="adv-wrapper">
+            <div class="adv-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill-row">
+                    <span>${subTitle}</span>
+                    <div class="wld-col-hdr">
+                      <span>W</span>
+                      <span>L</span>
+                      <span>D</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${teamsList.map(tm => `
+              <div class="adv-row">
+                <div class="team-left-info">
+                  <span class="noc-code">${tm.noc}</span>
+                  <span class="flag-box">${tm.flag}</span>
+                  <span class="team-fullname">${tm.name}</span>
+                </div>
+                <div class="wld-vals">
+                  <span>${tm.w}</span>
+                  <span>${tm.l}</span>
+                  <span>${tm.d}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-goal-summary": {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team2Noc = (data.team2Noc || data.noc2 || "BEL").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇪";
+      const finalScore = data.score || "4 - 1";
+
+      const goalsList = Array.isArray(data.goals) ? data.goals : [
+        { side: "left", shirt: "13", scorer: "O. ADEFEMI", minute: "17'", runningScore: "1-0" },
+        { side: "left", shirt: "7", scorer: "C. OGBUKE OBASI", minute: "59'", runningScore: "2-0" },
+        { side: "left", shirt: "7", scorer: "C. OGBUKE OBASI", minute: "72'", runningScore: "3-0" },
+        { side: "left", shirt: "2", scorer: "C. OKONKWO", minute: "78'", runningScore: "4-0" },
+        { side: "right", shirt: "13", scorer: "L. CIMAN", minute: "88'", runningScore: "4-1" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .goals-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .goals-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-team {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .score-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 2px 32px;
+              border-radius: 4px;
+              letter-spacing: 2px;
+              transform: skewX(15deg);
+              box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            }
+
+            .goal-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .goal-col-left {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .goal-col-mid {
+              width: 140px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .goal-col-right {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+
+            .shirt-num { font-size: 18px; font-weight: 900; font-style: italic; color: #38bdf8; }
+            .scorer-name { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
+            .goal-min { font-size: 17px; font-weight: 900; font-style: italic; color: #38bdf8; }
+            .running-sc { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; }
+          </style>
+        </head>
+        <body>
+          <div class="goals-wrapper">
+            <div class="goals-head">
+              <div class="head-team">
+                <span class="noc-code">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+              </div>
+              <div class="score-pill">
+                <span>${finalScore}</span>
+              </div>
+              <div class="head-team">
+                <span class="noc-code">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+              </div>
+            </div>
+
+            ${goalsList.map(g => {
+              const isLeft = g.side !== "right";
+              return `
+                <div class="goal-row">
+                  <div class="goal-col-left">
+                    ${isLeft ? `
+                      <span class="shirt-num">${g.shirt}</span>
+                      <span class="scorer-name">${(g.scorer || '').toUpperCase()}</span>
+                    ` : ''}
+                  </div>
+                  <div class="goal-col-mid">
+                    ${isLeft ? `<span class="goal-min">${g.minute}</span>` : ''}
+                    <span class="running-sc">${g.runningScore}</span>
+                    ${!isLeft ? `<span class="goal-min">${g.minute}</span>` : ''}
+                  </div>
+                  <div class="goal-col-right">
+                    ${!isLeft ? `
+                      <span class="scorer-name">${(g.scorer || '').toUpperCase()}</span>
+                      <span class="shirt-num">${g.shirt}</span>
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-match-result": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const matchStage = (data.stage || data.subTitle || "BRONZE MEDAL MATCH").toUpperCase();
+      const matchStatus = (data.status || data.period || "2ND HALF").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "BEL").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇧🇪";
+      const team1Name = (data.team1Name || data.name1 || "BELGIUM").toUpperCase();
+      const team1Score = data.team1Score !== undefined ? data.team1Score : "0";
+      const team1Pso = data.team1Pso !== undefined ? `(${data.team1Pso})` : "";
+
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const team2Name = (data.team2Name || data.name2 || "BRAZIL").toUpperCase();
+      const team2Score = data.team2Score !== undefined ? data.team2Score : "2";
+      const team2Pso = data.team2Pso !== undefined ? `(${data.team2Pso})` : "";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .m-res-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .m-res-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 16px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              margin-top: 2px;
+              width: 500px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .team-score-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 28px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .team-left-info {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .flag-box { font-size: 22px; color: #ffffff; }
+            .team-fullname { font-size: 22px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+            
+            .score-right-info {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              transform: skewX(15deg);
+            }
+            .pso-text { font-size: 18px; font-weight: 900; font-style: italic; color: #ffd700; }
+            .score-num { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; width: 30px; text-align: right; }
+          </style>
+        </head>
+        <body>
+          <div class="m-res-wrapper">
+            <div class="m-res-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <div class="sub-pill-row">
+                    <span>${matchStage}</span>
+                    <span>${matchStatus}</span>
+                  </div>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="team-score-row">
+              <div class="team-left-info">
+                <span class="noc-code">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+                <span class="team-fullname">${team1Name}</span>
+              </div>
+              <div class="score-right-info">
+                ${team1Pso ? `<span class="pso-text">${team1Pso}</span>` : ''}
+                <span class="score-num">${team1Score}</span>
+              </div>
+            </div>
+
+            <div class="team-score-row">
+              <div class="team-left-info">
+                <span class="noc-code">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+                <span class="team-fullname">${team2Name}</span>
+              </div>
+              <div class="score-right-info">
+                ${team2Pso ? `<span class="pso-text">${team2Pso}</span>` : ''}
+                <span class="score-num">${team2Score}</span>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-match-statistics": {
+      const team1Noc = (data.team1Noc || data.noc1 || "BEL").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇧🇪";
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const subTitle = (data.subTitle || "MATCH STATISTICS").toUpperCase();
+
+      const statsList = Array.isArray(data.stats) ? data.stats : [
+        { label: "GOALS / SHOTS ON GOAL", val1: "0 / 8", val2: "3 / 9" },
+        { label: "CORNERS", val1: "7", val2: "1" },
+        { label: "FREE KICKS", val1: "0", val2: "1" },
+        { label: "FOULS", val1: "21", val2: "13" },
+        { label: "OFFSIDES", val1: "2", val2: "5" },
+        { label: "CARDS", val1: "🟨 0  🟨 0  🟥 0", val2: "🟨 4  🟨 0  🟥 1", isCards: true },
+        { label: "BALL POSSESSION", val1: "51%", val2: "49%" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .match-stats-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .m-stats-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-team {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .title-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 15px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 4px 24px;
+              border-radius: 4px;
+              letter-spacing: 1.2px;
+              transform: skewX(15deg);
+              box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            }
+
+            .m-stats-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 28px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .row-val-left {
+              flex: 1;
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-align: left;
+            }
+            .row-label {
+              flex: 2;
+              transform: skewX(15deg);
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              text-align: center;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .row-val-right {
+              flex: 1;
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-align: right;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="match-stats-wrapper">
+            <div class="m-stats-head">
+              <div class="head-team">
+                <span class="noc-code">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+              </div>
+              <div class="title-pill">
+                <span>${subTitle}</span>
+              </div>
+              <div class="head-team">
+                <span class="noc-code">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+              </div>
+            </div>
+
+            ${statsList.map(st => `
+              <div class="m-stats-row">
+                <span class="row-val-left">${st.val1}</span>
+                <span class="row-label">${st.label}</span>
+                <span class="row-val-right">${st.val2}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-crunch-stats": {
+      const statLabel = (data.statLabel || data.label || "SHOTS ON GOAL").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "ARG").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇦🇷";
+      const team1Val = data.team1Val !== undefined ? data.team1Val : (data.val1 !== undefined ? data.val1 : "5");
+
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const team2Val = data.team2Val !== undefined ? data.team2Val : (data.val2 !== undefined ? data.val2 : "4");
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .crunch-stat-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 120px;
+              width: 260px;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .stat-inset-pill {
+              align-self: center;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 20px;
+              border-radius: 4px 4px 0 0;
+              transform: skewX(-15deg);
+              letter-spacing: 1px;
+              box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
+              margin-bottom: -3px;
+              z-index: 2;
+            }
+
+            .team-row {
+              height: 38px;
+              background: linear-gradient(180deg, #004077 0%, #002244 50%, #001228 100%);
+              border: 1px solid #001f3f;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+              padding: 0 16px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .team-info {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              transform: skewX(15deg);
+            }
+            .noc-text {
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 0.5px;
+            }
+            .flag-box { font-size: 18px; }
+            .val-text {
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              transform: skewX(15deg);
+              min-width: 24px;
+              text-align: right;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="crunch-stat-wrapper">
+            <div class="stat-inset-pill">
+              <span style="display:inline-block; transform: skewX(15deg);">${statLabel}</span>
+            </div>
+
+            <div class="team-row">
+              <div class="team-info">
+                <span class="noc-text">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+              </div>
+              <span class="val-text">${team1Val}</span>
+            </div>
+
+            <div class="team-row">
+              <div class="team-info">
+                <span class="noc-text">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+              </div>
+              <span class="val-text">${team2Val}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-coach-id": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const coachName = (data.coach || data.name || "SERGIO BATISTA").toUpperCase();
+      const roleTitle = (data.role || data.title || "COACH").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .c-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .c-id-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .coach-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .c-id-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .role-title-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="c-id-wrapper">
+            <div class="c-id-head">
+              <div class="head-left">
+                <span class="country-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="coach-name">${coachName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="c-id-sub">
+              <span class="role-title-text">${roleTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-captain-id": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = data.shirt || data.bib || "10";
+      const playerName = (data.athlete || data.player || data.name || "JUAN RIQUELME").toUpperCase();
+      const roleTitle = (data.role || data.title || "CAPTAIN").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .c-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .c-id-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .shirt-num { font-size: 26px; font-weight: 900; font-style: italic; color: #38bdf8; margin-left: 4px; }
+            .player-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .c-id-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .role-title-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="c-id-wrapper">
+            <div class="c-id-head">
+              <div class="head-left">
+                <span class="country-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="shirt-num">${shirtNum}</span>
+                <span class="player-name">${playerName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="c-id-sub">
+              <span class="role-title-text">${roleTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-substitution-single": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = data.shirt || data.bib || "7";
+      const playerName = (data.athlete || data.player || data.name || "JOSE SOSA").toUpperCase();
+      const subType = (data.subType || data.direction || "in").toLowerCase();
+      const isOut = subType === "out" || subType === "off";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .sub-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 780px;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 16px 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: skewX(-15deg) translateX(-80px); opacity: 0; } to { transform: skewX(-15deg) translateX(0); opacity: 1; } }
+
+            .sub-id-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .shirt-num { font-size: 26px; font-weight: 900; font-style: italic; color: #38bdf8; margin-left: 4px; }
+            .player-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .arrow-badge {
+              transform: skewX(15deg);
+              width: 32px;
+              height: 32px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 20px;
+              font-weight: 900;
+              color: #ffffff;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            }
+            .arrow-out { background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%); }
+            .arrow-in { background: linear-gradient(180deg, #10b981 0%, #065f46 100%); }
+          </style>
+        </head>
+        <body>
+          <div class="sub-id-wrapper">
+            <div class="sub-id-left">
+              <span class="country-code">${countryCode}</span>
+              <span class="flag-box">${flagStr}</span>
+              <span class="shirt-num">${shirtNum}</span>
+              <span class="player-name">${playerName}</span>
+            </div>
+            <div class="arrow-badge ${isOut ? 'arrow-out' : 'arrow-in'}">
+              ${isOut ? '↙' : '↗'}
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-substitution-event": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const teamName = (data.teamName || data.name || "ARGENTINA").toUpperCase();
+
+      const playerOutShirt = data.outShirt || data.shirtOut || "10";
+      const playerOutName = (data.outName || data.playerOut || "JUAN RIQUELME").toUpperCase();
+
+      const playerInShirt = data.inShirt || data.shirtIn || "7";
+      const playerInName = (data.inName || data.playerIn || "JOSE SOSA").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .sub-evt-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 680px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .sub-head-bar {
+              height: 52px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              gap: 16px;
+            }
+            .head-inner {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .team-title {
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+
+            .sub-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 16px 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .row-left {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .shirt-num {
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              width: 30px;
+              text-align: right;
+            }
+            .player-name {
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+            .arrow-badge {
+              transform: skewX(15deg);
+              width: 28px;
+              height: 28px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 18px;
+              font-weight: 900;
+              color: #ffffff;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            }
+            .arrow-out { background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%); }
+            .arrow-in { background: linear-gradient(180deg, #10b981 0%, #065f46 100%); }
+          </style>
+        </head>
+        <body>
+          <div class="sub-evt-wrapper">
+            <div class="sub-head-bar">
+              <div class="head-inner">
+                <span class="country-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="team-title">${teamName}</span>
+              </div>
+            </div>
+
+            <div class="sub-row">
+              <div class="row-left">
+                <span class="shirt-num">${playerOutShirt}</span>
+                <span class="player-name">${playerOutName}</span>
+              </div>
+              <div class="arrow-badge arrow-out">↙</div>
+            </div>
+
+            <div class="sub-row">
+              <div class="row-left">
+                <span class="shirt-num">${playerInShirt}</span>
+                <span class="player-name">${playerInName}</span>
+              </div>
+              <div class="arrow-badge arrow-in">↗</div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-tournament-player-stats": {
+      const topTag = (data.tag || "TOURNAMENT").toUpperCase();
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = data.shirt || data.bib || "9";
+      const playerName = (data.athlete || data.player || data.name || "EZEQUIEL LAVEZZI").toUpperCase();
+      const statLabel = (data.statLabel || data.label || "GOALS").toUpperCase();
+      const statValue = data.statValue !== undefined ? data.statValue : (data.value !== undefined ? data.value : "2");
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .tourn-stat-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .top-inset-pill {
+              align-self: flex-start;
+              margin-left: 50px;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 3px 18px;
+              border-radius: 4px 4px 0 0;
+              transform: skewX(-15deg);
+              letter-spacing: 1px;
+              box-shadow: 0 -2px 6px rgba(0,0,0,0.3);
+              margin-bottom: -4px;
+              z-index: 2;
+            }
+
+            .p-stat-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .shirt-num { font-size: 26px; font-weight: 900; font-style: italic; color: #38bdf8; margin-left: 4px; }
+            .player-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .p-stat-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .stat-label-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+            .stat-val-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              margin-left: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="tourn-stat-wrapper">
+            <div class="top-inset-pill">
+              <span style="display:inline-block; transform: skewX(15deg);">${topTag}</span>
+            </div>
+            <div class="p-stat-head">
+              <div class="head-left">
+                <span class="country-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="shirt-num">${shirtNum}</span>
+                <span class="player-name">${playerName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="p-stat-sub">
+              <span class="stat-label-text">${statLabel}</span>
+              <span class="stat-val-text">${statValue}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-player-stats": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = data.shirt || data.bib || "16";
+      const playerName = (data.athlete || data.player || data.name || "SERGIO AGUERO").toUpperCase();
+      const statLabel = (data.statLabel || data.label || "GOALS").toUpperCase();
+      const statValue = data.statValue !== undefined ? data.statValue : (data.value !== undefined ? data.value : "2");
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .p-stat-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .p-stat-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .shirt-num { font-size: 26px; font-weight: 900; font-style: italic; color: #38bdf8; margin-left: 4px; }
+            .player-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .p-stat-sub {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .stat-label-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+            .stat-val-text {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              margin-left: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="p-stat-wrapper">
+            <div class="p-stat-head">
+              <div class="head-left">
+                <span class="country-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="shirt-num">${shirtNum}</span>
+                <span class="player-name">${playerName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="p-stat-sub">
+              <span class="stat-label-text">${statLabel}</span>
+              <span class="stat-val-text">${statValue}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-crunch-scoreboard": {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Score = data.team1Score !== undefined ? data.team1Score : "2";
+
+      const team2Noc = (data.team2Noc || data.noc2 || "CIV").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇨🇮";
+      const team2Score = data.team2Score !== undefined ? data.team2Score : "0";
+
+      const matchTime = data.time || data.clock || "21:45";
+      const matchPeriod = (data.period || data.half || "1ST").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .crunch-wrapper {
+              position: absolute;
+              top: 90px;
+              left: 120px;
+              width: 240px;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              animation: fadeInDown 0.4s ease-out;
+            }
+            @keyframes fadeInDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+            .team-row {
+              height: 36px;
+              background: linear-gradient(180deg, #004077 0%, #002244 50%, #001228 100%);
+              border: 1px solid #001f3f;
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+              padding: 0 12px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .team-info {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              transform: skewX(15deg);
+            }
+            .noc-text {
+              font-size: 17px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 0.5px;
+            }
+            .flag-box { font-size: 16px; }
+            .score-val {
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              transform: skewX(15deg);
+              min-width: 24px;
+              text-align: right;
+            }
+
+            .timer-row {
+              height: 32px;
+              display: flex;
+              gap: 2px;
+              transform: skewX(-15deg);
+            }
+            .time-pill {
+              flex: 1.4;
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            }
+            .time-text {
+              transform: skewX(15deg);
+              font-size: 16px;
+              font-weight: 900;
+              font-style: italic;
+              color: #001736;
+              letter-spacing: 1px;
+            }
+            .period-pill {
+              flex: 1;
+              background: linear-gradient(180deg, #003366 0%, #001530 100%);
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            }
+            .period-text {
+              transform: skewX(15deg);
+              font-size: 16px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="crunch-wrapper">
+            <div class="team-row">
+              <div class="team-info">
+                <span class="noc-text">${team1Noc}</span>
+                <span class="flag-box">${team1Flag}</span>
+              </div>
+              <span class="score-val">${team1Score}</span>
+            </div>
+
+            <div class="team-row">
+              <div class="team-info">
+                <span class="noc-text">${team2Noc}</span>
+                <span class="flag-box">${team2Flag}</span>
+              </div>
+              <span class="score-val">${team2Score}</span>
+            </div>
+
+            <div class="timer-row">
+              <div class="time-pill">
+                <span class="time-text">${matchTime}</span>
+              </div>
+              <div class="period-pill">
+                <span class="period-text">${matchPeriod}</span>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-player-id": {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = data.shirt || data.bib || "5";
+      const playerName = (data.athlete || data.player || data.name || "FERNANDO GAGO").toUpperCase();
+      const cardColor = data.card ? (data.card.toLowerCase().includes("yellow") ? "#eab308" : "#ef4444") : null;
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .p-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: skewX(-15deg) translateX(-80px); opacity: 0; } to { transform: skewX(-15deg) translateX(0); opacity: 1; } }
+
+            .p-id-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+            .flag-box {
+              font-size: 24px;
+              color: #ffffff;
+            }
+            .shirt-num {
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              margin-left: 4px;
+            }
+            .player-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .p-id-right {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .card-badge {
+              width: 14px;
+              height: 22px;
+              background: ${cardColor || '#ef4444'};
+              border-radius: 2px;
+              transform: skewX(-10deg);
+              box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="p-id-wrapper">
+            <div class="p-id-left">
+              <span class="country-code">${countryCode}</span>
+              <span class="flag-box">${flagStr}</span>
+              <span class="shirt-num">${shirtNum}</span>
+              <span class="player-name">${playerName}</span>
+            </div>
+            <div class="p-id-right">
+              ${cardColor || data.card ? `<div class="card-badge"></div>` : ''}
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-officials-list": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "OFFICIALS").toUpperCase();
+      const officialsList = Array.isArray(data.officials) ? data.officials : [
+        { noc: "URU", flag: "🇺🇾", name: "MARTIN VAZQUEZ", role: "REFEREE" },
+        { noc: "URU", flag: "🇺🇾", name: "MAURICIO ESPINOSA", role: "ASSISTANT REFEREE 1" },
+        { noc: "URU", flag: "🇺🇾", name: "MIGUEL NIEVAS", role: "ASSISTANT REFEREE 2" },
+        { noc: "FRA", flag: "🇫🇷", name: "STEPHANE LANNOY", role: "4TH OFFICIAL" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .off-list-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .off-list-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .off-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .row-left {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .off-noc { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .off-flag { font-size: 20px; color: #ffffff; }
+            .off-name { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+            .row-right-role {
+              font-size: 19px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              transform: skewX(15deg);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="off-list-wrapper">
+            <div class="off-list-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${officialsList.map(off => `
+              <div class="off-row">
+                <div class="row-left">
+                  <span class="off-noc">${(off.noc || '').toUpperCase()}</span>
+                  <span class="off-flag">${off.flag || ''}</span>
+                  <span class="off-name">${(off.name || '').toUpperCase()}</span>
+                </div>
+                <span class="row-right-role">${(off.role || '').toUpperCase()}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-official-id": {
+      const countryCode = (data.country || data.noc || "URU").toUpperCase();
+      const flagStr = data.flag || "🇺🇾";
+      const officialName = (data.officialName || data.name || "MAURICIO ESPINOSA").toUpperCase();
+      const roleTitle = (data.role || data.title || "ASSISTANT REFEREE 1").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .off-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .off-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .off-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .off-sub-bar {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .off-role {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="off-wrapper">
+            <div class="off-head">
+              <div class="head-left">
+                <span class="noc-code">${countryCode}</span>
+                <span class="flag-box">${flagStr}</span>
+                <span class="off-name">${officialName}</span>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="off-sub-bar">
+              <span class="off-role">${roleTitle}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-previous-results": {
+      const teamNoc = (data.noc || data.country || "CMR").toUpperCase();
+      const teamFlag = data.flag || "🇨🇲";
+      const teamName = (data.teamName || data.name || "CAMEROON").toUpperCase();
+      const teamRecord = data.record || "1 - 0 - 2";
+      const subTitle = (data.subTitle || "PREVIOUS RESULTS").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { oppNoc: "KOR", oppFlag: "🇰🇷", oppName: "KOREA", group: "GROUP D", score: "1-1", outcome: "D" },
+        { oppNoc: "HON", oppFlag: "🇭🇳", oppName: "HONDURAS", group: "GROUP D", score: "1-0", outcome: "W" },
+        { oppNoc: "ITA", oppFlag: "🇮🇹", oppName: "ITALY", group: "GROUP D", score: "0-0", outcome: "D" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .prev-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .prev-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .title-box { display: flex; flex-direction: column; }
+            .team-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .prev-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .row-left {
+              display: flex;
+              align-items: center;
+              gap: 14px;
+              transform: skewX(15deg);
+            }
+            .opp-noc { font-size: 19px; font-weight: 900; font-style: italic; color: #ffffff; width: 45px; }
+            .opp-flag { font-size: 20px; color: #ffffff; }
+            .opp-name { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; text-transform: uppercase; letter-spacing: 1.2px; }
+            .row-right {
+              display: flex;
+              align-items: center;
+              gap: 24px;
+              transform: skewX(15deg);
+            }
+            .match-group { font-size: 18px; font-weight: 900; font-style: italic; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+            .match-score { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+            .match-outcome { font-size: 20px; font-weight: 900; font-style: italic; color: #ffd700; width: 20px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="prev-wrapper">
+            <div class="prev-head">
+              <div class="head-left">
+                <span class="noc-code">${teamNoc}</span>
+                <span class="flag-box">${teamFlag}</span>
+                <div class="title-box">
+                  <span class="team-title">${teamName} (${teamRecord})</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${resultsList.map(res => `
+              <div class="prev-row">
+                <div class="row-left">
+                  <span class="opp-noc">${(res.oppNoc || '').toUpperCase()}</span>
+                  <span class="opp-flag">${res.oppFlag || ''}</span>
+                  <span class="opp-name">${(res.oppName || '').toUpperCase()}</span>
+                </div>
+                <div class="row-right">
+                  <span class="match-group">${(res.group || '').toUpperCase()}</span>
+                  <span class="match-score">${res.score || ''}</span>
+                  <span class="match-outcome" style="color: ${res.outcome === 'W' ? '#10b981' : res.outcome === 'L' ? '#ef4444' : '#ffd700'}">${res.outcome || ''}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-substitutes-list": {
+      const teamNoc = (data.noc || data.country || "NZL").toUpperCase();
+      const teamFlag = data.flag || "🇳🇿";
+      const teamName = (data.teamName || data.name || "NEW ZEALAND").toUpperCase();
+      const subTitle = (data.subTitle || "SUBSTITUTES").toUpperCase();
+
+      const leftSubs = Array.isArray(data.leftSubs) ? data.leftSubs : [
+        { shirt: "5", name: "RYAN NELSEN" },
+        { shirt: "11", name: "JEREMY BROCKIE" },
+        { shirt: "13", name: "SHAUN VAN ROOYEN" },
+        { shirt: "14", name: "COLE TINKLER" }
+      ];
+
+      const rightSubs = Array.isArray(data.rightSubs) ? data.rightSubs : [
+        { shirt: "15", name: "GREG DRAPER" },
+        { shirt: "17", name: "SAM MESSAM" },
+        { shirt: "18", name: "LIAM LITTLE", pos: "GK" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .subs-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .subs-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .title-box { display: flex; flex-direction: column; }
+            .team-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .subs-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .col-half {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .shirt-num {
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              width: 24px;
+              text-align: right;
+            }
+            .p-name {
+              font-size: 19px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .p-pos {
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffd700;
+              margin-left: 6px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="subs-wrapper">
+            <div class="subs-head">
+              <div class="head-left">
+                <span class="noc-code">${teamNoc}</span>
+                <span class="flag-box">${teamFlag}</span>
+                <div class="title-box">
+                  <span class="team-title">${teamName}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${Array.from({ length: 4 }).map((_, idx) => {
+              const lp = leftSubs[idx];
+              const rp = rightSubs[idx];
+
+              return `
+                <div class="subs-row">
+                  <div class="col-half">
+                    ${lp ? `
+                      <span class="p-name">${lp.name}</span>
+                      ${lp.pos ? `<span class="p-pos">${lp.pos}</span>` : ''}
+                    ` : ''}
+                  </div>
+                  <div class="col-half">
+                    ${rp ? `
+                      <span class="p-name">${rp.name}</span>
+                      ${rp.pos ? `<span class="p-pos">${rp.pos}</span>` : ''}
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-starting-lineup": {
+      const teamNoc = (data.noc || data.country || "NZL").toUpperCase();
+      const teamFlag = data.flag || "🇳🇿";
+      const teamName = (data.teamName || data.name || "NEW ZEALAND").toUpperCase();
+      const subTitle = (data.subTitle || "STARTING LINEUP").toUpperCase();
+
+      const leftPlayers = Array.isArray(data.leftPlayers) ? data.leftPlayers : [
+        { shirt: "1", name: "JACOB SPOONLEY", pos: "GK" },
+        { shirt: "2", name: "AARON SCOTT", pos: "C" },
+        { shirt: "3", name: "IAN HOGG" },
+        { shirt: "4", name: "COLE PEVERLEY" },
+        { shirt: "6", name: "MICHAEL BOXALL" },
+        { shirt: "7", name: "SIMON ELLIOTT" },
+        { shirt: "8", name: "CRAIG HENDERSON" }
+      ];
+
+      const rightPlayers = Array.isArray(data.rightPlayers) ? data.rightPlayers : [
+        { shirt: "9", name: "DANIEL ELLENSOHN" },
+        { shirt: "10", name: "CHRIS KILLEN" },
+        { shirt: "12", name: "STEVEN OLD" },
+        { shirt: "16", name: "SAM JENKINS" }
+      ];
+
+      const coachName = (data.coach || "STU JACOBS").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .lineup-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .lineup-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; }
+            .flag-box { font-size: 24px; color: #ffffff; }
+            .title-box { display: flex; flex-direction: column; }
+            .team-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .lineup-row {
+              height: 38px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .col-half {
+              flex: 1;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .shirt-num {
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #38bdf8;
+              width: 24px;
+              text-align: right;
+            }
+            .p-name {
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .p-pos {
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffd700;
+              margin-left: 6px;
+            }
+            .coach-label {
+              font-size: 14px;
+              font-weight: 900;
+              font-style: italic;
+              color: #cbd5e1;
+              letter-spacing: 1px;
+              margin-left: 36px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="lineup-wrapper">
+            <div class="lineup-head">
+              <div class="head-left">
+                <span class="noc-code">${teamNoc}</span>
+                <span class="flag-box">${teamFlag}</span>
+                <div class="title-box">
+                  <span class="team-title">${teamName}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${Array.from({ length: 7 }).map((_, idx) => {
+              const lp = leftPlayers[idx];
+              const rp = rightPlayers[idx];
+              const isCoachLabelRow = idx === 5;
+              const isCoachNameRow = idx === 6;
+
+              return `
+                <div class="lineup-row">
+                  <div class="col-half">
+                    ${lp ? `
+                      <span class="shirt-num">${lp.shirt}</span>
+                      <span class="p-name">${lp.name}</span>
+                      ${lp.pos ? `<span class="p-pos">${lp.pos}</span>` : ''}
+                    ` : ''}
+                  </div>
+                  <div class="col-half">
+                    ${rp ? `
+                      <span class="shirt-num">${rp.shirt}</span>
+                      <span class="p-name">${rp.name}</span>
+                      ${rp.pos ? `<span class="p-pos">${rp.pos}</span>` : ''}
+                    ` : isCoachLabelRow ? `
+                      <span class="coach-label">COACH</span>
+                    ` : isCoachNameRow ? `
+                      <span class="p-name" style="margin-left:36px;">${coachName}</span>
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "team-id-single": {
+      const countryCode = (data.country || data.noc || "BEL").toUpperCase();
+      const flagStr = data.flag || "🇧🇪";
+      const teamName = (data.teamName || data.name || "BELGIUM").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .team-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 860px;
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: skewX(-15deg) translateX(-80px); opacity: 0; } to { transform: skewX(-15deg) translateX(0); opacity: 1; } }
+
+            .team-id-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .country-code {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+            .flag-box {
+              font-size: 24px;
+              color: #ffffff;
+            }
+            .team-name {
+              font-size: 28px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.5px;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="team-id-wrapper">
+            <div class="team-id-left">
+              <span class="country-code">${countryCode}</span>
+              <span class="flag-box">${flagStr}</span>
+              <span class="team-name">${teamName}</span>
+            </div>
+            <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+              <circle cx="20" cy="20" r="14" />
+              <circle cx="50" cy="20" r="14" />
+              <circle cx="80" cy="20" r="14" />
+              <circle cx="35" cy="32" r="14" />
+              <circle cx="65" cy="32" r="14" />
+            </svg>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "football-group-standings": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "STANDINGS - GROUP D").toUpperCase();
+      const standingsList = Array.isArray(data.standings) ? data.standings : [
+        { rank: "1", noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "0", f: "6", a: "0", pts: "6" },
+        { rank: "2", noc: "CMR", flag: "🇨🇲", name: "CAMEROON", w: "1", l: "0", d: "1", f: "2", a: "1", pts: "4" },
+        { rank: "3", noc: "KOR", flag: "🇰🇷", name: "KOREA", w: "0", l: "1", d: "1", f: "1", a: "4", pts: "1" },
+        { rank: "4", noc: "HON", flag: "🇭🇳", name: "HONDURAS", w: "0", l: "2", d: "0", f: "0", a: "4", pts: "0" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .fb-standings-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 1050px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .fb-standings-head {
+              height: 60px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .head-right {
+              display: flex;
+              align-items: center;
+              gap: 20px;
+              transform: skewX(15deg);
+            }
+            .stats-col-headers {
+              display: flex;
+              gap: 16px;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1px;
+            }
+            .stats-col-headers span { width: 28px; text-align: center; }
+            .rings-svg { margin-left: 10px; }
+
+            .st-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            .row-left {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              transform: skewX(15deg);
+            }
+            .rank-badge {
+              background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+              color: #ffffff;
+              font-size: 18px;
+              font-weight: 900;
+              font-style: italic;
+              width: 28px;
+              height: 28px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 4px;
+            }
+            .team-noc {
+              font-size: 19px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              width: 45px;
+            }
+            .team-flag {
+              font-size: 20px;
+              color: #ffffff;
+            }
+            .team-name {
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+            .row-right-stats {
+              display: flex;
+              gap: 16px;
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              transform: skewX(15deg);
+            }
+            .row-right-stats span { width: 28px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="fb-standings-wrapper">
+            <div class="fb-standings-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <div class="head-right">
+                <div class="stats-col-headers">
+                  <span>W</span><span>L</span><span>D</span><span>F</span><span>A</span><span>PTS</span>
+                </div>
+                <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+            </div>
+
+            ${standingsList.map(st => `
+              <div class="st-row">
+                <div class="row-left">
+                  <span class="rank-badge">${st.rank}</span>
+                  <span class="team-noc">${(st.noc || '').toUpperCase()}</span>
+                  <span class="team-flag">${st.flag || ''}</span>
+                  <span class="team-name">${(st.name || '').toUpperCase()}</span>
+                </div>
+                <div class="row-right-stats">
+                  ${(st.q || st.qualified || (data.showQ && Number(st.rank) <= 3)) ? '<span style="color:#10b981; font-weight:900; width:22px;">Q</span>' : '<span style="width:22px;"></span>'}
+                  <span>${st.w ?? 0}</span>
+                  <span>${st.l ?? 0}</span>
+                  <span>${st.d ?? 0}</span>
+                  <span>${st.f ?? 0}</span>
+                  <span>${st.a ?? 0}</span>
+                  <span>${st.pts ?? 0}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "group-list-teams": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GROUP C").toUpperCase();
+      const teamsList = Array.isArray(data.teams) ? data.teams : [
+        { noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
+        { noc: "BRA", flag: "🇧🇷", name: "BRAZIL" },
+        { noc: "CHN", flag: "🇨🇳", name: "CHINA" },
+        { noc: "NZL", flag: "🇳🇿", name: "NEW ZEALAND" }
+      ];
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .group-list-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 960px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .group-list-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon { font-size: 26px; line-height: 1; }
+            .title-box { display: flex; flex-direction: column; }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg { transform: skewX(15deg); }
+
+            .team-row {
+              height: 42px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+              gap: 14px;
+            }
+            .team-noc {
+              transform: skewX(15deg);
+              font-size: 19px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              width: 50px;
+            }
+            .team-flag {
+              transform: skewX(15deg);
+              font-size: 20px;
+              color: #ffffff;
+            }
+            .team-name {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="group-list-wrapper">
+            <div class="group-list-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            ${teamsList.map(tm => `
+              <div class="team-row">
+                <span class="team-noc">${(tm.noc || '').toUpperCase()}</span>
+                <span class="team-flag">${tm.flag || ''}</span>
+                <span class="team-name">${(tm.name || '').toUpperCase()}</span>
+              </div>
+            `).join('')}
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    case "match-id-teams": {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FIRST ROUND - GROUP A").toUpperCase();
+      const team1Noc = (data.team1Noc || data.homeNoc || "AUS").toUpperCase();
+      const team1Flag = data.team1Flag || data.homeFlag || "🇦🇺";
+      const team1Name = (data.team1Name || data.homeTeam || "AUSTRALIA").toUpperCase();
+      const team2Noc = (data.team2Noc || data.awayNoc || "SRB").toUpperCase();
+      const team2Flag = data.team2Flag || data.awayFlag || "🇷🇸";
+      const team2Name = (data.team2Name || data.awayTeam || "SERBIA").toUpperCase();
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            
+            .match-id-wrapper {
+              position: absolute;
+              bottom: 90px;
+              left: 90px;
+              width: 960px;
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+              animation: slideIn 0.4s ease-out;
+            }
+            @keyframes slideIn { from { transform: translateX(-80px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+            .match-id-head {
+              height: 56px;
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
+              padding: 0 24px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .head-left {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+              transform: skewX(15deg);
+            }
+            .sport-icon {
+              font-size: 26px;
+              line-height: 1;
+            }
+            .title-box {
+              display: flex;
+              flex-direction: column;
+            }
+            .event-title {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              letter-spacing: 1.2px;
+              text-transform: uppercase;
+              text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            }
+            .sub-pill {
+              background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+              color: #002850;
+              font-size: 13px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 1px 12px;
+              border-radius: 4px;
+              letter-spacing: 1px;
+              display: inline-block;
+              margin-top: 2px;
+            }
+            .rings-svg {
+              transform: skewX(15deg);
+            }
+
+            .team-row {
+              height: 44px;
+              background: linear-gradient(180deg, #002850 0%, #001736 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 0 24px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+              gap: 14px;
+            }
+            .team-noc {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              width: 50px;
+            }
+            .team-flag {
+              transform: skewX(15deg);
+              font-size: 22px;
+              color: #ffffff;
+            }
+            .team-name {
+              transform: skewX(15deg);
+              font-size: 22px;
+              font-weight: 900;
+              font-style: italic;
+              color: #ffffff;
+              text-transform: uppercase;
+              letter-spacing: 1.2px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="match-id-wrapper">
+            <div class="match-id-head">
+              <div class="head-left">
+                <span class="sport-icon">⚽</span>
+                <div class="title-box">
+                  <span class="event-title">${eventTitle}</span>
+                  <span class="sub-pill">${subTitle}</span>
+                </div>
+              </div>
+              <svg class="rings-svg" width="75" height="34" viewBox="0 0 100 50" fill="none" stroke="#ffd700" stroke-width="5" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));">
+                <circle cx="20" cy="20" r="14" />
+                <circle cx="50" cy="20" r="14" />
+                <circle cx="80" cy="20" r="14" />
+                <circle cx="35" cy="32" r="14" />
+                <circle cx="65" cy="32" r="14" />
+              </svg>
+            </div>
+
+            <div class="team-row">
+              <span class="team-noc">${team1Noc}</span>
+              <span class="team-flag">${team1Flag}</span>
+              <span class="team-name">${team1Name}</span>
+            </div>
+
+            <div class="team-row">
+              <span class="team-noc">${team2Noc}</span>
+              <span class="team-flag">${team2Flag}</span>
+              <span class="team-name">${team2Name}</span>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
     case "clock-at-finish": {
       const wrTime = data.wrTime || "3:40.08";
       const orTime = data.orTime || "3:40.59";
@@ -3241,7 +7511,7 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   const venueTitle = sport.venue.toUpperCase();
   const code = sport.code;
 
-  const category = resolveCategory(templateType, templateName);
+  const category = resolveCategory(templateType, templateName, templateId);
   const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
   const variant = ((idNum - 1) % 5) + 1;
 
@@ -4139,6 +8409,1757 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       objects.push(timeBg, timeText, codeBg, codeText);
       break;
     }
+
+    case 'football-additional-time': {
+      const labelStr = (data.label || "ADDITIONAL TIME").toUpperCase();
+      const timeVal = String(data.time || data.value || "4:00");
+
+      const lBg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 900, width: 160, height: 38, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const lTxt = new fabric.Textbox(labelStr, createProps('textbox', {
+        left: 125, top: 911, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 150
+      }));
+      const vBg = new fabric.Rect(createProps('rect', {
+        left: 282, top: 900, width: 100, height: 38, fill: '#003366', rx: 4, ry: 4, skewX: -15
+      }));
+      const vTxt = new fabric.Textbox(timeVal, createProps('textbox', {
+        left: 282, top: 908, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 100, textAlign: 'center'
+      }));
+
+      objects.push(lBg, lTxt, vBg, vTxt);
+      break;
+    }
+
+    case 'football-pso-crunch': {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Val = String(data.team1Val !== undefined ? data.team1Val : "2");
+
+      const team2Noc = (data.team2Noc || data.noc2 || "ARG").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇦🇷";
+      const team2Val = String(data.team2Val !== undefined ? data.team2Val : "1");
+
+      const r1Bg = new fabric.Rect(createProps('rect', { left: 120, top: 100, width: 280, height: 38, fill: '#003366', rx: 4, ry: 4, skewX: -15 }));
+      const r1Noc = new fabric.Textbox(team1Noc, createProps('textbox', { left: 135, top: 109, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 40 }));
+      const r1Flag = new fabric.Textbox(team1Flag, createProps('textbox', { left: 180, top: 107, fontSize: 16, fill: '#ffffff', width: 30 }));
+      const r1Val = new fabric.Textbox(team1Val, createProps('textbox', { left: 235, top: 107, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25 }));
+
+      const r1g1 = new fabric.Rect(createProps('rect', { left: 290, top: 109, width: 18, height: 16, fill: '#ef4444', rx: 2, ry: 2, skewX: -15 }));
+      const r1g2 = new fabric.Rect(createProps('rect', { left: 312, top: 109, width: 18, height: 16, fill: '#22c55e', rx: 2, ry: 2, skewX: -15 }));
+      const r1g3 = new fabric.Rect(createProps('rect', { left: 334, top: 109, width: 18, height: 16, fill: '#22c55e', rx: 2, ry: 2, skewX: -15 }));
+
+      const r2Bg = new fabric.Rect(createProps('rect', { left: 120, top: 140, width: 280, height: 38, fill: '#001a38', rx: 4, ry: 4, skewX: -15 }));
+      const r2Noc = new fabric.Textbox(team2Noc, createProps('textbox', { left: 135, top: 149, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 40 }));
+      const r2Flag = new fabric.Textbox(team2Flag, createProps('textbox', { left: 180, top: 147, fontSize: 16, fill: '#ffffff', width: 30 }));
+      const r2Val = new fabric.Textbox(team2Val, createProps('textbox', { left: 235, top: 147, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25 }));
+
+      const r2g1 = new fabric.Rect(createProps('rect', { left: 290, top: 149, width: 18, height: 16, fill: '#ef4444', rx: 2, ry: 2, skewX: -15 }));
+      const r2g2 = new fabric.Rect(createProps('rect', { left: 312, top: 149, width: 18, height: 16, fill: '#22c55e', rx: 2, ry: 2, skewX: -15 }));
+
+      const subBg = new fabric.Rect(createProps('rect', { left: 180, top: 180, width: 160, height: 22, fill: '#001e3d', rx: 4, ry: 4, skewX: -15 }));
+      const subTxt = new fabric.Textbox("SHOOT-OUT", createProps('textbox', { left: 180, top: 184, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 160, textAlign: 'center' }));
+
+      objects.push(r1Bg, r1Noc, r1Flag, r1Val, r1g1, r1g2, r1g3, r2Bg, r2Noc, r2Flag, r2Val, r2g1, r2g2, subBg, subTxt);
+      break;
+    }
+
+    case 'football-bracket-semifinals':
+    case 'football-bracket-finals': {
+      const isFinals = category === 'football-bracket-finals';
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || (isFinals ? "SEMI-FINALS ➔ GOLD MEDAL MATCH" : "QUARTER-FINALS ➔ SEMI-FINALS")).toUpperCase();
+
+      const pairsList = isFinals ? [
+        { t1Noc: "NGR", t1Flag: "🇳🇬", t1Name: "NIGERIA", t2Noc: "BEL", t2Flag: "🇧🇪", t2Name: "BELGIUM", advNoc: "NGR", advFlag: "🇳🇬", advName: "NIGERIA" },
+        { t1Noc: "ARG", t1Flag: "🇦🇷", t1Name: "ARGENTINA", t2Noc: "BRA", t2Flag: "🇧🇷", t2Name: "BRAZIL", advNoc: "ARG", advFlag: "🇦🇷", advName: "ARGENTINA" }
+      ] : [
+        { t1Noc: "BRA", t1Flag: "🇧🇷", t1Name: "BRAZIL", t2Noc: "CMR", t2Flag: "🇨🇲", t2Name: "CAMEROON", advNoc: "BRA", advFlag: "🇧🇷", advName: "BRAZIL" },
+        { t1Noc: "ITA", t1Flag: "🇮🇹", t1Name: "ITALY", t2Noc: "BEL", t2Flag: "🇧🇪", t2Name: "BELGIUM", advNoc: "BEL", advFlag: "🇧🇪", advName: "BELGIUM" },
+        { t1Noc: "ARG", t1Flag: "🇦🇷", t1Name: "ARGENTINA", t2Noc: "NED", t2Flag: "🇳🇱", t2Name: "NETHERLANDS", advNoc: "ARG", advFlag: "🇦🇷", advName: "ARGENTINA" },
+        { t1Noc: "NGR", t1Flag: "🇳🇬", t1Name: "NIGERIA", t2Noc: "CIV", t2Flag: "🇨🇮", t2Name: "COTE D'IVOIRE", advNoc: "NGR", advFlag: "🇳🇬", advName: "NIGERIA" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 560, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 574, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 568, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+      const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 594, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 596, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 573, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 573, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 573, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 582, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 582, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      pairsList.forEach((p, idx) => {
+        const topOffset = 625 + (idx * 85);
+
+        const r1Bg = new fabric.Rect(createProps('rect', { left: 90, top: topOffset, width: 560, height: 38, fill: '#001e3d', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+        const t1Noc = new fabric.Textbox(p.t1Noc, createProps('textbox', { left: 110, top: topOffset + 8, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45 }));
+        const t1Flag = new fabric.Textbox(p.t1Flag, createProps('textbox', { left: 160, top: topOffset + 6, fontSize: 18, fill: '#ffffff', width: 35 }));
+        const t1Name = new fabric.Textbox((p.t1Name || '').toUpperCase(), createProps('textbox', { left: 205, top: topOffset + 8, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 300 }));
+
+        const r2Bg = new fabric.Rect(createProps('rect', { left: 90, top: topOffset + 42, width: 560, height: 38, fill: '#001736', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+        const t2Noc = new fabric.Textbox(p.t2Noc, createProps('textbox', { left: 110, top: topOffset + 50, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45 }));
+        const t2Flag = new fabric.Textbox(p.t2Flag, createProps('textbox', { left: 160, top: topOffset + 48, fontSize: 18, fill: '#ffffff', width: 35 }));
+        const t2Name = new fabric.Textbox((p.t2Name || '').toUpperCase(), createProps('textbox', { left: 205, top: topOffset + 50, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 300 }));
+
+        const advBg = new fabric.Rect(createProps('rect', { left: 680, top: topOffset + 20, width: 370, height: 42, fill: '#003e73', rx: 6, ry: 6, stroke: '#38bdf8', strokeWidth: 1, skewX: -15 }));
+        const advNoc = new fabric.Textbox(p.advNoc, createProps('textbox', { left: 700, top: topOffset + 30, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45 }));
+        const advFlag = new fabric.Textbox(p.advFlag, createProps('textbox', { left: 750, top: topOffset + 28, fontSize: 18, fill: '#ffffff', width: 35 }));
+        const advName = new fabric.Textbox((p.advName || '').toUpperCase(), createProps('textbox', { left: 795, top: topOffset + 30, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 240 }));
+
+        objects.push(r1Bg, t1Noc, t1Flag, t1Name, r2Bg, t2Noc, t2Flag, t2Name, advBg, advNoc, advFlag, advName);
+      });
+      break;
+    }
+
+    case 'football-final-rank': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FINAL RANK").toUpperCase();
+
+      const rankList = Array.isArray(data.ranks) ? data.ranks : [
+        { rank: "1", noc: "ARG", flag: "🇦🇷", name: "ARGENTINA" },
+        { rank: "2", noc: "NGR", flag: "🇳🇬", name: "NIGERIA" },
+        { rank: "3", noc: "BRA", flag: "🇧🇷", name: "BRAZIL" },
+        { rank: "4", noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
+        { rank: "5", noc: "ITA", flag: "🇮🇹", name: "ITALY" },
+        { rank: "6", noc: "CIV", flag: "🇨🇮", name: "COTE D'IVOIRE" },
+        { rank: "7", noc: "NED", flag: "🇳🇱", name: "NETHERLANDS" },
+        { rank: "8", noc: "CMR", flag: "🇨🇲", name: "CAMEROON" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 580, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 594, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 588, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+      const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 614, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 616, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 602, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 602, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      rankList.forEach((rk, idx) => {
+        const topOffset = 644 + (idx * 42);
+
+        const rowBg = new fabric.Rect(createProps('rect', { left: 90, top: topOffset, width: 960, height: 40, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+        const rkBadge = new fabric.Rect(createProps('rect', { left: 105, top: topOffset + 6, width: 30, height: 26, fill: '#dc2626', rx: 3, ry: 3, skewX: -15 }));
+        const rkTxt = new fabric.Textbox(String(rk.rank), createProps('textbox', { left: 105, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'center' }));
+        const nocTxt = new fabric.Textbox(rk.noc, createProps('textbox', { left: 155, top: topOffset + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45 }));
+        const flagTxt = new fabric.Textbox(rk.flag, createProps('textbox', { left: 205, top: topOffset + 7, fontSize: 18, fill: '#ffffff', width: 35 }));
+        const nameTxt = new fabric.Textbox((rk.name || '').toUpperCase(), createProps('textbox', { left: 250, top: topOffset + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+
+        objects.push(rowBg, rkBadge, rkTxt, nocTxt, flagTxt, nameTxt);
+      });
+      break;
+    }
+
+    case 'football-ceremony-id': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 115, top: 854, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const eventTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 160, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      const subBg = new fabric.Rect(createProps('rect', { left: 90, top: 900, width: 860, height: 44, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
+      const subTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 600 }));
+
+      objects.push(headBg, iconTxt, eventTxt, r1, r2, r3, r4, r5, subBg, subTxt);
+      break;
+    }
+
+    case 'football-medal-id': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const teamName = (data.name || "ARGENTINA").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD - MEN'S FOOTBALL").toUpperCase();
+
+      const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', { left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55 }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', { left: 175, top: 850, fontSize: 24, fill: '#ffffff', width: 40 }));
+      const nameTxt = new fabric.Textbox(teamName, createProps('textbox', { left: 225, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 550 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      const subBg = new fabric.Rect(createProps('rect', { left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+      const medTxt = new fabric.Textbox("🥇", createProps('textbox', { left: 115, top: 908, fontSize: 20, fill: '#ffffff', width: 30 }));
+      const subTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 155, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+
+      objects.push(headBg, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5, subBg, medTxt, subTxt);
+      break;
+    }
+
+    case 'football-medals-list': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "VICTORY CEREMONY").toUpperCase();
+
+      const winnersList = Array.isArray(data.winners) ? data.winners : [
+        { medal: "🥇", noc: "ARG", flag: "🇦🇷", name: "ARGENTINA" },
+        { medal: "🥈", noc: "NGR", flag: "🇳🇬", name: "NIGERIA" },
+        { medal: "🥉", noc: "BRA", flag: "🇧🇷", name: "BRAZIL" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 760, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', { left: 110, top: 774, fontSize: 24, fill: '#ffffff', width: 35 }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', { left: 155, top: 768, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+      const pillBg = new fabric.Rect(createProps('rect', { left: 155, top: 794, width: 480, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 165, top: 796, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 460 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 773, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 773, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 773, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 782, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 782, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      winnersList.forEach((w, idx) => {
+        const topOffset = 825 + (idx * 44);
+
+        const rowBg = new fabric.Rect(createProps('rect', { left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+        const mTxt = new fabric.Textbox(w.medal, createProps('textbox', { left: 110, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 30 }));
+        const nocTxt = new fabric.Textbox(w.noc, createProps('textbox', { left: 150, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45 }));
+        const flagTxt = new fabric.Textbox(w.flag, createProps('textbox', { left: 200, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 35 }));
+        const nameTxt = new fabric.Textbox((w.name || '').toUpperCase(), createProps('textbox', { left: 245, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500 }));
+
+        objects.push(rowBg, mTxt, nocTxt, flagTxt, nameTxt);
+      });
+      break;
+    }
+
+    case 'football-medal-presenter':
+    case 'football-flower-presenter': {
+      const isFlower = category === 'football-flower-presenter';
+      const nameStr = (data.presenter || data.name || (isFlower ? "MR JULIO GRONDONA" : "JACQUES ROGGE")).toUpperCase();
+      const titleStr = (data.title || data.role || (isFlower ? "SENIOR VICE PRESIDENT, FIFA" : "IOC PRESIDENT, BELGIUM")).toUpperCase();
+
+      const headBg = new fabric.Rect(createProps('rect', { left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6, stroke: '#001938', strokeWidth: 2, skewX: -15 }));
+      const nameTxt = new fabric.Textbox(nameStr, createProps('textbox', { left: 115, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 650 }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      const subBg = new fabric.Rect(createProps('rect', { left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4, stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15 }));
+      const subTxt = new fabric.Textbox(titleStr, createProps('textbox', { left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 650 }));
+
+      objects.push(headBg, nameTxt, r1, r2, r3, r4, r5, subBg, subTxt);
+      break;
+    }
+
+    case 'football-pso-scoreboard': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GOLD MEDAL MATCH - PENALTY SHOOT-OUT").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Name = (data.team1Name || data.name1 || "NIGERIA").toUpperCase();
+      const team1Score = String(data.team1Score !== undefined ? data.team1Score : "2");
+
+      const team2Noc = (data.team2Noc || data.noc2 || "ARG").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇦🇷";
+      const team2Name = (data.team2Name || data.name2 || "ARGENTINA").toUpperCase();
+      const team2Score = String(data.team2Score !== undefined ? data.team2Score : "1");
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 820, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 834, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 828, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 854, width: 520, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 165, top: 856, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 500
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 842, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 842, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Row 1 Team 1
+      const t1Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 885, width: 960, height: 42, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t1NocTxt = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 110, top: 895, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t1FlagTxt = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 160, top: 893, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t1NameTxt = new fabric.Textbox(team1Name, createProps('textbox', {
+        left: 205, top: 895, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const t1ScrTxt = new fabric.Textbox(team1Score, createProps('textbox', {
+        left: 850, top: 895, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'right'
+      }));
+
+      // Shot boxes Team 1
+      const g1 = new fabric.Rect(createProps('rect', { left: 900, top: 896, width: 28, height: 20, fill: '#22c55e', rx: 3, ry: 3, skewX: -15 }));
+      const m1 = new fabric.Rect(createProps('rect', { left: 934, top: 896, width: 28, height: 20, fill: '#ef4444', rx: 3, ry: 3, skewX: -15 }));
+      const g2 = new fabric.Rect(createProps('rect', { left: 968, top: 896, width: 28, height: 20, fill: '#22c55e', rx: 3, ry: 3, skewX: -15 }));
+
+      // Row 2 Team 2
+      const t2Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 930, width: 960, height: 42, fill: '#001736', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t2NocTxt = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 110, top: 940, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t2FlagTxt = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 160, top: 938, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t2NameTxt = new fabric.Textbox(team2Name, createProps('textbox', {
+        left: 205, top: 940, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const t2ScrTxt = new fabric.Textbox(team2Score, createProps('textbox', {
+        left: 850, top: 940, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'right'
+      }));
+
+      // Shot boxes Team 2
+      const t2m1 = new fabric.Rect(createProps('rect', { left: 900, top: 941, width: 28, height: 20, fill: '#ef4444', rx: 3, ry: 3, skewX: -15 }));
+      const t2g1 = new fabric.Rect(createProps('rect', { left: 934, top: 941, width: 28, height: 20, fill: '#22c55e', rx: 3, ry: 3, skewX: -15 }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5, t1Bg, t1NocTxt, t1FlagTxt, t1NameTxt, t1ScrTxt, g1, m1, g2, t2Bg, t2NocTxt, t2FlagTxt, t2NameTxt, t2ScrTxt, t2m1, t2g1);
+      break;
+    }
+
+    case 'football-advance-quarterfinals': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FIRST ROUND ➔ QUARTER-FINALS").toUpperCase();
+
+      const teamsList = Array.isArray(data.teams) ? data.teams : [
+        { noc: "ARG", flag: "🇦🇷", name: "ARGENTINA", w: "3", l: "0", d: "0" },
+        { noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "1" },
+        { noc: "BRA", flag: "🇧🇷", name: "BRAZIL", w: "3", l: "0", d: "0" },
+        { noc: "NGR", flag: "🇳🇬", name: "NIGERIA", w: "2", l: "0", d: "1" },
+        { noc: "CIV", flag: "🇨🇮", name: "COTE D'IVOIRE", w: "2", l: "1", d: "0" },
+        { noc: "BEL", flag: "🇧🇪", name: "BELGIUM", w: "2", l: "1", d: "0" },
+        { noc: "NED", flag: "🇳🇱", name: "NETHERLANDS", w: "1", l: "0", d: "2" },
+        { noc: "CMR", flag: "🇨🇲", name: "CAMEROON", w: "1", l: "0", d: "2" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 580, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 594, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 588, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 614, width: 580, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 165, top: 616, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 300
+      }));
+      const wldHdr = new fabric.Textbox("W    L    D", createProps('textbox', {
+        left: 630, top: 616, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 100, textAlign: 'right'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 593, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 602, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 602, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, wldHdr, r1, r2, r3, r4, r5);
+
+      teamsList.forEach((tm, idx) => {
+        const topOffset = 644 + (idx * 42);
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 40, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const nocTxt = new fabric.Textbox(tm.noc, createProps('textbox', {
+          left: 110, top: topOffset + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+        }));
+        const flagTxt = new fabric.Textbox(tm.flag, createProps('textbox', {
+          left: 160, top: topOffset + 7, fontSize: 18, fill: '#ffffff', width: 35
+        }));
+        const nameTxt = new fabric.Textbox((tm.name || '').toUpperCase(), createProps('textbox', {
+          left: 205, top: topOffset + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+        }));
+
+        const wVal = new fabric.Textbox(String(tm.w), createProps('textbox', {
+          left: 880, top: topOffset + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25, textAlign: 'center'
+        }));
+        const lVal = new fabric.Textbox(String(tm.l), createProps('textbox', {
+          left: 930, top: topOffset + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25, textAlign: 'center'
+        }));
+        const dVal = new fabric.Textbox(String(tm.d), createProps('textbox', {
+          left: 980, top: topOffset + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 25, textAlign: 'center'
+        }));
+
+        objects.push(rowBg, nocTxt, flagTxt, nameTxt, wVal, lVal, dVal);
+      });
+      break;
+    }
+
+    case 'football-goal-summary': {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team2Noc = (data.team2Noc || data.noc2 || "BEL").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇪";
+      const finalScore = data.score || "4 - 1";
+
+      const goalsList = Array.isArray(data.goals) ? data.goals : [
+        { side: "left", shirt: "13", scorer: "O. ADEFEMI", minute: "17'", runningScore: "1-0" },
+        { side: "left", shirt: "7", scorer: "C. OGBUKE OBASI", minute: "59'", runningScore: "2-0" },
+        { side: "left", shirt: "7", scorer: "C. OGBUKE OBASI", minute: "72'", runningScore: "3-0" },
+        { side: "left", shirt: "2", scorer: "C. OKONKWO", minute: "78'", runningScore: "4-0" },
+        { side: "right", shirt: "13", scorer: "L. CIMAN", minute: "88'", runningScore: "4-1" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 620, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const t1Noc = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 110, top: 632, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t1Flag = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 165, top: 630, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 470, top: 630, width: 200, height: 34, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(finalScore, createProps('textbox', {
+        left: 470, top: 634, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 200, textAlign: 'center'
+      }));
+
+      const t2Noc = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 920, top: 632, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t2Flag = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 975, top: 630, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+
+      objects.push(headBg, t1Noc, t1Flag, pillBg, pillTxt, t2Noc, t2Flag);
+
+      goalsList.forEach((g, idx) => {
+        const topOffset = 680 + (idx * 44);
+        const isLeft = g.side !== "right";
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        objects.push(rowBg);
+
+        if (isLeft) {
+          const sTxt = new fabric.Textbox(String(g.shirt), createProps('textbox', {
+            left: 110, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 25
+          }));
+          const pTxt = new fabric.Textbox((g.scorer || '').toUpperCase(), createProps('textbox', {
+            left: 140, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 300
+          }));
+          const mTxt = new fabric.Textbox(g.minute, createProps('textbox', {
+            left: 460, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40, textAlign: 'right'
+          }));
+          const scTxt = new fabric.Textbox(g.runningScore, createProps('textbox', {
+            left: 520, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 80, textAlign: 'center'
+          }));
+          objects.push(sTxt, pTxt, mTxt, scTxt);
+        } else {
+          const scTxt = new fabric.Textbox(g.runningScore, createProps('textbox', {
+            left: 520, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 80, textAlign: 'center'
+          }));
+          const mTxt = new fabric.Textbox(g.minute, createProps('textbox', {
+            left: 610, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40, textAlign: 'left'
+          }));
+          const pTxt = new fabric.Textbox((g.scorer || '').toUpperCase(), createProps('textbox', {
+            left: 700, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 300, textAlign: 'right'
+          }));
+          const sTxt = new fabric.Textbox(String(g.shirt), createProps('textbox', {
+            left: 1010, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 25, textAlign: 'right'
+          }));
+          objects.push(scTxt, mTxt, pTxt, sTxt);
+        }
+      });
+      break;
+    }
+
+    case 'football-match-result': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const matchStage = (data.stage || data.subTitle || "BRONZE MEDAL MATCH").toUpperCase();
+      const matchStatus = (data.status || data.period || "2ND HALF").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "BEL").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇧🇪";
+      const team1Name = (data.team1Name || data.name1 || "BELGIUM").toUpperCase();
+      const team1Score = String(data.team1Score !== undefined ? data.team1Score : "0");
+
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const team2Name = (data.team2Name || data.name2 || "BRAZIL").toUpperCase();
+      const team2Score = String(data.team2Score !== undefined ? data.team2Score : "2");
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 820, width: 960, height: 60, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 834, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 828, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 854, width: 500, height: 20, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillStage = new fabric.Textbox(matchStage, createProps('textbox', {
+        left: 165, top: 856, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 240
+      }));
+      const pillStat = new fabric.Textbox(matchStatus, createProps('textbox', {
+        left: 415, top: 856, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 230, textAlign: 'right'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 833, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 842, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 842, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Row 1 Team 1
+      const t1Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 885, width: 960, height: 42, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t1NocTxt = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 110, top: 895, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t1FlagTxt = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 160, top: 893, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t1NameTxt = new fabric.Textbox(team1Name, createProps('textbox', {
+        left: 205, top: 895, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const t1ScrTxt = new fabric.Textbox(team1Score, createProps('textbox', {
+        left: 920, top: 895, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'right'
+      }));
+
+      // Row 2 Team 2
+      const t2Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 930, width: 960, height: 42, fill: '#001736', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t2NocTxt = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 110, top: 940, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t2FlagTxt = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 160, top: 938, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t2NameTxt = new fabric.Textbox(team2Name, createProps('textbox', {
+        left: 205, top: 940, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const t2ScrTxt = new fabric.Textbox(team2Score, createProps('textbox', {
+        left: 920, top: 940, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'right'
+      }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillStage, pillStat, r1, r2, r3, r4, r5, t1Bg, t1NocTxt, t1FlagTxt, t1NameTxt, t1ScrTxt, t2Bg, t2NocTxt, t2FlagTxt, t2NameTxt, t2ScrTxt);
+      break;
+    }
+
+    case 'football-match-statistics': {
+      const team1Noc = (data.team1Noc || data.noc1 || "BEL").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇧🇪";
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const subTitle = (data.subTitle || "MATCH STATISTICS").toUpperCase();
+
+      const statsList = Array.isArray(data.stats) ? data.stats : [
+        { label: "GOALS / SHOTS ON GOAL", val1: "0 / 8", val2: "3 / 9" },
+        { label: "CORNERS", val1: "7", val2: "1" },
+        { label: "FREE KICKS", val1: "0", val2: "1" },
+        { label: "FOULS", val1: "21", val2: "13" },
+        { label: "OFFSIDES", val1: "2", val2: "5" },
+        { label: "CARDS", val1: "🟨 0  🟨 0  🟥 0", val2: "🟨 4  🟨 0  🟥 1" },
+        { label: "BALL POSSESSION", val1: "51%", val2: "49%" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 620, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const t1Noc = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 110, top: 632, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t1Flag = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 165, top: 630, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 450, top: 632, width: 240, height: 30, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 450, top: 638, fontSize: 13, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 240, textAlign: 'center'
+      }));
+
+      const t2Noc = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 920, top: 632, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t2Flag = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 975, top: 630, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+
+      objects.push(headBg, t1Noc, t1Flag, pillBg, pillTxt, t2Noc, t2Flag);
+
+      statsList.forEach((st, idx) => {
+        const topOffset = 680 + (idx * 44);
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const v1Txt = new fabric.Textbox(String(st.val1), createProps('textbox', {
+          left: 110, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 250, textAlign: 'left'
+        }));
+        const lblTxt = new fabric.Textbox((st.label || '').toUpperCase(), createProps('textbox', {
+          left: 360, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 420, textAlign: 'center'
+        }));
+        const v2Txt = new fabric.Textbox(String(st.val2), createProps('textbox', {
+          left: 780, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 250, textAlign: 'right'
+        }));
+
+        objects.push(rowBg, v1Txt, lblTxt, v2Txt);
+      });
+      break;
+    }
+
+    case 'football-crunch-stats': {
+      const statLabel = (data.statLabel || data.label || "SHOTS ON GOAL").toUpperCase();
+
+      const team1Noc = (data.team1Noc || data.noc1 || "ARG").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇦🇷";
+      const team1Val = String(data.team1Val !== undefined ? data.team1Val : (data.val1 !== undefined ? data.val1 : "5"));
+
+      const team2Noc = (data.team2Noc || data.noc2 || "BRA").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇧🇷";
+      const team2Val = String(data.team2Val !== undefined ? data.team2Val : (data.val2 !== undefined ? data.val2 : "4"));
+
+      // Top Pill
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 170, top: 885, width: 160, height: 22, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(statLabel, createProps('textbox', {
+        left: 170, top: 888, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 160, textAlign: 'center'
+      }));
+
+      // Team 1 Row
+      const t1Bg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 906, width: 260, height: 38, fill: '#002b54', rx: 4, ry: 4,
+        stroke: '#001938', strokeWidth: 1, skewX: -15
+      }));
+      const t1Noc = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 135, top: 915, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t1Flag = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 185, top: 913, fontSize: 18, fill: '#ffffff', width: 30
+      }));
+      const t1Val = new fabric.Textbox(team1Val, createProps('textbox', {
+        left: 330, top: 913, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 35, textAlign: 'right'
+      }));
+
+      // Team 2 Row
+      const t2Bg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 946, width: 260, height: 38, fill: '#001a38', rx: 4, ry: 4,
+        stroke: '#001938', strokeWidth: 1, skewX: -15
+      }));
+      const t2Noc = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 135, top: 955, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t2Flag = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 185, top: 953, fontSize: 18, fill: '#ffffff', width: 30
+      }));
+      const t2Val = new fabric.Textbox(team2Val, createProps('textbox', {
+        left: 330, top: 953, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 35, textAlign: 'right'
+      }));
+
+      objects.push(pillBg, pillTxt, t1Bg, t1Noc, t1Flag, t1Val, t2Bg, t2Noc, t2Flag, t2Val);
+      break;
+    }
+
+    case 'football-coach-id': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const coachName = (data.coach || data.name || "SERGIO BATISTA").toUpperCase();
+      const roleTitle = (data.role || data.title || "COACH").toUpperCase();
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 850, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(coachName, createProps('textbox', {
+        left: 225, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 550
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Sub Bar
+      const subBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const rTxt = new fabric.Textbox(roleTitle, createProps('textbox', {
+        left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+
+      objects.push(headBg, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5, subBg, rTxt);
+      break;
+    }
+
+    case 'football-captain-id': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = String(data.shirt || data.bib || "10");
+      const playerName = (data.athlete || data.player || data.name || "JUAN RIQUELME").toUpperCase();
+      const roleTitle = (data.role || data.title || "CAPTAIN").toUpperCase();
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 850, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const sTxt = new fabric.Textbox(shirtNum, createProps('textbox', {
+        left: 225, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(playerName, createProps('textbox', {
+        left: 275, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Sub Bar
+      const subBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const rTxt = new fabric.Textbox(roleTitle, createProps('textbox', {
+        left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+
+      objects.push(headBg, nocTxt, flagTxt, sTxt, nameTxt, r1, r2, r3, r4, r5, subBg, rTxt);
+      break;
+    }
+
+    case 'football-substitution-single': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = String(data.shirt || data.bib || "7");
+      const playerName = (data.athlete || data.player || data.name || "JOSE SOSA").toUpperCase();
+      const subType = (data.subType || data.direction || "in").toLowerCase();
+      const isOut = subType === "out" || subType === "off";
+
+      const barBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 780, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 902, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 900, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const sTxt = new fabric.Textbox(shirtNum, createProps('textbox', {
+        left: 225, top: 900, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(playerName, createProps('textbox', {
+        left: 275, top: 900, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+
+      const badgeBg = new fabric.Rect(createProps('rect', {
+        left: 820, top: 902, width: 32, height: 32, fill: isOut ? '#ef4444' : '#10b981', rx: 4, ry: 4, skewX: -15
+      }));
+      const badgeArr = new fabric.Textbox(isOut ? "↙" : "↗", createProps('textbox', {
+        left: 820, top: 905, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 32, textAlign: 'center'
+      }));
+
+      objects.push(barBg, nocTxt, flagTxt, sTxt, nameTxt, badgeBg, badgeArr);
+      break;
+    }
+
+    case 'football-substitution-event': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const teamName = (data.teamName || data.name || "ARGENTINA").toUpperCase();
+
+      const playerOutShirt = String(data.outShirt || data.shirtOut || "10");
+      const playerOutName = (data.outName || data.playerOut || "JUAN RIQUELME").toUpperCase();
+
+      const playerInShirt = String(data.inShirt || data.shirtIn || "7");
+      const playerInName = (data.inName || data.playerIn || "JOSE SOSA").toUpperCase();
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 820, width: 680, height: 52, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 832, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 830, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(teamName, createProps('textbox', {
+        left: 225, top: 830, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+
+      // Player OUT Row
+      const outBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 875, width: 680, height: 42, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const outNum = new fabric.Textbox(playerOutShirt, createProps('textbox', {
+        left: 115, top: 885, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 30, textAlign: 'right'
+      }));
+      const outTxt = new fabric.Textbox(playerOutName, createProps('textbox', {
+        left: 155, top: 885, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 450
+      }));
+      const outBadge = new fabric.Rect(createProps('rect', {
+        left: 720, top: 882, width: 28, height: 28, fill: '#ef4444', rx: 4, ry: 4, skewX: -15
+      }));
+      const outArr = new fabric.Textbox("↙", createProps('textbox', {
+        left: 720, top: 884, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 28, textAlign: 'center'
+      }));
+
+      // Player IN Row
+      const inBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 920, width: 680, height: 42, fill: '#001736', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const inNum = new fabric.Textbox(playerInShirt, createProps('textbox', {
+        left: 115, top: 930, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 30, textAlign: 'right'
+      }));
+      const inTxt = new fabric.Textbox(playerInName, createProps('textbox', {
+        left: 155, top: 930, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 450
+      }));
+      const inBadge = new fabric.Rect(createProps('rect', {
+        left: 720, top: 927, width: 28, height: 28, fill: '#10b981', rx: 4, ry: 4, skewX: -15
+      }));
+      const inArr = new fabric.Textbox("↗", createProps('textbox', {
+        left: 720, top: 929, fontSize: 18, fontWeight: 'bold', fill: '#ffffff', width: 28, textAlign: 'center'
+      }));
+
+      objects.push(headBg, nocTxt, flagTxt, nameTxt, outBg, outNum, outTxt, outBadge, outArr, inBg, inNum, inTxt, inBadge, inArr);
+      break;
+    }
+
+    case 'football-tournament-player-stats': {
+      const topTag = (data.tag || "TOURNAMENT").toUpperCase();
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = String(data.shirt || data.bib || "9");
+      const playerName = (data.athlete || data.player || data.name || "EZEQUIEL LAVEZZI").toUpperCase();
+      const statLabel = (data.statLabel || data.label || "GOALS").toUpperCase();
+      const statValue = String(data.statValue !== undefined ? data.statValue : (data.value !== undefined ? data.value : "2"));
+
+      // Top Inset Pill
+      const tagBg = new fabric.Rect(createProps('rect', {
+        left: 140, top: 818, width: 130, height: 22, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const tagTxt = new fabric.Textbox(topTag, createProps('textbox', {
+        left: 140, top: 821, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 130, textAlign: 'center'
+      }));
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 850, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const sTxt = new fabric.Textbox(shirtNum, createProps('textbox', {
+        left: 225, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(playerName, createProps('textbox', {
+        left: 275, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Sub Bar
+      const subBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const lTxt = new fabric.Textbox(statLabel, createProps('textbox', {
+        left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 120
+      }));
+      const vTxt = new fabric.Textbox(statValue, createProps('textbox', {
+        left: 240, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 100
+      }));
+
+      objects.push(tagBg, tagTxt, headBg, nocTxt, flagTxt, sTxt, nameTxt, r1, r2, r3, r4, r5, subBg, lTxt, vTxt);
+      break;
+    }
+
+    case 'football-player-stats': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = String(data.shirt || data.bib || "16");
+      const playerName = (data.athlete || data.player || data.name || "SERGIO AGUERO").toUpperCase();
+      const statLabel = (data.statLabel || data.label || "GOALS").toUpperCase();
+      const statValue = String(data.statValue !== undefined ? data.statValue : (data.value !== undefined ? data.value : "2"));
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 840, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 850, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const sTxt = new fabric.Textbox(shirtNum, createProps('textbox', {
+        left: 225, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(playerName, createProps('textbox', {
+        left: 275, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Sub Bar
+      const subBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 900, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const lTxt = new fabric.Textbox(statLabel, createProps('textbox', {
+        left: 115, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 120
+      }));
+      const vTxt = new fabric.Textbox(statValue, createProps('textbox', {
+        left: 240, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 100
+      }));
+
+      objects.push(headBg, nocTxt, flagTxt, sTxt, nameTxt, r1, r2, r3, r4, r5, subBg, lTxt, vTxt);
+      break;
+    }
+
+    case 'football-crunch-scoreboard': {
+      const team1Noc = (data.team1Noc || data.noc1 || "NGR").toUpperCase();
+      const team1Flag = data.team1Flag || data.flag1 || "🇳🇬";
+      const team1Score = data.team1Score !== undefined ? String(data.team1Score) : "2";
+
+      const team2Noc = (data.team2Noc || data.noc2 || "CIV").toUpperCase();
+      const team2Flag = data.team2Flag || data.flag2 || "🇨🇮";
+      const team2Score = data.team2Score !== undefined ? String(data.team2Score) : "0";
+
+      const matchTime = data.time || data.clock || "21:45";
+      const matchPeriod = (data.period || data.half || "1ST").toUpperCase();
+
+      // Team 1 Row
+      const t1Bg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 90, width: 240, height: 36, fill: '#002b54', rx: 4, ry: 4,
+        stroke: '#001938', strokeWidth: 1, skewX: -15
+      }));
+      const t1Noc = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 135, top: 98, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t1Flag = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 180, top: 96, fontSize: 16, fill: '#ffffff', width: 30
+      }));
+      const t1Scr = new fabric.Textbox(team1Score, createProps('textbox', {
+        left: 305, top: 96, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 35, textAlign: 'right'
+      }));
+
+      // Team 2 Row
+      const t2Bg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 128, width: 240, height: 36, fill: '#001a38', rx: 4, ry: 4,
+        stroke: '#001938', strokeWidth: 1, skewX: -15
+      }));
+      const t2Noc = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 135, top: 136, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      const t2Flag = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 180, top: 134, fontSize: 16, fill: '#ffffff', width: 30
+      }));
+      const t2Scr = new fabric.Textbox(team2Score, createProps('textbox', {
+        left: 305, top: 134, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 35, textAlign: 'right'
+      }));
+
+      // Timer Row
+      const timeBg = new fabric.Rect(createProps('rect', {
+        left: 120, top: 166, width: 140, height: 32, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const timeTxt = new fabric.Textbox(matchTime, createProps('textbox', {
+        left: 120, top: 172, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#001736', width: 140, textAlign: 'center'
+      }));
+
+      const perBg = new fabric.Rect(createProps('rect', {
+        left: 262, top: 166, width: 98, height: 32, fill: '#002850', rx: 4, ry: 4, skewX: -15
+      }));
+      const perTxt = new fabric.Textbox(matchPeriod, createProps('textbox', {
+        left: 262, top: 172, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 98, textAlign: 'center'
+      }));
+
+      objects.push(t1Bg, t1Noc, t1Flag, t1Scr, t2Bg, t2Noc, t2Flag, t2Scr, timeBg, timeTxt, perBg, perTxt);
+      break;
+    }
+
+    case 'football-player-id': {
+      const countryCode = (data.country || data.noc || "ARG").toUpperCase();
+      const flagStr = data.flag || "🇦🇷";
+      const shirtNum = String(data.shirt || data.bib || "5");
+      const playerName = (data.athlete || data.player || data.name || "FERNANDO GAGO").toUpperCase();
+      const hasCard = !!data.card;
+      const cardColor = data.card && data.card.toLowerCase().includes("yellow") ? "#eab308" : "#ef4444";
+
+      const barBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 902, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 900, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const sTxt = new fabric.Textbox(shirtNum, createProps('textbox', {
+        left: 225, top: 900, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(playerName, createProps('textbox', {
+        left: 275, top: 900, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+
+      if (hasCard) {
+        const cardBadge = new fabric.Rect(createProps('rect', {
+          left: 830, top: 906, width: 14, height: 22, fill: cardColor, rx: 2, ry: 2, skewX: -10
+        }));
+        objects.push(cardBadge);
+      }
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 912, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 912, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(barBg, nocTxt, flagTxt, sTxt, nameTxt, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'football-officials-list': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "OFFICIALS").toUpperCase();
+      const officialsList = Array.isArray(data.officials) ? data.officials : [
+        { noc: "URU", flag: "🇺🇾", name: "MARTIN VAZQUEZ", role: "REFEREE" },
+        { noc: "URU", flag: "🇺🇾", name: "MAURICIO ESPINOSA", role: "ASSISTANT REFEREE 1" },
+        { noc: "URU", flag: "🇺🇾", name: "MIGUEL NIEVAS", role: "ASSISTANT REFEREE 2" },
+        { noc: "FRA", flag: "🇫🇷", name: "STEPHANE LANNOY", role: "4TH OFFICIAL" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 740, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 748, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 774, width: 140, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 155, top: 776, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      officialsList.forEach((off, idx) => {
+        const topOffset = 800 + (idx * 44);
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const oNoc = new fabric.Textbox((off.noc || '').toUpperCase(), createProps('textbox', {
+          left: 110, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+        }));
+        const oFlag = new fabric.Textbox(off.flag || '', createProps('textbox', {
+          left: 160, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 35
+        }));
+        const oName = new fabric.Textbox((off.name || '').toUpperCase(), createProps('textbox', {
+          left: 200, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+        }));
+        const rRole = new fabric.Textbox((off.role || '').toUpperCase(), createProps('textbox', {
+          left: 620, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 320, textAlign: 'right'
+        }));
+
+        objects.push(rowBg, oNoc, oFlag, oName, rRole);
+      });
+      break;
+    }
+
+    case 'football-official-id': {
+      const countryCode = (data.country || data.noc || "URU").toUpperCase();
+      const flagStr = data.flag || "🇺🇾";
+      const officialName = (data.officialName || data.name || "MAURICIO ESPINOSA").toUpperCase();
+      const roleTitle = (data.role || data.title || "ASSISTANT REFEREE 1").toUpperCase();
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 840, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 110, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 165, top: 850, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+      const nameTxt = new fabric.Textbox(officialName, createProps('textbox', {
+        left: 210, top: 850, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 853, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 862, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Sub Bar
+      const subBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 900, width: 960, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const roleTxt = new fabric.Textbox(roleTitle, createProps('textbox', {
+        left: 110, top: 910, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 800
+      }));
+
+      objects.push(headBg, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5, subBg, roleTxt);
+      break;
+    }
+
+    case 'football-previous-results': {
+      const teamNoc = (data.noc || data.country || "CMR").toUpperCase();
+      const teamFlag = data.flag || "🇨🇲";
+      const teamName = (data.teamName || data.name || "CAMEROON").toUpperCase();
+      const teamRecord = data.record || "1 - 0 - 2";
+      const subTitle = (data.subTitle || "PREVIOUS RESULTS").toUpperCase();
+
+      const resultsList = Array.isArray(data.results) ? data.results : [
+        { oppNoc: "KOR", oppFlag: "🇰🇷", oppName: "KOREA", group: "GROUP D", score: "1-1", outcome: "D" },
+        { oppNoc: "HON", oppFlag: "🇭🇳", oppName: "HONDURAS", group: "GROUP D", score: "1-0", outcome: "W" },
+        { oppNoc: "ITA", oppFlag: "🇮🇹", oppName: "ITALY", group: "GROUP D", score: "0-0", outcome: "D" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 740, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(teamNoc, createProps('textbox', {
+        left: 110, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(teamFlag, createProps('textbox', {
+        left: 165, top: 750, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(`${teamName} (${teamRecord})`, createProps('textbox', {
+        left: 210, top: 748, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 210, top: 774, width: 160, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 210, top: 776, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 160, textAlign: 'center'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, nocTxt, flagTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      resultsList.forEach((res, idx) => {
+        const topOffset = 800 + (idx * 44);
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const oNoc = new fabric.Textbox((res.oppNoc || '').toUpperCase(), createProps('textbox', {
+          left: 110, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 45
+        }));
+        const oFlag = new fabric.Textbox(res.oppFlag || '', createProps('textbox', {
+          left: 160, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 35
+        }));
+        const oName = new fabric.Textbox((res.oppName || '').toUpperCase(), createProps('textbox', {
+          left: 200, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+        }));
+
+        const grpTxt = new fabric.Textbox((res.group || '').toUpperCase(), createProps('textbox', {
+          left: 700, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 120, textAlign: 'right'
+        }));
+        const scrTxt = new fabric.Textbox(res.score || '', createProps('textbox', {
+          left: 835, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 60, textAlign: 'center'
+        }));
+        const outTxt = new fabric.Textbox(res.outcome || '', createProps('textbox', {
+          left: 905, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic',
+          fill: res.outcome === 'W' ? '#10b981' : res.outcome === 'L' ? '#ef4444' : '#ffd700',
+          width: 30, textAlign: 'center'
+        }));
+
+        objects.push(rowBg, oNoc, oFlag, oName, grpTxt, scrTxt, outTxt);
+      });
+      break;
+    }
+
+    case 'football-substitutes-list': {
+      const teamNoc = (data.noc || data.country || "NZL").toUpperCase();
+      const teamFlag = data.flag || "🇳🇿";
+      const teamName = (data.teamName || data.name || "NEW ZEALAND").toUpperCase();
+      const subTitle = (data.subTitle || "SUBSTITUTES").toUpperCase();
+
+      const leftSubs = Array.isArray(data.leftSubs) ? data.leftSubs : [
+        { shirt: "5", name: "RYAN NELSEN" },
+        { shirt: "11", name: "JEREMY BROCKIE" },
+        { shirt: "13", name: "SHAUN VAN ROOYEN" },
+        { shirt: "14", name: "COLE TINKLER" }
+      ];
+
+      const rightSubs = Array.isArray(data.rightSubs) ? data.rightSubs : [
+        { shirt: "15", name: "GREG DRAPER" },
+        { shirt: "17", name: "SAM MESSAM" },
+        { shirt: "18", name: "LIAM LITTLE", pos: "GK" }
+      ];
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 740, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(teamNoc, createProps('textbox', {
+        left: 110, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(teamFlag, createProps('textbox', {
+        left: 165, top: 750, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(teamName, createProps('textbox', {
+        left: 210, top: 748, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 210, top: 774, width: 140, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 210, top: 776, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, nocTxt, flagTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      Array.from({ length: 4 }).forEach((_, idx) => {
+        const topOffset = 800 + (idx * 44);
+        const lp = leftSubs[idx];
+        const rp = rightSubs[idx];
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        objects.push(rowBg);
+
+        // Left Column
+        if (lp) {
+          const pTxt = new fabric.Textbox(String(lp.name), createProps('textbox', {
+            left: 110, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 360
+          }));
+          objects.push(pTxt);
+          if (lp.pos) {
+            const posTxt = new fabric.Textbox(String(lp.pos), createProps('textbox', {
+              left: 450, top: topOffset + 10, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffd700', width: 30
+            }));
+            objects.push(posTxt);
+          }
+        }
+
+        // Right Column
+        if (rp) {
+          const pTxt = new fabric.Textbox(String(rp.name), createProps('textbox', {
+            left: 560, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 360
+          }));
+          objects.push(pTxt);
+          if (rp.pos) {
+            const posTxt = new fabric.Textbox(String(rp.pos), createProps('textbox', {
+              left: 900, top: topOffset + 10, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffd700', width: 30
+            }));
+            objects.push(posTxt);
+          }
+        }
+      });
+      break;
+    }
+
+    case 'football-starting-lineup': {
+      const teamNoc = (data.noc || data.country || "NZL").toUpperCase();
+      const teamFlag = data.flag || "🇳🇿";
+      const teamName = (data.teamName || data.name || "NEW ZEALAND").toUpperCase();
+      const subTitle = (data.subTitle || "STARTING LINEUP").toUpperCase();
+
+      const leftPlayers = Array.isArray(data.leftPlayers) ? data.leftPlayers : [
+        { shirt: "1", name: "JACOB SPOONLEY", pos: "GK" },
+        { shirt: "2", name: "AARON SCOTT", pos: "C" },
+        { shirt: "3", name: "IAN HOGG" },
+        { shirt: "4", name: "COLE PEVERLEY" },
+        { shirt: "6", name: "MICHAEL BOXALL" },
+        { shirt: "7", name: "SIMON ELLIOTT" },
+        { shirt: "8", name: "CRAIG HENDERSON" }
+      ];
+
+      const rightPlayers = Array.isArray(data.rightPlayers) ? data.rightPlayers : [
+        { shirt: "9", name: "DANIEL ELLENSOHN" },
+        { shirt: "10", name: "CHRIS KILLEN" },
+        { shirt: "12", name: "STEVEN OLD" },
+        { shirt: "16", name: "SAM JENKINS" }
+      ];
+      const coachName = (data.coach || "STU JACOBS").toUpperCase();
+
+      // Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 620, width: 960, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(teamNoc, createProps('textbox', {
+        left: 110, top: 632, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const flagTxt = new fabric.Textbox(teamFlag, createProps('textbox', {
+        left: 165, top: 630, fontSize: 22, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(teamName, createProps('textbox', {
+        left: 210, top: 628, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 210, top: 654, width: 160, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 210, top: 656, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 160, textAlign: 'center'
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 950, top: 633, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 970, top: 633, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 990, top: 633, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 960, top: 642, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 980, top: 642, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, nocTxt, flagTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      Array.from({ length: 7 }).forEach((_, idx) => {
+        const topOffset = 680 + (idx * 40);
+        const lp = leftPlayers[idx];
+        const rp = rightPlayers[idx];
+
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 960, height: 38, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        objects.push(rowBg);
+
+        // Left Column
+        if (lp) {
+          const sTxt = new fabric.Textbox(String(lp.shirt), createProps('textbox', {
+            left: 110, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 25, textAlign: 'right'
+          }));
+          const pTxt = new fabric.Textbox(String(lp.name), createProps('textbox', {
+            left: 145, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 320
+          }));
+          objects.push(sTxt, pTxt);
+          if (lp.pos) {
+            const posTxt = new fabric.Textbox(String(lp.pos), createProps('textbox', {
+              left: 450, top: topOffset + 9, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffd700', width: 30
+            }));
+            objects.push(posTxt);
+          }
+        }
+
+        // Right Column
+        if (rp) {
+          const sTxt = new fabric.Textbox(String(rp.shirt), createProps('textbox', {
+            left: 560, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#38bdf8', width: 25, textAlign: 'right'
+          }));
+          const pTxt = new fabric.Textbox(String(rp.name), createProps('textbox', {
+            left: 595, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 320
+          }));
+          objects.push(sTxt, pTxt);
+        } else if (idx === 5) {
+          const cLabel = new fabric.Textbox("COACH", createProps('textbox', {
+            left: 595, top: topOffset + 9, fontSize: 14, fontWeight: 'bold', fontStyle: 'italic', fill: '#cbd5e1', width: 100
+          }));
+          objects.push(cLabel);
+        } else if (idx === 6) {
+          const cName = new fabric.Textbox(coachName, createProps('textbox', {
+            left: 595, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 320
+          }));
+          objects.push(cName);
+        }
+      });
+      break;
+    }
+
+    case 'team-id-single': {
+      const countryCode = (data.country || data.noc || "BEL").toUpperCase();
+      const flagStr = data.flag || "🇧🇪";
+      const teamName = (data.teamName || data.name || "BELGIUM").toUpperCase();
+
+      const barBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
+        left: 115, top: 902, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 55
+      }));
+      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
+        left: 175, top: 900, fontSize: 24, fill: '#ffffff', width: 40
+      }));
+      const nameTxt = new fabric.Textbox(teamName, createProps('textbox', {
+        left: 230, top: 900, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 550
+      }));
+
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 903, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 912, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 912, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(barBg, nocTxt, flagTxt, nameTxt, r1, r2, r3, r4, r5);
+      break;
+    }
+
+    case 'football-group-standings': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "STANDINGS - GROUP D").toUpperCase();
+      const standingsList = Array.isArray(data.standings) ? data.standings : [
+        { rank: "1", noc: "ITA", flag: "🇮🇹", name: "ITALY", w: "2", l: "0", d: "0", f: "6", a: "0", pts: "6" },
+        { rank: "2", noc: "CMR", flag: "🇨🇲", name: "CAMEROON", w: "1", l: "0", d: "1", f: "2", a: "1", pts: "4" },
+        { rank: "3", noc: "KOR", flag: "🇰🇷", name: "KOREA", w: "0", l: "1", d: "1", f: "1", a: "4", pts: "1" },
+        { rank: "4", noc: "HON", flag: "🇭🇳", name: "HONDURAS", w: "0", l: "2", d: "0", f: "0", a: "4", pts: "0" }
+      ];
+
+      // Primary Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 740, width: 950, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 748, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 774, width: 180, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 155, top: 776, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 180, textAlign: 'center'
+      }));
+
+      // Column Headers
+      const colHeaders = ["W", "L", "D", "F", "A", "PTS"];
+      colHeaders.forEach((ch, idx) => {
+        const chTxt = new fabric.Textbox(ch, createProps('textbox', {
+          left: 680 + (idx * 35), top: 758, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'center'
+        }));
+        objects.push(chTxt);
+      });
+
+      // Olympic Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 930, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 950, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 970, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 940, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 960, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      standingsList.forEach((st, idx) => {
+        const topOffset = 800 + (idx * 45);
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 950, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const rBadge = new fabric.Rect(createProps('rect', {
+          left: 108, top: topOffset + 7, width: 26, height: 26, fill: '#dc2626', rx: 4, ry: 4, skewX: -15
+        }));
+        const rTxt = new fabric.Textbox(String(st.rank), createProps('textbox', {
+          left: 108, top: topOffset + 10, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 26, textAlign: 'center'
+        }));
+        const tNoc = new fabric.Textbox((st.noc || '').toUpperCase(), createProps('textbox', {
+          left: 145, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+        }));
+        const tFlag = new fabric.Textbox(st.flag || '', createProps('textbox', {
+          left: 195, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 35
+        }));
+        const tName = new fabric.Textbox((st.name || '').toUpperCase(), createProps('textbox', {
+          left: 235, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 400
+        }));
+
+        objects.push(rowBg, rBadge, rTxt, tNoc, tFlag, tName);
+
+        if (st.q || st.qualified || (data.showQ && Number(st.rank) <= 3)) {
+          const qTxt = new fabric.Textbox("Q", createProps('textbox', {
+            left: 645, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#10b981', width: 25, textAlign: 'center'
+          }));
+          objects.push(qTxt);
+        }
+
+        const vals = [st.w, st.l, st.d, st.f, st.a, st.pts];
+        vals.forEach((v, vIdx) => {
+          const vTxt = new fabric.Textbox(String(v ?? 0), createProps('textbox', {
+            left: 680 + (vIdx * 35), top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'center'
+          }));
+          objects.push(vTxt);
+        });
+      });
+      break;
+    }
+
+    case 'group-list-teams': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "GROUP C").toUpperCase();
+      const teamsList = Array.isArray(data.teams) ? data.teams : [
+        { noc: "BEL", flag: "🇧🇪", name: "BELGIUM" },
+        { noc: "BRA", flag: "🇧🇷", name: "BRAZIL" },
+        { noc: "CHN", flag: "🇨🇳", name: "CHINA" },
+        { noc: "NZL", flag: "🇳🇿", name: "NEW ZEALAND" }
+      ];
+
+      // Primary Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 740, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 752, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 748, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 774, width: 140, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 155, top: 776, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 140, textAlign: 'center'
+      }));
+
+      // Olympic Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 753, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 762, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
+
+      teamsList.forEach((tm, idx) => {
+        const topOffset = 800 + (idx * 45);
+        const rowBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: topOffset, width: 860, height: 42, fill: idx % 2 === 0 ? '#001e3d' : '#001736', rx: 4, ry: 4,
+          stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+        }));
+        const tNoc = new fabric.Textbox((tm.noc || '').toUpperCase(), createProps('textbox', {
+          left: 110, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+        }));
+        const tFlag = new fabric.Textbox(tm.flag || '', createProps('textbox', {
+          left: 165, top: topOffset + 8, fontSize: 20, fill: '#ffffff', width: 35
+        }));
+        const tName = new fabric.Textbox((tm.name || '').toUpperCase(), createProps('textbox', {
+          left: 210, top: topOffset + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+        }));
+
+        objects.push(rowBg, tNoc, tFlag, tName);
+      });
+      break;
+    }
+
+    case 'match-id-teams': {
+      const eventTitle = (data.event || "MEN'S FOOTBALL").toUpperCase();
+      const subTitle = (data.subTitle || "FIRST ROUND - GROUP A").toUpperCase();
+      const team1Noc = (data.team1Noc || data.homeNoc || "AUS").toUpperCase();
+      const team1Flag = data.team1Flag || data.homeFlag || "🇦🇺";
+      const team1Name = (data.team1Name || data.homeTeam || "AUSTRALIA").toUpperCase();
+      const team2Noc = (data.team2Noc || data.awayNoc || "SRB").toUpperCase();
+      const team2Flag = data.team2Flag || data.awayFlag || "🇷🇸";
+      const team2Name = (data.team2Name || data.awayTeam || "SERBIA").toUpperCase();
+
+      // Primary Header Bar
+      const headBg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 830, width: 860, height: 56, fill: '#003366', rx: 6, ry: 6,
+        stroke: '#001938', strokeWidth: 2, skewX: -15
+      }));
+      const iconTxt = new fabric.Textbox("⚽", createProps('textbox', {
+        left: 110, top: 842, fontSize: 24, fill: '#ffffff', width: 35
+      }));
+      const titleTxt = new fabric.Textbox(eventTitle, createProps('textbox', {
+        left: 155, top: 838, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500
+      }));
+      const pillBg = new fabric.Rect(createProps('rect', {
+        left: 155, top: 864, width: 220, height: 18, fill: '#ffffff', rx: 4, ry: 4, skewX: -15
+      }));
+      const pillTxt = new fabric.Textbox(subTitle, createProps('textbox', {
+        left: 155, top: 866, fontSize: 11, fontWeight: 'bold', fontStyle: 'italic', fill: '#002850', width: 220, textAlign: 'center'
+      }));
+
+      // Olympic Rings
+      const ringColor = '#ffd700';
+      const r1 = new fabric.Circle(createProps('circle', { left: 860, top: 843, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r2 = new fabric.Circle(createProps('circle', { left: 880, top: 843, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r3 = new fabric.Circle(createProps('circle', { left: 900, top: 843, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r4 = new fabric.Circle(createProps('circle', { left: 870, top: 852, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+      const r5 = new fabric.Circle(createProps('circle', { left: 890, top: 852, radius: 10, stroke: ringColor, strokeWidth: 2, fill: '' }));
+
+      // Team Row 1
+      const row1Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 890, width: 860, height: 44, fill: '#001e3d', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t1Noc = new fabric.Textbox(team1Noc, createProps('textbox', {
+        left: 110, top: 900, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t1Flag = new fabric.Textbox(team1Flag, createProps('textbox', {
+        left: 165, top: 898, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t1Name = new fabric.Textbox(team1Name, createProps('textbox', {
+        left: 210, top: 900, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+      }));
+
+      // Team Row 2
+      const row2Bg = new fabric.Rect(createProps('rect', {
+        left: 90, top: 938, width: 860, height: 44, fill: '#001736', rx: 4, ry: 4,
+        stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
+      }));
+      const t2Noc = new fabric.Textbox(team2Noc, createProps('textbox', {
+        left: 110, top: 948, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
+      }));
+      const t2Flag = new fabric.Textbox(team2Flag, createProps('textbox', {
+        left: 165, top: 946, fontSize: 20, fill: '#ffffff', width: 35
+      }));
+      const t2Name = new fabric.Textbox(team2Name, createProps('textbox', {
+        left: 210, top: 948, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
+      }));
+
+      objects.push(headBg, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5, row1Bg, t1Noc, t1Flag, t1Name, row2Bg, t2Noc, t2Flag, t2Name);
+      break;
+    }
+
     case 'clock-at-finish': {
       const wrTime = data.wrTime || "3:40.08";
       const orTime = data.orTime || "3:40.59";
