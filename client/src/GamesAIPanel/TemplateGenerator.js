@@ -6,11 +6,52 @@
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
 
+const RANDOM_ATHLETES_POOL = [
+  { name: "Usain Bolt", country: "JAM" },
+  { name: "Michael Phelps", country: "USA" },
+  { name: "Yohan Blake", country: "JAM" },
+  { name: "Justin Gatlin", country: "USA" },
+  { name: "Richard Thompson", country: "TRI" },
+  { name: "Ryan Bailey", country: "USA" },
+  { name: "Churandy Martina", country: "NED" },
+  { name: "Asafa Powell", country: "JAM" },
+  { name: "Su Bingtian", country: "CHN" },
+  { name: "Marcell Jacobs", country: "ITA" },
+  { name: "Andre De Grasse", country: "CAN" },
+  { name: "Trayvon Bromell", country: "USA" },
+  { name: "Akani Simbine", country: "RSA" },
+  { name: "Fred Kerley", country: "USA" },
+  { name: "Noah Lyles", country: "USA" }
+];
+
+export function get11PlayerLineup(sport) {
+  const existing = sport && sport.lineup ? [...sport.lineup] : [];
+  const result = [];
+  for (let i = 0; i < 11; i++) {
+    if (existing[i]) {
+      result.push({
+        lane: existing[i].lane || (i + 1),
+        name: existing[i].name,
+        country: existing[i].country || "NOC"
+      });
+    } else {
+      const poolItem = RANDOM_ATHLETES_POOL[i % RANDOM_ATHLETES_POOL.length];
+      result.push({
+        lane: i + 1,
+        name: poolItem.name,
+        country: poolItem.country
+      });
+    }
+  }
+  return result;
+}
+
 export function resolveCategory(templateType, templateName = '') {
   const normType = (templateType || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
   const combined = `${normType} ${normName}`;
 
+  if (combined.includes("position")) return "position-on-screen";
   if (combined.includes("venue") || combined.includes("location")) return "venue-id";
   if (combined.includes("weather")) return "weather";
   if (combined.includes("schedule")) return "event-schedule";
@@ -49,6 +90,67 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const variant = ((idNum - 1) % 5) + 1;
 
   switch (category) {
+    case "position-on-screen": {
+      const athlete1 = data.athlete || data.athleteA || "MICHAEL PHELPS";
+      const country1 = data.country || "USA";
+      const time1 = data.time || "50.58";
+      const rank1 = data.rank || "1st";
+
+      return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;800;900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+            .pos-card {
+              position: absolute; top: 70px; left: 90px;
+              display: flex; align-items: center; gap: 0;
+              border-radius: 8px; overflow: hidden;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            }
+            .pos-label {
+              background: ${primaryColor}; color: white; padding: 12px 20px;
+              font-size: 14px; font-weight: 900; letter-spacing: 2px;
+              border-right: 3px solid ${accentColor}; text-transform: uppercase;
+            }
+            .pos-item {
+              background: rgba(15,23,42,0.95); color: white; padding: 10px 24px;
+              font-size: 20px; font-weight: 900; border-right: 1px solid rgba(255,255,255,0.1);
+              display: flex; align-items: center; gap: 12px;
+            }
+            .pos-item.leading { background: ${secondaryColor}; color: ${accentColor}; }
+            .pos-rank { font-size: 16px; background: ${accentColor}; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: 900; }
+            .pos-time { font-size: 15px; color: #cbd5e1; font-weight: 700; margin-left: 8px; }
+            .pos-code { background: ${accentColor}; color: #000; padding: 12px 18px; font-size: 15px; font-weight: 900; }
+          </style>
+        </head>
+        <body>
+          <div class="pos-card">
+            <div class="pos-label">LIVE POSITION</div>
+            <div class="pos-item leading">
+              <span class="pos-rank">${rank1}</span>
+              <span>${athlete1.toUpperCase()} (${country1.toUpperCase()})</span>
+              <span class="pos-time">${time1}</span>
+            </div>
+            <div class="pos-item">
+              <span style="color:#94a3b8;">2nd</span>
+              <span>CHAD LE CLOS (RSA)</span>
+              <span class="pos-time">+0.25</span>
+            </div>
+            <div class="pos-item">
+              <span style="color:#94a3b8;">3rd</span>
+              <span>MILORAD ČAVIĆ (SRB)</span>
+              <span class="pos-time">+0.66</span>
+            </div>
+            <div class="pos-code">${code}</div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
     case "venue-id":
       return `
         <!DOCTYPE html>
@@ -603,15 +705,8 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </body></html>`;
     }
 
-    case "start-list":
-      const lineup = sport.lineup || [
-        { lane: 1, name: "Competitor A", country: "GBR", time: "--" },
-        { lane: 2, name: "Competitor B", country: "USA", time: "--" },
-        { lane: 3, name: "Competitor C", country: "JAM", time: "--" },
-        { lane: 4, name: "Competitor D", country: "GER", time: "--" },
-        { lane: 5, name: "Competitor E", country: "FRA", time: "--" },
-        { lane: 6, name: "Competitor F", country: "AUS", time: "--" }
-      ];
+    case "start-list": {
+      const lineup = get11PlayerLineup(sport);
 
       return `
         <!DOCTYPE html>
@@ -630,10 +725,10 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             }
             .sl-container {
               position: absolute;
-              top: 150px;
+              top: 100px;
               left: 90px;
-              width: 800px;
-              background: rgba(15, 23, 42, 0.95);
+              width: 820px;
+              background: rgba(15, 23, 42, 0.96);
               border-radius: 12px;
               overflow: hidden;
               box-shadow: 0 15px 40px rgba(0,0,0,0.7);
@@ -642,38 +737,47 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             }
             .sl-header {
               background: linear-gradient(135deg, ${primaryColor}, ${secondaryColor});
-              padding: 16px 24px;
+              padding: 14px 24px;
               display: flex;
               justify-content: space-between;
               align-items: center;
               border-bottom: 4px solid ${accentColor};
             }
-            .sl-title { font-size: 26px; font-weight: 900; text-transform: uppercase; }
-            .sl-subtitle { font-size: 16px; color: ${accentColor}; font-weight: 700; }
+            .sl-title { font-size: 24px; font-weight: 900; text-transform: uppercase; }
+            .sl-subtitle { font-size: 15px; color: ${accentColor}; font-weight: 700; }
             .row {
               display: flex;
               align-items: center;
-              padding: 12px 24px;
+              padding: 8px 24px;
               border-bottom: 1px solid rgba(255,255,255,0.08);
-              font-size: 20px;
+              font-size: 17px;
               font-weight: 700;
             }
+            .row:last-child { border-bottom: none; }
             .row:nth-child(even) { background: rgba(255,255,255,0.03); }
             .lane-num {
               background: ${secondaryColor};
               color: ${accentColor};
-              width: 36px;
-              height: 36px;
+              width: 32px;
+              height: 32px;
               display: flex;
               align-items: center;
               justify-content: center;
               border-radius: 50%;
-              margin-right: 20px;
+              margin-right: 18px;
+              font-size: 15px;
               font-weight: 900;
-              font-size: 18px;
+              border: 1px solid ${accentColor};
             }
-            .name { flex: 1; text-transform: uppercase; }
-            .noc { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 16px; font-weight: 800; }
+            .name { flex: 1; text-transform: uppercase; font-size: 17px; letter-spacing: 0.5px; }
+            .noc {
+              background: rgba(255,255,255,0.1);
+              padding: 3px 10px;
+              border-radius: 4px;
+              font-size: 14px;
+              font-weight: 800;
+              letter-spacing: 1px;
+            }
           </style>
         </head>
         <body>
@@ -681,13 +785,13 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="sl-header">
               <div>
                 <div class="sl-title">${sportTitle}</div>
-                <div class="sl-subtitle">${data.event || 'START LIST'}</div>
+                <div class="sl-subtitle">${data.event || "START LIST - FINAL DRAW"}</div>
               </div>
-              <div style="font-weight:900; font-size:24px; color:${accentColor};">${code}</div>
+              <span style="font-size: 24px; font-weight: 900; color: ${accentColor};">${code}</span>
             </div>
             ${lineup.map(item => `
               <div class="row">
-                <div class="lane-num">${item.lane || item.rank || '•'}</div>
+                <div class="lane-num">${item.lane}</div>
                 <div class="name">${item.name}</div>
                 <div class="noc">${item.country}</div>
               </div>
@@ -696,6 +800,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </body>
         </html>
       `;
+    }
 
     case "medal-tally":
       return `
@@ -1491,55 +1596,48 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'start-list': {
-      const lineup = sport.lineup || [
-        { lane: 1, name: "COMPETITOR A", country: "GBR" },
-        { lane: 2, name: "COMPETITOR B", country: "USA" },
-        { lane: 3, name: "COMPETITOR C", country: "JAM" },
-        { lane: 4, name: "COMPETITOR D", country: "GER" },
-        { lane: 5, name: "COMPETITOR E", country: "FRA" },
-        { lane: 6, name: "COMPETITOR F", country: "AUS" }
-      ];
+      const lineup = get11PlayerLineup(sport);
 
       const cardBg = new fabric.Rect(createProps('rect', {
-        left: 90, top: 150, width: 800, height: 75 + lineup.length * 55, fill: '#0f172a', rx: 12, ry: 12
+        left: 90, top: 100, width: 820, height: 60 + lineup.length * 44, fill: '#0f172a', rx: 12, ry: 12
       }));
       const headerBg = new fabric.Rect(createProps('rect', {
-        left: 90, top: 150, width: 800, height: 75, fill: primaryColor, rx: 12, ry: 12
+        left: 90, top: 100, width: 820, height: 60, fill: primaryColor, rx: 12, ry: 12
       }));
       const headerAccent = new fabric.Rect(createProps('rect', {
-        left: 90, top: 220, width: 800, height: 5, fill: accentColor
+        left: 90, top: 156, width: 820, height: 4, fill: accentColor
       }));
       const titleText = new fabric.Textbox(sportTitle, createProps('textbox', {
-        left: 120, top: 165, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 550
+        left: 115, top: 110, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 550
       }));
-      const subtitleText = new fabric.Textbox(data.event || 'START LIST', createProps('textbox', {
-        left: 120, top: 195, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 550
+      const subtitleText = new fabric.Textbox(data.event || 'START LIST - FINAL DRAW', createProps('textbox', {
+        left: 115, top: 134, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 550
       }));
       const codeHeader = new fabric.Textbox(code, createProps('textbox', {
-        left: 740, top: 170, fontSize: 26, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
+        left: 760, top: 118, fontSize: 22, fontWeight: 'bold', fill: accentColor, width: 120, textAlign: 'center'
       }));
 
       objects.push(cardBg, headerBg, headerAccent, titleText, subtitleText, codeHeader);
 
       lineup.forEach((item, idx) => {
-        const y = 225 + idx * 55;
+        const y = 160 + idx * 44;
         const rowBg = new fabric.Rect(createProps('rect', {
-          left: 90, top: y, width: 800, height: 52, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
+          left: 90, top: y, width: 820, height: 42, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
         }));
         const circle = new fabric.Circle(createProps('circle', {
-          left: 110, top: y + 8, radius: 18, fill: secondaryColor
+          left: 110, top: y + 6, radius: 15, fill: secondaryColor
         }));
-        const laneText = new fabric.Textbox(String(item.lane || item.rank || (idx + 1)), createProps('textbox', {
-          left: 110, top: y + 15, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 36, textAlign: 'center'
+        const laneText = new fabric.Textbox(String(item.lane), createProps('textbox', {
+          left: 110, top: y + 11, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 30, textAlign: 'center'
         }));
         const nameText = new fabric.Textbox(item.name.toUpperCase(), createProps('textbox', {
-          left: 165, top: y + 13, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 600
+          left: 155, top: y + 10, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 580
         }));
         const nocBg = new fabric.Rect(createProps('rect', {
-          left: 790, top: y + 12, width: 70, height: 28, fill: '#334155', rx: 4, ry: 4
+          left: 810, top: y + 8, width: 80, height: 26, fill: '#334155', rx: 4, ry: 4
         }));
         const nocText = new fabric.Textbox(item.country, createProps('textbox', {
-          left: 790, top: y + 16, fontSize: 16, fontWeight: 'bold', fill: '#ffffff', width: 70, textAlign: 'center'
+          left: 810, top: y + 12, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 80, textAlign: 'center'
         }));
 
         objects.push(rowBg, circle, laneText, nameText, nocBg, nocText);
