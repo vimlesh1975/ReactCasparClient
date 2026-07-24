@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSend, FiMic, FiTrash2 } from 'react-icons/fi';
 import { presetPrompts } from './presetPrompts';
-import { creativeModes } from './CreativeModes';
-import { stylePresets } from './StylePresets';
+import { BROADCAST_THEMES } from './Themes';
 import { buildSystemPrompt } from './PromptEngine';
 import { dispatchCommand, postProcessCommands } from './CommandDispatcher';
 
 const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
     const [prompt, setPrompt] = useState('blue rectangle with the text "Vimlesh Kumar"');
-    const [creativeMode, setCreativeMode] = useState('Professional');
-    const [stylePreset, setStylePreset] = useState('BBC News');
+    const [selectedTheme, setSelectedTheme] = useState('Default (Auto)');
     const [chatHistory, setChatHistory] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -105,7 +103,7 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
         try {
             // Extract Canvas State
             const canvasStateJSON = getCanvasState(canvas);
-            const systemPrompt = buildSystemPrompt(creativeMode, stylePreset, canvasStateJSON);
+            const systemPrompt = buildSystemPrompt(canvasStateJSON, selectedTheme);
             const apiUrl = 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component';
 
             // Construct payload with limited history (last 6 messages to save tokens)
@@ -174,26 +172,17 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
     return (
         <div className="aiPanel" style={{ padding: '12px', background: 'rgba(20,20,20,0.9)', borderRadius: '8px', color: '#fff', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '600px' }}>
             <h3 style={{ margin: '0 0 8px 0' }}>AI Studio</h3>
-            
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+
+            <div style={{ marginBottom: '8px' }}>
+                <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '3px' }}>🎨 Select Broadcast Theme (10 Themes):</label>
                 <select
-                    style={{ flex: 1, padding: '6px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
-                    value={creativeMode}
-                    onChange={(e) => setCreativeMode(e.target.value)}
-                    title="Creative Mode"
+                    style={{ width: '100%', padding: '6px', borderRadius: '4px', background: '#2a2a2a', color: '#ffcc00', border: '1px solid #ffcc00', fontWeight: 'bold' }}
+                    value={selectedTheme}
+                    onChange={(e) => setSelectedTheme(e.target.value)}
+                    title="Broadcast Theme"
                 >
-                    {Object.keys(creativeModes).map(mode => (
-                        <option key={mode} value={mode}>{mode} Mode</option>
-                    ))}
-                </select>
-                <select
-                    style={{ flex: 1, padding: '6px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
-                    value={stylePreset}
-                    onChange={(e) => setStylePreset(e.target.value)}
-                    title="Style Preset"
-                >
-                    {Object.keys(stylePresets).map(preset => (
-                        <option key={preset} value={preset}>{preset}</option>
+                    {Object.keys(BROADCAST_THEMES).map(tName => (
+                        <option key={tName} value={tName}>🎭 {tName}</option>
                     ))}
                 </select>
             </div>

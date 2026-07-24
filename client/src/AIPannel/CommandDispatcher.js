@@ -1,4 +1,5 @@
-import { createRect, createCircle, createTriangle, createTextBox, gradient, gradient2, resizeTextWidth, setPrimitivePropAsSequenced } from '../common';
+import { createRect, createCircle, createTriangle, createTextBox, createShape, gradient, gradient2, resizeTextWidth, setPrimitivePropAsSequenced } from '../common';
+import { getShapePath } from '../shapelib/registry.js';
 
 const colorToHex = (color) => {
     if (!color || color === 'gradient' || color === 'gradient2') return color;
@@ -117,6 +118,17 @@ export const dispatchCommand = (canvas, cmd, generateTheatreID = null, deleteThe
                 if (textbox) { 
                     applyOptions(textbox, cmd.options); 
                     if (generateTheatreID) generateTheatreID(textbox.id, textbox);
+                }
+            }
+            break;
+        case 'createShape':
+            {
+                const svgPath = getShapePath(cmd.shapeName || cmd.shape || (cmd.options && cmd.options.shape));
+                createShape(canvas, svgPath, cmd.size || (cmd.options && cmd.options.size) || 0.4);
+                const pathObj = canvas.getActiveObject();
+                if (pathObj) {
+                    applyOptions(pathObj, cmd.options);
+                    if (generateTheatreID) generateTheatreID(pathObj.id, pathObj);
                 }
             }
             break;

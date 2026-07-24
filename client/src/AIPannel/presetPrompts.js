@@ -1,4 +1,12 @@
 export const presetPrompts = {
+    "SVG Vector Shape Graphics": [
+        "Generate a Star Badge Winner Lower Third with Gold SVG Star",
+        "Create a Shield Rank Leaderboard with SVG Shield Badges",
+        "Generate a Speech Balloon Graphic with SVG Callout",
+        "Create a Crown Leaderboard Badge for Rank #1",
+        "Generate an Arrow Direction Score Bug with SVG Arrow",
+        "Create a Trophy Champion Full-Screen Graphic with SVG Trophy Badge"
+    ],
     "News & Current Affairs": [
         "Create a standard news lower third with a reporter name and location",
         "Generate a TV breaking news ticker for the bottom of the screen",

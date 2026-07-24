@@ -35,7 +35,7 @@ import Effects from "./Effects.jsx";
 import ColorGradient2 from "./ColorGradient2.jsx";
 
 import Crop from "./Crop";
-// import AIPanel from "./AIPannel/AIPannel.jsx";
+import AIPannel from "./AIPannel/AIPannel.jsx";
 import GamesAIPanel from "./GamesAIPanel/GamesAIPanel.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
@@ -502,7 +502,7 @@ const App = () => {
               <Tab className="tabHidden">Effects</Tab>
               <Tab>Crop</Tab>
               <Tab>Games AI</Tab>
-              <Tab className="tabHidden">Test</Tab>
+              <Tab>Test AI</Tab>
               <Tab className="tabHidden">Tsparticles</Tab>
               <Tab className="tabHidden">Data</Tab>
 
@@ -604,7 +604,7 @@ const App = () => {
             </TabPanel>
 
             <TabPanel>
-              test
+              <AIPannel />
             </TabPanel>
             <TabPanel>
               <Tsparticles1 />
