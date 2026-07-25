@@ -29,12 +29,21 @@ const applyOptions = (obj, options = {}) => {
     if (options.radius !== undefined && options.radius !== null) obj.set('radius', options.radius);
     if (options.opacity !== undefined && options.opacity !== null) obj.set('opacity', options.opacity);
     if (options.stroke !== undefined && options.stroke !== null) obj.set('stroke', colorToHex(options.stroke));
-    if (options.strokeWidth !== undefined && options.strokeWidth !== null) obj.set('strokeWidth', options.strokeWidth);
+    if (options.strokeWidth !== undefined && options.strokeWidth !== null) {
+        obj.set('strokeWidth', options.strokeWidth);
+    } else if (obj.type === 'textbox' || obj.type === 'i-text' || obj.type === 'text') {
+        obj.set('strokeWidth', 0);
+    }
     if (options.angle !== undefined && options.angle !== null) obj.set('angle', options.angle);
+    if (options.skewX !== undefined && options.skewX !== null) obj.set('skewX', options.skewX);
+    if (options.skewY !== undefined && options.skewY !== null) obj.set('skewY', options.skewY);
+    if (options.scaleX !== undefined && options.scaleX !== null) obj.set('scaleX', options.scaleX);
+    if (options.scaleY !== undefined && options.scaleY !== null) obj.set('scaleY', options.scaleY);
     if (options.rx !== undefined && options.rx !== null) obj.set('rx', options.rx);
     if (options.ry !== undefined && options.ry !== null) obj.set('ry', options.ry);
     if (options.originX !== undefined && options.originX !== null) obj.set('originX', options.originX);
     if (options.originY !== undefined && options.originY !== null) obj.set('originY', options.originY);
+    if (options.backgroundColor !== undefined && options.backgroundColor !== null) obj.set('backgroundColor', colorToHex(options.backgroundColor));
 
     if (options.className !== undefined && options.className !== null) obj.set('className', sanitizeString(options.className));
     if (options.class !== undefined && options.class !== null) obj.set('className', sanitizeString(options.class));
@@ -122,13 +131,48 @@ export const dispatchCommand = (canvas, cmd, generateTheatreID = null, deleteThe
             }
             break;
         case 'createShape':
+        case 'createPath':
             {
-                const svgPath = getShapePath(cmd.shapeName || cmd.shape || (cmd.options && cmd.options.shape));
+                let svgPath = cmd.path || cmd.pathData || (cmd.options && cmd.options.path);
+                if (!svgPath) {
+                    const sName = cmd.shapeName || cmd.shape || (cmd.options && cmd.options.shapeName) || (cmd.options && cmd.options.shape);
+                    // Check if shapeName itself is a raw path string (starts with m/M)
+                    if (sName && (sName.trim().startsWith('m') || sName.trim().startsWith('M'))) {
+                        svgPath = sName;
+                    } else {
+                        svgPath = getShapePath(sName);
+                    }
+                }
                 createShape(canvas, svgPath, cmd.size || (cmd.options && cmd.options.size) || 0.4);
                 const pathObj = canvas.getActiveObject();
                 if (pathObj) {
                     applyOptions(pathObj, cmd.options);
                     if (generateTheatreID) generateTheatreID(pathObj.id, pathObj);
+                }
+            }
+            break;
+        case 'createImage':
+            {
+                const imageUrl = cmd.url || cmd.src || (cmd.options && cmd.options.url) || (cmd.options && cmd.options.src);
+                if (imageUrl) {
+                    const fabricLib = window.fabric;
+                    if (fabricLib && fabricLib.FabricImage && fabricLib.FabricImage.fromURL) {
+                        fabricLib.FabricImage.fromURL(imageUrl).then(img => {
+                            applyOptions(img, cmd.options);
+                            canvas.add(img);
+                            canvas.setActiveObject(img);
+                            if (generateTheatreID) generateTheatreID(img.id, img);
+                            canvas.requestRenderAll();
+                        }).catch(e => console.error("Error loading createImage for AI canvas:", e));
+                    } else if (fabricLib && fabricLib.Image && fabricLib.Image.fromURL) {
+                        fabricLib.Image.fromURL(imageUrl, (img) => {
+                            applyOptions(img, cmd.options);
+                            canvas.add(img);
+                            canvas.setActiveObject(img);
+                            if (generateTheatreID) generateTheatreID(img.id, img);
+                            canvas.requestRenderAll();
+                        });
+                    }
                 }
             }
             break;
