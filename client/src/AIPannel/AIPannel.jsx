@@ -364,35 +364,7 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
                 }}
             />
             
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                <button
-                    onClick={() => handleGenerate("Analyze the current canvas state and improve the layout, spacing, and typography without changing the text content.")}
-                    style={{ flex: 1, padding: '4px', background: '#333', color: '#00cc66', border: '1px solid #00cc66', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
-                >
-                    ✨ Improve
-                </button>
-                <button
-                    onClick={() => handleGenerate("Upgrade the current canvas state to a premium broadcast aesthetic. Add subtle gradients, drop shadows, and high-contrast accent lines.")}
-                    style={{ flex: 1, padding: '4px', background: '#333', color: '#ffcc00', border: '1px solid #ffcc00', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
-                >
-                    💎 Premium
-                </button>
-                <button
-                    onClick={() => handleGenerate("Do NOT just copy the existing objects. Generate 3 DISTINCT and UNIQUE stylistic variations of the current graphic. Radically change the shapes, colors, typography, and layout for each variation. Distribute them vertically across the canvas so they do not overlap.")}
-                    style={{ flex: 1, padding: '4px', background: '#333', color: '#0099ff', border: '1px solid #0099ff', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
-                >
-                    🔀 Variations
-                </button>
-                <button
-                    onClick={() => {
-                        const lastUserMessage = [...chatHistory].reverse().find(m => m.role === 'user');
-                        if (lastUserMessage) handleGenerate(lastUserMessage.content);
-                    }}
-                    style={{ flex: 1, padding: '4px', background: '#333', color: '#ccc', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '11px' }}
-                >
-                    🔄 Regenerate
-                </button>
-            </div>
+
             
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 <button
