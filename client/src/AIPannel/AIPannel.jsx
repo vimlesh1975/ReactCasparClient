@@ -6,6 +6,7 @@ import { dispatchCommand, postProcessCommands } from './CommandDispatcher';
 
 const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
     const [prompt, setPrompt] = useState('');
+    const [temperature, setTemperature] = useState(1.2);
     const [chatHistory, setChatHistory] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [attachedImage, setAttachedImage] = useState(null); // base64 string
@@ -189,7 +190,7 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
                 },
                 body: JSON.stringify({
                     model: imageToUse ? 'google/gemini-2.5-flash' : 'openai/gpt-4o-mini',
-                    temperature: 1.2,
+                    temperature: parseFloat(temperature),
                     messages: messages
                 }),
             });
@@ -243,6 +244,22 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
             style={{ padding: '12px', background: 'rgba(20,20,20,0.9)', borderRadius: '8px', color: '#fff', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '650px' }}
         >
             <h3 style={{ margin: '0 0 8px 0' }}>AI Studio</h3>
+
+            <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#2a2a2a', padding: '6px 8px', borderRadius: '4px', border: '1px solid #444' }}>
+                <label style={{ fontSize: '11px', color: '#ccc', display: 'flex', alignItems: 'center', gap: '4px' }} title="Controls AI creativity vs strict precision (0.0 = Strict, 2.0 = High Creativity)">
+                    🌡️ <span>Creativity:</span> <b style={{ color: '#ffcc00' }}>{temperature}</b>
+                </label>
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="2" 
+                    step="0.1" 
+                    value={temperature} 
+                    onChange={(e) => setTemperature(parseFloat(e.target.value))}
+                    style={{ width: '100px', cursor: 'pointer', accentColor: '#ffcc00' }}
+                    title={`Temperature: ${temperature}`}
+                />
+            </div>
 
             <select
                 style={{ width: '100%', marginBottom: '8px', padding: '6px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
