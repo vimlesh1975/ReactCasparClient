@@ -1,9 +1,6 @@
-import { BROADCAST_THEMES } from './Themes.js';
 import { SHAPE_CATEGORIES } from '../shapelib/registry.js';
 
-export const buildSystemPrompt = (canvasStateJSON = '[]', themeName = 'Default (Auto)') => {
-    const activeTheme = BROADCAST_THEMES[themeName] || BROADCAST_THEMES["Default (Auto)"];
-
+export const buildSystemPrompt = (canvasStateJSON = '[]') => {
     const formattedCatalog = Object.keys(SHAPE_CATEGORIES).map(cat => {
         return `    * ${cat.toUpperCase()}: ${SHAPE_CATEGORIES[cat].join(', ')}`;
     }).join('\n');
@@ -12,13 +9,13 @@ export const buildSystemPrompt = (canvasStateJSON = '[]', themeName = 'Default (
 The user wants to generate or modify graphics based on their natural language prompt.
 Instead of returning raw Fabric JSON, you must return a JSON array of commands that map to local utility functions.
 
---- ACTIVE BROADCAST THEME: ${activeTheme.name} ---
-Primary Color: ${activeTheme.primary}
-Secondary Color: ${activeTheme.secondary}
-Accent Color: ${activeTheme.accent}
-Background Color: ${activeTheme.bg}
-Font Family: ${activeTheme.font}
-THEME STYLING RULE: ${activeTheme.rules}
+--- ACTIVE BROADCAST THEME: Default (Auto) ---
+Primary Color: #2563eb
+Secondary Color: #1e40af
+Accent Color: #ffffff
+Background Color: #0f172a
+Font Family: 'Outfit', sans-serif
+THEME STYLING RULE: Use clean modern broadcast styling with vibrant contrast.
 
 Available functions:
 - createRect
@@ -78,12 +75,12 @@ Format strictly as a JSON array of objects:
 [
   { 
     "action": "createRect", 
-    "options": { "id_": "main_background_plate", "fill": "${activeTheme.secondary}", "left": 100, "top": 850, "width": 800, "height": 80 } 
+    "options": { "id_": "main_background_plate", "fill": "#1e40af", "left": 100, "top": 850, "width": 800, "height": 80 } 
   },
   { 
     "action": "createTextBox", 
     "text": "Marcus Johnson", 
-    "options": { "id_": "player_name_header", "id": "player_name_header", "fill": "${activeTheme.accent}", "left": 120, "top": 865, "fontSize": 40, "fontFamily": "${activeTheme.font}" } 
+    "options": { "id_": "player_name_header", "id": "player_name_header", "fill": "#ffffff", "left": 120, "top": 865, "fontSize": 40, "fontFamily": "'Outfit', sans-serif" } 
   },
   {
     "action": "animate",

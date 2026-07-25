@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiSend, FiMic, FiTrash2, FiImage, FiX } from 'react-icons/fi';
 import { presetPrompts } from './presetPrompts';
-import { BROADCAST_THEMES } from './Themes';
 import { buildSystemPrompt } from './PromptEngine';
 import { dispatchCommand, postProcessCommands } from './CommandDispatcher';
 
 const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
     const [prompt, setPrompt] = useState('');
-    const [selectedTheme, setSelectedTheme] = useState('Default (Auto)');
     const [chatHistory, setChatHistory] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [attachedImage, setAttachedImage] = useState(null); // base64 string
@@ -164,7 +162,7 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
         try {
             // Extract Canvas State
             const canvasStateJSON = getCanvasState(canvas);
-            const systemPrompt = buildSystemPrompt(canvasStateJSON, selectedTheme);
+            const systemPrompt = buildSystemPrompt(canvasStateJSON);
             const apiUrl = 'https://octopus-app-gzws3.ondigitalocean.app/api/ai/component';
 
             // Construct payload with limited history (last 6 messages to save tokens)
@@ -245,20 +243,6 @@ const AIPannel = ({ generateTheatreID, deleteTheatreID }) => {
             style={{ padding: '12px', background: 'rgba(20,20,20,0.9)', borderRadius: '8px', color: '#fff', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '650px' }}
         >
             <h3 style={{ margin: '0 0 8px 0' }}>AI Studio</h3>
-
-            <div style={{ marginBottom: '8px' }}>
-                <label style={{ fontSize: '11px', color: '#aaa', display: 'block', marginBottom: '3px' }}>🎨 Select Broadcast Theme (10 Themes):</label>
-                <select
-                    style={{ width: '100%', padding: '6px', borderRadius: '4px', background: '#2a2a2a', color: '#ffcc00', border: '1px solid #ffcc00', fontWeight: 'bold' }}
-                    value={selectedTheme}
-                    onChange={(e) => setSelectedTheme(e.target.value)}
-                    title="Broadcast Theme"
-                >
-                    {Object.keys(BROADCAST_THEMES).map(tName => (
-                        <option key={tName} value={tName}>🎭 {tName}</option>
-                    ))}
-                </select>
-            </div>
 
             <select
                 style={{ width: '100%', marginBottom: '8px', padding: '6px', borderRadius: '4px', background: '#333', color: '#fff', border: '1px solid #555' }}
