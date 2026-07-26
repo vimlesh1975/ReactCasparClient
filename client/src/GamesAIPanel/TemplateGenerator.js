@@ -6,6 +6,7 @@
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
 import { generateGymnasticsArtisticHTML, generateGymnasticsArtisticFabric } from './sports/gymnasticsArtistic';
+import { generateArcheryHTML } from './sports/archery';
 
 const RANDOM_ATHLETES_POOL = [
   { name: "Usain Bolt", country: "JAM" },
@@ -219,6 +220,10 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 
   if (code === 'GA' || (sport && sport.code === 'GA')) {
     return generateGymnasticsArtisticHTML(templateId, templateName, data, sport, styleOptions);
+  }
+
+  if (code === 'AR' || (sport && sport.code === 'AR')) {
+    return generateArcheryHTML(templateId, templateName, data, sport, styleOptions);
   }
 
   switch (category) {
