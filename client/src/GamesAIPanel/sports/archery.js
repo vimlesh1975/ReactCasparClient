@@ -3,6 +3,8 @@
  * Exact text, layout, and styling from reference images AR002 through AR038.
  */
 
+import { generateUniqueId } from '../../common';
+
 export function generateArcheryHTML(templateId = '', templateName = '', customData = {}, sport = {}, styleOptions = {}) {
   const font = styleOptions.fontFamily || "'Outfit', 'Roboto Condensed', 'Segoe UI', sans-serif";
 
@@ -3402,3 +3404,546 @@ export function generateArcheryHTML(templateId = '', templateName = '', customDa
     </html>
   `;
 }
+
+export function generateArcheryFabric(templateId = '', templateName = '', data = {}, sport = {}, styleOptions = {}, createProps, fabric) {
+  const normId = (templateId || "").toUpperCase();
+
+  const primaryColor = styleOptions?.primaryColor || '#092552';
+  const secondaryColor = styleOptions?.secondaryColor || '#16407d';
+
+  const objects = [];
+
+  function createRings(rightX = 780, topY = 890) {
+    const circles = [];
+    const rings = [
+      { cx: 0, cy: 0, color: '#38bdf8' },
+      { cx: 16, cy: 0, color: '#fbbf24' },
+      { cx: 32, cy: 0, color: '#ffffff' },
+      { cx: 8, cy: 10, color: '#4ade80' },
+      { cx: 24, cy: 10, color: '#f87171' }
+    ];
+    rings.forEach((r) => {
+      circles.push(new fabric.Circle(createProps('circle', {
+        left: rightX + r.cx,
+        top: topY + r.cy,
+        radius: 7,
+        fill: 'transparent',
+        stroke: r.color,
+        strokeWidth: 2
+      })));
+    });
+    return circles;
+  }
+
+  // ── AR002 / Venue ID ─────────────────────────────────────────────────────
+  if (normId.includes("AR002")) {
+    const bar = new fabric.Rect(createProps('rect', {
+      left: 160, top: 880, width: 680, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5
+    }));
+    const txt = new fabric.Textbox("🎯 LORD'S CRICKET GROUND", createProps('textbox', {
+      left: 180, top: 892, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 480
+    }));
+    const rings = createRings(770, 892);
+    objects.push(bar, txt, ...rings);
+  }
+
+  // ── AR003 / Weather ───────────────────────────────────────────────────────
+  else if (normId.includes("AR003") || normId.includes("WEATHER")) {
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 560, width: 520, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("☀️ ARCHERY", createProps('textbox', { left: 180, top: 572, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 300 }));
+    const rings = createRings(610, 572);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: 160, top: 614, width: 520, height: 28, fill: '#ffffff', rx: 3, ry: 3, skewX: -12 }));
+    const subTxt = new fabric.Textbox("WEATHER", createProps('textbox', { left: 180, top: 619, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 480 }));
+
+    const weatherRows = [
+      { label: "🌡️ TEMPERATURE", val: "31°C" },
+      { label: "🌧️ 24 HOUR RAIN FORECAST", val: "2MM" },
+      { label: "💧 HUMIDITY", val: "77%" },
+      { label: "🧭 WIND DIRECTION", val: "EAST NORTH EAST" },
+      { label: "💨 WIND SPEED", val: "5KM/H" }
+    ];
+
+    weatherRows.forEach((row, idx) => {
+      const topOffset = 644 + (idx * 40);
+      const rowBg = new fabric.Rect(createProps('rect', { left: 160, top: topOffset, width: 520, height: 38, fill: secondaryColor, rx: 3, ry: 3, skewX: -12, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+      const labelTxt = new fabric.Textbox(row.label, createProps('textbox', { left: 180, top: topOffset + 9, fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 320 }));
+      const valTxt = new fabric.Textbox(row.val, createProps('textbox', { left: 500, top: topOffset + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 160, textAlign: 'right' }));
+      objects.push(rowBg, labelTxt, valTxt);
+    });
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt);
+  }
+
+  // ── AR004 / Event Schedule (Variant A / Variant B) ───────────────────────
+  else if (normId.includes("AR004")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR004B");
+
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 620, width: 650, height: 54, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🎯 ARCHERY", createProps('textbox', { left: 180, top: 633, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 350 }));
+    const rings = createRings(720, 633);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: 160, top: 676, width: 650, height: 28, fill: '#ffffff', rx: 3, ry: 3, skewX: -12 }));
+    const subTxt = new fabric.Textbox("LORD'S CRICKET GROUND", createProps('textbox', { left: 180, top: 681, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 600 }));
+
+    const rowsData = isVariantB ? [
+      "MEN'S TEAM - QUARTER-FINALS",
+      "MEN'S TEAM - SEMI-FINALS",
+      "MEN'S TEAM - BRONZE MEDAL MATCH",
+      "MEN'S TEAM - GOLD MEDAL MATCH"
+    ] : [
+      "MEN'S RANKING ROUND"
+    ];
+
+    rowsData.forEach((rowStr, idx) => {
+      const topOffset = 706 + (idx * 40);
+      const rowBg = new fabric.Rect(createProps('rect', { left: 160, top: topOffset, width: 650, height: 38, fill: secondaryColor, rx: 3, ry: 3, skewX: -12, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+      const rowTxt = new fabric.Textbox(rowStr, createProps('textbox', { left: 180, top: topOffset + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 610 }));
+      objects.push(rowBg, rowTxt);
+    });
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt);
+  }
+
+  // ── AR005 / Athlete ID (Variant A / Variant B with DSQ) ──────────────────
+  else if (normId.includes("AR005")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR005B");
+
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 720, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const athTxt = new fabric.Textbox("RUS 🇷🇺 ANDREY ABRAMOV", createProps('textbox', { left: 180, top: 892, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 460 }));
+
+    if (isVariantB) {
+      const dsqBg = new fabric.Rect(createProps('rect', { left: 690, top: 891, width: 55, height: 30, fill: '#ffffff', rx: 4, ry: 4, skewX: -15 }));
+      const dsqTxt = new fabric.Textbox("DSQ", createProps('textbox', { left: 690, top: 896, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 55, textAlign: 'center' }));
+      const rings = createRings(765, 892);
+      objects.push(bar, athTxt, dsqBg, dsqTxt, ...rings);
+    } else {
+      const rings = createRings(770, 892);
+      objects.push(bar, athTxt, ...rings);
+    }
+  }
+
+  // ── AR006 / Coach ID ─────────────────────────────────────────────────────
+  else if (normId.includes("AR006")) {
+    const topBar = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, ry: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const nameTxt = new fabric.Textbox("ITA 🇮🇹 FILIPPO CLINI", createProps('textbox', { left: 180, top: 852, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 480 }));
+    const rings = createRings(790, 852);
+
+    const subBar = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#061836', rx: 0, ry: 0, skewX: -15, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+    const subTxt = new fabric.Textbox("COACH", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600, letterSpacing: 2 }));
+
+    objects.push(topBar, nameTxt, ...rings, subBar, subTxt);
+  }
+
+  // ── AR007 / Arrow Speed Bug ───────────────────────────────────────────────
+  else if (normId.includes("AR007")) {
+    const pill = new fabric.Rect(createProps('rect', { left: 160, top: 120, width: 280, height: 46, fill: '#e2e8f0', rx: 18, ry: 18, skewX: -15, stroke: '#ffffff', strokeWidth: 2 }));
+    const speedTxt = new fabric.Textbox("SPEED 125KM/H", createProps('textbox', { left: 175, top: 132, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#0f2b5c', width: 250, textAlign: 'center' }));
+
+    objects.push(pill, speedTxt);
+  }
+
+  // ── AR008 / Bracket to Phase (1/32 → 1/16) ──────────────────────────────
+  else if (normId.includes("AR008")) {
+    const cx = 550; // Centre-region anchor
+    const headBg = new fabric.Rect(createProps('rect', { left: cx, top: 180, width: 820, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🎯 MEN'S INDIVIDUAL", createProps('textbox', { left: cx + 18, top: 192, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500 }));
+    const rings = createRings(cx + 720, 192);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: cx, top: 234, width: 820, height: 28, fill: '#ffffff', rx: 3, ry: 3, skewX: -12 }));
+    const subTxt = new fabric.Textbox("1/32 ELIMINATIONS ➔ 1/16 ELIMINATIONS", createProps('textbox', { left: cx + 18, top: 239, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 780 }));
+
+    const matchRows = [
+      ["GBR 🇬🇧 SIMON TERRY", "FIN 🇫🇮 MATTI HATAVA"],
+      ["FIN 🇫🇮 MATTI HATAVA", ""],
+      ["AUS 🇦🇺 MATTHEW GRAY", "MAS 🇲🇾 CHU SIAN CHENG"],
+      ["MAS 🇲🇾 CHU SIAN CHENG", ""]
+    ];
+    matchRows.forEach(([left, right], idx) => {
+      const top = 264 + idx * 40;
+      const rowBg = new fabric.Rect(createProps('rect', { left: cx, top, width: 820, height: 38, fill: secondaryColor, rx: 3, ry: 3, skewX: -12, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+      const leftTxt = new fabric.Textbox(left, createProps('textbox', { left: cx + 18, top: top + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 380 }));
+      const rightTxt = new fabric.Textbox(right, createProps('textbox', { left: cx + 420, top: top + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 380 }));
+      objects.push(rowBg, leftTxt, rightTxt);
+    });
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt);
+  }
+
+  // ── AR009 / Bracket to Gold Medal Match (Semi → Gold) ────────────────────
+  else if (normId.includes("AR009")) {
+    const cx = 550;
+    const headBg = new fabric.Rect(createProps('rect', { left: cx, top: 220, width: 820, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🎯 MEN'S INDIVIDUAL", createProps('textbox', { left: cx + 18, top: 232, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500 }));
+    const rings = createRings(cx + 720, 232);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: cx, top: 274, width: 820, height: 28, fill: '#ffffff', rx: 3, ry: 3, skewX: -12 }));
+    const subTxt = new fabric.Textbox("SEMI-FINALS ➔ GOLD MEDAL MATCH", createProps('textbox', { left: cx + 18, top: 279, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 780 }));
+
+    const matchRows = [
+      ["MEX 🇲🇽 JUAN RENE SERRANO", "KOR 🇰🇷 PARK KYUNG-MO"],
+      ["KOR 🇰🇷 PARK KYUNG-MO", ""],
+      ["UKR 🇺🇦 VIKTOR RUBAN", "UKR 🇺🇦 VIKTOR RUBAN"],
+      ["RUS 🇷🇺 BAIR BADENOV", ""]
+    ];
+    matchRows.forEach(([left, right], idx) => {
+      const top = 304 + idx * 40;
+      const rowBg = new fabric.Rect(createProps('rect', { left: cx, top, width: 820, height: 38, fill: secondaryColor, rx: 3, ry: 3, skewX: -12, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+      const leftTxt = new fabric.Textbox(left, createProps('textbox', { left: cx + 18, top: top + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 380 }));
+      const rightTxt = new fabric.Textbox(right, createProps('textbox', { left: cx + 420, top: top + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 380 }));
+      objects.push(rowBg, leftTxt, rightTxt);
+    });
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt);
+  }
+
+  // ── AR010 / Final Rank (A=Individual 8-wide, B=Team 6-wide) ──────────────
+  else if (normId.includes("AR010")) {
+    const isVarB10 = normId.endsWith("B") || normId.includes("AR010B");
+    const ev10 = isVarB10 ? "MEN'S TEAM" : "MEN'S INDIVIDUAL";
+    const cx10 = 550;
+    const top10 = isVarB10 ? 220 : 200;
+    const h10 = new fabric.Rect(createProps('rect', { left: cx10, top: top10, width: 860, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const t10 = new fabric.Textbox(`🎯 ${ev10}`, createProps('textbox', { left: cx10 + 18, top: top10 + 12, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+    const r10 = createRings(cx10 + 760, top10 + 12);
+    const sb10 = new fabric.Rect(createProps('rect', { left: cx10, top: top10 + 54, width: 860, height: 28, fill: '#ffffff', rx: 3, skewX: -12 }));
+    const st10 = new fabric.Textbox("FINAL RANK", createProps('textbox', { left: cx10 + 18, top: top10 + 59, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 820 }));
+    objects.push(h10, t10, ...r10, sb10, st10);
+    const rows10 = isVarB10 ? [
+      { rank:'1', text:'KOR 🇰🇷  KOREA' },
+      { rank:'2', text:'ITA 🇮🇹  ITALY' },
+      { rank:'3', text:'CHN 🇨🇳  CHINA' },
+      { rank:'4', text:'UKR 🇺🇦  UKRAINE' },
+      { rank:'5', text:'POL 🇵🇱  POLAND' },
+      { rank:'6', text:'RUS 🇷🇺  RUSSIAN FEDERATION' }
+    ] : [
+      { rank:'1', text:'UKR 🇺🇦  VIKTOR RUBAN' },
+      { rank:'2', text:'KOR 🇰🇷  PARK KYUNG-MO' },
+      { rank:'3', text:'RUS 🇷🇺  BAIR BADENOV' },
+      { rank:'4', text:'MEX 🇲🇽  JUAN RENE SERRANO' },
+      { rank:'5', text:'JPN 🇯🇵  RYUICHI MORIYA' },
+      { rank:'5', text:'USA 🇺🇸  VICTOR WUNDERLE' },
+      { rank:'5', text:'CUB 🇨🇺  JUAN CARLOS STEVENS' },
+      { rank:'5', text:'MAS 🇲🇾  CHU SIAN CHENG' }
+    ];
+    rows10.forEach(({ rank, text }, idx) => {
+      const top = top10 + 84 + idx * 44;
+      const rkBg = new fabric.Rect(createProps('rect', { left: cx10, top, width: 45, height: 42, fill: '#dc2626', rx: 0 }));
+      const rkTxt = new fabric.Textbox(rank, createProps('textbox', { left: cx10 + 5, top: top + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 35, textAlign: 'center' }));
+      const rBg = new fabric.Rect(createProps('rect', { left: cx10 + 45, top, width: 815, height: 42, fill: secondaryColor, skewX: -12 }));
+      const rTxt = new fabric.Textbox(text, createProps('textbox', { left: cx10 + 58, top: top + 10, fontSize: 19, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 780 }));
+      objects.push(rkBg, rkTxt, rBg, rTxt);
+    });
+  }
+
+  // ── AR011 / Ceremony ID (Event name + VICTORY CEREMONY sub-bar) ──────────
+  else if (normId.includes("AR011")) {
+    const topBar11 = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const nameTxt11 = new fabric.Textbox("🎯 MEN'S INDIVIDUAL", createProps('textbox', { left: 180, top: 852, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 480 }));
+    const rings11 = createRings(790, 852);
+    const sub11 = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#a8d5e5', rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.6)', strokeWidth: 1 }));
+    const st11 = new fabric.Textbox("VICTORY CEREMONY", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 600 }));
+    objects.push(topBar11, nameTxt11, ...rings11, sub11, st11);
+  }
+
+  // ── AR012 / Medal ID (athlete name + GOLD sub-bar) ───────────────────────
+  else if (normId.includes("AR012")) {
+    const topBar12 = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const nameTxt12 = new fabric.Textbox("UKR 🇺🇦 VIKTOR RUBAN", createProps('textbox', { left: 180, top: 852, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 480 }));
+    const rings12 = createRings(790, 852);
+    const sub12 = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#061836', rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+    const st12 = new fabric.Textbox("🥇  GOLD - MEN'S INDIVIDUAL", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 640 }));
+    objects.push(topBar12, nameTxt12, ...rings12, sub12, st12);
+  }
+
+  // ── AR013 / Medals List (Victory Ceremony, left-panel, 3 medal rows) ─────
+  else if (normId.includes("AR013")) {
+    const h13 = new fabric.Rect(createProps('rect', { left: 160, top: 700, width: 680, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const t13 = new fabric.Textbox("🎯 MEN'S INDIVIDUAL", createProps('textbox', { left: 180, top: 712, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 450 }));
+    const r13 = createRings(760, 712);
+    const sb13 = new fabric.Rect(createProps('rect', { left: 160, top: 754, width: 680, height: 28, fill: '#a8d5e5', rx: 3, skewX: -12 }));
+    const st13 = new fabric.Textbox("VICTORY CEREMONY", createProps('textbox', { left: 180, top: 759, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 640 }));
+    objects.push(h13, t13, ...r13, sb13, st13);
+    [
+      { medal:'🥇', noc:'UKR', flag:'🇺🇦', name:'VIKTOR RUBAN' },
+      { medal:'🥈', noc:'KOR', flag:'🇰🇷', name:'PARK KYUNG-MO' },
+      { medal:'🥉', noc:'RUS', flag:'🇷🇺', name:'BAIR BADENOV' }
+    ].forEach(({ medal, noc, flag, name }, idx) => {
+      const top = 784 + idx * 42;
+      const rBg = new fabric.Rect(createProps('rect', { left: 160, top, width: 680, height: 40, fill: secondaryColor, rx: 3, skewX: -12 }));
+      const rTxt = new fabric.Textbox(`${medal}  ${noc} ${flag}  ${name}`, createProps('textbox', { left: 178, top: top + 10, fontSize: 19, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 640 }));
+      objects.push(rBg, rTxt);
+    });
+  }
+
+  // ── AR014 / Medal Presenter ID (JACQUES ROGGE / IOC PRESIDENT) ───────────
+  else if (normId.includes("AR014")) {
+    const topBar14 = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const nameTxt14 = new fabric.Textbox("JACQUES ROGGE", createProps('textbox', { left: 180, top: 852, fontSize: 25, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 460 }));
+    const rings14 = createRings(790, 852);
+    const sub14 = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#061836', rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+    const st14 = new fabric.Textbox("IOC PRESIDENT, BELGIUM", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 640 }));
+    objects.push(topBar14, nameTxt14, ...rings14, sub14, st14);
+  }
+
+  // ── AR015 / Flower Presenter ID (MR JAMES L. EASTON / HONORARY PRESIDENT) ─
+  else if (normId.includes("AR015")) {
+    const topBar15 = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const nameTxt15 = new fabric.Textbox("MR JAMES L. EASTON", createProps('textbox', { left: 180, top: 852, fontSize: 25, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 460 }));
+    const rings15 = createRings(790, 852);
+    const sub15 = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#061836', rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+    const st15 = new fabric.Textbox("HONORARY PRESIDENT, FITA", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 640 }));
+    objects.push(topBar15, nameTxt15, ...rings15, sub15, st15);
+  }
+
+  // ── AR016 / Records (A=Individual 72 Arrows, B=Team 24 Arrows) ───────────
+  else if (normId.includes("AR016")) {
+    const isVarB16 = normId.includes("AR016B");
+    const sub16 = isVarB16 ? "MEN'S TEAM - 24 ARROWS" : "MEN'S INDIVIDUAL - 72 ARROWS";
+    const rec16 = isVarB16 ? [
+      { noc:'KOR', flag:'🇰🇷', name:'KOREA',             year:'2007', badge:'WR', score:'231' },
+      { noc:'KOR', flag:'🇰🇷', name:'KOREA',             year:'2008', badge:'OR', score:'224' }
+    ] : [
+      { noc:'KOR', flag:'🇰🇷', name:'IM DONG-HYUN',     year:'2004', badge:'WR', score:'687' },
+      { noc:'ITA', flag:'🇮🇹', name:'MICHELE FRANGILLI', year:'1996', badge:'OR', score:'684' }
+    ];
+    const h16 = new fabric.Rect(createProps('rect', { left: 160, top: 700, width: 720, height: 52, fill: primaryColor, rx: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const t16 = new fabric.Textbox("🎯 ARCHERY", createProps('textbox', { left: 180, top: 712, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 450 }));
+    const r16 = createRings(770, 712);
+    const sb16 = new fabric.Rect(createProps('rect', { left: 160, top: 754, width: 720, height: 28, fill: '#a8d5e5', rx: 3, skewX: -12 }));
+    const st16 = new fabric.Textbox(sub16, createProps('textbox', { left: 180, top: 759, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 680 }));
+    objects.push(h16, t16, ...r16, sb16, st16);
+    rec16.forEach(({ noc, flag, name, year, badge, score }, idx) => {
+      const top = 784 + idx * 42;
+      const rBg = new fabric.Rect(createProps('rect', { left: 160, top, width: 720, height: 40, fill: secondaryColor, rx: 3, skewX: -12 }));
+      const lT = new fabric.Textbox(`${noc} ${flag}  ${name}`, createProps('textbox', { left: 178, top: top + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 380 }));
+      const bBg = new fabric.Rect(createProps('rect', { left: 710, top: top + 8, width: 36, height: 24, fill: badge === 'WR' ? '#eab308' : '#94a3b8', rx: 4 }));
+      const bTxt = new fabric.Textbox(badge, createProps('textbox', { left: 712, top: top + 11, fontSize: 13, fontWeight: 'bold', fill: '#092552', width: 32, textAlign: 'center' }));
+      const rT2 = new fabric.Textbox(`${year}   ${score}`, createProps('textbox', { left: 750, top: top + 10, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right' }));
+      objects.push(rBg, lT, bBg, bTxt, rT2);
+    });
+  }
+
+  // ── AR017 / Ranking Round Score (rank badge + WR sub-bar) ────────────────
+  else if (normId.includes("AR017")) {
+    const bar17 = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 720, height: 52, fill: primaryColor, rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const rkBg17 = new fabric.Rect(createProps('rect', { left: 162, top: 843, width: 44, height: 46, fill: '#dc2626', rx: 0 }));
+    const rkTxt17 = new fabric.Textbox("1", createProps('textbox', { left: 166, top: 852, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 36, textAlign: 'center' }));
+    const ath17 = new fabric.Textbox("MEX 🇲🇽  JUAN RENE SERRANO", createProps('textbox', { left: 215, top: 852, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 440 }));
+    const rng17 = createRings(790, 852);
+    const sub17 = new fabric.Rect(createProps('rect', { left: 160, top: 893, width: 720, height: 28, fill: '#061836', rx: 0, skewX: -15, stroke: 'rgba(255,255,255,0.2)', strokeWidth: 1 }));
+    const wrBg17 = new fabric.Rect(createProps('rect', { left: 543, top: 897, width: 32, height: 20, fill: '#eab308', rx: 3 }));
+    const wrT17 = new fabric.Textbox("WR", createProps('textbox', { left: 544, top: 899, fontSize: 12, fontWeight: 'bold', fill: '#092552', width: 30, textAlign: 'center' }));
+    const st17 = new fabric.Textbox("RANKING ROUND  688", createProps('textbox', { left: 180, top: 899, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 360 }));
+    objects.push(bar17, rkBg17, rkTxt17, ath17, ...rng17, sub17, st17, wrBg17, wrT17);
+  }
+
+  // ── AR018 / Standings (10-row centred board with red rank badges + WR) ───
+  else if (normId.includes("AR018")) {
+    const cx18 = 530;
+    const hBg18 = new fabric.Rect(createProps('rect', { left: cx18, top: 160, width: 880, height: 48, fill: primaryColor, rx: 6, skewX: -12, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const hTxt18 = new fabric.Textbox("🎯 MEN'S INDIVIDUAL", createProps('textbox', { left: cx18 + 18, top: 172, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+    const rng18 = createRings(cx18 + 780, 172);
+    const sBg18 = new fabric.Rect(createProps('rect', { left: cx18, top: 210, width: 880, height: 28, fill: '#a8d5e5', rx: 3, skewX: -12 }));
+    const sT18 = new fabric.Textbox("RANKING ROUND STANDINGS", createProps('textbox', { left: cx18 + 18, top: 215, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 840 }));
+    objects.push(hBg18, hTxt18, ...rng18, sBg18, sT18);
+    [
+      { rank:'1',  noc:'MEX', flag:'🇲🇽', name:'JUAN RENE SERRANO',       wr:true,  score:'688' },
+      { rank:'2',  noc:'IND', flag:'🇮🇳', name:'MANGAL SINGH CHAMPIA',    wr:false, score:'678' },
+      { rank:'3',  noc:'UKR', flag:'🇺🇦', name:'VIKTOR RUBAN',            wr:false, score:'678' },
+      { rank:'4',  noc:'KOR', flag:'🇰🇷', name:'PARK KYUNG-MO',           wr:false, score:'676' },
+      { rank:'5',  noc:'MAS', flag:'🇲🇾', name:'WAN KHALMIZAM',           wr:false, score:'674' },
+      { rank:'6',  noc:'RUS', flag:'🇷🇺', name:'BALJINIMA TSYREMPILOV',  wr:false, score:'671' },
+      { rank:'7',  noc:'GBR', flag:'🇬🇧', name:'SIMON TERRY',             wr:false, score:'670' },
+      { rank:'8',  noc:'KOR', flag:'🇰🇷', name:'IM DONG-HYUN',            wr:false, score:'670' },
+      { rank:'9',  noc:'CHN', flag:'🇨🇳', name:'JIANG LIN',               wr:false, score:'670' },
+      { rank:'10', noc:'KOR', flag:'🇰🇷', name:'LEE CHANG-HWAN',          wr:false, score:'669' }
+    ].forEach(({ rank, noc, flag, name, wr, score }, idx) => {
+      const top = 240 + idx * 38;
+      const rBg = new fabric.Rect(createProps('rect', { left: cx18, top, width: 40, height: 38, fill: '#dc2626' }));
+      const rTxt = new fabric.Textbox(rank, createProps('textbox', { left: cx18 + 2, top: top + 9, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 36, textAlign: 'center' }));
+      const rowBg = new fabric.Rect(createProps('rect', { left: cx18 + 40, top, width: 840, height: 38, fill: secondaryColor, skewX: -12 }));
+      const lT = new fabric.Textbox(`${noc} ${flag}  ${name}`, createProps('textbox', { left: cx18 + 54, top: top + 10, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+      const sT = new fabric.Textbox(score, createProps('textbox', { left: cx18 + 780, top: top + 10, fontSize: 17, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 80, textAlign: 'right' }));
+      objects.push(rBg, rTxt, rowBg, lT, sT);
+      if (wr) {
+        const wBg = new fabric.Rect(createProps('rect', { left: cx18 + 740, top: top + 9, width: 28, height: 20, fill: '#eab308', rx: 3 }));
+        const wT = new fabric.Textbox('WR', createProps('textbox', { left: cx18 + 741, top: top + 11, fontSize: 12, fontWeight: 'bold', fill: '#092552', width: 26, textAlign: 'center' }));
+        objects.push(wBg, wT);
+      }
+    });
+  }
+
+  // ── AR022 / Set Scoreboard ───────────────────────────────────────────────
+  else if (normId.includes("AR022")) {
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 740, width: 760, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🏹 MEN'S INDIVIDUAL - GOLD MEDAL MATCH", createProps('textbox', { left: 180, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 560 }));
+    const rings = createRings(850, 752);
+
+    const r1Bg = new fabric.Rect(createProps('rect', { left: 160, top: 796, width: 760, height: 42, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r1Txt = new fabric.Textbox("KOR 🇰🇷 OH JIN-HYEK                      7 (29, 29, 29, 28)", createProps('textbox', { left: 180, top: 806, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 720 }));
+
+    const r2Bg = new fabric.Rect(createProps('rect', { left: 160, top: 840, width: 760, height: 42, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r2Txt = new fabric.Textbox("JPN 🇯🇵 TAKAHARU FURUKAWA               1 (26, 28, 29, 25)", createProps('textbox', { left: 180, top: 850, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 720 }));
+
+    objects.push(headBg, titleTxt, ...rings, r1Bg, r1Txt, r2Bg, r2Txt);
+  }
+
+  // ── AR025 / Shoot-Off Scoreboard (Individual) ────────────────────────────
+  else if (normId.includes("AR025")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR025B");
+    const subTitle = isVariantB ? "SHOOT-OFF - 1/16 ELIMINATION" : "SHOOT-OFF - BRONZE MEDAL MATCH";
+    const archer1 = isVariantB ? "UKR 🇺🇦 VIKTOR RUBAN                   10" : "MEX 🇲🇽 JUAN RENE SERRANO              10";
+    const archer2 = isVariantB ? "AUS 🇦🇺 MICHAEL NARAY                 10*" : "RUS 🇷🇺 BAIR BADENOV                      9";
+
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 740, width: 720, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🏹 MEN'S INDIVIDUAL", createProps('textbox', { left: 180, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 520 }));
+    const rings = createRings(810, 752);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: 160, top: 794, width: 720, height: 32, fill: '#ffffff', rx: 3, ry: 3, skewX: -15 }));
+    const subTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 180, top: 800, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 680 }));
+
+    const r1Bg = new fabric.Rect(createProps('rect', { left: 160, top: 828, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r1Txt = new fabric.Textbox(archer1, createProps('textbox', { left: 180, top: 838, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    const r2Bg = new fabric.Rect(createProps('rect', { left: 160, top: 870, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r2Txt = new fabric.Textbox(archer2, createProps('textbox', { left: 180, top: 880, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt, r1Bg, r1Txt, r2Bg, r2Txt);
+  }
+
+  // ── AR026 / Winner ID ────────────────────────────────────────────────────
+  else if (normId.includes("AR026")) {
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 720, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const athTxt = new fabric.Textbox("MATCH WINNER   KOR 🇰🇷 OH JIN-HYEK", createProps('textbox', { left: 180, top: 892, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 560 }));
+    const rings = createRings(810, 892);
+
+    objects.push(bar, athTxt, ...rings);
+  }
+
+  // ── AR031 / Team Scoreboard ──────────────────────────────────────────────
+  else if (normId.includes("AR031")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR031B");
+    const subTitle = isVariantB ? "GOLD MEDAL MATCH" : "BRONZE MEDAL MATCH";
+    const team1 = isVariantB ? "KOR 🇰🇷 KOREA (OR)                         225" : "CHN 🇨🇳 CHINA                                85";
+    const team2 = isVariantB ? "ITA 🇮🇹 ITALY                               218" : "UKR 🇺🇦 UKRAINE                              83";
+
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 740, width: 720, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🏹 MEN'S TEAM", createProps('textbox', { left: 180, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 520 }));
+    const rings = createRings(810, 752);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: 160, top: 794, width: 720, height: 32, fill: '#ffffff', rx: 3, ry: 3, skewX: -15 }));
+    const subTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 180, top: 800, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 680 }));
+
+    const r1Bg = new fabric.Rect(createProps('rect', { left: 160, top: 828, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r1Txt = new fabric.Textbox(team1, createProps('textbox', { left: 180, top: 838, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    const r2Bg = new fabric.Rect(createProps('rect', { left: 160, top: 870, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r2Txt = new fabric.Textbox(team2, createProps('textbox', { left: 180, top: 880, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt, r1Bg, r1Txt, r2Bg, r2Txt);
+  }
+
+  // ── AR033 / Team Winner ID ───────────────────────────────────────────────
+  else if (normId.includes("AR033")) {
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 680, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const athTxt = new fabric.Textbox("MATCH WINNER   ITA 🇮🇹 ITALY   219", createProps('textbox', { left: 180, top: 892, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 520 }));
+    const rings = createRings(770, 892);
+
+    objects.push(bar, athTxt, ...rings);
+  }
+
+  // ── AR034 / Clocks (with NOC) ────────────────────────────────────────────
+  else if (normId.includes("AR034")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR034B");
+    const valStr = isVariantB ? "98" : "102";
+    const nocStr = isVariantB ? "KOR 🇰🇷" : "FRA 🇫🇷";
+
+    const pillBg = new fabric.Rect(createProps('rect', { left: 240, top: 880, width: 220, height: 48, fill: '#ffffff', rx: 18, ry: 18, skewX: -15, stroke: '#0f2b5c', strokeWidth: 2 }));
+    const valTxt = new fabric.Textbox(valStr, createProps('textbox', { left: 255, top: 890, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#0f2b5c', width: 60 }));
+    const badgeBg = new fabric.Rect(createProps('rect', { left: 320, top: 880, width: 140, height: 48, fill: primaryColor, rx: 18, ry: 18, skewX: -15 }));
+    const nocTxt = new fabric.Textbox(nocStr, createProps('textbox', { left: 335, top: 890, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 110, textAlign: 'center' }));
+
+    objects.push(pillBg, valTxt, badgeBg, nocTxt);
+  }
+
+  // ── AR035 / Shoot-Off Scoreboard (Team) ──────────────────────────────────
+  else if (normId.includes("AR035")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR035B");
+    const subTitle = isVariantB ? "SHOOT-OFF - GOLD MEDAL MATCH" : "SHOOT-OFF - BRONZE MEDAL MATCH";
+    const team1 = isVariantB ? "KOR 🇰🇷 KOREA                        9    8   10    27" : "CHN 🇨🇳 CHINA                        9    8   10    27";
+    const team2 = isVariantB ? "ITA 🇮🇹 ITALY                        9    8   10    27*" : "UKR 🇺🇦 UKRAINE                      9    8    9    26";
+
+    const headBg = new fabric.Rect(createProps('rect', { left: 160, top: 740, width: 720, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox("🏹 MEN'S TEAM", createProps('textbox', { left: 180, top: 752, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 520 }));
+    const rings = createRings(810, 752);
+
+    const subBg = new fabric.Rect(createProps('rect', { left: 160, top: 794, width: 720, height: 32, fill: '#ffffff', rx: 3, ry: 3, skewX: -15 }));
+    const subTxt = new fabric.Textbox(subTitle, createProps('textbox', { left: 180, top: 800, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#092552', width: 680 }));
+
+    const r1Bg = new fabric.Rect(createProps('rect', { left: 160, top: 828, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r1Txt = new fabric.Textbox(team1, createProps('textbox', { left: 180, top: 838, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    const r2Bg = new fabric.Rect(createProps('rect', { left: 160, top: 870, width: 720, height: 40, fill: secondaryColor, rx: 3, ry: 3, skewX: -15 }));
+    const r2Txt = new fabric.Textbox(team2, createProps('textbox', { left: 180, top: 880, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+
+    objects.push(headBg, titleTxt, ...rings, subBg, subTxt, r1Bg, r1Txt, r2Bg, r2Txt);
+  }
+
+  // ── AR036 / Team ID ──────────────────────────────────────────────────────
+  else if (normId.includes("AR036")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR036B");
+    const textStr = isVariantB ? "GER 🇩🇪 GERMANY  (DSQ)" : "GER 🇩🇪 GERMANY";
+
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 680, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const athTxt = new fabric.Textbox(textStr, createProps('textbox', { left: 180, top: 892, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 520 }));
+    const rings = createRings(770, 892);
+
+    objects.push(bar, athTxt, ...rings);
+  }
+
+  // ── AR037 / Wind Indicator ───────────────────────────────────────────────
+  else if (normId.includes("AR037")) {
+    const isVariantB = normId.endsWith("B") || normId.includes("AR037B");
+    const timerStr = isVariantB ? "98 KOR 🇰🇷" : "12";
+
+    const pillBg = new fabric.Rect(createProps('rect', { left: 240, top: 880, width: 160, height: 48, fill: '#ffffff', rx: 18, ry: 18, skewX: -15, stroke: '#0f2b5c', strokeWidth: 2 }));
+    const valTxt = new fabric.Textbox(timerStr, createProps('textbox', { left: 255, top: 892, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#0f2b5c', width: 130, textAlign: 'center' }));
+
+    const targetBg = new fabric.Circle(createProps('circle', { left: 1540, top: 820, radius: 35, fill: '#ef4444', stroke: '#ffffff', strokeWidth: 3 }));
+    const centerYellow = new fabric.Circle(createProps('circle', { left: 1557, top: 837, radius: 18, fill: '#facc15' }));
+    const speedPill = new fabric.Rect(createProps('rect', { left: 1515, top: 895, width: 120, height: 32, fill: '#ffffff', rx: 12, ry: 12, skewX: -15, stroke: '#0f2b5c', strokeWidth: 2 }));
+    const speedTxt = new fabric.Textbox("1.5M/S", createProps('textbox', { left: 1515, top: 900, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#0f2b5c', width: 120, textAlign: 'center' }));
+
+    objects.push(pillBg, valTxt, targetBg, centerYellow, speedPill, speedTxt);
+  }
+
+  // ── AR038 / Ranking Round Score (with Rank) ──────────────────────────────
+  else if (normId.includes("AR038")) {
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 740, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const athTxt = new fabric.Textbox("RANK 1   KOR 🇰🇷 IM DONG-HYUN   SCORE: 699 (WR)", createProps('textbox', { left: 180, top: 892, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 580 }));
+    const rings = createRings(830, 892);
+
+    objects.push(bar, athTxt, ...rings);
+  }
+
+  // Default fallback for any remaining AR templates
+  else {
+    const bar = new fabric.Rect(createProps('rect', { left: 160, top: 880, width: 680, height: 52, fill: primaryColor, rx: 6, ry: 6, skewX: -15, stroke: 'rgba(255,255,255,0.4)', strokeWidth: 1.5 }));
+    const titleTxt = new fabric.Textbox(`🎯 ${normId} ${templateName || "ARCHERY GRAPHIC"}`, createProps('textbox', { left: 180, top: 892, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 500 }));
+    const rings = createRings(770, 892);
+
+    objects.push(bar, titleTxt, ...rings);
+  }
+
+  const groupId = generateUniqueId({ type: 'group' });
+  const group = new fabric.Group(objects, {
+    id: groupId,
+    class: groupId,
+    subTargetCheck: true,
+    objectCaching: false
+  });
+
+  return group;
+}
+
