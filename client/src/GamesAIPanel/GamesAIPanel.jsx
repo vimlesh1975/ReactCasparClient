@@ -10,6 +10,8 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
   const [selectedTemplateObj, setSelectedTemplateObj] = useState(null);
+  const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
+  const [previewMode, setPreviewMode] = useState('html'); // 'html' or 'reference'
 
   // Helper to map sub-category to template type keyword understood by generateBroadcastHTML
   const mapSubCatToType = (subCat) => {
@@ -98,25 +100,33 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       if (newTemplates && newTemplates.length > 0) {
         setSelectedTemplateType(newTemplates[0].id);
         setSelectedTemplateObj(newTemplates[0]);
+        setSelectedVariationIndex(0);
       }
     }
   }, [selectedSport]);
+
+  const variations = selectedTemplateObj?.variations || [];
+  const activeVariation = variations[selectedVariationIndex] || variations[0];
+  const referenceImagePath = activeVariation?.image || selectedTemplateObj?.images?.[0];
 
   // Derive the semantic template category from the selected template's subCat
   const resolvedTemplateType = selectedTemplateObj
     ? mapSubCatToType(selectedTemplateObj.subCat)
     : (selectedTemplateType || '');
 
-  // Generate current HTML
+  const effectiveTemplateId = (activeVariation && activeVariation.label && activeVariation.label.length === 1)
+    ? `${selectedTemplateType}${activeVariation.label.toLowerCase()}`
+    : selectedTemplateType;
+
+  // Generate current HTML (maintaining the same clean template name across all variations)
   const currentHTML = generateBroadcastHTML(
     selectedSport,
     resolvedTemplateType,
     customFields,
     customColors,
-    selectedTemplateType,
+    effectiveTemplateId,
     selectedTemplateObj?.name || ''
   );
-
 
   const handleAddToCanvas = () => {
     if (!canvas) {
@@ -130,8 +140,8 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       resolvedType,
       customFields,
       customColors,
-      selectedTemplateType,
-      templateInfo?.name || ''
+      effectiveTemplateId,
+      selectedTemplateObj?.name || ''
     );
 
     canvas.add(group);
@@ -143,6 +153,13 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
     }
   };
 
+  const getFullImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${process.env.PUBLIC_URL || ''}${cleanPath}`;
+  };
+
   return (
     <div className="games-ai-container">
 
@@ -151,7 +168,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
         {/* Left Column: Select Sport */}
         <div className="sidebar-panel">
-          <div className="section-label">1. Select Sport</div>
+          <div className="section-label">1. Select Sport ({filteredSports.length})</div>
           <input
             type="text"
             className="search-input"
@@ -162,8 +179,8 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
           <div className="sports-list">
             {filteredSports.map(sport => (
               <div
-                key={sport.id}
-                className={`sport-item ${selectedSport.id === sport.id ? 'active' : ''}`}
+                key={sport.id || sport.code}
+                className={`sport-item ${selectedSport.code === sport.code ? 'active' : ''}`}
                 onClick={() => setSelectedSport(sport)}
               >
                 <span>{sport.name}</span>
@@ -175,7 +192,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
         {/* Right Column: Templates */}
         <div className="templates-panel">
-          <div className="section-label">2. Select Template</div>
+          <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
           <input
             type="text"
             className="search-input"
@@ -188,7 +205,11 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
               <button
                 key={tt.id}
                 className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
-                onClick={() => { setSelectedTemplateType(tt.id); setSelectedTemplateObj(tt); }}
+                onClick={() => {
+                  setSelectedTemplateType(tt.id);
+                  setSelectedTemplateObj(tt);
+                  setSelectedVariationIndex(0);
+                }}
                 title={tt.name}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -211,9 +232,43 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       {/* ── Bottom: Graphics / Preview Area ── */}
       <div className="main-preview-area">
 
-        {/* Live Preview */}
+        {/* Controls Bar above preview */}
+        <div className="preview-controls-header">
+          <div className="preview-mode-tabs">
+            <button
+              className={`preview-mode-tab ${previewMode === 'html' ? 'active' : ''}`}
+              onClick={() => setPreviewMode('html')}
+            >
+              📺 Live Broadcast Render
+            </button>
+            <button
+              className={`preview-mode-tab ${previewMode === 'reference' ? 'active' : ''}`}
+              onClick={() => setPreviewMode('reference')}
+            >
+              🖼️ Reference Guide Image
+            </button>
+          </div>
+
+          {variations.length > 1 && (
+            <div className="variations-pills">
+              <span className="variation-label">Variation:</span>
+              {variations.map((v, idx) => (
+                <button
+                  key={idx}
+                  className={`variation-pill ${selectedVariationIndex === idx ? 'active' : ''}`}
+                  onClick={() => setSelectedVariationIndex(idx)}
+                >
+                  Variant {v.label.toUpperCase()} {v.page ? `(p.${v.page})` : ''}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Preview Frame */}
         <div className="preview-frame-container" ref={previewContainerRef}>
           <span className="preview-res-badge">1920 × 1080</span>
+          
           <iframe
             ref={iframeRef}
             className="preview-iframe"
@@ -226,13 +281,28 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
               border: 'none',
               transformOrigin: 'top left',
               transform: `scale(${previewScale})`,
-              display: 'block',
+              display: previewMode === 'html' ? 'block' : 'none',
               pointerEvents: 'none'
             }}
           />
+
+          {previewMode === 'reference' && (
+            <div className="reference-image-wrapper">
+              {referenceImagePath ? (
+                <img
+                  src={getFullImageUrl(referenceImagePath)}
+                  alt={selectedTemplateObj?.title || 'Graphic Reference'}
+                  className="reference-preview-image"
+                  onError={(e) => {
+                    console.error('Failed to load image:', e.target.src);
+                  }}
+                />
+              ) : (
+                <div className="no-reference-msg">No Reference Image Available</div>
+              )}
+            </div>
+          )}
         </div>
-
-
 
       </div>
 
@@ -241,3 +311,4 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 };
 
 export default GamesAIPanel;
+

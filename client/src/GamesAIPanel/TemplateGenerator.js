@@ -205,11 +205,17 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
   const sportIcon = SPORT_ICONS[code] || "🏅";
   const category = resolveCategory(templateType, templateName, templateId);
 
-  // Derive a 1-based variant index from the template ID numeric suffix
-  // e.g. CF001 → 1, AT003 → 3, SW007 → 7  → mapped to variant 1-5
-  const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
-  // We use a 5-variant cycle so each template in a sub-category looks different
-  const variant = ((idNum - 1) % 5) + 1;
+  // Derive a 1-based variant index from the template ID suffix or number
+  let variant = 1;
+  const match = (templateId || '').match(/([0-9]+)([a-z])?/i);
+  if (match) {
+    if (match[2]) {
+      variant = match[2].toLowerCase().charCodeAt(0) - 96;
+    } else {
+      const num = parseInt(match[1], 10) || 1;
+      variant = ((num - 1) % 5) + 1;
+    }
+  }
 
   if (code === 'GA' || (sport && sport.code === 'GA')) {
     return generateGymnasticsArtisticHTML(templateId, templateName, data, sport, styleOptions);

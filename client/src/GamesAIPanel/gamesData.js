@@ -1,6 +1,78 @@
 import * as RealTemplates from "./real_templates_output";
+import dataJSON from "./data.json";
 
-export const OLYMPIC_GAMES_DATA = [
+const SPORT_COLORS = {
+  AR: { primary: "#27ae60", secondary: "#2ecc71", accent: "#f39c12", category: "Precision", venue: "Lord's Cricket Ground" },
+  GA: { primary: "#0f172a", secondary: "#1e293b", accent: "#38bdf8", category: "Gymnastics", venue: "North Greenwich Arena" },
+  AT: { primary: "#c0392b", secondary: "#e74c3c", accent: "#f1c40f", category: "Athletics", venue: "Olympic Stadium" },
+  CB: { primary: "#e74c3c", secondary: "#c0392b", accent: "#f1c40f", category: "Cycling", venue: "BMX Track" },
+  BD: { primary: "#d35400", secondary: "#e67e22", accent: "#ffffff", category: "Racquet", venue: "Wembley Arena" },
+  BK: { primary: "#e67e22", secondary: "#d35400", accent: "#ffffff", category: "Ball Sports", venue: "North Greenwich Arena" },
+  BV: { primary: "#f1c40f", secondary: "#f39c12", accent: "#2980b9", category: "Ball Sports", venue: "Horse Guards Parade" },
+  BX: { primary: "#c0392b", secondary: "#2c3e50", accent: "#f1c40f", category: "Combat", venue: "ExCeL London" },
+  CS: { primary: "#16a085", secondary: "#1abc9c", accent: "#ffffff", category: "Canoe", venue: "Lee Valley White Water Centre" },
+  CF: { primary: "#2980b9", secondary: "#3498db", accent: "#f1c40f", category: "Canoe", venue: "Eton Dorney" },
+  CR: { primary: "#8e44ad", secondary: "#9b59b6", accent: "#f1c40f", category: "Cycling", venue: "The Mall" },
+  CT: { primary: "#2980b9", secondary: "#1f618d", accent: "#f1c40f", category: "Cycling", venue: "London Velopark" },
+  DV: { primary: "#005b96", secondary: "#6497b1", accent: "#ffd700", category: "Aquatics", venue: "Aquatics Centre" },
+  EQ: { primary: "#4a235a", secondary: "#7d3c98", accent: "#f1c40f", category: "Equestrian", venue: "Greenwich Park" },
+  FE: { primary: "#2c3e50", secondary: "#34495e", accent: "#00d2ff", category: "Combat", venue: "ExCeL London" },
+  FB: { primary: "#1e8449", secondary: "#27ae60", accent: "#ffffff", category: "Ball Sports", venue: "Wembley Stadium" },
+  HB: { primary: "#d68910", secondary: "#f39c12", accent: "#ffffff", category: "Ball Sports", venue: "Copper Box Arena" },
+  HO: { primary: "#1f618d", secondary: "#2980b9", accent: "#f1c40f", category: "Ball Sports", venue: "Riverbank Arena" },
+  JU: { primary: "#212f3d", secondary: "#2874a6", accent: "#f1c40f", category: "Combat", venue: "ExCeL London" },
+  MP: { primary: "#117864", secondary: "#16a085", accent: "#f1c40f", category: "Combined", venue: "Greenwich Park" },
+  CM: { primary: "#27ae60", secondary: "#1e8449", accent: "#ffffff", category: "Cycling", venue: "Hadleigh Farm" },
+  GR: { primary: "#d2b4de", secondary: "#bb8fce", accent: "#4a235a", category: "Gymnastics", venue: "Wembley Arena" },
+  RO: { primary: "#1f618d", secondary: "#2874a6", accent: "#ffffff", category: "Water", venue: "Eton Dorney" },
+  SA: { primary: "#117a65", secondary: "#138d75", accent: "#f1c40f", category: "Water", venue: "Weymouth and Portland" },
+  SH: { primary: "#78281f", secondary: "#943126", accent: "#f1c40f", category: "Precision", venue: "Royal Artillery Barracks" },
+  SW: { primary: "#0077be", secondary: "#00d2ff", accent: "#ffffff", category: "Aquatics", venue: "Aquatics Centre" },
+  SY: { primary: "#00a896", secondary: "#028090", accent: "#f0f3f4", category: "Aquatics", venue: "Aquatics Centre" },
+  TT: { primary: "#b9770e", secondary: "#d68910", accent: "#ffffff", category: "Racquet", venue: "ExCeL London" },
+  TK: { primary: "#922b21", secondary: "#b03a2e", accent: "#f1c40f", category: "Combat", venue: "ExCeL London" },
+  TE: { primary: "#196f3d", secondary: "#229954", accent: "#ffffff", category: "Racquet", venue: "All England Club" },
+  GT: { primary: "#5b2c6f", secondary: "#76448a", accent: "#f1c40f", category: "Gymnastics", venue: "North Greenwich Arena" },
+  TR: { primary: "#0e6655", secondary: "#117864", accent: "#f1c40f", category: "Combined", venue: "Hyde Park" },
+  VO: { primary: "#1b4f72", secondary: "#21618c", accent: "#ffffff", category: "Ball Sports", venue: "Earls Court Exhibition Centre" },
+  WP: { primary: "#004080", secondary: "#00aaff", accent: "#ffffff", category: "Aquatics", venue: "Water Polo Arena" },
+  WL: { primary: "#6c3483", secondary: "#7d3c98", accent: "#f1c40f", category: "Weightlifting", venue: "ExCeL London" },
+  WR: { primary: "#7b241c", secondary: "#922b21", accent: "#f1c40f", category: "Combat", venue: "ExCeL London" }
+};
+
+export function deriveSubCategory(name = "") {
+  const norm = name.toUpperCase();
+  if (norm.includes("CLOCK") || norm.includes("TIME") || norm.includes("SPLIT") || norm.includes("SPEED") || norm.includes("GAP") || norm.includes("WIND")) {
+    return "SPLITS & TIMES";
+  }
+  if (norm.includes("ID") || norm.includes("ATHLETE") || norm.includes("COACH") || norm.includes("OFFICIAL") || norm.includes("PRESENTER") || norm.includes("CEREMONY") || norm.includes("LOCATION") || norm.includes("VENUE")) {
+    return "LOWER THIRDS";
+  }
+  if (norm.includes("RESULT") || norm.includes("STANDINGS") || norm.includes("RANK") || norm.includes("MEDAL") || norm.includes("WINNER") || norm.includes("BRACKET") || norm.includes("ADVANCE")) {
+    return "RESULTS & STANDINGS";
+  }
+  if (norm.includes("RECORD") || norm.includes("INDICATOR") || norm.includes("LIGHT") || norm.includes("REFERRAL") || norm.includes("PENALTY") || norm.includes("FAULT")) {
+    return "RECORDS & BUGS";
+  }
+  return "SCORES & MATCH";
+}
+
+export function deriveGraphicIcon(name = "") {
+  const norm = name.toUpperCase();
+  if (norm.includes("MEDAL") || norm.includes("WINNER") || norm.includes("CEREMONY")) return "🥇";
+  if (norm.includes("WEATHER")) return "☀️";
+  if (norm.includes("VENUE") || norm.includes("LOCATION")) return "🏟️";
+  if (norm.includes("SCHEDULE")) return "🗓️";
+  if (norm.includes("CLOCK") || norm.includes("TIME") || norm.includes("SPEED")) return "⏱️";
+  if (norm.includes("WIND")) return "💨";
+  if (norm.includes("STANDINGS") || norm.includes("RANK") || norm.includes("BRACKET")) return "📊";
+  if (norm.includes("LIST") || norm.includes("LINEUP") || norm.includes("START")) return "📋";
+  if (norm.includes("COACH") || norm.includes("OFFICIAL") || norm.includes("PRESENTER")) return "👤";
+  if (norm.includes("ATHLETE") || norm.includes("PLAYER")) return "🏃";
+  return "🎯";
+}
+
+const BASE_OLYMPIC_GAMES_DATA = [
   {
     id: "aquatics-swimming",
     name: "Aquatics - Swimming",
@@ -1526,52 +1598,75 @@ function fillMissingTemplates(list, sportCode, sportName) {
   });
 }
 
-export function getSportTemplates(sport) {
-  if (!sport) return fillMissingTemplates(TEMPLATE_TYPES, "MASTER", "Master");
+const EXISTING_CODES = new Set(BASE_OLYMPIC_GAMES_DATA.map(s => s.code));
 
-  // Use inline templates on the sport object if provided
-  if (sport.templates && sport.templates.length > 0) {
-    return fillMissingTemplates(sport.templates, sport.code, sport.name);
+const EXTRA_SPORTS = dataJSON
+  .filter(s => !EXISTING_CODES.has(s.prefix))
+  .map(s => {
+    const meta = SPORT_COLORS[s.prefix] || {
+      primary: "#1e293b",
+      secondary: "#334155",
+      accent: "#f1c40f",
+      category: "Olympic Sports",
+      venue: "London Olympic Park"
+    };
+    return {
+      id: `game-${s.prefix.toLowerCase()}`,
+      name: s.game,
+      code: s.prefix,
+      category: meta.category,
+      venue: meta.venue,
+      primaryColor: meta.primary,
+      secondaryColor: meta.secondary,
+      accentColor: meta.accent,
+      dataFields: {
+        athlete: "Olympic Competitor",
+        country: "GBR",
+        flag: "🇬🇧",
+        event: `${s.game} Final`,
+        score: "1st Place"
+      }
+    };
+  });
+
+export const OLYMPIC_GAMES_DATA = [...BASE_OLYMPIC_GAMES_DATA, ...EXTRA_SPORTS];
+
+export function getSportTemplates(sport) {
+  if (!sport) return [];
+
+  const code = (sport.code || sport.prefix || "").toUpperCase();
+
+  // Look up in dataJSON first
+  const jsonSport = dataJSON.find(
+    s => s.prefix.toUpperCase() === code || s.game.toLowerCase() === (sport.name || "").toLowerCase()
+  );
+
+  if (jsonSport && jsonSport.graphics && jsonSport.graphics.length > 0) {
+    const mapped = jsonSport.graphics.map(g => {
+      const name = g.name || g.title || g.id;
+      return {
+        id: g.id,
+        name: name,
+        title: g.title || `${g.id} ${name}`,
+        icon: deriveGraphicIcon(name),
+        subCat: deriveSubCategory(name),
+        images: g.images || [],
+        variations: g.variations || []
+      };
+    });
+
+    return mapped.sort((a, b) => {
+      const numA = parseInt((a.id || "").replace(/\D/g, ""), 10) || 0;
+      const numB = parseInt((b.id || "").replace(/\D/g, ""), 10) || 0;
+      return numA - numB;
+    });
   }
 
-  const code = (sport.code || "").toUpperCase();
-
-  // 1. Primary lookup from RealTemplates by sport code (e.g. AT_TEMPLATES, SW_TEMPLATES)
   const realKey = `${code}_TEMPLATES`;
   if (RealTemplates[realKey] && RealTemplates[realKey].length > 0) {
     return fillMissingTemplates(RealTemplates[realKey], code, sport.name);
   }
 
-  // 2. Name-based fallback for partial matches from RealTemplates
-  const name = sport.name || "";
-  if (name.includes("Swimming") && RealTemplates.SW_TEMPLATES) return fillMissingTemplates(RealTemplates.SW_TEMPLATES, "SW", sport.name);
-  if ((name.includes("Athletics") || name.includes("Track")) && RealTemplates.AT_TEMPLATES) return fillMissingTemplates(RealTemplates.AT_TEMPLATES, "AT", sport.name);
-  if (name.includes("Archery") && RealTemplates.AR_TEMPLATES) return fillMissingTemplates(RealTemplates.AR_TEMPLATES, "AR", sport.name);
-  if (name.includes("Badminton") && RealTemplates.BD_TEMPLATES) return fillMissingTemplates(RealTemplates.BD_TEMPLATES, "BD", sport.name);
-  if (name.includes("Basketball") && RealTemplates.BK_TEMPLATES) return fillMissingTemplates(RealTemplates.BK_TEMPLATES, "BK", sport.name);
-  if (name.includes("Beach Volleyball") && RealTemplates.BV_TEMPLATES) return fillMissingTemplates(RealTemplates.BV_TEMPLATES, "BV", sport.name);
-  if (name.includes("Boxing") && RealTemplates.BX_TEMPLATES) return fillMissingTemplates(RealTemplates.BX_TEMPLATES, "BX", sport.name);
-  if ((name.includes("Canoe Slalom") || name.includes("Slalom")) && RealTemplates.CS_TEMPLATES) return fillMissingTemplates(RealTemplates.CS_TEMPLATES, "CS", sport.name);
-  if ((name.includes("Canoe") || name.includes("Flatwater") || name.includes("Sprint")) && RealTemplates.CF_TEMPLATES) return fillMissingTemplates(RealTemplates.CF_TEMPLATES, "CF", sport.name);
-  if ((name.includes("Cycling Track") || name.includes("Track Cycling")) && RealTemplates.CT_TEMPLATES) return fillMissingTemplates(RealTemplates.CT_TEMPLATES, "CT", sport.name);
-  if ((name.includes("Cycling Road") || name.includes("Road Cycling")) && RealTemplates.CR_TEMPLATES) return fillMissingTemplates(RealTemplates.CR_TEMPLATES, "CR", sport.name);
-  if (name.includes("Diving") && RealTemplates.DV_TEMPLATES) return fillMissingTemplates(RealTemplates.DV_TEMPLATES, "DV", sport.name);
-  if (name.includes("Water Polo") && RealTemplates.WP_TEMPLATES) return fillMissingTemplates(RealTemplates.WP_TEMPLATES, "WP", sport.name);
-  if ((name.includes("Synchronised") || name.includes("Synchronized")) && RealTemplates.SY_TEMPLATES) return fillMissingTemplates(RealTemplates.SY_TEMPLATES, "SY", sport.name);
-
-  // Generic fallback — build numbered templates dynamically
-  const c = code.toUpperCase() || "XX";
-  return fillMissingTemplates([
-    { id: `${c}001`, name: `${sport.name} Athlete ID Lower Third`, icon: "👤", subCat: "LOWER THIRDS" },
-    { id: `${c}002`, name: `${sport.name} Olympic Champion Card`, icon: "🥇", subCat: "LOWER THIRDS" },
-    { id: `${c}003`, name: `${sport.name} Intermediate Split / Score Bug`, icon: "⏱️", subCat: "SPLITS & TIMES" },
-    { id: `${c}004`, name: `${sport.name} Live Scoreboard Bug`, icon: "📊", subCat: "SCORES & MATCH" },
-    { id: `${c}005`, name: `${sport.name} Heat / Start List Draw`, icon: "📋", subCat: "SCORES & MATCH" },
-    { id: `${c}006`, name: `${sport.name} Final Results & Standings Table`, icon: "🏆", subCat: "RESULTS & STANDINGS" },
-    { id: `${c}007`, name: `${sport.name} Tournament Bracket Tree`, icon: "🌿", subCat: "RESULTS & STANDINGS" },
-    { id: `${c}008`, name: `${sport.name} Podium Medallists & Country Tally`, icon: "🥇", subCat: "RESULTS & STANDINGS" },
-    { id: `${c}009`, name: `${sport.name} World Record Pace Line`, icon: "🏁", subCat: "RECORDS & BUGS" },
-    { id: `${c}010`, name: `${sport.name} Venue & Event Title Corner Bug`, icon: "🏷️", subCat: "RECORDS & BUGS" },
-  ], c, sport.name);
+  return [];
 }
 
