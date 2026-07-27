@@ -6,6 +6,7 @@ import CustomClient from './CustomClient';
 import Hockey from './Hockey'
 import Kabaddi from './Kabaddi';
 import Tennis from './Tennis';
+import Diving from './Diving';
 
 
 const Games = () => {
@@ -20,6 +21,7 @@ const Games = () => {
                     <Tab>Hockey</Tab>
                     <Tab>Tennis</Tab>
                     <Tab>Kabaddi</Tab>
+                    <Tab>Aquatics - Diving</Tab>
                     <Tab>Custom Client</Tab>
                 </TabList>
 
@@ -34,6 +36,9 @@ const Games = () => {
                 </TabPanel>
                 <TabPanel>
                     <Kabaddi />
+                </TabPanel>
+                <TabPanel>
+                    <Diving />
                 </TabPanel>
                 <TabPanel>
                     <CustomClient />

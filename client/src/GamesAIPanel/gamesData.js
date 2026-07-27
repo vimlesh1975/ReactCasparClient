@@ -115,8 +115,22 @@ const BASE_OLYMPIC_GAMES_DATA = [
       flag: "🇬🇧",
       event: "Men's 10m Platform",
       round: "Final - Dive 6",
+      diveCode: "107B",
+      diveDesc: "Forward 3½ Somersaults",
+      position: "Pike",
+      dd: "3.0",
+      jScores: ["8.5", "9.0", "8.5", "9.0", "8.5", "9.0", "8.5"],
+      diveScore: "76.50",
+      totalScore: "556.95",
       score: "556.95",
-      rank: "3rd"
+      rank: "3rd",
+      standings: [
+        { rank: "1", name: "CAO YUAN", country: "CHN", flag: "🇨🇳", score: "582.45" },
+        { rank: "2", name: "RIKUTO TAMAI", country: "JPN", flag: "🇯🇵", score: "563.40" },
+        { rank: "3", name: "TOM DALEY", country: "GBR", flag: "🇬🇧", score: "556.95" },
+        { rank: "4", name: "CASPAR CORER", country: "GBR", flag: "🇬🇧", score: "520.10" },
+        { rank: "5", name: "OLEKSIY SEREDA", country: "UKR", flag: "🇺🇦", score: "498.80" }
+      ]
     }
   },
   {

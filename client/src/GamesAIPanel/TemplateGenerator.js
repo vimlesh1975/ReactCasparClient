@@ -7,6 +7,7 @@ import * as fabric from 'fabric';
 import { generateUniqueId } from '../common';
 import { generateGymnasticsArtisticHTML, generateGymnasticsArtisticFabric } from './sports/gymnasticsArtistic';
 import { generateArcheryHTML, generateArcheryFabric } from './sports/archery';
+import { generateDivingHTML, generateDivingFabric } from './sports/diving';
 
 const RANDOM_ATHLETES_POOL = [
   { name: "Usain Bolt", country: "JAM" },
@@ -224,6 +225,10 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 
   if (code === 'AR' || (sport && sport.code === 'AR')) {
     return generateArcheryHTML(templateId, templateName, data, sport, styleOptions);
+  }
+
+  if (code === 'DV' || (sport && sport.code === 'DV') || (templateId && templateId.toUpperCase().includes('DV0'))) {
+    return generateDivingHTML(templateId, templateName, data, sport, styleOptions);
   }
 
   switch (category) {
@@ -7590,6 +7595,14 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     return {
       id,
       class: id,
+      selectable: true,
+      hasControls: true,
+      hasBorders: true,
+      lockMovementX: false,
+      lockMovementY: false,
+      lockRotation: false,
+      lockScalingX: false,
+      lockScalingY: false,
       objectCaching: false,
       opacity: 1,
       visible: true,
@@ -7602,6 +7615,9 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   }
   if (code === 'AR' || (sport && sport.code === 'AR') || (templateId && templateId.toUpperCase().includes('AR0'))) {
     return generateArcheryFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
+  }
+  if (code === 'DV' || (sport && sport.code === 'DV') || (templateId && templateId.toUpperCase().includes('DV0'))) {
+    return generateDivingFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
   }
 
   switch (category) {

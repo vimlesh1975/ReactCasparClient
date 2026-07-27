@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import * as fabric from 'fabric';
 import { OLYMPIC_GAMES_DATA, getSportTemplates } from './gamesData';
-import { generateBroadcastHTML, createFabricGraphicGroup } from './TemplateGenerator';
+import { createFabricGraphicGroup } from './TemplateGenerator';
 import { FaPlus } from 'react-icons/fa';
 import './GamesAIPanel.css';
 
@@ -11,7 +12,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
   const [selectedTemplateObj, setSelectedTemplateObj] = useState(null);
   const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
-  const [previewMode, setPreviewMode] = useState('html'); // 'html' or 'reference'
+  const [previewMode, setPreviewMode] = useState('fabric'); // 'fabric' or 'reference'
 
   // Helper to map sub-category to template type keyword understood by generateBroadcastHTML
   const mapSubCatToType = (subCat) => {
@@ -44,8 +45,9 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
            (t.subCat || '').toLowerCase().includes(term);
   });
 
-  const iframeRef = useRef(null);
   const previewContainerRef = useRef(null);
+  const fabricCanvasRef = useRef(null);
+  const fabricInstanceRef = useRef(null);
   const [previewScale, setPreviewScale] = useState(0.27);
 
   useEffect(() => {
@@ -109,27 +111,45 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   const activeVariation = variations[selectedVariationIndex] || variations[0];
   const referenceImagePath = activeVariation?.image || selectedTemplateObj?.images?.[0];
 
-  // Derive the semantic template category from the selected template's subCat
-  const resolvedTemplateType = selectedTemplateObj
-    ? mapSubCatToType(selectedTemplateObj.subCat)
-    : (selectedTemplateType || '');
-
   const effectiveTemplateId = (activeVariation && activeVariation.label && activeVariation.label.length === 1)
     ? `${selectedTemplateType}${activeVariation.label.toLowerCase()}`
     : selectedTemplateType;
 
-  // Generate current HTML (maintaining the same clean template name across all variations)
-  const currentHTML = generateBroadcastHTML(
-    selectedSport,
-    resolvedTemplateType,
-    customFields,
-    customColors,
-    effectiveTemplateId,
-    selectedTemplateObj?.name || ''
-  );
+  // Fabric Canvas Preview Renderer
+  useEffect(() => {
+    if (previewMode === 'fabric' && fabricCanvasRef.current) {
+      if (!fabricInstanceRef.current) {
+        fabricInstanceRef.current = new fabric.Canvas(fabricCanvasRef.current, {
+          width: 1920,
+          height: 1080,
+          selection: true
+        });
+      }
+      const previewCanvas = fabricInstanceRef.current;
+      previewCanvas.clear();
+      previewCanvas.backgroundColor = 'transparent';
+
+      const templateInfo = filteredTemplates.find(t => t.id === selectedTemplateType);
+      const resolvedType = templateInfo ? mapSubCatToType(templateInfo.subCat) : selectedTemplateType;
+      const group = createFabricGraphicGroup(
+        selectedSport,
+        resolvedType,
+        customFields,
+        customColors,
+        effectiveTemplateId,
+        selectedTemplateObj?.name || ''
+      );
+
+      if (group) {
+        previewCanvas.add(group);
+        previewCanvas.requestRenderAll();
+      }
+    }
+  }, [previewMode, selectedSport, selectedTemplateType, selectedVariationIndex, customFields, customColors, effectiveTemplateId, filteredTemplates, selectedTemplateObj]);
 
   const handleAddToCanvas = () => {
-    if (!canvas) {
+    const activeCanvas = canvas || window.editor?.canvas || window.canvas;
+    if (!activeCanvas) {
       alert('Canvas is not initialized yet. Please open the Drawing tab first!');
       return;
     }
@@ -144,12 +164,14 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       selectedTemplateObj?.name || ''
     );
 
-    canvas.add(group);
-    canvas.setActiveObject(group);
-    canvas.requestRenderAll();
+    if (group) {
+      activeCanvas.add(group);
+      activeCanvas.setActiveObject(group);
+      activeCanvas.requestRenderAll();
 
-    if (generateTheatreID) {
-      generateTheatreID(group.id, group);
+      if (generateTheatreID) {
+        generateTheatreID(group.id, group);
+      }
     }
   };
 
@@ -236,10 +258,10 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         <div className="preview-controls-header">
           <div className="preview-mode-tabs">
             <button
-              className={`preview-mode-tab ${previewMode === 'html' ? 'active' : ''}`}
-              onClick={() => setPreviewMode('html')}
+              className={`preview-mode-tab ${previewMode === 'fabric' ? 'active' : ''}`}
+              onClick={() => setPreviewMode('fabric')}
             >
-              📺 Live Broadcast Render
+              🎨 Fabric Vector Canvas
             </button>
             <button
               className={`preview-mode-tab ${previewMode === 'reference' ? 'active' : ''}`}
@@ -269,22 +291,18 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         <div className="preview-frame-container" ref={previewContainerRef}>
           <span className="preview-res-badge">1920 × 1080</span>
           
-          <iframe
-            ref={iframeRef}
-            className="preview-iframe"
-            title="Graphic Preview"
-            sandbox="allow-scripts"
-            srcDoc={currentHTML}
+          <div
             style={{
               width: '1920px',
               height: '1080px',
-              border: 'none',
               transformOrigin: 'top left',
               transform: `scale(${previewScale})`,
-              display: previewMode === 'html' ? 'block' : 'none',
-              pointerEvents: 'none'
+              display: previewMode === 'fabric' ? 'block' : 'none',
+              pointerEvents: 'auto'
             }}
-          />
+          >
+            <canvas ref={fabricCanvasRef} width={1920} height={1080} />
+          </div>
 
           {previewMode === 'reference' && (
             <div className="reference-image-wrapper">
