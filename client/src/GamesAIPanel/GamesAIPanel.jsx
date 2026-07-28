@@ -129,11 +129,9 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       previewCanvas.clear();
       previewCanvas.backgroundColor = 'transparent';
 
-      const templateInfo = filteredTemplates.find(t => t.id === selectedTemplateType);
-      const resolvedType = templateInfo ? mapSubCatToType(templateInfo.subCat) : selectedTemplateType;
       const group = createFabricGraphicGroup(
         selectedSport,
-        resolvedType,
+        selectedTemplateType,
         customFields,
         customColors,
         effectiveTemplateId,
@@ -153,11 +151,9 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
       alert('Canvas is not initialized yet. Please open the Drawing tab first!');
       return;
     }
-    const templateInfo = filteredTemplates.find(t => t.id === selectedTemplateType);
-    const resolvedType = templateInfo ? mapSubCatToType(templateInfo.subCat) : selectedTemplateType;
     const group = createFabricGraphicGroup(
       selectedSport,
-      resolvedType,
+      selectedTemplateType,
       customFields,
       customColors,
       effectiveTemplateId,

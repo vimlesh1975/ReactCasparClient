@@ -176,7 +176,7 @@ export function resolveCategory(templateType, templateName = '', templateId = ''
   if (combined.includes("breakdown") || combined.includes("apparatus")) return "score-breakdown";
   if (combined.includes("target") || combined.includes("set") || combined.includes("serve")) return "target-score";
   if (combined.includes("start") || combined.includes("list") || combined.includes("lineup") || combined.includes("formation")) return "start-list";
-  if (combined.includes("result") || combined.includes("tally") || combined.includes("rank") || combined.includes("standing") || combined.includes("order")) return "results-table";
+  if (combined.includes("result") || combined.includes("tally") || combined.includes("rank") || combined.includes("standing") || combined.includes("order") || combined.includes("top") || combined.includes("leaderboard")) return "results-table";
   if (combined.includes("bug")) return "event-bug";
   if (combined.includes("sb") || combined.includes("score")) return "scoreboard";
   return "lower-third";
@@ -7585,8 +7585,14 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
   const sportIcon = SPORT_ICONS[code] || "🏅";
 
   const category = resolveCategory(templateType, templateName, templateId);
-  const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
-  const variant = ((idNum - 1) % 5) + 1;
+  let variant = 1;
+  const letterMatch = (templateId || '').match(/[a-z]$/i);
+  if (letterMatch) {
+    variant = letterMatch[0].toLowerCase().charCodeAt(0) - 96;
+  } else {
+    const idNum = parseInt((templateId || '').replace(/\D/g, '')) || 1;
+    variant = ((idNum - 1) % 5) + 1;
+  }
 
   const objects = [];
 
