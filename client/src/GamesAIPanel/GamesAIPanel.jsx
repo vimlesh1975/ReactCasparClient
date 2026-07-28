@@ -181,111 +181,126 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   return (
     <div className="games-ai-container">
 
-      {/* ── Top Row: Sport list (left) + Template grid (right) ── */}
+      {/* ── Top Row: Left Sidebar (Sport 50% + Templates 50%) + Reference Image (Right) ── */}
       <div className="top-section-row">
 
-        {/* Left Column: Select Sport */}
-        <div className="sidebar-panel">
-          <div className="section-label">1. Select Sport ({filteredSports.length})</div>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search sports or venues..."
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <div className="sports-list">
-            {filteredSports.map(sport => (
-              <div
-                key={sport.id || sport.code}
-                className={`sport-item ${selectedSport.code === sport.code ? 'active' : ''}`}
-                onClick={() => setSelectedSport(sport)}
-              >
-                <span>{sport.name}</span>
-                <span className="sport-code-badge">{sport.code}</span>
-              </div>
-            ))}
+        {/* Left Column: Sport list (top 50%) + Template list (bottom 50%) */}
+        <div className="left-sidebar-col">
+
+          {/* Top 50%: Select Sport */}
+          <div className="sidebar-panel">
+            <div className="section-label">1. Select Sport ({filteredSports.length})</div>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search sports or venues..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <div className="sports-list">
+              {filteredSports.map(sport => (
+                <div
+                  key={sport.id || sport.code}
+                  className={`sport-item ${selectedSport.code === sport.code ? 'active' : ''}`}
+                  onClick={() => setSelectedSport(sport)}
+                >
+                  <span>{sport.name}</span>
+                  <span className="sport-code-badge">{sport.code}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Bottom 50%: Select Template */}
+          <div className="templates-panel">
+            <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search templates..."
+              value={templateSearchTerm}
+              onChange={e => setTemplateSearchTerm(e.target.value)}
+            />
+            <div className="template-types-grid">
+              {filteredTemplates.map(tt => (
+                <button
+                  key={tt.id}
+                  className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
+                  onClick={() => {
+                    setSelectedTemplateType(tt.id);
+                    setSelectedTemplateObj(tt);
+                    setSelectedVariationIndex(0);
+                  }}
+                  title={tt.name}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span>{tt.icon}</span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{tt.name}</span>
+                  </span>
+                  <span className="sport-code-badge">{tt.id}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
         </div>
 
-        {/* Right Column: Templates */}
-        <div className="templates-panel">
-          <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search templates..."
-            value={templateSearchTerm}
-            onChange={e => setTemplateSearchTerm(e.target.value)}
-          />
-          <div className="template-types-grid">
-            {filteredTemplates.map(tt => (
-              <button
-                key={tt.id}
-                className={`template-type-btn ${selectedTemplateType === tt.id ? 'active' : ''}`}
-                onClick={() => {
-                  setSelectedTemplateType(tt.id);
-                  setSelectedTemplateObj(tt);
-                  setSelectedVariationIndex(0);
-                }}
-                title={tt.name}
-              >
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  <span>{tt.icon}</span>
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{tt.name}</span>
-                </span>
-                <span className="sport-code-badge">{tt.id}</span>
-              </button>
-            ))}
+        {/* Right Column: Reference Guide Image Panel */}
+        <div className="reference-guide-panel">
+          <div className="reference-header-row">
+            <div className="section-label">🖼️ Reference Guide Image</div>
+            {variations.length > 1 && (
+              <div className="variations-pills">
+                <span className="variation-label">Variation:</span>
+                {variations.map((v, idx) => (
+                  <button
+                    key={idx}
+                    className={`variation-pill ${selectedVariationIndex === idx ? 'active' : ''}`}
+                    onClick={() => setSelectedVariationIndex(idx)}
+                  >
+                    Variant {v.label.toUpperCase()} {v.page ? `(p.${v.page})` : ''}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-
-          {/* Add to Canvas lives here, at the bottom of the template panel */}
-          <button className="action-btn btn-add" style={{ width: '100%', justifyContent: 'center', marginTop: 'auto' }} onClick={handleAddToCanvas}>
-            <FaPlus /> Add to Canvas
-          </button>
+          <div className="reference-image-wrapper">
+            {referenceImagePath ? (
+              <img
+                src={getFullImageUrl(referenceImagePath)}
+                alt={selectedTemplateObj?.title || 'Graphic Reference'}
+                className="reference-preview-image"
+                onError={(e) => {
+                  console.error('Failed to load image:', e.target.src);
+                }}
+              />
+            ) : (
+              <div className="no-reference-msg">No Reference Image Available</div>
+            )}
+          </div>
         </div>
 
       </div>
 
-      {/* ── Bottom: Graphics / Preview Area ── */}
+      {/* ── Bottom: Live Fabric Vector Canvas Preview ── */}
       <div className="main-preview-area">
-
-        {/* Controls Bar above preview */}
-        <div className="preview-controls-header">
-          <div className="preview-mode-tabs">
-            <button
-              className={`preview-mode-tab ${previewMode === 'fabric' ? 'active' : ''}`}
-              onClick={() => setPreviewMode('fabric')}
-            >
-              🎨 Fabric Vector Canvas
-            </button>
-            <button
-              className={`preview-mode-tab ${previewMode === 'reference' ? 'active' : ''}`}
-              onClick={() => setPreviewMode('reference')}
-            >
-              🖼️ Reference Guide Image
-            </button>
-          </div>
-
-          {variations.length > 1 && (
-            <div className="variations-pills">
-              <span className="variation-label">Variation:</span>
-              {variations.map((v, idx) => (
-                <button
-                  key={idx}
-                  className={`variation-pill ${selectedVariationIndex === idx ? 'active' : ''}`}
-                  onClick={() => setSelectedVariationIndex(idx)}
-                >
-                  Variant {v.label.toUpperCase()} {v.page ? `(p.${v.page})` : ''}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
 
         {/* Preview Frame */}
         <div className="preview-frame-container" ref={previewContainerRef}>
-          <span className="preview-res-badge">1920 × 1080</span>
+          <button
+            className="action-btn btn-add"
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              zIndex: 20,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+              cursor: 'pointer'
+            }}
+            onClick={handleAddToCanvas}
+          >
+            <FaPlus /> Add to Canvas
+          </button>
           
           <div
             style={{
@@ -293,29 +308,12 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
               height: '1080px',
               transformOrigin: 'top left',
               transform: `scale(${previewScale})`,
-              display: previewMode === 'fabric' ? 'block' : 'none',
+              display: 'block',
               pointerEvents: 'auto'
             }}
           >
             <canvas ref={fabricCanvasRef} width={1920} height={1080} />
           </div>
-
-          {previewMode === 'reference' && (
-            <div className="reference-image-wrapper">
-              {referenceImagePath ? (
-                <img
-                  src={getFullImageUrl(referenceImagePath)}
-                  alt={selectedTemplateObj?.title || 'Graphic Reference'}
-                  className="reference-preview-image"
-                  onError={(e) => {
-                    console.error('Failed to load image:', e.target.src);
-                  }}
-                />
-              ) : (
-                <div className="no-reference-msg">No Reference Image Available</div>
-              )}
-            </div>
-          )}
         </div>
 
       </div>

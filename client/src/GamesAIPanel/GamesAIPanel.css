@@ -13,43 +13,77 @@
   border-radius: 12px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   gap: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   margin: 0 auto;
 }
 
-/* ── Top Row: Sport list + Template grid side by side ── */
+/* ── Top Row: Left sidebar (Sport + Template stacked) & Reference Image panel ── */
 .top-section-row {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 280px 1fr;
   gap: 14px;
-  height: 300px;
-  max-height: 300px;
+  height: 320px;
+  max-height: 320px;
   flex-shrink: 0;
 }
 
-/* ── Sport sidebar ── */
+.left-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Sport sidebar (top 50%) ── */
 .sidebar-panel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   background: #1e293b;
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
   border: 1px solid #334155;
+  height: 50%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* ── Template panel (right of sport list) ── */
+/* ── Template panel (bottom 50%, shifted below sports) ── */
 .templates-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  height: 50%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ── Reference Guide Panel (top right) ── */
+.reference-guide-panel {
   display: flex;
   flex-direction: column;
   gap: 8px;
   background: #1e293b;
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
   border: 1px solid #334155;
-  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.reference-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* ── Bottom preview / graphics area ── */
@@ -126,7 +160,7 @@
 .sport-code-badge {
   font-weight: 800;
   font-size: 10px;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   padding: 2px 6px;
   border-radius: 4px;
   flex-shrink: 0;
@@ -258,10 +292,10 @@
 /* ── Preview frame — fills all remaining space at 16:9 ── */
 .preview-frame-container {
   background-color: rgba(30, 41, 59, 0.65);
-  background-image: 
-    linear-gradient(45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%), 
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%), 
-    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.08) 75%), 
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.08) 75%),
     linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.08) 75%);
   background-size: 24px 24px;
   background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
@@ -269,7 +303,7 @@
   overflow: hidden;
   position: relative;
   border: 2px solid #334155;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
   flex: 1;
   min-height: 0;
   /* use height to drive width so we fill the full available height */
@@ -330,10 +364,25 @@
   transform: scale(0.97);
 }
 
-.btn-play  { background: #16a34a; color: white; }
-.btn-update { background: #0284c7; color: white; }
-.btn-stop  { background: #dc2626; color: white; }
-.btn-add   { background: #4f46e5; color: white; }
+.btn-play {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-update {
+  background: #0284c7;
+  color: white;
+}
+
+.btn-stop {
+  background: #dc2626;
+  color: white;
+}
+
+.btn-add {
+  background: #4f46e5;
+  color: white;
+}
 
 /* ── Preview Controls Header ── */
 .preview-controls-header {
@@ -418,16 +467,16 @@
 
 /* ── Reference Image Preview ── */
 .reference-image-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
+  flex: 1;
   width: 100%;
-  height: 100%;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #0f172a;
-  z-index: 5;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  overflow: hidden;
 }
 
 .reference-preview-image {
@@ -444,4 +493,3 @@
   font-weight: 600;
   font-style: italic;
 }
-
