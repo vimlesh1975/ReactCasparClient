@@ -863,18 +863,23 @@ export function getSportTemplates(sport) {
   );
 
   if (jsonSport && jsonSport.graphics && jsonSport.graphics.length > 0) {
-    const mapped = jsonSport.graphics.map(g => {
-      const name = g.name || g.title || g.id;
-      return {
-        id: g.id,
-        name: name,
-        title: g.title || `${g.id} ${name}`,
-        icon: deriveGraphicIcon(name),
-        subCat: deriveSubCategory(name),
-        images: g.images || [],
-        variations: g.variations || []
-      };
-    });
+    const mapped = jsonSport.graphics
+      .filter(g => {
+        const str = `${g.id || ''} ${g.name || ''} ${g.title || ''}`.toUpperCase();
+        return !str.includes("OMEGA");
+      })
+      .map(g => {
+        const name = g.name || g.title || g.id;
+        return {
+          id: g.id,
+          name: name,
+          title: g.title || `${g.id} ${name}`,
+          icon: deriveGraphicIcon(name),
+          subCat: deriveSubCategory(name),
+          images: g.images || [],
+          variations: g.variations || []
+        };
+      });
 
     return mapped.sort((a, b) => {
       const numA = parseInt((a.id || "").replace(/\D/g, ""), 10) || 0;
@@ -885,7 +890,8 @@ export function getSportTemplates(sport) {
 
   const realKey = `${code}_TEMPLATES`;
   if (RealTemplates[realKey] && RealTemplates[realKey].length > 0) {
-    return fillMissingTemplates(RealTemplates[realKey], code, sport.name);
+    const list = fillMissingTemplates(RealTemplates[realKey], code, sport.name);
+    return list.filter(t => !`${t.id || ''} ${t.name || ''} ${t.title || ''}`.toUpperCase().includes("OMEGA"));
   }
 
   return [];
