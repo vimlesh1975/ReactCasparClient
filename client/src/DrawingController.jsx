@@ -71,6 +71,7 @@ import {
   templateLayers,
   executeScript,
   checkIdUniqueness,
+  getDuplicateIds,
   rgbaObjectToHex,
   sendToBack,
   bringToFront,
@@ -341,6 +342,7 @@ const DrawingController = () => {
   const xpositions = useSelector((state) => state.xpositionsReducer.xpositions);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [duplicateIdDialog, setDuplicateIdDialog] = useState({ open: false, ids: [] });
 
 
   useEffect(() => {
@@ -1061,9 +1063,9 @@ const DrawingController = () => {
       var aa1 = JSON.stringify(canvas.toJSON(["id", "class", "selectable"]));
       // localStorage.setItem("RCCpageData", aa1);
       localforage.setItem("RCCpageData", aa1);
-
     } else {
-      alert("All elements must have unique id");
+      const dups = getDuplicateIds(canvas);
+      setDuplicateIdDialog({ open: true, ids: dups });
     }
   };
 
@@ -2747,6 +2749,75 @@ var timer = setInterval(function() {
 
   return (<div>
     {isLoading && <Spinner />}
+    {duplicateIdDialog.open && (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0,0,0,0.55)",
+        }}
+        onClick={() => setDuplicateIdDialog({ open: false, ids: [] })}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: "#1e1e2e",
+            border: "1.5px solid #e74c3c",
+            borderRadius: 10,
+            padding: "28px 32px",
+            minWidth: 340,
+            maxWidth: 480,
+            boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
+            color: "#f0f0f0",
+            fontFamily: "monospace",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <span style={{ fontSize: 22, color: "#e74c3c" }}>⚠</span>
+            <strong style={{ fontSize: 16, color: "#e74c3c" }}>Duplicate Element IDs</strong>
+          </div>
+          <p style={{ margin: "0 0 14px", fontSize: 13, color: "#aaa" }}>
+            The following IDs appear more than once. All elements must have a unique <code style={{ color: "#f9ca24" }}>id</code> before saving.
+          </p>
+          <ul style={{ margin: 0, padding: "0 0 0 18px", listStyle: "disc" }}>
+            {duplicateIdDialog.ids.map((id) => (
+              <li
+                key={id}
+                style={{
+                  padding: "4px 0",
+                  color: "#f9ca24",
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  letterSpacing: 0.5,
+                }}
+              >
+                {id}
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => setDuplicateIdDialog({ open: false, ids: [] })}
+            style={{
+              marginTop: 22,
+              padding: "7px 22px",
+              background: "#e74c3c",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: 13,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )}
     <div style={{ display: "flex" }}>
       <div
         style={{

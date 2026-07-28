@@ -2386,6 +2386,21 @@ export const checkIdUniqueness = (canvas) => {
   }
   return true;
 };
+
+export const getDuplicateIds = (canvas) => {
+  var objects = canvas.getObjects();
+  var seen = {};
+  var duplicates = [];
+  for (var i = 0; i < objects.length; i++) {
+    var id = objects[i].id;
+    if (seen[id]) {
+      if (!duplicates.includes(id)) duplicates.push(id);
+    } else {
+      seen[id] = true;
+    }
+  }
+  return duplicates;
+};
 export const rgbaCol = (color, opacity) =>
   "rgba(" +
   parseInt(color.slice(-6, -4), 16) +
