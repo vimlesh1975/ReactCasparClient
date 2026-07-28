@@ -12,20 +12,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
   const [selectedTemplateType, setSelectedTemplateType] = useState(null);
   const [selectedTemplateObj, setSelectedTemplateObj] = useState(null);
   const [selectedVariationIndex, setSelectedVariationIndex] = useState(0);
-  const [previewMode, setPreviewMode] = useState('fabric'); // 'fabric' or 'reference'
-
-  // Helper to map sub-category to template type keyword understood by generateBroadcastHTML
-  const mapSubCatToType = (subCat) => {
-    if (!subCat) return '';
-    const upper = subCat.toUpperCase();
-    if (upper.includes('LOWER')) return 'lower-third';
-    if (upper.includes('SPLITS')) return 'split-times';
-    if (upper.includes('SCORES')) return 'scoreboard';
-    if (upper.includes('RESULTS')) return 'results-table';
-    if (upper.includes('RECORDS') || upper.includes('BUG')) return 'event-bug';
-    return '';
-  };
-
+  const [enlargedImage, setEnlargedImage] = useState(null);
   const [selectedSport, setSelectedSport] = useState(OLYMPIC_GAMES_DATA[0]);
   const [searchTerm, setSearchTerm] = useState('');
   const [templateSearchTerm, setTemplateSearchTerm] = useState('');
@@ -117,7 +104,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
   // Fabric Canvas Preview Renderer
   useEffect(() => {
-    if (previewMode === 'fabric' && fabricCanvasRef.current) {
+    if (fabricCanvasRef.current) {
       if (!fabricInstanceRef.current) {
         fabricInstanceRef.current = new fabric.Canvas(fabricCanvasRef.current, {
           width: 1920,
@@ -143,7 +130,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         previewCanvas.requestRenderAll();
       }
     }
-  }, [previewMode, selectedSport, selectedTemplateType, selectedVariationIndex, customFields, customColors, effectiveTemplateId, filteredTemplates, selectedTemplateObj]);
+  }, [selectedSport, selectedTemplateType, selectedVariationIndex, customFields, customColors, effectiveTemplateId, filteredTemplates, selectedTemplateObj]);
 
   const handleAddToCanvas = () => {
     const activeCanvas = canvas || window.editor?.canvas || window.canvas;
@@ -270,6 +257,9 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
                 src={getFullImageUrl(referenceImagePath)}
                 alt={selectedTemplateObj?.title || 'Graphic Reference'}
                 className="reference-preview-image"
+                style={{ cursor: 'pointer' }}
+                title="Double-click to view full size"
+                onDoubleClick={() => setEnlargedImage(getFullImageUrl(referenceImagePath))}
                 onError={(e) => {
                   console.error('Failed to load image:', e.target.src);
                 }}
@@ -317,6 +307,64 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
         </div>
 
       </div>
+
+      {/* ── Enlarged Reference Image Lightbox Modal ── */}
+      {enlargedImage && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+            boxSizing: 'border-box'
+          }}
+          onClick={() => setEnlargedImage(null)}
+        >
+          <div style={{ position: 'relative', width: '98vw', height: '96vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={e => e.stopPropagation()}>
+            <button
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '15px',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.8)',
+                zIndex: 100000
+              }}
+              onClick={() => setEnlargedImage(null)}
+              title="Close"
+            >
+              ✕
+            </button>
+            <img
+              src={enlargedImage}
+              alt="Enlarged Reference Guide"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                borderRadius: '8px',
+                boxShadow: '0 10px 50px rgba(0,0,0,0.95)',
+                border: '2px solid #38bdf8'
+              }}
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );
