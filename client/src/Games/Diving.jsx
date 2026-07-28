@@ -72,13 +72,13 @@ const Diving = () => {
     score: totalScore
   });
 
-  const sendToCanvas = (templateId) => {
+  const sendToCanvas = async (templateId) => {
     const activeCanvas = canvas || window.editor?.canvas || window.canvas;
     if (!activeCanvas) {
       alert("Canvas is not initialized yet. Please open the Drawing tab first!");
       return;
     }
-    const group = createFabricGraphicGroup(
+    const group = await createFabricGraphicGroup(
       sportInfo,
       'lower-third',
       getCustomFields(),

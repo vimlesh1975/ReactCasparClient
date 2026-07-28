@@ -104,6 +104,7 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
 
   // Fabric Canvas Preview Renderer
   useEffect(() => {
+    let isMounted = true;
     if (fabricCanvasRef.current) {
       if (!fabricInstanceRef.current) {
         fabricInstanceRef.current = new fabric.Canvas(fabricCanvasRef.current, {
@@ -112,33 +113,38 @@ const GamesAIPanel = ({ generateTheatreID, deleteTheatreID }) => {
           selection: true
         });
       }
-      const previewCanvas = fabricInstanceRef.current;
-      previewCanvas.clear();
-      previewCanvas.backgroundColor = 'transparent';
+      
+      if (selectedSport && selectedTemplateType) {
+        const previewCanvas = fabricInstanceRef.current;
+        previewCanvas.clear();
+        previewCanvas.backgroundColor = 'transparent';
 
-      const group = createFabricGraphicGroup(
-        selectedSport,
-        selectedTemplateType,
-        customFields,
-        customColors,
-        effectiveTemplateId,
-        selectedTemplateObj?.name || ''
-      );
-
-      if (group) {
-        previewCanvas.add(group);
-        previewCanvas.requestRenderAll();
+        createFabricGraphicGroup(
+          selectedSport,
+          selectedTemplateType,
+          customFields,
+          customColors,
+          effectiveTemplateId,
+          selectedTemplateObj?.name || ''
+        ).then(group => {
+          if (isMounted && group) {
+            previewCanvas.clear();
+            previewCanvas.add(group);
+            previewCanvas.requestRenderAll();
+          }
+        });
       }
     }
+    return () => { isMounted = false; };
   }, [selectedSport, selectedTemplateType, selectedVariationIndex, customFields, customColors, effectiveTemplateId, filteredTemplates, selectedTemplateObj]);
 
-  const handleAddToCanvas = () => {
+  const handleAddToCanvas = async () => {
     const activeCanvas = canvas || window.editor?.canvas || window.canvas;
     if (!activeCanvas) {
       alert('Canvas is not initialized yet. Please open the Drawing tab first!');
       return;
     }
-    const group = createFabricGraphicGroup(
+    const group = await createFabricGraphicGroup(
       selectedSport,
       selectedTemplateType,
       customFields,

@@ -8,6 +8,30 @@ import { generateUniqueId } from '../common';
 import { generateGymnasticsArtisticHTML, generateGymnasticsArtisticFabric } from './sports/gymnasticsArtistic';
 import { generateArcheryHTML, generateArcheryFabric } from './sports/archery';
 import { generateDivingHTML, generateDivingFabric } from './sports/diving';
+import { getFlagBase64 } from './flagsBase64';
+
+export async function createFabricFlagObject(nocCode, options = {}) {
+  const base64 = getFlagBase64(nocCode);
+  if (!base64) return null;
+  try {
+    const img = await fabric.Image.fromURL(base64);
+    img.set({
+      scaleX: 0.35,
+      scaleY: 0.35,
+      ...options
+    });
+    return img;
+  } catch (err) {
+    console.error("Error creating flag object for NOC:", nocCode, err);
+    return null;
+  }
+}
+
+export function getFlagImgHtml(nocCode, extraStyle = '') {
+  const base64 = getFlagBase64(nocCode);
+  if (!base64) return '';
+  return `<img src="${base64}" alt="${nocCode || ''}" style="height: 26px; width: auto; vertical-align: middle; ${extraStyle}" />`;
+}
 
 const RANDOM_ATHLETES_POOL = [
   { name: "Usain Bolt", country: "JAM" },
@@ -50,6 +74,9 @@ export function get11PlayerLineup(sport) {
 }
 
 export function resolveCategory(templateType, templateName = '', templateId = '') {
+  const combinedInput = `${templateType} ${templateName} ${templateId}`.toLowerCase();
+  if (combinedInput.includes("cb513") || combinedInput.includes("athlete result") || combinedInput.includes("single athlete")) return "single-athlete-result";
+
   const normType = (templateType || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
   const normId = (templateId || "").toLowerCase();
@@ -202,7 +229,8 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
     CS: "🛶", SA: "⛵", RW: "🚣", GY: "🤸", AR: "🎯", SH: "🎯", EQ: "🐎",
     WL: "🏋️", TR: "🏃", MP: "🏊", GT: "🤸", TF: "⚽", RU: "🏉", CR: "🏏",
     GO: "⛳", SK: "⛷️", BI: "🎯", CU: "🥌", IH: "🏒", FS: "⛸️", SS: "⛸️",
-    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂"
+    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂",
+    CB: "🚴", GA: "🤸", GR: "🤸", CM: "🚴", RO: "🚣"
   };
   const sportIcon = SPORT_ICONS[code] || "🏅";
   const category = resolveCategory(templateType, templateName, templateId);
@@ -650,7 +678,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="top-bar">
               <span class="sport-code">${code}</span>
               <span class="athlete-name">${data.athlete || data.athleteA || "MICHAEL PHELPS"}</span>
-              <span class="flag-badge">${data.flag || "🏳️"} ${data.country || ""}</span>
+              ${getFlagImgHtml(data.country || "USA", "height: 32px; transform: skewX(15deg); margin-left: 12px;")}
             </div>
             <div class="bottom-bar">
               <span>${data.event || sportTitle}</span>
@@ -670,14 +698,14 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
           .crew-card { position: absolute; bottom: 90px; left: 90px; display: flex; align-items: stretch; animation: riseIn 0.5s ease-out forwards; }
           @keyframes riseIn { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-          .flag-col { background: ${accentColor}; width: 80px; display: flex; align-items: center; justify-content: center; font-size: 44px; border-radius: 10px 0 0 10px; }
+          .flag-col { background: ${accentColor}; width: 80px; display: flex; align-items: center; justify-content: center; border-radius: 10px 0 0 10px; }
           .content-col { background: linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%); padding: 14px 24px; min-width: 500px; border-radius: 0 10px 10px 0; border-top: 4px solid ${accentColor}; }
           .sport-tag { font-size: 13px; font-weight: 900; color: ${accentColor}; letter-spacing: 2px; margin-bottom: 4px; }
           .crew-name { font-size: 30px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
           .crew-sub { font-size: 17px; font-weight: 600; color: rgba(255,255,255,0.75); margin-top: 4px; }
         </style></head><body>
           <div class="crew-card">
-            <div class="flag-col">${data.flag || "🏳️"}</div>
+            <div class="flag-col">${getFlagImgHtml(data.country || "USA", "height: 40px;")}</div>
             <div class="content-col">
               <div class="sport-tag">${code} • ${data.country || "TEAM"}</div>
               <div class="crew-name">${data.athlete || data.teamA || "DAVID DAVIES & K.A. PAYNE"}</div>
@@ -707,7 +735,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             <div class="name-row">
               <span class="champion-badge">🥇 CHAMPION</span>
               <span class="champ-name">${data.athlete || "USAIN BOLT"}</span>
-              <span style="font-size:28px;">${data.flag || "🏳️"}</span>
+              ${getFlagImgHtml(data.country || "JAM", "height: 32px;")}
             </div>
             <div class="detail-row">
               <span>${data.country || code}</span>
@@ -741,7 +769,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
               <div class="role-label">HEAD COACH • ${code}</div>
               <div class="person-name">${data.athlete || "BOB BOWMAN"}</div>
               <div class="person-sub">${data.event || sportTitle}</div>
-              <span class="country-tag">${data.flag || "🏳️"} ${data.country || "NOC"}</span>
+              <span class="country-tag">${getFlagImgHtml(data.country || "USA", "height: 20px; margin-right: 6px;")} ${data.country || "NOC"}</span>
             </div>
           </div>
         </body></html>`;
@@ -763,7 +791,8 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="team-card">
             <div class="team-header">
-              <span class="team-flag">${data.flag || "🏳️"}</span>
+              ${getFlagImgHtml(data.country || "USA", "height: 44px;")}
+              <span class="team-name">${data.country || data.athlete || "TEAM"}</span>
               <span class="team-name">${data.country || data.athlete || "TEAM"}</span>
               <span style="margin-left:auto; background:${accentColor}; color:#000; font-weight:900; padding:4px 12px; border-radius:4px; font-size:16px;">${code}</span>
             </div>
@@ -6349,8 +6378,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
             ${resultsList.slice(0, 8).map(r => `
               <div class="adv-row">
                 <span class="rank-badge">${r.rank}</span>
-                <span class="adv-noc">${r.noc}</span>
-                <span class="adv-flag">${r.flag}</span>
+                ${getFlagImgHtml(r.noc, "height: 28px; transform: skewX(15deg); margin-right: 12px;")}
                 <span class="adv-name">${r.athlete}</span>
                 <span class="adv-time">${r.time}</span>
               </div>
@@ -7420,7 +7448,117 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
       `;
     }
 
+    case "single-athlete-result":
     case "results-table": {
+      const isCB513 = (templateId || '').toUpperCase().includes('CB513') || (templateName || '').toLowerCase().includes('athlete result');
+      if (isCB513) {
+        const countryNoc = data.country || data.nocCode || 'COL';
+        const rankVal = data.rank || '6';
+        const bibVal = data.bib || data.bibNumber || '113';
+        const athleteName = (data.athlete || 'SERGIO SALAZAR').toUpperCase();
+        const subLabel = (data.subTitle || data.event || 'SEEDING RUN').toUpperCase();
+        const scoreVal = data.time || data.score || '36.145';
+
+        return `
+          <!DOCTYPE html><html><head><meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,700;1,900&display=swap');
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Outfit', sans-serif; }
+            .cb513-wrapper { position: absolute; bottom: 80px; left: 90px; display: flex; flex-direction: column; gap: 2px; }
+            .cb513-top {
+              background: linear-gradient(180deg, #00508c 0%, #002b54 50%, #001938 100%);
+              border: 2px solid #001f3f;
+              border-radius: 6px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 4px 20px 4px 6px;
+              box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            }
+            .cb513-rank {
+              background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+              color: white;
+              font-size: 26px;
+              font-weight: 900;
+              font-style: italic;
+              padding: 4px 14px;
+              border-radius: 4px;
+              margin-right: 12px;
+            }
+            .cb513-noc {
+              font-size: 24px;
+              font-weight: 900;
+              font-style: italic;
+              color: white;
+              margin-right: 12px;
+            }
+            .cb513-bib {
+              font-size: 24px;
+              font-weight: 700;
+              font-style: italic;
+              color: #cbd5e1;
+              margin-left: 12px;
+              margin-right: 14px;
+            }
+            .cb513-name {
+              font-size: 30px;
+              font-weight: 900;
+              font-style: italic;
+              color: white;
+              letter-spacing: 1px;
+              margin-right: 40px;
+            }
+            .cb513-bot {
+              background: linear-gradient(180deg, #001e3d 0%, #000d1a 100%);
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 4px;
+              transform: skewX(-15deg);
+              display: flex;
+              align-items: center;
+              padding: 6px 24px;
+              margin-left: 12px;
+              width: fit-content;
+              gap: 20px;
+            }
+            .cb513-sub {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: white;
+              letter-spacing: 1px;
+            }
+            .cb513-score {
+              transform: skewX(15deg);
+              font-size: 20px;
+              font-weight: 900;
+              font-style: italic;
+              color: ${accentColor};
+            }
+          </style></head><body>
+            <div class="cb513-wrapper">
+              <div class="cb513-top">
+                <span class="cb513-rank">${rankVal}</span>
+                ${getFlagImgHtml(countryNoc, "height: 28px; transform: skewX(15deg); margin-right: 10px; margin-left: 4px;")}
+                <span class="cb513-bib">${bibVal}</span>
+                <span class="cb513-name">${athleteName}</span>
+                <svg width="60" height="26" viewBox="0 0 100 50" fill="none" stroke="#ffffff" stroke-width="4" style="transform: skewX(15deg); opacity: 0.85;">
+                  <circle cx="20" cy="20" r="14" />
+                  <circle cx="50" cy="20" r="14" />
+                  <circle cx="80" cy="20" r="14" />
+                  <circle cx="35" cy="32" r="14" />
+                  <circle cx="65" cy="32" r="14" />
+                </svg>
+              </div>
+              <div class="cb513-bot">
+                <span class="cb513-sub">${subLabel}</span>
+                <span class="cb513-score">${scoreVal}</span>
+              </div>
+            </div>
+          </body></html>`;
+      }
+
       // Variant 1 & 4: Classic podium top-3 results card
       if (variant === 1 || variant === 4) return `
         <!DOCTYPE html><html><head><meta charset="utf-8">
@@ -7437,9 +7575,9 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
         </style></head><body>
           <div class="res-card">
             <div class="res-head"><span>${sportTitle} RESULTS</span><span style="color:${accentColor};">${code}</span></div>
-            <div class="res-row"><span class="badge-gold">1 GOLD</span><span style="margin-left:20px;flex:1;">${data.athlete || "MICHAEL PHELPS"}</span><span>${data.country || "USA"}</span><span style="margin-left:20px;color:${accentColor};">${data.time || data.score || "1st"}</span></div>
-            <div class="res-row"><span class="badge-silver">2 SILV</span><span style="margin-left:20px;flex:1;">CHAD LE CLOS</span><span>RSA</span><span style="margin-left:20px;">+0.12</span></div>
-            <div class="res-row"><span class="badge-bronze">3 BRNZ</span><span style="margin-left:20px;flex:1;">EVGENY KOROTYSHKIN</span><span>RUS</span><span style="margin-left:20px;">+0.35</span></div>
+            <div class="res-row"><span class="badge-gold">1 GOLD</span>${getFlagImgHtml(data.country || "USA", "height:26px; margin-left:14px; margin-right:10px;")}<span style="flex:1;">${data.athlete || "MICHAEL PHELPS"}</span><span style="margin-left:20px;color:${accentColor};">${data.time || data.score || "1st"}</span></div>
+            <div class="res-row"><span class="badge-silver">2 SILV</span>${getFlagImgHtml("RSA", "height:26px; margin-left:14px; margin-right:10px;")}<span style="flex:1;">CHAD LE CLOS</span><span style="margin-left:20px;">+0.12</span></div>
+            <div class="res-row"><span class="badge-bronze">3 BRNZ</span>${getFlagImgHtml("GER", "height:26px; margin-left:14px; margin-right:10px;")}<span style="flex:1;">EVGENY KOROTYSHKIN</span><span style="margin-left:20px;">+0.35</span></div>
           </div>
         </body></html>`;
 
@@ -7455,18 +7593,18 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
           .full-row { display: flex; align-items: center; padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 18px; font-weight: 700; }
           .full-row:nth-child(even) { background: rgba(255,255,255,0.03); }
           .pos { width: 36px; font-size: 22px; font-weight: 900; color: ${accentColor}; }
-          .noc { background: rgba(255,255,255,0.12); padding: 2px 8px; border-radius: 4px; font-size: 14px; margin-left: auto; }
           .result { color: ${accentColor}; font-size: 18px; margin-left: 20px; min-width: 80px; text-align: right; }
         </style></head><body>
           <div class="full-card">
             <div class="full-head"><span>${sportTitle} FINAL RESULTS</span><span style="color:${accentColor};">${code}</span></div>
-            ${[{pos:'🥇 1',name:data.athlete||'MICHAEL PHELPS',noc:data.country||'USA',res:data.time||'3:33.10'},{pos:'2',name:'CHAD LE CLOS',noc:'RSA',res:'+0.12'},{pos:'3',name:'EVGENY KOROTYSHKIN',noc:'RUS',res:'+0.35'},{pos:'4',name:'MILORAD ČAVIĆ',noc:'SRB',res:'+0.72'},{pos:'5',name:'TYLER MCGILL',noc:'USA',res:'+1.01'},{pos:'6',name:'STEFFEN DEIBLER',noc:'GER',res:'+1.45'}].map(r => `
+            ${[{pos:'🥇 1',name:data.athlete||'MICHAEL PHELPS',noc:data.country||'USA',res:data.time||'3:33.10'},{pos:'2',name:'CHAD LE CLOS',noc:'RSA',res:'+0.12'},{pos:'3',name:'EVGENY KOROTYSHKIN',noc:'GER',res:'+0.35'},{pos:'4',name:'MILORAD ČAVIĆ',noc:'SRB',res:'+0.72'},{pos:'5',name:'TYLER MCGILL',noc:'USA',res:'+1.01'},{pos:'6',name:'STEFFEN DEIBLER',noc:'GER',res:'+1.45'}].map(r => `
               <div class="full-row">
                 <span class="pos">${r.pos}</span>
-                <span style="flex:1;margin-left:12px;">${r.name}</span>
-                <span class="noc">${r.noc}</span>
+                ${getFlagImgHtml(r.noc, "height: 24px; margin-left: 12px; margin-right: 12px;")}
+                <span style="flex:1;">${r.name}</span>
                 <span class="result">${r.res}</span>
-              </div>`).join('')}
+              </div>
+            `).join('')}
           </div>
         </body></html>`;
 
@@ -7562,7 +7700,7 @@ export function generateBroadcastHTML(sport, templateType, customData = {}, styl
 /**
  * Generate Native Fabric.js Vector Graphic Objects matching HTML preview variants
  */
-export function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}, templateId = '', templateName = '') {
+export async function createFabricGraphicGroup(sport, templateType, customData = {}, customColors = {}, templateId = '', templateName = '') {
   const primaryColor = customColors.primaryColor || sport.primaryColor || "#005b96";
   const secondaryColor = customColors.secondaryColor || sport.secondaryColor || "#003366";
   const accentColor = customColors.accentColor || sport.accentColor || "#ffd700";
@@ -7580,7 +7718,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     CS: "🛶", SA: "⛵", RW: "🚣", GY: "🤸", AR: "🎯", SH: "🎯", EQ: "🐎",
     WL: "🏋️", TR: "🏃", MP: "🏊", GT: "🤸", TF: "⚽", RU: "🏉", CR: "🏏",
     GO: "⛳", SK: "⛷️", BI: "🎯", CU: "🥌", IH: "🏒", FS: "⛸️", SS: "⛸️",
-    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂"
+    BS: "🛷", LU: "🛷", SJ: "⛷️", CC: "⛷️", NC: "⛷️", FT: "⚽", SB: "🏂",
+    CB: "🚴", GA: "🤸", GR: "🤸", CM: "🚴", RO: "🚣"
   };
   const sportIcon = SPORT_ICONS[code] || "🏅";
 
@@ -7942,9 +8081,14 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const nameText = new fabric.Textbox((data.athlete || data.athleteA || "MICHAEL PHELPS").toUpperCase(), createProps('textbox', {
           left: 180, top: 872, fontSize: 34, fontWeight: 'bold', fill: '#ffffff', width: 450
         }));
-        const countryText = new fabric.Textbox(`${data.flag || "🏳️"} ${data.country || ""}`, createProps('textbox', {
-          left: 630, top: 875, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 190, textAlign: 'right'
+        const countryNoc = data.country || data.nocCode || "USA";
+        const flagObj = createFabricFlagObject(countryNoc, {
+          left: 770, top: 868, scaleX: 0.55, scaleY: 0.55
+        });
+        const countryText = new fabric.Textbox(countryNoc, createProps('textbox', {
+          left: 630, top: 875, fontSize: 26, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right'
         }));
+        if (flagObj) objects.push(flagObj);
 
         const bottomBg = new fabric.Rect(createProps('rect', {
           left: 90, top: 920, width: 700, height: 45, fill: '#0f172a', rx: 4, ry: 4
@@ -8148,7 +8292,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
           { name: "TYLER MCGILL", noc: "USA" },
           { name: "STEFFEN DEIBLER", noc: "GER" }
         ];
-        heatAthletes.forEach((ath, idx) => {
+        for (let idx = 0; idx < heatAthletes.length; idx++) {
+          const ath = heatAthletes[idx];
           const n = idx + 1;
           const y = 180 + idx * 45;
           const rowBg = new fabric.Rect(createProps('rect', {
@@ -8160,14 +8305,16 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
           const laneText = new fabric.Textbox(String(n), createProps('textbox', {
             left: 1285, top: y + 13, fontSize: 16, fontWeight: 'bold', fill: accentColor, width: 30, textAlign: 'center'
           }));
+          const flagObj = await createFabricFlagObject(ath.noc, createProps('image', {
+            left: 1325, top: y + 8, scaleX: 0.40, scaleY: 0.40
+          }));
           const nameText = new fabric.Textbox(ath.name, createProps('textbox', {
-            left: 1330, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 350
+            left: 1445, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 370
           }));
-          const nocText = new fabric.Textbox(ath.noc, createProps('textbox', {
-            left: 1730, top: y + 14, fontSize: 14, fontWeight: 'bold', fill: '#94a3b8', width: 80, textAlign: 'right'
-          }));
-          objects.push(rowBg, circle, laneText, nameText, nocText);
-        });
+          objects.push(rowBg, circle, laneText);
+          if (flagObj) objects.push(flagObj);
+          objects.push(nameText);
+        }
       } else {
         // Variant 3: Live lane position bug
         const posLabel = new fabric.Rect(createProps('rect', {
@@ -8235,7 +8382,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
 
       objects.push(cardBg, headerBg, headerAccent, titleText, subtitleText, codeHeader);
 
-      lineup.forEach((item, idx) => {
+      for (let idx = 0; idx < lineup.length; idx++) {
+        const item = lineup[idx];
         const y = 160 + idx * 44;
         const rowBg = new fabric.Rect(createProps('rect', {
           left: 90, top: y, width: 820, height: 42, fill: idx % 2 === 0 ? '#1e293b' : '#0f172a'
@@ -8246,22 +8394,144 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const laneText = new fabric.Textbox(String(item.lane), createProps('textbox', {
           left: 110, top: y + 11, fontSize: 14, fontWeight: 'bold', fill: accentColor, width: 30, textAlign: 'center'
         }));
+        const flagObj = await createFabricFlagObject(item.country, createProps('image', {
+          left: 155, top: y + 8, scaleX: 0.40, scaleY: 0.40
+        }));
         const nameText = new fabric.Textbox(item.name.toUpperCase(), createProps('textbox', {
-          left: 155, top: y + 10, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 580
+          left: 275, top: y + 10, fontSize: 17, fontWeight: 'bold', fill: '#ffffff', width: 610
         }));
-        const nocBg = new fabric.Rect(createProps('rect', {
-          left: 810, top: y + 8, width: 80, height: 26, fill: '#334155', rx: 4, ry: 4
-        }));
-        const nocText = new fabric.Textbox(item.country, createProps('textbox', {
-          left: 810, top: y + 12, fontSize: 14, fontWeight: 'bold', fill: '#ffffff', width: 80, textAlign: 'center'
-        }));
+        objects.push(rowBg, circle, laneText);
+        if (flagObj) objects.push(flagObj);
+        objects.push(nameText);
+      }
+      break;
+    }
 
-        objects.push(rowBg, circle, laneText, nameText, nocBg, nocText);
-      });
+    case 'single-athlete-result': {
+      const topY = 860;
+      const leftX = 90;
+      const countryNoc = data.country || data.nocCode || 'COL';
+      const rankVal = data.rank || '6';
+      const bibVal = data.bib || data.bibNumber || '113';
+      const athleteName = (data.athlete || 'SERGIO SALAZAR').toUpperCase();
+      const subLabel = (data.subTitle || data.event || 'SEEDING RUN').toUpperCase();
+      const scoreVal = data.time || data.score || '36.145';
+
+      // Top Main Bar (Slanted Blue Bar)
+      const topBarBg = new fabric.Rect(createProps('rect', {
+        left: leftX, top: topY, width: 1100, height: 48, fill: primaryColor, skewX: -15, rx: 4, ry: 4
+      }));
+
+      // Red Rank Badge
+      const rankBadge = new fabric.Rect(createProps('rect', {
+        left: leftX + 5, top: topY + 2, width: 45, height: 44, fill: '#dc2626', skewX: -15, rx: 4, ry: 4
+      }));
+      const rankText = new fabric.Textbox(rankVal, createProps('textbox', {
+        left: leftX + 8, top: topY + 8, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 40, textAlign: 'center'
+      }));
+
+      // Slanted Flag Object
+      const flagObj = await createFabricFlagObject(countryNoc, createProps('image', {
+        left: leftX + 60, top: topY + 6, scaleX: 0.48, scaleY: 0.48
+      }));
+
+      // Bib Number
+      const bibText = new fabric.Textbox(bibVal, createProps('textbox', {
+        left: leftX + 180, top: topY + 10, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#cbd5e1', width: 55
+      }));
+
+      // Athlete Name
+      const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
+        left: leftX + 245, top: topY + 8, fontSize: 26, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600
+      }));
+
+      // Bottom Sub Bar
+      const botBarBg = new fabric.Rect(createProps('rect', {
+        left: leftX + 10, top: topY + 50, width: 1080, height: 38, fill: secondaryColor, skewX: -15, rx: 4, ry: 4
+      }));
+
+      // Sub Label ("SEEDING RUN")
+      const subText = new fabric.Textbox(subLabel, createProps('textbox', {
+        left: leftX + 25, top: topY + 56, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 250
+      }));
+
+      // Score / Time ("36.145")
+      const scoreText = new fabric.Textbox(scoreVal, createProps('textbox', {
+        left: leftX + 280, top: topY + 56, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: accentColor, width: 250
+      }));
+
+      objects.push(topBarBg, rankBadge, rankText);
+      if (flagObj) objects.push(flagObj);
+      objects.push(bibText, nameText, botBarBg, subText, scoreText);
       break;
     }
 
     case 'results-table': {
+      const isCB513 = (templateId || '').toUpperCase().includes('CB513') || (templateName || '').toLowerCase().includes('athlete result');
+      if (isCB513) {
+        const topY = 860;
+        const leftX = 90;
+        const countryNoc = data.country || data.nocCode || 'COL';
+        const rankVal = data.rank || '6';
+        const bibVal = data.bib || data.bibNumber || '113';
+        const athleteName = (data.athlete || 'SERGIO SALAZAR').toUpperCase();
+        const subLabel = (data.subTitle || data.event || 'SEEDING RUN').toUpperCase();
+        const scoreVal = data.time || data.score || '36.145';
+
+        // Top Main Bar (Slanted Blue Bar)
+        const topBarBg = new fabric.Rect(createProps('rect', {
+          left: leftX, top: topY, width: 1100, height: 48, fill: primaryColor, skewX: -15, rx: 4, ry: 4
+        }));
+
+        // Red Rank Badge
+        const rankBadge = new fabric.Rect(createProps('rect', {
+          left: leftX + 5, top: topY + 2, width: 45, height: 44, fill: '#dc2626', skewX: -15, rx: 4, ry: 4
+        }));
+        const rankText = new fabric.Textbox(rankVal, createProps('textbox', {
+          left: leftX + 8, top: topY + 8, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 40, textAlign: 'center'
+        }));
+
+        // NOC Text
+        const nocText = new fabric.Textbox(countryNoc, createProps('textbox', {
+          left: leftX + 60, top: topY + 10, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 65
+        }));
+
+        // Slanted Flag Object
+        const flagObj = await createFabricFlagObject(countryNoc, createProps('image', {
+          left: leftX + 130, top: topY + 6, scaleX: 0.48, scaleY: 0.48
+        }));
+
+        // Bib Number
+        const bibText = new fabric.Textbox(bibVal, createProps('textbox', {
+          left: leftX + 245, top: topY + 10, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#cbd5e1', width: 55
+        }));
+
+        // Athlete Name
+        const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
+          left: leftX + 310, top: topY + 8, fontSize: 26, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600
+        }));
+
+        // Bottom Sub Bar
+        const botBarBg = new fabric.Rect(createProps('rect', {
+          left: leftX + 10, top: topY + 50, width: 1080, height: 38, fill: secondaryColor, skewX: -15, rx: 4, ry: 4
+        }));
+
+        // Sub Label ("SEEDING RUN")
+        const subText = new fabric.Textbox(subLabel, createProps('textbox', {
+          left: leftX + 25, top: topY + 56, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 250
+        }));
+
+        // Score / Time ("36.145")
+        const scoreText = new fabric.Textbox(scoreVal, createProps('textbox', {
+          left: leftX + 280, top: topY + 56, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: accentColor, width: 250
+        }));
+
+        objects.push(topBarBg, rankBadge, rankText, nocText);
+        if (flagObj) objects.push(flagObj);
+        objects.push(bibText, nameText, botBarBg, subText, scoreText);
+        break;
+      }
+
       const isCB515 = (templateId || '').toUpperCase().includes('CB515') || ((templateId || '').toUpperCase().includes('CB') && (templateName || '').toLowerCase().includes('standings'));
       if (isCB515) {
         const isVariant2 = (variant === 2);
@@ -8307,26 +8577,29 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
 
         const activeList = isVariant2 ? page2Data : page1Data;
 
-        activeList.forEach((r, idx) => {
+        for (let idx = 0; idx < activeList.length; idx++) {
+          const r = activeList[idx];
           const y = 158 + idx * 48;
           const isDsqRow = r.isDsq;
           const rowBg = new fabric.Rect(createProps('rect', {
             left: 90, top: y, width: 920, height: 46, fill: isDsqRow ? '#3b0764' : (idx % 2 === 0 ? '#1e293b' : '#0a0e1e')
           }));
           const posText = new fabric.Textbox(r.pos, createProps('textbox', {
-            left: 110, top: y + 12, fontSize: 18, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 50
+            left: 110, top: y + 12, fontSize: 18, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 45
+          }));
+          const flagObj = await createFabricFlagObject(r.noc, createProps('image', {
+            left: 160, top: y + 10, scaleX: 0.45, scaleY: 0.45
           }));
           const nameText = new fabric.Textbox(r.name, createProps('textbox', {
-            left: 170, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#fca5a5' : '#ffffff', width: 520
-          }));
-          const nocText = new fabric.Textbox(r.noc, createProps('textbox', {
-            left: 710, top: y + 13, fontSize: 15, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+            left: 285, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#fca5a5' : '#ffffff', width: 470
           }));
           const resText = new fabric.Textbox(r.res, createProps('textbox', {
-            left: 780, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 210, textAlign: 'right'
+            left: 770, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 220, textAlign: 'right'
           }));
-          objects.push(rowBg, posText, nameText, nocText, resText);
-        });
+          objects.push(rowBg, posText);
+          if (flagObj) objects.push(flagObj);
+          objects.push(nameText, resText);
+        }
         break;
       }
 
@@ -8355,11 +8628,11 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const goldPillText = new fabric.Textbox("1 GOLD", createProps('textbox', {
           left: 115, top: 227, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const goldAthlete = new fabric.Textbox((data.athlete || "MICHAEL PHELPS").toUpperCase(), createProps('textbox', {
-          left: 220, top: 224, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        const goldFlag = await createFabricFlagObject(data.country || "USA", createProps('image', {
+          left: 215, top: 218, scaleX: 0.45, scaleY: 0.45
         }));
-        const goldNoc = new fabric.Textbox(data.country || "USA", createProps('textbox', {
-          left: 610, top: 224, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        const goldAthlete = new fabric.Textbox((data.athlete || "MICHAEL PHELPS").toUpperCase(), createProps('textbox', {
+          left: 335, top: 224, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
         }));
         const goldTime = new fabric.Textbox(data.time || data.score || "1st", createProps('textbox', {
           left: 680, top: 224, fontSize: 20, fontWeight: 'bold', fill: accentColor, width: 130, textAlign: 'right'
@@ -8372,11 +8645,11 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const silverPillText = new fabric.Textbox("2 SILV", createProps('textbox', {
           left: 115, top: 277, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const silverAthlete = new fabric.Textbox("CHAD LE CLOS", createProps('textbox', {
-          left: 220, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        const silverFlag = await createFabricFlagObject("RSA", createProps('image', {
+          left: 215, top: 268, scaleX: 0.45, scaleY: 0.45
         }));
-        const silverNoc = new fabric.Textbox("RSA", createProps('textbox', {
-          left: 610, top: 274, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        const silverAthlete = new fabric.Textbox("CHAD LE CLOS", createProps('textbox', {
+          left: 335, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
         }));
         const silverTime = new fabric.Textbox("+0.12", createProps('textbox', {
           left: 680, top: 274, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right'
@@ -8389,17 +8662,23 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const bronzePillText = new fabric.Textbox("3 BRNZ", createProps('textbox', {
           left: 115, top: 327, fontSize: 16, fontWeight: 'bold', fill: '#000000', width: 90, textAlign: 'center'
         }));
-        const bronzeAthlete = new fabric.Textbox("EVGENY KOROTYSHKIN", createProps('textbox', {
-          left: 220, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 380
+        const bronzeFlag = await createFabricFlagObject("GER", createProps('image', {
+          left: 215, top: 318, scaleX: 0.45, scaleY: 0.45
         }));
-        const bronzeNoc = new fabric.Textbox("GER", createProps('textbox', {
-          left: 610, top: 324, fontSize: 18, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+        const bronzeAthlete = new fabric.Textbox("EVGENY KOROTYSHKIN", createProps('textbox', {
+          left: 335, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 340
         }));
         const bronzeTime = new fabric.Textbox("+0.35", createProps('textbox', {
           left: 680, top: 324, fontSize: 20, fontWeight: 'bold', fill: '#ffffff', width: 130, textAlign: 'right'
         }));
 
-        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, goldPill, goldPillText, goldAthlete, goldNoc, goldTime, silverPill, silverPillText, silverAthlete, silverNoc, silverTime, bronzePill, bronzePillText, bronzeAthlete, bronzeNoc, bronzeTime);
+        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader, goldPill, goldPillText);
+        if (goldFlag) objects.push(goldFlag);
+        objects.push(goldAthlete, goldTime, silverPill, silverPillText);
+        if (silverFlag) objects.push(silverFlag);
+        objects.push(silverAthlete, silverTime, bronzePill, bronzePillText);
+        if (bronzeFlag) objects.push(bronzeFlag);
+        objects.push(bronzeAthlete, bronzeTime);
       } else if (variant === 2 || variant === 5) {
         // Variant 2 & 5: Extended 6-finisher results table
         const cardBg = new fabric.Rect(createProps('rect', {
@@ -10710,7 +10989,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
 
       // 8 Result Rows
-      resultsList.slice(0, 8).forEach((r, idx) => {
+      for (let idx = 0; idx < Math.min(8, resultsList.length); idx++) {
+        const r = resultsList[idx];
         const y = 654 + idx * 42;
         const rowBar = new fabric.Rect(createProps('rect', {
           left: 90, top: y, width: 1120, height: 38, fill: '#001c3d', rx: 4, ry: 4,
@@ -10722,11 +11002,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const rTxt = new fabric.Textbox(r.rank, createProps('textbox', {
           left: 105, top: y + 10, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 24, textAlign: 'center'
         }));
-        const nocTxt = new fabric.Textbox(r.noc, createProps('textbox', {
-          left: 140, top: y + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
-        }));
-        const flagTxt = new fabric.Textbox(r.flag, createProps('textbox', {
-          left: 195, top: y + 7, fontSize: 22, fill: '#ffffff', width: 40
+        const flagObj = await createFabricFlagObject(r.noc, createProps('image', {
+          left: 140, top: y + 5, scaleX: 0.40, scaleY: 0.40
         }));
         const nameTxt = new fabric.Textbox(r.athlete, createProps('textbox', {
           left: 245, top: y + 9, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
@@ -10735,8 +11012,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
           left: 950, top: y + 8, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
         }));
 
-        objects.push(rowBar, rBadge, rTxt, nocTxt, flagTxt, nameTxt, timeTxt);
-      });
+        objects.push(rowBar, rBadge, rTxt);
+        if (flagObj) objects.push(flagObj);
+        objects.push(nameTxt, timeTxt);
+      }
       break;
     }
 
@@ -10786,7 +11065,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5);
 
       // 8 Result Rows
-      resultsList.slice(0, 8).forEach((r, idx) => {
+      for (let idx = 0; idx < Math.min(8, resultsList.length); idx++) {
+        const r = resultsList[idx];
         const y = 654 + idx * 42;
         const rowBar = new fabric.Rect(createProps('rect', {
           left: 90, top: y, width: 1120, height: 38, fill: '#001c3d', rx: 4, ry: 4,
@@ -10798,11 +11078,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         const rTxt = new fabric.Textbox(r.rank, createProps('textbox', {
           left: 105, top: y + 10, fontSize: 15, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 24, textAlign: 'center'
         }));
-        const nocTxt = new fabric.Textbox(r.noc, createProps('textbox', {
-          left: 140, top: y + 9, fontSize: 18, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
-        }));
-        const flagTxt = new fabric.Textbox(r.flag, createProps('textbox', {
-          left: 195, top: y + 7, fontSize: 22, fill: '#ffffff', width: 40
+        const flagObj = await createFabricFlagObject(r.noc, createProps('image', {
+          left: 140, top: y + 5, scaleX: 0.40, scaleY: 0.40
         }));
         const nameTxt = new fabric.Textbox(r.athlete, createProps('textbox', {
           left: 245, top: y + 9, fontSize: 20, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 600
@@ -10811,8 +11088,10 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
           left: 950, top: y + 8, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
         }));
 
-        objects.push(rowBar, rBadge, rTxt, nocTxt, flagTxt, nameTxt, timeTxt);
-      });
+        objects.push(rowBar, rBadge, rTxt);
+        if (flagObj) objects.push(flagObj);
+        objects.push(nameTxt, timeTxt);
+      }
       break;
     }
 
@@ -10820,7 +11099,6 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
       const sportName = (sportTitle || "SWIMMING").toUpperCase();
       const headerLabel = (data.headerLabel || "WINNER - MEN'S 4X200M FREESTYLE RELAY").toUpperCase();
       const countryCode = (data.country || "USA").toUpperCase();
-      const flagStr = data.flag || "🇺🇸";
       const winnerName = (data.winnerName || data.countryName || data.athlete || "UNITED STATES").toUpperCase();
       const badgeText = data.badge || "WR";
       const timeStr = data.time || "6:58.56";
@@ -10858,11 +11136,8 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 90, top: 752, width: 1100, height: 48, fill: '#001c3d', rx: 4, ry: 4,
         stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1, skewX: -15
       }));
-      const nocTxt = new fabric.Textbox(countryCode, createProps('textbox', {
-        left: 110, top: 762, fontSize: 22, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 50
-      }));
-      const flagTxt = new fabric.Textbox(flagStr, createProps('textbox', {
-        left: 165, top: 760, fontSize: 26, fill: '#ffffff', width: 45
+      const flagObj = await createFabricFlagObject(countryCode, createProps('image', {
+        left: 110, top: 757, scaleX: 0.45, scaleY: 0.45
       }));
       const nameTxt = new fabric.Textbox(winnerName, createProps('textbox', {
         left: 220, top: 762, fontSize: 24, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 550
@@ -10880,7 +11155,9 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
         left: 900, top: 761, fontSize: 26, fontWeight: 'bold', fontStyle: 'italic', fill: '#ffffff', width: 140, textAlign: 'right'
       }));
 
-      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5, rowBar, nocTxt, flagTxt, nameTxt, badgeBg, badgeTxt, timeTxt);
+      objects.push(headBar, iconTxt, titleTxt, pillBg, pillTxt, r1, r2, r3, r4, r5, rowBar);
+      if (flagObj) objects.push(flagObj);
+      objects.push(nameTxt, badgeBg, badgeTxt, timeTxt);
       break;
     }
 
