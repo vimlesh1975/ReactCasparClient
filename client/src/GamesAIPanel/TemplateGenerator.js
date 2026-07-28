@@ -8262,6 +8262,74 @@ export function createFabricGraphicGroup(sport, templateType, customData = {}, c
     }
 
     case 'results-table': {
+      const isCB515 = (templateId || '').toUpperCase().includes('CB515') || ((templateId || '').toUpperCase().includes('CB') && (templateName || '').toLowerCase().includes('standings'));
+      if (isCB515) {
+        const isVariant2 = (variant === 2);
+        const cardBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 100, width: 920, height: 480, fill: '#0a0e1e', rx: 12, ry: 12
+        }));
+        const headerBg = new fabric.Rect(createProps('rect', {
+          left: 90, top: 100, width: 920, height: 55, fill: primaryColor, rx: 12, ry: 12
+        }));
+        const headerAccent = new fabric.Rect(createProps('rect', {
+          left: 90, top: 151, width: 920, height: 4, fill: accentColor
+        }));
+        const titleText = new fabric.Textbox(
+          isVariant2 ? `${sportTitle} STANDINGS (9-15 & DSQ)` : `${sportTitle} STANDINGS (1-8)`,
+          createProps('textbox', { left: 115, top: 116, fontSize: 22, fontWeight: 'bold', fill: '#ffffff', width: 650 })
+        );
+        const codeHeader = new fabric.Textbox(code, createProps('textbox', {
+          left: 880, top: 116, fontSize: 22, fontWeight: 'bold', fill: accentColor, width: 100, textAlign: 'right'
+        }));
+        objects.push(cardBg, headerBg, headerAccent, titleText, codeHeader);
+
+        const page1Data = [
+          { pos: '1', name: (data.athlete || 'MARIS STROMBERGS').toUpperCase(), noc: data.country || 'LAT', res: data.time || '37.576' },
+          { pos: '2', name: 'SAM WILLOUGHBY', noc: 'AUS', res: '+0.35' },
+          { pos: '3', name: 'CARLOS OQUENDO', noc: 'COL', res: '+0.64' },
+          { pos: '4', name: 'RAYMON VAN DER BIEZEN', noc: 'NED', res: '+0.89' },
+          { pos: '5', name: 'TWAN VAN GENDT', noc: 'NED', res: '+1.12' },
+          { pos: '6', name: 'ANDRES JIMENEZ', noc: 'COL', res: '+1.54' },
+          { pos: '7', name: 'BRYAN CALLAN', noc: 'USA', res: '+2.01' },
+          { pos: '8', name: 'LIAM PHILLIPS', noc: 'GBR', res: '+3.10' }
+        ];
+
+        const page2Data = [
+          { pos: '9', name: 'QUENTIN CALEYRON', noc: 'FRA', res: '+3.45', isDsq: false },
+          { pos: '10', name: 'MARC WILLERS', noc: 'NZL', res: '+3.80', isDsq: false },
+          { pos: '11', name: 'RORY HUNTER', noc: 'AUS', res: '+4.10', isDsq: false },
+          { pos: '12', name: 'DAVID HERMAN', noc: 'USA', res: '+4.55', isDsq: false },
+          { pos: '13', name: 'JORIS DAUDET', noc: 'FRA', res: '+5.02', isDsq: false },
+          { pos: '14', name: 'MOANA COOLEY', noc: 'USA', res: '+5.40', isDsq: false },
+          { pos: '15', name: 'CONNOR FIELDS', noc: 'USA', res: '+6.10', isDsq: false },
+          { pos: 'DSQ', name: 'EDZUS TREIMANIS', noc: 'LAT', res: 'DSQ', isDsq: true }
+        ];
+
+        const activeList = isVariant2 ? page2Data : page1Data;
+
+        activeList.forEach((r, idx) => {
+          const y = 158 + idx * 48;
+          const isDsqRow = r.isDsq;
+          const rowBg = new fabric.Rect(createProps('rect', {
+            left: 90, top: y, width: 920, height: 46, fill: isDsqRow ? '#3b0764' : (idx % 2 === 0 ? '#1e293b' : '#0a0e1e')
+          }));
+          const posText = new fabric.Textbox(r.pos, createProps('textbox', {
+            left: 110, top: y + 12, fontSize: 18, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 50
+          }));
+          const nameText = new fabric.Textbox(r.name, createProps('textbox', {
+            left: 170, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#fca5a5' : '#ffffff', width: 520
+          }));
+          const nocText = new fabric.Textbox(r.noc, createProps('textbox', {
+            left: 710, top: y + 13, fontSize: 15, fontWeight: 'bold', fill: '#cbd5e1', width: 60
+          }));
+          const resText = new fabric.Textbox(r.res, createProps('textbox', {
+            left: 780, top: y + 12, fontSize: 17, fontWeight: 'bold', fill: isDsqRow ? '#ef4444' : accentColor, width: 210, textAlign: 'right'
+          }));
+          objects.push(rowBg, posText, nameText, nocText, resText);
+        });
+        break;
+      }
+
       if (variant === 1 || variant === 4) {
         // Variant 1 & 4: Classic podium top-3 results card
         const cardBg = new fabric.Rect(createProps('rect', {
