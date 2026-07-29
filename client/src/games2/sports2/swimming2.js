@@ -571,6 +571,373 @@ export async function generateSwimming2Fabric(
     }
   }
 
+  // ── SW012 / Result Layout ──
+  else if (normId.includes('SW012') || normId.includes('RESULT')) {
+    const isB = normId.endsWith('B') || normId.includes('SW012B');
+    const headerTitle = (customData.headerTitle || customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const subTitle = (customData.subTitle || (isB ? 'RESULT - FINAL' : 'RESULT - SEMI-FINAL 2')).toUpperCase();
+
+    const defaultResultsA = [
+      { pos: '1', noc: 'CHN', name: 'LIU ZIGE', time: '2:06.25', record: '' },
+      { pos: '2', noc: 'AUS', name: 'JESSICAH SCHIPPER', time: '2:06.34', record: '' },
+      { pos: '3', noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.78', record: '' },
+      { pos: '4', noc: 'JPN', name: 'YUKO NAKANISHI', time: '2:06.96', record: '' },
+      { pos: '4', noc: 'USA', name: 'KATHLEEN HERSEY', time: '2:06.96', record: '' },
+      { pos: '6', noc: 'USA', name: 'ELAINE BREEDEN', time: '2:07.73', record: '' },
+      { pos: '7', noc: 'AUS', name: 'SAMANTHA HAMILL', time: '2:09.58', record: '' },
+      { pos: '8', noc: 'GBR', name: 'ELLEN GANDY', time: '2:10.60', record: '' },
+    ];
+    const defaultResultsB = [
+      { pos: '1', noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' },
+      { pos: '2', noc: 'GBR', name: 'GREAT BRITAIN', time: '7:03.70', record: '' },
+      { pos: '3', noc: 'POL', name: 'POLAND', time: '7:04.98', record: '' },
+      { pos: '4', noc: 'AUS', name: 'AUSTRALIA', time: '7:05.35', record: '' },
+      { pos: '5', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:05.77', record: '' },
+      { pos: '6', noc: 'AUT', name: 'AUSTRIA', time: '7:05.92', record: '' },
+      { pos: '7', noc: 'HUN', name: 'HUNGARY', time: '7:10.31', record: '' },
+      { pos: '',  noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
+    ];
+    const resultsList = customData.athletes || customData.results || (isB ? defaultResultsB : defaultResultsA);
+
+    const startX = 280;
+    const bannerWidth = 780;
+    // Header
+    const hGrad = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const numRows = Math.min(resultsList.length, 8);
+    const totalH = 42 + 28 + numRows * 34 + (numRows - 1) * 4;
+    const startY = Math.max(100, 1080 - 100 - totalH);
+
+    const headerBar = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const swimIcon = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
+    const hTitle = new fabric.Textbox(headerTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600, charSpacing: 40 }));
+    const c1r = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2r = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3r = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4r = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5r = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+
+    const subBarR = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,34,62,0.3)', strokeWidth: 1 }));
+    const subTitleR = new fabric.Textbox(subTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
+
+    objects.push(headerBar, swimIcon, hTitle, c1r, c2r, c3r, c4r, c5r, subBarR, subTitleR);
+
+    let cy = startY + 74;
+    for (let idx = 0; idx < resultsList.length && idx < 8; idx++) {
+      const r = resultsList[idx];
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+      const rowBar = new fabric.Rect(createProps('rect', { left: startX + 15, top: cy, width: bannerWidth - 30, height: 32, fill: rowFill, skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,136,204,0.5)', strokeWidth: 1 }));
+      objects.push(rowBar);
+
+      // Position badge (red skewed box on far left)
+      if (r.pos) {
+        const posBg = new fabric.Rect(createProps('rect', { left: startX + 15, top: cy, width: 28, height: 32, fill: '#c00000', skewX: -12, rx: 2, ry: 2 }));
+        const posText = new fabric.Textbox(r.pos, createProps('textbox', { left: startX + 18, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 22, textAlign: 'center' }));
+        objects.push(posBg, posText);
+      }
+
+      // Flag
+      const nocCode = (r.noc || '').toUpperCase();
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 52, top: cy + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const nameText = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', { left: startX + 135, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+      objects.push(nameText);
+
+      // WR/OR record badge or DSQ badge
+      if (r.record === 'WR' || r.record === 'OR') {
+        const badgeBg = new fabric.Rect(createProps('rect', { left: startX + 560, top: cy + 4, width: 40, height: 22, fill: r.record === 'WR' ? '#f59e0b' : '#cbd5e1', skewX: -12, rx: 2, ry: 2 }));
+        const badgeText = new fabric.Textbox(r.record, createProps('textbox', { left: startX + 562, top: cy + 7, fontSize: 12, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 38, textAlign: 'center' }));
+        objects.push(badgeBg, badgeText);
+      }
+      if (r.record === 'DSQ') {
+        const dBg = new fabric.Rect(createProps('rect', { left: startX + 580, top: cy + 4, width: 55, height: 22, fill: '#cbd5e1', skewX: -12, rx: 2, ry: 2 }));
+        const dText = new fabric.Textbox('DSQ', createProps('textbox', { left: startX + 582, top: cy + 7, fontSize: 12, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 52, textAlign: 'center' }));
+        objects.push(dBg, dText);
+      }
+
+      if (r.time) {
+        const tText = new fabric.Textbox(r.time, createProps('textbox', { left: startX + 625, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right' }));
+        objects.push(tText);
+      }
+
+      cy += 36;
+    }
+  }
+
+  // ── SW013 / Advance All to Phase Layout ──
+  else if (normId.includes('SW013') || normId.includes('ADVANCE ALL')) {
+    const isB = normId.endsWith('B') || normId.includes('SW013B');
+    const headerTitle = (customData.headerTitle || customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const fromPhase = (customData.fromPhase || (isB ? 'HEATS' : 'SEMI-FINALS')).toUpperCase();
+    const toPhase = (customData.toPhase || 'FINAL').toUpperCase();
+    const subTitle = `${fromPhase} → ${toPhase}`;
+
+    const defaultAdvA = [
+      { pos: '1', noc: 'CHN', name: 'LIU ZIGE', time: '2:06.25' },
+      { pos: '2', noc: 'AUS', name: 'JESSICAH SCHIPPER', time: '2:06.34' },
+      { pos: '3', noc: 'CHN', name: 'JIAO LIUYANG', time: '2:06.78' },
+      { pos: '4', noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.96' },
+      { pos: '4', noc: 'JPN', name: 'YUKO NAKANISHI', time: '2:06.96' },
+      { pos: '6', noc: 'USA', name: 'KATHLEEN HERSEY', time: '2:07.73' },
+      { pos: '7', noc: 'FRA', name: 'AURORE MONGEL', time: '2:09.58' },
+      { pos: '8', noc: 'USA', name: 'ELAINE BREEDEN', time: '2:10.60' },
+    ];
+    const defaultAdvB = [
+      { pos: '1', noc: 'USA', name: 'UNITED STATES', time: '7:04.66', record: 'OR' },
+      { pos: '2', noc: 'ITA', name: 'ITALY', time: '7:07.84' },
+      { pos: '3', noc: 'RUS', name: 'RUSSIAN FEDERATION', time: '7:07.86' },
+      { pos: '4', noc: 'GBR', name: 'GREAT BRITAIN', time: '7:07.89' },
+      { pos: '5', noc: 'CAN', name: 'CANADA', time: '7:08.04' },
+      { pos: '6', noc: 'AUS', name: 'AUSTRALIA', time: '7:08.41' },
+      { pos: '7', noc: 'JPN', name: 'JAPAN', time: '7:09.12' },
+      { pos: '8', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:10.91' },
+    ];
+    const advList = customData.athletes || customData.results || (isB ? defaultAdvB : defaultAdvA);
+
+    const startX = 280;
+    const bannerWidth = 780;
+    const numRows13 = Math.min(advList.length, 8);
+    const totalH13 = 42 + 28 + numRows13 * 34 + (numRows13 - 1) * 4;
+    const startY = Math.max(100, 1080 - 100 - totalH13);
+
+    const hGrad13 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar13 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad13, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const swimIcon13 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
+    const hTitle13 = new fabric.Textbox(headerTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+    const c1a = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2a = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3a = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4a = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5a = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+
+    const subBar13 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
+    const subTitle13 = new fabric.Textbox(subTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
+
+    objects.push(headerBar13, swimIcon13, hTitle13, c1a, c2a, c3a, c4a, c5a, subBar13, subTitle13);
+
+    let cy13 = startY + 74;
+    for (let idx = 0; idx < advList.length && idx < 8; idx++) {
+      const r = advList[idx];
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+      const rowBar = new fabric.Rect(createProps('rect', { left: startX + 15, top: cy13, width: bannerWidth - 30, height: 32, fill: rowFill, skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,136,204,0.5)', strokeWidth: 1 }));
+      objects.push(rowBar);
+      if (r.pos) {
+        const posBg = new fabric.Rect(createProps('rect', { left: startX + 15, top: cy13, width: 28, height: 32, fill: '#c00000', skewX: -12, rx: 2, ry: 2 }));
+        const posText = new fabric.Textbox(r.pos, createProps('textbox', { left: startX + 18, top: cy13 + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 22, textAlign: 'center' }));
+        objects.push(posBg, posText);
+      }
+      const nocCode13 = (r.noc || '').toUpperCase();
+      const flag13 = getFlagBase64(nocCode13);
+      if (flag13) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flag13);
+          imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 52, top: cy13 + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+      const nameText13 = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', { left: startX + 135, top: cy13 + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
+      objects.push(nameText13);
+      if (r.record === 'OR' || r.record === 'WR') {
+        const bBg = new fabric.Rect(createProps('rect', { left: startX + 560, top: cy13 + 4, width: 40, height: 22, fill: r.record === 'WR' ? '#f59e0b' : '#cbd5e1', skewX: -12, rx: 2, ry: 2 }));
+        const bTxt = new fabric.Textbox(r.record, createProps('textbox', { left: startX + 562, top: cy13 + 7, fontSize: 12, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 38, textAlign: 'center' }));
+        objects.push(bBg, bTxt);
+      }
+      if (r.time) {
+        const tText13 = new fabric.Textbox(r.time, createProps('textbox', { left: startX + 625, top: cy13 + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right' }));
+        objects.push(tText13);
+      }
+      cy13 += 36;
+    }
+  }
+
+  // ── SW014 / Non-Competition Area Indicator ──
+  else if (normId.includes('SW014') || normId.includes('NON-COMPETITION') || normId.includes('NON COMPETITION')) {
+    const isB = normId.endsWith('B') || normId.includes('SW014B');
+    const areaLabel = (customData.area || customData.label || (isB ? 'CALL ROOM' : 'WARM UP POOL')).toUpperCase();
+
+    const pillGrad = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 }, colorStops: [{ offset: 0, color: '#bdc9d4' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#9fb5c2' }] });
+    const pill = new fabric.Rect(createProps('rect', { left: 280, top: 150, width: 200, height: 32, fill: pillGrad, skewX: -12, rx: 14, ry: 14, stroke: '#7a8fa0', strokeWidth: 1.5 }));
+    const pillText = new fabric.Textbox(areaLabel, createProps('textbox', { left: 284, top: 156, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 194, textAlign: 'center' }));
+    objects.push(pill, pillText);
+  }
+
+  // ── SW015 / Ceremony ID ──
+  else if (normId.includes('SW015') || normId.includes('SW120') || normId.includes('CEREMONY ID')) {
+    const eventTitle = (customData.event || customData.headerTitle || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+    const ceremonyLabel = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    const startX = 280;
+    const startY = 940;
+    const barWidth = 780;
+
+    const hGrad15 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar15 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad15, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const swimIcon15 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
+    const hTitle15 = new fabric.Textbox(eventTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+    const c1_15 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2_15 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3_15 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4_15 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5_15 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const subBar15 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
+    const subTitle15 = new fabric.Textbox(ceremonyLabel, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
+    objects.push(headerBar15, swimIcon15, hTitle15, c1_15, c2_15, c3_15, c4_15, c5_15, subBar15, subTitle15);
+  }
+
+  // ── SW016 / Medal ID ──
+  else if (normId.includes('SW016') || normId.includes('SW121') || normId.includes('MEDAL ID')) {
+    const isB = normId.endsWith('B') || normId.includes('SW016B');
+    const nocCode16 = (customData.noc || (isB ? 'GBR' : 'CHN')).toUpperCase();
+    const athleteName16 = (customData.name || customData.team || (isB ? 'GREAT BRITAIN' : 'LIU ZIGE')).toUpperCase();
+    const medalColor = (customData.medal || (isB ? 'SILVER' : 'GOLD')).toUpperCase();
+    const eventLabel16 = (customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+
+    const startX = 280;
+    const startY = 940;
+    const barWidth = 780;
+
+    const hGrad16 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar16 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad16, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+
+    // Push headerBar FIRST so flag and text render on top
+    objects.push(headerBar16);
+
+    const flag16 = getFlagBase64(nocCode16);
+    if (flag16) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flag16);
+        imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 18, top: startY + 9, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), selectable: true, hasControls: true });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const hTitle16 = new fabric.Textbox(athleteName16, createProps('textbox', { left: startX + 100, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 560 }));
+    const c1_16 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2_16 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3_16 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4_16 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5_16 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    objects.push(hTitle16, c1_16, c2_16, c3_16, c4_16, c5_16);
+
+    // Sub bar with medal emoji + event
+    const medalEmoji = medalColor === 'GOLD' ? '🥇' : medalColor === 'SILVER' ? '🥈' : '🥉';
+    const subBar16 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: darkTabColor, skewX: -12, rx: 3, ry: 3 }));
+    const medalIcon16 = new fabric.Textbox(medalEmoji, createProps('textbox', { left: startX + 18, top: startY + 46, fontSize: 18, fill: '#ffffff', width: 28 }));
+    const subLabel16 = new fabric.Textbox(`${medalColor} - ${eventLabel16}`, createProps('textbox', { left: startX + 50, top: startY + 48, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+    objects.push(subBar16, medalIcon16, subLabel16);
+  }
+
+  // ── SW017 / Medals List ──
+  else if (normId.includes('SW017') || normId.includes('SW122') || normId.includes('MEDALS LIST')) {
+    const isB = normId.endsWith('B') || normId.includes('SW017B');
+    const eventTitle17 = (customData.event || customData.headerTitle || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const ceremonyLabel17 = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    const defaultMedalsA = [
+      { medal: 'GOLD',   noc: 'CHN', name: 'LIU ZIGE' },
+      { medal: 'SILVER', noc: 'CHN', name: 'JIAO LIUYANG' },
+      { medal: 'BRONZE', noc: 'AUS', name: 'JESSICAH SCHIPPER' },
+    ];
+    const defaultMedalsB = [
+      { medal: 'GOLD',   noc: 'USA', name: 'UNITED STATES' },
+      { medal: 'SILVER', noc: 'GBR', name: 'GREAT BRITAIN' },
+      { medal: 'BRONZE', noc: 'POL', name: 'POLAND' },
+    ];
+    const medalsList = customData.medals || customData.athletes || (isB ? defaultMedalsB : defaultMedalsA);
+    const numRows17 = Math.min(medalsList.length, 3);
+    const totalH17 = 42 + 28 + numRows17 * 34 + (numRows17 - 1) * 4;
+    const startX = 280;
+    const bannerWidth = 780;
+    const startY17 = Math.max(700, 1080 - 120 - totalH17);
+
+    const hGrad17 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar17 = new fabric.Rect(createProps('rect', { left: startX, top: startY17, width: bannerWidth, height: 42, fill: hGrad17, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const swimIcon17 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY17 + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
+    const hTitle17 = new fabric.Textbox(eventTitle17, createProps('textbox', { left: startX + 60, top: startY17 + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
+    const c1_17 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2_17 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3_17 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4_17 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY17 + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5_17 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY17 + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const subBar17 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY17 + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
+    const subTitle17 = new fabric.Textbox(ceremonyLabel17, createProps('textbox', { left: startX + 30, top: startY17 + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
+    objects.push(headerBar17, swimIcon17, hTitle17, c1_17, c2_17, c3_17, c4_17, c5_17, subBar17, subTitle17);
+
+    let cy17 = startY17 + 74;
+    const medalEmojis = { GOLD: '🥇', SILVER: '🥈', BRONZE: '🥉' };
+    for (let idx = 0; idx < medalsList.length && idx < 3; idx++) {
+      const m = medalsList[idx];
+      const rowFill = darkTabColor;
+      const rowBar17 = new fabric.Rect(createProps('rect', { left: startX + 15, top: cy17, width: bannerWidth - 30, height: 32, fill: rowFill, skewX: -12, rx: 3, ry: 3 }));
+      const emojiText = new fabric.Textbox(medalEmojis[(m.medal || 'GOLD').toUpperCase()] || '🥇', createProps('textbox', { left: startX + 18, top: cy17 + 5, fontSize: 22, fill: '#ffffff', width: 32 }));
+      objects.push(rowBar17, emojiText);
+
+      const nocCode17 = (m.noc || '').toUpperCase();
+      const flag17 = getFlagBase64(nocCode17);
+      if (flag17) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flag17);
+          imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 58, top: cy17 + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const mName17 = new fabric.Textbox((m.name || '').toUpperCase(), createProps('textbox', { left: startX + 145, top: cy17 + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 590 }));
+      objects.push(mName17);
+      cy17 += 36;
+    }
+  }
+
+  // ── SW018 / Medal Presenter ID ──
+  else if (normId.includes('SW018') || normId.includes('SW123') || normId.includes('MEDAL PRESENTER')) {
+    const presenterName = (customData.name || customData.presenter || 'JACQUES ROGGE').toUpperCase();
+    const presenterTitle = (customData.title || customData.designation || 'IOC PRESIDENT, BELGIUM').toUpperCase();
+
+    const startX = 280;
+    const startY = 940;
+    const barWidth = 780;
+
+    const hGrad18 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar18 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad18, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const nameText18 = new fabric.Textbox(presenterName, createProps('textbox', { left: startX + 20, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 660 }));
+    const c1_18 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2_18 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3_18 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4_18 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5_18 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const subBar18 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: darkTabColor, skewX: -12, rx: 3, ry: 3 }));
+    const titleText18 = new fabric.Textbox(presenterTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+    objects.push(headerBar18, nameText18, c1_18, c2_18, c3_18, c4_18, c5_18, subBar18, titleText18);
+  }
+
+  // ── SW019 / Flower Presenter ID ──
+  else if (normId.includes('SW019') || normId.includes('SW124') || normId.includes('FLOWER PRESENTER')) {
+    const presenterName19 = (customData.name || customData.presenter || 'MR BILL MATSON').toUpperCase();
+    const presenterTitle19 = (customData.title || customData.designation || 'VICE PRESIDENT, FINA').toUpperCase();
+
+    const startX = 280;
+    const startY = 940;
+    const barWidth = 780;
+
+    const hGrad19 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
+    const headerBar19 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad19, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
+    const nameText19 = new fabric.Textbox(presenterName19, createProps('textbox', { left: startX + 20, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 660 }));
+    const c1_19 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2_19 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3_19 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4_19 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5_19 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const subBar19 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: darkTabColor, skewX: -12, rx: 3, ry: 3 }));
+    const titleText19 = new fabric.Textbox(presenterTitle19, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
+    objects.push(headerBar19, nameText19, c1_19, c2_19, c3_19, c4_19, c5_19, subBar19, titleText19);
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -1899,6 +2266,294 @@ export function generateSwimming2HTML(
       </body>
       </html>
     `;
+  }
+
+  // ── SW012 / Result ──
+  else if (normId.includes('SW012') || normId.includes('RESULT')) {
+    const isB = normId.endsWith('B') || normId.includes('SW012B');
+    const headerTitle = (customData.headerTitle || customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const subTitle = (customData.subTitle || (isB ? 'RESULT - FINAL' : 'RESULT - SEMI-FINAL 2')).toUpperCase();
+    const defaultResultsA = [
+      { pos: '1', noc: 'CHN', name: 'LIU ZIGE', time: '2:06.25', record: '' },
+      { pos: '2', noc: 'AUS', name: 'JESSICAH SCHIPPER', time: '2:06.34', record: '' },
+      { pos: '3', noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.78', record: '' },
+      { pos: '4', noc: 'JPN', name: 'YUKO NAKANISHI', time: '2:06.96', record: '' },
+      { pos: '4', noc: 'USA', name: 'KATHLEEN HERSEY', time: '2:06.96', record: '' },
+      { pos: '6', noc: 'USA', name: 'ELAINE BREEDEN', time: '2:07.73', record: '' },
+      { pos: '7', noc: 'AUS', name: 'SAMANTHA HAMILL', time: '2:09.58', record: '' },
+      { pos: '8', noc: 'GBR', name: 'ELLEN GANDY', time: '2:10.60', record: '' },
+    ];
+    const defaultResultsB = [
+      { pos: '1', noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' },
+      { pos: '2', noc: 'GBR', name: 'GREAT BRITAIN', time: '7:03.70', record: '' },
+      { pos: '3', noc: 'POL', name: 'POLAND', time: '7:04.98', record: '' },
+      { pos: '4', noc: 'AUS', name: 'AUSTRALIA', time: '7:05.35', record: '' },
+      { pos: '5', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:05.77', record: '' },
+      { pos: '6', noc: 'AUT', name: 'AUSTRIA', time: '7:05.92', record: '' },
+      { pos: '7', noc: 'HUN', name: 'HUNGARY', time: '7:10.31', record: '' },
+      { pos: '',  noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
+    ];
+    const resultsList = customData.athletes || customData.results || (isB ? defaultResultsB : defaultResultsA);
+    return `<!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .result-container { position: absolute; bottom: 80px; left: 280px; width: 780px; display: flex; flex-direction: column; gap: 3px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .result-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .result-sub-bar { background: #e2e8f0; height: 26px; transform: skewX(-12deg); border-radius: 3px; display: flex; align-items: center; padding: 0 20px; margin-left: 15px; width: 750px; }
+        .result-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00223e; }
+        .result-row { background: ${darkTabColor}; color: #fff; height: 32px; transform: skewX(-12deg); border-radius: 3px; border: 1px solid rgba(0,136,204,0.5); display: flex; align-items: center; margin-left: 15px; width: 750px; justify-content: space-between; overflow: hidden; }
+        .result-row.row-alt { background: ${altRowColor}; }
+        .result-pos { background: #c00000; width: 30px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .result-pos span { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; }
+        .result-left { display: flex; align-items: center; gap: 8px; padding-left: 6px; }
+        .result-flag-img { width: 70px; height: 22px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.5); transform: skewX(12deg); display: block; }
+        .result-name { font-size: 16px; font-weight: 900; font-style: italic; }
+        .result-right { display: flex; align-items: center; gap: 8px; padding-right: 12px; }
+        .result-badge-wr { background: #f59e0b; color: #00223e; font-size: 12px; font-weight: 900; font-style: italic; padding: 1px 5px; border-radius: 2px; }
+        .result-badge-or { background: #cbd5e1; color: #00223e; font-size: 12px; font-weight: 900; font-style: italic; padding: 1px 5px; border-radius: 2px; }
+        .result-badge-dsq { background: #cbd5e1; color: #00223e; font-size: 12px; font-weight: 900; font-style: italic; padding: 1px 5px; border-radius: 2px; }
+        .result-time { font-size: 16px; font-weight: 900; font-style: italic; min-width: 80px; text-align: right; }
+        .unskew { transform: skewX(12deg); display: block; }
+        .h-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="result-container">
+          <div class="result-header">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:28px;transform:skewX(12deg);">🏊</span><div class="h-title">${headerTitle}</div></div>
+            <svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg>
+          </div>
+          <div class="result-sub-bar"><div class="result-sub-title">${subTitle}</div></div>
+          ${resultsList.slice(0, 8).map((r, idx) => {
+            const nocCode = (r.noc || '').toUpperCase();
+            const flagUrl = getFlagBase64(nocCode);
+            return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+              <div class="result-pos"><span>${r.pos || ''}</span></div>
+              <div class="result-left">${flagUrl ? `<img src="${flagUrl}" class="result-flag-img" />` : ''}<div class="result-name"><span class="unskew">${(r.name || '').toUpperCase()}</span></div></div>
+              <div class="result-right">${r.record === 'WR' ? `<div class="result-badge-wr"><span class="unskew">WR</span></div>` : ''}${r.record === 'OR' ? `<div class="result-badge-or"><span class="unskew">OR</span></div>` : ''}${r.record === 'DSQ' ? `<div class="result-badge-dsq"><span class="unskew">DSQ</span></div>` : ''}${r.time ? `<div class="result-time"><span class="unskew">${r.time}</span></div>` : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW013 / Advance All to Phase ──
+  else if (normId.includes('SW013') || normId.includes('ADVANCE ALL')) {
+    const isB = normId.endsWith('B') || normId.includes('SW013B');
+    const headerTitle13 = (customData.headerTitle || customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const subTitle13 = `${(customData.fromPhase || (isB ? 'HEATS' : 'SEMI-FINALS')).toUpperCase()} → ${(customData.toPhase || 'FINAL').toUpperCase()}`;
+    const defA13 = [
+      { pos: '1', noc: 'CHN', name: 'LIU ZIGE', time: '2:06.25' }, { pos: '2', noc: 'AUS', name: 'JESSICAH SCHIPPER', time: '2:06.34' },
+      { pos: '3', noc: 'CHN', name: 'JIAO LIUYANG', time: '2:06.78' }, { pos: '4', noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.96' },
+      { pos: '4', noc: 'JPN', name: 'YUKO NAKANISHI', time: '2:06.96' }, { pos: '6', noc: 'USA', name: 'KATHLEEN HERSEY', time: '2:07.73' },
+      { pos: '7', noc: 'FRA', name: 'AURORE MONGEL', time: '2:09.58' }, { pos: '8', noc: 'USA', name: 'ELAINE BREEDEN', time: '2:10.60' },
+    ];
+    const defB13 = [
+      { pos: '1', noc: 'USA', name: 'UNITED STATES', time: '7:04.66', record: 'OR' }, { pos: '2', noc: 'ITA', name: 'ITALY', time: '7:07.84' },
+      { pos: '3', noc: 'RUS', name: 'RUSSIAN FEDERATION', time: '7:07.86' }, { pos: '4', noc: 'GBR', name: 'GREAT BRITAIN', time: '7:07.89' },
+      { pos: '5', noc: 'CAN', name: 'CANADA', time: '7:08.04' }, { pos: '6', noc: 'AUS', name: 'AUSTRALIA', time: '7:08.41' },
+      { pos: '7', noc: 'JPN', name: 'JAPAN', time: '7:09.12' }, { pos: '8', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:10.91' },
+    ];
+    const advList13 = customData.athletes || customData.results || (isB ? defB13 : defA13);
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .result-container { position: absolute; bottom: 80px; left: 280px; width: 780px; display: flex; flex-direction: column; gap: 3px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .result-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .result-sub-bar { background: #e2e8f0; height: 26px; transform: skewX(-12deg); border-radius: 3px; display: flex; align-items: center; padding: 0 20px; margin-left: 15px; width: 750px; }
+        .result-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00223e; }
+        .result-row { background: ${darkTabColor}; color: #fff; height: 32px; transform: skewX(-12deg); border-radius: 3px; border: 1px solid rgba(0,136,204,0.5); display: flex; align-items: center; margin-left: 15px; width: 750px; justify-content: space-between; overflow: hidden; }
+        .result-row.row-alt { background: ${altRowColor}; }
+        .result-pos { background: #c00000; width: 30px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .result-pos span { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; }
+        .result-left { display: flex; align-items: center; gap: 8px; padding-left: 6px; }
+        .result-flag-img { width: 70px; height: 22px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.5); transform: skewX(12deg); display: block; }
+        .result-name { font-size: 16px; font-weight: 900; font-style: italic; }
+        .result-right { display: flex; align-items: center; gap: 8px; padding-right: 12px; }
+        .result-badge-or { background: #cbd5e1; color: #00223e; font-size: 12px; font-weight: 900; font-style: italic; padding: 1px 5px; border-radius: 2px; }
+        .result-time { font-size: 16px; font-weight: 900; font-style: italic; min-width: 80px; text-align: right; }
+        .unskew { transform: skewX(12deg); display: block; }
+        .h-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="result-container">
+          <div class="result-header">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:28px;transform:skewX(12deg);">🏊</span><div class="h-title">${headerTitle13}</div></div>
+            <svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg>
+          </div>
+          <div class="result-sub-bar"><div class="result-sub-title">${subTitle13}</div></div>
+          ${advList13.slice(0, 8).map((r, idx) => {
+            const nocCode = (r.noc || '').toUpperCase();
+            const flagUrl = getFlagBase64(nocCode);
+            return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+              <div class="result-pos"><span>${r.pos || ''}</span></div>
+              <div class="result-left">${flagUrl ? `<img src="${flagUrl}" class="result-flag-img" />` : ''}<div class="result-name"><span class="unskew">${(r.name || '').toUpperCase()}</span></div></div>
+              <div class="result-right">${r.record === 'OR' || r.record === 'WR' ? `<div class="result-badge-or"><span class="unskew">${r.record}</span></div>` : ''}${r.time ? `<div class="result-time"><span class="unskew">${r.time}</span></div>` : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW014 / Non-Competition Area Indicator ──
+  else if (normId.includes('SW014') || normId.includes('NON-COMPETITION') || normId.includes('NON COMPETITION')) {
+    const isB14 = normId.endsWith('B') || normId.includes('SW014B');
+    const areaLabel14 = (customData.area || customData.label || (isB14 ? 'CALL ROOM' : 'WARM UP POOL')).toUpperCase();
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .pill { position: absolute; top: 150px; left: 280px; width: 220px; height: 34px; background: linear-gradient(90deg, #bdc9d4 0%, #ffffff 50%, #9fb5c2 100%); transform: skewX(-12deg); border-radius: 15px; border: 1.5px solid #7a8fa0; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5)); }
+        .pill-text { transform: skewX(12deg); font-size: 17px; font-weight: 900; font-style: italic; color: #00223e; }
+      </style></head><body><div class="pill"><div class="pill-text">${areaLabel14}</div></div></body></html>`;
+  }
+
+  // ── SW015 / Ceremony ID ──
+  else if (normId.includes('SW015') || normId.includes('SW120') || normId.includes('CEREMONY ID')) {
+    const eventTitle15 = (customData.event || customData.headerTitle || "WOMEN'S 200M BUTTERFLY").toUpperCase();
+    const ceremonyLabel15 = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .cer-container { position: absolute; bottom: 60px; left: 280px; width: 780px; display: flex; flex-direction: column; gap: 2px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .cer-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .cer-sub-bar { background: #e2e8f0; height: 26px; transform: skewX(-12deg); border-radius: 3px; margin-left: 15px; width: 750px; display: flex; align-items: center; padding: 0 20px; }
+        .cer-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00223e; }
+        .h-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="cer-container">
+          <div class="cer-header">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:28px;transform:skewX(12deg);">🏊</span><div class="h-title">${eventTitle15}</div></div>
+            <svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg>
+          </div>
+          <div class="cer-sub-bar"><div class="cer-sub-title">${ceremonyLabel15}</div></div>
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW016 / Medal ID ──
+  else if (normId.includes('SW016') || normId.includes('SW121') || normId.includes('MEDAL ID')) {
+    const isB16 = normId.endsWith('B') || normId.includes('SW016B');
+    const nocCode16 = (customData.noc || (isB16 ? 'GBR' : 'CHN')).toUpperCase();
+    const athleteName16 = (customData.name || customData.team || (isB16 ? 'GREAT BRITAIN' : 'LIU ZIGE')).toUpperCase();
+    const medalColor16 = (customData.medal || (isB16 ? 'SILVER' : 'GOLD')).toUpperCase();
+    const eventLabel16 = (customData.event || (isB16 ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const flagUrl16 = getFlagBase64(nocCode16);
+    const medalEmoji16 = medalColor16 === 'GOLD' ? '🥇' : medalColor16 === 'SILVER' ? '🥈' : '🥉';
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .medal-id-container { position: absolute; bottom: 60px; left: 280px; width: 780px; display: flex; flex-direction: column; gap: 2px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .medal-id-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; overflow: visible; }
+        .medal-id-sub { background: ${darkTabColor}; height: 26px; transform: skewX(-12deg); border-radius: 3px; margin-left: 15px; width: 750px; display: flex; align-items: center; padding: 0 16px; gap: 8px; }
+        .flag-img { width: 70px; height: 22px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.5); display: block; flex-shrink: 0; }
+        .h-name { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; color: #fff; }
+        .sub-text { transform: skewX(12deg); font-size: 14px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+        .header-left { display: flex; align-items: center; gap: 12px; transform: skewX(12deg); }
+      </style></head><body>
+        <div class="medal-id-container">
+          <div class="medal-id-header">
+            <div class="header-left">${flagUrl16 ? `<img src="${flagUrl16}" class="flag-img" />` : ''}<div style="font-size:22px;font-weight:900;font-style:italic;color:#fff;">${athleteName16}</div></div>
+            <svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg>
+          </div>
+          <div class="medal-id-sub"><span style="font-size:18px;transform:skewX(12deg);">${medalEmoji16}</span><div class="sub-text">${medalColor16} - ${eventLabel16}</div></div>
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW017 / Medals List ──
+  else if (normId.includes('SW017') || normId.includes('SW122') || normId.includes('MEDALS LIST')) {
+    const isB17 = normId.endsWith('B') || normId.includes('SW017B');
+    const eventTitle17 = (customData.event || customData.headerTitle || (isB17 ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+    const ceremonyLabel17 = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+    const defA17 = [{ medal: 'GOLD', noc: 'CHN', name: 'LIU ZIGE' }, { medal: 'SILVER', noc: 'CHN', name: 'JIAO LIUYANG' }, { medal: 'BRONZE', noc: 'AUS', name: 'JESSICAH SCHIPPER' }];
+    const defB17 = [{ medal: 'GOLD', noc: 'USA', name: 'UNITED STATES' }, { medal: 'SILVER', noc: 'GBR', name: 'GREAT BRITAIN' }, { medal: 'BRONZE', noc: 'POL', name: 'POLAND' }];
+    const medalsList17 = customData.medals || customData.athletes || (isB17 ? defB17 : defA17);
+    const medalEmojis17 = { GOLD: '🥇', SILVER: '🥈', BRONZE: '🥉' };
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .ml-container { position: absolute; bottom: 80px; left: 280px; width: 780px; display: flex; flex-direction: column; gap: 3px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .ml-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .ml-sub-bar { background: #e2e8f0; height: 26px; transform: skewX(-12deg); border-radius: 3px; margin-left: 15px; width: 750px; display: flex; align-items: center; padding: 0 20px; }
+        .ml-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00223e; }
+        .ml-row { background: ${darkTabColor}; color: #fff; height: 32px; transform: skewX(-12deg); border-radius: 3px; border: 1px solid rgba(0,136,204,0.5); display: flex; align-items: center; margin-left: 15px; width: 750px; overflow: hidden; }
+        .ml-medal { width: 36px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px; }
+        .ml-flag-img { width: 70px; height: 22px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.5); transform: skewX(12deg); display: block; margin-left: 8px; }
+        .ml-name { font-size: 17px; font-weight: 900; font-style: italic; margin-left: 10px; }
+        .unskew { transform: skewX(12deg); display: block; }
+        .h-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="ml-container">
+          <div class="ml-header">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:28px;transform:skewX(12deg);">🏊</span><div class="h-title">${eventTitle17}</div></div>
+            <svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg>
+          </div>
+          <div class="ml-sub-bar"><div class="ml-sub-title">${ceremonyLabel17}</div></div>
+          ${medalsList17.slice(0, 3).map((m) => {
+            const noc17 = (m.noc || '').toUpperCase();
+            const flagUrl17 = getFlagBase64(noc17);
+            const emoji17 = medalEmojis17[(m.medal || 'GOLD').toUpperCase()] || '🥇';
+            return `<div class="ml-row">
+              <div class="ml-medal"><span style="transform:skewX(12deg)">${emoji17}</span></div>
+              ${flagUrl17 ? `<img src="${flagUrl17}" class="ml-flag-img" />` : ''}
+              <div class="ml-name"><span class="unskew">${(m.name || '').toUpperCase()}</span></div>
+            </div>`;
+          }).join('')}
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW018 / Medal Presenter ID ──
+  else if (normId.includes('SW018') || normId.includes('SW123') || normId.includes('MEDAL PRESENTER')) {
+    const presenterName18 = (customData.name || customData.presenter || 'JACQUES ROGGE').toUpperCase();
+    const presenterTitle18 = (customData.title || customData.designation || 'IOC PRESIDENT, BELGIUM').toUpperCase();
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .presenter-container { position: absolute; bottom: 60px; left: 280px; width: 700px; display: flex; flex-direction: column; gap: 2px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .pres-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .pres-sub { background: ${darkTabColor}; height: 26px; transform: skewX(-12deg); border-radius: 3px; margin-left: 15px; width: 670px; display: flex; align-items: center; padding: 0 20px; }
+        .pres-name { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; color: #fff; }
+        .pres-title-text { transform: skewX(12deg); font-size: 14px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="presenter-container">
+          <div class="pres-header"><div class="pres-name">${presenterName18}</div><svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg></div>
+          <div class="pres-sub"><div class="pres-title-text">${presenterTitle18}</div></div>
+        </div>
+      </body></html>`;
+  }
+
+  // ── SW019 / Flower Presenter ID ──
+  else if (normId.includes('SW019') || normId.includes('SW124') || normId.includes('FLOWER PRESENTER')) {
+    const presenterName19 = (customData.name || customData.presenter || 'MR BILL MATSON').toUpperCase();
+    const presenterTitle19 = (customData.title || customData.designation || 'VICE PRESIDENT, FINA').toUpperCase();
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+        .presenter-container { position: absolute; bottom: 60px; left: 280px; width: 700px; display: flex; flex-direction: column; gap: 2px; filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8)); }
+        .pres-header { background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%); height: 42px; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; }
+        .pres-sub { background: ${darkTabColor}; height: 26px; transform: skewX(-12deg); border-radius: 3px; margin-left: 15px; width: 670px; display: flex; align-items: center; padding: 0 20px; }
+        .pres-name { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; color: #fff; }
+        .pres-title-text { transform: skewX(12deg); font-size: 14px; font-weight: 900; font-style: italic; color: #fff; }
+        .rings { transform: skewX(12deg); fill: none; stroke: #fff; stroke-width: 2.5; }
+      </style></head><body>
+        <div class="presenter-container">
+          <div class="pres-header"><div class="pres-name">${presenterName19}</div><svg class="rings" viewBox="0 0 100 45" width="48" height="22"><circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/><circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/><circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/><circle cx="72.5" cy="27" r="11"/></svg></div>
+          <div class="pres-sub"><div class="pres-title-text">${presenterTitle19}</div></div>
+        </div>
+      </body></html>`;
   }
 
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
