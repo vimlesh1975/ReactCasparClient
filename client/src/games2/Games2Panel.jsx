@@ -198,14 +198,16 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
 
           {/* Top 50%: Select Sport */}
           <div className="sidebar-panel">
-            <div className="section-label">1. Select Sport ({filteredSports.length})</div>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search sports or venues..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
+            <div className="section-header-row">
+              <div className="section-label">1. Select Sport ({filteredSports.length})</div>
+              <input
+                type="text"
+                className="search-input-inline"
+                placeholder="Search sports..."
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+            </div>
             <div className="sports-list">
               {filteredSports.map(sport => (
                 <div
@@ -222,14 +224,16 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
 
           {/* Bottom 50%: Select Template */}
           <div className="templates-panel">
-            <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search templates..."
-              value={templateSearchTerm}
-              onChange={e => setTemplateSearchTerm(e.target.value)}
-            />
+            <div className="section-header-row">
+              <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
+              <input
+                type="text"
+                className="search-input-inline"
+                placeholder="Search templates..."
+                value={templateSearchTerm}
+                onChange={e => setTemplateSearchTerm(e.target.value)}
+              />
+            </div>
             <div className="template-types-grid">
               {filteredTemplates.map(tt => (
                 <button

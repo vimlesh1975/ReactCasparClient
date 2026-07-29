@@ -95,14 +95,24 @@
   min-height: 0;
 }
 
-/* ── Labels ── */
+/* ── Labels & Header Rows ── */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
 .section-label {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   color: #94a3b8;
   letter-spacing: 1px;
-  margin-bottom: 2px;
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 
 /* ── Search inputs ── */
@@ -118,7 +128,20 @@
   box-sizing: border-box;
 }
 
-.search-input:focus {
+.search-input-inline {
+  width: 120px;
+  padding: 3px 8px;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 4px;
+  color: white;
+  font-size: 11px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input:focus,
+.search-input-inline:focus {
   border-color: #38bdf8;
 }
 

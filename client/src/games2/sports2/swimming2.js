@@ -938,6 +938,431 @@ export async function generateSwimming2Fabric(
     objects.push(headerBar19, nameText19, c1_19, c2_19, c3_19, c4_19, c5_19, subBar19, titleText19);
   }
 
+  // ── SW020 / Race Clock ──
+  else if (normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) {
+    const timeVal = customData.time || '15.4';
+    const startX = 1450;
+    const startY = 960;
+
+    const clockBody = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 170, height: 38,
+      fill: '#d1d5db', skewX: -12, rx: 5, ry: 5,
+      stroke: '#0088cc', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+    const timeText = new fabric.Textbox(timeVal, createProps('textbox', {
+      left: startX + 10, top: startY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+
+    const ringsTab = new fabric.Rect(createProps('rect', {
+      left: startX + 160, top: startY, width: 80, height: 38,
+      fill: '#00192e', skewX: -12, rx: 5, ry: 5,
+      stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const c1 = new fabric.Circle(createProps('circle', { left: startX + 172, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: startX + 183, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: startX + 194, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: startX + 177.5, top: startY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: startX + 188.5, top: startY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+
+    objects.push(clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+  }
+
+  // ── SW021 / Race Clock before Split Point ──
+  else if (normId.includes('SW021') || normId.includes('SW128') || normId.includes('BEFORE SPLIT')) {
+    const splitRecord = (customData.splitRecord || 'WR').toUpperCase();
+    const splitTime = customData.splitTime || '22.44';
+    const distanceVal = (customData.distance || '50M').toUpperCase();
+    const clockTime = customData.time || '19.4';
+
+    const leftX = 280;
+    const leftY = 960;
+    const recBg = new fabric.Rect(createProps('rect', {
+      left: leftX, top: leftY, width: 230, height: 38,
+      fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const badgeTab = new fabric.Rect(createProps('rect', {
+      left: leftX + 5, top: leftY + 4, width: 45, height: 30,
+      fill: splitRecord === 'WR' ? '#eab308' : '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+    const badgeText = new fabric.Textbox(splitRecord, createProps('textbox', {
+      left: leftX + 5, top: leftY + 9, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 45, textAlign: 'center'
+    }));
+    const splitLabel = new fabric.Textbox('SPLIT', createProps('textbox', {
+      left: leftX + 58, top: leftY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 60
+    }));
+    const splitTimeText = new fabric.Textbox(splitTime, createProps('textbox', {
+      left: leftX + 125, top: leftY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#e2e8f0', width: 95, textAlign: 'right'
+    }));
+    objects.push(recBg, badgeTab, badgeText, splitLabel, splitTimeText);
+
+    const rightX = 1450;
+    const rightY = 960;
+
+    const distTab = new fabric.Rect(createProps('rect', {
+      left: rightX + 60, top: rightY - 26, width: 100, height: 24,
+      fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+    const distText = new fabric.Textbox(distanceVal, createProps('textbox', {
+      left: rightX + 60, top: rightY - 22, fontSize: 15, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 100, textAlign: 'center'
+    }));
+
+    const clockBody = new fabric.Rect(createProps('rect', {
+      left: rightX, top: rightY, width: 170, height: 38,
+      fill: '#d1d5db', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const timeText = new fabric.Textbox(clockTime, createProps('textbox', {
+      left: rightX + 10, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+    const ringsTab = new fabric.Rect(createProps('rect', {
+      left: rightX + 160, top: rightY, width: 80, height: 38,
+      fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+
+    objects.push(distTab, distText, clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+  }
+
+  // ── SW022 / Race Clock at Split Point with Standings ──
+  else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+    const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
+    const isC = normId.endsWith('C') || normId.includes('SW022C') || normId.includes('SW129C');
+    const isD = normId.endsWith('D') || normId.includes('SW022D') || normId.includes('SW129D');
+    const isE = normId.endsWith('E') || normId.includes('SW022E') || normId.includes('SW129E');
+    const isA = !isB && !isC && !isD && !isE;
+
+    const defaultStandingsA = [{ lane: '4', noc: 'AUS', name: 'SULLIVAN', gap: '' }];
+    const defaultStandingsB = [{ lane: '3', noc: 'KOR', name: 'PARK', gap: '' }];
+    const defaultStandingsC = [{ lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' }];
+    const defaultStandingsD = [
+      { lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' },
+      { lane: '2', noc: 'CHN', name: 'SUN', gap: '+1.36' }
+    ];
+    const defaultStandingsE = [
+      { lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' },
+      { lane: '2', noc: 'CHN', name: 'SUN', gap: '+1.36' },
+      { lane: '4', noc: 'POL', name: 'SAWRYMOWICZ', gap: '+4.95' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+
+    const splitRecord = (customData.splitRecord || 'WR').toUpperCase();
+    const splitTime = customData.splitTime || (isE || isD || isC ? '13:37.89' : isB ? '2:45.43' : '22.48');
+    const diffTime = customData.diffTime || (isE || isD || isC ? '+12.74' : isB ? '0.00' : '-0.01');
+    const distanceVal = (customData.distance || (isE || isD || isC ? '1400M' : isB ? '300M' : '50M')).toUpperCase();
+    const clockTime = customData.time || (isE || isD || isC ? '13:50.63' : isB ? '2:45.43' : '22.47');
+
+    const topX = 350;
+    let topY = 60;
+    const maxRows = isE ? 3 : isD ? 2 : 1;
+
+    for (let idx = 0; idx < standings.length && idx < maxRows; idx++) {
+      const p = standings[idx];
+      const topBg = new fabric.Rect(createProps('rect', {
+        left: topX, top: topY, width: 420, height: 34,
+        fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      }));
+      const laneText = new fabric.Textbox(p.lane || '', createProps('textbox', {
+        left: topX + 12, top: topY + 6, fontSize: 19, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 25, textAlign: 'center'
+      }));
+      objects.push(topBg, laneText);
+
+      const flagBase64 = getFlagBase64(p.noc);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: topX + 42, top: topY + 7, scaleX: 65 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const nameText = new fabric.Textbox((p.name || '').toUpperCase(), createProps('textbox', {
+        left: topX + 115, top: topY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 210
+      }));
+      objects.push(nameText);
+
+      if (p.gap) {
+        const gapText = new fabric.Textbox(p.gap, createProps('textbox', {
+          left: topX + 330, top: topY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 75, textAlign: 'right'
+        }));
+        objects.push(gapText);
+      }
+
+      topY += 38;
+    }
+
+    const leftX = 280;
+    const leftY = 960;
+    const recBg = new fabric.Rect(createProps('rect', {
+      left: leftX, top: leftY, width: 230, height: 38,
+      fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const badgeTab = new fabric.Rect(createProps('rect', {
+      left: leftX + 5, top: leftY + 4, width: 45, height: 30,
+      fill: splitRecord === 'WR' ? '#eab308' : '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+    const badgeText = new fabric.Textbox(splitRecord, createProps('textbox', {
+      left: leftX + 5, top: leftY + 9, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 45, textAlign: 'center'
+    }));
+    const splitLabel = new fabric.Textbox('SPLIT', createProps('textbox', {
+      left: leftX + 58, top: leftY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 60
+    }));
+    const splitTimeText = new fabric.Textbox(splitTime, createProps('textbox', {
+      left: leftX + 125, top: leftY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#e2e8f0', width: 95, textAlign: 'right'
+    }));
+
+    const diffBgColor = (isA && diffTime.startsWith('-')) ? '#16a34a' : '#0284c7';
+
+    const diffBg = new fabric.Rect(createProps('rect', {
+      left: leftX + 235, top: leftY, width: 85, height: 38,
+      fill: diffBgColor, skewX: -12, rx: 4, ry: 4
+    }));
+    const diffText = new fabric.Textbox(diffTime, createProps('textbox', {
+      left: leftX + 235, top: leftY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 85, textAlign: 'center'
+    }));
+
+    objects.push(recBg, badgeTab, badgeText, splitLabel, splitTimeText, diffBg, diffText);
+
+    const rightX = 1450;
+    const rightY = 960;
+    const distTab = new fabric.Rect(createProps('rect', {
+      left: rightX + 60, top: rightY - 26, width: 100, height: 24, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+    const distText = new fabric.Textbox(distanceVal, createProps('textbox', {
+      left: rightX + 60, top: rightY - 22, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 100, textAlign: 'center'
+    }));
+
+    const clockBody = new fabric.Rect(createProps('rect', {
+      left: rightX, top: rightY, width: 170, height: 38, fill: '#d1d5db', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const timeText = new fabric.Textbox(clockTime, createProps('textbox', {
+      left: rightX + 10, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+    const ringsTab = new fabric.Rect(createProps('rect', {
+      left: rightX + 160, top: rightY, width: 80, height: 38, fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+
+    objects.push(distTab, distText, clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+  }
+
+  // ── SW023 / Race Clock before Finish & SW024 / Race Clock at Finish ──
+  else if (normId.includes('SW023') || normId.includes('SW024') || normId.includes('SW130') || normId.includes('FINISH')) {
+    const wrTime = customData.wrTime || (normId.includes('SW024') ? '3:40.08' : '47.24');
+    const orTime = customData.orTime || (normId.includes('SW024') ? '3:40.59' : '47.27');
+    const clockTime = customData.time || (normId.includes('SW024') ? '3:41.60' : '47.1');
+
+    const leftX = 280;
+    const leftY = 920;
+
+    const wrBg = new fabric.Rect(createProps('rect', {
+      left: leftX, top: leftY, width: 190, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const wrBadge = new fabric.Rect(createProps('rect', {
+      left: leftX + 4, top: leftY + 3, width: 40, height: 26, fill: '#eab308', skewX: -12, rx: 2, ry: 2
+    }));
+    const wrBadgeText = new fabric.Textbox('WR', createProps('textbox', {
+      left: leftX + 4, top: leftY + 7, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 40, textAlign: 'center'
+    }));
+    const wrTimeText = new fabric.Textbox(wrTime, createProps('textbox', {
+      left: leftX + 50, top: leftY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 130, textAlign: 'right'
+    }));
+
+    const orBg = new fabric.Rect(createProps('rect', {
+      left: leftX, top: leftY + 36, width: 190, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const orBadge = new fabric.Rect(createProps('rect', {
+      left: leftX + 4, top: leftY + 39, width: 40, height: 26, fill: '#e2e8f0', skewX: -12, rx: 2, ry: 2
+    }));
+    const orBadgeText = new fabric.Textbox('OR', createProps('textbox', {
+      left: leftX + 4, top: leftY + 43, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 40, textAlign: 'center'
+    }));
+    const orTimeText = new fabric.Textbox(orTime, createProps('textbox', {
+      left: leftX + 50, top: leftY + 42, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 130, textAlign: 'right'
+    }));
+
+    objects.push(wrBg, wrBadge, wrBadgeText, wrTimeText, orBg, orBadge, orBadgeText, orTimeText);
+
+    const rightX = 1450;
+    const rightY = 960;
+    const clockBody = new fabric.Rect(createProps('rect', {
+      left: rightX, top: rightY, width: 170, height: 38, fill: '#d1d5db', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const timeText = new fabric.Textbox(clockTime, createProps('textbox', {
+      left: rightX + 10, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+    const ringsTab = new fabric.Rect(createProps('rect', {
+      left: rightX + 160, top: rightY, width: 80, height: 38, fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
+
+    objects.push(clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+  }
+
+  // ── SW103 / Weather ──
+  else if (normId.includes('SW103') || normId.includes('WEATHER')) {
+    const airTemp = customData.airTemp || '21°C';
+    const waterTemp = customData.waterTemp || '28°C';
+    const humidity = customData.humidity || '83%';
+    const windDir = (customData.windDir || 'EAST SOUTH EAST').toUpperCase();
+    const windSpeed = customData.windSpeed || '5KM/H';
+
+    const gunPathData = 'M 45 0 L 888 0 C 892 0, 895 3, 893 8 L 872 44 C 870 49, 865 54, 860 54 L 140 54 L 115 88 C 112 92, 106 95, 100 95 L 10 95 C 4 95, 0 90, 2 84 L 22 42 L 35 6 C 37 2, 41 0, 45 0 Z';
+
+    const gunGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 890, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.4, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const gunHeaderBody = new fabric.Path(gunPathData, createProps('path', {
+      left: 240, top: 580,
+      fill: gunGradient,
+      stroke: borderHighlight,
+      strokeWidth: 2,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.7)', blur: 15, offsetX: 0, offsetY: 8 })
+    }));
+
+    const weatherIcon = new fabric.Textbox('🌧️', createProps('textbox', {
+      left: 275, top: 611, fontSize: 42, fill: '#ffffff', width: 65, textAlign: 'center'
+    }));
+
+    const sportTitleText = new fabric.Textbox(sportTitle, createProps('textbox', {
+      left: 395, top: 589, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 610, charSpacing: 90
+    }));
+
+    const c1 = new fabric.Circle(createProps('circle', { left: 1045, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: 1061, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: 1077, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: 1053, top: 603, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: 1069, top: 603, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+
+    const subBarGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 778, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#d1d5db' },
+        { offset: 0.5, color: '#ffffff' },
+        { offset: 1, color: '#e2e8f0' }
+      ]
+    });
+
+    const subBarPathData = 'M 28 0 L 778 0 L 766 34 L 0 34 Z';
+
+    const subBar = new fabric.Path(subBarPathData, createProps('path', {
+      left: 350, top: 635,
+      fill: subBarGradient,
+      stroke: 'rgba(0,34,62,0.5)',
+      strokeWidth: 1.2
+    }));
+
+    const weatherSubTitle = new fabric.Textbox('WEATHER', createProps('textbox', {
+      left: 395, top: 640, fontSize: 21, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00223e', width: 720, charSpacing: 40
+    }));
+
+    objects.push(gunHeaderBody, weatherIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, weatherSubTitle);
+
+    const rows = [
+      { icon: '🌡️', label: 'AIR TEMPERATURE', val: airTemp },
+      { icon: '🌊', label: 'WATER TEMPERATURE', val: waterTemp },
+      { icon: '💦', label: 'HUMIDITY', val: humidity },
+      { icon: '🧭', label: 'WIND DIRECTION', val: windDir },
+      { icon: '🌬️', label: 'WIND SPEED', val: windSpeed }
+    ];
+
+    const rowPathData = 'M 24 0 L 888 0 L 888 34 L 0 34 Z';
+    let ry = 675;
+    rows.forEach((r, idx) => {
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+      const rBar = new fabric.Path(rowPathData, createProps('path', {
+        left: 240, top: ry, fill: rowFill, stroke: 'rgba(0,136,204,0.6)', strokeWidth: 1
+      }));
+      const iText = new fabric.Textbox(r.icon, createProps('textbox', {
+        left: 272, top: ry + 5, fontSize: 18, fill: '#ffffff', width: 28
+      }));
+      const lText = new fabric.Textbox(r.label, createProps('textbox', {
+        left: 308, top: ry + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 350
+      }));
+      const vText = new fabric.Textbox(r.val, createProps('textbox', {
+        left: 650, top: ry + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 460, textAlign: 'right'
+      }));
+      objects.push(rBar, iText, lText, vText);
+      ry += 38;
+    });
+  }
+
+  // ── SW106 / Athlete ID (Open Water) ──
+  else if (normId.includes('SW106') || normId.includes('ATHLETE ID')) {
+    const athNum = customData.num || customData.lane || '17';
+    const nocCode = (customData.noc || 'NED').toUpperCase();
+    const nameVal = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
+
+    const startX = 280;
+    const startY = 940;
+    const barW = 780;
+
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: barW, height: 42, fill: gradientStart, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5
+    }));
+    objects.push(mainBar);
+
+    const flagBase64 = getFlagBase64(nocCode);
+    if (flagBase64) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flagBase64);
+        imgObj.set({
+          id: generateUniqueId({ type: 'image' }), left: startX + 18, top: startY + 9, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
+        });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const numText = new fabric.Textbox(athNum, createProps('textbox', {
+      left: startX + 98, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 45, textAlign: 'center'
+    }));
+    const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
+      left: startX + 150, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 510
+    }));
+
+    const c1 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+
+    objects.push(numText, nameText, c1, c2, c3, c4, c5);
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -3097,6 +3522,568 @@ export function generateSwimming2HTML(
           </div>
           <div class="event-sub-bar">
             <div class="event-sub-title">${customData.event || "WOMEN'S 200M BUTTERFLY"}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW020 / Race Clock ──
+  else if (normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) {
+    const timeVal = customData.time || '15.4';
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          .clock-box {
+            position: absolute; right: 280px; bottom: 80px;
+            display: flex; align-items: center; gap: 0;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .clock-time-body {
+            background: linear-gradient(180deg, #f3f4f6 0%, #d1d5db 100%);
+            color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 6px 20px; transform: skewX(-12deg); border-radius: 5px 0 0 5px;
+            border: 1.5px solid #0088cc; border-right: none; min-width: 150px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); }
+          .clock-rings-body {
+            background: #00192e; padding: 6px 16px; transform: skewX(-12deg);
+            border-radius: 0 5px 5px 0; border: 1.5px solid #0088cc; border-left: none;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="clock-box">
+          <div class="clock-time-body"><span class="clock-time-text">${timeVal}</span></div>
+          <div class="clock-rings-body">
+            <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW021 / Race Clock before Split Point ──
+  else if (normId.includes('SW021') || normId.includes('SW128') || normId.includes('BEFORE SPLIT')) {
+    const splitRecord = (customData.splitRecord || 'WR').toUpperCase();
+    const splitTime = customData.splitTime || '22.44';
+    const distanceVal = (customData.distance || '50M').toUpperCase();
+    const clockTime = customData.time || '19.4';
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          .left-split-badge {
+            position: absolute; left: 280px; bottom: 80px;
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 5px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; gap: 12px; padding: 6px 16px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .split-badge-tag {
+            background: ${splitRecord === 'WR' ? '#eab308' : '#e2e8f0'};
+            color: #00192e; font-size: 15px; font-weight: 900; font-style: italic;
+            padding: 2px 8px; border-radius: 3px;
+          }
+          .split-badge-content { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; }
+          .split-label { font-size: 18px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+          .split-val { font-size: 18px; font-weight: 900; font-style: italic; color: #e2e8f0; }
+
+          .right-clock-group {
+            position: absolute; right: 280px; bottom: 80px;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .dist-tab {
+            background: #e2e8f0; color: #00192e; font-size: 14px; font-weight: 900; font-style: italic;
+            padding: 3px 14px; transform: skewX(-12deg); border-radius: 3px; margin-right: 60px;
+          }
+          .dist-tab-text { transform: skewX(12deg); }
+          .clock-box { display: flex; align-items: center; }
+          .clock-time-body {
+            background: linear-gradient(180deg, #f3f4f6 0%, #d1d5db 100%);
+            color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 6px 20px; transform: skewX(-12deg); border-radius: 5px 0 0 5px;
+            border: 1.5px solid #0088cc; border-right: none; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); }
+          .clock-rings-body {
+            background: #00192e; padding: 6px 16px; transform: skewX(-12deg);
+            border-radius: 0 5px 5px 0; border: 1.5px solid #0088cc; border-left: none;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="left-split-badge">
+          <div class="split-badge-content">
+            <div class="split-badge-tag">${splitRecord}</div>
+            <div class="split-label">SPLIT</div>
+            <div class="split-val">${splitTime}</div>
+          </div>
+        </div>
+        <div class="right-clock-group">
+          <div class="dist-tab"><span class="dist-tab-text">${distanceVal}</span></div>
+          <div class="clock-box">
+            <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
+            <div class="clock-rings-body">
+              <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+                <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+                <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+                <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+                <circle cx="72.5" cy="27" r="11"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW022 / Race Clock at Split Point with Standings ──
+  else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+    const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
+    const isC = normId.endsWith('C') || normId.includes('SW022C') || normId.includes('SW129C');
+    const isD = normId.endsWith('D') || normId.includes('SW022D') || normId.includes('SW129D');
+    const isE = normId.endsWith('E') || normId.includes('SW022E') || normId.includes('SW129E');
+    const isA = !isB && !isC && !isD && !isE;
+
+    const defaultStandingsA = [{ lane: '4', noc: 'AUS', name: 'SULLIVAN', gap: '' }];
+    const defaultStandingsB = [{ lane: '3', noc: 'KOR', name: 'PARK', gap: '' }];
+    const defaultStandingsC = [{ lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' }];
+    const defaultStandingsD = [
+      { lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' },
+      { lane: '2', noc: 'CHN', name: 'SUN', gap: '+1.36' }
+    ];
+    const defaultStandingsE = [
+      { lane: '6', noc: 'TUN', name: 'MELLOULI', gap: '' },
+      { lane: '2', noc: 'CHN', name: 'SUN', gap: '+1.36' },
+      { lane: '4', noc: 'POL', name: 'SAWRYMOWICZ', gap: '+4.95' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+
+    const splitRecord = (customData.splitRecord || 'WR').toUpperCase();
+    const splitTime = customData.splitTime || (isE || isD || isC ? '13:37.89' : isB ? '2:45.43' : '22.48');
+    const diffTime = customData.diffTime || (isE || isD || isC ? '+12.74' : isB ? '0.00' : '-0.01');
+    const distanceVal = (customData.distance || (isE || isD || isC ? '1400M' : isB ? '300M' : '50M')).toUpperCase();
+    const clockTime = customData.time || (isE || isD || isC ? '13:50.63' : isB ? '2:45.43' : '22.47');
+
+    const maxRows = isE ? 3 : isD ? 2 : 1;
+    const sliceStandings = standings.slice(0, maxRows);
+    const diffBgColor = (isA && diffTime.startsWith('-')) ? '#16a34a' : '#0284c7';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .top-standings-container {
+            position: absolute; left: 350px; top: 60px;
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8)); min-width: 420px;
+          }
+          .top-standings-row {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 5px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 5px 16px; height: 34px;
+          }
+          .top-row-left { transform: skewX(12deg); display: flex; align-items: center; gap: 12px; }
+          .top-lane { font-size: 20px; font-weight: 900; font-style: italic; min-width: 20px; }
+          .top-flag-img { width: 65px; height: 20px; object-fit: cover; border-radius: 3px; border: 1px solid rgba(255,255,255,0.6); }
+          .top-name { font-size: 19px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+          .top-gap { transform: skewX(12deg); font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; }
+
+          .left-split-group {
+            position: absolute; left: 280px; bottom: 80px;
+            display: flex; align-items: center; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .left-split-badge {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 5px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; gap: 12px; padding: 6px 16px;
+          }
+          .split-badge-tag {
+            background: ${splitRecord === 'WR' ? '#eab308' : '#e2e8f0'};
+            color: #00192e; font-size: 15px; font-weight: 900; font-style: italic;
+            padding: 2px 8px; border-radius: 3px;
+          }
+          .split-badge-content { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; }
+          .split-label { font-size: 18px; font-weight: 900; font-style: italic; }
+          .split-val { font-size: 18px; font-weight: 900; font-style: italic; color: #e2e8f0; }
+          .diff-badge {
+            background: ${diffBgColor};
+            color: #ffffff; font-size: 18px; font-weight: 900; font-style: italic;
+            padding: 6px 14px; transform: skewX(-12deg); border-radius: 4px;
+          }
+          .diff-text { transform: skewX(12deg); }
+
+          .right-clock-group {
+            position: absolute; right: 280px; bottom: 80px;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .dist-tab {
+            background: #e2e8f0; color: #00192e; font-size: 14px; font-weight: 900; font-style: italic;
+            padding: 3px 14px; transform: skewX(-12deg); border-radius: 3px; margin-right: 60px;
+          }
+          .dist-tab-text { transform: skewX(12deg); }
+          .clock-box { display: flex; align-items: center; }
+          .clock-time-body {
+            background: linear-gradient(180deg, #f3f4f6 0%, #d1d5db 100%);
+            color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 6px 20px; transform: skewX(-12deg); border-radius: 5px 0 0 5px;
+            border: 1.5px solid #0088cc; border-right: none; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); }
+          .clock-rings-body {
+            background: #00192e; padding: 6px 16px; transform: skewX(-12deg);
+            border-radius: 0 5px 5px 0; border: 1.5px solid #0088cc; border-left: none;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="top-standings-container">
+          ${sliceStandings.map(s => {
+            const fUrl = getFlagBase64(s.noc);
+            return `
+              <div class="top-standings-row">
+                <div class="top-row-left">
+                  <div class="top-lane">${s.lane || ''}</div>
+                  ${fUrl ? `<img class="top-flag-img" src="${fUrl}" alt="${s.noc || ''}" />` : ''}
+                  <div class="top-name">${(s.name || '').toUpperCase()}</div>
+                </div>
+                ${s.gap ? `<div class="top-gap">${s.gap}</div>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="left-split-group">
+          <div class="left-split-badge">
+            <div class="split-badge-content">
+              <div class="split-badge-tag">${splitRecord}</div>
+              <div class="split-label">SPLIT</div>
+              <div class="split-val">${splitTime}</div>
+            </div>
+          </div>
+          <div class="diff-badge"><span class="diff-text">${diffTime}</span></div>
+        </div>
+        <div class="right-clock-group">
+          <div class="dist-tab"><span class="dist-tab-text">${distanceVal}</span></div>
+          <div class="clock-box">
+            <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
+            <div class="clock-rings-body">
+              <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+                <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+                <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+                <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+                <circle cx="72.5" cy="27" r="11"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW023 / Race Clock before Finish & SW024 / Race Clock at Finish ──
+  else if (normId.includes('SW023') || normId.includes('SW024') || normId.includes('SW130') || normId.includes('FINISH')) {
+    const wrTime = customData.wrTime || (normId.includes('SW024') ? '3:40.08' : '47.24');
+    const orTime = customData.orTime || (normId.includes('SW024') ? '3:40.59' : '47.27');
+    const clockTime = customData.time || (normId.includes('SW024') ? '3:41.60' : '47.1');
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .left-records-stack {
+            position: absolute; left: 280px; bottom: 80px;
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .record-row {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 4px; border: 1px solid #0088cc;
+            display: flex; align-items: center; gap: 10px; padding: 4px 12px; width: 190px; justify-content: space-between;
+          }
+          .record-row-content { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; width: 100%; justify-content: space-between; }
+          .rec-tag-wr { background: #eab308; color: #00192e; font-size: 13px; font-weight: 900; font-style: italic; padding: 2px 6px; border-radius: 2px; }
+          .rec-tag-or { background: #e2e8f0; color: #00192e; font-size: 13px; font-weight: 900; font-style: italic; padding: 2px 6px; border-radius: 2px; }
+          .rec-val { font-size: 17px; font-weight: 900; font-style: italic; }
+
+          .right-clock-group {
+            position: absolute; right: 280px; bottom: 80px;
+            display: flex; align-items: center; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .clock-time-body {
+            background: linear-gradient(180deg, #f3f4f6 0%, #d1d5db 100%);
+            color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 6px 20px; transform: skewX(-12deg); border-radius: 5px 0 0 5px;
+            border: 1.5px solid #0088cc; border-right: none; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); }
+          .clock-rings-body {
+            background: #00192e; padding: 6px 16px; transform: skewX(-12deg);
+            border-radius: 0 5px 5px 0; border: 1.5px solid #0088cc; border-left: none;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="left-records-stack">
+          <div class="record-row">
+            <div class="record-row-content">
+              <div class="rec-tag-wr">WR</div>
+              <div class="rec-val">${wrTime}</div>
+            </div>
+          </div>
+          <div class="record-row">
+            <div class="record-row-content">
+              <div class="rec-tag-or">OR</div>
+              <div class="rec-val">${orTime}</div>
+            </div>
+          </div>
+        </div>
+        <div class="right-clock-group">
+          <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
+          <div class="clock-rings-body">
+            <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW103 / Weather ──
+  else if (normId.includes('SW103') || normId.includes('WEATHER')) {
+    const airTemp = customData.airTemp || '21°C';
+    const waterTemp = customData.waterTemp || '28°C';
+    const humidity = customData.humidity || '83%';
+    const windDir = (customData.windDir || 'EAST SOUTH EAST').toUpperCase();
+    const windSpeed = customData.windSpeed || '5KM/H';
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .weather-container {
+            position: absolute; left: 240px; bottom: 80px;
+            display: flex; flex-direction: column; gap: 0;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .weather-gun-header {
+            position: relative; width: 890px; height: 55px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 45px 0 35px; color: #ffffff;
+          }
+          .weather-gun-body {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            clip-path: polygon(45px 0, 100% 0, calc(100% - 18px) 54px, 140px 54px, 115px 95px, 0 95px, 20px 42px);
+            border: 2px solid ${borderHighlight}; border-radius: 6px; z-index: -1;
+          }
+          .weather-picto-icon { font-size: 38px; transform: rotate(-5deg); margin-left: 20px; }
+          .weather-header-title { font-size: 30px; font-weight: 900; font-style: italic; letter-spacing: 3px; }
+          .weather-rings { fill: none; stroke: #ffffff; stroke-width: 3.2; }
+
+          .weather-sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            color: #00223e; height: 34px; padding: 0 24px;
+            margin-left: 110px; margin-top: -38px; width: 778px;
+            clip-path: polygon(28px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+            border: 1.2px solid rgba(0,34,62,0.5);
+            display: flex; align-items: center; position: relative; z-index: 1;
+          }
+          .weather-sub-title { font-size: 20px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+
+          .weather-rows-stack {
+            margin-left: 0; margin-top: 4px; width: 890px;
+            display: flex; flex-direction: column; gap: 4px;
+          }
+          .weather-row {
+            background: ${darkTabColor}; color: #ffffff;
+            clip-path: polygon(24px 0, 100% 0, 100% 100%, 0 100%);
+            border: 1px solid rgba(0, 136, 204, 0.6);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px 0 34px; height: 34px;
+          }
+          .weather-row.row-alt { background: ${altRowColor}; }
+          .weather-row-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          .weather-row-icon {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+          }
+          .weather-label { font-size: 16px; font-weight: 900; font-style: italic; }
+          .weather-val { font-size: 16px; font-weight: 900; font-style: italic; color: #e2e8f0; }
+        </style>
+      </head>
+      <body>
+        <div class="weather-container">
+          <div class="weather-gun-header">
+            <div class="weather-gun-body"></div>
+            <div class="weather-picto-icon">🌧️</div>
+            <div class="weather-header-title">${sportTitle}</div>
+            <svg class="weather-rings" viewBox="0 0 100 45" width="56" height="26">
+              <circle cx="15" cy="16" r="11"/>
+              <circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/>
+              <circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/>
+              <circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          <div class="weather-sub-bar">
+            <div class="weather-sub-title">WEATHER</div>
+          </div>
+          <div class="weather-rows-stack">
+            <div class="weather-row">
+              <div class="weather-row-left">
+                <span class="weather-row-icon">🌡️</span>
+                <span class="weather-label">AIR TEMPERATURE</span>
+              </div>
+              <div class="weather-val">${airTemp}</div>
+            </div>
+            <div class="weather-row row-alt">
+              <div class="weather-row-left">
+                <span class="weather-row-icon">🌊</span>
+                <span class="weather-label">WATER TEMPERATURE</span>
+              </div>
+              <div class="weather-val">${waterTemp}</div>
+            </div>
+            <div class="weather-row">
+              <div class="weather-row-left">
+                <span class="weather-row-icon">💦</span>
+                <span class="weather-label">HUMIDITY</span>
+              </div>
+              <div class="weather-val">${humidity}</div>
+            </div>
+            <div class="weather-row row-alt">
+              <div class="weather-row-left">
+                <span class="weather-row-icon">🧭</span>
+                <span class="weather-label">WIND DIRECTION</span>
+              </div>
+              <div class="weather-val">${windDir}</div>
+            </div>
+            <div class="weather-row">
+              <div class="weather-row-left">
+                <span class="weather-row-icon">🌬️</span>
+                <span class="weather-label">WIND SPEED</span>
+              </div>
+              <div class="weather-val">${windSpeed}</div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW106 / Athlete ID (Open Water) ──
+  else if (normId.includes('SW106') || normId.includes('ATHLETE ID')) {
+    const athNum = customData.num || customData.lane || '17';
+    const nocCode = (customData.noc || 'NED').toUpperCase();
+    const flagUrl = getFlagBase64(nocCode);
+    const nameVal = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .athlete-id-container {
+            position: absolute; left: 280px; bottom: 80px; width: 780px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .athlete-id-bar {
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff; padding: 10px 24px; transform: skewX(-12deg);
+            border-radius: 6px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: space-between;
+          }
+          .athlete-id-left { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; }
+          .athlete-flag-img { width: 70px; height: 22px; object-fit: cover; border-radius: 3px; border: 1.5px solid rgba(255,255,255,0.6); }
+          .athlete-num { font-size: 22px; font-weight: 900; font-style: italic; }
+          .athlete-name { font-size: 22px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+          .athlete-rings { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 3; }
+        </style>
+      </head>
+      <body>
+        <div class="athlete-id-container">
+          <div class="athlete-id-bar">
+            <div class="athlete-id-left">
+              ${flagUrl ? `<img class="athlete-flag-img" src="${flagUrl}" alt="${nocCode}" />` : ''}
+              <div class="athlete-num">${athNum}</div>
+              <div class="athlete-name">${nameVal}</div>
+            </div>
+            <svg class="athlete-rings" viewBox="0 0 100 45" width="52" height="24">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
           </div>
         </div>
       </body>
