@@ -61,6 +61,21 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
     };
   }, []);
 
+  // Close enlarged reference image on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) {
+        setEnlargedImage(null);
+      }
+    };
+    if (enlargedImage) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [enlargedImage]);
+
   // Filter sports list
   const filteredSports = OLYMPIC_GAMES_DATA.filter(sport =>
     sport.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -353,7 +368,7 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
                 zIndex: 100000
               }}
               onClick={() => setEnlargedImage(null)}
-              title="Close"
+              title="Close (Esc)"
             >
               ✕
             </button>

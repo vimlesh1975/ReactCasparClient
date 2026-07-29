@@ -1,32 +1,42 @@
-# Swimming Graphics Module (`games2`) Walkthrough
+# Swimming Graphics (games2) - Implementation Walkthrough
 
-## Summary of Accomplishments
-
-We built a modular, 1-to-1 visual parity graphics generator for Swimming (`SW`) templates in `client/src/games2/sports2/swimming2.js`, wired directly into `TemplateGenerator2.js`.
-
-### Completed Swimming Graphic Templates:
-1. **`SW002` (Venue ID)**:
-   - **Gun Silhouette Header Banner**: Gun handle slant, ocean dark navy linear gradient fill (`#00223e` → `#00355c` → `#00477a`), bright cyan border (`#0088cc`).
-   - **Icon & Typography**: 42px Swimmer pictogram (`🏊`), bold italic `AQUATICS CENTRE` venue title, and white Olympic rings SVG in barrel tip.
-
-2. **`SW003` (Event Schedule)**:
-   - **Header & Sub-Header**: Header banner + metallic silver/light sub-bar (`AQUATICS CENTRE`).
-   - **8 Event Rows**: Stacked ocean navy blue event rows (`MEN'S 50M FREESTYLE - HEATS`, etc.).
-
-3. **`SW004` (Event ID)**:
-   - **Gun Header (`SWIMMING`)**: Pistol silhouette with swimmer icon, bold italic title, and Olympic rings.
-   - **Metallic Silver Sub-Bar (`WOMEN'S 200M BUTTERFLY - HEAT 1`)**: Skewed left edge matching gun handle slant; right edge flush with gun barrel.
-
-4. **`SW005` (Start List)**:
-   - **Header & Sub-Header**: `WOMEN'S 200M BUTTERFLY` + `START LIST - HEAT 5`.
-   - **8 Athlete Rows (Single Continuous Strips)**:
-     - **Direct Numbering**: Lane numbers (`1` to `8`) directly on the strip without a separate cyan box.
-     - **Alternating Dark & Lighter Blue Rows**: Even rows in dark navy blue (`#00192e`); odd rows in lighter navy blue (`#002e4d`).
-     - **Double-Width Base64 Country Flags**: High-resolution country flag images (`58px x 22px`) dynamically fetched from `FLAGS_BASE64` module (`KOR`, `AUS`, `USA`, `POL`, `FRA`, `CHN`, `HUN`, `BRA`, etc.).
-     - **Athlete Names**: Bold 900 italic uppercase athlete names.
+All swimming broadcast graphic templates (`SW002` through `SW006`) have been built with pixel-perfect precision matching the London 2012 Olympic Games broadcast graphic spec.
 
 ---
 
-## Verification & Build
-- `swimming2.js` handles both Fabric.js vector canvas groups (`generateSwimming2Fabric`) and 1920x1080 HTML broadcast overlays (`generateSwimming2HTML`).
-- `FLAGS_BASE64` from `client/src/GamesAIPanel/flagsBase64.js` supplies crisp NOC flag images.
+## 🏊 Built Templates & Specifications
+
+### 1. `SW002` (Venue ID)
+- **Visual Design**: Sleek gun-shaped banner in lower third with dark ocean gradient (`#00223e` -> `#00477a`), bright blue outline (`#0088cc`), swimmer icon `🏊`, venue title (`AQUATICS CENTRE`), and Olympic rings graphic.
+
+### 2. `SW003` (Event Schedule)
+- **Visual Design**: Full-width header banner with sub-header venue bar (`AQUATICS CENTRE`) and up to 8 event schedule rows in dark blue ocean tabs.
+
+### 3. `SW004` (Event ID)
+- **Visual Design**: Gun-shaped header bar for sport title (`SWIMMING`), stacked with a white/grey gradient sub-bar for event title (`WOMEN'S 200M BUTTERFLY`).
+
+### 4. `SW005` (Start List)
+- **Visual Design**:
+  - Header banner (`WOMEN'S 200M BUTTERFLY`) + sub-header (`START LIST - HEAT 5`).
+  - **Single Continuous Row Strips**: Each athlete row rendered on a single continuous angled strip (`skewX: -12deg`).
+  - **Direct Lane Numbering**: White bold italic number directly on strip (no cyan box).
+  - **Alternating Row Fills**: Even rows in dark ocean navy (`#00192e`); odd rows in lighter navy (`#002e4d`).
+  - **80px x 22px Country Flags**: Base64 country flag graphics (`KOR`, `AUS`, `USA`, `POL`, `FRA`, `CHN`, `HUN`, `BRA`). Unlocked and fully selectable.
+  - **Athlete Names**: Bold 900 italic uppercase text.
+
+### 5. `SW006` (Lane ID - Individual & Relay Variants a–e)
+- **Visual Design**:
+  - Lower third single-athlete or team lane identification strip (`skewX: -12deg`).
+  - Lane number, NOC code, crisp 80px x 22px country flag image, athlete/team name (`OTYLIA JEDRZEJCZAK`, `FRANCE`, `BEATRIX BOULSEVICZ`, `KATHLEEN HERSEY`, `UNITED STATES`).
+  - **Variant Badges**:
+    - `SW006c`: Top `FALSE START` tab badge + right `DSQ` status badge.
+    - `SW006d`: Sub-bar time result badge (`2:06.96 Q`) with green qualification badge.
+    - `SW006e`: Relay time result badge (`7:04.66 OR Q`) with Olympic Record (`OR`) and Qualification (`Q`) badges.
+  - **Unlocked & Unique IDs**: All sub-elements have unique IDs and unlocked controls.
+
+---
+
+## 🛠 Technical Verification
+- **Fabric.js Vector Canvas**: Generator `generateSwimming2Fabric` creates fully interactive, selectable vector groups with unique element IDs.
+- **HTML Playout Engine**: Generator `generateSwimming2HTML` produces transparent 1920x1080 HTML overlays for CasparCG playout.
+- **Build Status**: Verified via `npm run build` with **0 errors**.
