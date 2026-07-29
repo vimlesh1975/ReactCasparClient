@@ -432,7 +432,7 @@ export async function generateSwimming2Fabric(
   }
 
   // ── SW011 / Winner / Winners / Place ID Layout (SW011a, SW011b, SW011c) ──
-  else if (normId.includes('SW011') || normId.includes('SW111') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+  else if (normId.includes('SW011') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW011B');
     const isC = normId.endsWith('C') || normId.includes('SW011C');
 
@@ -1395,18 +1395,13 @@ export async function generateSwimming2Fabric(
       }));
       objects.push(mainBar);
 
-      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
-        left: startX + 12, top: startY + 7, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 45
-      }));
-      objects.push(nocText);
-
       const flagBase64 = getFlagBase64(nocCode);
       if (flagBase64) {
         try {
           const imgObj = await fabric.Image.fromURL(flagBase64);
           imgObj.set({
             id: generateUniqueId({ type: 'image' }),
-            left: startX + 60, top: startY + 8,
+            left: startX + 12, top: startY + 8,
             scaleX: 55 / (imgObj.width || 32),
             scaleY: 18 / (imgObj.height || 20),
             skewX: -12, selectable: true, hasControls: true
@@ -1416,16 +1411,477 @@ export async function generateSwimming2Fabric(
       }
 
       const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
-        left: startX + 122, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+        left: startX + 82, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
       }));
 
       const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
-        left: startX + 172, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 210
+        left: startX + 137, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 240
       }));
 
       objects.push(bibText, nameText);
       startX += bugW + 40;
     }
+  }
+
+  // ── SW108 / In-Race ID ──
+  else if (normId.includes('SW108') || normId.includes('IN-RACE ID')) {
+    const bibNum = customData.num || customData.bib || customData.lane || '18';
+    const nocCode = (customData.noc || 'USA').toUpperCase();
+    const nameVal = (customData.name || customData.team || 'MARK WARKENTIN').toUpperCase();
+
+    const startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 940;
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 540, height: 42, fill: gradientStart, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5
+    }));
+    objects.push(mainBar);
+
+    const flagBase64 = getFlagBase64(nocCode);
+    if (flagBase64) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flagBase64);
+        imgObj.set({
+          id: generateUniqueId({ type: 'image' }), left: startX + 16, top: startY + 10,
+          scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
+        });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
+      left: startX + 85, top: startY + 9, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+    }));
+
+    const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
+      left: startX + 140, top: startY + 9, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 380
+    }));
+
+    objects.push(bibText, nameText);
+  }
+
+  // ── SW109 / In-Race Place ID ──
+  else if (normId.includes('SW109') || normId.includes('IN-RACE PLACE ID')) {
+    const bibNum = customData.num || customData.bib || customData.lane || '14';
+    const nocCode = (customData.noc || 'RUS').toUpperCase();
+    const nameVal = (customData.name || customData.team || 'EVGENY DRATTSEV').toUpperCase();
+    const placeVal = (customData.place || customData.badge || '2ND PLACE').toUpperCase();
+
+    const startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 940;
+
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 540, height: 42, fill: gradientStart, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5
+    }));
+    objects.push(mainBar);
+
+    const flagBase64 = getFlagBase64(nocCode);
+    if (flagBase64) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flagBase64);
+        imgObj.set({
+          id: generateUniqueId({ type: 'image' }), left: startX + 16, top: startY + 10,
+          scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
+        });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
+      left: startX + 85, top: startY + 9, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+    }));
+
+    const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
+      left: startX + 140, top: startY + 9, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 380
+    }));
+
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY + 45, width: 160, height: 26, fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#ffffff', strokeWidth: 1
+    }));
+    const subText = new fabric.Textbox(placeVal, createProps('textbox', {
+      left: startX + 10, top: startY + 49, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+
+    objects.push(bibText, nameText, subBar, subText);
+  }
+
+  // ── SW110 / Group Indicator ──
+  else if (normId.includes('SW110') || normId.includes('GROUP INDICATOR')) {
+    const titleVal = (customData.title || customData.group || 'LEADERS').toUpperCase();
+    const startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 960;
+
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 180, height: 34, fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const mainText = new fabric.Textbox(titleVal, createProps('textbox', {
+      left: startX + 10, top: startY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 160, textAlign: 'center'
+    }));
+
+    objects.push(mainBar, mainText);
+  }
+
+  // ── SW111 / Group Members ──
+  else if (normId.includes('SW111') || normId.includes('GROUP MEMBERS')) {
+    const titleVal = (customData.title || customData.group || 'LEADERS').toUpperCase();
+    const defaultMembers = [
+      { noc: 'UKR', num: '4', name: 'I. CHERVYNSKIY' },
+      { noc: 'ESP', num: '2', name: 'F.J. HERVAS' },
+      { noc: 'VEN', num: '9', name: 'E.MALDONADO SAVERA' }
+    ];
+    const members = customData.members || customData.athletes || defaultMembers;
+
+    const startX = customData.posX ? Number(customData.posX) : 280;
+    let startY = customData.posY ? Number(customData.posY) : 830;
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX + 50, top: startY, width: 200, height: 26, fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const headerText = new fabric.Textbox(titleVal, createProps('textbox', {
+      left: startX + 50, top: startY + 4, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 200, textAlign: 'center'
+    }));
+    objects.push(headerBar, headerText);
+    startY += 30;
+
+    for (let idx = 0; idx < members.length && idx < 5; idx++) {
+      const p = members[idx];
+      const nocCode = (p.noc || 'UKR').toUpperCase();
+      const bibNum = p.num || p.bib || p.lane || '';
+      const nameVal = (p.name || '').toUpperCase();
+
+      const rBar = new fabric.Rect(createProps('rect', {
+        left: startX, top: startY, width: 380, height: 32, fill: '#002f5a', skewX: -12, rx: 3, ry: 3, stroke: '#0088cc', strokeWidth: 1.5
+      }));
+      objects.push(rBar);
+
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 15, top: startY + 8,
+            scaleX: 34 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
+        left: startX + 65, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00e5ff', width: 30
+      }));
+      objects.push(bibText);
+
+      const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
+        left: startX + 100, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 260
+      }));
+      objects.push(nameText);
+
+      startY += 34;
+    }
+  }
+
+  // ── SW112 / Gap between 2 Groups ──
+  else if (normId.includes('SW112') || normId.includes('GAP BETWEEN 2 GROUPS')) {
+    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const gapTime = customData.gap || customData.time || '1:15';
+    const group2 = (customData.group2 || 'PACK').toUpperCase();
+
+    let startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 960;
+
+    const b1 = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 140, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const t1 = new fabric.Textbox(group1, createProps('textbox', {
+      left: startX + 8, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+    }));
+
+    const b2 = new fabric.Rect(createProps('rect', {
+      left: startX + 150, top: startY, width: 75, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
+    }));
+    const t2 = new fabric.Textbox(gapTime, createProps('textbox', {
+      left: startX + 154, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 67, textAlign: 'center'
+    }));
+
+    const b3 = new fabric.Rect(createProps('rect', {
+      left: startX + 235, top: startY, width: 140, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const t3 = new fabric.Textbox(group2, createProps('textbox', {
+      left: startX + 243, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+    }));
+
+    objects.push(b1, t1, b2, t2, b3, t3);
+  }
+
+  // ── SW113 / Gap between 3 Groups ──
+  else if (normId.includes('SW113') || normId.includes('GAP BETWEEN 3 GROUPS')) {
+    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const gap1 = customData.gap1 || '0:13';
+    const group2 = (customData.group2 || 'CHASE').toUpperCase();
+    const gap2 = customData.gap2 || '0:25';
+    const group3 = (customData.group3 || 'PACK').toUpperCase();
+
+    let startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 960;
+
+    const items = [
+      { type: 'group', val: group1, w: 130 },
+      { type: 'gap', val: gap1, w: 65 },
+      { type: 'group', val: group2, w: 130 },
+      { type: 'gap', val: gap2, w: 65 },
+      { type: 'group', val: group3, w: 130 }
+    ];
+
+    items.forEach(it => {
+      if (it.type === 'group') {
+        const bg = new fabric.Rect(createProps('rect', {
+          left: startX, top: startY, width: it.w, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+        }));
+        const tx = new fabric.Textbox(it.val, createProps('textbox', {
+          left: startX + 6, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: it.w - 12, textAlign: 'center'
+        }));
+        objects.push(bg, tx);
+      } else {
+        const bg = new fabric.Rect(createProps('rect', {
+          left: startX, top: startY, width: it.w, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
+        }));
+        const tx = new fabric.Textbox(it.val, createProps('textbox', {
+          left: startX + 4, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: it.w - 8, textAlign: 'center'
+        }));
+        objects.push(bg, tx);
+      }
+      startX += it.w + 10;
+    });
+  }
+
+  // ── SW114 / Winner/Winners/Place ID ──
+  else if (normId.includes('SW114') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const categoryTitle = (customData.title || customData.event || "WINNER - MEN'S MARATHON 10KM").toUpperCase();
+    const athNum = customData.num || customData.lane || '17';
+    const nocCode = (customData.noc || 'NED').toUpperCase();
+    const athleteName = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
+    const timeVal = customData.time || '1:51:51.6';
+
+    const startX = 280;
+    const startY = 870;
+
+    const mainHeader = new fabric.Path('M 45 0 L 860 0 L 888 44 L 882 54 L 140 54 L 115 88 L 100 95 L 10 95 L 2 84 L 22 42 L 35 6 Z', createProps('path', {
+      left: startX, top: startY, fill: gradientStart, stroke: borderHighlight, strokeWidth: 1.5, scaleX: 780 / 888, scaleY: 48 / 95
+    }));
+    const sportText = new fabric.Textbox(sportTitle, createProps('textbox', {
+      left: startX + 160, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 450
+    }));
+
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: startX + 70, top: startY + 45, width: 710, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#ffffff', strokeWidth: 1
+    }));
+    const subText = new fabric.Textbox(categoryTitle, createProps('textbox', {
+      left: startX + 85, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 680
+    }));
+
+    const rowBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY + 75, width: 780, height: 38, fill: darkTabColor, skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
+    }));
+
+    const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+      left: startX + 16, top: startY + 83, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 50
+    }));
+    const flagBase64 = getFlagBase64(nocCode);
+    if (flagBase64) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flagBase64);
+        imgObj.set({
+          id: generateUniqueId({ type: 'image' }), left: startX + 68, top: startY + 84,
+          scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
+        });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const bibText = new fabric.Textbox(athNum, createProps('textbox', {
+      left: startX + 135, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+    }));
+    const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
+      left: startX + 188, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 380
+    }));
+    const timeText = new fabric.Textbox(timeVal, createProps('textbox', {
+      left: startX + 580, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 170, textAlign: 'right'
+    }));
+
+    objects.push(mainHeader, sportText, subBar, subText, rowBar, nocText, bibText, nameText, timeText);
+  }
+
+  // ── SW117 / MF Standings ──
+  else if (normId.includes('SW117') || normId.includes('MF STANDINGS')) {
+    const subTitle = (customData.title || customData.subtitle || 'LAP 3 OF 6').toUpperCase();
+    const defaultRows = [
+      { rank: '1', noc: 'NED', num: '17', name: 'M. VAN DER WEIJDEN', time: '55:55.8' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'D. DAVIES', time: '+0.8' },
+      { rank: '2', noc: 'GER', num: '6', name: 'T. LURZ', time: '+0.8' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'V. CLERI', time: '+8.0' },
+      { rank: '5', noc: 'RUS', num: '14', name: 'E. DRATTSEV', time: '+8.7' }
+    ];
+    const rowsList = customData.rows || customData.standings || defaultRows;
+
+    const startX = customData.posX ? Number(customData.posX) : 280;
+    let startY = customData.posY ? Number(customData.posY) : 740;
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX + 40, top: startY, width: 180, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+    }));
+    const headerText = new fabric.Textbox(subTitle, createProps('textbox', {
+      left: startX + 50, top: startY + 4, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 160, textAlign: 'center'
+    }));
+    objects.push(headerBar, headerText);
+    startY += 30;
+
+    rowsList.forEach((r, idx) => {
+      const rBar = new fabric.Rect(createProps('rect', {
+        left: startX, top: startY, width: 480, height: 32, fill: idx === 0 ? darkTabColor : altRowColor, skewX: -12, rx: 3, ry: 3, stroke: borderHighlight, strokeWidth: 1
+      }));
+
+      const rBadge = new fabric.Rect(createProps('rect', {
+        left: startX, top: startY, width: 32, height: 32, fill: '#dc2626', skewX: -12, rx: 3, ry: 3
+      }));
+      const rText = new fabric.Textbox(r.rank || '', createProps('textbox', {
+        left: startX + 2, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 28, textAlign: 'center'
+      }));
+
+      const nocText = new fabric.Textbox((r.noc || '').toUpperCase(), createProps('textbox', {
+        left: startX + 40, top: startY + 6, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 40
+      }));
+
+      const flagBase64 = getFlagBase64(r.noc);
+
+      const numText = new fabric.Textbox(r.num || r.bib || '', createProps('textbox', {
+        left: startX + 130, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 35, textAlign: 'center'
+      }));
+
+      const nameText = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', {
+        left: startX + 172, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 190
+      }));
+
+      const valText = new fabric.Textbox(r.time || r.val || '', createProps('textbox', {
+        left: startX + 365, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 100, textAlign: 'right'
+      }));
+
+      objects.push(rBar, rBadge, rText, nocText, numText, nameText, valText);
+
+      if (flagBase64) {
+        try {
+          fabric.Image.fromURL(flagBase64).then(imgObj => {
+            imgObj.set({
+              id: generateUniqueId({ type: 'image' }), left: startX + 82, top: startY + 7,
+              scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
+            });
+            objects.push(imgObj);
+          });
+        } catch (e) {}
+      }
+
+      startY += 34;
+    });
+  }
+
+  // ── SW118 / Standings & SW119 / Standings at Finish ──
+  else if (normId.includes('SW118') || normId.includes('SW119') || (normId.includes('STANDINGS') && normId.includes('OPEN WATER'))) {
+    const isFinish = normId.includes('SW119') || normId.includes('FINISH');
+    const subTitle = customData.subtitle || (isFinish ? 'STANDINGS AT FINISH' : 'STANDINGS - LAP 3 OF 6');
+
+    const defaultRows118 = [
+      { rank: '1', noc: 'NED', num: '17', name: 'MAARTEN VAN DER WEIJDEN', time: '55:55.8' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'DAVID DAVIES', time: '+0.8' },
+      { rank: '2', noc: 'GER', num: '6', name: 'THOMAS LURZ', time: '+0.8' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'VALERIO CLERI', time: '+8.0' },
+      { rank: '5', noc: 'RUS', num: '14', name: 'EVGENY DRATTSEV', time: '+8.7' },
+      { rank: '6', noc: 'BUL', num: '21', name: 'PETAR STOYCHEV', time: '+8.8' },
+      { rank: '7', noc: 'BEL', num: '8', name: 'BRIAN RYCKEMAN', time: '+9.6' },
+      { rank: '7', noc: 'USA', num: '18', name: 'MARK WARKENTIN', time: '+9.6' },
+      { rank: '', noc: 'RSA', num: '5', name: 'CHAD HO', time: 'DNF' }
+    ];
+
+    const defaultRows119 = [
+      { rank: '1', noc: 'NED', num: '17', name: 'MAARTEN VAN DER WEIJDEN', time: '1:51:51.6' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'DAVID DAVIES', time: '1:51:53.1' },
+      { rank: '3', noc: 'GER', num: '6', name: 'THOMAS LURZ', time: '1:51:53.6' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'VALERIO CLERI', time: '1:52:07.5' },
+      { rank: '', noc: 'RUS', num: '14', name: 'EVGENY DRATTSEV', time: 'PHOTO' },
+      { rank: '', noc: 'BUL', num: '21', name: 'PETAR STOYCHEV', time: 'PHOTO' },
+      { rank: '7', noc: 'BEL', num: '8', name: 'BRIAN RYCKEMAN', time: '1:52:10.7' },
+      { rank: '8', noc: 'USA', num: '18', name: 'MARK WARKENTIN', time: '1:52:13.0' },
+      { rank: '9', noc: 'RSA', num: '5', name: 'CHAD HO', time: '1:52:13.1' }
+    ];
+
+    const rowsList = customData.rows || customData.standings || (isFinish ? defaultRows119 : defaultRows118);
+
+    const startX = 280;
+    let startY = 580;
+
+    const mainHeader = new fabric.Path('M 45 0 L 860 0 L 888 44 L 882 54 L 140 54 L 115 88 L 100 95 L 10 95 L 2 84 L 22 42 L 35 6 Z', createProps('path', {
+      left: startX, top: startY, fill: gradientStart, stroke: borderHighlight, strokeWidth: 1.5, scaleX: 780 / 888, scaleY: 48 / 95
+    }));
+    const sportText = new fabric.Textbox("MEN'S MARATHON 10KM", createProps('textbox', {
+      left: startX + 160, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 450
+    }));
+
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: startX + 70, top: startY + 45, width: 710, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#ffffff', strokeWidth: 1
+    }));
+    const subText = new fabric.Textbox(subTitle.toUpperCase(), createProps('textbox', {
+      left: startX + 85, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 680
+    }));
+
+    objects.push(mainHeader, sportText, subBar, subText);
+    startY += 75;
+
+    rowsList.forEach((r, idx) => {
+      const rBar = new fabric.Rect(createProps('rect', {
+        left: startX, top: startY, width: 780, height: 32, fill: idx % 2 === 0 ? darkTabColor : altRowColor, skewX: -12, rx: 3, ry: 3, stroke: borderHighlight, strokeWidth: 1
+      }));
+      objects.push(rBar);
+
+      if (r.rank) {
+        const rBadge = new fabric.Rect(createProps('rect', {
+          left: startX, top: startY, width: 34, height: 32, fill: '#dc2626', skewX: -12, rx: 3, ry: 3
+        }));
+        const rText = new fabric.Textbox(r.rank, createProps('textbox', {
+          left: startX + 2, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 30, textAlign: 'center'
+        }));
+        objects.push(rBadge, rText);
+      }
+
+      const nocText = new fabric.Textbox((r.noc || '').toUpperCase(), createProps('textbox', {
+        left: startX + 42, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+
+      const numText = new fabric.Textbox(r.num || r.bib || '', createProps('textbox', {
+        left: startX + 140, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 35, textAlign: 'center'
+      }));
+
+      const nameText = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', {
+        left: startX + 185, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 380
+      }));
+
+      const valText = new fabric.Textbox(r.time || r.val || '', createProps('textbox', {
+        left: startX + 580, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: r.time === 'DNF' ? '#ef4444' : r.time === 'PHOTO' ? '#0088cc' : '#ffffff', width: 180, textAlign: 'right'
+      }));
+
+      objects.push(nocText, numText, nameText, valText);
+
+      const flagBase64 = getFlagBase64(r.noc);
+      if (flagBase64) {
+        try {
+          fabric.Image.fromURL(flagBase64).then(imgObj => {
+            imgObj.set({
+              id: generateUniqueId({ type: 'image' }), left: startX + 90, top: startY + 7,
+              scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
+            });
+            objects.push(imgObj);
+          });
+        } catch (e) {}
+      }
+
+      startY += 36;
+    });
   }
 
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
@@ -2029,6 +2485,638 @@ export function generateSwimming2HTML(
     `;
   }
 
+  // ── SW108 / In-Race ID ──
+  else if (normId.includes('SW108') || normId.includes('IN-RACE ID')) {
+    const bibNum = customData.num || customData.bib || customData.lane || '18';
+    const nocCode = (customData.noc || 'USA').toUpperCase();
+    const flagUrl = getFlagBase64(nocCode);
+    const nameVal = (customData.name || customData.team || 'MARK WARKENTIN').toUpperCase();
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '940px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .in-race-bar {
+            position: absolute; left: ${posX}; top: ${posY}; width: 540px; height: 42px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff; padding: 0 20px; transform: skewX(-12deg);
+            border-radius: 6px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: space-between;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .in-race-content { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; }
+          .in-race-flag { width: 60px; height: 20px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .in-race-num { font-size: 20px; font-weight: 900; font-style: italic; color: #0088cc; }
+          .in-race-name { font-size: 20px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="in-race-bar">
+          <div class="in-race-content">
+            ${flagUrl ? `<img class="in-race-flag" src="${flagUrl}" alt="${nocCode}" />` : ''}
+            <div class="in-race-num">${bibNum}</div>
+            <div class="in-race-name">${nameVal}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW109 / In-Race Place ID ──
+  else if (normId.includes('SW109') || normId.includes('IN-RACE PLACE ID')) {
+    const bibNum = customData.num || customData.bib || customData.lane || '14';
+    const nocCode = (customData.noc || 'RUS').toUpperCase();
+    const flagUrl = getFlagBase64(nocCode);
+    const nameVal = (customData.name || customData.team || 'EVGENY DRATTSEV').toUpperCase();
+    const placeVal = (customData.place || customData.badge || '2ND PLACE').toUpperCase();
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '940px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .in-race-place-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .in-race-bar {
+            width: 540px; height: 42px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff; padding: 0 20px; transform: skewX(-12deg);
+            border-radius: 6px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center;
+          }
+          .in-race-content { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; }
+          .in-race-flag { width: 60px; height: 20px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .in-race-num { font-size: 20px; font-weight: 900; font-style: italic; color: #0088cc; }
+          .in-race-name { font-size: 20px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+
+          .in-race-sub-bar {
+            width: 160px; height: 26px; margin-top: 3px;
+            background: #ffffff;
+            transform: skewX(-12deg); border-radius: 4px; border: 1px solid #ffffff;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .in-race-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00192e; }
+        </style>
+      </head>
+      <body>
+        <div class="in-race-place-container">
+          <div class="in-race-bar">
+            <div class="in-race-content">
+              ${flagUrl ? `<img class="in-race-flag" src="${flagUrl}" alt="${nocCode}" />` : ''}
+              <div class="in-race-num">${bibNum}</div>
+              <div class="in-race-name">${nameVal}</div>
+            </div>
+          </div>
+          <div class="in-race-sub-bar">
+            <div class="in-race-sub-title">${placeVal}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW110 / Group Indicator ──
+  else if (normId.includes('SW110') || normId.includes('GROUP INDICATOR')) {
+    const titleVal = (customData.title || customData.group || 'LEADERS').toUpperCase();
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '960px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .group-ind-pill {
+            position: absolute; left: ${posX}; top: ${posY}; min-width: 180px; height: 34px;
+            background: #ffffff;
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: center; padding: 0 16px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .group-ind-text { transform: skewX(12deg); font-size: 17px; font-weight: 900; font-style: italic; color: #00192e; }
+        </style>
+      </head>
+      <body>
+        <div class="group-ind-pill">
+          <div class="group-ind-text">${titleVal}</div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW111 / Group Members ──
+  else if (normId.includes('SW111') || normId.includes('GROUP MEMBERS')) {
+    const titleVal = (customData.title || customData.group || 'LEADERS').toUpperCase();
+    const defaultMembers = [
+      { noc: 'UKR', num: '4', name: 'I. CHERVYNSKIY' },
+      { noc: 'ESP', num: '2', name: 'F.J. HERVAS' },
+      { noc: 'VEN', num: '9', name: 'E.MALDONADO SAVERA' }
+    ];
+    const members = customData.members || customData.athletes || defaultMembers;
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '830px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .group-members-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .group-members-header {
+            width: 200px; height: 26px; margin-left: 50px;
+            background: #ffffff;
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .group-header-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .group-member-row {
+            width: 380px; height: 32px; background: #002f5a;
+            transform: skewX(-12deg); border-radius: 3px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; padding: 0 15px;
+          }
+          .group-member-content { transform: skewX(12deg); display: flex; align-items: center; }
+          .gm-flag { width: 34px; height: 16px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); margin-right: 15px; }
+          .gm-num { font-size: 16px; font-weight: 900; font-style: italic; color: #00e5ff; width: 30px; }
+          .gm-name { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+        </style>
+      </head>
+      <body>
+        <div class="group-members-container">
+          <div class="group-members-header">
+            <div class="group-header-text">${titleVal}</div>
+          </div>
+          ${members.slice(0,5).map(m => {
+            const nocCode = (m.noc || '').toUpperCase();
+            const fUrl = getFlagBase64(nocCode);
+            const flagTag = fUrl ? '<img class="gm-flag" src="' + fUrl + '" />' : '<div style="width:49px;"></div>';
+            return `
+              <div class="group-member-row">
+                <div class="group-member-content">
+                  ${flagTag}
+                  <div class="gm-num">${m.num || m.bib || ''}</div>
+                  <div class="gm-name">${(m.name || '').toUpperCase()}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW112 / Gap between 2 Groups ──
+  else if (normId.includes('SW112') || normId.includes('GAP BETWEEN 2 GROUPS')) {
+    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const gapTime = customData.gap || customData.time || '1:15';
+    const group2 = (customData.group2 || 'PACK').toUpperCase();
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '960px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .gap-2groups-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            display: flex; align-items: center; gap: 10px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .gap-group-pill {
+            min-width: 140px; height: 32px;
+            background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: center; padding: 0 14px;
+          }
+          .gap-group-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .gap-time-pill {
+            min-width: 75px; height: 32px; background: #00192e;
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: center; padding: 0 10px;
+          }
+          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; }
+        </style>
+      </head>
+      <body>
+        <div class="gap-2groups-container">
+          <div class="gap-group-pill"><div class="gap-group-text">${group1}</div></div>
+          <div class="gap-time-pill"><div class="gap-time-text">${gapTime}</div></div>
+          <div class="gap-group-pill"><div class="gap-group-text">${group2}</div></div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW113 / Gap between 3 Groups ──
+  else if (normId.includes('SW113') || normId.includes('GAP BETWEEN 3 GROUPS')) {
+    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const gap1 = customData.gap1 || '0:13';
+    const group2 = (customData.group2 || 'CHASE').toUpperCase();
+    const gap2 = customData.gap2 || '0:25';
+    const group3 = (customData.group3 || 'PACK').toUpperCase();
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '960px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .gap-3groups-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            display: flex; align-items: center; gap: 10px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .gap-group-pill {
+            min-width: 130px; height: 32px;
+            background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: center; padding: 0 12px;
+          }
+          .gap-group-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .gap-time-pill {
+            min-width: 65px; height: 32px; background: #00192e;
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: center; padding: 0 8px;
+          }
+          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; }
+        </style>
+      </head>
+      <body>
+        <div class="gap-3groups-container">
+          <div class="gap-group-pill"><div class="gap-group-text">${group1}</div></div>
+          <div class="gap-time-pill"><div class="gap-time-text">${gap1}</div></div>
+          <div class="gap-group-pill"><div class="gap-group-text">${group2}</div></div>
+          <div class="gap-time-pill"><div class="gap-time-text">${gap2}</div></div>
+          <div class="gap-group-pill"><div class="gap-group-text">${group3}</div></div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW114 / Winner/Winners/Place ID ──
+  else if (normId.includes('SW114') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const categoryTitle = (customData.title || customData.event || "WINNER - MEN'S MARATHON 10KM").toUpperCase();
+    const athNum = customData.num || customData.lane || '17';
+    const nocCode = (customData.noc || 'NED').toUpperCase();
+    const flagUrl = getFlagBase64(nocCode);
+    const athleteName = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
+    const timeVal = customData.time || '1:51:51.6';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .winner-container {
+            position: absolute; left: 280px; top: 870px; width: 780px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .winner-gun-header {
+            position: relative; width: 780px; height: 44px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+          }
+          .winner-gun-body {
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            clip-path: polygon(45px 0px, 860px 0px, 888px 44px, 882px 54px, 140px 54px, 115px 88px, 100px 95px, 10px 95px, 2px 84px, 22px 42px, 35px 6px);
+            border: 1.5px solid ${borderHighlight}; z-index: 1;
+          }
+          .winner-picto-icon { position: relative; z-index: 2; font-size: 24px; margin-left: 30px; }
+          .winner-header-title { position: relative; z-index: 2; font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; margin-left: 10px; flex: 1; }
+          .winner-rings { position: relative; z-index: 2; fill: none; stroke: #ffffff; stroke-width: 3; }
+
+          .winner-sub-bar {
+            width: 710px; height: 26px; margin: 2px 0 3px 70px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1px solid #ffffff;
+            display: flex; align-items: center; padding: 0 16px;
+          }
+          .winner-sub-title { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .winner-row-bar {
+            width: 780px; height: 38px; background: ${darkTabColor};
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+          }
+          .winner-row-left { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; }
+          .winner-noc { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .winner-flag { width: 60px; height: 20px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .winner-num { font-size: 20px; font-weight: 900; font-style: italic; color: #0088cc; }
+          .winner-name { font-size: 20px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+          .winner-time { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; }
+        </style>
+      </head>
+      <body>
+        <div class="winner-container">
+          <div class="winner-gun-header">
+            <div class="winner-gun-body"></div>
+            <div class="winner-picto-icon">🏊</div>
+            <div class="winner-header-title">${sportTitle}</div>
+            <svg class="winner-rings" viewBox="0 0 100 45" width="52" height="24">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          <div class="winner-sub-bar">
+            <div class="winner-sub-title">${categoryTitle}</div>
+          </div>
+          <div class="winner-row-bar">
+            <div class="winner-row-left">
+              <div class="winner-noc">${nocCode}</div>
+              ${flagUrl ? `<img class="winner-flag" src="${flagUrl}" alt="${nocCode}" />` : ''}
+              <div class="winner-num">${athNum}</div>
+              <div class="winner-name">${athleteName}</div>
+            </div>
+            <div class="winner-time">${timeVal}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW117 / MF Standings ──
+  else if (normId.includes('SW117') || normId.includes('MF STANDINGS')) {
+    const subTitle = (customData.title || customData.subtitle || 'LAP 3 OF 6').toUpperCase();
+    const defaultRows = [
+      { rank: '1', noc: 'NED', num: '17', name: 'M. VAN DER WEIJDEN', time: '55:55.8' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'D. DAVIES', time: '+0.8' },
+      { rank: '2', noc: 'GER', num: '6', name: 'T. LURZ', time: '+0.8' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'V. CLERI', time: '+8.0' },
+      { rank: '5', noc: 'RUS', num: '14', name: 'E. DRATTSEV', time: '+8.7' }
+    ];
+    const rowsList = customData.rows || customData.standings || defaultRows;
+
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '740px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .mf-standings-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .mf-header-pill {
+            width: 180px; height: 26px; margin-left: 40px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .mf-header-text { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .mf-row {
+            width: 480px; height: 32px; background: ${darkTabColor};
+            transform: skewX(-12deg); border-radius: 3px; border: 1px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: space-between; padding-right: 16px;
+          }
+          .mf-row.row-alt { background: ${altRowColor}; }
+
+          .mf-left { transform: skewX(12deg); display: flex; align-items: center; gap: 8px; }
+          .mf-rank {
+            width: 32px; height: 32px; background: #dc2626; border-radius: 3px 0 0 3px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff;
+          }
+          .mf-noc { font-size: 15px; font-weight: 900; font-style: italic; color: #ffffff; width: 36px; margin-left: 6px; }
+          .mf-flag { width: 45px; height: 16px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .gm-num { font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; width: 25px; text-align: center; }
+          .mf-name { font-size: 16px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+          .mf-val { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+        </style>
+      </head>
+      <body>
+        <div class="mf-standings-container">
+          <div class="mf-header-pill">
+            <div class="mf-header-text">${subTitle}</div>
+          </div>
+          ${rowsList.map((r, idx) => {
+            const nocCode = (r.noc || '').toUpperCase();
+            const fUrl = getFlagBase64(nocCode);
+            return `
+              <div class="mf-row ${idx > 0 ? 'row-alt' : ''}">
+                <div class="mf-left">
+                  <div class="mf-rank">${r.rank || ''}</div>
+                  <div class="mf-noc">${nocCode}</div>
+                  ${fUrl ? `<img class="mf-flag" src="${fUrl}" alt="${nocCode}" />` : ''}
+                  <div class="gm-num">${r.num || r.bib || ''}</div>
+                  <div class="mf-name">${(r.name || '').toUpperCase()}</div>
+                </div>
+                <div class="mf-val">${r.time || r.val || ''}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW118 / Standings & SW119 / Standings at Finish ──
+  else if (normId.includes('SW118') || normId.includes('SW119') || (normId.includes('STANDINGS') && normId.includes('OPEN WATER'))) {
+    const isFinish = normId.includes('SW119') || normId.includes('FINISH');
+    const subTitle = customData.subtitle || (isFinish ? 'STANDINGS AT FINISH' : 'STANDINGS - LAP 3 OF 6');
+
+    const defaultRows118 = [
+      { rank: '1', noc: 'NED', num: '17', name: 'MAARTEN VAN DER WEIJDEN', time: '55:55.8' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'DAVID DAVIES', time: '+0.8' },
+      { rank: '2', noc: 'GER', num: '6', name: 'THOMAS LURZ', time: '+0.8' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'VALERIO CLERI', time: '+8.0' },
+      { rank: '5', noc: 'RUS', num: '14', name: 'EVGENY DRATTSEV', time: '+8.7' },
+      { rank: '6', noc: 'BUL', num: '21', name: 'PETAR STOYCHEV', time: '+8.8' },
+      { rank: '7', noc: 'BEL', num: '8', name: 'BRIAN RYCKEMAN', time: '+9.6' },
+      { rank: '7', noc: 'USA', num: '18', name: 'MARK WARKENTIN', time: '+9.6' },
+      { rank: '', noc: 'RSA', num: '5', name: 'CHAD HO', time: 'DNF' }
+    ];
+
+    const defaultRows119 = [
+      { rank: '1', noc: 'NED', num: '17', name: 'MAARTEN VAN DER WEIJDEN', time: '1:51:51.6' },
+      { rank: '2', noc: 'GBR', num: '10', name: 'DAVID DAVIES', time: '1:51:53.1' },
+      { rank: '3', noc: 'GER', num: '6', name: 'THOMAS LURZ', time: '1:51:53.6' },
+      { rank: '4', noc: 'ITA', num: '3', name: 'VALERIO CLERI', time: '1:52:07.5' },
+      { rank: '', noc: 'RUS', num: '14', name: 'EVGENY DRATTSEV', time: 'PHOTO' },
+      { rank: '', noc: 'BUL', num: '21', name: 'PETAR STOYCHEV', time: 'PHOTO' },
+      { rank: '7', noc: 'BEL', num: '8', name: 'BRIAN RYCKEMAN', time: '1:52:10.7' },
+      { rank: '8', noc: 'USA', num: '18', name: 'MARK WARKENTIN', time: '1:52:13.0' },
+      { rank: '9', noc: 'RSA', num: '5', name: 'CHAD HO', time: '1:52:13.1' }
+    ];
+
+    const rowsList = customData.rows || customData.standings || (isFinish ? defaultRows119 : defaultRows118);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .board-container {
+            position: absolute; left: 280px; top: 580px; width: 780px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
+          }
+          .board-gun-header {
+            position: relative; width: 780px; height: 44px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+          }
+          .board-gun-body {
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            clip-path: polygon(45px 0px, 860px 0px, 888px 44px, 882px 54px, 140px 54px, 115px 88px, 100px 95px, 10px 95px, 2px 84px, 22px 42px, 35px 6px);
+            border: 1.5px solid ${borderHighlight}; z-index: 1;
+          }
+          .board-picto-icon { position: relative; z-index: 2; font-size: 24px; margin-left: 30px; }
+          .board-header-title { position: relative; z-index: 2; font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; margin-left: 10px; flex: 1; }
+          .board-rings { position: relative; z-index: 2; fill: none; stroke: #ffffff; stroke-width: 3; }
+
+          .board-sub-bar {
+            width: 710px; height: 26px; margin: 2px 0 4px 70px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1px solid #ffffff;
+            display: flex; align-items: center; padding: 0 16px;
+          }
+          .board-sub-title { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+
+          .board-rows-stack { display: flex; flex-direction: column; gap: 4px; }
+          .board-row {
+            width: 780px; height: 32px; background: ${darkTabColor};
+            transform: skewX(-12deg); border-radius: 3px; border: 1px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: space-between; padding-right: 20px;
+          }
+          .board-row.row-alt { background: ${altRowColor}; }
+
+          .board-left { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; }
+          .board-rank {
+            width: 34px; height: 32px; background: #dc2626; border-radius: 3px 0 0 3px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff;
+          }
+          .board-rank.no-rank { background: transparent; }
+          .board-noc { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; width: 42px; margin-left: 4px; }
+          .board-flag { width: 45px; height: 16px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .board-num { font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; width: 30px; text-align: center; }
+          .board-name { font-size: 16px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+
+          .board-val { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .board-val.dnf-val { color: #ef4444; }
+          .board-val.photo-val { color: #0088cc; }
+        </style>
+      </head>
+      <body>
+        <div class="board-container">
+          <div class="board-gun-header">
+            <div class="board-gun-body"></div>
+            <div class="board-picto-icon">🏊</div>
+            <div class="board-header-title">MEN'S MARATHON 10KM</div>
+            <svg class="board-rings" viewBox="0 0 100 45" width="52" height="24">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          <div class="board-sub-bar">
+            <div class="board-sub-title">${subTitle.toUpperCase()}</div>
+          </div>
+          <div class="board-rows-stack">
+            ${rowsList.map((r, idx) => {
+              const nocCode = (r.noc || '').toUpperCase();
+              const fUrl = getFlagBase64(nocCode);
+              const isDNF = r.time === 'DNF';
+              const isPhoto = r.time === 'PHOTO';
+              return `
+                <div class="board-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+                  <div class="board-left">
+                    <div class="board-rank ${!r.rank ? 'no-rank' : ''}">${r.rank || ''}</div>
+                    <div class="board-noc">${nocCode}</div>
+                    ${fUrl ? `<img class="board-flag" src="${fUrl}" alt="${nocCode}" />` : ''}
+                    <div class="board-num">${r.num || r.bib || ''}</div>
+                    <div class="board-name">${(r.name || '').toUpperCase()}</div>
+                  </div>
+                  <div class="board-val ${isDNF ? 'dnf-val' : isPhoto ? 'photo-val' : ''}">${r.time || r.val || ''}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
   // ── SW007 / Team List by Lane Layout ──
   else if (normId.includes('SW007') || normId.includes('TEAM LIST BY LANE')) {
     const isB = normId.endsWith('B') || normId.includes('SW007B') || normId.includes('SW107B');
@@ -2529,7 +3617,7 @@ export function generateSwimming2HTML(
   }
 
   // ── SW011 / Winner / Winners / Place ID Layout ──
-  else if (normId.includes('SW011') || normId.includes('SW111') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+  else if (normId.includes('SW011') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW011B');
     const isC = normId.endsWith('C') || normId.includes('SW011C');
 
@@ -4195,7 +5283,6 @@ export function generateSwimming2HTML(
             min-width: 390px; height: 34px;
           }
           .pos-content { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; }
-          .pos-noc { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; width: 40px; }
           .pos-flag-img { width: 55px; height: 18px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
           .pos-bib { font-size: 18px; font-weight: 900; font-style: italic; color: #0088cc; margin-left: 4px; }
           .pos-name { font-size: 18px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
@@ -4211,7 +5298,6 @@ export function generateSwimming2HTML(
             return `
               <div class="pos-screen-bug">
                 <div class="pos-content">
-                  <div class="pos-noc">${nocCode}</div>
                   ${fUrl ? `<img class="pos-flag-img" src="${fUrl}" alt="${nocCode}" />` : ''}
                   <div class="pos-bib">${bibNum}</div>
                   <div class="pos-name">${nameVal}</div>
@@ -4358,6 +5444,193 @@ export function generateSwimming2HTML(
         </div>
       </body>
       </html>
+    `;
+  }
+
+  // ── SW120 / Ceremony ID ──
+  else if (normId.includes('SW120') || normId.includes('CEREMONY ID')) {
+    const titleVal = (customData.title || 'VICTORY CEREMONY').toUpperCase();
+    const eventVal = (customData.event || "MEN'S MARATHON 10KM").toUpperCase();
+    const posX = customData.posX || '280px', posY = customData.posY || '880px';
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .cer-container { position: absolute; left: ${posX}; top: ${posY}; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .cer-bar { width: 700px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; }
+        .cer-title { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; }
+        .cer-sub { width: 660px; height: 26px; background: #fff; transform: skewX(-12deg); margin-top: 3px; border-radius: 4px; display: flex; align-items: center; padding: 0 20px; }
+        .cer-sub-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+      </style></head><body>
+        <div class="cer-container">
+          <div class="cer-bar"><div class="cer-title">${titleVal}</div></div>
+          <div class="cer-sub"><div class="cer-sub-text">${eventVal}</div></div>
+        </div>
+      </body></html>
+    `;
+  }
+
+  // ── SW121 / Medal ID ──
+  else if (normId.includes('SW121') || normId.includes('MEDAL ID')) {
+    const nocCode = (customData.noc || 'NED').toUpperCase();
+    const flagUrl = getFlagBase64(nocCode);
+    const nameVal = (customData.name || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
+    const medalVal = (customData.medal || 'GOLD MEDALLIST').toUpperCase();
+    const posX = customData.posX || '280px', posY = customData.posY || '940px';
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .m-container { position: absolute; left: ${posX}; top: ${posY}; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .m-bar { width: 540px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 16px; }
+        .m-content { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; width: 100%; }
+        .m-noc { font-size: 18px; font-weight: 900; font-style: italic; }
+        .m-flag { width: 60px; height: 20px; object-fit: cover; border: 1px solid rgba(255,255,255,0.6); }
+        .m-name { font-size: 20px; font-weight: 900; font-style: italic; }
+        .m-sub { width: 220px; height: 26px; background: #fff; transform: skewX(-12deg); margin-top: 3px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .m-sub-text { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00192e; }
+      </style></head><body>
+        <div class="m-container">
+          <div class="m-bar"><div class="m-content">
+            <div class="m-noc">${nocCode}</div>
+            ${flagUrl ? `<img class="m-flag" src="${flagUrl}" />` : ''}
+            <div class="m-name">${nameVal}</div>
+          </div></div>
+          <div class="m-sub"><div class="m-sub-text">${medalVal}</div></div>
+        </div>
+      </body></html>
+    `;
+  }
+
+  // ── SW122 / Medals List ──
+  else if (normId.includes('SW122') || normId.includes('MEDALS LIST')) {
+    const eventVal = (customData.event || "MEN'S MARATHON 10KM").toUpperCase();
+    const medals = customData.medals || [
+      { noc: 'NED', name: 'M. VAN DER WEIJDEN', medal: 'GOLD' },
+      { noc: 'GBR', name: 'DAVID DAVIES', medal: 'SILVER' },
+      { noc: 'GER', name: 'THOMAS LURZ', medal: 'BRONZE' }
+    ];
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .ml-container { position: absolute; left: 280px; top: 700px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .ml-header { width: 700px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; }
+        .ml-title { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; }
+        .ml-sub { width: 660px; height: 26px; background: #fff; transform: skewX(-12deg); margin-top: 3px; border-radius: 4px; display: flex; align-items: center; padding: 0 20px; margin-bottom: 15px; }
+        .ml-sub-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+        .ml-row { width: 700px; height: 40px; background: ${altRowColor}; transform: skewX(-12deg); border: 1px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; margin-top: 2px; color: #fff; }
+        .ml-row-content { transform: skewX(12deg); display: flex; align-items: center; gap: 14px; width: 100%; font-size: 18px; font-weight: 900; font-style: italic; }
+        .ml-row-medal { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.3); }
+        .gold { background: radial-gradient(circle, #fceabb 0%, #f8b500 100%); }
+        .silver { background: radial-gradient(circle, #e0e0e0 0%, #9e9e9e 100%); }
+        .bronze { background: radial-gradient(circle, #f5d3b3 0%, #cc8855 100%); }
+        .ml-flag { width: 60px; height: 20px; object-fit: cover; border: 1px solid rgba(255,255,255,0.6); }
+      </style></head><body>
+        <div class="ml-container">
+          <div class="ml-header"><div class="ml-title">VICTORY CEREMONY</div></div>
+          <div class="ml-sub"><div class="ml-sub-text">MEDALLISTS - ${eventVal}</div></div>
+          \${medals.map(m => {
+            const f = getFlagBase64(m.noc);
+            const mClass = (m.medal || '').toLowerCase().includes('gold') ? 'gold' : (m.medal || '').toLowerCase().includes('silver') ? 'silver' : 'bronze';
+            const flagTag = f ? '<img class="ml-flag" src="' + f + '" />' : '';
+            return '<div class="ml-row"><div class="ml-row-content">' +
+              '<div class="ml-row-medal ' + mClass + '"></div>' +
+              '<div>' + m.noc + '</div>' +
+              flagTag +
+              '<div>' + m.name + '</div>' +
+            '</div></div>';
+          }).join('')}
+        </div>
+      </body></html>
+    `;
+  }
+
+  // ── SW123 / Medal Presenter ID & SW124 / Flower Presenter ID ──
+  else if (normId.includes('SW123') || normId.includes('SW124') || normId.includes('PRESENTER')) {
+    const isFlower = normId.includes('SW124') || normId.includes('FLOWER');
+    const roleVal = (customData.role || (isFlower ? 'FLOWERS PRESENTED BY' : 'MEDALS PRESENTED BY')).toUpperCase();
+    const nameVal = (customData.name || 'JACQUES ROGGE').toUpperCase();
+    const titleVal = (customData.title || 'IOC PRESIDENT').toUpperCase();
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .p-container { position: absolute; left: 280px; top: 940px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .p-bar { width: 700px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; }
+        .p-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; }
+        .p-sub { width: 660px; height: 26px; background: #fff; transform: skewX(-12deg); margin-top: 3px; border-radius: 4px; display: flex; align-items: center; padding: 0 20px; }
+        .p-sub-text { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00192e; }
+      </style></head><body>
+        <div class="p-container">
+          <div class="p-bar"><div class="p-title">${nameVal}</div></div>
+          <div class="p-sub"><div class="p-sub-text">${roleVal} - ${titleVal}</div></div>
+        </div>
+      </body></html>
+    `;
+  }
+
+  // ── SW125 to SW130 / Race Clocks ──
+  else if (normId.match(/SW125|SW126|SW128|SW129|SW130|CLOCK/)) {
+    const isFinish = normId.includes('SW130') || normId.includes('FINISH');
+    const hasDelta = normId.includes('SW126') || normId.includes('DELTA');
+    const hasStandings = normId.includes('SW129') || normId.includes('SW130');
+    const clockVal = customData.clock || '1:45:23';
+    const deltaVal = customData.delta || '+0:12';
+    const startY = hasStandings ? '840px' : '940px';
+    const rows = isFinish ? ['NED 1 M.VAN DER WEIJDEN', 'GBR 2 DAVID DAVIES'] : ['LEADER NED M.VAN DER WEIJDEN', 'CHASE GBR DAVID DAVIES'];
+
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .c-container { position: absolute; left: 280px; top: ${startY}; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); display: flex; flex-direction: column; gap: 8px; }
+        .c-top { display: flex; gap: 10px; }
+        .c-main { width: 180px; height: 42px; background: #000; color: #fff; transform: skewX(-12deg); border: 2px solid #fff; border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+        .c-main-t { transform: skewX(12deg); font-size: 24px; font-weight: 900; font-style: italic; }
+        .c-delta { width: 120px; height: 42px; background: #00192e; color: #ffcc00; transform: skewX(-12deg); border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; justify-content: center; }
+        .c-delta-t { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; }
+        .c-row { width: 500px; height: 35px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; margin-top: -4px; }
+        .c-row-t { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; }
+      </style></head><body>
+        <div class="c-container">
+          <div class="c-top">
+            <div class="c-main"><div class="c-main-t">${clockVal}</div></div>
+            \${hasDelta ? '<div class="c-delta"><div class="c-delta-t">' + deltaVal + '</div></div>' : ''}
+          </div>
+          \${hasStandings ? rows.map(r => '<div class="c-row"><div class="c-row-t">' + r + '</div></div>').join('') : ''}
+        </div>
+      </body></html>
+    `;
+  }
+
+  // ── SW131 / Location ──
+  else if (normId.includes('SW131') || normId.includes('LOCATION')) {
+    const locVal = (customData.location || 'HYDE PARK').toUpperCase();
+    return `
+      <!DOCTYPE html><html><head><meta charset="utf-8">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
+        .l-container { position: absolute; left: 280px; top: 940px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .l-bar { width: 400px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; justify-content: center; }
+        .l-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; }
+      </style></head><body>
+        <div class="l-container">
+          <div class="l-bar"><div class="l-title">${locVal}</div></div>
+        </div>
+      </body></html>
     `;
   }
 
