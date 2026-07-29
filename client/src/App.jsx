@@ -37,6 +37,7 @@ import ColorGradient2 from "./ColorGradient2.jsx";
 import Crop from "./Crop";
 import AIPannel from "./AIPannel/AIPannel.jsx";
 import GamesAIPanel from "./GamesAIPanel/GamesAIPanel.jsx";
+import Games2Panel from "./games2/Games2Panel.jsx";
 
 import Tsparticles1 from "./tsparticles/Tsparticles1.jsx";
 import HtmlOutput from "./HtmlOutput.jsx";
@@ -600,7 +601,7 @@ const App = () => {
               <Crop />
             </TabPanel>
             <TabPanel>
-              <GamesAIPanel />
+              <Games2Panel />
             </TabPanel>
 
             <TabPanel>
