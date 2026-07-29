@@ -90,7 +90,7 @@ export async function generateSwimming2Fabric(
   }
 
   // ── SW007 / Team List by Lane Layout (SW007a, SW007b, SW007c) ──
-  else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+  else if (normId.includes('SW007') || normId.includes('TEAM LIST BY LANE')) {
     const isB = normId.endsWith('B') || normId.includes('SW007B') || normId.includes('SW107B');
     const isC = normId.endsWith('C') || normId.includes('SW007C') || normId.includes('SW107C');
 
@@ -1363,6 +1363,71 @@ export async function generateSwimming2Fabric(
     objects.push(numText, nameText, c1, c2, c3, c4, c5);
   }
 
+  // ── SW107 / Position on Screen Layout ──
+  else if (normId.includes('SW107') || normId.includes('POSITION ON SCREEN')) {
+    const defaultAthletes = [
+      { noc: 'UKR', num: '4', name: 'I. CHERVYNSKIY' },
+      { noc: 'USA', num: '18', name: 'M. WARKENTIN' }
+    ];
+
+    const athletes = customData.athletes || customData.members || (
+      (customData.name || customData.noc || customData.num)
+        ? [{ noc: customData.noc || 'UKR', num: customData.num || customData.bib || customData.lane || '4', name: customData.name || 'I. CHERVYNSKIY' }]
+        : defaultAthletes
+    );
+
+    let startX = customData.posX ? Number(customData.posX) : 280;
+    const startY = customData.posY ? Number(customData.posY) : 960;
+    const bugW = 390;
+    const bugH = 34;
+
+    for (let idx = 0; idx < athletes.length && idx < 2; idx++) {
+      const p = athletes[idx];
+      const nocCode = (p.noc || (idx === 0 ? 'UKR' : 'USA')).toUpperCase();
+      const bibNum = p.num || p.bib || p.lane || (idx === 0 ? '4' : '18');
+      const nameVal = (p.name || (idx === 0 ? 'I. CHERVYNSKIY' : 'M. WARKENTIN')).toUpperCase();
+
+      const mainBar = new fabric.Rect(createProps('rect', {
+        left: startX, top: startY, width: bugW, height: bugH,
+        fill: '#00192e', skewX: -12, rx: 4, ry: 4,
+        stroke: borderHighlight, strokeWidth: 1.5,
+        shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.7)', blur: 10, offsetX: 0, offsetY: 5 })
+      }));
+      objects.push(mainBar);
+
+      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+        left: startX + 12, top: startY + 7, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 45
+      }));
+      objects.push(nocText);
+
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }),
+            left: startX + 60, top: startY + 8,
+            scaleX: 55 / (imgObj.width || 32),
+            scaleY: 18 / (imgObj.height || 20),
+            skewX: -12, selectable: true, hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
+        left: startX + 122, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+      }));
+
+      const nameText = new fabric.Textbox(nameVal, createProps('textbox', {
+        left: startX + 172, top: startY + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 210
+      }));
+
+      objects.push(bibText, nameText);
+      startX += bugW + 40;
+    }
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -1965,7 +2030,7 @@ export function generateSwimming2HTML(
   }
 
   // ── SW007 / Team List by Lane Layout ──
-  else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+  else if (normId.includes('SW007') || normId.includes('TEAM LIST BY LANE')) {
     const isB = normId.endsWith('B') || normId.includes('SW007B') || normId.includes('SW107B');
     const isC = normId.endsWith('C') || normId.includes('SW007C') || normId.includes('SW107C');
 
@@ -4085,6 +4150,75 @@ export function generateSwimming2HTML(
               <circle cx="72.5" cy="27" r="11"/>
             </svg>
           </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW107 / Position on Screen ──
+  else if (normId.includes('SW107') || normId.includes('POSITION ON SCREEN')) {
+    const defaultAthletes = [
+      { noc: 'UKR', num: '4', name: 'I. CHERVYNSKIY' },
+      { noc: 'USA', num: '18', name: 'M. WARKENTIN' }
+    ];
+
+    const athletes = customData.athletes || customData.members || (
+      (customData.name || customData.noc || customData.num)
+        ? [{ noc: customData.noc || 'UKR', num: customData.num || customData.bib || customData.lane || '4', name: customData.name || 'I. CHERVYNSKIY' }]
+        : defaultAthletes
+    );
+
+    const sliceAthletes = athletes.slice(0, 2);
+    const posX = customData.posX || '280px';
+    const posY = customData.posY || '960px';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .pos-screen-container {
+            position: absolute; left: ${posX}; top: ${posY};
+            display: flex; flex-direction: row; gap: 40px; align-items: center;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .pos-screen-bug {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 4px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; gap: 10px; padding: 5px 16px;
+            min-width: 390px; height: 34px;
+          }
+          .pos-content { transform: skewX(12deg); display: flex; align-items: center; gap: 10px; }
+          .pos-noc { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; width: 40px; }
+          .pos-flag-img { width: 55px; height: 18px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .pos-bib { font-size: 18px; font-weight: 900; font-style: italic; color: #0088cc; margin-left: 4px; }
+          .pos-name { font-size: 18px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="pos-screen-container">
+          ${sliceAthletes.map((a, idx) => {
+            const nocCode = (a.noc || (idx === 0 ? 'UKR' : 'USA')).toUpperCase();
+            const fUrl = getFlagBase64(nocCode);
+            const bibNum = a.num || a.bib || a.lane || (idx === 0 ? '4' : '18');
+            const nameVal = (a.name || (idx === 0 ? 'I. CHERVYNSKIY' : 'M. WARKENTIN')).toUpperCase();
+            return `
+              <div class="pos-screen-bug">
+                <div class="pos-content">
+                  <div class="pos-noc">${nocCode}</div>
+                  ${fUrl ? `<img class="pos-flag-img" src="${fUrl}" alt="${nocCode}" />` : ''}
+                  <div class="pos-bib">${bibNum}</div>
+                  <div class="pos-name">${nameVal}</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
         </div>
       </body>
       </html>
