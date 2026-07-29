@@ -381,6 +381,56 @@ export async function generateSwimming2Fabric(
     }
   }
 
+  // ── SW009 / Lane Indicator Layout (SW009a, SW009b) ──
+  else if (normId.includes('SW009') || normId.includes('LANE INDICATOR')) {
+    const isB = normId.endsWith('B') || normId.includes('SW009B');
+
+    const topLaneTextVal = customData.topLane || 'LANE 1';
+    const bottomLaneTextVal = customData.bottomLane || (isB ? 'LANE 9' : 'LANE 8');
+
+    const badgeWidth = 140;
+    const badgeHeight = 30;
+
+    const badgeGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: badgeWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#d1d5db' },
+        { offset: 0.5, color: '#ffffff' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    // Top Badge (LANE 1)
+    const topBg = new fabric.Rect(createProps('rect', {
+      left: 280, top: 180, width: badgeWidth, height: badgeHeight,
+      fill: badgeGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: '#00223e', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+
+    const topText = new fabric.Textbox(topLaneTextVal.toUpperCase(), createProps('textbox', {
+      left: 280, top: 185, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00223e', width: badgeWidth, textAlign: 'center'
+    }));
+
+    // Bottom Badge (LANE 8 / LANE 9)
+    const bottomBg = new fabric.Rect(createProps('rect', {
+      left: 280, top: 900, width: badgeWidth, height: badgeHeight,
+      fill: badgeGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: '#00223e', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+
+    const bottomText = new fabric.Textbox(bottomLaneTextVal.toUpperCase(), createProps('textbox', {
+      left: 280, top: 905, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00223e', width: badgeWidth, textAlign: 'center'
+    }));
+
+    objects.push(topBg, topText, bottomBg, bottomText);
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -1418,6 +1468,64 @@ export function generateSwimming2HTML(
             `;
           }).join('')}
         </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW009 / Lane Indicator Layout ──
+  else if (normId.includes('SW009') || normId.includes('LANE INDICATOR')) {
+    const isB = normId.endsWith('B') || normId.includes('SW009B');
+
+    const topLaneTextVal = customData.topLane || 'LANE 1';
+    const bottomLaneTextVal = customData.bottomLane || (isB ? 'LANE 9' : 'LANE 8');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .lane-badge {
+            position: absolute;
+            width: 140px;
+            height: 30px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #cbd5e1 100%);
+            color: #00223e;
+            transform: skewX(-12deg);
+            border-radius: 5px;
+            border: 1.5px solid #00223e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+          }
+
+          .lane-badge-top {
+            top: 180px;
+            left: 280px;
+          }
+
+          .lane-badge-bottom {
+            top: 900px;
+            left: 280px;
+          }
+
+          .unskew {
+            transform: skewX(12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="lane-badge lane-badge-top"><span class="unskew">${topLaneTextVal.toUpperCase()}</span></div>
+        <div class="lane-badge lane-badge-bottom"><span class="unskew">${bottomLaneTextVal.toUpperCase()}</span></div>
       </body>
       </html>
     `;
