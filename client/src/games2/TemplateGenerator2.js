@@ -20,8 +20,8 @@ export async function createFabricGraphicGroup2(
   const code = (sport?.code || '').toUpperCase();
   const normId = (effectiveTemplateId || templateType || '').toUpperCase();
 
-  // Swimming (SW) templates (SW002 Venue ID, SW003 Event Schedule, SW004 Event ID, etc.)
-  if (code === 'SW' || normId.includes('SW002') || normId.includes('SW003') || normId.includes('SW004') || normId.includes('SW102') || normId.includes('SW103') || normId.includes('SW104')) {
+  // Swimming (SW) templates (SW002 Venue ID, SW003 Event Schedule, SW004 Event ID, SW005 Start List, etc.)
+  if (code === 'SW' || normId.includes('SW002') || normId.includes('SW003') || normId.includes('SW004') || normId.includes('SW005') || normId.includes('SW102') || normId.includes('SW103') || normId.includes('SW104') || normId.includes('SW105')) {
     const group = await generateSwimming2Fabric(normId, customFields, customColors);
     if (group) return group;
   }
@@ -43,8 +43,8 @@ export function generateBroadcastHTML2(
   const code = (sport?.code || '').toUpperCase();
   const normId = (effectiveTemplateId || templateType || '').toUpperCase();
 
-  // Swimming (SW) templates (SW002 Venue ID, SW003 Event Schedule, SW004 Event ID, etc.)
-  if (code === 'SW' || normId.includes('SW002') || normId.includes('SW003') || normId.includes('SW004') || normId.includes('SW102') || normId.includes('SW103') || normId.includes('SW104')) {
+  // Swimming (SW) templates (SW002 Venue ID, SW003 Event Schedule, SW004 Event ID, SW005 Start List, etc.)
+  if (code === 'SW' || normId.includes('SW002') || normId.includes('SW003') || normId.includes('SW004') || normId.includes('SW005') || normId.includes('SW102') || normId.includes('SW103') || normId.includes('SW104') || normId.includes('SW105')) {
     const html = generateSwimming2HTML(normId, customFields, customColors);
     if (html) return html;
   }
