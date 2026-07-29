@@ -244,6 +244,143 @@ export async function generateSwimming2Fabric(
     }
   }
 
+  // ── SW008 / Records Layout (SW008a, SW008b) ──
+  else if (normId.includes('SW008') || normId.includes('RECORDS')) {
+    const isB = normId.endsWith('B') || normId.includes('SW008B');
+    const eventTitleTextVal = (customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+
+    const defaultRecordsA = [
+      { noc: 'AUS', name: 'JESSICAH SCHIPPER', year: '2006', record: 'WR', time: '2:05.40' },
+      { noc: 'USA', name: 'MISTY HYMAN', year: '2000', record: 'OR', time: '2:05.88' }
+    ];
+
+    const defaultRecordsB = [
+      { noc: 'USA', name: 'UNITED STATES', year: '2007', record: 'WR', time: '7:03.24' },
+      { noc: 'USA', name: 'UNITED STATES', year: '2012', record: 'OR', time: '7:04.66' }
+    ];
+
+    const recordsList = customData.records || (isB ? defaultRecordsB : defaultRecordsA);
+
+    const startX = 280;
+    const startY = 740;
+    const barWidth = 780;
+    const headerHeight = 42;
+
+    // 1. Header Bar (SWIMMING + Olympic Rings)
+    const headerGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: barWidth, height: headerHeight,
+      fill: headerGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 })
+    }));
+
+    const swimmerIcon = new fabric.Textbox('🏊', createProps('textbox', {
+      left: startX + 22, top: startY + 6, fontSize: 24, fill: '#ffffff', width: 40
+    }));
+
+    const sportTitleText = new fabric.Textbox(sportTitle, createProps('textbox', {
+      left: startX + 100, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 90
+    }));
+
+    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+
+    // 2. Sub-Header Metallic Silver Bar (Event Title)
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: startX + 15, top: startY + 44, width: barWidth - 30, height: 28,
+      fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+
+    const subTitleText = new fabric.Textbox(eventTitleTextVal, createProps('textbox', {
+      left: startX + 35, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00223e', width: 500, charSpacing: 60
+    }));
+
+    objects.push(headerBar, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, subTitleText);
+
+    // 3. 2 Record Rows (WR and OR)
+    let currentY = startY + 74;
+    const sliceRecords = recordsList.slice(0, 2);
+    for (let idx = 0; idx < sliceRecords.length; idx++) {
+      const rec = sliceRecords[idx];
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: startX + 15, top: currentY, width: barWidth - 30, height: 34,
+        fill: rowFill, skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(0,136,204,0.6)', strokeWidth: 1
+      }));
+
+      objects.push(rowBar);
+
+      // Country flag image placed directly at left of row strip
+      const nocCode = (rec.noc || rec.flag || rec.country || '').toUpperCase();
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }),
+            left: startX + 35,
+            top: currentY + 6,
+            scaleX: 80 / (imgObj.width || 32),
+            scaleY: 22 / (imgObj.height || 20),
+            skewX: -12,
+            selectable: true,
+            hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const nameText = new fabric.Textbox((rec.name || '').toUpperCase(), createProps('textbox', {
+        left: startX + 130, top: currentY + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 370
+      }));
+
+      const yearText = new fabric.Textbox(rec.year || '', createProps('textbox', {
+        left: startX + 510, top: currentY + 7, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 50, textAlign: 'center'
+      }));
+
+      objects.push(nameText, yearText);
+
+      // Badge (WR gold or OR silver)
+      const isWR = rec.record === 'WR';
+      const badgeBg = new fabric.Rect(createProps('rect', {
+        left: startX + 570, top: currentY + 6, width: 32, height: 22,
+        fill: isWR ? '#fbbf24' : '#e2e8f0', rx: 2, ry: 2, skewX: -12
+      }));
+      const badgeText = new fabric.Textbox(rec.record || '', createProps('textbox', {
+        left: startX + 570, top: currentY + 8, fontSize: 13, fontWeight: '900', fontStyle: 'italic',
+        fill: '#00223e', width: 32, textAlign: 'center'
+      }));
+
+      const timeText = new fabric.Textbox(rec.time || '', createProps('textbox', {
+        left: startX + 615, top: currentY + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 130, textAlign: 'right'
+      }));
+
+      objects.push(badgeBg, badgeText, timeText);
+      currentY += 36;
+    }
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -1049,6 +1186,237 @@ export function generateSwimming2HTML(
               ${hasQBadge ? `<div class="team-q-badge"><span class="unskew">Q</span></div>` : ''}
             </div>
           ` : ''}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW008 / Records Layout (SW008a, SW008b) ──
+  else if (normId.includes('SW008') || normId.includes('RECORDS')) {
+    const isB = normId.endsWith('B') || normId.includes('SW008B');
+    const eventTitleTextVal = (customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
+
+    const defaultRecordsA = [
+      { noc: 'AUS', name: 'JESSICAH SCHIPPER', year: '2006', record: 'WR', time: '2:05.40' },
+      { noc: 'USA', name: 'MISTY HYMAN', year: '2000', record: 'OR', time: '2:05.88' }
+    ];
+
+    const defaultRecordsB = [
+      { noc: 'USA', name: 'UNITED STATES', year: '2007', record: 'WR', time: '7:03.24' },
+      { noc: 'USA', name: 'UNITED STATES', year: '2012', record: 'OR', time: '7:04.66' }
+    ];
+
+    const recordsList = customData.records || (isB ? defaultRecordsB : defaultRecordsA);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .records-container {
+            position: absolute;
+            bottom: 100px;
+            left: 280px;
+            width: 780px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8));
+          }
+
+          .records-header {
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff;
+            height: 42px;
+            transform: skewX(-12deg);
+            border-radius: 5px;
+            border: 1.5px solid ${borderHighlight};
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+          }
+
+          .records-left-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .records-sport-title {
+            font-size: 24px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+          }
+
+          .records-rings {
+            transform: skewX(12deg);
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3;
+          }
+
+          .records-sub-bar {
+            background: #e2e8f0;
+            color: #00223e;
+            height: 28px;
+            transform: skewX(-12deg);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-left: 15px;
+            width: 750px;
+          }
+
+          .records-sub-title {
+            transform: skewX(12deg);
+            font-size: 16px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+          }
+
+          .records-row {
+            background: ${darkTabColor};
+            color: #ffffff;
+            height: 34px;
+            transform: skewX(-12deg);
+            border-radius: 3px;
+            border: 1px solid rgba(0, 136, 204, 0.6);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            margin-left: 15px;
+            width: 750px;
+            justify-content: space-between;
+          }
+
+          .records-row.row-alt {
+            background: ${altRowColor};
+          }
+
+          .records-row-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .records-noc {
+            font-size: 16px;
+            font-weight: 900;
+            font-style: italic;
+          }
+
+          .records-flag-img {
+            width: 80px;
+            height: 22px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            transform: skewX(12deg);
+            display: block;
+          }
+
+          .records-name {
+            font-size: 17px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+
+          .records-row-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+          }
+
+          .records-year {
+            font-size: 16px;
+            font-weight: 900;
+            font-style: italic;
+          }
+
+          .records-wr-badge {
+            background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+            color: #00223e;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .records-or-badge {
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            color: #00223e;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .records-time {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            min-width: 90px;
+            text-align: right;
+          }
+
+          .unskew {
+            transform: skewX(12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="records-container">
+          <div class="records-header">
+            <div class="records-left-section">
+              <span style="font-size:24px;transform:skewX(12deg);">🏊</span>
+              <div class="records-sport-title"><span class="unskew">${sportTitle}</span></div>
+            </div>
+            <svg class="records-rings" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/>
+              <circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/>
+              <circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/>
+              <circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          <div class="records-sub-bar">
+            <div class="records-sub-title"><span class="unskew">${eventTitleTextVal}</span></div>
+          </div>
+          ${recordsList.slice(0, 2).map((rec, idx) => {
+            const nocCode = (rec.noc || rec.flag || rec.country || '').toUpperCase();
+            const flagUrl = getFlagBase64(nocCode);
+            const isWR = rec.record === 'WR';
+            return `
+              <div class="records-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+                <div class="records-row-left">
+                  ${flagUrl ? `<img src="${flagUrl}" class="records-flag-img" />` : ''}
+                  <div class="records-name"><span class="unskew">${rec.name.toUpperCase()}</span></div>
+                </div>
+                <div class="records-row-right">
+                  <div class="records-year"><span class="unskew">${rec.year}</span></div>
+                  <div class="${isWR ? 'records-wr-badge' : 'records-or-badge'}"><span class="unskew">${rec.record}</span></div>
+                  <div class="records-time"><span class="unskew">${rec.time}</span></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
         </div>
       </body>
       </html>
