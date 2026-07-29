@@ -6,6 +6,7 @@
  *  - SW004 (Event ID) matching SW004_Event_ID_a.jpg
  *  - SW005 / SW005B (Start List) matching SW005_Start_List_a.jpg & SW005_Start_List_b.jpg (DNS white badge)
  *  - SW006 (Lane ID) matching SW006_Lane_ID_a.jpg to SW006_Lane_ID_e.jpg (5 distinct variants)
+ *  - SW007 (Team List by Lane) matching SW007_Team_List_by_Lane_a.jpg to c.jpg (3 distinct variants)
  */
 
 import * as fabric from 'fabric';
@@ -21,7 +22,7 @@ export function getFlagBase64(nocCode) {
 }
 
 /**
- * Fabric.js Vector Generator for Swimming Templates (SW002, SW003, SW004, SW005, SW006)
+ * Fabric.js Vector Generator for Swimming Templates (SW002 - SW007)
  */
 export async function generateSwimming2Fabric(
   templateId = '',
@@ -86,6 +87,161 @@ export async function generateSwimming2Fabric(
     const c5 = new fabric.Circle(createProps('circle', { left: 1069, top: 878, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
 
     objects.push(gunBody, swimmerIcon, titleText, c1, c2, c3, c4, c5);
+  }
+
+  // ── SW007 / Team List by Lane Layout (SW007a, SW007b, SW007c) ──
+  else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+    const isB = normId.endsWith('B') || normId.includes('SW007B') || normId.includes('SW107B');
+    const isC = normId.endsWith('C') || normId.includes('SW007C') || normId.includes('SW107C');
+
+    const laneNum = customData.lane || (isB ? '2' : isC ? '4' : '5');
+    const nocCode = (customData.noc || (isB ? 'RSA' : isC ? 'USA' : 'AUS')).toUpperCase();
+    const teamName = (customData.team || (isB ? 'SOUTH AFRICA' : isC ? 'UNITED STATES' : 'AUSTRALIA')).toUpperCase();
+
+    const defaultSwimmersA = ['NICK FFROST', 'GRANT BRITS', 'KIRK PALMER', 'LEITH BRODIE'];
+    const defaultSwimmersB = ['JEAN BASSON', 'DARIAN TOWNSEND', 'JAN VENTER', 'SEBASTIEN ROUSSEAU'];
+    const defaultSwimmersC = ['DAVID WALTERS', 'RICKY BERENS', 'ERIK VENDT', 'KLETE KELLER'];
+
+    const swimmers = customData.members || customData.swimmers || (isB ? defaultSwimmersB : isC ? defaultSwimmersC : defaultSwimmersA);
+
+    const timeResult = (isB || isC) ? (customData.time || (isB ? '7:08.04' : '7:04.66')) : '';
+    const hasOrRecord = isC || (isB && customData.record === 'OR');
+    const hasQBadge = isB || isC;
+
+    const startX = 280;
+    const startY = 740;
+    const barWidth = 780;
+    const headerHeight = 42;
+
+    // 1. Header Bar (5 AUS AUSTRALIA + Olympic Rings)
+    const headerGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: barWidth, height: headerHeight,
+      fill: headerGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 })
+    }));
+
+    const laneText = new fabric.Textbox(laneNum, createProps('textbox', {
+      left: startX + 22, top: startY + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 25, textAlign: 'center'
+    }));
+
+    const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+      left: startX + 50, top: startY + 9, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 45
+    }));
+
+    objects.push(headerBar, laneText, nocText);
+
+    // Country Flag Image (80px x 22px - Selectable & Unlocked)
+    const flagBase64 = getFlagBase64(nocCode);
+    if (flagBase64) {
+      try {
+        const imgObj = await fabric.Image.fromURL(flagBase64);
+        imgObj.set({
+          id: generateUniqueId({ type: 'image' }),
+          left: startX + 102,
+          top: startY + 10,
+          scaleX: 80 / (imgObj.width || 32),
+          scaleY: 22 / (imgObj.height || 20),
+          skewX: -12,
+          selectable: true,
+          hasControls: true
+        });
+        objects.push(imgObj);
+      } catch (e) {}
+    }
+
+    const teamText = new fabric.Textbox(teamName, createProps('textbox', {
+      left: startX + 200, top: startY + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450
+    }));
+    objects.push(teamText);
+
+    // Olympic Rings
+    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    objects.push(c1, c2, c3, c4, c5);
+
+    // 2. 4 Swimmer Member Sub-Rows
+    let currentY = startY + 44;
+    swimmers.slice(0, 4).forEach((swimmerName, idx) => {
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: startX + 15, top: currentY, width: barWidth - 30, height: 32,
+        fill: rowFill, skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(0,136,204,0.6)', strokeWidth: 1
+      }));
+
+      const nameText = new fabric.Textbox((swimmerName || '').toUpperCase(), createProps('textbox', {
+        left: startX + 35, top: currentY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: barWidth - 80
+      }));
+
+      objects.push(rowBar, nameText);
+      currentY += 34;
+    });
+
+    // 3. Bottom Result/Time Sub-Bar (SW007b & SW007c)
+    if (timeResult) {
+      let subTabWidth = 150;
+      if (hasOrRecord && hasQBadge) subTabWidth = 210;
+      else if (hasQBadge || hasOrRecord) subTabWidth = 170;
+
+      const subBar = new fabric.Rect(createProps('rect', {
+        left: startX + 15, top: currentY, width: subTabWidth, height: 24,
+        fill: '#00192e', skewX: -12, rx: 3, ry: 3,
+        stroke: borderHighlight, strokeWidth: 1
+      }));
+
+      const timeText = new fabric.Textbox(timeResult, createProps('textbox', {
+        left: startX + 25, top: currentY + 3, fontSize: 15, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 90
+      }));
+
+      objects.push(subBar, timeText);
+      let pillX = startX + 115;
+
+      if (hasOrRecord) {
+        const orBg = new fabric.Rect(createProps('rect', {
+          left: pillX, top: currentY + 2, width: 30, height: 20,
+          fill: '#e2e8f0', rx: 2, ry: 2, skewX: -12
+        }));
+        const orText = new fabric.Textbox('OR', createProps('textbox', {
+          left: pillX, top: currentY + 4, fontSize: 13, fontWeight: '900', fontStyle: 'italic',
+          fill: '#00223e', width: 30, textAlign: 'center'
+        }));
+        objects.push(orBg, orText);
+        pillX += 34;
+      }
+
+      if (hasQBadge) {
+        const qBg = new fabric.Rect(createProps('rect', {
+          left: pillX, top: currentY + 2, width: 24, height: 20,
+          fill: '#16a34a', rx: 2, ry: 2, skewX: -12
+        }));
+        const qText = new fabric.Textbox('Q', createProps('textbox', {
+          left: pillX, top: currentY + 4, fontSize: 13, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 24, textAlign: 'center'
+        }));
+        objects.push(qBg, qText);
+      }
+    }
   }
 
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
@@ -581,7 +737,7 @@ export async function generateSwimming2Fabric(
 }
 
 /**
- * 1920x1080 HTML Broadcast Overlay for Swimming SW002, SW003, SW004, SW005, SW006
+ * 1920x1080 HTML Broadcast Overlay for Swimming SW002 - SW007
  */
 export function generateSwimming2HTML(
   templateId = '',
@@ -683,6 +839,216 @@ export function generateSwimming2HTML(
             <circle cx="49.5" cy="27" r="11"/>
             <circle cx="72.5" cy="27" r="11"/>
           </svg>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW007 / Team List by Lane Layout ──
+  else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+    const isB = normId.endsWith('B') || normId.includes('SW007B') || normId.includes('SW107B');
+    const isC = normId.endsWith('C') || normId.includes('SW007C') || normId.includes('SW107C');
+
+    const laneNum = customData.lane || (isB ? '2' : isC ? '4' : '5');
+    const nocCode = (customData.noc || (isB ? 'RSA' : isC ? 'USA' : 'AUS')).toUpperCase();
+    const teamName = (customData.team || (isB ? 'SOUTH AFRICA' : isC ? 'UNITED STATES' : 'AUSTRALIA')).toUpperCase();
+
+    const defaultSwimmersA = ['NICK FFROST', 'GRANT BRITS', 'KIRK PALMER', 'LEITH BRODIE'];
+    const defaultSwimmersB = ['JEAN BASSON', 'DARIAN TOWNSEND', 'JAN VENTER', 'SEBASTIEN ROUSSEAU'];
+    const defaultSwimmersC = ['DAVID WALTERS', 'RICKY BERENS', 'ERIK VENDT', 'KLETE KELLER'];
+
+    const swimmers = customData.members || customData.swimmers || (isB ? defaultSwimmersB : isC ? defaultSwimmersC : defaultSwimmersA);
+
+    const timeResult = (isB || isC) ? (customData.time || (isB ? '7:08.04' : '7:04.66')) : '';
+    const hasOrRecord = isC || (isB && customData.record === 'OR');
+    const hasQBadge = isB || isC;
+    const flagUrl = getFlagBase64(nocCode);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .team-list-container {
+            position: absolute;
+            bottom: 100px;
+            left: 280px;
+            width: 780px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8));
+          }
+
+          .team-main-header {
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff;
+            height: 42px;
+            transform: skewX(-12deg);
+            border-radius: 5px;
+            border: 1.5px solid ${borderHighlight};
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+          }
+
+          .team-left-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .team-lane-num {
+            font-size: 22px;
+            font-weight: 900;
+            font-style: italic;
+            width: 25px;
+            text-align: center;
+          }
+
+          .team-noc {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+          }
+
+          .team-flag-img {
+            width: 80px;
+            height: 22px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            transform: skewX(12deg);
+            display: block;
+          }
+
+          .team-name {
+            font-size: 22px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 10px;
+          }
+
+          .team-rings {
+            transform: skewX(12deg);
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3;
+          }
+
+          .team-member-row {
+            background: ${darkTabColor};
+            color: #ffffff;
+            height: 32px;
+            transform: skewX(-12deg);
+            border-radius: 3px;
+            border: 1px solid rgba(0, 136, 204, 0.6);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-left: 15px;
+            width: 750px;
+          }
+
+          .team-member-row.row-alt {
+            background: ${altRowColor};
+          }
+
+          .team-member-name {
+            transform: skewX(12deg);
+            font-size: 17px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+
+          .team-sub-bar {
+            background: #00192e;
+            color: #ffffff;
+            transform: skewX(-12deg);
+            border-radius: 0 0 4px 4px;
+            border: 1px solid ${borderHighlight};
+            width: fit-content;
+            padding: 3px 14px;
+            margin-left: 15px;
+            margin-top: -2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .team-time-text {
+            font-size: 15px;
+            font-weight: 900;
+            font-style: italic;
+          }
+
+          .team-or-badge {
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            color: #00223e;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .team-q-badge {
+            background: #16a34a;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .unskew {
+            transform: skewX(12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="team-list-container">
+          <div class="team-main-header">
+            <div class="team-left-section">
+              <div class="team-lane-num"><span class="unskew">${laneNum}</span></div>
+              <div class="team-noc"><span class="unskew">${nocCode}</span></div>
+              ${flagUrl ? `<img src="${flagUrl}" class="team-flag-img" />` : ''}
+              <div class="team-name"><span class="unskew">${teamName}</span></div>
+            </div>
+            <svg class="team-rings" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/>
+              <circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/>
+              <circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/>
+              <circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          ${swimmers.slice(0, 4).map((swimmer, idx) => `
+            <div class="team-member-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+              <div class="team-member-name"><span class="unskew">${(swimmer || '').toUpperCase()}</span></div>
+            </div>
+          `).join('')}
+          ${timeResult ? `
+            <div class="team-sub-bar">
+              <div class="team-time-text"><span class="unskew">${timeResult}</span></div>
+              ${hasOrRecord ? `<div class="team-or-badge"><span class="unskew">OR</span></div>` : ''}
+              ${hasQBadge ? `<div class="team-q-badge"><span class="unskew">Q</span></div>` : ''}
+            </div>
+          ` : ''}
         </div>
       </body>
       </html>
