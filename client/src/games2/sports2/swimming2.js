@@ -431,6 +431,146 @@ export async function generateSwimming2Fabric(
     objects.push(topBg, topText, bottomBg, bottomText);
   }
 
+  // ── SW011 / Winner / Winners / Place ID Layout (SW011a, SW011b, SW011c) ──
+  else if (normId.includes('SW011') || normId.includes('SW111') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const isB = normId.endsWith('B') || normId.includes('SW011B');
+    const isC = normId.endsWith('C') || normId.includes('SW011C');
+
+    const headerTitleVal = (customData.headerTitle || customData.sport || (isB ? "WOMEN'S 200M BUTTERFLY" : "SWIMMING")).toUpperCase();
+    const subTitleVal = (customData.subTitle || (isB ? "3RD PLACE - HEAT 5" : isC ? "WINNERS - MEN'S 4X200M FREESTYLE RELAY" : "WINNER - MEN'S 4X200M FREESTYLE RELAY")).toUpperCase();
+
+    const defaultWinnersA = [
+      { noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' }
+    ];
+
+    const defaultWinnersB = [
+      { noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.91', record: '' }
+    ];
+
+    const defaultWinnersC = [
+      { noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' },
+      { noc: 'GBR', name: 'GREAT BRITAIN', time: '6:58.56', record: 'WR' }
+    ];
+
+    const winnersList = customData.winners || customData.athletes || (isB ? defaultWinnersB : isC ? defaultWinnersC : defaultWinnersA);
+
+    const startX = 280;
+    const startY = winnersList.length > 1 ? 780 : 820;
+    const barWidth = 780;
+    const headerHeight = 42;
+
+    // 1. Header Bar
+    const headerGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: barWidth, height: headerHeight,
+      fill: headerGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 })
+    }));
+
+    const swimmerIcon = new fabric.Textbox('🏊', createProps('textbox', {
+      left: startX + 22, top: startY + 6, fontSize: 24, fill: '#ffffff', width: 40
+    }));
+
+    const sportTitleText = new fabric.Textbox(headerTitleVal, createProps('textbox', {
+      left: startX + 100, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 90
+    }));
+
+    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+
+    // 2. Sub-Header Metallic Silver Bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: startX + 15, top: startY + 44, width: barWidth - 30, height: 28,
+      fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+    }));
+
+    const subTitleText = new fabric.Textbox(subTitleVal, createProps('textbox', {
+      left: startX + 35, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00223e', width: 500, charSpacing: 60
+    }));
+
+    objects.push(headerBar, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, subTitleText);
+
+    // 3. Winner / Place Rows
+    let currentY = startY + 74;
+    for (let idx = 0; idx < winnersList.length; idx++) {
+      const w = winnersList[idx];
+      const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: startX + 15, top: currentY, width: barWidth - 30, height: 34,
+        fill: rowFill, skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(0,136,204,0.6)', strokeWidth: 1
+      }));
+
+      objects.push(rowBar);
+
+      // Flag image placed directly at left end of row strip
+      const nocCode = (w.noc || w.flag || w.country || '').toUpperCase();
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }),
+            left: startX + 35,
+            top: currentY + 6,
+            scaleX: 80 / (imgObj.width || 32),
+            scaleY: 22 / (imgObj.height || 20),
+            skewX: -12,
+            selectable: true,
+            hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+
+      const nameText = new fabric.Textbox((w.name || '').toUpperCase(), createProps('textbox', {
+        left: startX + 130, top: currentY + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 410
+      }));
+
+      objects.push(nameText);
+
+      // Record Pill (WR gold or OR silver if present)
+      if (w.record) {
+        const isWR = w.record === 'WR';
+        const badgeBg = new fabric.Rect(createProps('rect', {
+          left: startX + 560, top: currentY + 6, width: 32, height: 22,
+          fill: isWR ? '#fbbf24' : '#e2e8f0', rx: 2, ry: 2, skewX: -12
+        }));
+        const badgeText = new fabric.Textbox(w.record, createProps('textbox', {
+          left: startX + 560, top: currentY + 8, fontSize: 13, fontWeight: '900', fontStyle: 'italic',
+          fill: '#00223e', width: 32, textAlign: 'center'
+        }));
+        objects.push(badgeBg, badgeText);
+      }
+
+      const timeText = new fabric.Textbox(w.time || '', createProps('textbox', {
+        left: startX + 600, top: currentY + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 140, textAlign: 'right'
+      }));
+
+      objects.push(timeText);
+      currentY += 36;
+    }
+  }
+
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
   else if (normId.includes('SW006') || normId.includes('SW106') || normId.includes('LANE ID')) {
     const isB = normId.endsWith('B') || normId.includes('SW006B') || normId.includes('SW106B');
@@ -1526,6 +1666,236 @@ export function generateSwimming2HTML(
       <body>
         <div class="lane-badge lane-badge-top"><span class="unskew">${topLaneTextVal.toUpperCase()}</span></div>
         <div class="lane-badge lane-badge-bottom"><span class="unskew">${bottomLaneTextVal.toUpperCase()}</span></div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW011 / Winner / Winners / Place ID Layout ──
+  else if (normId.includes('SW011') || normId.includes('SW111') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const isB = normId.endsWith('B') || normId.includes('SW011B');
+    const isC = normId.endsWith('C') || normId.includes('SW011C');
+
+    const headerTitleVal = (customData.headerTitle || customData.sport || (isB ? "WOMEN'S 200M BUTTERFLY" : "SWIMMING")).toUpperCase();
+    const subTitleVal = (customData.subTitle || (isB ? "3RD PLACE - HEAT 5" : isC ? "WINNERS - MEN'S 4X200M FREESTYLE RELAY" : "WINNER - MEN'S 4X200M FREESTYLE RELAY")).toUpperCase();
+
+    const defaultWinnersA = [
+      { noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' }
+    ];
+
+    const defaultWinnersB = [
+      { noc: 'POL', name: 'OTYLIA JEDRZEJCZAK', time: '2:06.91', record: '' }
+    ];
+
+    const defaultWinnersC = [
+      { noc: 'USA', name: 'UNITED STATES', time: '6:58.56', record: 'WR' },
+      { noc: 'GBR', name: 'GREAT BRITAIN', time: '6:58.56', record: 'WR' }
+    ];
+
+    const winnersList = customData.winners || customData.athletes || (isB ? defaultWinnersB : isC ? defaultWinnersC : defaultWinnersA);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .winner-container {
+            position: absolute;
+            bottom: 100px;
+            left: 280px;
+            width: 780px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8));
+          }
+
+          .winner-header {
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            color: #ffffff;
+            height: 42px;
+            transform: skewX(-12deg);
+            border-radius: 5px;
+            border: 1.5px solid ${borderHighlight};
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+          }
+
+          .winner-left-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .winner-sport-title {
+            font-size: 24px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+          }
+
+          .winner-rings {
+            transform: skewX(12deg);
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3;
+          }
+
+          .winner-sub-bar {
+            background: #e2e8f0;
+            color: #00223e;
+            height: 28px;
+            transform: skewX(-12deg);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-left: 15px;
+            width: 750px;
+          }
+
+          .winner-sub-title {
+            transform: skewX(12deg);
+            font-size: 16px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+          }
+
+          .winner-row {
+            background: ${darkTabColor};
+            color: #ffffff;
+            height: 34px;
+            transform: skewX(-12deg);
+            border-radius: 3px;
+            border: 1px solid rgba(0, 136, 204, 0.6);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            margin-left: 15px;
+            width: 750px;
+            justify-content: space-between;
+          }
+
+          .winner-row.row-alt {
+            background: ${altRowColor};
+          }
+
+          .winner-row-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+
+          .winner-noc {
+            font-size: 16px;
+            font-weight: 900;
+            font-style: italic;
+          }
+
+          .winner-flag-img {
+            width: 80px;
+            height: 22px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            transform: skewX(12deg);
+            display: block;
+          }
+
+          .winner-name {
+            font-size: 17px;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+
+          .winner-row-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+          }
+
+          .winner-wr-badge {
+            background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+            color: #00223e;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .winner-or-badge {
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+            color: #00223e;
+            font-size: 13px;
+            font-weight: 900;
+            font-style: italic;
+            padding: 1px 6px;
+            border-radius: 2px;
+          }
+
+          .winner-time {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            min-width: 90px;
+            text-align: right;
+          }
+
+          .unskew {
+            transform: skewX(12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="winner-container">
+          <div class="winner-header">
+            <div class="winner-left-section">
+              <span style="font-size:24px;transform:skewX(12deg);">🏊</span>
+              <div class="winner-sport-title"><span class="unskew">${headerTitleVal}</span></div>
+            </div>
+            <svg class="winner-rings" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/>
+              <circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/>
+              <circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/>
+              <circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+          <div class="winner-sub-bar">
+            <div class="winner-sub-title"><span class="unskew">${subTitleVal}</span></div>
+          </div>
+          ${winnersList.map((w, idx) => {
+            const nocCode = (w.noc || w.flag || w.country || '').toUpperCase();
+            const flagUrl = getFlagBase64(nocCode);
+            const isWR = w.record === 'WR';
+            return `
+              <div class="winner-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+                <div class="winner-row-left">
+                  ${flagUrl ? `<img src="${flagUrl}" class="winner-flag-img" />` : ''}
+                  <div class="winner-name"><span class="unskew">${(w.name || '').toUpperCase()}</span></div>
+                </div>
+                <div class="winner-row-right">
+                  ${w.record ? `<div class="${isWR ? 'winner-wr-badge' : 'winner-or-badge'}"><span class="unskew">${w.record}</span></div>` : ''}
+                  <div class="winner-time"><span class="unskew">${w.time}</span></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       </body>
       </html>
     `;
