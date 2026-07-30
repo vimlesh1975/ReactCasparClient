@@ -1140,7 +1140,7 @@ export async function generateSwimming2Fabric(
     const clockTime = customData.time || (normId.includes('SW024') ? '3:41.60' : '47.1');
 
     const leftX = 280;
-    const leftY = 920;
+    const leftY = 610;
 
     const wrBg = new fabric.Rect(createProps('rect', {
       left: leftX, top: leftY, width: 190, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1
@@ -1170,8 +1170,8 @@ export async function generateSwimming2Fabric(
 
     objects.push(wrBg, wrBadge, wrBadgeText, wrTimeText, orBg, orBadge, orBadgeText, orTimeText);
 
-    const rightX = 1450;
-    const rightY = 960;
+    const rightX = 950;
+    const rightY = 650;
     const clockBody = new fabric.Rect(createProps('rect', {
       left: rightX, top: rightY, width: 170, height: 38, fill: '#d1d5db', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
     }));
@@ -2490,6 +2490,13 @@ export async function generateSwimming2Fabric(
       top: 68,
       scaleX: 1.515,
       scaleY: 1.515
+    });
+  } else if (normId.includes('SW023') || normId.includes('SW024') || normId.includes('SW130') || normId.includes('FINISH')) {
+    group.set({
+      left: 325,
+      top: 912,
+      scaleX: 1.428,
+      scaleY: 1.500
     });
   }
 
