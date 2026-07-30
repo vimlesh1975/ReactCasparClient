@@ -73,6 +73,7 @@ export async function generateSwimming2Fabric(
     id: generateUniqueId({ type }),
     selectable: true,
     hasControls: true,
+    objectCaching: false,
     ...extra
   });
 
@@ -2303,18 +2304,20 @@ export async function generateSwimming2Fabric(
 
   if (objects.length === 0) return null;
 
-  // Attach double-click path node editing listener & disable object caching for all path elements
+  // Attach double-click path node editing listener & disable object caching for all elements
   objects.forEach((obj) => {
-    if (obj && (obj.type === 'path' || obj instanceof fabric.Path)) {
+    if (obj) {
       obj.set({ objectCaching: false });
-      obj.on('mousedblclick', () => {
-        if (window.editor?.canvas) {
-          window.editor.canvas.setActiveObject(obj);
-        }
-        if (window.edit) {
-          window.edit(window.dispatch);
-        }
-      });
+      if (obj.type === 'path' || obj instanceof fabric.Path) {
+        obj.on('mousedblclick', () => {
+          if (window.editor?.canvas) {
+            window.editor.canvas.setActiveObject(obj);
+          }
+          if (window.edit) {
+            window.edit(window.dispatch);
+          }
+        });
+      }
     }
   });
 
