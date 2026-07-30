@@ -413,20 +413,46 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
 
         {/* Preview Frame */}
         <div className="preview-frame-container" ref={previewContainerRef}>
-          <button
-            className="action-btn btn-add"
-            style={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              zIndex: 20,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-              cursor: 'pointer'
-            }}
-            onClick={handleAddToCanvas}
-          >
-            <FaPlus /> Add to Canvas
-          </button>
+          <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 20, display: 'flex', gap: '8px' }}>
+            <button
+              className="action-btn"
+              style={{
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                cursor: 'pointer',
+                backgroundColor: '#2ecc71',
+                color: 'white'
+              }}
+              onClick={() => {
+                const activeCanvas = window.canvas || window.editor?.canvas || canvas;
+                if (!activeCanvas) return;
+                const activeObj = activeCanvas.getActiveObject();
+                if (!activeObj) {
+                  alert("Please select the graphic on the main Drawing canvas first!");
+                  return;
+                }
+                const data = `Template: ${selectedTemplateObj?.id || selectedTemplateType}\nLeft: ${Math.round(activeObj.left)}\nTop: ${Math.round(activeObj.top)}\nScaleX: ${activeObj.scaleX.toFixed(3)}\nScaleY: ${activeObj.scaleY.toFixed(3)}`;
+                navigator.clipboard.writeText(data).then(() => {
+                  alert("Copied to clipboard!\n\n" + data + "\n\nPaste this to Antigravity to permanently update the code.");
+                }).catch(err => {
+                  alert("Layout Values:\n\n" + data);
+                });
+              }}
+              title="Copy layout values to share with AI"
+            >
+              💾 Copy Layout
+            </button>
+
+            <button
+              className="action-btn btn-add"
+              style={{
+                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                cursor: 'pointer'
+              }}
+              onClick={handleAddToCanvas}
+            >
+              <FaPlus /> Add to Canvas
+            </button>
+          </div>
           
           <div
             style={{

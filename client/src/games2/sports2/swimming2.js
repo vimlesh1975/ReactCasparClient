@@ -2357,6 +2357,23 @@ export async function generateSwimming2Fabric(
     scaleY: 1.5
   });
 
+  // Apply layout overrides copied from UI
+  if (normId.includes('SW002') || normId.includes('SW102') || normId === 'VENUE ID') {
+    group.set({
+      left: 347,
+      top: 830,
+      scaleX: 1.411,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW003') || normId.includes('SW103') || normId === 'EVENT SCHEDULE') {
+    group.set({
+      left: 293,
+      top: 388,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  }
+
   return group;
 }
 
