@@ -1183,6 +1183,31 @@ export async function generateSwimming2Fabric(
     }));
     const olympicRings = createOlympicRingsGroup(rightX + 172, rightY + 10, 6, 1.5);
     objects.push(clockBody, timeText, ringsTab, olympicRings);
+
+    const isB = normId.endsWith('B') || normId.includes('SW024B') || normId.includes('SW130B');
+    const isC = normId.endsWith('C') || normId.includes('SW024C') || normId.includes('SW130C');
+
+    if (isB) {
+      const newRecordTag = customData.newRecord || 'NEW OR';
+      const newBg = new fabric.Rect(createProps('rect', {
+        left: rightX + 60, top: rightY - 26, width: 90, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+      }));
+      const newText = new fabric.Textbox(newRecordTag, createProps('textbox', {
+        left: rightX + 60, top: rightY - 23, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 90, textAlign: 'center'
+      }));
+      objects.push(newBg, newText);
+    }
+
+    if (isC) {
+      const laneNum = customData.lane || '3';
+      const laneBg = new fabric.Rect(createProps('rect', {
+        left: rightX - 45, top: rightY, width: 55, height: 38, fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
+      }));
+      const laneText = new fabric.Textbox(laneNum, createProps('textbox', {
+        left: rightX - 45, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 55, textAlign: 'center'
+      }));
+      objects.push(laneBg, laneText);
+    }
   }
 
   // ── SW103 / Weather ──
