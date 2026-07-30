@@ -2303,6 +2303,21 @@ export async function generateSwimming2Fabric(
 
   if (objects.length === 0) return null;
 
+  // Attach double-click path node editing listener & disable object caching for all path elements
+  objects.forEach((obj) => {
+    if (obj && (obj.type === 'path' || obj instanceof fabric.Path)) {
+      obj.set({ objectCaching: false });
+      obj.on('mousedblclick', () => {
+        if (window.editor?.canvas) {
+          window.editor.canvas.setActiveObject(obj);
+        }
+        if (window.edit) {
+          window.edit(window.dispatch);
+        }
+      });
+    }
+  });
+
   const groupId = generateUniqueId({ type: 'group' });
   const group = new fabric.Group(objects, {
     id: groupId,
@@ -5474,7 +5489,7 @@ export function generateSwimming2HTML(
         <div class="ml-container">
           <div class="ml-header"><div class="ml-title">VICTORY CEREMONY</div></div>
           <div class="ml-sub"><div class="ml-sub-text">MEDALLISTS - ${eventVal}</div></div>
-          \${medals.map(m => {
+          ${medals.map(m => {
             const f = getFlagBase64(m.noc);
             const mClass = (m.medal || '').toLowerCase().includes('gold') ? 'gold' : (m.medal || '').toLowerCase().includes('silver') ? 'silver' : 'bronze';
             const flagTag = f ? '<img class="ml-flag" src="' + f + '" />' : '';
@@ -5544,9 +5559,9 @@ export function generateSwimming2HTML(
         <div class="c-container">
           <div class="c-top">
             <div class="c-main"><div class="c-main-t">${clockVal}</div></div>
-            \${hasDelta ? '<div class="c-delta"><div class="c-delta-t">' + deltaVal + '</div></div>' : ''}
+            ${hasDelta ? '<div class="c-delta"><div class="c-delta-t">' + deltaVal + '</div></div>' : ''}
           </div>
-          \${hasStandings ? rows.map(r => '<div class="c-row"><div class="c-row-t">' + r + '</div></div>').join('') : ''}
+          ${hasStandings ? rows.map(r => '<div class="c-row"><div class="c-row-t">' + r + '</div></div>').join('') : ''}
         </div>
       </body></html>
     `;
