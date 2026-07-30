@@ -1534,34 +1534,49 @@ export async function generateSwimming2Fabric(
     }
   }
 
-  // ── SW112 / Gap between 2 Groups ──
+  // ── SW112 / Gap between 2 Groups (SW112A & SW112B) ──
   else if (normId.includes('SW112') || normId.includes('GAP BETWEEN 2 GROUPS')) {
-    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const isB = normId.endsWith('B') || normId.includes('SW112B');
+    const group1 = (customData.group1 || (isB ? 'PACK' : 'LEADER')).toUpperCase();
     const gapTime = customData.gap || customData.time || '1:15';
-    const group2 = (customData.group2 || 'PACK').toUpperCase();
+    const group2 = (customData.group2 || (isB ? 'LEADER' : 'PACK')).toUpperCase();
 
     let startX = customData.posX ? Number(customData.posX) : 280;
     const startY = customData.posY ? Number(customData.posY) : 960;
 
+    const silverGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 140, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#d1d5db' },
+        { offset: 0.5, color: '#ffffff' },
+        { offset: 1, color: '#e2e8f0' }
+      ]
+    });
+
+    // Left group pill (White / Metallic silver capsule)
     const b1 = new fabric.Rect(createProps('rect', {
-      left: startX, top: startY, width: 140, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      left: startX, top: startY, width: 140, height: 32, fill: silverGradient, skewX: -12, rx: 14, ry: 14, stroke: '#00223e', strokeWidth: 1.5
     }));
     const t1 = new fabric.Textbox(group1, createProps('textbox', {
-      left: startX + 8, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+      left: startX + 8, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
     }));
 
+    // Center time pill (Dark Blue with White text)
     const b2 = new fabric.Rect(createProps('rect', {
       left: startX + 150, top: startY, width: 75, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
     }));
     const t2 = new fabric.Textbox(gapTime, createProps('textbox', {
-      left: startX + 154, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 67, textAlign: 'center'
+      left: startX + 154, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 67, textAlign: 'center'
     }));
 
+    // Right group pill (White / Metallic silver capsule)
     const b3 = new fabric.Rect(createProps('rect', {
-      left: startX + 235, top: startY, width: 140, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      left: startX + 235, top: startY, width: 140, height: 32, fill: silverGradient, skewX: -12, rx: 14, ry: 14, stroke: '#00223e', strokeWidth: 1.5
     }));
     const t3 = new fabric.Textbox(group2, createProps('textbox', {
-      left: startX + 243, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+      left: startX + 243, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
     }));
 
     objects.push(b1, t1, b2, t2, b3, t3);
@@ -2659,11 +2674,12 @@ export function generateSwimming2HTML(
     `;
   }
 
-  // ── SW112 / Gap between 2 Groups ──
+  // ── SW112 / Gap between 2 Groups (SW112A & SW112B) ──
   else if (normId.includes('SW112') || normId.includes('GAP BETWEEN 2 GROUPS')) {
-    const group1 = (customData.group1 || 'LEADER').toUpperCase();
+    const isB = normId.endsWith('B') || normId.includes('SW112B');
+    const group1 = (customData.group1 || (isB ? 'PACK' : 'LEADER')).toUpperCase();
     const gapTime = customData.gap || customData.time || '1:15';
-    const group2 = (customData.group2 || 'PACK').toUpperCase();
+    const group2 = (customData.group2 || (isB ? 'LEADER' : 'PACK')).toUpperCase();
 
     const posX = customData.posX || '280px';
     const posY = customData.posY || '960px';
@@ -2685,9 +2701,9 @@ export function generateSwimming2HTML(
           }
           .gap-group-pill {
             min-width: 140px; height: 32px;
-            background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
-            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
-            display: flex; align-items: center; justify-content: center; padding: 0 14px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            transform: skewX(-12deg); border-radius: 14px; border: 1.5px solid #00223e;
+            display: flex; align-items: center; justify-content: center; padding: 0 16px;
           }
           .gap-group-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
 
@@ -2696,7 +2712,7 @@ export function generateSwimming2HTML(
             transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
             display: flex; align-items: center; justify-content: center; padding: 0 10px;
           }
-          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; }
+          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
         </style>
       </head>
       <body>
