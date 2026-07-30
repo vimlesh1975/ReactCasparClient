@@ -2428,6 +2428,55 @@ export async function generateSwimming2Fabric(
       scaleX: 1.607,
       scaleY: 1.574
     });
+  } else if (normId.includes('SW014') || normId.includes('SW114') || normId === 'NAME SUPER') {
+    group.set({
+      left: 340,
+      top: 69,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW015') || normId.includes('SW115') || normId === 'WINNER') {
+    group.set({
+      left: 342,
+      top: 849,
+      scaleX: 1.574,
+      scaleY: 1.665
+    });
+  } else if (normId.includes('SW018') || normId.includes('SW118') || normId === 'POINT TABLE') {
+    group.set({
+      left: 353,
+      top: 844,
+      scaleX: 1.555,
+      scaleY: 1.770
+    });
+  } else if (normId.includes('SW016') || normId.includes('SW116') || normId === 'MEDAL TALLY') {
+    group.set({
+      left: 361,
+      top: 842,
+      scaleX: 1.564,
+      scaleY: 1.717
+    });
+  } else if (normId.includes('SW017') || normId.includes('SW117') || normId === 'TOP MEDAL TALLY') {
+    group.set({
+      left: 316,
+      top: 673,
+      scaleX: 1.605,
+      scaleY: 1.634
+    });
+  } else if (normId.includes('SW019') || normId.includes('SW119') || normId === 'RECORDS TAG') {
+    group.set({
+      left: 364,
+      top: 844,
+      scaleX: 1.541,
+      scaleY: 1.691
+    });
+  } else if (normId.includes('SW020') || normId.includes('SW120') || normId === 'BUG') {
+    group.set({
+      left: 1283,
+      top: 956,
+      scaleX: 1.266,
+      scaleY: 1.500
+    });
   }
 
   return group;
