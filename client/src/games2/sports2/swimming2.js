@@ -1218,12 +1218,12 @@ export async function generateSwimming2Fabric(
     const windDir = (customData.windDir || 'EAST SOUTH EAST').toUpperCase();
     const windSpeed = customData.windSpeed || '5KM/H';
 
-    const gunPathData = 'M 45 0 L 888 0 C 892 0, 895 3, 893 8 L 872 44 C 870 49, 865 54, 860 54 L 140 54 L 115 88 C 112 92, 106 95, 100 95 L 10 95 C 4 95, 0 90, 2 84 L 22 42 L 35 6 C 37 2, 41 0, 45 0 Z';
+    const gunPathData = 'M 45 0 L 488 0 C 492 0, 495 3, 493 8 L 472 44 C 470 49, 465 54, 460 54 L 140 54 L 115 88 C 112 92, 106 95, 100 95 L 10 95 C 4 95, 0 90, 2 84 L 22 42 L 35 6 C 37 2, 41 0, 45 0 Z';
 
     const gunGradient = new fabric.Gradient({
       type: 'linear',
       gradientUnits: 'pixels',
-      coords: { x1: 0, y1: 0, x2: 890, y2: 0 },
+      coords: { x1: 0, y1: 0, x2: 490, y2: 0 },
       colorStops: [
         { offset: 0, color: gradientStart },
         { offset: 0.4, color: gradientMid },
@@ -1245,15 +1245,15 @@ export async function generateSwimming2Fabric(
 
     const sportTitleText = new fabric.Textbox(sportTitle, createProps('textbox', {
       left: 395, top: 589, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
-      fill: '#ffffff', width: 610, charSpacing: 90
+      fill: '#ffffff', width: 220, charSpacing: 40
     }));
 
-    const olympicRings = createOlympicRingsGroup(1045, 595, 9, 2.2);
+    const olympicRings = createOlympicRingsGroup(645, 595, 9, 2.2);
 
     const subBarGradient = new fabric.Gradient({
       type: 'linear',
       gradientUnits: 'pixels',
-      coords: { x1: 0, y1: 0, x2: 778, y2: 0 },
+      coords: { x1: 0, y1: 0, x2: 378, y2: 0 },
       colorStops: [
         { offset: 0, color: '#d1d5db' },
         { offset: 0.5, color: '#ffffff' },
@@ -1261,7 +1261,7 @@ export async function generateSwimming2Fabric(
       ]
     });
 
-    const subBarPathData = 'M 28 0 L 778 0 L 766 34 L 0 34 Z';
+    const subBarPathData = 'M 28 0 L 378 0 L 366 34 L 0 34 Z';
 
     const subBar = new fabric.Path(subBarPathData, createProps('path', {
       left: 350, top: 635,
@@ -1272,7 +1272,7 @@ export async function generateSwimming2Fabric(
 
     const weatherSubTitle = new fabric.Textbox('WEATHER', createProps('textbox', {
       left: 395, top: 640, fontSize: 21, fontWeight: '900', fontStyle: 'italic',
-      fill: '#00223e', width: 720, charSpacing: 40
+      fill: '#00223e', width: 320, charSpacing: 20
     }));
 
     objects.push(gunHeaderBody, weatherIcon, sportTitleText, olympicRings, subBar, weatherSubTitle);
@@ -1285,7 +1285,7 @@ export async function generateSwimming2Fabric(
       { icon: '🌬️', label: 'WIND SPEED', val: windSpeed }
     ];
 
-    const rowPathData = 'M 24 0 L 888 0 L 888 34 L 0 34 Z';
+    const rowPathData = 'M 24 0 L 488 0 L 488 34 L 0 34 Z';
     let ry = 675;
     rows.forEach((r, idx) => {
       const rowFill = idx % 2 === 0 ? darkTabColor : altRowColor;
@@ -1299,7 +1299,7 @@ export async function generateSwimming2Fabric(
         left: 308, top: ry + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 350
       }));
       const vText = new fabric.Textbox(r.val, createProps('textbox', {
-        left: 650, top: ry + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 460, textAlign: 'right'
+        left: 450, top: ry + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 250, textAlign: 'right'
       }));
       objects.push(rBar, iText, lText, vText);
       ry += 38;
@@ -2383,75 +2383,159 @@ export async function generateSwimming2Fabric(
   });
 
   // Apply layout overrides copied from UI
-  if (normId.includes('SW002') || normId.includes('SW102') || normId === 'VENUE ID') {
+  if (normId.includes('SW002') || normId === 'VENUE ID') {
     group.set({
       left: 319,
       top: 673,
       scaleX: 1.600,
       scaleY: 1.592
     });
-  } else if (normId.includes('SW003') || normId.includes('SW103') || normId === 'EVENT SCHEDULE') {
+  } else if (normId.includes('SW102')) {
+    group.set({
+      left: 330,
+      top: 821,
+      scaleX: 1.440,
+      scaleY: 1.592
+    });
+  } else if (normId.includes('SW003') || normId === 'EVENT SCHEDULE') {
     group.set({
       left: 293,
       top: 388,
       scaleX: 1.500,
       scaleY: 1.500
     });
-  } else if (normId.includes('SW005') || normId.includes('SW105') || normId === 'START LIST') {
+  } else if (normId.includes('SW103')) {
+    group.set({
+      left: 311,
+      top: 558,
+      scaleX: 1.654,
+      scaleY: 1.445
+    });
+  } else if (normId.includes('SW104')) {
+    group.set({
+      left: 257,
+      top: 351,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW005') || normId === 'START LIST') {
     group.set({
       left: 312,
       top: 391,
       scaleX: 1.500,
       scaleY: 1.500
     });
-  } else if (normId.includes('SW006') || normId.includes('SW106') || normId === 'LANE IDENT') {
+  } else if (normId.includes('SW105')) {
+    group.set({
+      left: 304,
+      top: 350,
+      scaleX: 1.500,
+      scaleY: 1.587
+    });
+  } else if (normId.includes('SW006') || normId === 'LANE IDENT') {
     group.set({
       left: 334,
       top: 892,
       scaleX: 1.500,
       scaleY: 1.500
     });
-  } else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+  } else if (normId.includes('SW106')) {
+    group.set({
+      left: 364,
+      top: 900,
+      scaleX: 1.553,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW007') || normId.includes('TEAM LIST BY LANE')) {
     group.set({
       left: 329,
       top: 666,
       scaleX: 1.609,
       scaleY: 1.662
     });
-  } else if (normId.includes('SW008') || normId.includes('SW108') || normId === 'RESULTS') {
+  } else if (normId.includes('SW107')) {
+    group.set({
+      left: 314,
+      top: 962,
+      scaleX: 1.609,
+      scaleY: 1.662
+    });
+  } else if (normId.includes('SW008') || normId === 'RESULTS') {
     group.set({
       left: 336,
       top: 739,
       scaleX: 1.590,
       scaleY: 1.600
     });
-  } else if (normId.includes('SW009') || normId.includes('SW109') || normId === 'MEDALS') {
+  } else if (normId.includes('SW108')) {
+    group.set({
+      left: 332,
+      top: 895,
+      scaleX: 1.773,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW009') || normId === 'MEDALS') {
     group.set({
       left: 306,
       top: 64,
       scaleX: 1.500,
       scaleY: 1.873
     });
-  } else if (normId.includes('SW011') || normId.includes('SW111') || normId === 'LOWER THIRD') {
+  } else if (normId.includes('SW109')) {
+    group.set({
+      left: 336,
+      top: 883,
+      scaleX: 1.777,
+      scaleY: 1.873
+    });
+  } else if (normId.includes('SW110')) {
+    group.set({
+      left: 318,
+      top: 969,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW011') || normId === 'LOWER THIRD') {
     group.set({
       left: 334,
       top: 793,
       scaleX: 1.581,
       scaleY: 1.600
     });
-  } else if (normId.includes('SW012') || normId.includes('SW112') || normId === 'RECORDS') {
+  } else if (normId.includes('SW111')) {
+    group.set({
+      left: 330,
+      top: 772,
+      scaleX: 1.669,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW012') || normId === 'RECORDS') {
     group.set({
       left: 321,
       top: 399,
       scaleX: 1.607,
       scaleY: 1.564
     });
-  } else if (normId.includes('SW013') || normId.includes('SW113') || normId === 'RECORD TAG') {
+  } else if (normId.includes('SW112')) {
+    group.set({
+      left: 312,
+      top: 958,
+      scaleX: 1.030,
+      scaleY: 1.564
+    });
+  } else if (normId.includes('SW013') || normId === 'RECORD TAG') {
     group.set({
       left: 329,
       top: 406,
       scaleX: 1.607,
       scaleY: 1.574
+    });
+  } else if (normId.includes('SW113')) {
+    group.set({
+      left: 312,
+      top: 953,
+      scaleX: 0.933,
+      scaleY: 1.081
     });
   } else if (normId.includes('SW014') || normId.includes('SW114') || normId === 'NAME SUPER') {
     group.set({
