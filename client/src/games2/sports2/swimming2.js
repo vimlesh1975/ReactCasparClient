@@ -448,7 +448,7 @@ export async function generateSwimming2Fabric(
   }
 
   // ── SW011 / Winner / Winners / Place ID Layout (SW011a, SW011b, SW011c) ──
-  else if (normId.includes('SW011') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+  else if (normId.includes('SW011') || (!normId.includes('SW114') && (normId.includes('WINNER') || normId.includes('PLACE ID')))) {
     const isB = normId.endsWith('B') || normId.includes('SW011B');
     const isC = normId.endsWith('C') || normId.includes('SW011C');
 
@@ -1660,60 +1660,98 @@ export async function generateSwimming2Fabric(
   }
 
   // ── SW114 / Winner/Winners/Place ID ──
-  else if (normId.includes('SW114') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
-    const categoryTitle = (customData.title || customData.event || "WINNER - MEN'S MARATHON 10KM").toUpperCase();
-    const athNum = customData.num || customData.lane || '17';
-    const nocCode = (customData.noc || 'NED').toUpperCase();
-    const athleteName = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
-    const timeVal = customData.time || '1:51:51.6';
+  else if (normId.includes('SW114')) {
+    const isC = normId.endsWith('C') || normId.includes('SW114C');
+    const categoryTitle = (customData.title || customData.event || (isC ? "WINNERS - MEN'S MARATHON 10KM" : "WINNER - MEN'S MARATHON 10KM")).toUpperCase();
+
+    const defaultWinnersA = [
+      { num: '17', noc: 'NED', name: 'MAARTEN VAN DER WEIJDEN', time: '1:51:51.6' }
+    ];
+    const defaultWinnersC = [
+      { num: '17', noc: 'NED', name: 'MAARTEN VAN DER WEIJDEN', time: '1:51:51.6' },
+      { num: '10', noc: 'GBR', name: 'DAVID DAVIES', time: '1:51:51.6' }
+    ];
+
+    const athletes = customData.athletes || customData.winners || (isC ? defaultWinnersC : defaultWinnersA);
 
     const startX = 280;
-    const startY = 870;
+    const startY = athletes.length > 1 ? 680 : 720;
+    const barWidth = 780;
+    const headerHeight = 42;
 
-    const mainHeader = new fabric.Path('M 45 0 L 860 0 L 888 44 L 882 54 L 140 54 L 115 88 L 100 95 L 10 95 L 2 84 L 22 42 L 35 6 Z', createProps('path', {
-      left: startX, top: startY, fill: gradientStart, stroke: borderHighlight, strokeWidth: 1.5, scaleX: 780 / 888, scaleY: 48 / 95
+    const headerGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 },
+      colorStops: [ { offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd } ]
+    });
+
+    const headerBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: barWidth, height: headerHeight,
+      fill: headerGradient, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 })
     }));
-    const sportText = new fabric.Textbox(sportTitle, createProps('textbox', {
-      left: startX + 160, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 450
+
+    const swimmerIcon = new fabric.Textbox('🏊', createProps('textbox', {
+      left: startX + 22, top: startY + 6, fontSize: 24, fill: '#ffffff', width: 40
     }));
+
+    const sportTitleText = new fabric.Textbox(sportTitle, createProps('textbox', {
+      left: startX + 100, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 450, charSpacing: 90
+    }));
+
+    const olympicRings = createOlympicRingsGroup(startX + 665, startY + 12, 7.5, 1.8);
 
     const subBar = new fabric.Rect(createProps('rect', {
-      left: startX + 70, top: startY + 45, width: 710, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#ffffff', strokeWidth: 1
+      left: startX + 15, top: startY + 44, width: barWidth - 30, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,34,62,0.3)', strokeWidth: 1
     }));
+
     const subText = new fabric.Textbox(categoryTitle, createProps('textbox', {
-      left: startX + 85, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 680
+      left: startX + 35, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 680, charSpacing: 60
     }));
 
-    const rowBar = new fabric.Rect(createProps('rect', {
-      left: startX, top: startY + 75, width: 780, height: 38, fill: darkTabColor, skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
-    }));
+    objects.push(headerBar, swimmerIcon, sportTitleText, olympicRings, subBar, subText);
 
-    const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
-      left: startX + 16, top: startY + 83, fontSize: 18, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 50
-    }));
-    const flagBase64 = getFlagBase64(nocCode);
-    if (flagBase64) {
-      try {
-        const imgObj = await fabric.Image.fromURL(flagBase64);
-        imgObj.set({
-          id: generateUniqueId({ type: 'image' }), left: startX + 68, top: startY + 84,
-          scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
-        });
-        objects.push(imgObj);
-      } catch (e) { }
+    let cy = startY + 74;
+    for (let i = 0; i < athletes.length; i++) {
+      const athlete = athletes[i];
+      const athNum = (athlete.num || athlete.lane || '').toString();
+      const nocCode = (athlete.noc || '').toUpperCase();
+      const athleteName = (athlete.name || athlete.team || '').toUpperCase();
+      const timeVal = athlete.time || '';
+
+      const rowFill = i % 2 === 0 ? darkTabColor : altRowColor;
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: startX + 15, top: cy, width: barWidth - 30, height: 32, fill: rowFill, skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,136,204,0.5)', strokeWidth: 1
+      }));
+      objects.push(rowBar);
+
+      const flagBase64 = getFlagBase64(nocCode);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 26, top: cy + 5,
+            scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12
+          });
+          objects.push(imgObj);
+        } catch (e) { }
+      }
+
+      const bibText = new fabric.Textbox(athNum, createProps('textbox', {
+        left: startX + 105, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
+      }));
+
+      const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
+        left: startX + 158, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 420
+      }));
+
+      const timeText = new fabric.Textbox(timeVal, createProps('textbox', {
+        left: startX + 625, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 120, textAlign: 'right'
+      }));
+
+      objects.push(bibText, nameText, timeText);
+      cy += 36;
     }
-
-    const bibText = new fabric.Textbox(athNum, createProps('textbox', {
-      left: startX + 135, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 45, textAlign: 'center'
-    }));
-    const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
-      left: startX + 188, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 380
-    }));
-    const timeText = new fabric.Textbox(timeVal, createProps('textbox', {
-      left: startX + 580, top: startY + 83, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 170, textAlign: 'right'
-    }));
-
-    objects.push(mainHeader, sportText, subBar, subText, rowBar, nocText, bibText, nameText, timeText);
   }
 
   // ── SW117 / MF Standings ──
@@ -1732,7 +1770,7 @@ export async function generateSwimming2Fabric(
     let startY = customData.posY ? Number(customData.posY) : 740;
 
     const headerBar = new fabric.Rect(createProps('rect', {
-      left: startX + 40, top: startY, width: 180, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      left: startX + 40, top: startY, width: 180, height: 26, fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
     }));
     const headerText = new fabric.Textbox(subTitle, createProps('textbox', {
       left: startX + 50, top: startY + 4, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 160, textAlign: 'center'
@@ -1740,7 +1778,8 @@ export async function generateSwimming2Fabric(
     objects.push(headerBar, headerText);
     startY += 30;
 
-    rowsList.forEach((r, idx) => {
+    for (let idx = 0; idx < rowsList.length; idx++) {
+      const r = rowsList[idx];
       const rBar = new fabric.Rect(createProps('rect', {
         left: startX, top: startY, width: 480, height: 32, fill: idx === 0 ? darkTabColor : altRowColor, skewX: -12, rx: 3, ry: 3, stroke: borderHighlight, strokeWidth: 1
       }));
@@ -1752,40 +1791,35 @@ export async function generateSwimming2Fabric(
         left: startX + 2, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 28, textAlign: 'center'
       }));
 
-      const nocText = new fabric.Textbox((r.noc || '').toUpperCase(), createProps('textbox', {
-        left: startX + 40, top: startY + 6, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 40
-      }));
-
       const flagBase64 = getFlagBase64(r.noc);
 
       const numText = new fabric.Textbox(r.num || r.bib || '', createProps('textbox', {
-        left: startX + 130, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 35, textAlign: 'center'
+        left: startX + 95, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: 35, textAlign: 'center'
       }));
 
       const nameText = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', {
-        left: startX + 172, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 190
+        left: startX + 137, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 225
       }));
 
       const valText = new fabric.Textbox(r.time || r.val || '', createProps('textbox', {
         left: startX + 365, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 100, textAlign: 'right'
       }));
 
-      objects.push(rBar, rBadge, rText, nocText, numText, nameText, valText);
+      objects.push(rBar, rBadge, rText, numText, nameText, valText);
 
       if (flagBase64) {
         try {
-          fabric.Image.fromURL(flagBase64).then(imgObj => {
-            imgObj.set({
-              id: generateUniqueId({ type: 'image' }), left: startX + 82, top: startY + 7,
-              scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
-            });
-            objects.push(imgObj);
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 42, top: startY + 8,
+            scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
           });
+          objects.push(imgObj);
         } catch (e) { }
       }
 
       startY += 34;
-    });
+    }
   }
 
   // ── SW118 / Standings & SW119 / Standings at Finish ──
@@ -1822,24 +1856,25 @@ export async function generateSwimming2Fabric(
     const startX = 280;
     let startY = 580;
 
-    const mainHeader = new fabric.Path('M 45 0 L 860 0 L 888 44 L 882 54 L 140 54 L 115 88 L 100 95 L 10 95 L 2 84 L 22 42 L 35 6 Z', createProps('path', {
-      left: startX, top: startY, fill: gradientStart, stroke: borderHighlight, strokeWidth: 1.5, scaleX: 780 / 888, scaleY: 48 / 95
+    const mainHeader = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 780, height: 42, fill: gradientStart, skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
     }));
-    const sportText = new fabric.Textbox("MEN'S MARATHON 10KM", createProps('textbox', {
-      left: startX + 160, top: startY + 8, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 450
+    const sportText = new fabric.Textbox(customData.title ? customData.title.toUpperCase() : "MEN'S MARATHON 10KM", createProps('textbox', {
+      left: startX + 20, top: startY + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 740
     }));
 
     const subBar = new fabric.Rect(createProps('rect', {
-      left: startX + 70, top: startY + 45, width: 710, height: 26, fill: 'linear-gradient(to right, #cbd5e1, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#ffffff', strokeWidth: 1
+      left: startX + 40, top: startY + 46, width: 740, height: 26, fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1
     }));
     const subText = new fabric.Textbox(subTitle.toUpperCase(), createProps('textbox', {
-      left: startX + 85, top: startY + 48, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 680
+      left: startX + 50, top: startY + 50, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 720
     }));
 
     objects.push(mainHeader, sportText, subBar, subText);
-    startY += 75;
+    startY += 76;
 
-    rowsList.forEach((r, idx) => {
+    for (let idx = 0; idx < rowsList.length; idx++) {
+      const r = rowsList[idx];
       const rBar = new fabric.Rect(createProps('rect', {
         left: startX, top: startY, width: 780, height: 32, fill: idx % 2 === 0 ? darkTabColor : altRowColor, skewX: -12, rx: 3, ry: 3, stroke: borderHighlight, strokeWidth: 1
       }));
@@ -1876,18 +1911,17 @@ export async function generateSwimming2Fabric(
       const flagBase64 = getFlagBase64(r.noc);
       if (flagBase64) {
         try {
-          fabric.Image.fromURL(flagBase64).then(imgObj => {
-            imgObj.set({
-              id: generateUniqueId({ type: 'image' }), left: startX + 90, top: startY + 7,
-              scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
-            });
-            objects.push(imgObj);
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 90, top: startY + 7,
+            scaleX: 45 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
           });
+          objects.push(imgObj);
         } catch (e) { }
       }
 
       startY += 36;
-    });
+    }
   }
 
   // ── SW006 / Lane ID Layout (5 Distinct Variants SW006a to SW006e) ──
@@ -2523,6 +2557,20 @@ export async function generateSwimming2Fabric(
       scaleX: 1.030,
       scaleY: 1.564
     });
+  } else if (normId.includes('SW114C')) {
+    group.set({
+      left: 328,
+      top: 733,
+      scaleX: 1.596,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW114')) {
+    group.set({
+      left: 332,
+      top: 787,
+      scaleX: 1.596,
+      scaleY: 1.600
+    });
   } else if (normId.includes('SW013') || normId === 'RECORD TAG') {
     group.set({
       left: 329,
@@ -2537,7 +2585,14 @@ export async function generateSwimming2Fabric(
       scaleX: 0.933,
       scaleY: 1.081
     });
-  } else if (normId.includes('SW014') || normId.includes('SW114') || normId === 'NAME SUPER') {
+  } else if (normId.includes('SW114')) {
+    group.set({
+      left: 332,
+      top: 787,
+      scaleX: 1.596,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW014') || normId === 'NAME SUPER') {
     group.set({
       left: 340,
       top: 69,
@@ -2551,7 +2606,14 @@ export async function generateSwimming2Fabric(
       scaleX: 1.574,
       scaleY: 1.665
     });
-  } else if (normId.includes('SW018') || normId.includes('SW118') || normId === 'POINT TABLE') {
+  } else if (normId.includes('SW118')) {
+    group.set({
+      left: 342,
+      top: 351,
+      scaleX: 1.555,
+      scaleY: 1.549
+    });
+  } else if (normId.includes('SW018') || normId === 'POINT TABLE') {
     group.set({
       left: 353,
       top: 844,
@@ -2565,7 +2627,14 @@ export async function generateSwimming2Fabric(
       scaleX: 1.564,
       scaleY: 1.717
     });
-  } else if (normId.includes('SW017') || normId.includes('SW117') || normId === 'TOP MEDAL TALLY') {
+  } else if (normId.includes('SW117') || normId.includes('MF STANDINGS')) {
+    group.set({
+      left: 330,
+      top: 683,
+      scaleX: 1.368,
+      scaleY: 1.434
+    });
+  } else if (normId.includes('SW017') || normId === 'TOP MEDAL TALLY') {
     group.set({
       left: 316,
       top: 673,
@@ -3167,7 +3236,7 @@ export function generateSwimming2HTML(
           }
           .mf-header-pill {
             width: 180px; height: 26px; margin-left: 40px;
-            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 100%);
+            background: #ffffff;
             transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
             display: flex; align-items: center; justify-content: center;
           }
@@ -3186,8 +3255,8 @@ export function generateSwimming2HTML(
             display: flex; align-items: center; justify-content: center;
             font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff;
           }
-          .mf-noc { font-size: 15px; font-weight: 900; font-style: italic; color: #ffffff; width: 36px; margin-left: 6px; }
-          .mf-flag { width: 45px; height: 16px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); }
+          .mf-noc { font-size: 15px; font-weight: 900; font-style: italic; color: #ffffff; width: 36px; margin-left: 2px; }
+          .mf-flag { width: 45px; height: 16px; object-fit: cover; border-radius: 2px; border: 1px solid rgba(255,255,255,0.6); margin-left: 2px; }
           .gm-num { font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; width: 25px; text-align: center; }
           .mf-name { font-size: 16px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
           .mf-val { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
@@ -3205,8 +3274,7 @@ export function generateSwimming2HTML(
               <div class="mf-row ${idx > 0 ? 'row-alt' : ''}">
                 <div class="mf-left">
                   <div class="mf-rank">${r.rank || ''}</div>
-                  <div class="mf-noc">${nocCode}</div>
-                  ${fUrl ? `<img class="mf-flag" src="${fUrl}" alt="${nocCode}" />` : ''}
+                  ${fUrl ? `<img class="mf-flag" src="${fUrl}" alt="${nocCode}" />` : `<div class="mf-noc">${nocCode}</div>`}
                   <div class="gm-num">${r.num || r.bib || ''}</div>
                   <div class="mf-name">${(r.name || '').toUpperCase()}</div>
                 </div>
@@ -3266,26 +3334,22 @@ export function generateSwimming2HTML(
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8));
           }
           .board-gun-header {
-            position: relative; width: 780px; height: 44px;
+            position: relative; width: 780px; height: 42px; margin-bottom: 4px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
             display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
           }
-          .board-gun-body {
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
-            clip-path: polygon(45px 0px, 860px 0px, 888px 44px, 882px 54px, 140px 54px, 115px 88px, 100px 95px, 10px 95px, 2px 84px, 22px 42px, 35px 6px);
-            border: 1.5px solid ${borderHighlight}; z-index: 1;
-          }
-          .board-picto-icon { position: relative; z-index: 2; font-size: 24px; margin-left: 30px; }
-          .board-header-title { position: relative; z-index: 2; font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; margin-left: 10px; flex: 1; }
-          .board-rings { position: relative; z-index: 2; fill: none; stroke: #ffffff; stroke-width: 3; }
+          .board-picto-icon { transform: skewX(12deg); font-size: 24px; margin-right: 10px; }
+          .board-header-title { transform: skewX(12deg); font-size: 22px; font-weight: 900; font-style: italic; color: #ffffff; flex: 1; }
+          .board-rings { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 3; }
 
           .board-sub-bar {
-            width: 710px; height: 26px; margin: 2px 0 4px 70px;
-            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 100%);
-            transform: skewX(-12deg); border-radius: 4px; border: 1px solid #ffffff;
+            width: 740px; height: 26px; margin-left: 40px; margin-bottom: 4px;
+            background: #ffffff;
+            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
             display: flex; align-items: center; padding: 0 16px;
           }
-          .board-sub-title { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+          .board-sub-title { transform: skewX(12deg); font-size: 15px; font-weight: 900; font-style: italic; color: #00192e; }
 
           .board-rows-stack { display: flex; flex-direction: column; gap: 4px; }
           .board-row {
@@ -3315,9 +3379,8 @@ export function generateSwimming2HTML(
       <body>
         <div class="board-container">
           <div class="board-gun-header">
-            <div class="board-gun-body"></div>
             <div class="board-picto-icon">🏊</div>
-            <div class="board-header-title">MEN'S MARATHON 10KM</div>
+            <div class="board-header-title">${customData.title ? customData.title.toUpperCase() : "MEN'S MARATHON 10KM"}</div>
             <svg class="board-rings" viewBox="0 0 100 45" width="52" height="24">
               <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
               <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
