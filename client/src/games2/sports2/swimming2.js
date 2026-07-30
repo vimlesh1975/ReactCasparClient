@@ -1160,6 +1160,123 @@ export async function generateSwimming2Fabric(
     objects.push(outerBlueBar, clockDeltaText, innerWhiteStrip, clockTimeText, olympicRings);
   }
 
+  // ── SW130 / Race Clock at Finish with Standings ──
+  else if (normId.includes('SW130')) {
+    const isB = normId.endsWith('B') || normId.includes('SW130B');
+    const isC = normId.endsWith('C') || normId.includes('SW130C');
+    const isD = normId.endsWith('D') || normId.includes('SW130D');
+    const isE = normId.endsWith('E') || normId.includes('SW130E');
+
+    const defaultStandingsA = [{ rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' }];
+    const defaultStandingsB = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' }
+    ];
+    const defaultStandingsC = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' }
+    ];
+    const defaultStandingsD = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' }
+    ];
+    const defaultStandingsE = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' },
+      { rank: '5', noc: 'USA', bib: '8', name: 'C. SUTTON', time: '+5.0' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+    const finishLabel = customData.finishLabel || customData.subTitle || 'FINISH';
+    const deltaVal = customData.delta || customData.diff || '+0:01';
+    const clockTime = customData.time || customData.clock || '1:59:27.7';
+
+    const startX = 250;
+    const startY = 820 - (standings.length * 38);
+
+    for (let idx = 0; idx < standings.length; idx++) {
+      const p = standings[idx];
+      const curY = startY + (idx * 38);
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: startX, top: curY, width: 440, height: 34,
+        fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      }));
+      const rankBadge = new fabric.Rect(createProps('rect', {
+        left: startX + 4, top: curY + 3, width: 30, height: 28,
+        fill: '#dc2626', skewX: -12, rx: 2, ry: 2
+      }));
+      const rankText = new fabric.Textbox(p.rank || String(idx + 1), createProps('textbox', {
+        left: startX + 4, top: curY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 30, textAlign: 'center'
+      }));
+      const nocText = new fabric.Textbox((p.noc || 'RUS').toUpperCase(), createProps('textbox', {
+        left: startX + 38, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 45, textAlign: 'center'
+      }));
+      const nameText = new fabric.Textbox(`${p.bib ? p.bib + ' ' : ''}${(p.name || '').toUpperCase()}`, createProps('textbox', {
+        left: startX + 88, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 230
+      }));
+      const timeText = new fabric.Textbox(p.time || p.gap || '', createProps('textbox', {
+        left: startX + 320, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 110, textAlign: 'right'
+      }));
+
+      objects.push(rowBg, rankBadge, rankText, nocText, nameText, timeText);
+
+      const flagBase64 = getFlagBase64(p.noc);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 88, top: curY + 8, scaleX: 30 / (imgObj.width || 32), scaleY: 18 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+    }
+
+    const finishY = startY + (standings.length * 38);
+    const finishBg = new fabric.Rect(createProps('rect', {
+      left: startX + 5, top: finishY + 2, width: 150, height: 30,
+      fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const finishText = new fabric.Textbox(finishLabel, createProps('textbox', {
+      left: startX + 10, top: finishY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 140, textAlign: 'center'
+    }));
+    objects.push(finishBg, finishText);
+
+    const rightX = 1150;
+    const rightY = 820;
+    const outerBlueBar = new fabric.Rect(createProps('rect', {
+      left: rightX, top: rightY, width: 310, height: 38,
+      fill: '#0f2b46', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+    const clockDeltaText = new fabric.Textbox(deltaVal, createProps('textbox', {
+      left: rightX + 5, top: rightY + 6, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 85, textAlign: 'center'
+    }));
+    const innerWhiteStrip = new fabric.Rect(createProps('rect', {
+      left: rightX + 92, top: rightY + 2, width: 140, height: 34,
+      fill: '#ffffff', skewX: -12, rx: 3, ry: 3, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const clockTimeText = new fabric.Textbox(clockTime, createProps('textbox', {
+      left: rightX + 97, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 130, textAlign: 'center'
+    }));
+    const olympicRings = createOlympicRingsGroup(rightX + 245, rightY + 10, 6, 1.5);
+    objects.push(outerBlueBar, clockDeltaText, innerWhiteStrip, clockTimeText, olympicRings);
+  }
+
   // ── SW022 / Race Clock at Split Point with Standings ──
   else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
@@ -2511,33 +2628,46 @@ export async function generateSwimming2Fabric(
 
     const defaultEvents = [
       "MEN'S 50M FREESTYLE - HEATS",
-      "WOMEN'S 200M FREESTYLE - HEATS",
-      "MEN'S 4x100M FREESTYLE RELAY - HEATS",
-      "WOMEN'S 50M BUTTERFLY - SEMI-FINALS",
-      "MEN'S 100M BREASTSTROKE - HEATS",
-      "WOMEN'S 200M BUTTERFLY - SEMI-FINALS",
-      "MEN'S 400M INDIVIDUAL MEDLEY - FINAL",
-      "WOMEN'S 200M BUTTERFLY - HEATS"
+      "WOMEN'S 100M BUTTERFLY - HEATS",
+      "MEN'S 400M FREESTYLE - HEATS"
     ];
+    const eventList = (customData.events && customData.events.length > 0) ? customData.events : defaultEvents;
 
-    const eventsList = customData.events || defaultEvents;
-    let currentY = startY + 86;
-
-    eventsList.slice(0, 8).forEach((eventName, idx) => {
-      const rowBar = new fabric.Rect(createProps('rect', {
-        left: startX + 15, top: currentY, width: bannerWidth - 30, height: 34,
-        fill: darkTabColor, skewX: -12, rx: 3, ry: 3,
-        stroke: 'rgba(0,136,204,0.6)', strokeWidth: 1
+    let evY = startY + 88;
+    for (let i = 0; i < eventList.length && i < 3; i++) {
+      const evRow = new fabric.Rect(createProps('rect', {
+        left: startX + 10, top: evY, width: bannerWidth - 20, height: 32,
+        fill: (i % 2 === 0) ? '#00192e' : '#002e4d', skewX: -12, rx: 4, ry: 4,
+        stroke: borderHighlight, strokeWidth: 1
       }));
-
-      const rowText = new fabric.Textbox(eventName.toUpperCase(), createProps('textbox', {
-        left: startX + 35, top: currentY + 7, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+      const evText = new fabric.Textbox(eventList[i].toUpperCase(), createProps('textbox', {
+        left: startX + 30, top: evY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
         fill: '#ffffff', width: bannerWidth - 60
       }));
 
-      objects.push(rowBar, rowText);
-      currentY += 38;
-    });
+      objects.push(evRow, evText);
+      evY += 36;
+    }
+  }
+
+  // ── SW131 / Location ──
+  else if (normId.includes('SW131') || normId.includes('LOCATION')) {
+    const locVal = (customData.location || customData.title || customData.name || 'THE SERPENTINE').toUpperCase();
+    const startX = 350;
+    const startY = 840;
+
+    const locBg = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 400, height: 42,
+      fill: '#00192e', skewX: -12, rx: 5, ry: 5,
+      stroke: '#0088cc', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+    const locText = new fabric.Textbox(locVal, createProps('textbox', {
+      left: startX + 10, top: startY + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 380, textAlign: 'center'
+    }));
+
+    objects.push(locBg, locText);
   }
 
   if (objects.length === 0) return null;
@@ -2911,6 +3041,19 @@ export async function generateSwimming2Fabric(
         scaleY: 1.355
       });
     }
+  } else if (normId.includes('SW130')) {
+    const isB = normId.endsWith('B') || normId.includes('SW130B');
+    const isC = normId.endsWith('C') || normId.includes('SW130C');
+    const isD = normId.endsWith('D') || normId.includes('SW130D');
+    if (isD) {
+      group.set({ left: 334, top: 773, scaleX: 1.038, scaleY: 1.355 });
+    } else if (isC) {
+      group.set({ left: 334, top: 823, scaleX: 1.038, scaleY: 1.355 });
+    } else if (isB) {
+      group.set({ left: 328, top: 862, scaleX: 1.038, scaleY: 1.355 });
+    } else {
+      group.set({ left: 328, top: 917, scaleX: 1.038, scaleY: 1.355 });
+    }
   } else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     group.set({
       left: 252,
@@ -2918,11 +3061,18 @@ export async function generateSwimming2Fabric(
       scaleX: 1.515,
       scaleY: 1.515
     });
-  } else if (normId.includes('SW023') || normId.includes('SW024') || normId.includes('SW130') || normId.includes('FINISH')) {
+  } else if (normId.includes('SW023') || normId.includes('SW024') || normId.includes('FINISH')) {
     group.set({
       left: 325,
       top: 912,
       scaleX: 1.428,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW131') || normId.includes('LOCATION')) {
+    group.set({
+      left: 326,
+      top: 962,
+      scaleX: 1.648,
       scaleY: 1.500
     });
   }
@@ -5559,6 +5709,144 @@ export function generateSwimming2HTML(
     `;
   }
 
+  // ── SW130 / Race Clock at Finish with Standings ──
+  else if (normId.includes('SW130')) {
+    const isB = normId.endsWith('B') || normId.includes('SW130B');
+    const isC = normId.endsWith('C') || normId.includes('SW130C');
+    const isD = normId.endsWith('D') || normId.includes('SW130D');
+    const isE = normId.endsWith('E') || normId.includes('SW130E');
+
+    const defaultStandingsA = [{ rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' }];
+    const defaultStandingsB = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' }
+    ];
+    const defaultStandingsC = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' }
+    ];
+    const defaultStandingsD = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' }
+    ];
+    const defaultStandingsE = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '1:59:27.7' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+1.5' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' },
+      { rank: '5', noc: 'USA', bib: '8', name: 'C. SUTTON', time: '+5.0' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+    const finishLabel = customData.finishLabel || customData.subTitle || 'FINISH';
+    const deltaVal = customData.delta || customData.diff || '+0:01';
+    const clockTime = customData.time || customData.clock || '1:59:27.7';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .sw130-left-container {
+            position: absolute; left: 250px; bottom: 80px;
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .sw130-row {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 5px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 4px 14px; min-width: 440px; height: 36px;
+          }
+          .sw130-row-left { transform: skewX(12deg); display: flex; align-items: center; gap: 8px; }
+          .sw130-rank {
+            background: #dc2626; color: #ffffff; font-size: 16px; font-weight: 900; font-style: italic;
+            padding: 2px 8px; border-radius: 3px; transform: skewX(-12deg); min-width: 26px; text-align: center;
+          }
+          .sw130-rank-text { transform: skewX(12deg); }
+          .sw130-noc { font-size: 17px; font-weight: 900; font-style: italic; }
+          .sw130-flag { width: 32px; height: 20px; object-fit: cover; border-radius: 2px; }
+          .sw130-name { font-size: 18px; font-weight: 900; font-style: italic; }
+          .sw130-time { transform: skewX(12deg); font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; }
+
+          .sw130-finish-pill {
+            background: #ffffff; color: #00192e; font-size: 16px; font-weight: 900; font-style: italic;
+            padding: 4px 22px; transform: skewX(-12deg); border-radius: 4px;
+            border: 1.5px solid #0088cc; width: fit-content; margin-top: 2px;
+          }
+          .sw130-finish-text { transform: skewX(12deg); display: inline-block; }
+
+          .clock-box {
+            position: absolute; right: 250px; bottom: 80px;
+            display: flex; align-items: center; gap: 4px;
+            background: linear-gradient(180deg, #0f2b46 0%, #00192e 100%);
+            transform: skewX(-12deg); border-radius: 6px;
+            border: 1.5px solid #0088cc; padding: 3px 10px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .clock-delta-body {
+            color: #ffffff; font-size: 24px; font-weight: 900; font-style: italic;
+            padding: 4px 12px; min-width: 85px; text-align: center;
+          }
+          .clock-delta-text { transform: skewX(12deg); display: inline-block; }
+          .clock-time-body {
+            background: #ffffff; color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 4px 20px; border-radius: 4px;
+            border: 1px solid #0088cc; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); display: inline-block; }
+          .clock-rings-body {
+            padding: 4px 10px; display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="sw130-left-container">
+          ${standings.map((s, i) => {
+            const fUrl = getFlagBase64(s.noc);
+            return `
+              <div class="sw130-row">
+                <div class="sw130-row-left">
+                  <div class="sw130-rank"><span class="sw130-rank-text">${s.rank || String(i + 1)}</span></div>
+                  <div class="sw130-noc">${(s.noc || '').toUpperCase()}</div>
+                  ${fUrl ? `<img class="sw130-flag" src="${fUrl}" alt="${s.noc}" />` : ''}
+                  <div class="sw130-name">${s.bib ? s.bib + ' ' : ''}${(s.name || '').toUpperCase()}</div>
+                </div>
+                <div class="sw130-time">${s.time || s.gap || ''}</div>
+              </div>
+            `;
+          }).join('')}
+          <div class="sw130-finish-pill"><span class="sw130-finish-text">${finishLabel}</span></div>
+        </div>
+
+        <div class="clock-box">
+          <div class="clock-delta-body"><span class="clock-delta-text">${deltaVal}</span></div>
+          <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
+          <div class="clock-rings-body">
+            <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
   // ── SW022 / Race Clock at Split Point with Standings ──
   else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
@@ -6360,7 +6648,7 @@ export function generateSwimming2HTML(
 
   // ── SW131 / Location ──
   else if (normId.includes('SW131') || normId.includes('LOCATION')) {
-    const locVal = (customData.location || 'HYDE PARK').toUpperCase();
+    const locVal = (customData.location || customData.title || customData.name || 'THE SERPENTINE').toUpperCase();
     return `
       <!DOCTYPE html><html><head><meta charset="utf-8">
       <style>
