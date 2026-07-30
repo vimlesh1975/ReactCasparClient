@@ -616,7 +616,6 @@ export async function generateSwimming2Fabric(
     // Header
     const hGrad = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
     const numRows = Math.min(resultsList.length, 8);
-    const totalH = 42 + 28 + numRows * 34 + (numRows - 1) * 4;
     const startY = customData.posY ? Number(customData.posY) : (numRows > 4 ? 380 : 480);
 
     const headerBar = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
@@ -711,7 +710,6 @@ export async function generateSwimming2Fabric(
     const startX = 280;
     const bannerWidth = 780;
     const numRows13 = Math.min(advList.length, 8);
-    const totalH13 = 42 + 28 + numRows13 * 34 + (numRows13 - 1) * 4;
     const startY = customData.posY ? Number(customData.posY) : (numRows13 > 4 ? 380 : 480);
 
     const hGrad13 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
