@@ -922,8 +922,8 @@ export async function generateSwimming2Fabric(
     objects.push(headerBar19, nameText19, olympicRings19, subBar19, titleText19);
   }
 
-  // ── SW020 / Race Clock ──
-  else if (normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) {
+  // ── SW020 / SW125 / Race Clock ──
+  else if ((normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) && !normId.includes('SW126') && !normId.includes('DELTA')) {
     const timeVal = customData.time || '15.4';
     const startX = 1450;
     const startY = 860;
@@ -946,6 +946,39 @@ export async function generateSwimming2Fabric(
     }));
     const olympicRings = createOlympicRingsGroup(startX + 172, startY + 10, 6, 1.5);
     objects.push(clockBody, timeText, ringsTab, olympicRings);
+  }
+
+  // ── SW126 / Race Clock with Delta Clock ──
+  else if (normId.includes('SW126') || normId.includes('DELTA CLOCK')) {
+    const timeVal = customData.time || customData.clock || '1:21:14';
+    const deltaVal = customData.delta || customData.diff || '+0:07';
+    const startX = 1350;
+    const startY = 860;
+
+    const outerBlueBar = new fabric.Rect(createProps('rect', {
+      left: startX, top: startY, width: 310, height: 38,
+      fill: '#0f2b46', skewX: -12, rx: 5, ry: 5,
+      stroke: '#0088cc', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+
+    const deltaText = new fabric.Textbox(deltaVal, createProps('textbox', {
+      left: startX + 5, top: startY + 6, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 85, textAlign: 'center'
+    }));
+
+    const innerWhiteStrip = new fabric.Rect(createProps('rect', {
+      left: startX + 92, top: startY + 2, width: 140, height: 34,
+      fill: '#ffffff', skewX: -12, rx: 3, ry: 3,
+      stroke: '#0088cc', strokeWidth: 1
+    }));
+    const timeText = new fabric.Textbox(timeVal, createProps('textbox', {
+      left: startX + 97, top: startY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 130, textAlign: 'center'
+    }));
+
+    const olympicRings = createOlympicRingsGroup(startX + 245, startY + 10, 6, 1.5);
+    objects.push(outerBlueBar, deltaText, innerWhiteStrip, timeText, olympicRings);
   }
 
   // ── SW021 / Race Clock before Split Point ──
@@ -982,14 +1015,17 @@ export async function generateSwimming2Fabric(
     const rightX = 950;
     const rightY = 650;
 
-    const distTab = new fabric.Rect(createProps('rect', {
-      left: rightX + 60, top: rightY - 26, width: 100, height: 24,
-      fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
-    }));
-    const distText = new fabric.Textbox(distanceVal, createProps('textbox', {
-      left: rightX + 60, top: rightY - 22, fontSize: 15, fontWeight: '900', fontStyle: 'italic',
-      fill: '#00192e', width: 100, textAlign: 'center'
-    }));
+    if (!normId.includes('SW128')) {
+      const distTab = new fabric.Rect(createProps('rect', {
+        left: rightX + 60, top: rightY - 26, width: 100, height: 24,
+        fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
+      }));
+      const distText = new fabric.Textbox(distanceVal, createProps('textbox', {
+        left: rightX + 60, top: rightY - 22, fontSize: 15, fontWeight: '900', fontStyle: 'italic',
+        fill: '#00192e', width: 100, textAlign: 'center'
+      }));
+      objects.push(distTab, distText);
+    }
 
     const clockBody = new fabric.Rect(createProps('rect', {
       left: rightX, top: rightY, width: 170, height: 38,
@@ -1004,11 +1040,128 @@ export async function generateSwimming2Fabric(
       fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
     }));
     const olympicRings = createOlympicRingsGroup(rightX + 172, rightY + 10, 6, 1.5);
-    objects.push(distTab, distText, clockBody, timeText, ringsTab, olympicRings);
+    objects.push(clockBody, timeText, ringsTab, olympicRings);
+  }
+
+  // ── SW129 / Race Clock at Split Point with Standings ──
+  else if (normId.includes('SW129')) {
+    const isB = normId.endsWith('B') || normId.includes('SW129B');
+    const isC = normId.endsWith('C') || normId.includes('SW129C');
+    const isD = normId.endsWith('D') || normId.includes('SW129D');
+    const isE = normId.endsWith('E') || normId.includes('SW129E');
+
+    const defaultStandingsA = [{ rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' }];
+    const defaultStandingsB = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' }
+    ];
+    const defaultStandingsC = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' }
+    ];
+    const defaultStandingsD = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' }
+    ];
+    const defaultStandingsE = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' },
+      { rank: '5', noc: 'USA', bib: '8', name: 'C. SUTTON', time: '+5.0' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+    const lapLabel = customData.lap || customData.subTitle || 'LAP 3 OF 6';
+    const deltaVal = customData.delta || customData.diff || '+0:01';
+    const clockTime = customData.time || customData.clock || '59:29';
+
+    const startX = 250;
+    const startY = 820 - (standings.length * 38);
+
+    for (let idx = 0; idx < standings.length; idx++) {
+      const p = standings[idx];
+      const curY = startY + (idx * 38);
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: startX, top: curY, width: 440, height: 34,
+        fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+      }));
+      const rankBadge = new fabric.Rect(createProps('rect', {
+        left: startX + 4, top: curY + 3, width: 30, height: 28,
+        fill: '#dc2626', skewX: -12, rx: 2, ry: 2
+      }));
+      const rankText = new fabric.Textbox(p.rank || String(idx + 1), createProps('textbox', {
+        left: startX + 4, top: curY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 30, textAlign: 'center'
+      }));
+      const nocText = new fabric.Textbox((p.noc || 'RUS').toUpperCase(), createProps('textbox', {
+        left: startX + 38, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 45, textAlign: 'center'
+      }));
+      const nameText = new fabric.Textbox(`${p.bib ? p.bib + ' ' : ''}${(p.name || '').toUpperCase()}`, createProps('textbox', {
+        left: startX + 88, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 230
+      }));
+      const timeText = new fabric.Textbox(p.time || p.gap || '', createProps('textbox', {
+        left: startX + 320, top: curY + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 110, textAlign: 'right'
+      }));
+
+      objects.push(rowBg, rankBadge, rankText, nocText, nameText, timeText);
+
+      const flagBase64 = getFlagBase64(p.noc);
+      if (flagBase64) {
+        try {
+          const imgObj = await fabric.Image.fromURL(flagBase64);
+          imgObj.set({
+            id: generateUniqueId({ type: 'image' }), left: startX + 88, top: curY + 8, scaleX: 30 / (imgObj.width || 32), scaleY: 18 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
+          });
+          objects.push(imgObj);
+        } catch (e) {}
+      }
+    }
+
+    const lapY = startY + (standings.length * 38);
+    const lapBg = new fabric.Rect(createProps('rect', {
+      left: startX + 5, top: lapY + 2, width: 180, height: 30,
+      fill: '#ffffff', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const lapText = new fabric.Textbox(lapLabel, createProps('textbox', {
+      left: startX + 10, top: lapY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 170, textAlign: 'center'
+    }));
+    objects.push(lapBg, lapText);
+
+    const rightX = 1150;
+    const rightY = 820;
+    const outerBlueBar = new fabric.Rect(createProps('rect', {
+      left: rightX, top: rightY, width: 310, height: 38,
+      fill: '#0f2b46', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+    }));
+    const clockDeltaText = new fabric.Textbox(deltaVal, createProps('textbox', {
+      left: rightX + 5, top: rightY + 6, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 85, textAlign: 'center'
+    }));
+    const innerWhiteStrip = new fabric.Rect(createProps('rect', {
+      left: rightX + 92, top: rightY + 2, width: 140, height: 34,
+      fill: '#ffffff', skewX: -12, rx: 3, ry: 3, stroke: '#0088cc', strokeWidth: 1
+    }));
+    const clockTimeText = new fabric.Textbox(clockTime, createProps('textbox', {
+      left: rightX + 97, top: rightY + 6, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00192e', width: 130, textAlign: 'center'
+    }));
+    const olympicRings = createOlympicRingsGroup(rightX + 245, rightY + 10, 6, 1.5);
+    objects.push(outerBlueBar, clockDeltaText, innerWhiteStrip, clockTimeText, olympicRings);
   }
 
   // ── SW022 / Race Clock at Split Point with Standings ──
-  else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+  else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
     const isC = normId.endsWith('C') || normId.includes('SW022C') || normId.includes('SW129C');
     const isD = normId.endsWith('D') || normId.includes('SW022D') || normId.includes('SW129D');
@@ -2655,21 +2808,110 @@ export async function generateSwimming2Fabric(
       scaleX: 1.541,
       scaleY: 1.691
     });
-  } else if (normId.includes('SW020') || normId.includes('SW120') || normId === 'BUG') {
+  } else if (normId.includes('SW120')) {
+    group.set({
+      left: 333,
+      top: 845,
+      scaleX: 1.595,
+      scaleY: 1.800
+    });
+  } else if (normId.includes('SW121') || normId === 'MEDAL ID') {
+    group.set({
+      left: 340,
+      top: 834,
+      scaleX: 1.590,
+      scaleY: 1.929
+    });
+  } else if (normId.includes('SW122') || normId === 'MEDALS LIST') {
+    group.set({
+      left: 329,
+      top: 679,
+      scaleX: 1.595,
+      scaleY: 1.614
+    });
+  } else if (normId.includes('SW123') || normId === 'MEDAL PRESENTER') {
+    group.set({
+      left: 363,
+      top: 834,
+      scaleX: 1.560,
+      scaleY: 1.902
+    });
+  } else if (normId.includes('SW124') || normId === 'FLOWER PRESENTER') {
+    group.set({
+      left: 357,
+      top: 836,
+      scaleX: 1.566,
+      scaleY: 1.929
+    });
+  } else if (normId.includes('SW125')) {
+    group.set({
+      left: 1272,
+      top: 954,
+      scaleX: 1.288,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW126')) {
+    group.set({
+      left: 1127,
+      top: 967,
+      scaleX: 1.483,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW020') || normId === 'BUG') {
     group.set({
       left: 1283,
       top: 956,
       scaleX: 1.266,
       scaleY: 1.500
     });
-  } else if (normId.includes('SW021') || normId.includes('SW128') || normId.includes('BEFORE SPLIT')) {
+  } else if (normId.includes('SW128')) {
+    group.set({
+      left: 314,
+      top: 962,
+      scaleX: 1.392,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW021') || normId.includes('BEFORE SPLIT')) {
     group.set({
       left: 323,
       top: 924,
       scaleX: 1.475,
       scaleY: 1.500
     });
-  } else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+  } else if (normId.includes('SW129')) {
+    const isB = normId.endsWith('B') || normId.includes('SW129B');
+    const isC = normId.endsWith('C') || normId.includes('SW129C');
+    const isD = normId.endsWith('D') || normId.includes('SW129D');
+    if (isD) {
+      group.set({
+        left: 334,
+        top: 773,
+        scaleX: 1.038,
+        scaleY: 1.355
+      });
+    } else if (isC) {
+      group.set({
+        left: 334,
+        top: 823,
+        scaleX: 1.038,
+        scaleY: 1.355
+      });
+    } else if (isB) {
+      group.set({
+        left: 328,
+        top: 862,
+        scaleX: 1.038,
+        scaleY: 1.355
+      });
+    } else {
+      group.set({
+        left: 328,
+        top: 917,
+        scaleX: 1.038,
+        scaleY: 1.355
+      });
+    }
+  } else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     group.set({
       left: 252,
       top: 68,
@@ -4989,8 +5231,8 @@ export function generateSwimming2HTML(
     `;
   }
 
-  // ── SW020 / Race Clock ──
-  else if (normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) {
+  // ── SW020 / SW125 / Race Clock ──
+  else if ((normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) && !normId.includes('SW126') && !normId.includes('DELTA')) {
     const timeVal = customData.time || '15.4';
     return `
       <!DOCTYPE html>
@@ -5023,6 +5265,63 @@ export function generateSwimming2HTML(
       </head>
       <body>
         <div class="clock-box">
+          <div class="clock-time-body"><span class="clock-time-text">${timeVal}</span></div>
+          <div class="clock-rings-body">
+            <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── SW126 / Race Clock with Delta Clock ──
+  else if (normId.includes('SW126') || normId.includes('DELTA CLOCK')) {
+    const timeVal = customData.time || customData.clock || '1:21:14';
+    const deltaVal = customData.delta || customData.diff || '+0:07';
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          .clock-box {
+            position: absolute; right: 280px; bottom: 80px;
+            display: flex; align-items: center; gap: 4px;
+            background: linear-gradient(180deg, #0f2b46 0%, #00192e 100%);
+            transform: skewX(-12deg); border-radius: 6px;
+            border: 1.5px solid #0088cc; padding: 3px 10px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .clock-delta-body {
+            color: #ffffff; font-size: 24px; font-weight: 900; font-style: italic;
+            padding: 4px 12px; min-width: 85px; text-align: center;
+          }
+          .clock-delta-text { transform: skewX(12deg); display: inline-block; }
+          .clock-time-body {
+            background: #ffffff;
+            color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 4px 20px; border-radius: 4px;
+            border: 1px solid #0088cc; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); display: inline-block; }
+          .clock-rings-body {
+            padding: 4px 10px; display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="clock-box">
+          <div class="clock-delta-body"><span class="clock-delta-text">${deltaVal}</span></div>
           <div class="clock-time-body"><span class="clock-time-text">${timeVal}</span></div>
           <div class="clock-rings-body">
             <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
@@ -5104,7 +5403,7 @@ export function generateSwimming2HTML(
           </div>
         </div>
         <div class="right-clock-group">
-          <div class="dist-tab"><span class="dist-tab-text">${distanceVal}</span></div>
+          ${!normId.includes('SW128') ? `<div class="dist-tab"><span class="dist-tab-text">${distanceVal}</span></div>` : ''}
           <div class="clock-box">
             <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
             <div class="clock-rings-body">
@@ -5122,8 +5421,146 @@ export function generateSwimming2HTML(
     `;
   }
 
+  // ── SW129 / Race Clock at Split Point with Standings ──
+  else if (normId.includes('SW129')) {
+    const isB = normId.endsWith('B') || normId.includes('SW129B');
+    const isC = normId.endsWith('C') || normId.includes('SW129C');
+    const isD = normId.endsWith('D') || normId.includes('SW129D');
+    const isE = normId.endsWith('E') || normId.includes('SW129E');
+
+    const defaultStandingsA = [{ rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' }];
+    const defaultStandingsB = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' }
+    ];
+    const defaultStandingsC = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' }
+    ];
+    const defaultStandingsD = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' }
+    ];
+    const defaultStandingsE = [
+      { rank: '1', noc: 'RUS', bib: '12', name: 'L. ILCHENKO', time: '59:28.6' },
+      { rank: '2', noc: 'GBR', bib: '21', name: 'K.A. PAYNE', time: '+0.9' },
+      { rank: '3', noc: 'GBR', bib: '2', name: 'C. PATTEN', time: '+2.1' },
+      { rank: '4', noc: 'BRA', bib: '15', name: 'A. OKIMOTO', time: '+3.5' },
+      { rank: '5', noc: 'USA', bib: '8', name: 'C. SUTTON', time: '+5.0' }
+    ];
+
+    const standings = customData.standings || customData.athletes || (
+      isE ? defaultStandingsE : isD ? defaultStandingsD : isC ? defaultStandingsC : isB ? defaultStandingsB : defaultStandingsA
+    );
+    const lapLabel = customData.lap || customData.subTitle || 'LAP 3 OF 6';
+    const deltaVal = customData.delta || customData.diff || '+0:01';
+    const clockTime = customData.time || customData.clock || '59:29';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .sw129-left-container {
+            position: absolute; left: 250px; bottom: 80px;
+            display: flex; flex-direction: column; gap: 4px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .sw129-row {
+            background: #00192e; color: #ffffff; transform: skewX(-12deg);
+            border-radius: 5px; border: 1.5px solid #0088cc;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 4px 14px; min-width: 440px; height: 36px;
+          }
+          .sw129-row-left { transform: skewX(12deg); display: flex; align-items: center; gap: 8px; }
+          .sw129-rank {
+            background: #dc2626; color: #ffffff; font-size: 16px; font-weight: 900; font-style: italic;
+            padding: 2px 8px; border-radius: 3px; transform: skewX(-12deg); min-width: 26px; text-align: center;
+          }
+          .sw129-rank-text { transform: skewX(12deg); }
+          .sw129-noc { font-size: 17px; font-weight: 900; font-style: italic; }
+          .sw129-flag { width: 32px; height: 20px; object-fit: cover; border-radius: 2px; }
+          .sw129-name { font-size: 18px; font-weight: 900; font-style: italic; }
+          .sw129-time { transform: skewX(12deg); font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; }
+
+          .sw129-lap-pill {
+            background: #ffffff; color: #00192e; font-size: 16px; font-weight: 900; font-style: italic;
+            padding: 4px 18px; transform: skewX(-12deg); border-radius: 4px;
+            border: 1.5px solid #0088cc; width: fit-content; margin-top: 2px;
+          }
+          .sw129-lap-text { transform: skewX(12deg); display: inline-block; }
+
+          .clock-box {
+            position: absolute; right: 250px; bottom: 80px;
+            display: flex; align-items: center; gap: 4px;
+            background: linear-gradient(180deg, #0f2b46 0%, #00192e 100%);
+            transform: skewX(-12deg); border-radius: 6px;
+            border: 1.5px solid #0088cc; padding: 3px 10px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+          }
+          .clock-delta-body {
+            color: #ffffff; font-size: 24px; font-weight: 900; font-style: italic;
+            padding: 4px 12px; min-width: 85px; text-align: center;
+          }
+          .clock-delta-text { transform: skewX(12deg); display: inline-block; }
+          .clock-time-body {
+            background: #ffffff; color: #00192e; font-size: 26px; font-weight: 900; font-style: italic;
+            padding: 4px 20px; border-radius: 4px;
+            border: 1px solid #0088cc; min-width: 140px; text-align: center;
+          }
+          .clock-time-text { transform: skewX(12deg); display: inline-block; }
+          .clock-rings-body {
+            padding: 4px 10px; display: flex; align-items: center; justify-content: center;
+          }
+          .clock-rings-svg { transform: skewX(12deg); fill: none; stroke: #ffffff; stroke-width: 2.5; }
+        </style>
+      </head>
+      <body>
+        <div class="sw129-left-container">
+          ${standings.map((s, i) => {
+            const fUrl = getFlagBase64(s.noc);
+            return `
+              <div class="sw129-row">
+                <div class="sw129-row-left">
+                  <div class="sw129-rank"><span class="sw129-rank-text">${s.rank || String(i + 1)}</span></div>
+                  <div class="sw129-noc">${(s.noc || '').toUpperCase()}</div>
+                  ${fUrl ? `<img class="sw129-flag" src="${fUrl}" alt="${s.noc}" />` : ''}
+                  <div class="sw129-name">${s.bib ? s.bib + ' ' : ''}${(s.name || '').toUpperCase()}</div>
+                </div>
+                <div class="sw129-time">${s.time || s.gap || ''}</div>
+              </div>
+            `;
+          }).join('')}
+          <div class="sw129-lap-pill"><span class="sw129-lap-text">${lapLabel}</span></div>
+        </div>
+
+        <div class="clock-box">
+          <div class="clock-delta-body"><span class="clock-delta-text">${deltaVal}</span></div>
+          <div class="clock-time-body"><span class="clock-time-text">${clockTime}</span></div>
+          <div class="clock-rings-body">
+            <svg class="clock-rings-svg" viewBox="0 0 100 45" width="48" height="22">
+              <circle cx="15" cy="16" r="11"/><circle cx="38" cy="16" r="11"/>
+              <circle cx="61" cy="16" r="11"/><circle cx="84" cy="16" r="11"/>
+              <circle cx="26.5" cy="27" r="11"/><circle cx="49.5" cy="27" r="11"/>
+              <circle cx="72.5" cy="27" r="11"/>
+            </svg>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
   // ── SW022 / Race Clock at Split Point with Standings ──
-  else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+  else if (normId.includes('SW022') || normId.includes('SPLIT POINT WITH STANDINGS')) {
     const isB = normId.endsWith('B') || normId.includes('SW022B') || normId.includes('SW129B');
     const isC = normId.endsWith('C') || normId.includes('SW022C') || normId.includes('SW129C');
     const isD = normId.endsWith('D') || normId.includes('SW022D') || normId.includes('SW129D');
