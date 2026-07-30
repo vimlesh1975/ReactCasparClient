@@ -2626,13 +2626,18 @@ export async function generateSwimming2Fabric(
 
     const defaultEvents = [
       "MEN'S 50M FREESTYLE - HEATS",
-      "WOMEN'S 100M BUTTERFLY - HEATS",
-      "MEN'S 400M FREESTYLE - HEATS"
+      "WOMEN'S 200M FREESTYLE - HEATS",
+      "MEN'S 4x100M FREESTYLE RELAY - HEATS",
+      "WOMEN'S 50M BUTTERFLY - SEMI-FINALS",
+      "MEN'S 100M BREASTSTROKE - HEATS",
+      "WOMEN'S 200M BUTTERFLY - SEMI-FINALS",
+      "MEN'S 400M INDIVIDUAL MEDLEY - FINAL",
+      "WOMEN'S 200M BUTTERFLY - HEATS"
     ];
     const eventList = (customData.events && customData.events.length > 0) ? customData.events : defaultEvents;
 
     let evY = startY + 88;
-    for (let i = 0; i < eventList.length && i < 3; i++) {
+    for (let i = 0; i < eventList.length && i < 8; i++) {
       const evRow = new fabric.Rect(createProps('rect', {
         left: startX + 10, top: evY, width: bannerWidth - 20, height: 32,
         fill: (i % 2 === 0) ? '#00192e' : '#002e4d', skewX: -12, rx: 4, ry: 4,
@@ -2700,10 +2705,10 @@ export async function generateSwimming2Fabric(
   // Apply layout overrides copied from UI
   if (normId.includes('SW002') || normId === 'VENUE ID') {
     group.set({
-      left: 319,
-      top: 673,
-      scaleX: 1.600,
-      scaleY: 1.592
+      left: 328,
+      top: 840,
+      scaleX: 1.427,
+      scaleY: 1.258
     });
   } else if (normId.includes('SW102')) {
     group.set({
