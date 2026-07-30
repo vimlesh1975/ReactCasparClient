@@ -22,6 +22,34 @@ export function getFlagBase64(nocCode) {
 }
 
 /**
+ * Helper function to create a unified, named Olympic Rings Group in Fabric.js
+ */
+export function createOlympicRingsGroup(left = 0, top = 0, radius = 9, strokeWidth = 2.2, options = {}) {
+  const scale = radius / 9;
+  const dx1 = 16 * scale;
+  const dx2 = 32 * scale;
+  const dx3 = 8 * scale;
+  const dx4 = 24 * scale;
+  const dy = 8 * scale;
+
+  const c1 = new fabric.Circle({ left: 0, top: 0, radius, fill: '', stroke: '#ffffff', strokeWidth });
+  const c2 = new fabric.Circle({ left: dx1, top: 0, radius, fill: '', stroke: '#ffffff', strokeWidth });
+  const c3 = new fabric.Circle({ left: dx2, top: 0, radius, fill: '', stroke: '#ffffff', strokeWidth });
+  const c4 = new fabric.Circle({ left: dx3, top: dy, radius, fill: '', stroke: '#ffffff', strokeWidth });
+  const c5 = new fabric.Circle({ left: dx4, top: dy, radius, fill: '', stroke: '#ffffff', strokeWidth });
+
+  return new fabric.Group([c1, c2, c3, c4, c5], {
+    left,
+    top,
+    id: generateUniqueId({ type: 'olympicRings' }),
+    name: 'Olympic Logo',
+    selectable: true,
+    hasControls: true,
+    ...options
+  });
+}
+
+/**
  * Fabric.js Vector Generator for Swimming Templates (SW002 - SW007)
  */
 export async function generateSwimming2Fabric(
@@ -80,13 +108,8 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 610, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: 1045, top: 870, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: 1061, top: 870, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: 1077, top: 870, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: 1053, top: 878, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: 1069, top: 878, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-
-    objects.push(gunBody, swimmerIcon, titleText, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(1045, 870, 9, 2.2);
+    objects.push(gunBody, swimmerIcon, titleText, olympicRings);
   }
 
   // ── SW007 / Team List by Lane Layout (SW007a, SW007b, SW007c) ──
@@ -170,12 +193,8 @@ export async function generateSwimming2Fabric(
     objects.push(teamText);
 
     // Olympic Rings
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    objects.push(c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(startX + 665, startY + 12, 7.5, 1.8);
+    objects.push(olympicRings);
 
     // 2. 4 Swimmer Member Sub-Rows
     let currentY = startY + 44;
@@ -294,11 +313,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 450, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const olympicRings = createOlympicRingsGroup(startX + 665, startY + 12, 7.5, 1.8);
 
     // 2. Sub-Header Metallic Silver Bar (Event Title)
     const subBar = new fabric.Rect(createProps('rect', {
@@ -311,7 +326,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 500, charSpacing: 60
     }));
 
-    objects.push(headerBar, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, subTitleText);
+    objects.push(headerBar, swimmerIcon, sportTitleText, olympicRings, subBar, subTitleText);
 
     // 3. 2 Record Rows (WR and OR)
     let currentY = startY + 74;
@@ -487,11 +502,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 450, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
+    const olympicRings = createOlympicRingsGroup(startX + 665, startY + 12, 7.5, 1.8);
 
     // 2. Sub-Header Metallic Silver Bar
     const subBar = new fabric.Rect(createProps('rect', {
@@ -504,7 +515,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 500, charSpacing: 60
     }));
 
-    objects.push(headerBar, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, subTitleText);
+    objects.push(headerBar, swimmerIcon, sportTitleText, olympicRings, subBar, subTitleText);
 
     // 3. Winner / Place Rows
     let currentY = startY + 74;
@@ -610,16 +621,12 @@ export async function generateSwimming2Fabric(
     const headerBar = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const swimIcon = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
     const hTitle = new fabric.Textbox(headerTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600, charSpacing: 40 }));
-    const c1r = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2r = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3r = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4r = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5r = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRingsR = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
 
     const subBarR = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,34,62,0.3)', strokeWidth: 1 }));
     const subTitleR = new fabric.Textbox(subTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
 
-    objects.push(headerBar, swimIcon, hTitle, c1r, c2r, c3r, c4r, c5r, subBarR, subTitleR);
+    objects.push(headerBar, swimIcon, hTitle, olympicRingsR, subBarR, subTitleR);
 
     let cy = startY + 74;
     for (let idx = 0; idx < resultsList.length && idx < 8; idx++) {
@@ -710,16 +717,12 @@ export async function generateSwimming2Fabric(
     const headerBar13 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad13, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const swimIcon13 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
     const hTitle13 = new fabric.Textbox(headerTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
-    const c1a = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2a = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3a = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4a = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5a = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings13 = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
 
     const subBar13 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
     const subTitle13 = new fabric.Textbox(subTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
 
-    objects.push(headerBar13, swimIcon13, hTitle13, c1a, c2a, c3a, c4a, c5a, subBar13, subTitle13);
+    objects.push(headerBar13, swimIcon13, hTitle13, olympicRings13, subBar13, subTitle13);
 
     let cy13 = startY + 74;
     for (let idx = 0; idx < advList.length && idx < 8; idx++) {
@@ -780,14 +783,10 @@ export async function generateSwimming2Fabric(
     const headerBar15 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad15, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const swimIcon15 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
     const hTitle15 = new fabric.Textbox(eventTitle, createProps('textbox', { left: startX + 60, top: startY + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
-    const c1_15 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2_15 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3_15 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4_15 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5_15 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings15 = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
     const subBar15 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
     const subTitle15 = new fabric.Textbox(ceremonyLabel, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
-    objects.push(headerBar15, swimIcon15, hTitle15, c1_15, c2_15, c3_15, c4_15, c5_15, subBar15, subTitle15);
+    objects.push(headerBar15, swimIcon15, hTitle15, olympicRings15, subBar15, subTitle15);
   }
 
   // ── SW016 / Medal ID ──
@@ -818,12 +817,8 @@ export async function generateSwimming2Fabric(
     }
 
     const hTitle16 = new fabric.Textbox(athleteName16, createProps('textbox', { left: startX + 100, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 560 }));
-    const c1_16 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2_16 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3_16 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4_16 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5_16 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    objects.push(hTitle16, c1_16, c2_16, c3_16, c4_16, c5_16);
+    const olympicRings16 = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
+    objects.push(hTitle16, olympicRings16);
 
     // Sub bar with medal emoji + event
     const medalEmoji = medalColor === 'GOLD' ? '🥇' : medalColor === 'SILVER' ? '🥈' : '🥉';
@@ -860,14 +855,10 @@ export async function generateSwimming2Fabric(
     const headerBar17 = new fabric.Rect(createProps('rect', { left: startX, top: startY17, width: bannerWidth, height: 42, fill: hGrad17, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const swimIcon17 = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY17 + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
     const hTitle17 = new fabric.Textbox(eventTitle17, createProps('textbox', { left: startX + 60, top: startY17 + 9, fontSize: 21, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 600 }));
-    const c1_17 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2_17 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3_17 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY17 + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4_17 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY17 + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5_17 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY17 + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings17 = createOlympicRingsGroup(startX + 700, startY17 + 8, 9, 2.2);
     const subBar17 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY17 + 44, width: bannerWidth - 15, height: 26, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3 }));
     const subTitle17 = new fabric.Textbox(ceremonyLabel17, createProps('textbox', { left: startX + 30, top: startY17 + 48, fontSize: 15, fontWeight: '900', fontStyle: 'italic', fill: '#00223e', width: 500 }));
-    objects.push(headerBar17, swimIcon17, hTitle17, c1_17, c2_17, c3_17, c4_17, c5_17, subBar17, subTitle17);
+    objects.push(headerBar17, swimIcon17, hTitle17, olympicRings17, subBar17, subTitle17);
 
     let cy17 = startY17 + 74;
     const medalEmojis = { GOLD: '🥇', SILVER: '🥈', BRONZE: '🥉' };
@@ -906,14 +897,10 @@ export async function generateSwimming2Fabric(
     const hGrad18 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
     const headerBar18 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad18, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const nameText18 = new fabric.Textbox(presenterName, createProps('textbox', { left: startX + 20, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 660 }));
-    const c1_18 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2_18 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3_18 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4_18 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5_18 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings18 = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
     const subBar18 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: darkTabColor, skewX: -12, rx: 3, ry: 3 }));
     const titleText18 = new fabric.Textbox(presenterTitle, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
-    objects.push(headerBar18, nameText18, c1_18, c2_18, c3_18, c4_18, c5_18, subBar18, titleText18);
+    objects.push(headerBar18, nameText18, olympicRings18, subBar18, titleText18);
   }
 
   // ── SW019 / Flower Presenter ID ──
@@ -928,14 +915,10 @@ export async function generateSwimming2Fabric(
     const hGrad19 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
     const headerBar19 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: barWidth, height: 42, fill: hGrad19, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const nameText19 = new fabric.Textbox(presenterName19, createProps('textbox', { left: startX + 20, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 660 }));
-    const c1_19 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2_19 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3_19 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4_19 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5_19 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings19 = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
     const subBar19 = new fabric.Rect(createProps('rect', { left: startX + 15, top: startY + 44, width: barWidth - 15, height: 26, fill: darkTabColor, skewX: -12, rx: 3, ry: 3 }));
     const titleText19 = new fabric.Textbox(presenterTitle19, createProps('textbox', { left: startX + 30, top: startY + 48, fontSize: 14, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 680 }));
-    objects.push(headerBar19, nameText19, c1_19, c2_19, c3_19, c4_19, c5_19, subBar19, titleText19);
+    objects.push(headerBar19, nameText19, olympicRings19, subBar19, titleText19);
   }
 
   // ── SW020 / Race Clock ──
@@ -960,13 +943,8 @@ export async function generateSwimming2Fabric(
       fill: '#00192e', skewX: -12, rx: 5, ry: 5,
       stroke: '#0088cc', strokeWidth: 1.5
     }));
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 172, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 183, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 194, top: startY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 177.5, top: startY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 188.5, top: startY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-
-    objects.push(clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(startX + 172, startY + 10, 6, 1.5);
+    objects.push(clockBody, timeText, ringsTab, olympicRings);
   }
 
   // ── SW021 / Race Clock before Split Point ──
@@ -1024,13 +1002,8 @@ export async function generateSwimming2Fabric(
       left: rightX + 160, top: rightY, width: 80, height: 38,
       fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
     }));
-    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-
-    objects.push(distTab, distText, clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(rightX + 172, rightY + 10, 6, 1.5);
+    objects.push(distTab, distText, clockBody, timeText, ringsTab, olympicRings);
   }
 
   // ── SW022 / Race Clock at Split Point with Standings ──
@@ -1155,13 +1128,8 @@ export async function generateSwimming2Fabric(
     const ringsTab = new fabric.Rect(createProps('rect', {
       left: rightX + 160, top: rightY, width: 80, height: 38, fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
     }));
-    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-
-    objects.push(distTab, distText, clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(rightX + 172, rightY + 10, 6, 1.5);
+    objects.push(distTab, distText, clockBody, timeText, ringsTab, olympicRings);
   }
 
   // ── SW023 / Race Clock before Finish & SW024 / Race Clock at Finish ──
@@ -1212,13 +1180,8 @@ export async function generateSwimming2Fabric(
     const ringsTab = new fabric.Rect(createProps('rect', {
       left: rightX + 160, top: rightY, width: 80, height: 38, fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
     }));
-    const c1 = new fabric.Circle(createProps('circle', { left: rightX + 172, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: rightX + 183, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: rightX + 194, top: rightY + 10, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: rightX + 177.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: rightX + 188.5, top: rightY + 16, radius: 6, fill: '', stroke: '#ffffff', strokeWidth: 1.5 }));
-
-    objects.push(clockBody, timeText, ringsTab, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(rightX + 172, rightY + 10, 6, 1.5);
+    objects.push(clockBody, timeText, ringsTab, olympicRings);
   }
 
   // ── SW103 / Weather ──
@@ -1259,11 +1222,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 610, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: 1045, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: 1061, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: 1077, top: 595, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: 1053, top: 603, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: 1069, top: 603, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings = createOlympicRingsGroup(1045, 595, 9, 2.2);
 
     const subBarGradient = new fabric.Gradient({
       type: 'linear',
@@ -1290,7 +1249,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 720, charSpacing: 40
     }));
 
-    objects.push(gunHeaderBody, weatherIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, weatherSubTitle);
+    objects.push(gunHeaderBody, weatherIcon, sportTitleText, olympicRings, subBar, weatherSubTitle);
 
     const rows = [
       { icon: '🌡️', label: 'AIR TEMPERATURE', val: airTemp },
@@ -1354,13 +1313,8 @@ export async function generateSwimming2Fabric(
       left: startX + 150, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 510
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 700, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 716, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 732, top: startY + 8, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 708, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 724, top: startY + 18, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-
-    objects.push(numText, nameText, c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(startX + 700, startY + 8, 9, 2.2);
+    objects.push(numText, nameText, olympicRings);
   }
 
   // ── SW107 / Position on Screen Layout ──
@@ -1995,12 +1949,8 @@ export async function generateSwimming2Fabric(
     }
 
     // Far Right Olympic Rings
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 665, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 678, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 691, top: startY + 12, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 671.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 684.5, top: startY + 18.5, radius: 7.5, fill: '', stroke: '#ffffff', strokeWidth: 1.8 }));
-    objects.push(c1, c2, c3, c4, c5);
+    const olympicRings = createOlympicRingsGroup(startX + 665, startY + 12, 7.5, 1.8);
+    objects.push(olympicRings);
 
     // 3. Sub-Bar Result/Time Badge below (SW006d 2:06.96 Q or SW006e 7:04.66 OR Q) — ONLY for Variant D & E
     if (timeResult) {
@@ -2088,11 +2038,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 550, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 760, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 774, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 788, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 767, top: startY + 19, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 781, top: startY + 19, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
+    const olympicRings = createOlympicRingsGroup(startX + 760, startY + 12, 8, 2);
 
     // 2. Sub-Header Bar (START LIST - HEAT 5 or START LIST - FINAL)
     const subBar = new fabric.Rect(createProps('rect', {
@@ -2105,7 +2051,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 500, charSpacing: 60
     }));
 
-    objects.push(headerBar, swimmerIcon, eventTitleText, c1, c2, c3, c4, c5, subBar, phaseTitleText);
+    objects.push(headerBar, swimmerIcon, eventTitleText, olympicRings, subBar, phaseTitleText);
 
     // 3. Default Athlete lists for SW005a (Individual) vs SW005b (Relay with DNS)
     const defaultAthletesA = [
@@ -2248,11 +2194,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 610, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: 1045, top: 835, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: 1061, top: 835, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: 1077, top: 835, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: 1053, top: 843, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: 1069, top: 843, radius: 9, fill: '', stroke: '#ffffff', strokeWidth: 2.2 }));
+    const olympicRings = createOlympicRingsGroup(1045, 835, 9, 2.2);
 
     const subBarGradient = new fabric.Gradient({
       type: 'linear',
@@ -2279,7 +2221,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 720, charSpacing: 40
     }));
 
-    objects.push(gunHeaderBody, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, eventTitleText);
+    objects.push(gunHeaderBody, swimmerIcon, sportTitleText, olympicRings, subBar, eventTitleText);
   }
 
   // ── SW003 / Event Schedule Layout ──
@@ -2314,11 +2256,7 @@ export async function generateSwimming2Fabric(
       fill: '#ffffff', width: 480, charSpacing: 90
     }));
 
-    const c1 = new fabric.Circle(createProps('circle', { left: startX + 760, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c2 = new fabric.Circle(createProps('circle', { left: startX + 774, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c3 = new fabric.Circle(createProps('circle', { left: startX + 788, top: startY + 12, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c4 = new fabric.Circle(createProps('circle', { left: startX + 767, top: startY + 19, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
-    const c5 = new fabric.Circle(createProps('circle', { left: startX + 781, top: startY + 19, radius: 8, fill: '', stroke: '#ffffff', strokeWidth: 2 }));
+    const olympicRings = createOlympicRingsGroup(startX + 760, startY + 12, 8, 2);
 
     const subBar = new fabric.Rect(createProps('rect', {
       left: startX + 10, top: startY + 52, width: bannerWidth - 20, height: 30,
@@ -2330,7 +2268,7 @@ export async function generateSwimming2Fabric(
       fill: '#00223e', width: 500, charSpacing: 60
     }));
 
-    objects.push(headerBar, swimmerIcon, sportTitleText, c1, c2, c3, c4, c5, subBar, subTitleText);
+    objects.push(headerBar, swimmerIcon, sportTitleText, olympicRings, subBar, subTitleText);
 
     const defaultEvents = [
       "MEN'S 50M FREESTYLE - HEATS",
