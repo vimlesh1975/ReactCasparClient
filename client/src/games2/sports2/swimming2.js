@@ -2641,7 +2641,14 @@ export async function generateSwimming2Fabric(
       scaleX: 1.605,
       scaleY: 1.634
     });
-  } else if (normId.includes('SW019') || normId.includes('SW119') || normId === 'RECORDS TAG') {
+  } else if (normId.includes('SW119')) {
+    group.set({
+      left: 358,
+      top: 341,
+      scaleX: 1.541,
+      scaleY: 1.568
+    });
+  } else if (normId.includes('SW019') || normId === 'RECORDS TAG') {
     group.set({
       left: 364,
       top: 844,
