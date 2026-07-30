@@ -180,6 +180,105 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
     }
   };
 
+  const handleAddReferenceToCanvas = async () => {
+    const activeCanvas = canvas || window.editor?.canvas || window.canvas;
+    if (!activeCanvas) {
+      alert('Canvas is not initialized yet. Please open the Drawing tab first!');
+      return;
+    }
+    if (!referenceImagePath) return;
+
+    try {
+      const url = getFullImageUrl(referenceImagePath);
+      const imgObj = await fabric.Image.fromURL(url);
+      
+      const imgW = imgObj.width;
+      const imgH = imgObj.height;
+
+      // 1. Draw full image to an offscreen canvas to analyze pixels
+      const offscreen = document.createElement('canvas');
+      offscreen.width = imgW;
+      offscreen.height = imgH;
+      const ctx = offscreen.getContext('2d');
+      // fabric.Image.getElement() returns the underlying HTMLImageElement
+      ctx.drawImage(imgObj.getElement(), 0, 0, imgW, imgH);
+      
+      const imgData = ctx.getImageData(0, 0, imgW, imgH);
+      const data = imgData.data;
+
+      let minX = imgW, maxX = 0, minY = imgH, maxY = 0;
+      
+      // 2. Scan pixels below the top 15% (to skip the title bar)
+      const startY = Math.floor(imgH * 0.15);
+      
+      for (let y = startY; y < imgH; y++) {
+        for (let x = 0; x < imgW; x++) {
+          const i = (y * imgW + x) * 4;
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+          
+          // Check if pixel is not white/light-gray (threshold < 245) and is fully opaque
+          if (a > 100 && (r < 245 || g < 245 || b < 245)) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+
+      let cropX = minX;
+      let cropY = minY;
+      let cropW = maxX - minX;
+      let cropH = maxY - minY;
+
+      // Fallback if scanning failed (e.g. perfectly white image)
+      if (cropW <= 0 || cropH <= 0) {
+        cropX = imgW * 0.05;
+        cropW = imgW * 0.9;
+        cropH = cropW * (9 / 16);
+        cropY = imgH - cropH - (imgW * 0.05);
+      } else {
+        // Optional: shrink by 1-2 pixels to remove the blue border itself if desired,
+        // but keeping it helps visualize the screen edge.
+      }
+
+      // 3. Create a new canvas with just the cropped region
+      const cropCanvas = document.createElement('canvas');
+      cropCanvas.width = cropW;
+      cropCanvas.height = cropH;
+      const cropCtx = cropCanvas.getContext('2d');
+      cropCtx.drawImage(offscreen, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+      // 4. Create a new Fabric image from the cropped canvas (bulletproof cropping)
+      const croppedImg = await fabric.Image.fromURL(cropCanvas.toDataURL('image/png'));
+      
+      croppedImg.set({
+        left: 0,
+        top: 0,
+        opacity: 0.5,
+        selectable: true,
+        hasControls: true,
+        name: 'Reference Guide (Screen Area)'
+      });
+
+      // Scale to fit the 1920x1080 canvas exactly
+      croppedImg.set({
+        scaleX: 1920 / cropW,
+        scaleY: 1080 / cropH
+      });
+      
+      activeCanvas.add(croppedImg);
+      activeCanvas.sendObjectToBack(croppedImg);
+      activeCanvas.setActiveObject(croppedImg);
+      activeCanvas.requestRenderAll();
+    } catch (err) {
+      console.error('Error adding reference image:', err);
+    }
+  };
+
   const getFullImageUrl = (path) => {
     if (!path) return '';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
@@ -199,7 +298,7 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
           {/* Top 50%: Select Sport */}
           <div className="sidebar-panel">
             <div className="section-header-row">
-              <div className="section-label">1. Select Sport ({filteredSports.length})</div>
+              <div className="section-label">🏅 Select Sport ({filteredSports.length})</div>
               <input
                 type="text"
                 className="search-input-inline"
@@ -225,7 +324,7 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
           {/* Bottom 50%: Select Template */}
           <div className="templates-panel">
             <div className="section-header-row">
-              <div className="section-label">2. Select Template ({filteredTemplates.length})</div>
+              <div className="section-label">📜 Templates ({filteredTemplates.length})</div>
               <input
                 type="text"
                 className="search-input-inline"
@@ -261,7 +360,18 @@ const Games2Panel = ({ generateTheatreID, deleteTheatreID }) => {
         {/* Right Column: Reference Guide Image Panel */}
         <div className="reference-guide-panel">
           <div className="reference-header-row">
-            <div className="section-label">🖼️ Reference Guide Image</div>
+            <div className="section-label" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              🖼️ Reference Guide Image
+              {referenceImagePath && (
+                <button
+                  onClick={handleAddReferenceToCanvas}
+                  title="Add Reference Image to Canvas"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px' }}
+                >
+                  📌
+                </button>
+              )}
+            </div>
             {variations.length > 1 && (
               <div className="variations-pills">
                 <span className="variation-label">Variation:</span>

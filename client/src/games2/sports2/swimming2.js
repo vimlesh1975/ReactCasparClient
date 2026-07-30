@@ -93,7 +93,7 @@ export async function generateSwimming2Fabric(
     });
 
     const gunBody = new fabric.Path(gunPathData, createProps('path', {
-      left: 240, top: 855,
+      left: 240, top: 755,
       fill: gunGradient,
       stroke: borderHighlight,
       strokeWidth: 2,
@@ -101,15 +101,15 @@ export async function generateSwimming2Fabric(
     }));
 
     const swimmerIcon = new fabric.Textbox('🏊', createProps('textbox', {
-      left: 275, top: 886, fontSize: 42, fill: '#ffffff', width: 65, textAlign: 'center'
+      left: 275, top: 786, fontSize: 42, fill: '#ffffff', width: 65, textAlign: 'center'
     }));
 
     const titleText = new fabric.Textbox(venueTitle, createProps('textbox', {
-      left: 395, top: 864, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      left: 395, top: 764, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
       fill: '#ffffff', width: 610, charSpacing: 90
     }));
 
-    const olympicRings = createOlympicRingsGroup(1045, 870, 9, 2.2);
+    const olympicRings = createOlympicRingsGroup(1045, 770, 9, 2.2);
     objects.push(gunBody, swimmerIcon, titleText, olympicRings);
   }
 
@@ -133,7 +133,7 @@ export async function generateSwimming2Fabric(
     const hasQBadge = isB || isC;
 
     const startX = 280;
-    const startY = 740;
+    const startY = 640;
     const barWidth = 780;
     const headerHeight = 42;
 
@@ -184,7 +184,7 @@ export async function generateSwimming2Fabric(
           hasControls: true
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const teamText = new fabric.Textbox(teamName, createProps('textbox', {
@@ -282,7 +282,7 @@ export async function generateSwimming2Fabric(
     const recordsList = customData.records || (isB ? defaultRecordsB : defaultRecordsA);
 
     const startX = 280;
-    const startY = 740;
+    const startY = 640;
     const barWidth = 780;
     const headerHeight = 42;
 
@@ -361,7 +361,7 @@ export async function generateSwimming2Fabric(
             hasControls: true
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const nameText = new fabric.Textbox((rec.name || '').toUpperCase(), createProps('textbox', {
@@ -433,14 +433,14 @@ export async function generateSwimming2Fabric(
 
     // Bottom Badge (LANE 8 / LANE 9)
     const bottomBg = new fabric.Rect(createProps('rect', {
-      left: 280, top: 900, width: badgeWidth, height: badgeHeight,
+      left: 280, top: 660, width: badgeWidth, height: badgeHeight,
       fill: badgeGradient, skewX: -12, rx: 5, ry: 5,
       stroke: '#00223e', strokeWidth: 1.5,
       shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
     }));
 
     const bottomText = new fabric.Textbox(bottomLaneTextVal.toUpperCase(), createProps('textbox', {
-      left: 280, top: 905, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      left: 280, top: 665, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
       fill: '#00223e', width: badgeWidth, textAlign: 'center'
     }));
 
@@ -471,7 +471,7 @@ export async function generateSwimming2Fabric(
     const winnersList = customData.winners || customData.athletes || (isB ? defaultWinnersB : isC ? defaultWinnersC : defaultWinnersA);
 
     const startX = 280;
-    const startY = winnersList.length > 1 ? 780 : 820;
+    const startY = winnersList.length > 1 ? 680 : 720;
     const barWidth = 780;
     const headerHeight = 42;
 
@@ -549,7 +549,7 @@ export async function generateSwimming2Fabric(
             hasControls: true
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const nameText = new fabric.Textbox((w.name || '').toUpperCase(), createProps('textbox', {
@@ -607,7 +607,7 @@ export async function generateSwimming2Fabric(
       { pos: '5', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:05.77', record: '' },
       { pos: '6', noc: 'AUT', name: 'AUSTRIA', time: '7:05.92', record: '' },
       { pos: '7', noc: 'HUN', name: 'HUNGARY', time: '7:10.31', record: '' },
-      { pos: '',  noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
+      { pos: '', noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
     ];
     const resultsList = customData.athletes || customData.results || (isB ? defaultResultsB : defaultResultsA);
 
@@ -617,7 +617,7 @@ export async function generateSwimming2Fabric(
     const hGrad = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
     const numRows = Math.min(resultsList.length, 8);
     const totalH = 42 + 28 + numRows * 34 + (numRows - 1) * 4;
-    const startY = Math.max(100, 1080 - 100 - totalH);
+    const startY = customData.posY ? Number(customData.posY) : (numRows > 4 ? 380 : 480);
 
     const headerBar = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
     const swimIcon = new fabric.Textbox('🏊', createProps('textbox', { left: startX + 15, top: startY + 5, fontSize: 32, fill: '#ffffff', width: 50 }));
@@ -651,7 +651,7 @@ export async function generateSwimming2Fabric(
           const imgObj = await fabric.Image.fromURL(flagBase64);
           imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 52, top: cy + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const nameText = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', { left: startX + 135, top: cy + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
@@ -712,7 +712,7 @@ export async function generateSwimming2Fabric(
     const bannerWidth = 780;
     const numRows13 = Math.min(advList.length, 8);
     const totalH13 = 42 + 28 + numRows13 * 34 + (numRows13 - 1) * 4;
-    const startY = Math.max(100, 1080 - 100 - totalH13);
+    const startY = customData.posY ? Number(customData.posY) : (numRows13 > 4 ? 380 : 480);
 
     const hGrad13 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
     const headerBar13 = new fabric.Rect(createProps('rect', { left: startX, top: startY, width: bannerWidth, height: 42, fill: hGrad13, skewX: -12, rx: 5, ry: 5, stroke: borderHighlight, strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 12, offsetX: 0, offsetY: 6 }) }));
@@ -743,7 +743,7 @@ export async function generateSwimming2Fabric(
           const imgObj = await fabric.Image.fromURL(flag13);
           imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 52, top: cy13 + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
       const nameText13 = new fabric.Textbox((r.name || '').toUpperCase(), createProps('textbox', { left: startX + 135, top: cy13 + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 400 }));
       objects.push(nameText13);
@@ -777,7 +777,7 @@ export async function generateSwimming2Fabric(
     const ceremonyLabel = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
 
     const startX = 280;
-    const startY = 940;
+    const startY = 840;
     const barWidth = 780;
 
     const hGrad15 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
@@ -799,7 +799,7 @@ export async function generateSwimming2Fabric(
     const eventLabel16 = (customData.event || (isB ? "MEN'S 4X200M FREESTYLE RELAY" : "WOMEN'S 200M BUTTERFLY")).toUpperCase();
 
     const startX = 280;
-    const startY = 940;
+    const startY = 840;
     const barWidth = 780;
 
     const hGrad16 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
@@ -814,7 +814,7 @@ export async function generateSwimming2Fabric(
         const imgObj = await fabric.Image.fromURL(flag16);
         imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 18, top: startY + 9, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), selectable: true, hasControls: true });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const hTitle16 = new fabric.Textbox(athleteName16, createProps('textbox', { left: startX + 100, top: startY + 9, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 560 }));
@@ -836,12 +836,12 @@ export async function generateSwimming2Fabric(
     const ceremonyLabel17 = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
 
     const defaultMedalsA = [
-      { medal: 'GOLD',   noc: 'CHN', name: 'LIU ZIGE' },
+      { medal: 'GOLD', noc: 'CHN', name: 'LIU ZIGE' },
       { medal: 'SILVER', noc: 'CHN', name: 'JIAO LIUYANG' },
       { medal: 'BRONZE', noc: 'AUS', name: 'JESSICAH SCHIPPER' },
     ];
     const defaultMedalsB = [
-      { medal: 'GOLD',   noc: 'USA', name: 'UNITED STATES' },
+      { medal: 'GOLD', noc: 'USA', name: 'UNITED STATES' },
       { medal: 'SILVER', noc: 'GBR', name: 'GREAT BRITAIN' },
       { medal: 'BRONZE', noc: 'POL', name: 'POLAND' },
     ];
@@ -877,7 +877,7 @@ export async function generateSwimming2Fabric(
           const imgObj = await fabric.Image.fromURL(flag17);
           imgObj.set({ id: generateUniqueId({ type: 'image' }), left: startX + 58, top: cy17 + 5, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const mName17 = new fabric.Textbox((m.name || '').toUpperCase(), createProps('textbox', { left: startX + 145, top: cy17 + 6, fontSize: 17, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 590 }));
@@ -892,7 +892,7 @@ export async function generateSwimming2Fabric(
     const presenterTitle = (customData.title || customData.designation || 'IOC PRESIDENT, BELGIUM').toUpperCase();
 
     const startX = 280;
-    const startY = 940;
+    const startY = 840;
     const barWidth = 780;
 
     const hGrad18 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
@@ -910,7 +910,7 @@ export async function generateSwimming2Fabric(
     const presenterTitle19 = (customData.title || customData.designation || 'VICE PRESIDENT, FINA').toUpperCase();
 
     const startX = 280;
-    const startY = 940;
+    const startY = 840;
     const barWidth = 780;
 
     const hGrad19 = new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: barWidth, y2: 0 }, colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }] });
@@ -926,7 +926,7 @@ export async function generateSwimming2Fabric(
   else if (normId.includes('SW020') || normId.includes('SW125') || normId.includes('RACE CLOCK')) {
     const timeVal = customData.time || '15.4';
     const startX = 1450;
-    const startY = 960;
+    const startY = 860;
 
     const clockBody = new fabric.Rect(createProps('rect', {
       left: startX, top: startY, width: 170, height: 38,
@@ -1061,7 +1061,7 @@ export async function generateSwimming2Fabric(
             id: generateUniqueId({ type: 'image' }), left: topX + 42, top: topY + 7, scaleX: 65 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const nameText = new fabric.Textbox((p.name || '').toUpperCase(), createProps('textbox', {
@@ -1288,7 +1288,7 @@ export async function generateSwimming2Fabric(
     const nameVal = (customData.name || customData.team || 'MAARTEN VAN DER WEIJDEN').toUpperCase();
 
     const startX = 280;
-    const startY = 940;
+    const startY = 840;
     const barW = 780;
 
     const mainBar = new fabric.Rect(createProps('rect', {
@@ -1304,7 +1304,7 @@ export async function generateSwimming2Fabric(
           id: generateUniqueId({ type: 'image' }), left: startX + 18, top: startY + 9, scaleX: 70 / (imgObj.width || 32), scaleY: 22 / (imgObj.height || 20), skewX: -12, selectable: true, hasControls: true
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const numText = new fabric.Textbox(athNum, createProps('textbox', {
@@ -1362,7 +1362,7 @@ export async function generateSwimming2Fabric(
             skewX: -12, selectable: true, hasControls: true
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
@@ -1400,7 +1400,7 @@ export async function generateSwimming2Fabric(
           scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
@@ -1438,7 +1438,7 @@ export async function generateSwimming2Fabric(
           scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
@@ -1517,7 +1517,7 @@ export async function generateSwimming2Fabric(
             scaleX: 34 / (imgObj.width || 32), scaleY: 16 / (imgObj.height || 20), skewX: -12
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const bibText = new fabric.Textbox(bibNum, createProps('textbox', {
@@ -1675,7 +1675,7 @@ export async function generateSwimming2Fabric(
           scaleX: 60 / (imgObj.width || 32), scaleY: 20 / (imgObj.height || 20), skewX: -12
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const bibText = new fabric.Textbox(athNum, createProps('textbox', {
@@ -1756,7 +1756,7 @@ export async function generateSwimming2Fabric(
             });
             objects.push(imgObj);
           });
-        } catch (e) {}
+        } catch (e) { }
       }
 
       startY += 34;
@@ -1858,7 +1858,7 @@ export async function generateSwimming2Fabric(
             });
             objects.push(imgObj);
           });
-        } catch (e) {}
+        } catch (e) { }
       }
 
       startY += 36;
@@ -1884,7 +1884,7 @@ export async function generateSwimming2Fabric(
     const hasQBadge = isD || isE;
 
     const startX = 280;
-    const startY = 900;
+    const startY = 800;
     const barWidth = 780;
     const barHeight = 42;
 
@@ -1951,7 +1951,7 @@ export async function generateSwimming2Fabric(
           hasControls: true
         });
         objects.push(imgObj);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // Athlete or Team Name
@@ -2144,7 +2144,7 @@ export async function generateSwimming2Fabric(
             hasControls: true
           });
           objects.push(imgObj);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Athlete / Team Name Text
@@ -2352,7 +2352,9 @@ export async function generateSwimming2Fabric(
     id: groupId,
     class: groupId,
     subTargetCheck: true,
-    objectCaching: false
+    objectCaching: false,
+    scaleX: 1.5,
+    scaleY: 1.5
   });
 
   return group;
@@ -2392,7 +2394,7 @@ export function generateSwimming2HTML(
 
           .gun-banner-container {
             position: absolute;
-            bottom: 120px;
+            bottom: 220px;
             left: 240px;
             width: 890px;
             height: 95px;
@@ -2665,11 +2667,11 @@ export function generateSwimming2HTML(
           <div class="group-members-header">
             <div class="group-header-text">${titleVal}</div>
           </div>
-          ${members.slice(0,5).map(m => {
-            const nocCode = (m.noc || '').toUpperCase();
-            const fUrl = getFlagBase64(nocCode);
-            const flagTag = fUrl ? '<img class="gm-flag" src="' + fUrl + '" />' : '<div style="width:49px;"></div>';
-            return `
+          ${members.slice(0, 5).map(m => {
+      const nocCode = (m.noc || '').toUpperCase();
+      const fUrl = getFlagBase64(nocCode);
+      const flagTag = fUrl ? '<img class="gm-flag" src="' + fUrl + '" />' : '<div style="width:49px;"></div>';
+      return `
               <div class="group-member-row">
                 <div class="group-member-content">
                   ${flagTag}
@@ -2678,7 +2680,7 @@ export function generateSwimming2HTML(
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -2945,9 +2947,9 @@ export function generateSwimming2HTML(
             <div class="mf-header-text">${subTitle}</div>
           </div>
           ${rowsList.map((r, idx) => {
-            const nocCode = (r.noc || '').toUpperCase();
-            const fUrl = getFlagBase64(nocCode);
-            return `
+      const nocCode = (r.noc || '').toUpperCase();
+      const fUrl = getFlagBase64(nocCode);
+      return `
               <div class="mf-row ${idx > 0 ? 'row-alt' : ''}">
                 <div class="mf-left">
                   <div class="mf-rank">${r.rank || ''}</div>
@@ -2959,7 +2961,7 @@ export function generateSwimming2HTML(
                 <div class="mf-val">${r.time || r.val || ''}</div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -3076,11 +3078,11 @@ export function generateSwimming2HTML(
           </div>
           <div class="board-rows-stack">
             ${rowsList.map((r, idx) => {
-              const nocCode = (r.noc || '').toUpperCase();
-              const fUrl = getFlagBase64(nocCode);
-              const isDNF = r.time === 'DNF';
-              const isPhoto = r.time === 'PHOTO';
-              return `
+      const nocCode = (r.noc || '').toUpperCase();
+      const fUrl = getFlagBase64(nocCode);
+      const isDNF = r.time === 'DNF';
+      const isPhoto = r.time === 'PHOTO';
+      return `
                 <div class="board-row ${idx % 2 === 1 ? 'row-alt' : ''}">
                   <div class="board-left">
                     <div class="board-rank ${!r.rank ? 'no-rank' : ''}">${r.rank || ''}</div>
@@ -3092,7 +3094,7 @@ export function generateSwimming2HTML(
                   <div class="board-val ${isDNF ? 'dnf-val' : isPhoto ? 'photo-val' : ''}">${r.time || r.val || ''}</div>
                 </div>
               `;
-            }).join('')}
+    }).join('')}
           </div>
         </div>
       </body>
@@ -3518,10 +3520,10 @@ export function generateSwimming2HTML(
             <div class="records-sub-title"><span class="unskew">${eventTitleTextVal}</span></div>
           </div>
           ${recordsList.slice(0, 2).map((rec, idx) => {
-            const nocCode = (rec.noc || rec.flag || rec.country || '').toUpperCase();
-            const flagUrl = getFlagBase64(nocCode);
-            const isWR = rec.record === 'WR';
-            return `
+      const nocCode = (rec.noc || rec.flag || rec.country || '').toUpperCase();
+      const flagUrl = getFlagBase64(nocCode);
+      const isWR = rec.record === 'WR';
+      return `
               <div class="records-row ${idx % 2 === 1 ? 'row-alt' : ''}">
                 <div class="records-row-left">
                   ${flagUrl ? `<img src="${flagUrl}" class="records-flag-img" />` : ''}
@@ -3534,7 +3536,7 @@ export function generateSwimming2HTML(
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -3807,10 +3809,10 @@ export function generateSwimming2HTML(
             <div class="winner-sub-title"><span class="unskew">${subTitleVal}</span></div>
           </div>
           ${winnersList.map((w, idx) => {
-            const nocCode = (w.noc || w.flag || w.country || '').toUpperCase();
-            const flagUrl = getFlagBase64(nocCode);
-            const isWR = w.record === 'WR';
-            return `
+      const nocCode = (w.noc || w.flag || w.country || '').toUpperCase();
+      const flagUrl = getFlagBase64(nocCode);
+      const isWR = w.record === 'WR';
+      return `
               <div class="winner-row ${idx % 2 === 1 ? 'row-alt' : ''}">
                 <div class="winner-row-left">
                   ${flagUrl ? `<img src="${flagUrl}" class="winner-flag-img" />` : ''}
@@ -3822,7 +3824,7 @@ export function generateSwimming2HTML(
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -3852,7 +3854,7 @@ export function generateSwimming2HTML(
       { pos: '5', noc: 'RSA', name: 'SOUTH AFRICA', time: '7:05.77', record: '' },
       { pos: '6', noc: 'AUT', name: 'AUSTRIA', time: '7:05.92', record: '' },
       { pos: '7', noc: 'HUN', name: 'HUNGARY', time: '7:10.31', record: '' },
-      { pos: '',  noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
+      { pos: '', noc: 'GRE', name: 'GREECE', time: '', record: 'DSQ' },
     ];
     const resultsList = customData.athletes || customData.results || (isB ? defaultResultsB : defaultResultsA);
     return `<!DOCTYPE html><html><head><meta charset="utf-8">
@@ -3887,14 +3889,14 @@ export function generateSwimming2HTML(
           </div>
           <div class="result-sub-bar"><div class="result-sub-title">${subTitle}</div></div>
           ${resultsList.slice(0, 8).map((r, idx) => {
-            const nocCode = (r.noc || '').toUpperCase();
-            const flagUrl = getFlagBase64(nocCode);
-            return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+      const nocCode = (r.noc || '').toUpperCase();
+      const flagUrl = getFlagBase64(nocCode);
+      return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
               <div class="result-pos"><span>${r.pos || ''}</span></div>
               <div class="result-left">${flagUrl ? `<img src="${flagUrl}" class="result-flag-img" />` : ''}<div class="result-name"><span class="unskew">${(r.name || '').toUpperCase()}</span></div></div>
               <div class="result-right">${r.record === 'WR' ? `<div class="result-badge-wr"><span class="unskew">WR</span></div>` : ''}${r.record === 'OR' ? `<div class="result-badge-or"><span class="unskew">OR</span></div>` : ''}${r.record === 'DSQ' ? `<div class="result-badge-dsq"><span class="unskew">DSQ</span></div>` : ''}${r.time ? `<div class="result-time"><span class="unskew">${r.time}</span></div>` : ''}</div>
             </div>`;
-          }).join('')}
+    }).join('')}
         </div>
       </body></html>`;
   }
@@ -3946,14 +3948,14 @@ export function generateSwimming2HTML(
           </div>
           <div class="result-sub-bar"><div class="result-sub-title">${subTitle13}</div></div>
           ${advList13.slice(0, 8).map((r, idx) => {
-            const nocCode = (r.noc || '').toUpperCase();
-            const flagUrl = getFlagBase64(nocCode);
-            return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
+      const nocCode = (r.noc || '').toUpperCase();
+      const flagUrl = getFlagBase64(nocCode);
+      return `<div class="result-row ${idx % 2 === 1 ? 'row-alt' : ''}">
               <div class="result-pos"><span>${r.pos || ''}</span></div>
               <div class="result-left">${flagUrl ? `<img src="${flagUrl}" class="result-flag-img" />` : ''}<div class="result-name"><span class="unskew">${(r.name || '').toUpperCase()}</span></div></div>
               <div class="result-right">${r.record === 'OR' || r.record === 'WR' ? `<div class="result-badge-or"><span class="unskew">${r.record}</span></div>` : ''}${r.time ? `<div class="result-time"><span class="unskew">${r.time}</span></div>` : ''}</div>
             </div>`;
-          }).join('')}
+    }).join('')}
         </div>
       </body></html>`;
   }
@@ -4060,15 +4062,15 @@ export function generateSwimming2HTML(
           </div>
           <div class="ml-sub-bar"><div class="ml-sub-title">${ceremonyLabel17}</div></div>
           ${medalsList17.slice(0, 3).map((m) => {
-            const noc17 = (m.noc || '').toUpperCase();
-            const flagUrl17 = getFlagBase64(noc17);
-            const emoji17 = medalEmojis17[(m.medal || 'GOLD').toUpperCase()] || '🥇';
-            return `<div class="ml-row">
+      const noc17 = (m.noc || '').toUpperCase();
+      const flagUrl17 = getFlagBase64(noc17);
+      const emoji17 = medalEmojis17[(m.medal || 'GOLD').toUpperCase()] || '🥇';
+      return `<div class="ml-row">
               <div class="ml-medal"><span style="transform:skewX(12deg)">${emoji17}</span></div>
               ${flagUrl17 ? `<img src="${flagUrl17}" class="ml-flag-img" />` : ''}
               <div class="ml-name"><span class="unskew">${(m.name || '').toUpperCase()}</span></div>
             </div>`;
-          }).join('')}
+    }).join('')}
         </div>
       </body></html>`;
   }
@@ -4371,7 +4373,7 @@ export function generateSwimming2HTML(
 
           .startlist-container {
             position: absolute;
-            bottom: 120px;
+            top: 180px;
             left: 280px;
             width: 860px;
             display: flex;
@@ -4525,9 +4527,9 @@ export function generateSwimming2HTML(
             <div class="startlist-sub-title">${phaseTitleTextVal}</div>
           </div>
           ${athletesList.slice(0, 8).map((ath, idx) => {
-            if (!ath.lane && !ath.name && !ath.noc) return '';
-            const flagUrl = getFlagBase64(ath.noc);
-            return `
+      if (!ath.lane && !ath.name && !ath.noc) return '';
+      const flagUrl = getFlagBase64(ath.noc);
+      return `
               <div class="startlist-single-strip ${idx % 2 === 1 ? 'strip-alt' : ''}">
                 <div class="strip-lane-num"><span class="unskew">${ath.lane}</span></div>
                 <div class="strip-flag-container">
@@ -4537,7 +4539,7 @@ export function generateSwimming2HTML(
                 ${ath.status ? `<div class="strip-status-badge"><span class="unskew">${ath.status.toUpperCase()}</span></div>` : ''}
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -4558,7 +4560,7 @@ export function generateSwimming2HTML(
 
           .event-id-container {
             position: absolute;
-            bottom: 120px;
+            bottom: 220px;
             left: 240px;
             width: 890px;
             filter: drop-shadow(0 12px 25px rgba(0,0,0,0.8));
@@ -4914,8 +4916,8 @@ export function generateSwimming2HTML(
       <body>
         <div class="top-standings-container">
           ${sliceStandings.map(s => {
-            const fUrl = getFlagBase64(s.noc);
-            return `
+      const fUrl = getFlagBase64(s.noc);
+      return `
               <div class="top-standings-row">
                 <div class="top-row-left">
                   <div class="top-lane">${s.lane || ''}</div>
@@ -4925,7 +4927,7 @@ export function generateSwimming2HTML(
                 ${s.gap ? `<div class="top-gap">${s.gap}</div>` : ''}
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
         <div class="left-split-group">
           <div class="left-split-badge">
@@ -5274,11 +5276,11 @@ export function generateSwimming2HTML(
       <body>
         <div class="pos-screen-container">
           ${sliceAthletes.map((a, idx) => {
-            const nocCode = (a.noc || (idx === 0 ? 'UKR' : 'USA')).toUpperCase();
-            const fUrl = getFlagBase64(nocCode);
-            const bibNum = a.num || a.bib || a.lane || (idx === 0 ? '4' : '18');
-            const nameVal = (a.name || (idx === 0 ? 'I. CHERVYNSKIY' : 'M. WARKENTIN')).toUpperCase();
-            return `
+      const nocCode = (a.noc || (idx === 0 ? 'UKR' : 'USA')).toUpperCase();
+      const fUrl = getFlagBase64(nocCode);
+      const bibNum = a.num || a.bib || a.lane || (idx === 0 ? '4' : '18');
+      const nameVal = (a.name || (idx === 0 ? 'I. CHERVYNSKIY' : 'M. WARKENTIN')).toUpperCase();
+      return `
               <div class="pos-screen-bug">
                 <div class="pos-content">
                   ${fUrl ? `<img class="pos-flag-img" src="${fUrl}" alt="${nocCode}" />` : ''}
@@ -5287,7 +5289,7 @@ export function generateSwimming2HTML(
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </body>
       </html>
@@ -5321,7 +5323,7 @@ export function generateSwimming2HTML(
 
           .schedule-container {
             position: absolute;
-            bottom: 120px;
+            top: 180px;
             left: 280px;
             width: 860px;
             display: flex;
@@ -5520,16 +5522,16 @@ export function generateSwimming2HTML(
           <div class="ml-header"><div class="ml-title">VICTORY CEREMONY</div></div>
           <div class="ml-sub"><div class="ml-sub-text">MEDALLISTS - ${eventVal}</div></div>
           ${medals.map(m => {
-            const f = getFlagBase64(m.noc);
-            const mClass = (m.medal || '').toLowerCase().includes('gold') ? 'gold' : (m.medal || '').toLowerCase().includes('silver') ? 'silver' : 'bronze';
-            const flagTag = f ? '<img class="ml-flag" src="' + f + '" />' : '';
-            return '<div class="ml-row"><div class="ml-row-content">' +
-              '<div class="ml-row-medal ' + mClass + '"></div>' +
-              '<div>' + m.noc + '</div>' +
-              flagTag +
-              '<div>' + m.name + '</div>' +
-            '</div></div>';
-          }).join('')}
+      const f = getFlagBase64(m.noc);
+      const mClass = (m.medal || '').toLowerCase().includes('gold') ? 'gold' : (m.medal || '').toLowerCase().includes('silver') ? 'silver' : 'bronze';
+      const flagTag = f ? '<img class="ml-flag" src="' + f + '" />' : '';
+      return '<div class="ml-row"><div class="ml-row-content">' +
+        '<div class="ml-row-medal ' + mClass + '"></div>' +
+        '<div>' + m.noc + '</div>' +
+        flagTag +
+        '<div>' + m.name + '</div>' +
+        '</div></div>';
+    }).join('')}
         </div>
       </body></html>
     `;
@@ -5547,7 +5549,7 @@ export function generateSwimming2HTML(
         @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
-        .p-container { position: absolute; left: 280px; top: 940px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .p-container { position: absolute; left: 280px; top: 840px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
         .p-bar { width: 700px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; padding: 0 20px; }
         .p-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; }
         .p-sub { width: 660px; height: 26px; background: #fff; transform: skewX(-12deg); margin-top: 3px; border-radius: 4px; display: flex; align-items: center; padding: 0 20px; }
@@ -5606,7 +5608,7 @@ export function generateSwimming2HTML(
         @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@1,800;1,900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { width: 1920px; height: 1080px; overflow: hidden; font-family: ${font}; }
-        .l-container { position: absolute; left: 280px; top: 940px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
+        .l-container { position: absolute; left: 280px; top: 840px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.8)); }
         .l-bar { width: 400px; height: 42px; background: linear-gradient(90deg, ${gradientStart}, ${gradientEnd}); color: #fff; transform: skewX(-12deg); border-radius: 5px; border: 1.5px solid ${borderHighlight}; display: flex; align-items: center; justify-content: center; }
         .l-title { transform: skewX(12deg); font-size: 20px; font-weight: 900; font-style: italic; }
       </style></head><body>
