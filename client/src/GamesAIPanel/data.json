@@ -800,21 +800,6 @@
             "page": 156
           }
         ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 150
-          }
-        ]
       }
     ]
   },
@@ -1788,195 +1773,6 @@
             "label": "a",
             "image": "/images/GA031b_2nd_Vault_ID_a.jpg",
             "page": 877
-          }
-        ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_b.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_c.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_d.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_e.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_f.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_g.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_h.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_i.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_j.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_k.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_l.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_m.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_n.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_o.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_p.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_q.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_r.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_s.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_t.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_u.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_v.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_w.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_x.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_y.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_z.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_aa.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_ab.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_ac.jpg",
-          "/images/OMEGA_LOGO_OMEGA_LOGO_ad.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 57
-          },
-          {
-            "label": "b",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_b.jpg",
-            "page": 83
-          },
-          {
-            "label": "c",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_c.jpg",
-            "page": 109
-          },
-          {
-            "label": "d",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_d.jpg",
-            "page": 135
-          },
-          {
-            "label": "e",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_e.jpg",
-            "page": 183
-          },
-          {
-            "label": "f",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_f.jpg",
-            "page": 359
-          },
-          {
-            "label": "g",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_g.jpg",
-            "page": 390
-          },
-          {
-            "label": "h",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_h.jpg",
-            "page": 403
-          },
-          {
-            "label": "i",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_i.jpg",
-            "page": 415
-          },
-          {
-            "label": "j",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_j.jpg",
-            "page": 456
-          },
-          {
-            "label": "k",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_k.jpg",
-            "page": 468
-          },
-          {
-            "label": "l",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_l.jpg",
-            "page": 526
-          },
-          {
-            "label": "m",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_m.jpg",
-            "page": 718
-          },
-          {
-            "label": "n",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_n.jpg",
-            "page": 786
-          },
-          {
-            "label": "o",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_o.jpg",
-            "page": 848
-          },
-          {
-            "label": "p",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_p.jpg",
-            "page": 904
-          },
-          {
-            "label": "q",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_q.jpg",
-            "page": 920
-          },
-          {
-            "label": "r",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_r.jpg",
-            "page": 945
-          },
-          {
-            "label": "s",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_s.jpg",
-            "page": 977
-          },
-          {
-            "label": "t",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_t.jpg",
-            "page": 1004
-          },
-          {
-            "label": "u",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_u.jpg",
-            "page": 1069
-          },
-          {
-            "label": "v",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_v.jpg",
-            "page": 1105
-          },
-          {
-            "label": "w",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_w.jpg",
-            "page": 1168
-          },
-          {
-            "label": "x",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_x.jpg",
-            "page": 1211
-          },
-          {
-            "label": "y",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_y.jpg",
-            "page": 1252
-          },
-          {
-            "label": "z",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_z.jpg",
-            "page": 1283
-          },
-          {
-            "label": "aa",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_aa.jpg",
-            "page": 1309
-          },
-          {
-            "label": "ab",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_ab.jpg",
-            "page": 1345
-          },
-          {
-            "label": "ac",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_ac.jpg",
-            "page": 1371
-          },
-          {
-            "label": "ad",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_ad.jpg",
-            "page": 1388
           }
         ]
       }
@@ -3653,8 +3449,8 @@
       },
       {
         "id": "AT081",
-        "title": "AT081 Standings \u2013 Qualifying Rounds",
-        "name": "Standings \u2013 Qualifying Rounds",
+        "title": "AT081 Standings – Qualifying Rounds",
+        "name": "Standings – Qualifying Rounds",
         "images": [
           "/images/AT081_Standings_Qualifying_Rounds_a.jpg",
           "/images/AT081_Standings_Qualifying_Rounds_b.jpg",
@@ -3701,8 +3497,8 @@
       },
       {
         "id": "AT083",
-        "title": "AT083 Standings \u2013 Decathlon/Heptathlon & Final/Result",
-        "name": "Standings \u2013 Decathlon/Heptathlon & Final/Result",
+        "title": "AT083 Standings – Decathlon/Heptathlon & Final/Result",
+        "name": "Standings – Decathlon/Heptathlon & Final/Result",
         "images": [
           "/images/AT083_Standings_Decathlon_Heptathlon_Final_Result_a.jpg",
           "/images/AT083_Standings_Decathlon_Heptathlon_Final_Result_b.jpg",
@@ -4815,21 +4611,6 @@
             "label": "b",
             "image": "/images/GA14a_Start_List_GA14a_Start_List_b.jpg",
             "page": 849
-          }
-        ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 294
           }
         ]
       }
@@ -6140,21 +5921,6 @@
           {
             "label": "a",
             "image": "/images/BD028_Flower_Presenter_ID_a.jpg",
-            "page": 330
-          }
-        ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
             "page": 330
           }
         ]
@@ -13118,21 +12884,6 @@
             "page": 692
           }
         ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 562
-          }
-        ]
       }
     ]
   },
@@ -13517,21 +13268,6 @@
             "page": 40
           }
         ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 40
-          }
-        ]
       }
     ]
   },
@@ -13646,8 +13382,8 @@
       },
       {
         "id": "EQ007",
-        "title": "EQ007 Chef d\u2019Equipe ID",
-        "name": "Chef d\u2019Equipe ID",
+        "title": "EQ007 Chef d’Equipe ID",
+        "name": "Chef d’Equipe ID",
         "images": [
           "/images/EQ007_Chef_d_Equipe_ID_a.jpg"
         ],
@@ -15614,8 +15350,8 @@
       },
       {
         "id": "FE032",
-        "title": "FE032 Clock with Lights \u2013 Priority (Individual)",
-        "name": "Clock with Lights \u2013 Priority (Individual)",
+        "title": "FE032 Clock with Lights – Priority (Individual)",
+        "name": "Clock with Lights – Priority (Individual)",
         "images": [
           "/images/FE032_Clock_with_Lights_Priority_Individual_a.jpg",
           "/images/FE032_Clock_with_Lights_Priority_Individual_b.jpg",
@@ -15641,8 +15377,8 @@
       },
       {
         "id": "FE033",
-        "title": "FE033 Clock with Lights \u2013 Priority (Team)",
-        "name": "Clock with Lights \u2013 Priority (Team)",
+        "title": "FE033 Clock with Lights – Priority (Team)",
+        "name": "Clock with Lights – Priority (Team)",
         "images": [
           "/images/FE033_Clock_with_Lights_Priority_Team_a.jpg",
           "/images/FE033_Clock_with_Lights_Priority_Team_b.jpg",
@@ -16376,21 +16112,6 @@
           {
             "label": "a",
             "image": "/images/FB037_Flower_Presenter_ID_a.jpg",
-            "page": 836
-          }
-        ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
             "page": 836
           }
         ]
@@ -18578,8 +18299,8 @@
       },
       {
         "id": "MP029",
-        "title": "MP029 Race Clock at Finish with Winner\u2019s Lane",
-        "name": "Race Clock at Finish with Winner\u2019s Lane",
+        "title": "MP029 Race Clock at Finish with Winner’s Lane",
+        "name": "Race Clock at Finish with Winner’s Lane",
         "images": [
           "/images/MP029_Race_Clock_at_Finish_with_Winner_s_Lane_a.jpg"
         ],
@@ -19656,21 +19377,6 @@
             "label": "b",
             "image": "/images/CM228_Race_Clock_with_Laps_to_Go_Indicator_Lap_Time_and_Speed_b.jpg",
             "page": 518
-          }
-        ]
-      },
-      {
-        "id": "OMEGA_LOGO",
-        "title": "OMEGA LOGO",
-        "name": "OMEGA LOGO",
-        "images": [
-          "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg"
-        ],
-        "variations": [
-          {
-            "label": "a",
-            "image": "/images/OMEGA_LOGO_OMEGA_LOGO_a.jpg",
-            "page": 512
           }
         ]
       }
@@ -22934,8 +22640,8 @@
       },
       {
         "id": "SH025",
-        "title": "SH025 Scorecard (Women\u2019s 25m Pistol)",
-        "name": "Scorecard (Women\u2019s 25m Pistol)",
+        "title": "SH025 Scorecard (Women’s 25m Pistol)",
+        "name": "Scorecard (Women’s 25m Pistol)",
         "images": [
           "/images/SH025_Scorecard_Women_s_25m_Pistol_a.jpg",
           "/images/SH025_Scorecard_Women_s_25m_Pistol_b.jpg"
@@ -23003,8 +22709,8 @@
       },
       {
         "id": "SH028",
-        "title": "SH028 Standings/Result (Men\u2019s 25m Rapid Fire Pistol)",
-        "name": "Standings/Result (Men\u2019s 25m Rapid Fire Pistol)",
+        "title": "SH028 Standings/Result (Men’s 25m Rapid Fire Pistol)",
+        "name": "Standings/Result (Men’s 25m Rapid Fire Pistol)",
         "images": [
           "/images/SH028_Standings_Result_Men_s_25m_Rapid_Fire_Pistol_a.jpg",
           "/images/SH028_Standings_Result_Men_s_25m_Rapid_Fire_Pistol_b.jpg",
@@ -23306,8 +23012,8 @@
       },
       {
         "id": "SH041",
-        "title": "SH041 Scorecard (Men\u2019s 25m Pistol)",
-        "name": "Scorecard (Men\u2019s 25m Pistol)",
+        "title": "SH041 Scorecard (Men’s 25m Pistol)",
+        "name": "Scorecard (Men’s 25m Pistol)",
         "images": [
           "/images/SH041_Scorecard_Men_s_25m_Pistol_a.jpg",
           "/images/SH041_Scorecard_Men_s_25m_Pistol_b.jpg",
@@ -23345,8 +23051,8 @@
       },
       {
         "id": "SH042",
-        "title": "SH042 MF Standings (Men\u2019s 25m Pistol)",
-        "name": "MF Standings (Men\u2019s 25m Pistol)",
+        "title": "SH042 MF Standings (Men’s 25m Pistol)",
+        "name": "MF Standings (Men’s 25m Pistol)",
         "images": [
           "/images/SH042_MF_Standings_Men_s_25m_Pistol_a.jpg",
           "/images/SH042_MF_Standings_Men_s_25m_Pistol_b.jpg",
@@ -23426,8 +23132,8 @@
       },
       {
         "id": "SH044",
-        "title": "SH044 Winner/Place ID (Men\u2019s 25m Rapid Fire Pistol)",
-        "name": "Winner/Place ID (Men\u2019s 25m Rapid Fire Pistol)",
+        "title": "SH044 Winner/Place ID (Men’s 25m Rapid Fire Pistol)",
+        "name": "Winner/Place ID (Men’s 25m Rapid Fire Pistol)",
         "images": [
           "/images/SH044_Winner_Place_ID_Men_s_25m_Rapid_Fire_Pistol_a.jpg",
           "/images/SH044_Winner_Place_ID_Men_s_25m_Rapid_Fire_Pistol_b.jpg",
@@ -24707,8 +24413,8 @@
       },
       {
         "id": "SY012",
-        "title": "SY012 Routine Breakdown \u2013 Technical Routine",
-        "name": "Routine Breakdown \u2013 Technical Routine",
+        "title": "SY012 Routine Breakdown – Technical Routine",
+        "name": "Routine Breakdown – Technical Routine",
         "images": [
           "/images/SY012_Routine_Breakdown_Technical_Routine_a.jpg",
           "/images/SY012_Routine_Breakdown_Technical_Routine_b.jpg"
@@ -24728,8 +24434,8 @@
       },
       {
         "id": "SY013",
-        "title": "SY013 Routine Breakdown \u2013 Free Routine",
-        "name": "Routine Breakdown \u2013 Free Routine",
+        "title": "SY013 Routine Breakdown – Free Routine",
+        "name": "Routine Breakdown – Free Routine",
         "images": [
           "/images/SY013_Routine_Breakdown_Free_Routine_a.jpg",
           "/images/SY013_Routine_Breakdown_Free_Routine_b.jpg"
@@ -25283,8 +24989,8 @@
       },
       {
         "id": "TT019a",
-        "title": "TT019a Position on Court \u2013 Side-on",
-        "name": "Position on Court \u2013 Side-on",
+        "title": "TT019a Position on Court – Side-on",
+        "name": "Position on Court – Side-on",
         "images": [
           "/images/TT019a_Position_on_Court_Side_on_a.jpg"
         ],
@@ -25298,8 +25004,8 @@
       },
       {
         "id": "TT019b",
-        "title": "TT019b Position on Court \u2013 Side-on",
-        "name": "Position on Court \u2013 Side-on",
+        "title": "TT019b Position on Court – Side-on",
+        "name": "Position on Court – Side-on",
         "images": [
           "/images/TT019b_Position_on_Court_Side_on_a.jpg"
         ],
@@ -25313,8 +25019,8 @@
       },
       {
         "id": "TT020a",
-        "title": "TT020a Position on Court \u2013 Head-on",
-        "name": "Position on Court \u2013 Head-on",
+        "title": "TT020a Position on Court – Head-on",
+        "name": "Position on Court – Head-on",
         "images": [
           "/images/TT020a_Position_on_Court_Head_on_a.jpg",
           "/images/TT020a_Position_on_Court_Head_on_b.jpg"
@@ -25334,8 +25040,8 @@
       },
       {
         "id": "TT020b",
-        "title": "TT020b Position on Court \u2013 Head on",
-        "name": "Position on Court \u2013 Head on",
+        "title": "TT020b Position on Court – Head on",
+        "name": "Position on Court – Head on",
         "images": [
           "/images/TT020b_Position_on_Court_Head_on_a.jpg"
         ],
