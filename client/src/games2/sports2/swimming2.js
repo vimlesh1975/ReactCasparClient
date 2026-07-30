@@ -2360,10 +2360,10 @@ export async function generateSwimming2Fabric(
   // Apply layout overrides copied from UI
   if (normId.includes('SW002') || normId.includes('SW102') || normId === 'VENUE ID') {
     group.set({
-      left: 347,
-      top: 830,
-      scaleX: 1.411,
-      scaleY: 1.500
+      left: 319,
+      top: 673,
+      scaleX: 1.600,
+      scaleY: 1.592
     });
   } else if (normId.includes('SW003') || normId.includes('SW103') || normId === 'EVENT SCHEDULE') {
     group.set({
@@ -2371,6 +2371,62 @@ export async function generateSwimming2Fabric(
       top: 388,
       scaleX: 1.500,
       scaleY: 1.500
+    });
+  } else if (normId.includes('SW005') || normId.includes('SW105') || normId === 'START LIST') {
+    group.set({
+      left: 312,
+      top: 391,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW006') || normId.includes('SW106') || normId === 'LANE IDENT') {
+    group.set({
+      left: 334,
+      top: 892,
+      scaleX: 1.500,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW007') || normId.includes('SW107') || normId.includes('TEAM LIST BY LANE')) {
+    group.set({
+      left: 329,
+      top: 666,
+      scaleX: 1.609,
+      scaleY: 1.662
+    });
+  } else if (normId.includes('SW008') || normId.includes('SW108') || normId === 'RESULTS') {
+    group.set({
+      left: 336,
+      top: 739,
+      scaleX: 1.590,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW009') || normId.includes('SW109') || normId === 'MEDALS') {
+    group.set({
+      left: 306,
+      top: 64,
+      scaleX: 1.500,
+      scaleY: 1.873
+    });
+  } else if (normId.includes('SW011') || normId.includes('SW111') || normId === 'LOWER THIRD') {
+    group.set({
+      left: 334,
+      top: 793,
+      scaleX: 1.581,
+      scaleY: 1.600
+    });
+  } else if (normId.includes('SW012') || normId.includes('SW112') || normId === 'RECORDS') {
+    group.set({
+      left: 321,
+      top: 399,
+      scaleX: 1.607,
+      scaleY: 1.564
+    });
+  } else if (normId.includes('SW013') || normId.includes('SW113') || normId === 'RECORD TAG') {
+    group.set({
+      left: 329,
+      top: 406,
+      scaleX: 1.607,
+      scaleY: 1.574
     });
   }
 
