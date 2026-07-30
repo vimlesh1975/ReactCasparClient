@@ -956,7 +956,7 @@ export async function generateSwimming2Fabric(
     const clockTime = customData.time || '19.4';
 
     const leftX = 280;
-    const leftY = 960;
+    const leftY = 650;
     const recBg = new fabric.Rect(createProps('rect', {
       left: leftX, top: leftY, width: 230, height: 38,
       fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
@@ -979,8 +979,8 @@ export async function generateSwimming2Fabric(
     }));
     objects.push(recBg, badgeTab, badgeText, splitLabel, splitTimeText);
 
-    const rightX = 1450;
-    const rightY = 960;
+    const rightX = 950;
+    const rightY = 650;
 
     const distTab = new fabric.Rect(createProps('rect', {
       left: rightX + 60, top: rightY - 26, width: 100, height: 24,
@@ -1080,7 +1080,7 @@ export async function generateSwimming2Fabric(
     }
 
     const leftX = 280;
-    const leftY = 960;
+    const leftY = 650;
     const recBg = new fabric.Rect(createProps('rect', {
       left: leftX, top: leftY, width: 230, height: 38,
       fill: '#00192e', skewX: -12, rx: 5, ry: 5, stroke: '#0088cc', strokeWidth: 1.5
@@ -1111,8 +1111,8 @@ export async function generateSwimming2Fabric(
 
     objects.push(recBg, badgeTab, badgeText, splitLabel, splitTimeText, diffBg, diffText);
 
-    const rightX = 1450;
-    const rightY = 960;
+    const rightX = 950;
+    const rightY = 650;
     const distTab = new fabric.Rect(createProps('rect', {
       left: rightX + 60, top: rightY - 26, width: 100, height: 24, fill: '#e2e8f0', skewX: -12, rx: 3, ry: 3
     }));
@@ -2476,6 +2476,20 @@ export async function generateSwimming2Fabric(
       top: 956,
       scaleX: 1.266,
       scaleY: 1.500
+    });
+  } else if (normId.includes('SW021') || normId.includes('SW128') || normId.includes('BEFORE SPLIT')) {
+    group.set({
+      left: 323,
+      top: 924,
+      scaleX: 1.475,
+      scaleY: 1.500
+    });
+  } else if (normId.includes('SW022') || normId.includes('SW129') || normId.includes('SPLIT POINT WITH STANDINGS')) {
+    group.set({
+      left: 252,
+      top: 68,
+      scaleX: 1.515,
+      scaleY: 1.515
     });
   }
 
