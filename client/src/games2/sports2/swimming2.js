@@ -1541,15 +1541,15 @@ export async function generateSwimming2Fabric(
     const gapTime = customData.gap || customData.time || '1:15';
     const group2 = (customData.group2 || (isB ? 'LEADER' : 'PACK')).toUpperCase();
 
-    let startX = customData.posX ? Number(customData.posX) : 280;
-    const startY = customData.posY ? Number(customData.posY) : 960;
+    let startX = customData.posX ? Number(customData.posX) : 315;
+    const startY = customData.posY ? Number(customData.posY) : 975;
 
     const silverGradient = new fabric.Gradient({
       type: 'linear',
       gradientUnits: 'pixels',
-      coords: { x1: 0, y1: 0, x2: 140, y2: 0 },
+      coords: { x1: 0, y1: 0, x2: 240, y2: 0 },
       colorStops: [
-        { offset: 0, color: '#d1d5db' },
+        { offset: 0, color: '#cbd5e1' },
         { offset: 0.5, color: '#ffffff' },
         { offset: 1, color: '#e2e8f0' }
       ]
@@ -1557,26 +1557,26 @@ export async function generateSwimming2Fabric(
 
     // Left group pill (White / Metallic silver capsule)
     const b1 = new fabric.Rect(createProps('rect', {
-      left: startX, top: startY, width: 140, height: 32, fill: silverGradient, skewX: -12, rx: 14, ry: 14, stroke: '#00223e', strokeWidth: 1.5
+      left: startX, top: startY, width: 240, height: 48, fill: silverGradient, skewX: -12, rx: 24, ry: 24, stroke: '#00223e', strokeWidth: 2
     }));
     const t1 = new fabric.Textbox(group1, createProps('textbox', {
-      left: startX + 8, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+      left: startX + 10, top: startY + 6, fontSize: 30, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 220, textAlign: 'center'
     }));
 
     // Center time pill (Dark Blue with White text)
     const b2 = new fabric.Rect(createProps('rect', {
-      left: startX + 150, top: startY, width: 75, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
+      left: startX + 252, top: startY, width: 115, height: 48, fill: '#00192e', skewX: -12, rx: 6, ry: 6, stroke: borderHighlight, strokeWidth: 2
     }));
     const t2 = new fabric.Textbox(gapTime, createProps('textbox', {
-      left: startX + 154, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 67, textAlign: 'center'
+      left: startX + 257, top: startY + 6, fontSize: 30, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 105, textAlign: 'center'
     }));
 
     // Right group pill (White / Metallic silver capsule)
     const b3 = new fabric.Rect(createProps('rect', {
-      left: startX + 235, top: startY, width: 140, height: 32, fill: silverGradient, skewX: -12, rx: 14, ry: 14, stroke: '#00223e', strokeWidth: 1.5
+      left: startX + 379, top: startY, width: 240, height: 48, fill: silverGradient, skewX: -12, rx: 24, ry: 24, stroke: '#00223e', strokeWidth: 2
     }));
     const t3 = new fabric.Textbox(group2, createProps('textbox', {
-      left: startX + 243, top: startY + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 124, textAlign: 'center'
+      left: startX + 389, top: startY + 6, fontSize: 30, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: 220, textAlign: 'center'
     }));
 
     objects.push(b1, t1, b2, t2, b3, t3);
@@ -1590,36 +1590,47 @@ export async function generateSwimming2Fabric(
     const gap2 = customData.gap2 || '0:25';
     const group3 = (customData.group3 || 'PACK').toUpperCase();
 
-    let startX = customData.posX ? Number(customData.posX) : 280;
-    const startY = customData.posY ? Number(customData.posY) : 960;
+    let startX = customData.posX ? Number(customData.posX) : 100;
+    const startY = customData.posY ? Number(customData.posY) : 900;
+
+    const silverGradient = new fabric.Gradient({
+      type: 'linear',
+      gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 260, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#cbd5e1' },
+        { offset: 0.5, color: '#ffffff' },
+        { offset: 1, color: '#e2e8f0' }
+      ]
+    });
 
     const items = [
-      { type: 'group', val: group1, w: 130 },
-      { type: 'gap', val: gap1, w: 65 },
-      { type: 'group', val: group2, w: 130 },
-      { type: 'gap', val: gap2, w: 65 },
-      { type: 'group', val: group3, w: 130 }
+      { type: 'group', val: group1, w: 260 },
+      { type: 'gap', val: gap1, w: 120 },
+      { type: 'group', val: group2, w: 260 },
+      { type: 'gap', val: gap2, w: 120 },
+      { type: 'group', val: group3, w: 260 }
     ];
 
     items.forEach(it => {
       if (it.type === 'group') {
         const bg = new fabric.Rect(createProps('rect', {
-          left: startX, top: startY, width: it.w, height: 32, fill: 'linear-gradient(to right, #e2e8f0, #ffffff)', skewX: -12, rx: 4, ry: 4, stroke: '#0088cc', strokeWidth: 1.5
+          left: startX, top: startY, width: it.w, height: 64, fill: silverGradient, skewX: -12, rx: 32, ry: 32, stroke: '#00223e', strokeWidth: 2.5
         }));
         const tx = new fabric.Textbox(it.val, createProps('textbox', {
-          left: startX + 6, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: it.w - 12, textAlign: 'center'
+          left: startX + 10, top: startY + 11, fontSize: 32, fontWeight: '900', fontStyle: 'italic', fill: '#00192e', width: it.w - 20, textAlign: 'center'
         }));
         objects.push(bg, tx);
       } else {
         const bg = new fabric.Rect(createProps('rect', {
-          left: startX, top: startY, width: it.w, height: 32, fill: '#00192e', skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5
+          left: startX, top: startY, width: it.w, height: 64, fill: '#00192e', skewX: -12, rx: 8, ry: 8, stroke: borderHighlight, strokeWidth: 2.5
         }));
         const tx = new fabric.Textbox(it.val, createProps('textbox', {
-          left: startX + 4, top: startY + 5, fontSize: 16, fontWeight: '900', fontStyle: 'italic', fill: '#0088cc', width: it.w - 8, textAlign: 'center'
+          left: startX + 5, top: startY + 11, fontSize: 32, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: it.w - 10, textAlign: 'center'
         }));
         objects.push(bg, tx);
       }
-      startX += it.w + 10;
+      startX += it.w + 18;
     });
   }
 
@@ -2681,8 +2692,8 @@ export function generateSwimming2HTML(
     const gapTime = customData.gap || customData.time || '1:15';
     const group2 = (customData.group2 || (isB ? 'LEADER' : 'PACK')).toUpperCase();
 
-    const posX = customData.posX || '280px';
-    const posY = customData.posY || '960px';
+    const posX = customData.posX || '315px';
+    const posY = customData.posY || '975px';
 
     return `
       <!DOCTYPE html>
@@ -2696,23 +2707,23 @@ export function generateSwimming2HTML(
 
           .gap-2groups-container {
             position: absolute; left: ${posX}; top: ${posY};
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 12px;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
           }
           .gap-group-pill {
-            min-width: 140px; height: 32px;
-            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
-            transform: skewX(-12deg); border-radius: 14px; border: 1.5px solid #00223e;
-            display: flex; align-items: center; justify-content: center; padding: 0 16px;
+            min-width: 240px; height: 48px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 50%, #e2e8f0 100%);
+            transform: skewX(-12deg); border-radius: 24px; border: 2px solid #00223e;
+            display: flex; align-items: center; justify-content: center; padding: 0 20px;
           }
-          .gap-group-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+          .gap-group-text { transform: skewX(12deg); font-size: 30px; font-weight: 900; font-style: italic; color: #00192e; }
 
           .gap-time-pill {
-            min-width: 75px; height: 32px; background: #00192e;
-            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
-            display: flex; align-items: center; justify-content: center; padding: 0 10px;
+            min-width: 115px; height: 48px; background: #00192e;
+            transform: skewX(-12deg); border-radius: 6px; border: 2px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: center; padding: 0 14px;
           }
-          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .gap-time-text { transform: skewX(12deg); font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; }
         </style>
       </head>
       <body>
@@ -2734,8 +2745,8 @@ export function generateSwimming2HTML(
     const gap2 = customData.gap2 || '0:25';
     const group3 = (customData.group3 || 'PACK').toUpperCase();
 
-    const posX = customData.posX || '280px';
-    const posY = customData.posY || '960px';
+    const posX = customData.posX || '100px';
+    const posY = customData.posY || '900px';
 
     return `
       <!DOCTYPE html>
@@ -2749,23 +2760,23 @@ export function generateSwimming2HTML(
 
           .gap-3groups-container {
             position: absolute; left: ${posX}; top: ${posY};
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 18px;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
           }
           .gap-group-pill {
-            min-width: 130px; height: 32px;
-            background: linear-gradient(90deg, #e2e8f0 0%, #ffffff 100%);
-            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid #0088cc;
-            display: flex; align-items: center; justify-content: center; padding: 0 12px;
+            min-width: 260px; height: 64px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #ffffff 50%, #e2e8f0 100%);
+            transform: skewX(-12deg); border-radius: 32px; border: 2.5px solid #00223e;
+            display: flex; align-items: center; justify-content: center; padding: 0 24px;
           }
-          .gap-group-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #00192e; }
+          .gap-group-text { transform: skewX(12deg); font-size: 32px; font-weight: 900; font-style: italic; color: #00192e; }
 
           .gap-time-pill {
-            min-width: 65px; height: 32px; background: #00192e;
-            transform: skewX(-12deg); border-radius: 4px; border: 1.5px solid ${borderHighlight};
-            display: flex; align-items: center; justify-content: center; padding: 0 8px;
+            min-width: 120px; height: 64px; background: #00192e;
+            transform: skewX(-12deg); border-radius: 8px; border: 2.5px solid ${borderHighlight};
+            display: flex; align-items: center; justify-content: center; padding: 0 16px;
           }
-          .gap-time-text { transform: skewX(12deg); font-size: 16px; font-weight: 900; font-style: italic; color: #0088cc; }
+          .gap-time-text { transform: skewX(12deg); font-size: 32px; font-weight: 900; font-style: italic; color: #ffffff; }
         </style>
       </head>
       <body>
