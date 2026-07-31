@@ -1118,6 +1118,362 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── 8. DV009 - Position ID (Synchronised - Side-by-Side Dual Name Tags) ──
+  if (normId.includes('DV009') || normId.includes('POSITION ID')) {
+    const rawLeftName = (customData.leftName || customData.diver1 || customData.name1 || '').trim();
+    const rawRightName = (customData.rightName || customData.diver2 || customData.name2 || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+
+    const isGenericLeft = !rawLeftName || rawLeftName.toUpperCase() === 'TOM DALEY';
+    const isGenericRight = !rawRightName || rawRightName.toUpperCase() === 'TOM DALEY';
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const leftNameStr = (isGenericLeft ? 'TATIANA ORTIZ' : rawLeftName).toUpperCase();
+    const rightNameStr = (isGenericRight ? 'PAOLA ESPINOSA' : rawRightName).toUpperCase();
+
+    const leftNocCode = (customData.leftNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
+    const rightNocCode = (customData.rightNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
+
+    const baseTop = 920;
+    const tagWidth = 650;
+    const stripHeight = 54;
+
+    const leftX = 240;
+    const rightX = 1000;
+
+    const createTagObjects = async (baseLeft, nocCode, diverName) => {
+      const tagObjects = [];
+      const stripGradient = new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels',
+        coords: { x1: 0, y1: 0, x2: tagWidth, y2: 0 },
+        colorStops: [
+          { offset: 0, color: gradientStart },
+          { offset: 0.5, color: gradientMid },
+          { offset: 1, color: gradientEnd }
+        ]
+      });
+
+      const bodyRect = new fabric.Rect(createProps('rect', {
+        left: baseLeft, top: baseTop, width: tagWidth, height: stripHeight,
+        fill: stripGradient, skewX: -12, rx: 6, ry: 6,
+        stroke: borderHighlight, strokeWidth: 1.5,
+        shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+      }));
+      tagObjects.push(bodyRect);
+
+      const flagImg = await createFabricFlagObject(nocCode, createProps('image', {
+        left: baseLeft + 20, top: baseTop + 11, scaleX: 0.60, scaleY: 0.60, skewX: -12
+      }));
+      if (flagImg) {
+        tagObjects.push(flagImg);
+      } else {
+        const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+          left: baseLeft + 20, top: baseTop + 10, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 80
+        }));
+        tagObjects.push(nocText);
+      }
+
+      const nameText = new fabric.Textbox(diverName, createProps('textbox', {
+        left: baseLeft + 175, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 450
+      }));
+      tagObjects.push(nameText);
+
+      return tagObjects;
+    };
+
+    const leftTagObjs = await createTagObjects(leftX, leftNocCode, leftNameStr);
+    const rightTagObjs = await createTagObjects(rightX, rightNocCode, rightNameStr);
+
+    objects.push(...leftTagObjs, ...rightTagObjs);
+
+    return new fabric.Group(objects, {
+      left: leftX, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV009 Position ID Synch (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── 9. DV010 - Scorecard Individual (Variants A & B) ──
+  if (normId.includes('DV010') || normId.includes('SCORECARD')) {
+    const isVariantA = normId.includes('_A') || normId.endsWith('A') || (customData.variant || '').toUpperCase() === 'A';
+    const isVariantB = !isVariantA && (normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B');
+
+    let defaultNoc = 'RUS';
+    let defaultName = 'ALEKSANDR DOBROSKOK';
+    let defaultOrder = '3';
+    let defaultRound = 'ROUND 1';
+    let defaultDifficulty = 'DIFFICULTY 3.5';
+    let defaultPenalty = 'PENALTY 0.00';
+    let defaultScore = 'SCORE 78.75';
+    let defaultScores = [
+      { score: '7.0', struck: true },
+      { score: '7.5', struck: false },
+      { score: '7.0', struck: true },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false }
+    ];
+    let defaultTotal = '';
+
+    if (isVariantB) {
+      defaultNoc = 'ITA';
+      defaultName = 'TOMMASO MARCONI';
+      defaultOrder = '28';
+      defaultRound = 'ROUND 6';
+      defaultDifficulty = 'DIFFICULTY 3.4';
+      defaultPenalty = 'PENALTY 2.0';
+      defaultScore = 'SCORE 47.30';
+      defaultTotal = 'TOTAL 358.15';
+      defaultScores = [
+        { score: '5.0', struck: false },
+        { score: '5.0', struck: false },
+        { score: '4.5', struck: true },
+        { score: '4.5', struck: false },
+        { score: '5.0', struck: true },
+        { score: '4.5', struck: false },
+        { score: '5.0', struck: false }
+      ];
+    }
+
+    const rawName = (customData.name || customData.athlete || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+    const isGenericName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const nameStr = (isGenericName ? defaultName : rawName).toUpperCase();
+    const nocCode = (isGenericNoc ? defaultNoc : rawNoc).toUpperCase();
+    const orderStr = String(customData.order || customData.startOrder || defaultOrder);
+
+    const rawRound = (customData.round || '').trim();
+    const isGenericRound = !rawRound || rawRound.toUpperCase().includes('SYNCHRONISED') || rawRound.toUpperCase().includes('10M PLATFORM') || rawRound.toUpperCase().includes('DIVE 6');
+    const roundStr = (isGenericRound ? defaultRound : rawRound).toUpperCase();
+
+    const rawDiff = (customData.difficulty || '').trim();
+    let formattedDiff = rawDiff;
+    if (formattedDiff && !formattedDiff.toUpperCase().startsWith('DIFFICULTY')) {
+      formattedDiff = `DIFFICULTY ${formattedDiff}`;
+    }
+    const diffStr = (formattedDiff ? formattedDiff : defaultDifficulty).toUpperCase();
+
+    const rawPen = (customData.penalty || '').trim();
+    let formattedPen = rawPen;
+    if (formattedPen && !formattedPen.toUpperCase().startsWith('PENALTY')) {
+      formattedPen = `PENALTY ${formattedPen}`;
+    }
+    const penaltyStr = (formattedPen ? formattedPen : defaultPenalty).toUpperCase();
+
+    const rawScore = (customData.score || '').trim();
+    let formattedScore = rawScore;
+    if (formattedScore && !formattedScore.toUpperCase().startsWith('SCORE')) {
+      formattedScore = `SCORE ${formattedScore}`;
+    }
+    const scoreStr = (formattedScore ? formattedScore : defaultScore).toUpperCase();
+
+    const rawTotal = (customData.total || customData.totalScore || '').trim();
+    let formattedTotal = rawTotal;
+    if (formattedTotal && !formattedTotal.toUpperCase().startsWith('TOTAL')) {
+      formattedTotal = `TOTAL ${formattedTotal}`;
+    }
+    const totalStr = (isVariantB ? (formattedTotal ? formattedTotal : defaultTotal) : '').toUpperCase();
+
+    const scoresList = (customData.scores && customData.scores.length > 0) ? customData.scores : defaultScores;
+
+    const bannerWidth = 1100;
+    const tier1Height = 54;
+    const tier2Height = 38;
+    const tier3Height = 42;
+
+    const totalHeight = tier1Height + tier2Height + tier3Height + 4;
+    const targetBottomY = 997; // 83px bottom clearance
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight;
+
+    // 0. Top Total Score Tab (Variant B)
+    if (totalStr) {
+      const tabGradient = new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels',
+        coords: { x1: 0, y1: 0, x2: 240, y2: 0 },
+        colorStops: [
+          { offset: 0, color: '#ffffff' },
+          { offset: 0.5, color: '#e2e8f0' },
+          { offset: 1, color: '#cbd5e1' }
+        ]
+      });
+
+      const tabRect = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 45, top: baseTop - 34, width: 240, height: 32,
+        fill: tabGradient, skewX: -12, rx: 4, ry: 4,
+        stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+      }));
+      const tabText = new fabric.Textbox(totalStr, createProps('textbox', {
+        left: baseLeft + 55, top: baseTop - 30, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+        fill: '#1a2b42', width: 220, textAlign: 'center'
+      }));
+      objects.push(tabRect, tabText);
+    }
+
+    // 1. Tier 1: Main Dark Blue Athlete Banner
+    const t1Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const t1Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: t1Gradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(t1Bar);
+
+    // Red Order Number Badge
+    const orderBadge = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 8, top: baseTop + 6, width: 44, height: tier1Height - 12,
+      fill: '#d32f2f', skewX: -12, rx: 4, ry: 4
+    }));
+    const orderText = new fabric.Textbox(orderStr, createProps('textbox', {
+      left: baseLeft + 8, top: baseTop + 10, fontSize: 28, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 44, textAlign: 'center'
+    }));
+    objects.push(orderBadge, orderText);
+
+    // Flag Image
+    const flagImg = await createFabricFlagObject(nocCode, createProps('image', {
+      left: baseLeft + 65, top: baseTop + 11, scaleX: 0.60, scaleY: 0.60, skewX: -12
+    }));
+    if (flagImg) {
+      objects.push(flagImg);
+    } else {
+      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+        left: baseLeft + 65, top: baseTop + 10, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 80
+      }));
+      objects.push(nocText);
+    }
+
+    // Athlete Name
+    const nameText = new fabric.Textbox(nameStr, createProps('textbox', {
+      left: baseLeft + 220, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 700
+    }));
+    objects.push(nameText);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 95, baseTop + 13, 11, 2.4);
+    objects.push(olympicRings);
+
+    // 2. Tier 2: Silver Metallic Strip (Round, Difficulty, Penalty, Score)
+    const t2Top = baseTop + tier1Height + 2;
+    const t2Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const t2Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 15, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: t2Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    objects.push(t2Bar);
+
+    // Round Text
+    const roundText = new fabric.Textbox(roundStr, createProps('textbox', {
+      left: baseLeft + 35, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 200
+    }));
+    objects.push(roundText);
+
+    // Difficulty Text
+    const diffText = new fabric.Textbox(diffStr, createProps('textbox', {
+      left: baseLeft + 250, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 260
+    }));
+    objects.push(diffText);
+
+    // Penalty Text
+    const penaltyText = new fabric.Textbox(penaltyStr, createProps('textbox', {
+      left: baseLeft + 520, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 260
+    }));
+    objects.push(penaltyText);
+
+    // Score Text
+    const scoreText = new fabric.Textbox(scoreStr, createProps('textbox', {
+      left: baseLeft + bannerWidth - 320, top: t2Top + 6, fontSize: 26, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 280, textAlign: 'right'
+    }));
+    objects.push(scoreText);
+
+    // 3. Tier 3: Dark Blue Strip (7 Judge Scores with Strikethroughs)
+    const t3Top = t2Top + tier2Height + 2;
+    const t3Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#091d36' },
+        { offset: 0.5, color: '#0f2f57' },
+        { offset: 1, color: '#071629' }
+      ]
+    });
+
+    const t3Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: t3Top, width: bannerWidth, height: tier3Height,
+      fill: t3Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1
+    }));
+    objects.push(t3Bar);
+
+    // Render 7 Scores
+    const colWidth = bannerWidth / scoresList.length;
+    for (let index = 0; index < scoresList.length; index++) {
+      const item = scoresList[index];
+      const valStr = typeof item === 'object' ? item.score : String(item);
+      const isStruck = typeof item === 'object' ? item.struck : false;
+
+      const colX = baseLeft + (index * colWidth);
+
+      const sText = new fabric.Textbox(valStr, createProps('textbox', {
+        left: colX, top: t3Top + 7, fontSize: 26, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: colWidth, textAlign: 'center'
+      }));
+      objects.push(sText);
+
+      if (isStruck) {
+        const strikeLine = new fabric.Line([colX + 50, t3Top + 21, colX + colWidth - 50, t3Top + 21], createProps('line', {
+          stroke: '#ffffff', strokeWidth: 3, skewX: -12
+        }));
+        objects.push(strikeLine);
+      }
+    }
+
+    const groupTop = totalStr ? (baseTop - 34) : baseTop;
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: groupTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV010 Scorecard Individual ${isVariantB ? 'Variant B' : 'Variant A'} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }
@@ -1689,6 +2045,252 @@ export function generateDiving2HTML(
             <div class="sub-title unskew">${subTitle}</div>
           </div>
           ${rowsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 8. DV009 - Position ID (Synchronised - Side-by-Side Dual Name Tags) ──
+  if (normId.includes('DV009') || normId.includes('POSITION ID')) {
+    const rawLeftName = (customData.leftName || customData.diver1 || customData.name1 || '').trim();
+    const rawRightName = (customData.rightName || customData.diver2 || customData.name2 || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+
+    const isGenericLeft = !rawLeftName || rawLeftName.toUpperCase() === 'TOM DALEY';
+    const isGenericRight = !rawRightName || rawRightName.toUpperCase() === 'TOM DALEY';
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const leftNameStr = (isGenericLeft ? 'TATIANA ORTIZ' : rawLeftName).toUpperCase();
+    const rightNameStr = (isGenericRight ? 'PAOLA ESPINOSA' : rawRightName).toUpperCase();
+
+    const leftNocCode = (customData.leftNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
+    const rightNocCode = (customData.rightNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
+
+    const leftFlagImgHtml = getFlagImgHtml(leftNocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
+    const rightFlagImgHtml = getFlagImgHtml(rightNocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .position-tag {
+            position: absolute; top: 920px; width: 650px; height: 54px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: flex-start;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6); gap: 36px;
+          }
+          .tag-left { left: 240px; }
+          .tag-right { left: 1000px; }
+          .unskew { transform: skewX(12deg); }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="position-tag tag-left">
+          <div class="flag-icon unskew">${leftFlagImgHtml || leftNocCode}</div>
+          <div class="athlete-name unskew">${leftNameStr}</div>
+        </div>
+        <div class="position-tag tag-right">
+          <div class="flag-icon unskew">${rightFlagImgHtml || rightNocCode}</div>
+          <div class="athlete-name unskew">${rightNameStr}</div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 9. DV010 - Scorecard Individual (HTML Generator) ──
+  if (normId.includes('DV010') || normId.includes('SCORECARD')) {
+    const isVariantA = normId.includes('_A') || normId.endsWith('A') || (customData.variant || '').toUpperCase() === 'A';
+    const isVariantB = !isVariantA && (normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B');
+
+    let defaultNoc = 'RUS';
+    let defaultName = 'ALEKSANDR DOBROSKOK';
+    let defaultOrder = '3';
+    let defaultRound = 'ROUND 1';
+    let defaultDifficulty = 'DIFFICULTY 3.5';
+    let defaultPenalty = 'PENALTY 0.00';
+    let defaultScore = 'SCORE 78.75';
+    let defaultScores = [
+      { score: '7.0', struck: true },
+      { score: '7.5', struck: false },
+      { score: '7.0', struck: true },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false },
+      { score: '7.5', struck: false }
+    ];
+    let defaultTotal = '';
+
+    if (isVariantB) {
+      defaultNoc = 'ITA';
+      defaultName = 'TOMMASO MARCONI';
+      defaultOrder = '28';
+      defaultRound = 'ROUND 6';
+      defaultDifficulty = 'DIFFICULTY 3.4';
+      defaultPenalty = 'PENALTY 2.0';
+      defaultScore = 'SCORE 47.30';
+      defaultTotal = 'TOTAL 358.15';
+      defaultScores = [
+        { score: '5.0', struck: false },
+        { score: '5.0', struck: false },
+        { score: '4.5', struck: true },
+        { score: '4.5', struck: false },
+        { score: '5.0', struck: true },
+        { score: '4.5', struck: false },
+        { score: '5.0', struck: false }
+      ];
+    }
+
+    const rawName = (customData.name || customData.athlete || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+    const isGenericName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const nameStr = (isGenericName ? defaultName : rawName).toUpperCase();
+    const nocCode = (isGenericNoc ? defaultNoc : rawNoc).toUpperCase();
+    const orderStr = String(customData.order || customData.startOrder || defaultOrder);
+
+    const rawRound = (customData.round || '').trim();
+    const isGenericRound = !rawRound || rawRound.toUpperCase().includes('SYNCHRONISED') || rawRound.toUpperCase().includes('10M PLATFORM') || rawRound.toUpperCase().includes('DIVE 6');
+    const roundStr = (isGenericRound ? defaultRound : rawRound).toUpperCase();
+
+    const rawDiff = (customData.difficulty || '').trim();
+    let formattedDiff = rawDiff;
+    if (formattedDiff && !formattedDiff.toUpperCase().startsWith('DIFFICULTY')) {
+      formattedDiff = `DIFFICULTY ${formattedDiff}`;
+    }
+    const diffStr = (formattedDiff ? formattedDiff : defaultDifficulty).toUpperCase();
+
+    const rawPen = (customData.penalty || '').trim();
+    let formattedPen = rawPen;
+    if (formattedPen && !formattedPen.toUpperCase().startsWith('PENALTY')) {
+      formattedPen = `PENALTY ${formattedPen}`;
+    }
+    const penaltyStr = (formattedPen ? formattedPen : defaultPenalty).toUpperCase();
+
+    const rawScore = (customData.score || '').trim();
+    let formattedScore = rawScore;
+    if (formattedScore && !formattedScore.toUpperCase().startsWith('SCORE')) {
+      formattedScore = `SCORE ${formattedScore}`;
+    }
+    const scoreStr = (formattedScore ? formattedScore : defaultScore).toUpperCase();
+
+    const rawTotal = (customData.total || customData.totalScore || '').trim();
+    let formattedTotal = rawTotal;
+    if (formattedTotal && !formattedTotal.toUpperCase().startsWith('TOTAL')) {
+      formattedTotal = `TOTAL ${formattedTotal}`;
+    }
+    const totalStr = (isVariantB ? (formattedTotal ? formattedTotal : defaultTotal) : '').toUpperCase();
+
+    const scoresList = (customData.scores && customData.scores.length > 0) ? customData.scores : defaultScores;
+
+    const flagImgHtml = getFlagImgHtml(nocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
+
+    const totalHeight = 54 + 38 + 42 + 4;
+    const baseTop = 997 - totalHeight;
+
+    const scoresHTML = scoresList.map((item) => {
+      const valStr = typeof item === 'object' ? item.score : String(item);
+      const isStruck = typeof item === 'object' ? item.struck : false;
+      return `<div class="score-val ${isStruck ? 'struck' : ''}">${valStr}</div>`;
+    }).join('');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .scorecard-container {
+            position: absolute; top: ${totalStr ? (baseTop - 34) : baseTop}px; left: 333px; width: 1100px;
+            display: flex; flex-direction: column; gap: 2px;
+          }
+          .unskew { transform: skewX(12deg); }
+
+          .total-tab {
+            height: 32px; width: 240px; margin-left: 45px; margin-bottom: 2px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 900; font-style: italic; color: #1a2b42;
+          }
+
+          .t1-bar {
+            height: 54px; width: 1100px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .t1-left { display: flex; align-items: center; gap: 16px; }
+          .order-badge-red {
+            background: #d32f2f; color: #ffffff; font-size: 28px; font-weight: 900; font-style: italic;
+            padding: 2px 14px; border-radius: 4px;
+          }
+          .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; }
+
+          .t2-bar {
+            height: 38px; width: 1070px; margin-left: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+          }
+          .t2-text { font-size: 24px; font-weight: 900; font-style: italic; color: #1a2b42; }
+
+          .t3-bar {
+            height: 42px; width: 1100px;
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-around;
+            padding: 0 10px;
+          }
+          .score-val {
+            font-size: 26px; font-weight: 900; font-style: italic; color: #ffffff; position: relative;
+          }
+          .score-val.struck::after {
+            content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 3px;
+            background: #ffffff; transform: translateY(-50%) skewX(-12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="scorecard-container">
+          ${totalStr ? `<div class="total-tab"><div class="unskew">${totalStr}</div></div>` : ''}
+          <div class="t1-bar">
+            <div class="t1-left unskew">
+              <div class="order-badge-red">${orderStr}</div>
+              <div class="noc-code">${nocCode}</div>
+              <div class="flag-icon">${flagImgHtml}</div>
+              <div class="athlete-name">${nameStr}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="t2-bar">
+            <div class="t2-text unskew">${roundStr}</div>
+            <div class="t2-text unskew">${diffStr}</div>
+            <div class="t2-text unskew">${penaltyStr}</div>
+            <div class="t2-text unskew" style="font-size:26px;">${scoreStr}</div>
+          </div>
+          <div class="t3-bar unskew">
+            ${scoresHTML}
+          </div>
         </div>
       </body>
       </html>
