@@ -205,6 +205,9 @@ const Diving = () => {
         <button onClick={() => sendToCanvas('DV005_D')} style={btnCanvasStyle}>
           <FaPlus /> DV005 Var D (DSQ)
         </button>
+        <button onClick={() => sendToCanvas('DV006')} style={btnCanvasStyle}>
+          <FaPlus /> Add DV006 Officials to Canvas
+        </button>
         <button onClick={() => sendToCanvas('DV008')} style={btnCanvasStyle}>
           <FaPlus /> Add Dive ID to Canvas
         </button>
