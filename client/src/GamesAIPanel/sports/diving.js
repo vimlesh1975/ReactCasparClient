@@ -12,7 +12,7 @@ export function generateDivingHTML(templateId = '', templateName = '', customDat
   const normId = (templateId || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
 
-  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005') || normId.includes('dv006')) {
+  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005') || normId.includes('dv006') || normId.includes('dv007')) {
     const html = generateDiving2HTML(templateId, customData, styleOptions);
     if (html) return html;
   }
@@ -506,7 +506,7 @@ export async function generateDivingFabric(templateId = '', templateName = '', d
   const normId = (templateId || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
 
-  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005') || normId.includes('dv006')) {
+  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005') || normId.includes('dv006') || normId.includes('dv007')) {
     const group = await generateDiving2Fabric(templateId, data, customColors);
     if (group) return group;
   }

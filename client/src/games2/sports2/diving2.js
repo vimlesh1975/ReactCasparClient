@@ -722,6 +722,165 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── 6. DV007 - Officials / Judges (Synchronised - Execution vs Synch) ──
+  if (normId.includes('DV007') || normId.includes('SYNCH')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+    const bannerWidth = 1250;
+    const rowHeight = 54;
+    const rowGap = 3;
+    const headerHeight = 88;
+    const subHeaderHeight = 46;
+
+    const defaultJudgesA = [
+      { name: 'ANN SISSONS', role: 'EXECUTION 1' },
+      { name: 'YOSHINO YUASA', role: 'EXECUTION 2' },
+      { name: 'MATHZ LINDBERG', role: 'EXECUTION 3' },
+      { name: 'ADRIENNE WILSON', role: 'EXECUTION 4' },
+      { name: 'FELIPE MENDES', role: 'EXECUTION 5' },
+      { name: 'LEYLA SAHAN', role: 'EXECUTION 6' }
+    ];
+
+    const defaultJudgesB = [
+      { name: 'ROLANDO RUIZ PEDREGUERA', role: 'SYNCHRONISATION 1' },
+      { name: 'HANA NOVOTNA', role: 'SYNCHRONISATION 2' },
+      { name: 'ROBERTO GONCALVES', role: 'SYNCHRONISATION 3' },
+      { name: 'OLGA MCCLESKEY', role: 'SYNCHRONISATION 4' },
+      { name: 'ILDIKO KELEMEN', role: 'SYNCHRONISATION 5' }
+    ];
+
+    const judges = (customData.officials && customData.officials.length > 0)
+      ? customData.officials
+      : (customData.judges && customData.judges.length > 0)
+      ? customData.judges
+      : (isVariantB ? defaultJudgesB : defaultJudgesA);
+
+    const rawEvent = (customData.event || customData.title || '').trim();
+    const isDefaultEvent = !rawEvent || 
+      rawEvent.toUpperCase().includes('SPRINGBOARD') || 
+      rawEvent.toUpperCase().includes('10M PLATFORM') || 
+      rawEvent.toUpperCase() === "MEN'S 10M PLATFORM";
+    const eventTitle = (isDefaultEvent ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : rawEvent).toUpperCase();
+
+    const rawSub = (customData.subtitle || customData.subTitle || '').trim();
+    const subTitle = (rawSub ? rawSub : "JUDGES").toUpperCase();
+
+    const totalHeight = headerHeight + subHeaderHeight + 6 + (judges.length * (rowHeight + rowGap));
+    const targetBottomY = 997; // DV004 bottom edge (83px clearance from 1080 screen bottom)!
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight;
+
+    // 1. Header Blue Skewed Banner
+    const headGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const headBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 88,
+      fill: headGradient, skewX: -12, rx: 8, ry: 8,
+      stroke: borderHighlight, strokeWidth: 2,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 20, offsetX: 0, offsetY: 8 })
+    }));
+    objects.push(headBar);
+
+    // Diving Logo Icon inside Header
+    const pikeBody = new fabric.Path('M 40 78 L 40 25 C 40 12, 68 10, 72 30 L 68 48 C 65 52, 58 52, 54 46 L 50 32 C 48 24, 46 24, 46 30 L 46 78 Z', {
+      left: baseLeft + 32, top: baseTop + 12, fill: '#ffffff', scaleX: 0.95, scaleY: 0.95, selectable: true
+    });
+    const headHeart = new fabric.Path('M 64 48 C 56 48, 54 58, 62 66 C 68 72, 74 68, 74 58 C 74 50, 70 48, 64 48 Z', {
+      left: baseLeft + 48, top: baseTop + 32, fill: '#ffffff', scaleX: 0.95, scaleY: 0.95, selectable: true
+    });
+    const waterWaves = new fabric.Path('M 10 92 Q 22 87, 34 92 T 58 92 T 82 92', {
+      left: baseLeft + 22, top: baseTop + 58, fill: '', stroke: '#ffffff', strokeWidth: 4, strokeLineCap: 'round', scaleX: 0.95, scaleY: 0.95, selectable: true
+    });
+    const divingLogoGroup = new fabric.Group([pikeBody, headHeart, waterWaves], {
+      left: baseLeft + 22, top: baseTop + 12, id: generateUniqueId({ type: 'divingLogo' }), name: 'Diving Logo', selectable: true
+    });
+    objects.push(divingLogoGroup);
+
+    // Header Title
+    const headTitleText = new fabric.Textbox(eventTitle, createProps('textbox', {
+      left: baseLeft + 120, top: baseTop + 18, fontSize: 40, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 880
+    }));
+    objects.push(headTitleText);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 150, baseTop + 22, 16, 3.2);
+    objects.push(olympicRings);
+
+    // 2. Sub-Header Silver Metallic Strip
+    const subGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 40, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 20, top: baseTop + 90, width: bannerWidth - 40, height: 46,
+      fill: subGradient, skewX: -12, rx: 5, ry: 5,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTitleText = new fabric.Textbox(subTitle, createProps('textbox', {
+      left: baseLeft + 120, top: baseTop + 98, fontSize: 26, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 750
+    }));
+    objects.push(subTitleText);
+
+    // 3. Officials List Table Rows
+    let currentY = baseTop + 140;
+
+    for (let index = 0; index < judges.length; index++) {
+      const item = judges[index];
+      const isEven = index % 2 === 0;
+      const rowFill = isEven ? '#0a1d38' : '#061326';
+
+      const rowRect = new fabric.Rect(createProps('rect', {
+        left: baseLeft, top: currentY, width: bannerWidth, height: rowHeight,
+        fill: rowFill, skewX: -12,
+        stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1
+      }));
+      objects.push(rowRect);
+
+      // Judge Name (Left aligned)
+      const judgeNameText = new fabric.Textbox((item.name || item.officialName || '').toUpperCase(), createProps('textbox', {
+        left: baseLeft + 40, top: currentY + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 700
+      }));
+      objects.push(judgeNameText);
+
+      // Judge Role (Right aligned, e.g. "EXECUTION 1" or "SYNCHRONISATION 1")
+      const judgeRoleText = new fabric.Textbox((item.role || item.title || `JUDGE ${index + 1}`).toUpperCase(), createProps('textbox', {
+        left: baseLeft + bannerWidth - 450, top: currentY + 10, fontSize: 28, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 400, textAlign: 'right'
+      }));
+      objects.push(judgeRoleText);
+
+      currentY += rowHeight + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV007 Officials Synch ${isVariantB ? 'Variant B' : 'Variant A'} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }
@@ -1103,6 +1262,122 @@ export function generateDiving2HTML(
       : (customData.judges && customData.judges.length > 0)
       ? customData.judges
       : defaultJudges;
+
+    const totalHeight = 88 + 46 + 6 + (judges.length * 57);
+    const baseTop = 997 - totalHeight;
+
+    const rowsHTML = judges.map((item, index) => {
+      const isEven = index % 2 === 0;
+      const bg = isEven ? 'linear-gradient(90deg, #0a1d38 0%, #08162b 100%)' : 'linear-gradient(90deg, #061326 0%, #040d1c 100%)';
+      return `
+        <div class="start-row" style="background: ${bg};">
+          <div class="unskew row-content">
+            <div class="judge-name">${(item.name || item.officialName || '').toUpperCase()}</div>
+            <div class="judge-role">${(item.role || item.title || `JUDGE ${index + 1}`).toUpperCase()}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .start-list-container {
+            position: absolute; top: ${baseTop}px; left: 333px; width: 1250px;
+            display: flex; flex-direction: column; gap: 3px;
+          }
+          .unskew { transform: skewX(12deg); }
+
+          .head-bar {
+            height: 88px; width: 1250px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 2px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 36px; box-shadow: 0 12px 28px rgba(0,0,0,0.6);
+          }
+          .head-left { display: flex; align-items: center; gap: 20px; }
+          .head-title { font-size: 40px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+
+          .sub-bar {
+            height: 46px; width: 1210px; margin-left: 20px; margin-top: 2px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 5px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 32px;
+          }
+          .sub-title { font-size: 26px; font-weight: 900; font-style: italic; color: #1a2b42; letter-spacing: 1.5px; padding-left: 65px; }
+
+          .start-row {
+            height: 54px; width: 1250px; margin-top: 2px;
+            border: 1px solid rgba(255,255,255,0.12);
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 30px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .judge-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .judge-role { font-size: 28px; font-weight: 900; font-style: italic; color: #ffffff; text-align: right; }
+        </style>
+      </head>
+      <body>
+        <div class="start-list-container">
+          <div class="head-bar">
+            <div class="head-left unskew">
+              <div style="width:48px; height:48px;">${officialDivingPictographSVG}</div>
+              <div class="head-title">${eventTitle}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${subTitle}</div>
+          </div>
+          ${rowsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 6. DV007 - Officials / Judges List (Synchronised - Execution vs Synch) ──
+  if (normId.includes('DV007') || normId.includes('SYNCH')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+
+    const defaultJudgesA = [
+      { name: 'ANN SISSONS', role: 'EXECUTION 1' },
+      { name: 'YOSHINO YUASA', role: 'EXECUTION 2' },
+      { name: 'MATHZ LINDBERG', role: 'EXECUTION 3' },
+      { name: 'ADRIENNE WILSON', role: 'EXECUTION 4' },
+      { name: 'FELIPE MENDES', role: 'EXECUTION 5' },
+      { name: 'LEYLA SAHAN', role: 'EXECUTION 6' }
+    ];
+
+    const defaultJudgesB = [
+      { name: 'ROLANDO RUIZ PEDREGUERA', role: 'SYNCHRONISATION 1' },
+      { name: 'HANA NOVOTNA', role: 'SYNCHRONISATION 2' },
+      { name: 'ROBERTO GONCALVES', role: 'SYNCHRONISATION 3' },
+      { name: 'OLGA MCCLESKEY', role: 'SYNCHRONISATION 4' },
+      { name: 'ILDIKO KELEMEN', role: 'SYNCHRONISATION 5' }
+    ];
+
+    const judges = (customData.officials && customData.officials.length > 0)
+      ? customData.officials
+      : (customData.judges && customData.judges.length > 0)
+      ? customData.judges
+      : (isVariantB ? defaultJudgesB : defaultJudgesA);
+
+    const rawEvent = (customData.event || customData.title || '').trim();
+    const isDefaultEvent = !rawEvent || 
+      rawEvent.toUpperCase().includes('SPRINGBOARD') || 
+      rawEvent.toUpperCase().includes('10M PLATFORM') || 
+      rawEvent.toUpperCase() === "MEN'S 10M PLATFORM";
+    const eventTitle = (isDefaultEvent ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : rawEvent).toUpperCase();
+
+    const rawSub = (customData.subtitle || customData.subTitle || '').trim();
+    const subTitle = (rawSub ? rawSub : "JUDGES").toUpperCase();
 
     const totalHeight = 88 + 46 + 6 + (judges.length * 57);
     const baseTop = 997 - totalHeight;
