@@ -5,6 +5,7 @@
  */
 
 import { generateSwimming2Fabric, generateSwimming2HTML } from './sports2/swimming2';
+import { generateDiving2Fabric, generateDiving2HTML } from './sports2/diving2';
 
 /**
  * Creates Fabric.js vector graphic group for games2 templates.
@@ -23,6 +24,12 @@ export async function createFabricGraphicGroup2(
   // Swimming (SW) templates (SW002 Venue ID, SW003 Event Schedule, SW004 Event ID, SW005 Start List, etc.)
   if (code === 'SW' || normId.startsWith('SW')) {
     const group = await generateSwimming2Fabric(normId, customFields, customColors);
+    if (group) return group;
+  }
+
+  // Diving (DV) templates (DV002 Venue ID)
+  if (code === 'DV' || normId.startsWith('DV')) {
+    const group = await generateDiving2Fabric(normId, customFields, customColors);
     if (group) return group;
   }
 
@@ -49,5 +56,12 @@ export function generateBroadcastHTML2(
     if (html) return html;
   }
 
+  // Diving (DV) templates (DV002 Venue ID)
+  if (code === 'DV' || normId.startsWith('DV')) {
+    const html = generateDiving2HTML(normId, customFields, customColors);
+    if (html) return html;
+  }
+
   return '';
 }
+
