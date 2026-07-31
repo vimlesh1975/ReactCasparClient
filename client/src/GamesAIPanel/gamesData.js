@@ -113,7 +113,7 @@ const BASE_OLYMPIC_GAMES_DATA = [
       athlete: "Tom Daley",
       country: "GBR",
       flag: "🇬🇧",
-      event: "Men's 10m Platform",
+      event: "Women's Synchronised 10m Platform - Final",
       round: "Final - Dive 6",
       diveCode: "107B",
       diveDesc: "Forward 3½ Somersaults",
