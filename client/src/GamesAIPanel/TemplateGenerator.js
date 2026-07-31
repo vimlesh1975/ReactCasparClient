@@ -16,6 +16,8 @@ export async function createFabricFlagObject(nocCode, options = {}) {
   try {
     const img = await fabric.Image.fromURL(base64);
     img.set({
+      id: generateUniqueId({ type: 'flagImage' }),
+      name: `Flag ${nocCode || ''}`,
       scaleX: 0.35,
       scaleY: 0.35,
       ...options
@@ -7762,7 +7764,7 @@ export async function createFabricGraphicGroup(sport, templateType, customData =
     return generateArcheryFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
   }
   if (code === 'DV' || (sport && sport.code === 'DV') || (templateId && templateId.toUpperCase().includes('DV0'))) {
-    return generateDivingFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
+    return await generateDivingFabric(templateId, templateName, data, sport, customColors, createProps, fabric);
   }
 
   switch (category) {

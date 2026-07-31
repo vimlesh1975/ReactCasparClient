@@ -9,9 +9,9 @@ const Diving = () => {
 
   const [eventName, setEventName] = useState("Men's 10m Platform");
   const [roundStr, setRoundStr] = useState("Final - Dive 6");
-  const [athleteName, setAthleteName] = useState("Tom Daley");
-  const [country, setCountry] = useState("GBR");
-  const [flag, setFlag] = useState("🇬🇧");
+  const [athleteName, setAthleteName] = useState("");
+  const [country, setCountry] = useState("");
+  const [flag, setFlag] = useState("");
 
   const [diveCode, setDiveCode] = useState("107B");
   const [diveDesc, setDiveDesc] = useState("Forward 3½ Somersaults");
@@ -193,8 +193,17 @@ const Diving = () => {
       {/* Playout & Canvas Action Controls */}
       <div style={{ background: 'rgba(255,255,255,0.08)', padding: '18px', borderRadius: '8px', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
         <h4 style={{ width: '100%', color: '#ffd700', margin: '0 0 8px 0' }}>Broadcast & Canvas Controls</h4>
-        <button onClick={() => sendToCanvas('DV005')} style={btnCanvasStyle}>
-          <FaPlus /> Add Athlete ID to Canvas
+        <button onClick={() => sendToCanvas('DV005_A')} style={btnCanvasStyle}>
+          <FaPlus /> DV005 Var A (Single)
+        </button>
+        <button onClick={() => sendToCanvas('DV005_B')} style={btnCanvasStyle}>
+          <FaPlus /> DV005 Var B (DNS)
+        </button>
+        <button onClick={() => sendToCanvas('DV005_C')} style={btnCanvasStyle}>
+          <FaPlus /> DV005 Var C (Pair)
+        </button>
+        <button onClick={() => sendToCanvas('DV005_D')} style={btnCanvasStyle}>
+          <FaPlus /> DV005 Var D (DSQ)
         </button>
         <button onClick={() => sendToCanvas('DV008')} style={btnCanvasStyle}>
           <FaPlus /> Add Dive ID to Canvas

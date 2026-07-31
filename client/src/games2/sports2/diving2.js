@@ -1,6 +1,11 @@
 /**
  * Aquatics - Diving (DV) Broadcast Graphic Templates for games2
- * Focus: DV002, DV003, DV004 (Variant A with DNS, Variant B Pairs without DNS)
+ * Focus: DV002, DV003, DV004, DV005 (Variants A, B, C, D)
+ * DV005 Variants:
+ *  - Variant A: Single diver (RUS - ALEKSANDR DOBROSKOK, no status)
+ *  - Variant B: Single diver (COL - JUAN GUILLERMO URAN, DNS status)
+ *  - Variant C: Pair (CHN - WANG XIN / CHEN RUOLIN, no status)
+ *  - Variant D: Pair (MEX - P. ESPINOSA / T. ORTIZ, DSQ status)
  */
 
 import * as fabric from 'fabric';
@@ -59,7 +64,7 @@ const officialDivingPictographSVG = `
 `;
 
 /**
- * Fabric.js Vector Generator for Diving Templates (DV002, DV003, DV004)
+ * Fabric.js Vector Generator for Diving Templates (DV002, DV003, DV004, DV005)
  */
 export async function generateDiving2Fabric(
   templateId = '',
@@ -394,13 +399,13 @@ export async function generateDiving2Fabric(
       objects.push(orderText);
 
       // Country Flag Image (Left: baseLeft + 85)
-      const flagImg = await createFabricFlagObject(item.noc || item.country || 'ITA', {
+      const flagImg = await createFabricFlagObject(item.noc || item.country || 'ITA', createProps('image', {
         left: baseLeft + 85,
         top: currentY + 11,
         scaleX: 0.60,
         scaleY: 0.60,
         skewX: -12
-      });
+      }));
       if (flagImg) {
         objects.push(flagImg);
       } else {
@@ -446,12 +451,139 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── 4. DV005 - Athlete / Pair ID Lower Third (Variants A, B, C, D) ──
+  if (normId.includes('DV005') || normId.includes('ATHLETE ID') || normId.includes('PAIR ID')) {
+    const rawVariant = (customData.variant || customData.variation || '').toLowerCase();
+    let variant = 'a';
+    if (rawVariant && rawVariant.length >= 1) {
+      variant = rawVariant.charAt(0);
+    } else if (normId.endsWith('B') || normId.includes('_B')) {
+      variant = 'b';
+    } else if (normId.endsWith('C') || normId.includes('_C')) {
+      variant = 'c';
+    } else if (normId.endsWith('D') || normId.includes('_D')) {
+      variant = 'd';
+    } else if (normId.endsWith('A') || normId.includes('_A')) {
+      variant = 'a';
+    }
+
+    // Official OBS Reference Sample Defaults:
+    // Variant A: Single diver, no status (DV005_Athlete_Pair_ID_a.jpg)
+    // Variant B: Single diver, DNS status (DV005_Athlete_Pair_ID_b.jpg)
+    // Variant C: Pair diver, no status (DV005_Athlete_Pair_ID_c.jpg)
+    // Variant D: Pair diver, DSQ status (DV005_Athlete_Pair_ID_d.jpg)
+    let defaultName = 'ALEKSANDR DOBROSKOK';
+    let defaultNoc = 'RUS';
+    let defaultStatus = '';
+
+    if (variant === 'b') {
+      defaultName = 'JUAN GUILLERMO URAN';
+      defaultNoc = 'COL';
+      defaultStatus = 'DNS';
+    } else if (variant === 'c') {
+      defaultName = 'WANG XIN / CHEN RUOLIN';
+      defaultNoc = 'CHN';
+      defaultStatus = '';
+    } else if (variant === 'd') {
+      defaultName = 'P. ESPINOSA / T. ORTIZ';
+      defaultNoc = 'MEX';
+      defaultStatus = 'DSQ';
+    }
+
+    const rawName = (customData.name || customData.athlete || customData.athleteName || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+
+    const isGenericDefaultName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const isGenericDefaultNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const nameStr = (isGenericDefaultName ? defaultName : rawName).toUpperCase();
+    const nocCode = (isGenericDefaultNoc ? defaultNoc : rawNoc).toUpperCase();
+    const statusStr = (customData.status !== undefined && customData.status !== '' ? customData.status : defaultStatus).toUpperCase();
+
+    const baseLeft = 333;
+    const baseTop = 920; // Lower third position matching DV004 bottom distance!
+    const stripWidth = 1100;
+    const stripHeight = 54;
+
+    // 1. Skewed Dark Blue Gradient Strip
+    const stripGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: stripWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const bodyRect = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: stripWidth, height: stripHeight,
+      fill: stripGradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(bodyRect);
+
+    // 2. High-resolution Base64 PNG Country Flag (Scale 0.60, matching DV004!)
+    const flagImg = await createFabricFlagObject(nocCode, createProps('image', {
+      left: baseLeft + 20,
+      top: baseTop + 11,
+      scaleX: 0.60,
+      scaleY: 0.60,
+      skewX: -12
+    }));
+    if (flagImg) {
+      objects.push(flagImg);
+    } else {
+      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+        left: baseLeft + 20, top: baseTop + 10, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 80
+      }));
+      objects.push(nocText);
+    }
+
+    // 3. Athlete / Pair Name (Font Size 30px, matching DV004!)
+    const nameText = new fabric.Textbox(nameStr, createProps('textbox', {
+      left: baseLeft + 175, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: (statusStr && statusStr.trim() !== '') ? 660 : 760
+    }));
+    objects.push(nameText);
+
+    // 4. Status Badge (White rounded rect with black bold text if status present!)
+    if (statusStr && statusStr.trim() !== '') {
+      const dnsBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + stripWidth - 195, top: baseTop + 8, width: 85, height: stripHeight - 16,
+        fill: '#ffffff', skewX: -12, rx: 4, ry: 4,
+        stroke: 'rgba(0,0,0,0.3)', strokeWidth: 1
+      }));
+      const dnsText = new fabric.Textbox(statusStr, createProps('textbox', {
+        left: baseLeft + stripWidth - 190, top: baseTop + 12, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+        fill: '#000000', width: 75, textAlign: 'center'
+      }));
+      objects.push(dnsBg, dnsText);
+    }
+
+    // 5. Olympic Rings (Right side of lower third strip)
+    const olympicRings = createOlympicRingsGroup(baseLeft + stripWidth - 95, baseTop + 13, 11, 2.4);
+    objects.push(olympicRings);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV005 Athlete ID Variant ${variant.toUpperCase()} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }
 
 /**
- * HTML Broadcast Overlay Generator for Diving Templates (DV002, DV003, DV004)
+ * HTML Broadcast Overlay Generator for Diving Templates (DV002, DV003, DV004, DV005)
  */
 export function generateDiving2HTML(
   templateId = '',
@@ -583,7 +715,7 @@ export function generateDiving2HTML(
     `;
   }
 
-  // ── 3. DV004 - Start List / Dive Order (Variant A & Variant B HTML) ──
+  // ── 3. DV004 - Start List / Dive Order ──
   if (normId.includes('DV004') || normId.includes('START LIST')) {
     const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
 
@@ -704,6 +836,95 @@ export function generateDiving2HTML(
             <div class="sub-title unskew">${roundTitle}</div>
           </div>
           ${rowsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 4. DV005 - Athlete / Pair ID Lower Third (HTML Variants A, B, C, D) ──
+  if (normId.includes('DV005') || normId.includes('ATHLETE ID') || normId.includes('PAIR ID')) {
+    const rawVariant = (customData.variant || customData.variation || '').toLowerCase();
+    let variant = 'a';
+    if (rawVariant && rawVariant.length >= 1) {
+      variant = rawVariant.charAt(0);
+    } else if (normId.endsWith('B') || normId.includes('_B')) {
+      variant = 'b';
+    } else if (normId.endsWith('C') || normId.includes('_C')) {
+      variant = 'c';
+    } else if (normId.endsWith('D') || normId.includes('_D')) {
+      variant = 'd';
+    } else if (normId.endsWith('A') || normId.includes('_A')) {
+      variant = 'a';
+    }
+
+    let defaultName = 'ALEKSANDR DOBROSKOK';
+    let defaultNoc = 'RUS';
+    let defaultStatus = '';
+
+    if (variant === 'b') {
+      defaultName = 'JUAN GUILLERMO URAN';
+      defaultNoc = 'COL';
+      defaultStatus = 'DNS';
+    } else if (variant === 'c') {
+      defaultName = 'WANG XIN / CHEN RUOLIN';
+      defaultNoc = 'CHN';
+      defaultStatus = '';
+    } else if (variant === 'd') {
+      defaultName = 'P. ESPINOSA / T. ORTIZ';
+      defaultNoc = 'MEX';
+      defaultStatus = 'DSQ';
+    }
+
+    const rawName = (customData.name || customData.athlete || customData.athleteName || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+
+    const isGenericDefaultName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const isGenericDefaultNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const nameStr = (isGenericDefaultName ? defaultName : rawName).toUpperCase();
+    const nocCode = (isGenericDefaultNoc ? defaultNoc : rawNoc).toUpperCase();
+    const statusStr = (customData.status !== undefined && customData.status !== '' ? customData.status : defaultStatus).toUpperCase();
+    const flagImgHtml = getFlagImgHtml(nocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .lower-third-container {
+            position: absolute; top: 920px; left: 333px; width: 1100px; height: 54px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .lt-left { display: flex; align-items: center; gap: 36px; }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+          .lt-right { display: flex; align-items: center; gap: 18px; }
+          .status-badge-white {
+            background: #ffffff; color: #000000; font-size: 22px; font-weight: 900; font-style: italic;
+            padding: 4px 18px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="lower-third-container">
+          <div class="lt-left unskew">
+            <div class="flag-icon">${flagImgHtml || nocCode}</div>
+            <div class="athlete-name">${nameStr}</div>
+          </div>
+          <div class="lt-right unskew">
+            ${(statusStr && statusStr.trim() !== '') ? `<div class="status-badge-white">${statusStr}</div>` : ''}
+            <div>${olympicRingsSVG}</div>
+          </div>
         </div>
       </body>
       </html>

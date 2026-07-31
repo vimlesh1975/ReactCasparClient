@@ -5,14 +5,17 @@
  */
 
 import { generateUniqueId } from '../../common';
-
-
+import { generateDiving2Fabric, generateDiving2HTML } from '../../games2/sports2/diving2';
 
 export function generateDivingHTML(templateId = '', templateName = '', customData = {}, sport = {}, styleOptions = {}) {
   const font = styleOptions.fontFamily || "'Outfit', 'Roboto Condensed', 'Segoe UI', sans-serif";
-
   const normId = (templateId || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
+
+  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005')) {
+    const html = generateDiving2HTML(templateId, customData, styleOptions);
+    if (html) return html;
+  }
 
   const primaryColor = customData.primaryColor || sport.primaryColor || '#005b96';
   const secondaryColor = customData.secondaryColor || sport.secondaryColor || '#6497b1';
@@ -499,9 +502,14 @@ export function generateDivingHTML(templateId = '', templateName = '', customDat
   `;
 }
 
-export function generateDivingFabric(templateId = '', templateName = '', data = {}, sport = {}, customColors = {}, createProps, fabric) {
+export async function generateDivingFabric(templateId = '', templateName = '', data = {}, sport = {}, customColors = {}, createProps, fabric) {
   const normId = (templateId || "").toLowerCase();
   const normName = (templateName || "").toLowerCase();
+
+  if (normId.includes('dv002') || normId.includes('dv003') || normId.includes('dv004') || normId.includes('dv005')) {
+    const group = await generateDiving2Fabric(templateId, data, customColors);
+    if (group) return group;
+  }
 
   // London 2012 OBS Diving colour system
   const NAVY   = '#0a1a3d';   // main dark navy background
