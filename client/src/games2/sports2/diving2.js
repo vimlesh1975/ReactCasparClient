@@ -881,6 +881,243 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── 7. DV008 - Dive ID (Variants A, B, C, D) ──
+  if (normId.includes('DV008') || normId.includes('DIVE ID')) {
+    const rawVariant = (customData.variant || customData.variation || '').toLowerCase();
+    let variant = 'a';
+    if (rawVariant && rawVariant.length >= 1) {
+      variant = rawVariant.charAt(0);
+    } else if (normId.endsWith('B') || normId.includes('_B')) {
+      variant = 'b';
+    } else if (normId.endsWith('C') || normId.includes('_C')) {
+      variant = 'c';
+    } else if (normId.endsWith('D') || normId.includes('_D')) {
+      variant = 'd';
+    } else if (normId.endsWith('A') || normId.includes('_A')) {
+      variant = 'a';
+    }
+
+    let defaultNoc = 'BLR';
+    let defaultName = 'SERGEI KUCHMASOV';
+    let defaultRound = 'ROUND 1';
+    let defaultDifficulty = 'DIFFICULTY 3.4';
+    let defaultPosition = 'TUCK POSITION';
+    let defaultDiveName = 'INWARD 3½ SOMERSAULT';
+    let hasRankStrip = false;
+    let defaultAfterRound = '';
+    let defaultRank = '';
+    let defaultTotalScore = '';
+
+    if (variant === 'b') {
+      defaultNoc = 'JPN';
+      defaultName = 'KEN TERAUCHI';
+      defaultRound = 'ROUND 3';
+      defaultDifficulty = 'DIFFICULTY 3.0';
+      defaultPosition = 'PIKE POSITION';
+      defaultDiveName = 'BACK 2½ SOMERSAULT';
+      hasRankStrip = true;
+      defaultAfterRound = 'AFTER ROUND 2';
+      defaultRank = '6';
+      defaultTotalScore = '238.00';
+    } else if (variant === 'c') {
+      defaultNoc = 'PRK';
+      defaultName = 'CHOE KUM HUI / KIM UN HYANG';
+      defaultRound = 'ROUND 1';
+      defaultDifficulty = 'DIFFICULTY 2.0';
+      defaultPosition = 'PIKE POSITION';
+      defaultDiveName = 'INWARD DIVE';
+      hasRankStrip = false;
+    } else if (variant === 'd') {
+      defaultNoc = 'GER';
+      defaultName = 'A. GAMM / N. SUBSCHINSKI';
+      defaultRound = 'ROUND 6';
+      defaultDifficulty = 'DIFFICULTY 3.4';
+      defaultPosition = 'PIKE POSITION';
+      defaultDiveName = 'BACK 2½ SOMERSAULT 1½ TWISTS';
+      hasRankStrip = true;
+      defaultAfterRound = 'AFTER ROUND 5';
+      defaultRank = '4';
+      defaultTotalScore = '651.36';
+    }
+
+    const rawName = (customData.name || customData.athlete || '').trim();
+    const rawNoc = (customData.noc || customData.country || '').trim();
+    const isGenericName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+
+    const nameStr = (isGenericName ? defaultName : rawName).toUpperCase();
+    const nocCode = (isGenericNoc ? defaultNoc : rawNoc).toUpperCase();
+
+    const roundStr = (customData.round || defaultRound).toUpperCase();
+    const diffStr = (customData.difficulty || defaultDifficulty).toUpperCase();
+    const posStr = (customData.position || defaultPosition).toUpperCase();
+    const diveNameStr = (customData.diveName || customData.dive || defaultDiveName).toUpperCase();
+
+    const afterRoundStr = (customData.afterRound || defaultAfterRound).toUpperCase();
+    const rankStr = (customData.rank || defaultRank);
+    const scoreStr = (customData.totalScore || customData.score || defaultTotalScore);
+
+    const bannerWidth = 1100;
+    const tier1Height = 54;
+    const tier2Height = 38;
+    const tier3Height = 42;
+    const tier4Height = hasRankStrip ? 38 : 0;
+
+    const totalHeight = tier1Height + tier2Height + tier3Height + tier4Height + 6;
+    const targetBottomY = 997;
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight;
+
+    // 1. Tier 1: Main Dark Blue Athlete/NOC Banner
+    const t1Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const t1Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: t1Gradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(t1Bar);
+
+    const flagImg = await createFabricFlagObject(nocCode, createProps('image', {
+      left: baseLeft + 20, top: baseTop + 11, scaleX: 0.60, scaleY: 0.60, skewX: -12
+    }));
+    if (flagImg) {
+      objects.push(flagImg);
+    } else {
+      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+        left: baseLeft + 20, top: baseTop + 10, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 80
+      }));
+      objects.push(nocText);
+    }
+
+    const nameText = new fabric.Textbox(nameStr, createProps('textbox', {
+      left: baseLeft + 175, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750
+    }));
+    objects.push(nameText);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 95, baseTop + 13, 11, 2.4);
+    objects.push(olympicRings);
+
+    // 2. Tier 2: Silver Metallic Strip
+    const t2Top = baseTop + tier1Height + 2;
+    const t2Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const t2Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 15, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: t2Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    objects.push(t2Bar);
+
+    const roundText = new fabric.Textbox(roundStr, createProps('textbox', {
+      left: baseLeft + 40, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 250
+    }));
+    objects.push(roundText);
+
+    const diffText = new fabric.Textbox(diffStr, createProps('textbox', {
+      left: baseLeft + 350, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 350, textAlign: 'center'
+    }));
+    objects.push(diffText);
+
+    const posText = new fabric.Textbox(posStr, createProps('textbox', {
+      left: baseLeft + bannerWidth - 380, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 330, textAlign: 'right'
+    }));
+    objects.push(posText);
+
+    // 3. Tier 3: Dark Blue Strip (Dive Name)
+    const t3Top = t2Top + tier2Height + 2;
+    const t3Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#091d36' },
+        { offset: 0.5, color: '#0f2f57' },
+        { offset: 1, color: '#071629' }
+      ]
+    });
+
+    const t3Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: t3Top, width: bannerWidth, height: tier3Height,
+      fill: t3Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1
+    }));
+    objects.push(t3Bar);
+
+    const diveNameText = new fabric.Textbox(diveNameStr, createProps('textbox', {
+      left: baseLeft + 30, top: t3Top + 8, fontSize: 26, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 1000
+    }));
+    objects.push(diveNameText);
+
+    // 4. Tier 4: Bottom Rank Strip ("AFTER ROUND X", Red Rank Badge, Total Score)
+    if (hasRankStrip && afterRoundStr) {
+      const t4Top = t3Top + tier3Height + 2;
+      const t4Bar = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 15, top: t4Top, width: 420, height: tier4Height,
+        fill: t3Gradient, skewX: -12, rx: 4, ry: 4,
+        stroke: borderHighlight, strokeWidth: 1
+      }));
+      objects.push(t4Bar);
+
+      const afterText = new fabric.Textbox(afterRoundStr, createProps('textbox', {
+        left: baseLeft + 30, top: t4Top + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 200
+      }));
+      objects.push(afterText);
+
+      if (rankStr) {
+        const rankBadge = new fabric.Rect(createProps('rect', {
+          left: baseLeft + 240, top: t4Top + 6, width: 36, height: tier4Height - 12,
+          fill: '#d32f2f', skewX: -12, rx: 3, ry: 3
+        }));
+        const rankText = new fabric.Textbox(String(rankStr), createProps('textbox', {
+          left: baseLeft + 240, top: t4Top + 8, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 36, textAlign: 'center'
+        }));
+        objects.push(rankBadge, rankText);
+      }
+
+      if (scoreStr) {
+        const scoreText = new fabric.Textbox(String(scoreStr), createProps('textbox', {
+          left: baseLeft + 290, top: t4Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 130, textAlign: 'center'
+        }));
+        objects.push(scoreText);
+      }
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV008 Dive ID Variant ${variant.toUpperCase()} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }

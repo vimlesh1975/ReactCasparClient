@@ -214,8 +214,17 @@ const Diving = () => {
         <button onClick={() => sendToCanvas('DV007_B')} style={btnCanvasStyle}>
           <FaPlus /> DV007 Var B (Synch)
         </button>
-        <button onClick={() => sendToCanvas('DV008')} style={btnCanvasStyle}>
-          <FaPlus /> Add Dive ID to Canvas
+        <button onClick={() => sendToCanvas('DV008_A')} style={btnCanvasStyle}>
+          <FaPlus /> DV008 Var A (Single 3-Tier)
+        </button>
+        <button onClick={() => sendToCanvas('DV008_B')} style={btnCanvasStyle}>
+          <FaPlus /> DV008 Var B (Single 4-Tier Rank)
+        </button>
+        <button onClick={() => sendToCanvas('DV008_C')} style={btnCanvasStyle}>
+          <FaPlus /> DV008 Var C (Pair 3-Tier)
+        </button>
+        <button onClick={() => sendToCanvas('DV008_D')} style={btnCanvasStyle}>
+          <FaPlus /> DV008 Var D (Pair 4-Tier Rank)
         </button>
         <button onClick={() => sendToCanvas('DV010')} style={btnCanvasStyle}>
           <FaPlus /> Add Scorecard to Canvas
