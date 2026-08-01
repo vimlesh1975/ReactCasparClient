@@ -68,7 +68,7 @@ import HtmlOutput from "../HtmlOutput";
 import { Rnd } from "react-rnd";
 import * as d from "@theatre/dataverse";
 
-import AIPannel from "../GamesAIPanel/GamesAIPanel";
+import AIPannel from "../games2/Games2Panel";
 
 // import split from 'graphemesplit'
 // fabric.util.string.graphemeSplit.prototype = split

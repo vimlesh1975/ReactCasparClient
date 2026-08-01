@@ -6,7 +6,7 @@
 
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../../common';
-import { createFabricFlagObject, getFlagImgHtml } from '../../GamesAIPanel/TemplateGenerator';
+import { createFabricFlagObject, getFlagImgHtml } from '../flagHelpers';
 
 /**
  * Helper function to create a unified, named Olympic Rings Group in Fabric.js

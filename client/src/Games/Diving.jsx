@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaPlay, FaStop, FaPlus, FaCalculator } from 'react-icons/fa';
 import { endpoint, stopGraphics, templateLayers } from '../common';
-import { createFabricGraphicGroup } from '../GamesAIPanel/TemplateGenerator';
+import { createFabricGraphicGroup2 as createFabricGraphicGroup } from '../games2/TemplateGenerator2';
 
 const Diving = () => {
   const canvas = useSelector(state => state.canvasReducer.canvas);

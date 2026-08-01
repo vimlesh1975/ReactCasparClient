@@ -2,7 +2,7 @@
  * London 2012 Olympic Games — Sport Metadata & Color Themes (games2)
  */
 
-import * as RealTemplates from "../GamesAIPanel/real_templates_output";
+import * as RealTemplates from "./real_templates_output";
 
 export const OLYMPIC_GAMES_DATA_2 = [
   { id: "aquatics-swimming", name: "Aquatics - Swimming", code: "SW", category: "Aquatics", venue: "Aquatics Centre", primaryColor: "#0077be", secondaryColor: "#00d2ff", accentColor: "#ffffff" },

@@ -11,7 +11,7 @@
 
 import * as fabric from 'fabric';
 import { generateUniqueId } from '../../common';
-import { FLAGS_BASE64 } from '../../GamesAIPanel/flagsBase64';
+import { FLAGS_BASE64 } from '../flagsBase64';
 
 /**
  * Helper to retrieve base64 flag URL for NOC code

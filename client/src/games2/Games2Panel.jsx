@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import * as fabric from 'fabric';
-import { OLYMPIC_GAMES_DATA, getSportTemplates } from '../GamesAIPanel/gamesData';
+import { OLYMPIC_GAMES_DATA, getSportTemplates } from './games2SportData';
 import { createFabricGraphicGroup2 } from './TemplateGenerator2';
 import { FaPlus } from 'react-icons/fa';
 import './Games2Panel.css';
