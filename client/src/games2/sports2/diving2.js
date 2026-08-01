@@ -2388,6 +2388,339 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── DV016 - Ceremony ID ──
+  if (normId.includes('DV016')) {
+    const baseTop = 876;
+    const baseLeft = 328;
+    const bannerWidth = 1260;
+
+    const eventTitle = (customData.event || "WOMEN'S SYNCHRONISED 10M PLATFORM").toUpperCase();
+    const ceremonyStr = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    // Top bar (blue gradient)
+    const topBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const topBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54,
+      fill: topBarGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(topBar);
+
+    // Picto box accent block
+    const pictoBox = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: 68, height: 54,
+      fill: 'rgba(0,0,0,0.25)', skewX: -12
+    }));
+    objects.push(pictoBox);
+
+    // Diving pictograph (inline SVG path objects)
+    const pikeBody = new fabric.Path('M 40 78 L 40 25 C 40 12, 68 10, 72 30 L 68 48 C 65 52, 58 52, 54 46 L 50 32 C 48 24, 46 24, 46 30 L 46 78 Z', {
+      left: baseLeft + 14, top: baseTop + 7, fill: '#ffffff', scaleX: 0.65, scaleY: 0.65, selectable: true
+    });
+    const headCircle = new fabric.Path('M 64 48 C 56 48, 54 58, 62 66 C 68 72, 74 68, 74 58 C 74 50, 70 48, 64 48 Z', {
+      left: baseLeft + 26, top: baseTop + 20, fill: '#ffffff', scaleX: 0.65, scaleY: 0.65, selectable: true
+    });
+    const waves = new fabric.Path('M 10 92 Q 22 87, 34 92 T 58 92 T 82 92', {
+      left: baseLeft + 8, top: baseTop + 34, fill: '', stroke: '#ffffff', strokeWidth: 2.5, strokeLineCap: 'round', selectable: true
+    });
+    objects.push(pikeBody, headCircle, waves);
+
+    // Event title text
+    const eventText = new fabric.Textbox(eventTitle, createProps('textbox', {
+      left: baseLeft + 76, top: baseTop + 10, fontSize: 28, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 200, charSpacing: 20
+    }));
+    objects.push(eventText);
+
+    // Olympic rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 110, baseTop + 13, 12, 2.5);
+    objects.push(olympicRings);
+
+    // Sub-header bar (light grey)
+    const subBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 1220, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#c8d8ea' },
+        { offset: 0.5, color: '#dce8f5' },
+        { offset: 1, color: '#b8cce0' }
+      ]
+    });
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 56, width: 1220, height: 34,
+      fill: subBarGradient, skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,0,0,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const ceremonyText = new fabric.Textbox(ceremonyStr, createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 62, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 900, charSpacing: 60
+    }));
+    objects.push(ceremonyText);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: 'DV016 Ceremony ID',
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── DV017 - Medal ID (Variant A: individual, Variant B: pair/sync) ──
+  if (normId.includes('DV017')) {
+    const bannerWidth = 850;
+    const tier1Height = 42;
+    const tier2Height = 32;
+    const baseTop = 966 - (tier1Height + tier2Height + 2); // 890
+    const baseLeft = 328;
+
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+
+    const isGenericDummy = (customData.athlete || '').toUpperCase() === 'TOM DALEY' || (customData.noc || '').toUpperCase() === 'GBR';
+    const finalNoc = isGenericDummy ? null : (customData.noc || customData.country);
+    const finalAthlete = isGenericDummy ? null : (customData.athlete || customData.name || customData.pair);
+    const finalMedal = isGenericDummy ? null : customData.medal;
+    const finalEvent = isGenericDummy ? null : customData.event;
+
+    const nocCode = (finalNoc || (isVariantB ? 'PRK' : 'CHN')).toUpperCase();
+    const athleteName = finalAthlete || (isVariantB ? 'CHOE Kum Hui / KIM Un Hyang' : 'HE CHONG');
+    const medal = (finalMedal || (isVariantB ? 'SILVER' : 'GOLD')).toUpperCase();
+    const eventName = (finalEvent || (isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "MEN'S 3M SPRINGBOARD")).toUpperCase();
+    const medalLine = `${medal} - ${eventName}`;
+
+    const medalEmoji = medal.includes('GOLD') ? '🥇' : medal.includes('SILVER') ? '🥈' : '🥉';
+    const medalBarColor = medal.includes('GOLD') ? '#b8860b' : medal.includes('SILVER') ? '#607080' : '#7a4a2a';
+
+    const darkGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+    });
+
+    // Tier 1
+    const topBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: darkGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(topBar);
+
+    // Flag
+    const flagObj = await createFabricFlagObject(nocCode, {
+      left: baseLeft + 20, top: baseTop + 7, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Athlete name
+    const nameText = new fabric.Textbox(athleteName, createProps('textbox', {
+      left: baseLeft + 125, top: baseTop + 9, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 240, charSpacing: 10
+    }));
+    objects.push(nameText);
+
+    // Olympic rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 80, baseTop + 9, 10, 2);
+    objects.push(olympicRings);
+
+    // Tier 2
+    const t2Top = baseTop + tier1Height + 2;
+    const botBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: darkGradient, skewX: -12, rx: 3, ry: 3,
+      stroke: borderHighlight, strokeWidth: 1
+    }));
+    objects.push(botBar);
+
+    // Medal circle accent
+    const medalCircle = new fabric.Circle(createProps('circle', {
+      left: baseLeft + 22, top: t2Top + 3, radius: 13,
+      fill: medalBarColor, stroke: '#ffffff', strokeWidth: 1.5
+    }));
+    objects.push(medalCircle);
+
+    const medalTextObj = new fabric.Textbox(medalLine, createProps('textbox', {
+      left: baseLeft + 54, top: t2Top + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 100, charSpacing: 20
+    }));
+    objects.push(medalTextObj);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV017 Medal ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── DV018 - Medals List (Variant A: individual, Variant B: pair/sync) ──
+  if (normId.includes('DV018')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+    const eventTitle = (customData.event || (isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "MEN'S 3M SPRINGBOARD")).toUpperCase();
+    const ceremonyStr = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    // Default 3 rows (Gold, Silver, Bronze)
+    let rows = customData.rows || customData.medals || [];
+    const isGenericDummy = rows.some(r => (r.name || '').toUpperCase().includes('TOM DALEY'));
+    if (rows.length < 3 || isGenericDummy) {
+      rows = isVariantB ? [
+        { medal: 'GOLD', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN' },
+        { medal: 'SILVER', noc: 'PRK', name: 'CHOE Kum Hui / KIM Un Hyang' },
+        { medal: 'BRONZE', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU' }
+      ] : [
+        { medal: 'GOLD', noc: 'CHN', name: 'HE CHONG' },
+        { medal: 'SILVER', noc: 'CAN', name: 'ALEXANDRE DESPATIE' },
+        { medal: 'BRONZE', noc: 'CHN', name: 'QIN KAI' }
+      ];
+    }
+    // Limit to 3 max
+    rows = rows.slice(0, 3);
+
+    const bannerWidth = 1260;
+    const tier1Height = 54;
+    const tier2Height = 34;
+    const rowHeight = 38;
+    const rowGap = 2;
+
+    const totalHeight = tier1Height + tier2Height + 4 + (rows.length * rowHeight) + (Math.max(0, rows.length - 1) * rowGap);
+    const targetBottomY = 966;
+    const baseLeft = 328;
+    const baseTop = targetBottomY - totalHeight;
+
+    // Tier 1 (Header)
+    const topBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const topBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: topBarGradient, skewX: -12, rx: 4, ry: 4, stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(topBar);
+
+    const pictoBox = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: 68, height: tier1Height,
+      fill: 'rgba(0,0,0,0.25)', skewX: -12
+    }));
+    objects.push(pictoBox);
+
+    const pikeBody = new fabric.Path('M 40 78 L 40 25 C 40 12, 68 10, 72 30 L 68 48 C 65 52, 58 52, 54 46 L 50 32 C 48 24, 46 24, 46 30 L 46 78 Z', {
+      left: baseLeft + 14, top: baseTop + 7, fill: '#ffffff', scaleX: 0.65, scaleY: 0.65, selectable: true
+    });
+    const headCircle = new fabric.Path('M 64 48 C 56 48, 54 58, 62 66 C 68 72, 74 68, 74 58 C 74 50, 70 48, 64 48 Z', {
+      left: baseLeft + 26, top: baseTop + 20, fill: '#ffffff', scaleX: 0.65, scaleY: 0.65, selectable: true
+    });
+    const waves = new fabric.Path('M 10 92 Q 22 87, 34 92 T 58 92 T 82 92', {
+      left: baseLeft + 8, top: baseTop + 34, fill: '', stroke: '#ffffff', strokeWidth: 2.5, strokeLineCap: 'round', selectable: true
+    });
+    objects.push(pikeBody, headCircle, waves);
+
+    const eventText = new fabric.Textbox(eventTitle, createProps('textbox', {
+      left: baseLeft + 76, top: baseTop + 10, fontSize: 28, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 200, charSpacing: 20
+    }));
+    objects.push(eventText);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 110, baseTop + 13, 12, 2.5);
+    objects.push(olympicRings);
+
+    // Tier 2 (Sub-header)
+    const t2Top = baseTop + tier1Height + 2;
+    const subBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 1220, y2: 0 },
+      colorStops: [{ offset: 0, color: '#c8d8ea' }, { offset: 0.5, color: '#dce8f5' }, { offset: 1, color: '#b8cce0' }]
+    });
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: 1220, height: tier2Height,
+      fill: subBarGradient, skewX: -12, rx: 3, ry: 3, stroke: 'rgba(0,0,0,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const ceremonyText = new fabric.Textbox(ceremonyStr, createProps('textbox', {
+      left: baseLeft + 90, top: t2Top + 6, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 900, charSpacing: 60
+    }));
+    objects.push(ceremonyText);
+
+    // Rows
+    const rowsStartTop = t2Top + tier2Height + 2;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rTop = rowsStartTop + i * (rowHeight + rowGap);
+      const isGold = i === 0 || (row.medal || '').toUpperCase().includes('GOLD');
+      const isSilver = i === 1 || (row.medal || '').toUpperCase().includes('SILVER');
+      
+      const medalEmoji = isGold ? '🥇' : isSilver ? '🥈' : '🥉';
+      const medalBg = isGold ? '#b8860b' : isSilver ? '#607080' : '#7a4a2a';
+      const rNoc = (row.noc || row.country || 'CHN').toUpperCase();
+      const rName = row.name || row.athlete || row.pair || '';
+
+      const rowGradient = new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels',
+        coords: { x1: 0, y1: 0, x2: 1210, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      });
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 27, top: rTop, width: 1210, height: rowHeight,
+        fill: rowGradient, skewX: -12, rx: 3, ry: 3, stroke: borderHighlight, strokeWidth: 1
+      }));
+      objects.push(rowBar);
+
+      // Medal circle
+      const medalCircle = new fabric.Circle(createProps('circle', {
+        left: baseLeft + 31, top: rTop + 3, radius: 15,
+        fill: medalBg, stroke: '#ffffff', strokeWidth: 1.5
+      }));
+      // Note: we can't easily draw emoji in pure fabric reliably without custom fonts, so we use a text approximation or skip emoji in fabric preview. 
+      // We will render it properly in HTML. For Fabric, we'll draw a star or simple text.
+      const medalText = new fabric.Textbox(isGold ? '1' : isSilver ? '2' : '3', createProps('textbox', {
+        left: baseLeft + 31, top: rTop + 7, fontSize: 16, fontWeight: '900', fill: '#ffffff', width: 30, textAlign: 'center'
+      }));
+      objects.push(medalCircle, medalText);
+
+      // Flag
+      const flagObj = await createFabricFlagObject(rNoc, {
+        left: baseLeft + 70, top: rTop + 5, scaleX: 0.45, scaleY: 0.45
+      });
+      if (flagObj) objects.push(flagObj);
+
+      // Name
+      const nameText = new fabric.Textbox(rName, createProps('textbox', {
+        left: baseLeft + 160, top: rTop + 7, fontSize: 22, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 900, charSpacing: 20
+      }));
+      objects.push(nameText);
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV018 Medals List (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }
@@ -3171,7 +3504,7 @@ export function generateDiving2HTML(
           .t3-bar {
             height: 42px; width: 1100px;
             background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
-            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
             transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-around;
             padding: 0 10px;
           }
@@ -3866,6 +4199,265 @@ export function generateDiving2HTML(
             <div class="sub-title unskew">${subTitle}</div>
           </div>
           ${rowsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── DV016 - Ceremony ID ──
+  if (normId.includes('DV016')) {
+    const eventTitle = (customData.event || "WOMEN'S SYNCHRONISED 10M PLATFORM").toUpperCase();
+    const ceremonyStr = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .ceremony-banner { position: absolute; top: 876px; left: 328px; display: flex; flex-direction: column; gap: 2px; }
+          .tier-1 {
+            height: 54px; width: 1260px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 60%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 6px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px 0 0; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .t1-left { display: flex; align-items: center; gap: 14px; }
+          .picto-box {
+            width: 68px; height: 54px; background: rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 10px; flex-shrink: 0; margin-left: -1px;
+          }
+          .t1-title { font-size: 28px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+          .tier-2 {
+            height: 34px; width: 1220px; margin-left: 17px; margin-top: 2px;
+            background: linear-gradient(135deg, #c8d8ea 0%, #dce8f5 50%, #b8cce0 100%);
+            border: 1px solid rgba(0,0,0,0.15); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 24px;
+          }
+          .t2-text { font-size: 20px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 4px; padding-left: 72px; white-space: nowrap; }
+        </style>
+      </head>
+      <body>
+        <div class="ceremony-banner">
+          <div class="tier-1">
+            <div class="t1-left unskew">
+              <div class="picto-box">${officialDivingPictographSVG}</div>
+              <div class="t1-title">${eventTitle}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="tier-2">
+            <div class="t2-text unskew">${ceremonyStr}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── DV017 - Medal ID ──
+  if (normId.includes('DV017')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+
+    const isGenericDummy = (customData.athlete || '').toUpperCase() === 'TOM DALEY' || (customData.noc || '').toUpperCase() === 'GBR';
+    const finalNoc = isGenericDummy ? null : (customData.noc || customData.country);
+    const finalAthlete = isGenericDummy ? null : (customData.athlete || customData.name || customData.pair);
+    const finalMedal = isGenericDummy ? null : customData.medal;
+    const finalEvent = isGenericDummy ? null : customData.event;
+
+    const nocCode = (finalNoc || (isVariantB ? 'PRK' : 'CHN')).toUpperCase();
+    const athleteName = finalAthlete || (isVariantB ? 'CHOE Kum Hui / KIM Un Hyang' : 'HE CHONG');
+    const medal = (finalMedal || (isVariantB ? 'SILVER' : 'GOLD')).toUpperCase();
+    const eventName = (finalEvent || (isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "MEN'S 3M SPRINGBOARD")).toUpperCase();
+    const medalLine = `${medal} - ${eventName}`;
+    const medalEmoji = medal.includes('GOLD') ? '🥇' : medal.includes('SILVER') ? '🥈' : '🥉';
+    const medalBg = medal.includes('GOLD') ? '#b8860b' : medal.includes('SILVER') ? '#607080' : '#7a4a2a';
+    const flagHtml = getFlagImgHtml(nocCode, 'height: 32px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .medal-banner { position: absolute; top: 890px; left: 328px; display: flex; flex-direction: column; gap: 2px; }
+          .tier-1 {
+            height: 42px; width: 850px;
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px 0 0; box-shadow: 0 6px 16px rgba(0,0,0,0.6); overflow: hidden;
+          }
+          .unskew { transform: skewX(12deg); }
+          .t1-left { display: flex; align-items: center; padding-left: 20px; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 32px; }
+          .athlete-name { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; white-space: nowrap; }
+          .tier-2 {
+            height: 32px; width: 820px; margin-left: 17px; margin-top: 2px;
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 12px; gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+          }
+          .medal-circle {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: ${medalBg}; border: 1.5px solid #fff;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            font-size: 14px;
+          }
+          .medal-line { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+        </style>
+      </head>
+      <body>
+        <div class="medal-banner">
+          <div class="tier-1">
+            <div class="t1-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="athlete-name">${athleteName}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="tier-2">
+            <div class="unskew" style="display:flex;align-items:center;gap:10px;">
+              <div class="medal-circle">${medalEmoji}</div>
+              <div class="medal-line">${medalLine}</div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── DV018 - Medals List ──
+  if (normId.includes('DV018')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
+    const eventTitle = (customData.event || (isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "MEN'S 3M SPRINGBOARD")).toUpperCase();
+    const ceremonyStr = (customData.ceremony || 'VICTORY CEREMONY').toUpperCase();
+
+    let rows = customData.rows || customData.medals || [];
+    const isGenericDummy = rows.some(r => (r.name || '').toUpperCase().includes('TOM DALEY'));
+    if (rows.length < 3 || isGenericDummy) {
+      rows = isVariantB ? [
+        { medal: 'GOLD', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN' },
+        { medal: 'SILVER', noc: 'PRK', name: 'CHOE Kum Hui / KIM Un Hyang' },
+        { medal: 'BRONZE', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU' }
+      ] : [
+        { medal: 'GOLD', noc: 'CHN', name: 'HE CHONG' },
+        { medal: 'SILVER', noc: 'CAN', name: 'ALEXANDRE DESPATIE' },
+        { medal: 'BRONZE', noc: 'CHN', name: 'QIN KAI' }
+      ];
+    }
+    rows = rows.slice(0, 3);
+
+    const bannerWidth = 1260;
+    const tier1Height = 54;
+    const tier2Height = 34;
+    const rowHeight = 38;
+    const rowGap = 2;
+    const totalHeight = tier1Height + tier2Height + 4 + (rows.length * rowHeight) + (Math.max(0, rows.length - 1) * rowGap);
+    const targetBottomY = 966;
+    const baseTop = targetBottomY - totalHeight;
+
+    const rowsHTML = rows.map((row, i) => {
+      const isGold = i === 0 || (row.medal || '').toUpperCase().includes('GOLD');
+      const isSilver = i === 1 || (row.medal || '').toUpperCase().includes('SILVER');
+      const medalEmoji = isGold ? '🥇' : isSilver ? '🥈' : '🥉';
+      const medalBg = isGold ? '#b8860b' : isSilver ? '#607080' : '#7a4a2a';
+      const noc = (row.noc || row.country || 'CHN').toUpperCase();
+      const name = row.name || row.athlete || row.pair || '';
+      const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+      return `
+        <div class="medal-row">
+          <div class="medal-circle unskew">${medalEmoji}</div>
+          <div class="flag-wrap unskew" style="margin-left: 10px; margin-right: 24px;">${flagHtml}</div>
+          <div class="athlete-name unskew">${name}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .medals-list { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; gap: 2px; }
+          .tier-1 {
+            height: 54px; width: 1260px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 60%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 6px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px 0 0; box-shadow: 0 10px 24px rgba(0,0,0,0.6); overflow: hidden;
+          }
+          .unskew { transform: skewX(12deg); }
+          .t1-left { display: flex; align-items: center; gap: 14px; }
+          .picto-box {
+            width: 68px; height: 54px; background: rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 10px; flex-shrink: 0; margin-left: -1px;
+          }
+          .t1-title { font-size: 28px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+          .tier-2 {
+            height: 34px; width: 1220px; margin-left: 17px;
+            background: linear-gradient(135deg, #c8d8ea 0%, #dce8f5 50%, #b8cce0 100%);
+            border: 1px solid rgba(0,0,0,0.15); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 24px;
+          }
+          .t2-text { font-size: 20px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 4px; padding-left: 72px; white-space: nowrap; }
+          
+          .rows-container { display: flex; flex-direction: column; gap: 2px; margin-left: 27px; }
+          .medal-row {
+            height: 38px; width: 1210px;
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding-left: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+          }
+          .medal-circle {
+            width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #fff;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            font-size: 14px; margin-right: 8px; z-index: 2;
+          }
+          .medal-row:nth-child(1) .medal-circle { background: #b8860b; }
+          .medal-row:nth-child(2) .medal-circle { background: #607080; }
+          .medal-row:nth-child(3) .medal-circle { background: #7a4a2a; }
+          .flag-wrap { display: flex; align-items: center; }
+          .athlete-name { font-size: 22px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; white-space: nowrap; }
+        </style>
+      </head>
+      <body>
+        <div class="medals-list">
+          <div class="tier-1">
+            <div class="t1-left unskew">
+              <div class="picto-box">${officialDivingPictographSVG}</div>
+              <div class="t1-title">${eventTitle}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="tier-2">
+            <div class="t2-text unskew">${ceremonyStr}</div>
+          </div>
+          <div class="rows-container">
+            ${rowsHTML}
+          </div>
         </div>
       </body>
       </html>
