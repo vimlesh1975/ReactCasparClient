@@ -493,7 +493,7 @@ export async function generateDiving2Fabric(
     const statusStr = (customData.status !== undefined && customData.status !== '' ? customData.status : defaultStatus).toUpperCase();
 
     const baseLeft = 333;
-    const baseTop = 920; // Lower third position matching DV004 bottom distance!
+    const baseTop = 912; // Lower third position matching Y = 966px bottom baseline!
     const stripWidth = 1100;
     const stripHeight = 54;
 
@@ -606,7 +606,7 @@ export async function generateDiving2Fabric(
     const subTitle = (rawSub ? rawSub : "JUDGES").toUpperCase();
 
     const totalHeight = headerHeight + subHeaderHeight + 6 + (judges.length * (rowHeight + rowGap));
-    const targetBottomY = 997; // Exact DV004 bottom edge (83px clearance from 1080 screen bottom)!
+    const targetBottomY = 966; // Y = 966px bottom baseline!
     const baseLeft = 333;
     const baseTop = targetBottomY - totalHeight;
 
@@ -765,7 +765,7 @@ export async function generateDiving2Fabric(
     const subTitle = (rawSub ? rawSub : "JUDGES").toUpperCase();
 
     const totalHeight = headerHeight + subHeaderHeight + 6 + (judges.length * (rowHeight + rowGap));
-    const targetBottomY = 997; // DV004 bottom edge (83px clearance from 1080 screen bottom)!
+    const targetBottomY = 966; // Y = 966px bottom baseline!
     const baseLeft = 333;
     const baseTop = targetBottomY - totalHeight;
 
@@ -964,7 +964,7 @@ export async function generateDiving2Fabric(
     const tier4Height = hasRankStrip ? 38 : 0;
 
     const totalHeight = tier1Height + tier2Height + tier3Height + tier4Height + 6;
-    const targetBottomY = 997;
+    const targetBottomY = 966;
     const baseLeft = 333;
     const baseTop = targetBottomY - totalHeight;
 
@@ -1134,7 +1134,7 @@ export async function generateDiving2Fabric(
     const leftNocCode = (customData.leftNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
     const rightNocCode = (customData.rightNoc || (isGenericNoc ? 'MEX' : rawNoc)).toUpperCase();
 
-    const baseTop = 920;
+    const baseTop = 912;
     const tagWidth = 650;
     const stripHeight = 54;
 
@@ -1290,7 +1290,7 @@ export async function generateDiving2Fabric(
     const tier3Height = 42;
 
     const totalHeight = tier1Height + tier2Height + tier3Height + 4;
-    const targetBottomY = 997; // 83px bottom clearance
+    const targetBottomY = 966; // 114px bottom clearance
     const baseLeft = 333;
     const baseTop = targetBottomY - totalHeight;
 
@@ -1575,7 +1575,7 @@ export async function generateDiving2Fabric(
     const tier4Height = 38;
 
     const totalHeight = tier1Height + tier2Height + tier3Height + tier4Height + 6;
-    const targetBottomY = 997; // 83px bottom clearance
+    const targetBottomY = 966; // 114px bottom clearance
     const baseLeft = 333;
     const baseTop = targetBottomY - totalHeight;
 
@@ -1775,6 +1775,317 @@ export async function generateDiving2Fabric(
       subTargetCheck: true,
       id: generateUniqueId({ type: 'divingGroup' }),
       name: `DV011 Scorecard Synch ${isVariantB ? 'Variant B' : 'Variant A'} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── 11. DV012 - Winner / Winners / Place ID (Variants A & B) ──
+  if (normId.includes('DV012') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B';
+
+    let defaultEvent = isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "WOMEN'S 10M PLATFORM";
+    let defaultSubTitle = isVariantB ? "WINNERS" : "WINNER";
+    let defaultNoc = 'CHN';
+    let defaultName = isVariantB ? 'WANG XIN / CHEN RUOLIN' : 'CHEN RUOLIN';
+    let defaultScore = isVariantB ? '363.54' : 'OR 447.70';
+
+    const rawEvent = (customData.event || customData.title || customData.eventName || '').trim();
+    const eventTitle = (rawEvent ? rawEvent : defaultEvent).toUpperCase();
+
+    const rawSub = (customData.subtitle || customData.subTitle || customData.winnerTitle || '').trim();
+    const subTitle = (rawSub ? rawSub : defaultSubTitle).toUpperCase();
+
+    const rawName = (customData.name || customData.athlete || customData.winnerName || '').trim();
+    const isGenericName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const nameStr = (isGenericName ? defaultName : rawName).toUpperCase();
+
+    const rawNoc = (customData.noc || customData.country || '').trim();
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+    const nocCode = (isGenericNoc ? defaultNoc : rawNoc).toUpperCase();
+
+    const rawScore = (customData.score || customData.result || customData.totalScore || '').trim();
+    const scoreStr = (rawScore ? rawScore : defaultScore).toUpperCase();
+
+    const bannerWidth = 1100;
+    const tier1Height = 54;
+    const tier2Height = 38;
+    const tier3Height = 54;
+
+    const totalHeight = tier1Height + tier2Height + tier3Height + 4;
+    const targetBottomY = 966; // 114px bottom clearance
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight; // 816px
+
+    // 1. Tier 1: Header Blue Skewed Banner (Event Title)
+    const t1Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const t1Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: t1Gradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(t1Bar);
+
+    // Diving Pictograph Icon Box
+    const pictoBox = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 8, top: baseTop + 6, width: 44, height: tier1Height - 12,
+      fill: 'rgba(255,255,255,0.15)', skewX: -12, rx: 4, ry: 4
+    }));
+    const pikeBody = new fabric.Path('M 40 78 L 40 25 C 40 12, 68 10, 72 30 L 68 48 C 65 52, 58 52, 54 46 L 50 32 C 48 24, 46 24, 46 30 L 46 78 Z', {
+      left: 12, top: 0, fill: '#ffffff', selectable: false
+    });
+    const headHeart = new fabric.Path('M 64 48 C 56 48, 54 58, 62 66 C 68 72, 74 68, 74 58 C 74 50, 70 48, 64 48 Z', {
+      left: 28, top: 18, fill: '#ffffff', selectable: false
+    });
+    const waterWaves = new fabric.Path('M 10 92 Q 22 87, 34 92 T 58 92 T 82 92', {
+      left: 0, top: 38, fill: '', stroke: '#ffffff', strokeWidth: 3, strokeLineCap: 'round', selectable: false
+    });
+    const pictoGroup = new fabric.Group([pikeBody, headHeart, waterWaves], {
+      left: baseLeft + 12, top: baseTop + 10, scaleX: 0.38, scaleY: 0.38, skewX: -12, selectable: false
+    });
+    objects.push(pictoBox, pictoGroup);
+
+    // Event Title Text
+    const headText = new fabric.Textbox(eventTitle, createProps('textbox', {
+      left: baseLeft + 65, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 850
+    }));
+    objects.push(headText);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 95, baseTop + 13, 11, 2.4);
+    objects.push(olympicRings);
+
+    // 2. Tier 2: Silver Metallic Sub-Header Strip (WINNER / WINNERS)
+    const t2Top = baseTop + tier1Height + 2;
+    const t2Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const t2Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 15, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: t2Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    objects.push(t2Bar);
+
+    const subText = new fabric.Textbox(subTitle, createProps('textbox', {
+      left: baseLeft + 35, top: t2Top + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 800
+    }));
+    objects.push(subText);
+
+    // 3. Tier 3: Main Dark Blue Athlete Result Banner
+    const t3Top = t2Top + tier2Height + 2;
+    const t3Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const t3Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: t3Top, width: bannerWidth, height: tier3Height,
+      fill: t3Gradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(t3Bar);
+
+    // Flag Image
+    const flagImg = await createFabricFlagObject(nocCode, createProps('image', {
+      left: baseLeft + 20, top: t3Top + 11, scaleX: 0.60, scaleY: 0.60, skewX: -12
+    }));
+    if (flagImg) {
+      objects.push(flagImg);
+    } else {
+      const nocText = new fabric.Textbox(nocCode, createProps('textbox', {
+        left: baseLeft + 20, top: t3Top + 10, fontSize: 24, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 80
+      }));
+      objects.push(nocText);
+    }
+
+    // Athlete Name Text
+    const nameText = new fabric.Textbox(nameStr, createProps('textbox', {
+      left: baseLeft + 180, top: t3Top + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 620
+    }));
+    objects.push(nameText);
+
+    // Score / Result Text
+    const resultText = new fabric.Textbox(scoreStr, createProps('textbox', {
+      left: baseLeft + bannerWidth - 320, top: t3Top + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 280, textAlign: 'right'
+    }));
+    objects.push(resultText);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV012 Winner / Place ID ${isVariantB ? 'Variant B' : 'Variant A'} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── 12. DV014 - Top 3-5 (Variants A & B) ──
+  if (normId.includes('DV014') || normId.includes('TOP 3') || normId.includes('TOP 5')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B';
+
+    let defaultTitle = isVariantB ? 'FINAL' : 'SEMI-FINAL';
+    let defaultRows = [
+      { rank: '1', noc: 'GER', name: 'P. ROZENBERG', score: '84.00' },
+      { rank: '2', noc: 'CAN', name: 'A. DESPATIE', score: '81.00' },
+      { rank: '3', noc: 'RUS', name: 'A. DOBROSKOK', score: '78.75' }
+    ];
+
+    if (isVariantB) {
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG X. / CHEN R.', score: '422.28' },
+        { rank: '2', noc: 'PRK', name: 'CHOE K.H. / KIM U.H.', score: '409.28' },
+        { rank: '3', noc: 'AUS', name: 'B. COLE / M. WU', score: '403.16' },
+        { rank: '4', noc: 'GER', name: 'A. GAMM / N. SUBSCHINSKI', score: '390.82' },
+        { rank: '5', noc: 'USA', name: 'M. DUNNICHAY / H. ISHIMATSU', score: '382.76' }
+      ];
+    }
+
+    const rawTitle = (customData.title || customData.round || customData.header || '').trim();
+    const tabTitle = (rawTitle ? rawTitle : defaultTitle).toUpperCase();
+
+    const isVariantA = !isVariantB;
+    const maxRows = isVariantA ? 3 : 5;
+
+    const rawRows = (customData.rows && customData.rows.length > 0)
+      ? customData.rows
+      : (customData.standings && customData.standings.length > 0)
+      ? customData.standings
+      : defaultRows;
+    const rowsList = rawRows.slice(0, maxRows);
+
+    const bannerWidth = 1100;
+    const tabHeight = 32;
+    const rowHeight = 38;
+    const rowGap = 3;
+
+    const totalHeight = tabHeight + 2 + (rowsList.length * rowHeight) + ((rowsList.length - 1) * rowGap);
+    const targetBottomY = 966; // 114px bottom clearance
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight;
+
+    // Top Header Silver Tab
+    const tabGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: 240, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const tabRect = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 45, top: baseTop, width: 240, height: tabHeight,
+      fill: tabGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    const tabText = new fabric.Textbox(tabTitle, createProps('textbox', {
+      left: baseLeft + 55, top: baseTop + 4, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 220, textAlign: 'center'
+    }));
+    objects.push(tabRect, tabText);
+
+    // Rows
+    for (let i = 0; i < rowsList.length; i++) {
+      const item = rowsList[i];
+      const rTop = baseTop + tabHeight + 2 + i * (rowHeight + rowGap);
+      const rRank = String(item.rank || (i + 1));
+      const rNoc = (item.noc || item.country || 'CHN').toUpperCase();
+      const rName = (item.name || item.athlete || item.pair || '').toUpperCase();
+      const rScore = String(item.score || item.total || item.points || '');
+
+      const rowGradient = new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels',
+        coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+        colorStops: [
+          { offset: 0, color: gradientStart },
+          { offset: 0.5, color: gradientMid },
+          { offset: 1, color: gradientEnd }
+        ]
+      });
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: baseLeft, top: rTop, width: bannerWidth, height: rowHeight,
+        fill: rowGradient, skewX: -12, rx: 4, ry: 4,
+        stroke: borderHighlight, strokeWidth: 1
+      }));
+      objects.push(rowBar);
+
+      // Red Rank Badge
+      const rankBadge = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 6, top: rTop + 4, width: 32, height: rowHeight - 8,
+        fill: '#d32f2f', skewX: -12, rx: 3, ry: 3
+      }));
+      const rankText = new fabric.Textbox(rRank, createProps('textbox', {
+        left: baseLeft + 6, top: rTop + 7, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 32, textAlign: 'center'
+      }));
+      objects.push(rankBadge, rankText);
+
+      // Flag Image
+      const flagImg = await createFabricFlagObject(rNoc, createProps('image', {
+        left: baseLeft + 55, top: rTop + 6, scaleX: 0.50, scaleY: 0.50, skewX: -12
+      }));
+      if (flagImg) {
+        objects.push(flagImg);
+      } else {
+        const nocText = new fabric.Textbox(rNoc, createProps('textbox', {
+          left: baseLeft + 50, top: rTop + 7, fontSize: 20, fontWeight: '900', fontStyle: 'italic', fill: '#ffffff', width: 60
+        }));
+        objects.push(nocText);
+      }
+
+      // Athlete Name Text (with clear gap after Flag Image)
+      const nameText = new fabric.Textbox(rName, createProps('textbox', {
+        left: baseLeft + 175, top: rTop + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 640
+      }));
+      objects.push(nameText);
+
+      // Score Text
+      const scoreText = new fabric.Textbox(rScore, createProps('textbox', {
+        left: baseLeft + bannerWidth - 220, top: rTop + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 200, textAlign: 'right'
+      }));
+      objects.push(scoreText);
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV014 Top 3-5 ${isVariantB ? 'Variant B' : 'Variant A'} (${normId})`,
       selectable: true, hasControls: true
     });
   }
@@ -2099,7 +2410,7 @@ export function generateDiving2HTML(
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
 
           .lower-third-container {
-            position: absolute; top: 920px; left: 333px; width: 1100px; height: 54px;
+            position: absolute; top: 912px; left: 333px; width: 1100px; height: 54px;
             background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
             border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
             transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
@@ -2162,7 +2473,7 @@ export function generateDiving2HTML(
       : defaultJudges;
 
     const totalHeight = 88 + 46 + 6 + (judges.length * 57);
-    const baseTop = 997 - totalHeight;
+    const baseTop = 966 - totalHeight;
 
     const rowsHTML = judges.map((item, index) => {
       const isEven = index % 2 === 0;
@@ -2278,7 +2589,7 @@ export function generateDiving2HTML(
     const subTitle = (rawSub ? rawSub : "JUDGES").toUpperCase();
 
     const totalHeight = 88 + 46 + 6 + (judges.length * 57);
-    const baseTop = 997 - totalHeight;
+    const baseTop = 966 - totalHeight;
 
     const rowsHTML = judges.map((item, index) => {
       const isEven = index % 2 === 0;
@@ -2386,7 +2697,7 @@ export function generateDiving2HTML(
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
 
           .position-tag {
-            position: absolute; top: 920px; width: 650px; height: 54px;
+            position: absolute; top: 912px; width: 650px; height: 54px;
             background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
             border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
             transform: skewX(-12deg); display: flex; align-items: center; justify-content: flex-start;
@@ -2502,7 +2813,7 @@ export function generateDiving2HTML(
     const flagImgHtml = getFlagImgHtml(nocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
 
     const totalHeight = 54 + 38 + 42 + 4;
-    const baseTop = 997 - totalHeight;
+    const baseTop = 966 - totalHeight;
 
     const scoresHTML = scoresList.map((item) => {
       const valStr = typeof item === 'object' ? item.score : String(item);
@@ -2699,7 +3010,7 @@ export function generateDiving2HTML(
     const flagImgHtml = getFlagImgHtml(nocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
 
     const totalHeight = 54 + 38 + 28 + 38 + 6;
-    const baseTop = 997 - totalHeight;
+    const baseTop = 966 - totalHeight;
 
     const scoresHTML = scoresList.map((item) => {
       const valStr = typeof item === 'object' ? item.score : String(item);
@@ -2806,6 +3117,224 @@ export function generateDiving2HTML(
           <div class="t4-scores-bar unskew">
             ${scoresHTML}
           </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 11. DV012 - Winner / Winners / Place ID (HTML Generator) ──
+  if (normId.includes('DV012') || normId.includes('WINNER') || normId.includes('PLACE ID')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B';
+
+    let defaultEvent = isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "WOMEN'S 10M PLATFORM";
+    let defaultSubTitle = isVariantB ? "WINNERS" : "WINNER";
+    let defaultNoc = 'CHN';
+    let defaultName = isVariantB ? 'WANG XIN / CHEN RUOLIN' : 'CHEN RUOLIN';
+    let defaultScore = isVariantB ? '363.54' : 'OR 447.70';
+
+    const rawEvent = (customData.event || customData.title || customData.eventName || '').trim();
+    const eventTitle = (rawEvent ? rawEvent : defaultEvent).toUpperCase();
+
+    const rawSub = (customData.subtitle || customData.subTitle || customData.winnerTitle || '').trim();
+    const subTitle = (rawSub ? rawSub : defaultSubTitle).toUpperCase();
+
+    const rawName = (customData.name || customData.athlete || customData.winnerName || '').trim();
+    const isGenericName = !rawName || rawName.toUpperCase() === 'TOM DALEY';
+    const nameStr = (isGenericName ? defaultName : rawName).toUpperCase();
+
+    const rawNoc = (customData.noc || customData.country || '').trim();
+    const isGenericNoc = !rawNoc || rawNoc.toUpperCase() === 'GBR';
+    const nocCode = (isGenericNoc ? defaultNoc : rawNoc).toUpperCase();
+
+    const rawScore = (customData.score || customData.result || customData.totalScore || '').trim();
+    const scoreStr = (rawScore ? rawScore : defaultScore).toUpperCase();
+
+    const flagImgHtml = getFlagImgHtml(nocCode, 'height: 40px; width: auto; border-radius: 4px; transform: skewX(-12deg);');
+
+    const totalHeight = 54 + 38 + 54 + 4;
+    const baseTop = 966 - totalHeight; // 816px
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .winner-container {
+            position: absolute; top: ${baseTop}px; left: 333px; width: 1100px;
+            display: flex; flex-direction: column; gap: 2px;
+          }
+          .unskew { transform: skewX(12deg); }
+
+          .t1-bar {
+            height: 54px; width: 1100px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .t1-left { display: flex; align-items: center; gap: 16px; }
+          .picto-box {
+            background: rgba(255,255,255,0.15); width: 44px; height: 42px; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .head-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+
+          .t2-bar {
+            height: 38px; width: 1070px; margin-left: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: flex-start;
+            padding: 0 24px;
+          }
+          .sub-title { font-size: 24px; font-weight: 900; font-style: italic; color: #1a2b42; letter-spacing: 1px; }
+
+          .t3-bar {
+            height: 54px; width: 1100px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .t3-left { display: flex; align-items: center; gap: 20px; }
+          .noc-code { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .score-text { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="winner-container">
+          <div class="t1-bar">
+            <div class="t1-left unskew">
+              <div class="picto-box">${officialDivingPictographSVG}</div>
+              <div class="head-title">${eventTitle}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="t2-bar">
+            <div class="sub-title unskew">${subTitle}</div>
+          </div>
+          <div class="t3-bar">
+            <div class="t3-left unskew">
+              <div class="noc-code">${nocCode}</div>
+              <div class="flag-icon">${flagImgHtml}</div>
+              <div class="athlete-name">${nameStr}</div>
+            </div>
+            <div class="score-text unskew">${scoreStr}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 12. DV014 - Top 3-5 (HTML Generator) ──
+  if (normId.includes('DV014') || normId.includes('TOP 3') || normId.includes('TOP 5')) {
+    const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toUpperCase() === 'B';
+
+    let defaultTitle = isVariantB ? 'FINAL' : 'SEMI-FINAL';
+    let defaultRows = [
+      { rank: '1', noc: 'GER', name: 'P. ROZENBERG', score: '84.00' },
+      { rank: '2', noc: 'CAN', name: 'A. DESPATIE', score: '81.00' },
+      { rank: '3', noc: 'RUS', name: 'A. DOBROSKOK', score: '78.75' }
+    ];
+
+    if (isVariantB) {
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG X. / CHEN R.', score: '422.28' },
+        { rank: '2', noc: 'PRK', name: 'CHOE K.H. / KIM U.H.', score: '409.28' },
+        { rank: '3', noc: 'AUS', name: 'B. COLE / M. WU', score: '403.16' },
+        { rank: '4', noc: 'GER', name: 'A. GAMM / N. SUBSCHINSKI', score: '390.82' },
+        { rank: '5', noc: 'USA', name: 'M. DUNNICHAY / H. ISHIMATSU', score: '382.76' }
+      ];
+    }
+
+    const rawTitle = (customData.title || customData.round || customData.header || '').trim();
+    const tabTitle = (rawTitle ? rawTitle : defaultTitle).toUpperCase();
+
+    const isVariantA = !isVariantB;
+    const maxRows = isVariantA ? 3 : 5;
+
+    const rawRows = (customData.rows && customData.rows.length > 0)
+      ? customData.rows
+      : (customData.standings && customData.standings.length > 0)
+      ? customData.standings
+      : defaultRows;
+    const rowsList = rawRows.slice(0, maxRows);
+
+    const totalHeight = 32 + 2 + (rowsList.length * 38) + ((rowsList.length - 1) * 3);
+    const baseTop = 966 - totalHeight;
+
+    const rowsHTML = rowsList.map((item, index) => {
+      const rRank = String(item.rank || (index + 1));
+      const rNoc = (item.noc || item.country || 'CHN').toUpperCase();
+      const rName = (item.name || item.athlete || item.pair || '').toUpperCase();
+      const rScore = String(item.score || item.total || item.points || '');
+      const flagImgHtml = getFlagImgHtml(rNoc, 'height: 30px; width: auto; border-radius: 3px; transform: skewX(-12deg);');
+
+      return `
+        <div class="row-bar">
+          <div class="row-left unskew">
+            <div class="rank-badge">${rRank}</div>
+            <div class="flag-icon">${flagImgHtml}</div>
+            <div class="athlete-name">${rName}</div>
+          </div>
+          <div class="score-text unskew">${rScore}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .top35-container {
+            position: absolute; top: ${baseTop}px; left: 333px; width: 1100px;
+            display: flex; flex-direction: column; gap: 3px;
+          }
+          .unskew { transform: skewX(12deg); }
+
+          .header-tab {
+            height: 32px; width: 240px; margin-left: 45px; margin-bottom: 2px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 900; font-style: italic; color: #1a2b42; letter-spacing: 1px;
+          }
+
+          .row-bar {
+            height: 38px; width: 1100px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+          }
+          .row-left { display: flex; align-items: center; gap: 20px; }
+          .rank-badge {
+            background: #d32f2f; color: #ffffff; font-size: 22px; font-weight: 900; font-style: italic;
+            padding: 1px 10px; border-radius: 3px;
+          }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; margin-left: 15px; }
+          .score-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="top35-container">
+          <div class="header-tab"><div class="unskew">${tabTitle}</div></div>
+          ${rowsHTML}
         </div>
       </body>
       </html>
