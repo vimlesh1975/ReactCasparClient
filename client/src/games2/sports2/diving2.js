@@ -2501,7 +2501,6 @@ export async function generateDiving2Fabric(
     const eventName = (finalEvent || (isVariantB ? "WOMEN'S SYNCHRONISED 10M PLATFORM" : "MEN'S 3M SPRINGBOARD")).toUpperCase();
     const medalLine = `${medal} - ${eventName}`;
 
-    const medalEmoji = medal.includes('GOLD') ? '🥇' : medal.includes('SILVER') ? '🥈' : '🥉';
     const medalBarColor = medal.includes('GOLD') ? '#b8860b' : medal.includes('SILVER') ? '#607080' : '#7a4a2a';
 
     const darkGradient = new fabric.Gradient({
@@ -2669,7 +2668,6 @@ export async function generateDiving2Fabric(
       const isGold = i === 0 || (row.medal || '').toUpperCase().includes('GOLD');
       const isSilver = i === 1 || (row.medal || '').toUpperCase().includes('SILVER');
       
-      const medalEmoji = isGold ? '🥇' : isSilver ? '🥈' : '🥉';
       const medalBg = isGold ? '#b8860b' : isSilver ? '#607080' : '#7a4a2a';
       const rNoc = (row.noc || row.country || 'CHN').toUpperCase();
       const rName = row.name || row.athlete || row.pair || '';
@@ -2730,7 +2728,6 @@ export async function generateDiving2Fabric(
     const baseLeft = 328;
 
     const isGenericDummy = (customData.name || '').toUpperCase().includes('TOM DALEY') || (customData.presenter || '').toUpperCase().includes('TOM DALEY');
-    const nocCode = isGenericDummy ? null : (customData.noc || customData.country || null);
     const presenterName = isGenericDummy ? 'JACQUES ROGGE' : (customData.name || customData.presenter || 'JACQUES ROGGE');
     const designation = isGenericDummy ? 'IOC PRESIDENT, BELGIUM' : (customData.designation || customData.title || 'IOC PRESIDENT, BELGIUM');
 
@@ -2792,6 +2789,80 @@ export async function generateDiving2Fabric(
       subTargetCheck: true,
       id: generateUniqueId({ type: 'divingGroup' }),
       name: `DV019 Medal Presenter ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── DV020 - Flower Presenter ID ──
+  if (normId.includes('DV020')) {
+    const bannerWidth = 720;
+    const tier1Height = 42;
+    const tier2Height = 32;
+    const baseTop = 966 - (tier1Height + tier2Height + 2); // 890
+    const baseLeft = 328;
+
+    const isGenericDummy = (customData.name || '').toUpperCase().includes('TOM DALEY') || (customData.presenter || '').toUpperCase().includes('TOM DALEY');
+    const presenterName = isGenericDummy ? 'MR MUSTAPHA LARFAQUI' : (customData.name || customData.presenter || 'MR MUSTAPHA LARFAQUI');
+    const designation = isGenericDummy ? 'PRESIDENT, FINA' : (customData.designation || customData.title || 'PRESIDENT, FINA');
+
+    const topBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const botBarGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+      colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+    });
+
+    // Tier 1 (Bright Blue)
+    const topBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: topBarGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(topBar);
+
+    // Presenter name
+    const nameText = new fabric.Textbox(presenterName, createProps('textbox', {
+      left: baseLeft + 20, top: baseTop + 9, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 130, charSpacing: 10
+    }));
+    objects.push(nameText);
+
+    // Olympic rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 80, baseTop + 9, 10, 2);
+    objects.push(olympicRings);
+
+    // Tier 2 (Dark Navy)
+    const t2Top = baseTop + tier1Height + 2;
+    const botBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: botBarGradient, skewX: -12, rx: 3, ry: 3,
+      stroke: borderHighlight, strokeWidth: 1
+    }));
+    objects.push(botBar);
+
+    const designationText = new fabric.Textbox(designation, createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 6, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: bannerWidth - 50, charSpacing: 20
+    }));
+    objects.push(designationText);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV020 Flower Presenter ID (${normId})`,
       selectable: true, hasControls: true
     });
   }
@@ -4437,7 +4508,6 @@ export function generateDiving2HTML(
     }
     rows = rows.slice(0, 3);
 
-    const bannerWidth = 1260;
     const tier1Height = 54;
     const tier2Height = 34;
     const rowHeight = 38;
@@ -4450,7 +4520,6 @@ export function generateDiving2HTML(
       const isGold = i === 0 || (row.medal || '').toUpperCase().includes('GOLD');
       const isSilver = i === 1 || (row.medal || '').toUpperCase().includes('SILVER');
       const medalEmoji = isGold ? '🥇' : isSilver ? '🥈' : '🥉';
-      const medalBg = isGold ? '#b8860b' : isSilver ? '#607080' : '#7a4a2a';
       const noc = (row.noc || row.country || 'CHN').toUpperCase();
       const name = row.name || row.athlete || row.pair || '';
       const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
@@ -4566,6 +4635,60 @@ export function generateDiving2HTML(
           .unskew { transform: skewX(12deg); }
           .t1-left { display: flex; align-items: center; padding-left: 20px; }
           .flag-wrap { display: flex; align-items: center; margin-right: 32px; }
+          .presenter-name { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; white-space: nowrap; }
+          .tier-2 {
+            height: 32px; width: 690px; margin-left: 17px; margin-top: 2px;
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; padding: 0 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+          }
+          .designation-line { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; padding-left: 10px; white-space: nowrap; }
+        </style>
+      </head>
+      <body>
+        <div class="presenter-banner">
+          <div class="tier-1">
+            <div class="t1-left unskew">
+              <div class="presenter-name">${presenterName}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="tier-2">
+            <div class="designation-line unskew">${designation}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── DV020 - Flower Presenter ID ──
+  if (normId.includes('DV020')) {
+    const isGenericDummy = (customData.name || '').toUpperCase().includes('TOM DALEY') || (customData.presenter || '').toUpperCase().includes('TOM DALEY');
+    const presenterName = isGenericDummy ? 'MR MUSTAPHA LARFAQUI' : (customData.name || customData.presenter || 'MR MUSTAPHA LARFAQUI');
+    const designation = isGenericDummy ? 'PRESIDENT, FINA' : (customData.designation || customData.title || 'PRESIDENT, FINA');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .presenter-banner { position: absolute; top: 890px; left: 328px; display: flex; flex-direction: column; gap: 2px; }
+          .tier-1 {
+            height: 42px; width: 720px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 60%, ${gradientEnd} 100%);
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px 0 0; box-shadow: 0 6px 16px rgba(0,0,0,0.6); overflow: hidden;
+          }
+          .unskew { transform: skewX(12deg); }
+          .t1-left { display: flex; align-items: center; padding-left: 20px; }
           .presenter-name { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; white-space: nowrap; }
           .tier-2 {
             height: 32px; width: 690px; margin-left: 17px; margin-top: 2px;
