@@ -325,8 +325,8 @@ export async function generateWaterPolo2Fabric(
     }
 
     return new fabric.Group(objects, {
-      left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      left: 296, top: 508,
+      scaleX: 1.025, scaleY: 1.395,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP003 Event Schedule (${normId})`,
@@ -351,8 +351,8 @@ export async function generateWaterPolo2Fabric(
     const team1Noc = getNocCodeForTeam(team1Name) || (isGenericDummy ? (isVariantB ? 'HUN' : 'ESP') : (customData.noc1 || customData.nocA || 'ESP'));
     const team2Noc = getNocCodeForTeam(team2Name) || (isGenericDummy ? (isVariantB ? 'USA' : 'CAN') : (customData.noc2 || customData.nocB || 'CAN'));
 
-    const team1Stats = isGenericDummy ? [7, 0, 1] : (customData.stats1 || customData.statsA || [0,0,0]);
-    const team2Stats = isGenericDummy ? [5, 2, 0] : (customData.stats2 || customData.statsB || [0,0,0]);
+    const team1Stats = isGenericDummy ? [7, 0, 1] : (customData.stats1 || customData.statsA || [0, 0, 0]);
+    const team2Stats = isGenericDummy ? [5, 2, 0] : (customData.stats2 || customData.statsB || [0, 0, 0]);
 
     // Gun body header
     const gunPathData = 'M 45 0 L 820 0 C 825 0, 830 3, 832 8 L 848 44 C 850 49, 847 54, 842 54 L 140 54 L 115 88 C 112 92, 106 95, 100 95 L 10 95 C 4 95, 0 90, 2 84 L 22 42 L 35 6 C 37 2, 41 0, 45 0 Z';
@@ -493,8 +493,8 @@ export async function generateWaterPolo2Fabric(
     }
 
     return new fabric.Group(objects, {
-      left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      left: 328, top: 735,
+      scaleX: 1.455, scaleY: 1.310,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP004 Match ID (${normId})`,
@@ -634,12 +634,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP006') || normId === 'STANDINGS') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -765,8 +765,8 @@ export async function generateWaterPolo2Fabric(
     const inputRows = (customData.rows && customData.rows.length > 0)
       ? customData.rows
       : (customData.standings && customData.standings.length > 0)
-      ? customData.standings
-      : null;
+        ? customData.standings
+        : null;
 
     // Detect unedited default category variables (e.g. CROATIA default score row) and bypass
     const isGenericInputRows = inputRows && inputRows.length <= 5 &&
@@ -871,12 +871,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP007') || normId === 'TEAM ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -906,13 +906,13 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Default data mapping
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
-    const teamName = isGenericDummy 
-      ? (variant === 'b' ? 'CROATIA' : 'CHINA') 
+    const teamName = isGenericDummy
+      ? (variant === 'b' ? 'CROATIA' : 'CHINA')
       : (customData.team1 || customData.teamA || 'CHINA');
 
     const status = isGenericDummy
@@ -991,10 +991,10 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Default data mapping
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
     const teamName = isGenericDummy ? 'HUNGARY' : (customData.team1 || customData.teamA || 'HUNGARY');
     const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
@@ -1199,12 +1199,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP009') || normId === 'PREVIOUS RESULTS') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -1215,13 +1215,13 @@ export async function generateWaterPolo2Fabric(
     const baseLeft = 328;
 
     // Default data mapping
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
-    const teamName = isGenericDummy 
-      ? (variant === 'b' ? 'UNITED STATES' : 'HUNGARY') 
+    const teamName = isGenericDummy
+      ? (variant === 'b' ? 'UNITED STATES' : 'HUNGARY')
       : (customData.team1 || customData.teamA || 'HUNGARY');
 
     const record = isGenericDummy
@@ -1393,12 +1393,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP010') || normId === 'PLAYER ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -1411,10 +1411,10 @@ export async function generateWaterPolo2Fabric(
     const baseLeft = 328;
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'HUNGARY';
     let capNumber = '6';
@@ -1565,12 +1565,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -1582,10 +1582,10 @@ export async function generateWaterPolo2Fabric(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'SERBIA';
     let capNumber = '6';
@@ -1709,12 +1709,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -1726,10 +1726,10 @@ export async function generateWaterPolo2Fabric(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'AUSTRALIA';
     let capNumber = '1';
@@ -1838,12 +1838,12 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP013') || normId === 'COACH ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -1855,11 +1855,11 @@ export async function generateWaterPolo2Fabric(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
-                           (!customData.playerName && !customData.name && !customData.coachName);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
+      (!customData.playerName && !customData.name && !customData.coachName);
 
     let teamName = 'AUSTRALIA';
     let coachName = 'JOHN FOX';
@@ -1971,11 +1971,11 @@ export async function generateWaterPolo2Fabric(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
-                           (!customData.playerName && !customData.name && !customData.officialName);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
+      (!customData.playerName && !customData.name && !customData.officialName);
 
     let teamName = 'HUNGARY';
     let officialName = 'GABOR KISZELLY';
@@ -2055,6 +2055,2566 @@ export async function generateWaterPolo2Fabric(
       selectable: true, hasControls: true
     });
   }
+
+
+  // ── WP015 - Officials List ──
+  if (normId.includes('WP015') || normId === 'OFFICIALS LIST') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+
+    const isGenericDummy = !customData.officials && !customData.rows;
+    let officials = [
+      { name: 'AARON CHANEY', team: 'USA' },
+      { name: 'GABOR KISZELLY', team: 'HUNGARY' }
+    ];
+    if (!isGenericDummy) {
+      officials = customData.officials || customData.rows || [];
+    }
+
+    const rowCount = officials.length;
+    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
+    const totalHeight = 54 + 2 + 38 + 3 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Water Polo player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox((customData.eventTitle || "MEN'S WATER POLO").toUpperCase(), createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-header (silver)
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox("REFEREES", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 700, charSpacing: 20
+    }));
+    objects.push(subTxt);
+
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < rowCount; i++) {
+      const off = officials[i];
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      }));
+      objects.push(rowBg);
+
+      const noc = getNocCodeForTeam(off.team) || off.team || 'USA';
+      const flagObj = await createFabricFlagObject(noc, {
+        left: baseLeft + 30, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagObj) objects.push(flagObj);
+
+      const nameTxt = new fabric.Textbox(off.name.toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 600, charSpacing: 10
+      }));
+      objects.push(nameTxt);
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: 334, top: 736,
+      scaleX: 1.442, scaleY: 1.289,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP015 Officials List (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP016 - Player Statistics ──
+  if (normId.includes('WP016') || normId === 'PLAYER STATISTICS') {
+    const isGenericDummy = !customData.playerName && !customData.name;
+    let teamName = 'AUSTRALIA';
+    let capNumber = '2';
+    let playerName = 'RICHIE CAMPBELL';
+    let statName = 'GOALS';
+    let statValue = '2';
+
+    if (!isGenericDummy) {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      capNumber = customData.capNumber || customData.number || '2';
+      playerName = customData.playerName || customData.name || 'RICHIE CAMPBELL';
+      statName = customData.statName || customData.label || 'GOALS';
+      statValue = customData.statValue || customData.value || '2';
+    }
+
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 850, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: 328, top: 831, width: 850, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: 328 + 30, top: 831 + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    const capTxt = new fabric.Textbox(capNumber, createProps('textbox', {
+      left: 328 + 150, top: 831 + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00ccff', width: 60, charSpacing: 10
+    }));
+    objects.push(capTxt);
+
+    const nameLeft = 328 + 150 + (capNumber.length * 22) + 15;
+    const nameTxt = new fabric.Textbox(playerName.toUpperCase(), createProps('textbox', {
+      left: nameLeft, top: 831 + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    const statusBox = new fabric.Rect({
+      left: 328 + 850 - 190, top: 831 + 11, width: 80, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 80, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(statusBox);
+
+    const olympicRings = createOlympicRingsGroup(328 + 850 - 90, 831 + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: 328 + 17, top: 831 + 54 + 2, width: 850 - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 820, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox((statName + "  " + statValue).toUpperCase(), createProps('textbox', {
+      left: 328 + 30, top: 831 + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxt);
+
+    return new fabric.Group(objects, {
+      left: 364, top: 831,
+      scaleX: 1.425, scaleY: 1.302,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP016 Player Statistics (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP017 - Match Statistics ──
+  if (normId.includes('WP017') || normId === 'MATCH STATISTICS') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'AUSTRALIA';
+    let team2 = 'UNITED STATES';
+    let stats = [
+      { label: 'GOALS', val1: '18', val2: '19' },
+      { label: 'ACTION SHOT GOALS', val1: '0/3', val2: '4/15' },
+      { label: 'CENTRE SHOT GOALS', val1: '3/4', val2: '2/2' },
+      { label: 'EXTRA PLAYER GOALS', val1: '6/9', val2: '4/12' },
+      { label: '5M SHOT GOALS', val1: '0/6', val2: '0/5' },
+      { label: 'PENALTY SHOT GOALS', val1: '3/5', val2: '2/5' },
+      { label: 'COUNTER ATTACK GOALS', val1: '1/1', val2: '1/5' }
+    ];
+    if (variant === 'b') {
+      stats.push({ label: 'PENALTY SHOOT-OUT GOALS', val1: '5/7', val2: '6/7' });
+    }
+    stats.push({ label: 'SHOTS SAVED', val1: '19', val2: '5' });
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || 'AUSTRALIA';
+      team2 = customData.team2 || customData.teamB || 'UNITED STATES';
+      stats = customData.stats || customData.rows || stats;
+    }
+
+    const rowCount = stats.length;
+    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
+    const totalHeight = 54 + 2 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Left Flag
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    // Center Title (within silver skewed badge)
+    const titleBg = new fabric.Rect({
+      left: baseLeft + 180, top: baseTop + 10, width: 490, height: 34,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 490, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1, skewX: -12, rx: 3, ry: 3
+    });
+    objects.push(titleBg);
+
+    const titleTxt = new fabric.Textbox("MATCH STATISTICS", createProps('textbox', {
+      left: baseLeft + 200, top: baseTop + 14, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 450, textAlign: 'center', charSpacing: 10
+    }));
+    objects.push(titleTxt);
+
+    // Right Flag
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + bannerWidth - 95, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    let currentY = baseTop + 54 + 2;
+    for (let i = 0; i < rowCount; i++) {
+      const row = stats[i];
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+          colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      }));
+      objects.push(rowBg);
+
+      // Val 1 (left)
+      const val1Txt = new fabric.Textbox(row.val1, createProps('textbox', {
+        left: baseLeft + 30, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 100, textAlign: 'center'
+      }));
+      // Label (center)
+      const lblTxt = new fabric.Textbox(row.label.toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 550, textAlign: 'center', charSpacing: 10
+      }));
+      // Val 2 (right)
+      const val2Txt = new fabric.Textbox(row.val2, createProps('textbox', {
+        left: baseLeft + bannerWidth - 130, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 100, textAlign: 'center'
+      }));
+      objects.push(val1Txt, lblTxt, val2Txt);
+
+      currentY += 38 + 3;
+    }
+
+    let finalLeft = baseLeft;
+    let finalTop = baseTop;
+    let finalScaleX = 1.0;
+    let finalScaleY = 1.0;
+
+    if (variant === 'a') {
+      finalLeft = 328;
+      finalTop = 450;
+      finalScaleX = 1.471;
+      finalScaleY = 1.353;
+    } else if (variant === 'b') {
+      finalLeft = 308;
+      finalTop = 396;
+      finalScaleX = 1.492;
+      finalScaleY = 1.351;
+    }
+
+    return new fabric.Group(objects, {
+      left: finalLeft, top: finalTop,
+      scaleX: finalScaleX, scaleY: finalScaleY,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP017 Match Statistics (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP018 - Crunch Statistics ──
+  if (normId.includes('WP018') || normId === 'CRUNCH STATISTICS') {
+    const baseLeft = 328;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let title = 'PENALTY SHOT GOALS';
+    let team1 = 'CHINA';
+    let val1 = '3/5';
+    let team2 = 'CROATIA';
+    let val2 = '3/4';
+
+    if (!isGenericDummy) {
+      title = customData.title || customData.label || 'PENALTY SHOT GOALS';
+      team1 = customData.team1 || customData.teamA || 'CHINA';
+      val1 = customData.val1 || customData.value1 || '3/5';
+      team2 = customData.team2 || customData.teamB || 'CROATIA';
+      val2 = customData.val2 || customData.value2 || '3/4';
+    }
+
+    const rowCount = 2;
+    const rowsHeight = rowCount * 32 + (rowCount - 1) * 3;
+    const totalHeight = 38 + 2 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    // Header bar (silver skewed badge)
+    const mainBar = new fabric.Rect({
+      left: baseLeft, top: baseTop, width: 260, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 260, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 3, ry: 3
+    });
+    objects.push(mainBar);
+
+    const titleTxt = new fabric.Textbox(title.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 15, top: baseTop + 8, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 230, textAlign: 'center', charSpacing: 10
+    }));
+    objects.push(titleTxt);
+
+    // Row 1 (CHN/Team 1)
+    let r1Top = baseTop + 38 + 2;
+    const rowBg1 = new fabric.Rect({
+      left: baseLeft + 5, top: r1Top, width: 250, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 250, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'CHN';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 15, top: r1Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 110, top: r1Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 60, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    // Status box 1 (white)
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + 205, top: r1Top + 6, width: 40, height: 20,
+      fill: '#ffffff', skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox1);
+
+    // Row 2 (CRO/Team 2)
+    let r2Top = r1Top + 32 + 3;
+    const rowBg2 = new fabric.Rect({
+      left: baseLeft + 5, top: r2Top, width: 250, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 250, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'CRO';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 15, top: r2Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 110, top: r2Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 60, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    // Status box 2 (outline)
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + 205, top: r2Top + 6, width: 40, height: 20,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.2, skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox2);
+
+    return new fabric.Group(objects, {
+      left: 302, top: 891,
+      scaleX: 1.142, scaleY: 1.142,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP018 Crunch Statistics (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP019 - Time Outs Crunch ──
+  if (normId.includes('WP019') || normId === 'TIME OUTS CRUNCH') {
+    const baseLeft = 328;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'HUNGARY';
+    let val1 = '2';
+    let team2 = 'UNITED STATES';
+    let val2 = '1';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || 'HUNGARY';
+      val1 = customData.val1 || customData.value1 || '2';
+      team2 = customData.team2 || customData.teamB || 'UNITED STATES';
+      val2 = customData.val2 || customData.value2 || '1';
+    }
+
+    const rowCount = 2;
+    const rowsHeight = rowCount * 32 + (rowCount - 1) * 3;
+    const totalHeight = 38 + 2 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    // Header bar (silver skewed badge)
+    const mainBar = new fabric.Rect({
+      left: baseLeft, top: baseTop, width: 260, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 260, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 3, ry: 3
+    });
+    objects.push(mainBar);
+
+    const titleTxt = new fabric.Textbox("TIME OUTS TAKEN", createProps('textbox', {
+      left: baseLeft + 15, top: baseTop + 8, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 230, textAlign: 'center', charSpacing: 10
+    }));
+    objects.push(titleTxt);
+
+    // Row 1 (HUN/Team 1)
+    let r1Top = baseTop + 38 + 2;
+    const rowBg1 = new fabric.Rect({
+      left: baseLeft + 5, top: r1Top, width: 250, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 250, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'HUN';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 15, top: r1Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 110, top: r1Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 60, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    // Status box 1 (white)
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + 205, top: r1Top + 6, width: 40, height: 20,
+      fill: '#ffffff', skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox1);
+
+    // Row 2 (USA/Team 2)
+    let r2Top = r1Top + 32 + 3;
+    const rowBg2 = new fabric.Rect({
+      left: baseLeft + 5, top: r2Top, width: 250, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 250, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 15, top: r2Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 110, top: r2Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 60, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    // Status box 2 (outline)
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + 205, top: r2Top + 6, width: 40, height: 20,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.2, skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox2);
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP019 Time Outs Crunch (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP020 - Period Breakdown ──
+  if (normId.includes('WP020') || normId === 'PERIOD BREAKDOWN') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'PRELIMINARY ROUND - GROUP B';
+    let team1 = 'CHINA';
+    let team2 = 'CROATIA';
+    let team1Periods = ['0', '3', '', '', '3'];
+    let team2Periods = ['4', '1', '', '', '5'];
+    let headers = ['1', '2', '3', '4', 'TOTAL'];
+
+    if (variant === 'b') {
+      team1Periods = ['0', '3', '2', '1', '6'];
+      team2Periods = ['4', '1', '0', '1', '6'];
+    } else if (variant === 'c') {
+      team1Periods = ['0', '3', '2', '1', '1', '7'];
+      team2Periods = ['4', '1', '0', '1', '0', '6'];
+      headers = ['1', '2', '3', '4', 'OT', 'TOTAL'];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      team1 = customData.team1 || customData.teamA || team1;
+      team2 = customData.team2 || customData.teamB || team2;
+      team1Periods = customData.team1Periods || customData.periods1 || team1Periods;
+      team2Periods = customData.team2Periods || customData.periods2 || team2Periods;
+      headers = customData.headers || headers;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 400, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    // Headers on right
+    let xOffset = baseLeft + 480;
+    const colCount = headers.length;
+    for (let c = 0; c < colCount; c++) {
+      const isTotal = headers[c] === 'TOTAL';
+      const colLeft = isTotal ? baseLeft + 700 : xOffset + (c * 40);
+      const colTxt = new fabric.Textbox(headers[c], createProps('textbox', {
+        left: colLeft, top: baseTop + 54 + 2 + 8, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+        fill: '#0a2a5e', width: 70, textAlign: 'center'
+      }));
+      objects.push(colTxt);
+    }
+
+    // Row 1 (Team 1)
+    let r1Top = baseTop + 54 + 2 + 38 + 3;
+    const rowBg1 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r1Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'CHN';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 30, top: r1Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const nameTxt1 = new fabric.Textbox(team1.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r1Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 300, charSpacing: 10
+    }));
+    objects.push(nameTxt1);
+
+    for (let c = 0; c < colCount; c++) {
+      const isTotal = headers[c] === 'TOTAL';
+      const colLeft = isTotal ? baseLeft + 700 : xOffset + (c * 40);
+      const scoreVal = team1Periods[c] !== undefined ? String(team1Periods[c]) : '';
+      const scoreTxt = new fabric.Textbox(scoreVal, createProps('textbox', {
+        left: colLeft, top: r1Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 70, textAlign: 'center'
+      }));
+      objects.push(scoreTxt);
+    }
+
+    // Status box 1 (white)
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r1Top + 8, width: 45, height: 22,
+      fill: '#ffffff', skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2)
+    let r2Top = r1Top + 38 + 3;
+    const rowBg2 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'CRO';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 30, top: r2Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const nameTxt2 = new fabric.Textbox(team2.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 300, charSpacing: 10
+    }));
+    objects.push(nameTxt2);
+
+    for (let c = 0; c < colCount; c++) {
+      const isTotal = headers[c] === 'TOTAL';
+      const colLeft = isTotal ? baseLeft + 700 : xOffset + (c * 40);
+      const scoreVal = team2Periods[c] !== undefined ? String(team2Periods[c]) : '';
+      const scoreTxt = new fabric.Textbox(scoreVal, createProps('textbox', {
+        left: colLeft, top: r2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 70, textAlign: 'center'
+      }));
+      objects.push(scoreTxt);
+    }
+
+    // Status box 2 (outline)
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r2Top + 8, width: 45, height: 22,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.5, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox2);
+
+    return new fabric.Group(objects, {
+      left: 324, top: 731,
+      scaleX: 1.471, scaleY: 1.305,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP020 Period Breakdown (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP021 - Scoreboard/Result ──
+  if (normId.includes('WP021') || normId === 'SCOREBOARD/RESULT' || normId === 'SCOREBOARD RESULT') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'QUARTER-FINAL';
+    let timeText = '4TH QUARTER';
+    let team1 = 'AUSTRALIA';
+    let val1 = '12';
+    let team2 = 'UNITED STATES';
+    let val2 = '9';
+
+    if (variant === 'b') {
+      roundText = 'RESULT - GOLD MEDAL MATCH';
+      timeText = '';
+      team1 = 'HUNGARY';
+      val1 = '14';
+      team2 = 'UNITED STATES';
+      val2 = '10';
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      timeText = customData.timeText || customData.periodText || timeText;
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 400, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    if (timeText) {
+      const timeTxtObj = new fabric.Textbox(timeText.toUpperCase(), createProps('textbox', {
+        left: baseLeft + bannerWidth - 250, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#0a2a5e', width: 200, textAlign: 'right', charSpacing: 10
+      }));
+      objects.push(timeTxtObj);
+    }
+
+    // Row 1 (Team 1)
+    let r1Top = baseTop + 54 + 2 + 38 + 3;
+    const rowBg1 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r1Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 30, top: r1Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const nameTxt1 = new fabric.Textbox(team1.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r1Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 10
+    }));
+    objects.push(nameTxt1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + bannerWidth - 190, top: r1Top + 8, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 80, textAlign: 'right'
+    }));
+    objects.push(val1Txt);
+
+    // Status box 1 (white)
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r1Top + 8, width: 45, height: 22,
+      fill: '#ffffff', skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2)
+    let r2Top = r1Top + 38 + 3;
+    const rowBg2 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 30, top: r2Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const nameTxt2 = new fabric.Textbox(team2.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 10
+    }));
+    objects.push(nameTxt2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + bannerWidth - 190, top: r2Top + 8, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 80, textAlign: 'right'
+    }));
+    objects.push(val2Txt);
+
+    // Status box 2 (outline)
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r2Top + 8, width: 45, height: 22,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.5, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox2);
+
+    return new fabric.Group(objects, {
+      left: 339, top: 729,
+      scaleX: 1.464, scaleY: 1.358,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP021 Scoreboard/Result (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP022 - Shoot-Out Scoreboard ──
+  if (normId.includes('WP022') || normId === 'SHOOT-OUT SCOREBOARD' || normId === 'SHOOTOUT SCOREBOARD') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'QUARTER-FINAL - PENALTY SHOOT-OUT';
+    let shotText = '';
+    let team1 = 'AUSTRALIA';
+    let val1 = '2';
+    let team2 = 'UNITED STATES';
+    let val2 = '2';
+    let shots1 = ['green', 'green', 'red'];
+    let shots2 = ['green', 'green'];
+
+    if (variant === 'b') {
+      shotText = 'SHOT 6';
+      val1 = '3';
+      shots1 = ['green'];
+      shots2 = ['green'];
+    } else if (variant === 'c') {
+      shotText = 'SHOT 6';
+      val1 = '3';
+      shots1 = ['green'];
+      shots2 = ['red'];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      shotText = customData.shotText || customData.subText || shotText;
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      shots1 = customData.shots1 || shots1;
+      shots2 = customData.shots2 || shots2;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 500, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    if (shotText) {
+      const shotTxtObj = new fabric.Textbox(shotText.toUpperCase(), createProps('textbox', {
+        left: baseLeft + bannerWidth - 250, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#0a2a5e', width: 200, textAlign: 'right', charSpacing: 10
+      }));
+      objects.push(shotTxtObj);
+    }
+
+    // Row 1 (Team 1)
+    let r1Top = baseTop + 54 + 2 + 38 + 3;
+    const rowBg1 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r1Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 30, top: r1Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const nameTxt1 = new fabric.Textbox(team1.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r1Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 300, charSpacing: 10
+    }));
+    objects.push(nameTxt1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 480, top: r1Top + 8, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 50, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    // Shots 1
+    let shotX1 = baseLeft + 540;
+    for (let s = 0; s < shots1.length; s++) {
+      const color = shots1[s] === 'green' ? '#2e7d32' : '#c62828';
+      const shotBox = new fabric.Rect({
+        left: shotX1, top: r1Top + 7, width: 24, height: 24,
+        fill: color, skewX: -12, rx: 2, ry: 2
+      });
+      objects.push(shotBox);
+      shotX1 += 30;
+    }
+
+    // Status box 1 (white)
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r1Top + 8, width: 45, height: 22,
+      fill: '#ffffff', skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2)
+    let r2Top = r1Top + 38 + 3;
+    const rowBg2 = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: r2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 30, top: r2Top + 5, scaleX: 0.38, scaleY: 0.38
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const nameTxt2 = new fabric.Textbox(team2.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: r2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 300, charSpacing: 10
+    }));
+    objects.push(nameTxt2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 480, top: r2Top + 8, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 50, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    // Shots 2
+    let shotX2 = baseLeft + 540;
+    for (let s = 0; s < shots2.length; s++) {
+      const color = shots2[s] === 'green' ? '#2e7d32' : '#c62828';
+      const shotBox = new fabric.Rect({
+        left: shotX2, top: r2Top + 7, width: 24, height: 24,
+        fill: color, skewX: -12, rx: 2, ry: 2
+      });
+      objects.push(shotBox);
+      shotX2 += 30;
+    }
+
+    // Status box 2 (outline)
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + bannerWidth - 85, top: r2Top + 8, width: 45, height: 22,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.5, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(stBox2);
+
+    return new fabric.Group(objects, {
+      left: 313, top: 729,
+      scaleX: 1.473, scaleY: 1.369,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP022 Shoot-Out Scoreboard (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP023 - Advance All to Quarter-Finals ──
+  if (normId.includes('WP023') || normId === 'ADVANCE ALL TO QUARTER-FINALS' || normId === 'ADVANCE ALL') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 422; // 544
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'PRELIMINARY ROUND → QUARTER-FINALS';
+    let rows = [
+      { name: 'UNITED STATES', stats: '4   1   0' },
+      { name: 'HUNGARY', stats: '4   0   1' },
+      { name: 'SPAIN', stats: '4   1   0' },
+      { name: 'CROATIA', stats: '4   1   0' },
+      { name: 'MONTENEGRO', stats: '2   1   2' },
+      { name: 'SERBIA', stats: '3   2   0' },
+      { name: 'GERMANY', stats: '2   3   0' },
+      { name: 'AUSTRALIA', stats: '2   2   1' }
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 500, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    // Headers on right
+    const headersTxt = new fabric.Textbox("W   L   D", createProps('textbox', {
+      left: baseLeft + bannerWidth - 250, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 200, textAlign: 'right', charSpacing: 20
+    }));
+    objects.push(headersTxt);
+
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      }));
+      objects.push(rowBg);
+
+      const noc = getNocCodeForTeam(row.name) || 'USA';
+      const flagObj = await createFabricFlagObject(noc, {
+        left: baseLeft + 30, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagObj) objects.push(flagObj);
+
+      const nameTxt = new fabric.Textbox(row.name.toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 400, charSpacing: 10
+      }));
+      objects.push(nameTxt);
+
+      const statTxt = new fabric.Textbox(row.stats, createProps('textbox', {
+        left: baseLeft + bannerWidth - 250, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 200, textAlign: 'right', charSpacing: 20
+      }));
+      objects.push(statTxt);
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: 303, top: 398,
+      scaleX: 1.499, scaleY: 1.346,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP023 Advance All to Quarter-Finals (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP024 - Final Rank ──
+  if (normId.includes('WP024') || normId === 'FINAL RANK') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 340; // 626
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'FINAL RANK';
+    let rows = [
+      { rank: '1', name: 'HUNGARY' },
+      { rank: '2', name: 'UNITED STATES' },
+      { rank: '3', name: 'SERBIA' },
+      { rank: '4', name: 'MONTENEGRO' },
+      { rank: '5', name: 'GERMANY' },
+      { rank: '6', name: 'SPAIN' }
+    ];
+    if (variant === 'b') {
+      rows = [
+        { rank: '7', name: 'AUSTRALIA' },
+        { rank: '8', name: 'CROATIA' },
+        { rank: '9', name: 'ITALY' },
+        { rank: '10', name: 'GREECE' },
+        { rank: '11', name: 'CHINA' },
+        { rank: '12', name: 'CANADA' }
+      ];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 500, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      }));
+      objects.push(rowBg);
+
+      // Rank Badge
+      const rankBadge = new fabric.Rect({
+        left: baseLeft + 25, top: currentY + 7, width: 24, height: 24,
+        fill: '#d32f2f', skewX: -12, rx: 2, ry: 2
+      });
+      const rankTxt = new fabric.Textbox(row.rank, createProps('textbox', {
+        left: baseLeft + 25, top: currentY + 10, fontSize: 15, fontWeight: '900',
+        fill: '#ffffff', width: 24, textAlign: 'center'
+      }));
+      objects.push(rankBadge, rankTxt);
+
+      const noc = getNocCodeForTeam(row.name) || 'HUN';
+      const flagObj = await createFabricFlagObject(noc, {
+        left: baseLeft + 60, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagObj) objects.push(flagObj);
+
+      const nameTxt = new fabric.Textbox(row.name.toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 500, charSpacing: 10
+      }));
+      objects.push(nameTxt);
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: 328, top: 518,
+      scaleX: 1.482, scaleY: 1.318,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP024 Final Rank (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP025 - Ceremony ID ──
+  if (normId.includes('WP025') || normId === 'CEREMONY ID') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    const text = customData.subText || customData.text || 'VICTORY CEREMONY';
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(text.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 700, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    return new fabric.Group(objects, {
+      left: 328, top: 836,
+      scaleX: 1.458, scaleY: 1.376,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP025 Ceremony ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP026 - Medal ID ──
+  if (normId.includes('WP026') || normId === 'MEDAL ID') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    const isGenericDummy = !customData.teamName && !customData.team;
+    let teamName = 'HUNGARY';
+    let text = "GOLD - MEN'S WATER POLO";
+    let medal = 'gold';
+
+    if (!isGenericDummy) {
+      teamName = customData.teamName || customData.team || 'HUNGARY';
+      text = customData.subText || customData.text || "GOLD - MEN'S WATER POLO";
+      medal = (customData.medal || 'gold').toLowerCase();
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Flag
+    const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Name
+    const nameTxt = new fabric.Textbox(teamName.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    // Medal Circle
+    let medalColorStops = [{ offset: 0, color: '#ffe082' }, { offset: 0.5, color: '#ffb300' }, { offset: 1, color: '#ffa000' }]; // gold
+    if (medal === 'silver') {
+      medalColorStops = [{ offset: 0, color: '#e0e0e0' }, { offset: 0.5, color: '#b0bec5' }, { offset: 1, color: '#90a4ae' }];
+    } else if (medal === 'bronze') {
+      medalColorStops = [{ offset: 0, color: '#ffab91' }, { offset: 0.5, color: '#d84315' }, { offset: 1, color: '#bf360c' }];
+    }
+    const medalObj = new fabric.Circle({
+      left: baseLeft + 25, top: t2Top + 5, radius: 14,
+      fill: new fabric.Gradient({ type: 'linear', coords: { x1: 0, y1: 0, x2: 28, y2: 28 }, colorStops: medalColorStops }),
+      stroke: '#ffffff', strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 4, offsetX: 0, offsetY: 2 })
+    });
+    objects.push(medalObj);
+
+    const subTxtObj = new fabric.Textbox(text.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 65, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 700, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 328, top: 833,
+      scaleX: 1.458, scaleY: 1.415,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP026 Medal ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP027 - Medals List ──
+  if (normId.includes('WP027') || normId === 'MEDALS LIST') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 217; // 749
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'VICTORY CEREMONY';
+    let rows = [
+      { medal: 'gold', name: 'HUNGARY' },
+      { medal: 'silver', name: 'UNITED STATES' },
+      { medal: 'bronze', name: 'SERBIA' }
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 500, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rowBg = new fabric.Rect(createProps('rect', {
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3,
+        stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      }));
+      objects.push(rowBg);
+
+      // Medal Circle
+      let medalColorStops = [{ offset: 0, color: '#ffe082' }, { offset: 0.5, color: '#ffb300' }, { offset: 1, color: '#ffa000' }]; // gold
+      if (row.medal === 'silver') {
+        medalColorStops = [{ offset: 0, color: '#e0e0e0' }, { offset: 0.5, color: '#b0bec5' }, { offset: 1, color: '#90a4ae' }];
+      } else if (row.medal === 'bronze') {
+        medalColorStops = [{ offset: 0, color: '#ffab91' }, { offset: 0.5, color: '#d84315' }, { offset: 1, color: '#bf360c' }];
+      }
+      const medalObj = new fabric.Circle({
+        left: baseLeft + 25, top: currentY + 5, radius: 14,
+        fill: new fabric.Gradient({ type: 'linear', coords: { x1: 0, y1: 0, x2: 28, y2: 28 }, colorStops: medalColorStops }),
+        stroke: '#ffffff', strokeWidth: 1.5, shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 4, offsetX: 0, offsetY: 2 })
+      });
+      objects.push(medalObj);
+
+      const noc = getNocCodeForTeam(row.name) || 'HUN';
+      const flagObj = await createFabricFlagObject(noc, {
+        left: baseLeft + 65, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagObj) objects.push(flagObj);
+
+      const nameTxt = new fabric.Textbox(row.name.toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 500, charSpacing: 10
+      }));
+      objects.push(nameTxt);
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: 328, top: 679,
+      scaleX: 1.471, scaleY: 1.322,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP027 Medals List (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP028 - Medal Presenter ID ──
+  if (normId.includes('WP028') || normId === 'MEDAL PRESENTER ID') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    const isGenericDummy = !customData.presenterName && !customData.name;
+    let name = 'JACQUES ROGGE';
+    let designation = 'IOC PRESIDENT, BELGIUM';
+
+    if (!isGenericDummy) {
+      name = customData.presenterName || customData.name || 'JACQUES ROGGE';
+      designation = customData.designation || customData.subText || 'IOC PRESIDENT, BELGIUM';
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Name (starts exactly at baseLeft + 30)
+    const nameTxt = new fabric.Textbox(name.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 650, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox(designation.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 328, top: 823,
+      scaleX: 1.473, scaleY: 1.514,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP028 Medal Presenter ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP029 - Flower Presenter ID ──
+  if (normId.includes('WP029') || normId === 'FLOWER PRESENTER ID') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    const isGenericDummy = !customData.presenterName && !customData.name;
+    let name = 'MR GIANNI LONZI';
+    let designation = 'FINA MEMBER';
+
+    if (!isGenericDummy) {
+      name = customData.presenterName || customData.name || 'MR GIANNI LONZI';
+      designation = customData.designation || customData.subText || 'FINA MEMBER';
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Name (starts exactly at baseLeft + 30)
+    const nameTxt = new fabric.Textbox(name.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 650, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox(designation.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 328, top: 833,
+      scaleX: 1.468, scaleY: 1.415,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP029 Flower Presenter ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP030 - Crunch Scoreboard ──
+  if (normId.includes('WP030') || normId === 'CRUNCH SCOREBOARD') {
+    const baseLeft = 310;
+    const baseTop = 240;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '4';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '1:41';
+    let period = '3RD';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+    }
+
+    // Row 1 (Team 1)
+    const rowBg1 = new fabric.Rect({
+      left: baseLeft, top: baseTop, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 10, top: baseTop + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 100, top: baseTop + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    // Status box 1
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + 155, top: baseTop + 6, width: 35, height: 20,
+      fill: '#ffffff', skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2)
+    const r2Top = baseTop + 32 + 2;
+    const rowBg2 = new fabric.Rect({
+      left: baseLeft, top: r2Top, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 10, top: r2Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 100, top: r2Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    // Status box 2
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + 155, top: r2Top + 6, width: 35, height: 20,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.2, skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox2);
+
+    // Row 3 (Time/Period)
+    const r3Top = r2Top + 32 + 2;
+    const rowBg3 = new fabric.Rect({
+      left: baseLeft, top: r3Top, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2
+    });
+    objects.push(rowBg3);
+
+    const timeTxtObj = new fabric.Textbox(gameTime, createProps('textbox', {
+      left: baseLeft + 10, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 80, textAlign: 'center'
+    }));
+    const periodTxtObj = new fabric.Textbox(period, createProps('textbox', {
+      left: baseLeft + 100, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 80, textAlign: 'center'
+    }));
+    objects.push(timeTxtObj, periodTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 323, top: 56,
+      scaleX: 1.195, scaleY: 1.408,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP030 Crunch Scoreboard (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP031 - Shot Clock ──
+  if (normId.includes('WP031') || normId === 'SHOT CLOCK') {
+    const baseLeft = 310;
+    const baseTop = 240;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '4';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '1:32';
+    let period = '3RD';
+    let shotValue = 'SHOT 6';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+      shotValue = customData.shotValue || customData.shotText || shotValue;
+    }
+
+    // Row 1 (Team 1)
+    const rowBg1 = new fabric.Rect({
+      left: baseLeft, top: baseTop, width: 280, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 280, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 10, top: baseTop + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 140, top: baseTop + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    // Status box 1
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + 235, top: baseTop + 6, width: 35, height: 20,
+      fill: '#ffffff', skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2)
+    const r2Top = baseTop + 32 + 2;
+    const rowBg2 = new fabric.Rect({
+      left: baseLeft, top: r2Top, width: 280, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 280, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 10, top: r2Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 140, top: r2Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    // Status box 2
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + 235, top: r2Top + 6, width: 35, height: 20,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.2, skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox2);
+
+    // Row 3 (Time/Period/Shot)
+    const r3Top = r2Top + 32 + 2;
+    const rowBg3 = new fabric.Rect({
+      left: baseLeft, top: r3Top, width: 280, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 280, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2
+    });
+    objects.push(rowBg3);
+
+    const timeTxtObj = new fabric.Textbox(gameTime, createProps('textbox', {
+      left: baseLeft + 10, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 70, textAlign: 'center'
+    }));
+    const periodTxtObj = new fabric.Textbox(period, createProps('textbox', {
+      left: baseLeft + 90, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 70, textAlign: 'center'
+    }));
+    const shotTxtObj = new fabric.Textbox(shotValue.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 170, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 100, textAlign: 'center'
+    }));
+    objects.push(timeTxtObj, periodTxtObj, shotTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 318, top: 60,
+      scaleX: 1.000, scaleY: 1.510,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP031 Shot Clock (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP032 - Crunch Penalties ──
+  if (normId.includes('WP032') || normId === 'CRUNCH PENALTIES') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseLeft = 310;
+    const baseTop = 240;
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '7';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '2:15';
+    let period = '4TH';
+    let exclusions = [
+      { cap: '3', seconds: '6', team: 'USA' },
+      { cap: '7', seconds: '11', team: 'USA' },
+      { cap: '5', seconds: '19', team: 'USA' },
+      { cap: '6', seconds: '15', team: 'HUN' }
+    ];
+
+    if (variant === 'b') {
+      gameTime = '1:58';
+      exclusions = [
+        { cap: '5', seconds: '2', team: 'USA' }
+      ];
+    }
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+      exclusions = customData.exclusions || exclusions;
+    }
+
+    // Row 1 (Team 1 Scoreboard)
+    const rowBg1 = new fabric.Rect({
+      left: baseLeft, top: baseTop, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg1);
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagObj1 = await createFabricFlagObject(noc1, {
+      left: baseLeft + 10, top: baseTop + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj1) objects.push(flagObj1);
+
+    const val1Txt = new fabric.Textbox(val1, createProps('textbox', {
+      left: baseLeft + 100, top: baseTop + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val1Txt);
+
+    const stBox1 = new fabric.Rect({
+      left: baseLeft + 155, top: baseTop + 6, width: 35, height: 20,
+      fill: '#ffffff', skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox1);
+
+    // Row 2 (Team 2 Scoreboard)
+    const r2Top = baseTop + 32 + 2;
+    const rowBg2 = new fabric.Rect({
+      left: baseLeft, top: r2Top, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    });
+    objects.push(rowBg2);
+
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagObj2 = await createFabricFlagObject(noc2, {
+      left: baseLeft + 10, top: r2Top + 5, scaleX: 0.32, scaleY: 0.32
+    });
+    if (flagObj2) objects.push(flagObj2);
+
+    const val2Txt = new fabric.Textbox(val2, createProps('textbox', {
+      left: baseLeft + 100, top: r2Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 40, textAlign: 'center'
+    }));
+    objects.push(val2Txt);
+
+    const stBox2 = new fabric.Rect({
+      left: baseLeft + 155, top: r2Top + 6, width: 35, height: 20,
+      fill: 'transparent', stroke: '#ffffff', strokeWidth: 1.2, skewX: -12, rx: 1, ry: 1
+    });
+    objects.push(stBox2);
+
+    // Row 3 (Time/Period)
+    const r3Top = r2Top + 32 + 2;
+    const rowBg3 = new fabric.Rect({
+      left: baseLeft, top: r3Top, width: 200, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 200, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 2, ry: 2,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2
+    });
+    objects.push(rowBg3);
+
+    const timeTxtObj = new fabric.Textbox(gameTime, createProps('textbox', {
+      left: baseLeft + 10, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 80, textAlign: 'center'
+    }));
+    const periodTxtObj = new fabric.Textbox(period, createProps('textbox', {
+      left: baseLeft + 100, top: r3Top + 6, fontSize: 16, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 80, textAlign: 'center'
+    }));
+    objects.push(timeTxtObj, periodTxtObj);
+
+    // Draw active exclusions at bottom baseline 966px
+    // Exclusions for Team 1 (USA) - left side bottom
+    let team1Ex = exclusions.filter(e => e.team === 'USA');
+    let exY1 = 966 - (team1Ex.length * 32) - ((team1Ex.length - 1) * 3);
+    for (let e = 0; e < team1Ex.length; e++) {
+      const ex = team1Ex[e];
+      const exBg = new fabric.Rect({
+        left: 328, top: exY1, width: 180, height: 32,
+        fill: new fabric.Gradient({
+          type: 'linear', coords: { x1: 0, y1: 0, x2: 180, y2: 0 },
+          colorStops: [{ offset: 0, color: '#091d36' }, { offset: 1, color: '#051121' }]
+        }),
+        skewX: -12, rx: 2, ry: 2, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      });
+      const capTxt = new fabric.Textbox(ex.cap, createProps('textbox', {
+        left: 338, top: exY1 + 6, fontSize: 16, fontWeight: '900', fill: '#00ccff', width: 30, textAlign: 'center'
+      }));
+      const secTxt = new fabric.Textbox(ex.seconds, createProps('textbox', {
+        left: 378, top: exY1 + 6, fontSize: 16, fontWeight: '900', fill: '#ffffff', width: 40, textAlign: 'center'
+      }));
+      objects.push(exBg, capTxt, secTxt);
+
+      if (e === team1Ex.length - 1) {
+        const flagObj = await createFabricFlagObject('USA', {
+          left: 430, top: exY1 + 5, scaleX: 0.32, scaleY: 0.32
+        });
+        if (flagObj) objects.push(flagObj);
+      }
+      exY1 += 32 + 3;
+    }
+
+    // Exclusions for Team 2 (HUN) - right side bottom
+    let team2Ex = exclusions.filter(e => e.team === 'HUN');
+    let exY2 = 966 - (team2Ex.length * 32) - ((team2Ex.length - 1) * 3);
+    for (let e = 0; e < team2Ex.length; e++) {
+      const ex = team2Ex[e];
+      const exBg = new fabric.Rect({
+        left: 800, top: exY2, width: 180, height: 32,
+        fill: new fabric.Gradient({
+          type: 'linear', coords: { x1: 0, y1: 0, x2: 180, y2: 0 },
+          colorStops: [{ offset: 0, color: '#091d36' }, { offset: 1, color: '#051121' }]
+        }),
+        skewX: -12, rx: 2, ry: 2, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      });
+      const capTxt = new fabric.Textbox(ex.cap, createProps('textbox', {
+        left: 810, top: exY2 + 6, fontSize: 16, fontWeight: '900', fill: '#00ccff', width: 30, textAlign: 'center'
+      }));
+      const secTxt = new fabric.Textbox(ex.seconds, createProps('textbox', {
+        left: 850, top: exY2 + 6, fontSize: 16, fontWeight: '900', fill: '#ffffff', width: 40, textAlign: 'center'
+      }));
+      objects.push(exBg, capTxt, secTxt);
+
+      if (e === team2Ex.length - 1) {
+        const flagObj = await createFabricFlagObject('HUN', {
+          left: 902, top: exY2 + 5, scaleX: 0.32, scaleY: 0.32
+        });
+        if (flagObj) objects.push(flagObj);
+      }
+      exY2 += 32 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP032 Crunch Penalties (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP033 - Bracket to Semi-Finals ──
+  if (normId.includes('WP033') || normId === 'BRACKET TO SEMI-FINALS' || normId === 'BRACKET SEMI FINALS') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 422; // 544
+
+    const isGenericDummy = !customData.matches;
+    let roundText = 'QUARTER-FINALS → SEMI-FINALS';
+    let leftTeams = [
+      'HUNGARY', 'GERMANY',
+      'MONTENEGRO', 'CROATIA',
+      'SPAIN', 'SERBIA',
+      'AUSTRALIA', 'UNITED STATES'
+    ];
+    let winners = [
+      'HUNGARY', '',
+      'MONTENEGRO', '',
+      'SERBIA', '',
+      'UNITED STATES', ''
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      leftTeams = customData.leftTeams || leftTeams;
+      winners = customData.winners || winners;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 700, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    // Rows
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < 8; i++) {
+      // Left side row
+      const leftBg = new fabric.Rect({
+        left: baseLeft + 17, top: currentY, width: 380, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', coords: { x1: 0, y1: 0, x2: 380, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      });
+      objects.push(leftBg);
+
+      const nocLeft = getNocCodeForTeam(leftTeams[i]) || 'HUN';
+      const flagLeftObj = await createFabricFlagObject(nocLeft, {
+        left: baseLeft + 30, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagLeftObj) objects.push(flagLeftObj);
+
+      const nameLeftTxt = new fabric.Textbox(leftTeams[i].toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 230, charSpacing: 10
+      }));
+      objects.push(nameLeftTxt);
+
+      // Winner row
+      if (i % 2 === 0 && winners[i]) {
+        const winBg = new fabric.Rect({
+          left: baseLeft + 430, top: currentY, width: 400, height: 38,
+          fill: new fabric.Gradient({
+            type: 'linear', coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
+            colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+          }),
+          skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+        });
+        objects.push(winBg);
+
+        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const flagWinObj = await createFabricFlagObject(nocWin, {
+          left: baseLeft + 450, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+        });
+        if (flagWinObj) objects.push(flagWinObj);
+
+        const nameWinTxt = new fabric.Textbox(winners[i].toUpperCase(), createProps('textbox', {
+          left: baseLeft + 570, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 230, charSpacing: 10
+        }));
+        objects.push(nameWinTxt);
+      }
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP033 Bracket to Semi-Finals (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP034 - Bracket to Gold Medal Match ──
+  if (normId.includes('WP034') || normId === 'BRACKET TO GOLD MEDAL MATCH' || normId === 'BRACKET GOLD MEDAL') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 258; // 708
+
+    const isGenericDummy = !customData.matches;
+    let roundText = 'SEMI-FINALS → GOLD MEDAL MATCH';
+    let leftTeams = [
+      'HUNGARY', 'MONTENEGRO',
+      'SERBIA', 'UNITED STATES'
+    ];
+    let winners = [
+      'HUNGARY', '',
+      'UNITED STATES', ''
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      leftTeams = customData.leftTeams || leftTeams;
+      winners = customData.winners || winners;
+    }
+
+    // Header bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [{ offset: 0, color: gradientStart }, { offset: 0.5, color: gradientMid }, { offset: 1, color: gradientEnd }]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54, fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Player icon
+    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
+    }));
+    objects.push(iconTxt);
+
+    const titleTxt = new fabric.Textbox("MEN'S WATER POLO", createProps('textbox', {
+      left: baseLeft + 90, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 500, charSpacing: 20
+    }));
+    objects.push(titleTxt);
+
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: baseTop + 54 + 2, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxt = new fabric.Textbox(roundText.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: baseTop + 54 + 2 + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#0a2a5e', width: 700, charSpacing: 10
+    }));
+    objects.push(subTxt);
+
+    // Rows
+    let currentY = baseTop + 54 + 2 + 38 + 3;
+    for (let i = 0; i < 4; i++) {
+      // Left side row
+      const leftBg = new fabric.Rect({
+        left: baseLeft + 17, top: currentY, width: 380, height: 38,
+        fill: new fabric.Gradient({
+          type: 'linear', coords: { x1: 0, y1: 0, x2: 380, y2: 0 },
+          colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+        }),
+        skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+      });
+      objects.push(leftBg);
+
+      const nocLeft = getNocCodeForTeam(leftTeams[i]) || 'HUN';
+      const flagLeftObj = await createFabricFlagObject(nocLeft, {
+        left: baseLeft + 30, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+      });
+      if (flagLeftObj) objects.push(flagLeftObj);
+
+      const nameLeftTxt = new fabric.Textbox(leftTeams[i].toUpperCase(), createProps('textbox', {
+        left: baseLeft + 150, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 230, charSpacing: 10
+      }));
+      objects.push(nameLeftTxt);
+
+      // Winner row
+      if (i % 2 === 0 && winners[i]) {
+        const winBg = new fabric.Rect({
+          left: baseLeft + 430, top: currentY, width: 400, height: 38,
+          fill: new fabric.Gradient({
+            type: 'linear', coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
+            colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+          }),
+          skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+        });
+        objects.push(winBg);
+
+        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const flagWinObj = await createFabricFlagObject(nocWin, {
+          left: baseLeft + 450, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+        });
+        if (flagWinObj) objects.push(flagWinObj);
+
+        const nameWinTxt = new fabric.Textbox(winners[i].toUpperCase(), createProps('textbox', {
+          left: baseLeft + 570, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 230, charSpacing: 10
+        }));
+        objects.push(nameWinTxt);
+      }
+
+      currentY += 38 + 3;
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP034 Bracket to Gold Medal Match (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
 
   return null;
 }
@@ -2204,7 +4764,7 @@ export function generateWaterPolo2HTML(
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
 
-          .schedule-banner { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; gap: 3px; }
+          .schedule-banner { position: absolute; top: 508px; left: 296px; transform: scale(1.025, 1.395); transform-origin: top left; display: flex; flex-direction: column; gap: 3px; }
           .tier-1 {
             height: 54px; width: 1260px;
             background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 60%, ${gradientEnd} 100%);
@@ -2290,8 +4850,8 @@ export function generateWaterPolo2HTML(
     const team1Noc = getNocCodeForTeam(team1Name) || (isGenericDummy ? (isVariantB ? 'HUN' : 'ESP') : (customData.noc1 || customData.nocA || 'ESP'));
     const team2Noc = getNocCodeForTeam(team2Name) || (isGenericDummy ? (isVariantB ? 'USA' : 'CAN') : (customData.noc2 || customData.nocB || 'CAN'));
 
-    const team1Stats = isGenericDummy ? [7, 0, 1] : (customData.stats1 || customData.statsA || [0,0,0]);
-    const team2Stats = isGenericDummy ? [5, 2, 0] : (customData.stats2 || customData.statsB || [0,0,0]);
+    const team1Stats = isGenericDummy ? [7, 0, 1] : (customData.stats1 || customData.statsA || [0, 0, 0]);
+    const team2Stats = isGenericDummy ? [5, 2, 0] : (customData.stats2 || customData.statsB || [0, 0, 0]);
 
     const flag1Html = getFlagImgHtml(team1Noc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
     const flag2Html = getFlagImgHtml(team2Noc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
@@ -2306,7 +4866,7 @@ export function generateWaterPolo2HTML(
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
 
-          .match-banner { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; }
+          .match-banner { position: absolute; top: 735px; left: 328px; transform: scale(1.455, 1.310); transform-origin: top left; display: flex; flex-direction: column; }
           .event-gun-header {
             position: relative;
             width: 100%;
@@ -2570,12 +5130,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP006') || normId === 'STANDINGS') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -2618,8 +5178,8 @@ export function generateWaterPolo2HTML(
     const inputRows = (customData.rows && customData.rows.length > 0)
       ? customData.rows
       : (customData.standings && customData.standings.length > 0)
-      ? customData.standings
-      : null;
+        ? customData.standings
+        : null;
 
     const isGenericInputRows = inputRows && inputRows.length <= 5 &&
       inputRows.some(r => (r.name || '').toUpperCase().includes('CROATIA'));
@@ -2794,12 +5354,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP007') || normId === 'TEAM ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -2808,13 +5368,13 @@ export function generateWaterPolo2HTML(
 
     const baseTop = 966 - 54; // 912
 
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
-    const teamName = isGenericDummy 
-      ? (variant === 'b' ? 'CROATIA' : 'CHINA') 
+    const teamName = isGenericDummy
+      ? (variant === 'b' ? 'CROATIA' : 'CHINA')
       : (customData.team1 || customData.teamA || 'CHINA');
 
     const status = isGenericDummy
@@ -2878,10 +5438,10 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP008') || normId === 'TEAM LIST') {
     const baseTop = 966 - 425; // 541
 
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
     const teamName = isGenericDummy ? 'HUNGARY' : (customData.team1 || customData.teamA || 'HUNGARY');
     const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
@@ -3097,12 +5657,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP009') || normId === 'PREVIOUS RESULTS') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -3111,13 +5671,13 @@ export function generateWaterPolo2HTML(
 
     const baseLeft = 328;
 
-    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.teamA || '').toUpperCase() === 'CROATIA' || 
-                           (!customData.team1 && !customData.teamA);
+    const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.teamA || '').toUpperCase() === 'CROATIA' ||
+      (!customData.team1 && !customData.teamA);
 
-    const teamName = isGenericDummy 
-      ? (variant === 'b' ? 'UNITED STATES' : 'HUNGARY') 
+    const teamName = isGenericDummy
+      ? (variant === 'b' ? 'UNITED STATES' : 'HUNGARY')
       : (customData.team1 || customData.teamA || 'HUNGARY');
 
     const record = isGenericDummy
@@ -3280,12 +5840,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP010') || normId === 'PLAYER ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -3297,10 +5857,10 @@ export function generateWaterPolo2HTML(
     const baseLeft = 328;
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'HUNGARY';
     let capNumber = '6';
@@ -3439,12 +5999,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -3455,10 +6015,10 @@ export function generateWaterPolo2HTML(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'SERBIA';
     let capNumber = '6';
@@ -3581,12 +6141,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -3597,10 +6157,10 @@ export function generateWaterPolo2HTML(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (!customData.playerName && !customData.name);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (!customData.playerName && !customData.name);
 
     let teamName = 'AUSTRALIA';
     let capNumber = '1';
@@ -3708,12 +6268,12 @@ export function generateWaterPolo2HTML(
   if (normId.includes('WP013') || normId === 'COACH ID') {
     let variant = 'a';
     const variantStr = (
-      (customData.variant || '') + ' ' + 
-      (customData.image || '') + ' ' + 
-      (customData.selectedImage || '') + ' ' + 
-      (customData.subType || '') + ' ' + 
-      (customData.subTemplate || '') + ' ' + 
-      (customData.title || '') + ' ' + 
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
       normId
     ).toLowerCase();
 
@@ -3724,11 +6284,11 @@ export function generateWaterPolo2HTML(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
-                           (!customData.playerName && !customData.name && !customData.coachName);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
+      (!customData.playerName && !customData.name && !customData.coachName);
 
     let teamName = 'AUSTRALIA';
     let coachName = 'JOHN FOX';
@@ -3840,11 +6400,11 @@ export function generateWaterPolo2HTML(
     const baseTop = 966 - 94; // 872
 
     // Default data mapping
-    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
-                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
-                           (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
-                           (!customData.playerName && !customData.name && !customData.officialName);
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'TOM DALEY' ||
+      (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' ||
+      (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
+      (!customData.playerName && !customData.name && !customData.officialName);
 
     let teamName = 'HUNGARY';
     let officialName = 'GABOR KISZELLY';
@@ -3930,6 +6490,2253 @@ export function generateWaterPolo2HTML(
       </html>
     `;
   }
+
+
+  // ── WP015 - Officials List ──
+  if (normId.includes('WP015') || normId === 'OFFICIALS LIST') {
+    const isGenericDummy = !customData.officials && !customData.rows;
+    let officials = [
+      { name: 'AARON CHANEY', team: 'USA' },
+      { name: 'GABOR KISZELLY', team: 'HUNGARY' }
+    ];
+    if (!isGenericDummy) {
+      officials = customData.officials || customData.rows || [];
+    }
+
+    const rowCount = officials.length;
+    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
+    const totalHeight = 54 + 2 + 38 + 3 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    let rowsHTML = '';
+    for (let i = 0; i < rowCount; i++) {
+      const off = officials[i];
+      const noc = getNocCodeForTeam(off.team) || off.team || 'USA';
+      const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+      rowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="name-txt">${off.name.toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 736px; left: 334px; transform: scale(1.442, 1.289); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">${(customData.eventTitle || "MEN'S WATER POLO").toUpperCase()}</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">REFEREES</div>
+          </div>
+          <div class="rows-wrap">
+            ${rowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP016 - Player Statistics ──
+  if (normId.includes('WP016') || normId === 'PLAYER STATISTICS') {
+    const isGenericDummy = !customData.playerName && !customData.name;
+    let teamName = 'AUSTRALIA';
+    let capNumber = '2';
+    let playerName = 'RICHIE CAMPBELL';
+    let statName = 'GOALS';
+    let statValue = '2';
+
+    if (!isGenericDummy) {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      capNumber = customData.capNumber || customData.number || '2';
+      playerName = customData.playerName || customData.name || 'RICHIE CAMPBELL';
+      statName = customData.statName || customData.label || 'GOALS';
+      statValue = customData.statValue || customData.value || '2';
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 831px; left: 364px; transform: scale(1.425, 1.302); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .cap-number { font-size: 30px; font-weight: 900; font-style: italic; color: #00ccff; margin-right: 15px; }
+          .player-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .status-box {
+            width: 80px; height: 32px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); border-radius: 2px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+          }
+
+          .sub-bar {
+            background: linear-gradient(90deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="cap-number">${capNumber}</div>
+              <div class="player-name">${playerName.toUpperCase()}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div class="status-box"></div>
+              <div class="unskew">${olympicRingsSVG}</div>
+            </div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${statName.toUpperCase() + "  " + statValue}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP017 - Match Statistics ──
+  if (normId.includes('WP017') || normId === 'MATCH STATISTICS') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'AUSTRALIA';
+    let team2 = 'UNITED STATES';
+    let stats = [
+      { label: 'GOALS', val1: '18', val2: '19' },
+      { label: 'ACTION SHOT GOALS', val1: '0/3', val2: '4/15' },
+      { label: 'CENTRE SHOT GOALS', val1: '3/4', val2: '2/2' },
+      { label: 'EXTRA PLAYER GOALS', val1: '6/9', val2: '4/12' },
+      { label: '5M SHOT GOALS', val1: '0/6', val2: '0/5' },
+      { label: 'PENALTY SHOT GOALS', val1: '3/5', val2: '2/5' },
+      { label: 'COUNTER ATTACK GOALS', val1: '1/1', val2: '1/5' }
+    ];
+    if (variant === 'b') {
+      stats.push({ label: 'PENALTY SHOOT-OUT GOALS', val1: '5/7', val2: '6/7' });
+    }
+    stats.push({ label: 'SHOTS SAVED', val1: '19', val2: '5' });
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || 'AUSTRALIA';
+      team2 = customData.team2 || customData.teamB || 'UNITED STATES';
+      stats = customData.stats || customData.rows || stats;
+    }
+
+    const rowCount = stats.length;
+    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
+    const totalHeight = 54 + 2 + rowsHeight;
+    const baseTop = 966 - totalHeight;
+
+    let transformStr = '';
+    let finalTop = baseTop;
+    let finalLeft = 328;
+
+    if (variant === 'a') {
+      finalTop = 450;
+      finalLeft = 328;
+      transformStr = 'transform: scale(1.471, 1.353); transform-origin: top left;';
+    } else if (variant === 'b') {
+      finalTop = 396;
+      finalLeft = 308;
+      transformStr = 'transform: scale(1.492, 1.351); transform-origin: top left;';
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    let rowsHTML = '';
+    for (let i = 0; i < rowCount; i++) {
+      const row = stats[i];
+      rowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="val-txt left-val">${row.val1}</div>
+              <div class="label-txt">${row.label.toUpperCase()}</div>
+              <div class="val-txt right-val">${row.val2}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: ${finalTop}px; left: ${finalLeft}px; ${transformStr} display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; }
+          
+          .center-title-badge {
+            width: 490px; height: 34px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+          }
+          .center-title { font-size: 22px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 1px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .val-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; width: 100px; }
+          .left-val { text-align: left; }
+          .right-val { text-align: right; }
+          .label-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; text-align: center; flex: 1; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <div class="flag-wrap">${flagHtml1}</div>
+            </div>
+            <div class="center-title-badge">
+              <div class="center-title unskew">MATCH STATISTICS</div>
+            </div>
+            <div class="header-left unskew" style="gap: 20px;">
+              <div class="flag-wrap">${flagHtml2}</div>
+            </div>
+          </div>
+          <div class="rows-wrap">
+            ${rowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP018 - Crunch Statistics ──
+  if (normId.includes('WP018') || normId === 'CRUNCH STATISTICS') {
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let title = 'PENALTY SHOT GOALS';
+    let team1 = 'CHINA';
+    let val1 = '3/5';
+    let team2 = 'CROATIA';
+    let val2 = '3/4';
+
+    if (!isGenericDummy) {
+      title = customData.title || customData.label || 'PENALTY SHOT GOALS';
+      team1 = customData.team1 || customData.teamA || 'CHINA';
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || 'CROATIA';
+      val2 = customData.val2 || customData.value2 || val2;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'CHN';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'CRO';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+
+    const totalHeight = 38 + 2 + 67;
+    const baseTop = 966 - totalHeight;
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .crunch-container { position: absolute; top: 891px; left: 302px; transform: scale(1.142); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 260px; height: 38px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+          }
+          .unskew { transform: skewX(12deg); }
+          .title-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 1px; text-transform: uppercase; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; margin-left: 5px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg-red {
+            width: 250px; height: 32px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-blue {
+            width: 250px; height: 32px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; }
+          .val-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .st-box-white { width: 40px; height: 20px; background: #ffffff; border-radius: 1px; }
+          .st-box-outline { width: 40px; height: 20px; background: transparent; border: 1.2px solid #ffffff; border-radius: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="crunch-container">
+          <div class="header-bar">
+            <div class="title-txt unskew">${title.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="flag-wrap">${flagHtml1}</div>
+                  <div class="val-txt">${val1}</div>
+                  <div class="st-box-white"></div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="flag-wrap">${flagHtml2}</div>
+                  <div class="val-txt">${val2}</div>
+                  <div class="st-box-outline"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP019 - Time Outs Crunch ──
+  if (normId.includes('WP019') || normId === 'TIME OUTS CRUNCH') {
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'HUNGARY';
+    let val1 = '2';
+    let team2 = 'UNITED STATES';
+    let val2 = '1';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'HUN';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+
+    const totalHeight = 38 + 2 + 67;
+    const baseTop = 966 - totalHeight;
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .crunch-container { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 260px; height: 38px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); border-radius: 3px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+          }
+          .unskew { transform: skewX(12deg); }
+          .title-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 1px; text-transform: uppercase; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; margin-left: 5px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg-blue {
+            width: 250px; height: 32px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-red {
+            width: 250px; height: 32px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; }
+          .val-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .st-box-white { width: 40px; height: 20px; background: #ffffff; border-radius: 1px; }
+          .st-box-outline { width: 40px; height: 20px; background: transparent; border: 1.2px solid #ffffff; border-radius: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="crunch-container">
+          <div class="header-bar">
+            <div class="title-txt unskew">TIME OUTS TAKEN</div>
+          </div>
+          <div class="rows-wrap">
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="flag-wrap">${flagHtml1}</div>
+                  <div class="val-txt">${val1}</div>
+                  <div class="st-box-white"></div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="flag-wrap">${flagHtml2}</div>
+                  <div class="val-txt">${val2}</div>
+                  <div class="st-box-outline"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP020 - Period Breakdown ──
+  if (normId.includes('WP020') || normId === 'PERIOD BREAKDOWN') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'PRELIMINARY ROUND - GROUP B';
+    let team1 = 'CHINA';
+    let team2 = 'CROATIA';
+    let team1Periods = ['0', '3', '', '', '3'];
+    let team2Periods = ['4', '1', '', '', '5'];
+    let headers = ['1', '2', '3', '4', 'TOTAL'];
+
+    if (variant === 'b') {
+      team1Periods = ['0', '3', '2', '1', '6'];
+      team2Periods = ['4', '1', '0', '1', '6'];
+    } else if (variant === 'c') {
+      team1Periods = ['0', '3', '2', '1', '1', '7'];
+      team2Periods = ['4', '1', '0', '1', '0', '6'];
+      headers = ['1', '2', '3', '4', 'OT', 'TOTAL'];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      team1 = customData.team1 || customData.teamA || team1;
+      team2 = customData.team2 || customData.teamB || team2;
+      team1Periods = customData.team1Periods || customData.periods1 || team1Periods;
+      team2Periods = customData.team2Periods || customData.periods2 || team2Periods;
+      headers = customData.headers || headers;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'CHN';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'CRO';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    let headersHTML = '';
+    headers.forEach((h, idx) => {
+      const isTotal = h === 'TOTAL';
+      headersHTML += `<span class="col-head ${isTotal ? 'col-total' : ''}">${h}</span>`;
+    });
+
+    let scoresHTML1 = '';
+    let scoresHTML2 = '';
+    headers.forEach((h, idx) => {
+      const isTotal = h === 'TOTAL';
+      const score1 = team1Periods[idx] !== undefined ? team1Periods[idx] : '';
+      const score2 = team2Periods[idx] !== undefined ? team2Periods[idx] : '';
+      scoresHTML1 += `<span class="col-score ${isTotal ? 'col-total-val' : ''}">${score1}</span>`;
+      scoresHTML2 += `<span class="col-score ${isTotal ? 'col-total-val' : ''}">${score2}</span>`;
+    });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 731px; left: 324px; transform: scale(1.471, 1.305); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+          
+          .col-head-wrap { display: flex; gap: 5px; width: 350px; justify-content: flex-end; }
+          .col-head { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; width: 50px; text-align: center; }
+          .col-total { width: 70px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          
+          .row-bg-red {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-blue {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+          .row-left-section { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+
+          .col-score-wrap { display: flex; gap: 5px; width: 350px; justify-content: flex-end; }
+          .col-score { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; width: 50px; text-align: center; }
+          .col-total-val { width: 70px; }
+
+          .st-box-white { width: 45px; height: 22px; background: #ffffff; border-radius: 2px; margin-left: 10px; }
+          .st-box-outline { width: 45px; height: 22px; background: transparent; border: 1.5px solid #ffffff; border-radius: 2px; margin-left: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+            <div class="col-head-wrap unskew">
+              ${headersHTML}
+            </div>
+          </div>
+          <div class="rows-wrap">
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml1}</div>
+                    <div class="name-txt">${team1.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="col-score-wrap">
+                      ${scoresHTML1}
+                    </div>
+                    <div class="st-box-white"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="row-bg-blue">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml2}</div>
+                    <div class="name-txt">${team2.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="col-score-wrap">
+                      ${scoresHTML2}
+                    </div>
+                    <div class="st-box-outline"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP021 - Scoreboard/Result ──
+  if (normId.includes('WP021') || normId === 'SCOREBOARD/RESULT' || normId === 'SCOREBOARD RESULT') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'QUARTER-FINAL';
+    let timeText = '4TH QUARTER';
+    let team1 = 'AUSTRALIA';
+    let val1 = '12';
+    let team2 = 'UNITED STATES';
+    let val2 = '9';
+
+    if (variant === 'b') {
+      roundText = 'RESULT - GOLD MEDAL MATCH';
+      timeText = '';
+      team1 = 'HUNGARY';
+      val1 = '14';
+      team2 = 'UNITED STATES';
+      val2 = '10';
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      timeText = customData.timeText || customData.periodText || timeText;
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 729px; left: 339px; transform: scale(1.464, 1.358); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+          .sub-right { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+          .row-left-section { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+
+          .score-val { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; width: 80px; text-align: right; }
+          .st-box-white { width: 45px; height: 22px; background: #ffffff; border-radius: 2px; margin-left: 10px; }
+          .st-box-outline { width: 45px; height: 22px; background: transparent; border: 1.5px solid #ffffff; border-radius: 2px; margin-left: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+            <div class="sub-right unskew">${timeText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            <div class="stat-row">
+              <div class="row-bg">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml1}</div>
+                    <div class="name-txt">${team1.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="score-val">${val1}</div>
+                    <div class="st-box-white"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="row-bg">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml2}</div>
+                    <div class="name-txt">${team2.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="score-val">${val2}</div>
+                    <div class="st-box-outline"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP022 - Shoot-Out Scoreboard ──
+  if (normId.includes('WP022') || normId === 'SHOOT-OUT SCOREBOARD' || normId === 'SHOOTOUT SCOREBOARD') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseTop = 966 - 132; // 834
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let roundText = 'QUARTER-FINAL - PENALTY SHOOT-OUT';
+    let shotText = '';
+    let team1 = 'AUSTRALIA';
+    let val1 = '2';
+    let team2 = 'UNITED STATES';
+    let val2 = '2';
+    let shots1 = ['green', 'green', 'red'];
+    let shots2 = ['green', 'green'];
+
+    if (variant === 'b') {
+      shotText = 'SHOT 6';
+      val1 = '3';
+      shots1 = ['green'];
+      shots2 = ['green'];
+    } else if (variant === 'c') {
+      shotText = 'SHOT 6';
+      val1 = '3';
+      shots1 = ['green'];
+      shots2 = ['red'];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      shotText = customData.shotText || customData.subText || shotText;
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      shots1 = customData.shots1 || shots1;
+      shots2 = customData.shots2 || shots2;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'AUS';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'USA';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    let shotsHTML1 = '';
+    shots1.forEach(s => {
+      const color = s === 'green' ? '#2e7d32' : '#c62828';
+      shotsHTML1 += `<span class="shot-box" style="background: ${color};"></span>`;
+    });
+
+    let shotsHTML2 = '';
+    shots2.forEach(s => {
+      const color = s === 'green' ? '#2e7d32' : '#c62828';
+      shotsHTML2 += `<span class="shot-box" style="background: ${color};"></span>`;
+    });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 729px; left: 313px; transform: scale(1.473, 1.369); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+          .sub-right { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+          .row-left-section { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+
+          .score-val { font-size: 20px; font-weight: 900; font-style: italic; color: #ffffff; width: 50px; text-align: center; }
+          
+          .shots-container { display: flex; gap: 6px; align-items: center; margin-left: 10px; width: 200px; }
+          .shot-box { width: 24px; height: 24px; border-radius: 2px; transform: skewX(-12deg); }
+
+          .st-box-white { width: 45px; height: 22px; background: #ffffff; border-radius: 2px; margin-left: 10px; }
+          .st-box-outline { width: 45px; height: 22px; background: transparent; border: 1.5px solid #ffffff; border-radius: 2px; margin-left: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+            <div class="sub-right unskew">${shotText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            <div class="stat-row">
+              <div class="row-bg">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml1}</div>
+                    <div class="name-txt">${team1.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="score-val">${val1}</div>
+                    <div class="shots-container">
+                      ${shotsHTML1}
+                    </div>
+                    <div class="st-box-white"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="stat-row">
+              <div class="row-bg">
+                <div class="row-content unskew">
+                  <div class="row-left-section">
+                    <div class="flag-wrap">${flagHtml2}</div>
+                    <div class="name-txt">${team2.toUpperCase()}</div>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <div class="score-val">${val2}</div>
+                    <div class="shots-container">
+                      ${shotsHTML2}
+                    </div>
+                    <div class="st-box-outline"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP023 - Advance All to Quarter-Finals ──
+  if (normId.includes('WP023') || normId === 'ADVANCE ALL TO QUARTER-FINALS' || normId === 'ADVANCE ALL') {
+    const baseTop = 966 - 422; // 544
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'PRELIMINARY ROUND → QUARTER-FINALS';
+    let rows = [
+      { name: 'UNITED STATES', stats: '4   1   0' },
+      { name: 'HUNGARY', stats: '4   0   1' },
+      { name: 'SPAIN', stats: '4   1   0' },
+      { name: 'CROATIA', stats: '4   1   0' },
+      { name: 'MONTENEGRO', stats: '2   1   2' },
+      { name: 'SERBIA', stats: '3   2   0' },
+      { name: 'GERMANY', stats: '2   3   0' },
+      { name: 'AUSTRALIA', stats: '2   2   1' }
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    let rowsHTML = '';
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const noc = getNocCodeForTeam(row.name) || 'USA';
+      const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+      rowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="row-left-section">
+                <div class="flag-wrap">${flagHtml}</div>
+                <div class="name-txt">${row.name.toUpperCase()}</div>
+              </div>
+              <div class="stat-val">${row.stats}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 398px; left: 303px; transform: scale(1.499, 1.346); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+          .sub-right { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 20px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+          .row-left-section { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+          .stat-val { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 20px; text-align: right; width: 200px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+            <div class="sub-right unskew">W L D</div>
+          </div>
+          <div class="rows-wrap">
+            ${rowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP024 - Final Rank ──
+  if (normId.includes('WP024') || normId === 'FINAL RANK') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseTop = 966 - 340; // 626
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'FINAL RANK';
+    let rows = [
+      { rank: '1', name: 'HUNGARY' },
+      { rank: '2', name: 'UNITED STATES' },
+      { rank: '3', name: 'SERBIA' },
+      { rank: '4', name: 'MONTENEGRO' },
+      { rank: '5', name: 'GERMANY' },
+      { rank: '6', name: 'SPAIN' }
+    ];
+    if (variant === 'b') {
+      rows = [
+        { rank: '7', name: 'AUSTRALIA' },
+        { rank: '8', name: 'CROATIA' },
+        { rank: '9', name: 'ITALY' },
+        { rank: '10', name: 'GREECE' },
+        { rank: '11', name: 'CHINA' },
+        { rank: '12', name: 'CANADA' }
+      ];
+    }
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    let rowsHTML = '';
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const noc = getNocCodeForTeam(row.name) || 'HUN';
+      const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+      rowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="row-left-section">
+                <div class="rank-badge"><span class="unskew">${row.rank}</span></div>
+                <div class="flag-wrap">${flagHtml}</div>
+                <div class="name-txt">${row.name.toUpperCase()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 518px; left: 328px; transform: scale(1.482, 1.318); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; }
+          .row-left-section { display: flex; align-items: center; }
+          
+          .rank-badge {
+            width: 24px; height: 24px; background: #d32f2f; border-radius: 2px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 900; color: #ffffff; margin-right: 15px;
+          }
+
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            ${rowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP025 - Ceremony ID ──
+  if (normId.includes('WP025') || normId === 'CEREMONY ID') {
+    const text = customData.subText || customData.text || 'VICTORY CEREMONY';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 836px; left: 328px; transform: scale(1.458, 1.376); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${text.toUpperCase()}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP026 - Medal ID ──
+  if (normId.includes('WP026') || normId === 'MEDAL ID') {
+    const isGenericDummy = !customData.teamName && !customData.team;
+    let teamName = 'HUNGARY';
+    let text = "GOLD - MEN'S WATER POLO";
+    let medal = 'gold';
+
+    if (!isGenericDummy) {
+      teamName = customData.teamName || customData.team || 'HUNGARY';
+      text = customData.subText || customData.text || "GOLD - MEN'S WATER POLO";
+      medal = (customData.medal || 'gold').toLowerCase();
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    let medalGradient = 'linear-gradient(135deg, #ffe082 0%, #ffb300 50%, #ffa000 100%)'; // gold
+    if (medal === 'silver') {
+      medalGradient = 'linear-gradient(135deg, #e0e0e0 0%, #b0bec5 50%, #90a4ae 100%)';
+    } else if (medal === 'bronze') {
+      medalGradient = 'linear-gradient(135deg, #ffab91 0%, #d84315 50%, #bf360c 100%)';
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 833px; left: 328px; transform: scale(1.458, 1.415); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .team-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+
+          .medal-circle {
+            width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #ffffff;
+            background: ${medalGradient}; margin-right: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: inline-block;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="team-name">${teamName.toUpperCase()}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div style="display: flex; align-items: center;" class="unskew">
+              <span class="medal-circle"></span>
+              <span class="sub-title">${text.toUpperCase()}</span>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP027 - Medals List ──
+  if (normId.includes('WP027') || normId === 'MEDALS LIST') {
+    const baseTop = 966 - 217; // 749
+
+    const isGenericDummy = !customData.rows;
+    let roundText = 'VICTORY CEREMONY';
+    let rows = [
+      { medal: 'gold', name: 'HUNGARY' },
+      { medal: 'silver', name: 'UNITED STATES' },
+      { medal: 'bronze', name: 'SERBIA' }
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      rows = customData.rows || rows;
+    }
+
+    let rowsHTML = '';
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const noc = getNocCodeForTeam(row.name) || 'HUN';
+      const flagHtml = getFlagImgHtml(noc, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+      let medalGradient = 'linear-gradient(135deg, #ffe082 0%, #ffb300 50%, #ffa000 100%)'; // gold
+      if (row.medal === 'silver') {
+        medalGradient = 'linear-gradient(135deg, #e0e0e0 0%, #b0bec5 50%, #90a4ae 100%)';
+      } else if (row.medal === 'bronze') {
+        medalGradient = 'linear-gradient(135deg, #ffab91 0%, #d84315 50%, #bf360c 100%)';
+      }
+
+      rowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <span class="medal-circle" style="background: ${medalGradient};"></span>
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="name-txt">${row.name.toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 679px; left: 328px; transform: scale(1.471, 1.322); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg {
+            width: 820px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; width: 100%; }
+          
+          .medal-circle {
+            width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #ffffff;
+            margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: inline-block;
+          }
+
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            ${rowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP028 - Medal Presenter ID ──
+  if (normId.includes('WP028') || normId === 'MEDAL PRESENTER ID') {
+    const isGenericDummy = !customData.presenterName && !customData.name;
+    let name = 'JACQUES ROGGE';
+    let designation = 'IOC PRESIDENT, BELGIUM';
+
+    if (!isGenericDummy) {
+      name = customData.presenterName || customData.name || 'JACQUES ROGGE';
+      designation = customData.designation || customData.subText || 'IOC PRESIDENT, BELGIUM';
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 823px; left: 328px; transform: scale(1.473, 1.514); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .presenter-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; padding-left: 14px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="presenter-name unskew">${name.toUpperCase()}</div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${designation.toUpperCase()}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP029 - Flower Presenter ID ──
+  if (normId.includes('WP029') || normId === 'FLOWER PRESENTER ID') {
+    const isGenericDummy = !customData.presenterName && !customData.name;
+    let name = 'MR GIANNI LONZI';
+    let designation = 'FINA MEMBER';
+
+    if (!isGenericDummy) {
+      name = customData.presenterName || customData.name || 'MR GIANNI LONZI';
+      designation = customData.designation || customData.subText || 'FINA MEMBER';
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: 833px; left: 328px; transform: scale(1.468, 1.415); transform-origin: top left; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .presenter-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; padding-left: 14px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="presenter-name unskew">${name.toUpperCase()}</div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${designation.toUpperCase()}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP030 - Crunch Scoreboard ──
+  if (normId.includes('WP030') || normId === 'CRUNCH SCOREBOARD') {
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '4';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '1:41';
+    let period = '3RD';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .scoreboard-crunch { position: absolute; top: 56px; left: 323px; transform: scale(1.195, 1.408); transform-origin: top left; display: flex; flex-direction: column; gap: 2px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg-red {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-blue {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-silver {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; }
+          .val-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .st-box-white { width: 35px; height: 20px; background: #ffffff; border-radius: 1px; }
+          .st-box-outline { width: 35px; height: 20px; background: transparent; border: 1.2px solid #ffffff; border-radius: 1px; }
+          .time-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; }
+        </style>
+      </head>
+      <body>
+        <div class="scoreboard-crunch">
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml1}</div>
+                <div class="val-txt">${val1}</div>
+                <div class="st-box-white"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml2}</div>
+                <div class="val-txt">${val2}</div>
+                <div class="st-box-outline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-silver">
+              <div class="row-content unskew">
+                <div class="time-txt">${gameTime}</div>
+                <div class="time-txt">${period}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP031 - Shot Clock ──
+  if (normId.includes('WP031') || normId === 'SHOT CLOCK') {
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '4';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '1:32';
+    let period = '3RD';
+    let shotValue = 'SHOT 6';
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+      shotValue = customData.shotValue || customData.shotText || shotValue;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .scoreboard-crunch { position: absolute; top: 60px; left: 318px; transform: scale(1.000, 1.510); transform-origin: top left; display: flex; flex-direction: column; gap: 2px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg-red {
+            width: 280px; height: 32px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-blue {
+            width: 280px; height: 32px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-silver {
+            width: 280px; height: 32px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; }
+          .val-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .st-box-white { width: 35px; height: 20px; background: #ffffff; border-radius: 1px; }
+          .st-box-outline { width: 35px; height: 20px; background: transparent; border: 1.2px solid #ffffff; border-radius: 1px; }
+          .time-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; width: 80px; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="scoreboard-crunch">
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml1}</div>
+                <div class="val-txt">${val1}</div>
+                <div class="st-box-white"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml2}</div>
+                <div class="val-txt">${val2}</div>
+                <div class="st-box-outline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-silver">
+              <div class="row-content unskew">
+                <div class="time-txt">${gameTime}</div>
+                <div class="time-txt">${period}</div>
+                <div class="time-txt">${shotValue.toUpperCase()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP032 - Crunch Penalties ──
+  if (normId.includes('WP032') || normId === 'CRUNCH PENALTIES') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' +
+      (customData.image || '') + ' ' +
+      (customData.selectedImage || '') + ' ' +
+      (customData.subType || '') + ' ' +
+      (customData.subTemplate || '') + ' ' +
+      (customData.title || '') + ' ' +
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const isGenericDummy = !customData.team1 && !customData.teamA;
+    let team1 = 'UNITED STATES';
+    let val1 = '7';
+    let team2 = 'HUNGARY';
+    let val2 = '6';
+    let gameTime = '2:15';
+    let period = '4TH';
+    let exclusions = [
+      { cap: '3', seconds: '6', team: 'USA' },
+      { cap: '7', seconds: '11', team: 'USA' },
+      { cap: '5', seconds: '19', team: 'USA' },
+      { cap: '6', seconds: '15', team: 'HUN' }
+    ];
+
+    if (variant === 'b') {
+      gameTime = '1:58';
+      exclusions = [
+        { cap: '5', seconds: '2', team: 'USA' }
+      ];
+    }
+
+    if (!isGenericDummy) {
+      team1 = customData.team1 || customData.teamA || team1;
+      val1 = customData.val1 || customData.value1 || val1;
+      team2 = customData.team2 || customData.teamB || team2;
+      val2 = customData.val2 || customData.value2 || val2;
+      gameTime = customData.gameTime || customData.time || gameTime;
+      period = customData.period || period;
+      exclusions = customData.exclusions || exclusions;
+    }
+
+    const noc1 = getNocCodeForTeam(team1) || 'USA';
+    const flagHtml1 = getFlagImgHtml(noc1, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+    const noc2 = getNocCodeForTeam(team2) || 'HUN';
+    const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
+
+    // Build exclusions
+    let team1Ex = exclusions.filter(e => e.team === 'USA');
+    let team1HTML = '';
+    team1Ex.forEach((ex, idx) => {
+      const showFlag = idx === team1Ex.length - 1;
+      const flagHtml = showFlag ? getFlagImgHtml('USA', 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);') : '';
+      team1HTML += `
+        <div class="penalty-row">
+          <div class="penalty-bg">
+            <div class="penalty-content unskew">
+              <span class="cap-txt">${ex.cap}</span>
+              <span class="sec-txt">${ex.seconds}</span>
+              <div class="flag-wrap">${flagHtml}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    let team2Ex = exclusions.filter(e => e.team === 'HUN');
+    let team2HTML = '';
+    team2Ex.forEach((ex, idx) => {
+      const showFlag = idx === team2Ex.length - 1;
+      const flagHtml = showFlag ? getFlagImgHtml('HUN', 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);') : '';
+      team2HTML += `
+        <div class="penalty-row">
+          <div class="penalty-bg">
+            <div class="penalty-content unskew">
+              <span class="cap-txt">${ex.cap}</span>
+              <span class="sec-txt">${ex.seconds}</span>
+              <div class="flag-wrap">${flagHtml}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .scoreboard-crunch { position: absolute; top: 240px; left: 310px; display: flex; flex-direction: column; gap: 2px; }
+          .stat-row { transform: skewX(-12deg); }
+          .row-bg-red {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-blue {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-bg-silver {
+            width: 200px; height: 32px;
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+          }
+          .row-content { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; }
+          .val-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #ffffff; }
+          .st-box-white { width: 35px; height: 20px; background: #ffffff; border-radius: 1px; }
+          .st-box-outline { width: 35px; height: 20px; background: transparent; border: 1.2px solid #ffffff; border-radius: 1px; }
+          .time-txt { font-size: 16px; font-weight: 900; font-style: italic; color: #0a2a5e; }
+
+          .left-exclusions { position: absolute; bottom: 114px; left: 328px; display: flex; flex-direction: column; gap: 3px; }
+          .right-exclusions { position: absolute; bottom: 114px; left: 800px; display: flex; flex-direction: column; gap: 3px; }
+          .penalty-row { transform: skewX(-12deg); }
+          .penalty-bg {
+            width: 180px; height: 32px;
+            background: linear-gradient(90deg, #091d36 0%, #051121 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 10px;
+          }
+          .penalty-content { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+          .cap-txt { font-size: 16px; font-weight: 900; color: #00ccff; }
+          .sec-txt { font-size: 16px; font-weight: 900; color: #ffffff; }
+        </style>
+      </head>
+      <body>
+        <div class="scoreboard-crunch">
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml1}</div>
+                <div class="val-txt">${val1}</div>
+                <div class="st-box-white"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-blue">
+              <div class="row-content unskew">
+                <div class="flag-wrap">${flagHtml2}</div>
+                <div class="val-txt">${val2}</div>
+                <div class="st-box-outline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="row-bg-silver">
+              <div class="row-content unskew">
+                <div class="time-txt">${gameTime}</div>
+                <div class="time-txt">${period}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="left-exclusions">
+          ${team1HTML}
+        </div>
+        <div class="right-exclusions">
+          ${team2HTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP033 - Bracket to Semi-Finals ──
+  if (normId.includes('WP033') || normId === 'BRACKET TO SEMI-FINALS' || normId === 'BRACKET SEMI FINALS') {
+    const baseTop = 966 - 422; // 544
+
+    const isGenericDummy = !customData.matches;
+    let roundText = 'QUARTER-FINALS → SEMI-FINALS';
+    let leftTeams = [
+      'HUNGARY', 'GERMANY',
+      'MONTENEGRO', 'CROATIA',
+      'SPAIN', 'SERBIA',
+      'AUSTRALIA', 'UNITED STATES'
+    ];
+    let winners = [
+      'HUNGARY', '',
+      'MONTENEGRO', '',
+      'SERBIA', '',
+      'UNITED STATES', ''
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      leftTeams = customData.leftTeams || leftTeams;
+      winners = customData.winners || winners;
+    }
+
+    let bracketRowsHTML = '';
+    for (let i = 0; i < 8; i++) {
+      const nocLeft = getNocCodeForTeam(leftTeams[i]) || 'HUN';
+      const flagLeftHtml = getFlagImgHtml(nocLeft, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+      let winHTML = '';
+      if (i % 2 === 0 && winners[i]) {
+        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const flagWinHtml = getFlagImgHtml(nocWin, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+        winHTML = `
+          <div class="win-bg">
+            <div class="row-content unskew">
+              <div class="flag-wrap">${flagWinHtml}</div>
+              <div class="name-txt">${winners[i].toUpperCase()}</div>
+            </div>
+          </div>
+        `;
+      } else if (i % 2 === 0) {
+        winHTML = `<div class="win-bg-empty"></div>`;
+      }
+
+      bracketRowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="flag-wrap">${flagLeftHtml}</div>
+              <div class="name-txt">${leftTeams[i].toUpperCase()}</div>
+            </div>
+          </div>
+          ${winHTML}
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { display: flex; gap: 33px; transform: skewX(-12deg); }
+          .row-bg {
+            width: 380px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .win-bg {
+            width: 400px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .win-bg-empty { width: 400px; height: 38px; background: transparent; }
+          .row-content { display: flex; align-items: center; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            ${bracketRowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP034 - Bracket to Gold Medal Match ──
+  if (normId.includes('WP034') || normId === 'BRACKET TO GOLD MEDAL MATCH' || normId === 'BRACKET GOLD MEDAL') {
+    const baseTop = 966 - 258; // 708
+
+    const isGenericDummy = !customData.matches;
+    let roundText = 'SEMI-FINALS → GOLD MEDAL MATCH';
+    let leftTeams = [
+      'HUNGARY', 'MONTENEGRO',
+      'SERBIA', 'UNITED STATES'
+    ];
+    let winners = [
+      'HUNGARY', '',
+      'UNITED STATES', ''
+    ];
+
+    if (!isGenericDummy) {
+      roundText = customData.roundName || customData.roundText || roundText;
+      leftTeams = customData.leftTeams || leftTeams;
+      winners = customData.winners || winners;
+    }
+
+    let bracketRowsHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const nocLeft = getNocCodeForTeam(leftTeams[i]) || 'HUN';
+      const flagLeftHtml = getFlagImgHtml(nocLeft, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+      let winHTML = '';
+      if (i % 2 === 0 && winners[i]) {
+        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const flagWinHtml = getFlagImgHtml(nocWin, 'height: 24px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+        winHTML = `
+          <div class="win-bg">
+            <div class="row-content unskew">
+              <div class="flag-wrap">${flagWinHtml}</div>
+              <div class="name-txt">${winners[i].toUpperCase()}</div>
+            </div>
+          </div>
+        `;
+      } else if (i % 2 === 0) {
+        winHTML = `<div class="win-bg-empty"></div>`;
+      }
+
+      bracketRowsHTML += `
+        <div class="stat-row">
+          <div class="row-bg">
+            <div class="row-content unskew">
+              <div class="flag-wrap">${flagLeftHtml}</div>
+              <div class="name-txt">${leftTeams[i].toUpperCase()}</div>
+            </div>
+          </div>
+          ${winHTML}
+        </div>
+      `;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+          
+          .banner-container { position: absolute; top: ${baseTop}px; left: 328px; display: flex; flex-direction: column; }
+          .header-bar {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .header-left { display: flex; align-items: center; }
+          .header-icon { font-size: 28px; margin-right: 15px; }
+          .header-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; }
+          
+          .sub-bar {
+            background: linear-gradient(90deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1px solid rgba(0,34,62,0.4);
+            margin-left: 17px; margin-top: 2px; width: 820px; height: 38px;
+            display: flex; align-items: center; padding-left: 12px; transform: skewX(-12deg);
+          }
+          .sub-title { font-size: 18px; font-weight: 900; font-style: italic; color: #0a2a5e; letter-spacing: 2px; }
+
+          .rows-wrap { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; margin-left: 17px; }
+          .stat-row { display: flex; gap: 33px; transform: skewX(-12deg); }
+          .row-bg {
+            width: 380px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .win-bg {
+            width: 400px; height: 38px;
+            background: linear-gradient(90deg, #0f2f57 0%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; padding: 0 12px;
+          }
+          .win-bg-empty { width: 400px; height: 38px; background: transparent; }
+          .row-content { display: flex; align-items: center; width: 100%; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          .name-txt { font-size: 18px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="banner-container">
+          <div class="header-bar">
+            <div class="header-left unskew">
+              <span class="header-icon">🤽</span>
+              <span class="header-title">MEN'S WATER POLO</span>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="sub-bar">
+            <div class="sub-title unskew">${roundText.toUpperCase()}</div>
+          </div>
+          <div class="rows-wrap">
+            ${bracketRowsHTML}
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
 
   return '';
 }
