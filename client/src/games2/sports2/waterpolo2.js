@@ -1561,6 +1561,501 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
+  // ── WP011 - Major Fouls ID ──
+  if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (!customData.playerName && !customData.name);
+
+    let teamName = 'SERBIA';
+    let capNumber = '6';
+    let playerName = 'DUSKO PIJETLOVIC';
+    let fouls = 1;
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'MONTENEGRO';
+        capNumber = '6';
+        playerName = 'MILAN TICIC';
+        fouls = 3;
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'SERBIA';
+      capNumber = customData.capNumber || customData.number || '6';
+      playerName = customData.playerName || customData.name || 'DUSKO PIJETLOVIC';
+      fouls = parseInt(customData.fouls !== undefined ? customData.fouls : 1, 10);
+    }
+
+    // Background bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54,
+      fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Flag
+    const teamNoc = getNocCodeForTeam(teamName) || (variant === 'b' ? 'MNE' : 'SRB');
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Cap Number (cyan)
+    const capTxt = new fabric.Textbox(capNumber, createProps('textbox', {
+      left: baseLeft + 150, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00ccff', width: 60, charSpacing: 10
+    }));
+    objects.push(capTxt);
+
+    // Name (shifted dynamic right)
+    const nameLeft = baseLeft + 150 + (capNumber.length * 22) + 15;
+    const nameTxt = new fabric.Textbox(playerName.toUpperCase(), createProps('textbox', {
+      left: nameLeft, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    // Status box (white skewed box on right)
+    const statusBox = new fabric.Rect({
+      left: baseLeft + bannerWidth - 190, top: baseTop + 11, width: 80, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 80, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(statusBox);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox("MAJOR FOULS", createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 200, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    // Red foul indicators
+    let foulStartLeft = baseLeft + 200;
+    for (let f = 0; f < fouls; f++) {
+      const redBox = new fabric.Rect({
+        left: foulStartLeft, top: t2Top + 7, width: 24, height: 24,
+        fill: '#d32f2f', skewX: -12, rx: 2, ry: 2
+      });
+      const xText = new fabric.Textbox('X', createProps('textbox', {
+        left: foulStartLeft, top: t2Top + 10, fontSize: 15, fontWeight: '900',
+        fill: '#ffffff', width: 24, textAlign: 'center'
+      }));
+      objects.push(redBox, xText);
+      foulStartLeft += 30; // 24 width + 6 gap
+    }
+
+    return new fabric.Group(objects, {
+      left: 364, top: 831,
+      scaleX: 1.425, scaleY: 1.302,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP011 Major Fouls ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP012 - Captain/Goalkeeper ID ──
+  if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (!customData.playerName && !customData.name);
+
+    let teamName = 'AUSTRALIA';
+    let capNumber = '1';
+    let playerName = 'JAMES STANTON';
+    let role = 'GOALKEEPER';
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'AUSTRALIA';
+        capNumber = '9';
+        playerName = 'THOMAS WHALAN';
+        role = 'CAPTAIN';
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      capNumber = customData.capNumber || customData.number || '1';
+      playerName = customData.playerName || customData.name || 'JAMES STANTON';
+      role = customData.role || customData.subText || 'GOALKEEPER';
+    }
+
+    // Background bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54,
+      fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Flag
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Cap Number (cyan)
+    const capTxt = new fabric.Textbox(capNumber, createProps('textbox', {
+      left: baseLeft + 150, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#00ccff', width: 60, charSpacing: 10
+    }));
+    objects.push(capTxt);
+
+    // Name (shifted dynamic right)
+    const nameLeft = baseLeft + 150 + (capNumber.length * 22) + 15;
+    const nameTxt = new fabric.Textbox(playerName.toUpperCase(), createProps('textbox', {
+      left: nameLeft, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    // Status box (white skewed box on right)
+    const statusBox = new fabric.Rect({
+      left: baseLeft + bannerWidth - 190, top: baseTop + 11, width: 80, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 80, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(statusBox);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox(role.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 358, top: 840,
+      scaleX: 1.434, scaleY: 1.341,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP012 Captain/Goalkeeper ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP013 - Coach ID ──
+  if (normId.includes('WP013') || normId === 'COACH ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
+                           (!customData.playerName && !customData.name && !customData.coachName);
+
+    let teamName = 'AUSTRALIA';
+    let coachName = 'JOHN FOX';
+    let card = '';
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'AUSTRALIA';
+        coachName = 'JOHN FOX';
+        card = 'red';
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      coachName = customData.coachName || customData.playerName || customData.name || 'JOHN FOX';
+      card = (customData.card || '').toLowerCase(); // 'red', 'yellow' or ''
+    }
+
+    // Background bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54,
+      fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Flag
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Name (starts exactly at baseLeft + 150)
+    const nameTxt = new fabric.Textbox(coachName.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 450, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    // Red or Yellow card indicator
+    if (card === 'red' || card === 'yellow') {
+      const cardColor = card === 'red' ? '#d32f2f' : '#ffc107';
+      const cardRect = new fabric.Rect({
+        left: baseLeft + bannerWidth - 220, top: baseTop + 13, width: 18, height: 28,
+        fill: cardColor, skewX: -12, rx: 2, ry: 2,
+        stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+      });
+      objects.push(cardRect);
+    }
+
+    // Status box (white skewed box on right)
+    const statusBox = new fabric.Rect({
+      left: baseLeft + bannerWidth - 190, top: baseTop + 11, width: 80, height: 32,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 80, y2: 0 },
+        colorStops: [{ offset: 0, color: '#d1d5db' }, { offset: 0.5, color: '#ffffff' }, { offset: 1, color: '#e2e8f0' }]
+      }),
+      stroke: 'rgba(0,34,62,0.4)', strokeWidth: 1.2, skewX: -12, rx: 2, ry: 2
+    });
+    objects.push(statusBox);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox("COACH", createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 364, top: 827,
+      scaleX: 1.427, scaleY: 1.440,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP013 Coach ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
+  // ── WP014 - Official ID ──
+  if (normId.includes('WP014') || normId === 'OFFICIAL ID') {
+    const bannerWidth = 850;
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
+                           (!customData.playerName && !customData.name && !customData.officialName);
+
+    let teamName = 'HUNGARY';
+    let officialName = 'GABOR KISZELLY';
+    let role = 'REFEREE';
+
+    if (isGenericDummy) {
+      teamName = 'HUNGARY';
+      officialName = 'GABOR KISZELLY';
+      role = 'REFEREE';
+    } else {
+      teamName = customData.team1 || customData.teamA || 'HUNGARY';
+      officialName = customData.officialName || customData.playerName || customData.name || 'GABOR KISZELLY';
+      role = customData.role || customData.subText || 'REFEREE';
+    }
+
+    // Background bar
+    const barGradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+    const mainBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: 54,
+      fill: barGradient, skewX: -12, rx: 4, ry: 4,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(mainBar);
+
+    // Flag
+    const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
+    const flagObj = await createFabricFlagObject(teamNoc, {
+      left: baseLeft + 30, top: baseTop + 13, scaleX: 0.45, scaleY: 0.45
+    });
+    if (flagObj) objects.push(flagObj);
+
+    // Name (starts exactly at baseLeft + 150)
+    const nameTxt = new fabric.Textbox(officialName.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 150, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 550, charSpacing: 20
+    }));
+    objects.push(nameTxt);
+
+    // Olympic Rings (shifted slightly left to account for no status box)
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 90, baseTop + 15, 9, 2.2);
+    objects.push(olympicRings);
+
+    // Sub-bar
+    const t2Top = baseTop + 54 + 2;
+    const subBar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 17, top: t2Top, width: bannerWidth - 30, height: 38,
+      fill: new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+        colorStops: [{ offset: 0, color: '#091d36' }, { offset: 0.5, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
+      }),
+      skewX: -12, rx: 3, ry: 3,
+      stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
+    }));
+    objects.push(subBar);
+
+    const subTxtObj = new fabric.Textbox(role.toUpperCase(), createProps('textbox', {
+      left: baseLeft + 30, top: t2Top + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 750, charSpacing: 20
+    }));
+    objects.push(subTxtObj);
+
+    return new fabric.Group(objects, {
+      left: 358, top: 846,
+      scaleX: 1.425, scaleY: 1.282,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'waterPoloGroup' }),
+      name: `WP014 Official ID (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   return null;
 }
 
@@ -2934,6 +3429,502 @@ export function generateWaterPolo2HTML(
             <div class="event-sub-title unskew">${subText}</div>
           </div>
           ` : ''}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP011 - Major Fouls ID ──
+  if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (!customData.playerName && !customData.name);
+
+    let teamName = 'SERBIA';
+    let capNumber = '6';
+    let playerName = 'DUSKO PIJETLOVIC';
+    let fouls = 1;
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'MONTENEGRO';
+        capNumber = '6';
+        playerName = 'MILAN TICIC';
+        fouls = 3;
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'SERBIA';
+      capNumber = customData.capNumber || customData.number || '6';
+      playerName = customData.playerName || customData.name || 'DUSKO PIJETLOVIC';
+      fouls = parseInt(customData.fouls !== undefined ? customData.fouls : 1, 10);
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || (variant === 'b' ? 'MNE' : 'SRB');
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    let foulBadgesHTML = '';
+    for (let f = 0; f < fouls; f++) {
+      foulBadgesHTML += `<div class="foul-box"><span class="unskew-text">X</span></div>`;
+    }
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .fouls-banner { position: absolute; top: 831px; left: 364px; transform: scale(1.425, 1.302); transform-origin: top left; display: flex; flex-direction: column; }
+          .team-id-banner {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .row-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          
+          .cap-number { font-size: 30px; font-weight: 900; font-style: italic; color: #00ccff; margin-right: 15px; }
+          .player-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+
+          .row-right { display: flex; align-items: center; }
+          .status-box {
+            width: 80px; height: 32px;
+            background: linear-gradient(135deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4);
+            border-radius: 2px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            margin-right: 15px;
+          }
+          .unskew-text { transform: skewX(12deg); display: inline-block; }
+
+          .event-sub-bar {
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px;
+            margin-top: 2px;
+            width: 820px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+          }
+          .event-sub-title {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-right: 20px;
+          }
+          .fouls-container { display: flex; gap: 6px; }
+          .foul-box {
+            width: 24px; height: 24px; background: #d32f2f; border-radius: 2px;
+            color: #ffffff; font-size: 15px; font-weight: 900; display: flex;
+            align-items: center; justify-content: center; transform: skewX(-12deg);
+          }
+        </style>
+      </head>
+      <body>
+        <div class="fouls-banner">
+          <div class="team-id-banner">
+            <div class="row-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="cap-number">${capNumber}</div>
+              <div class="player-name">${playerName}</div>
+            </div>
+            <div class="row-right unskew">
+              <div class="status-box"></div>
+              <div>${olympicRingsSVG}</div>
+            </div>
+          </div>
+          
+          <div class="event-sub-bar">
+            <div class="event-sub-title unskew">MAJOR FOULS</div>
+            <div class="fouls-container">
+              ${foulBadgesHTML}
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP012 - Captain/Goalkeeper ID ──
+  if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (!customData.playerName && !customData.name);
+
+    let teamName = 'AUSTRALIA';
+    let capNumber = '1';
+    let playerName = 'JAMES STANTON';
+    let role = 'GOALKEEPER';
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'AUSTRALIA';
+        capNumber = '9';
+        playerName = 'THOMAS WHALAN';
+        role = 'CAPTAIN';
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      capNumber = customData.capNumber || customData.number || '1';
+      playerName = customData.playerName || customData.name || 'JAMES STANTON';
+      role = customData.role || customData.subText || 'GOALKEEPER';
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .captain-banner { position: absolute; top: 840px; left: 358px; transform: scale(1.434, 1.341); transform-origin: top left; display: flex; flex-direction: column; }
+          .team-id-banner {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.63);
+          }
+          .unskew { transform: skewX(12deg); }
+          .row-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          
+          .cap-number { font-size: 30px; font-weight: 900; font-style: italic; color: #00ccff; margin-right: 15px; }
+          .player-name { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+
+          .row-right { display: flex; align-items: center; }
+          .status-box {
+            width: 80px; height: 32px;
+            background: linear-gradient(135deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4);
+            border-radius: 2px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            margin-right: 15px;
+          }
+          .unskew-text { transform: skewX(12deg); display: inline-block; }
+
+          .event-sub-bar {
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px;
+            margin-top: 2px;
+            width: 820px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+          }
+          .event-sub-title {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="captain-banner">
+          <div class="team-id-banner">
+            <div class="row-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="cap-number">${capNumber}</div>
+              <div class="player-name">${playerName}</div>
+            </div>
+            <div class="row-right unskew">
+              <div class="status-box"></div>
+              <div>${olympicRingsSVG}</div>
+            </div>
+          </div>
+          
+          <div class="event-sub-bar">
+            <div class="event-sub-title unskew">${role}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP013 - Coach ID ──
+  if (normId.includes('WP013') || normId === 'COACH ID') {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
+
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (customData.coachName || '').toUpperCase() === 'JOHN FOX' ||
+                           (!customData.playerName && !customData.name && !customData.coachName);
+
+    let teamName = 'AUSTRALIA';
+    let coachName = 'JOHN FOX';
+    let card = '';
+
+    if (isGenericDummy) {
+      if (variant === 'b') {
+        teamName = 'AUSTRALIA';
+        coachName = 'JOHN FOX';
+        card = 'red';
+      }
+    } else {
+      teamName = customData.team1 || customData.teamA || 'AUSTRALIA';
+      coachName = customData.coachName || customData.playerName || customData.name || 'JOHN FOX';
+      card = (customData.card || '').toLowerCase(); // 'red', 'yellow' or ''
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'AUS';
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .coach-banner { position: absolute; top: 827px; left: 364px; transform: scale(1.427, 1.440); transform-origin: top left; display: flex; flex-direction: column; }
+          .team-id-banner {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .row-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          
+          .coach-name-txt { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+
+          .row-right { display: flex; align-items: center; }
+          .card-badge {
+            width: 18px; height: 28px;
+            background: ${card === 'red' ? '#d32f2f' : '#ffc107'};
+            border-radius: 2px; transform: skewX(-12deg);
+            margin-right: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          }
+          .status-box {
+            width: 80px; height: 32px;
+            background: linear-gradient(135deg, #d1d5db 0%, #ffffff 50%, #e2e8f0 100%);
+            border: 1.2px solid rgba(0,34,62,0.4);
+            border-radius: 2px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: center;
+            margin-right: 15px;
+          }
+          .unskew-text { transform: skewX(12deg); display: inline-block; }
+
+          .event-sub-bar {
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px;
+            margin-top: 2px;
+            width: 820px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+          }
+          .event-sub-title {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="coach-banner">
+          <div class="team-id-banner">
+            <div class="row-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="coach-name-txt">${coachName}</div>
+            </div>
+            <div class="row-right unskew">
+              ${(card === 'red' || card === 'yellow') ? `<div class="card-badge"></div>` : ''}
+              <div class="status-box"></div>
+              <div>${olympicRingsSVG}</div>
+            </div>
+          </div>
+          
+          <div class="event-sub-bar">
+            <div class="event-sub-title unskew">COACH</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── WP014 - Official ID ──
+  if (normId.includes('WP014') || normId === 'OFFICIAL ID') {
+    const baseLeft = 328;
+    const baseTop = 966 - 94; // 872
+
+    // Default data mapping
+    const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'TOM DALEY' || 
+                           (customData.name || '').toUpperCase() === 'NORBERT HOSNYANSZKY' || 
+                           (customData.officialName || '').toUpperCase() === 'GABOR KISZELLY' ||
+                           (!customData.playerName && !customData.name && !customData.officialName);
+
+    let teamName = 'HUNGARY';
+    let officialName = 'GABOR KISZELLY';
+    let role = 'REFEREE';
+
+    if (isGenericDummy) {
+      teamName = 'HUNGARY';
+      officialName = 'GABOR KISZELLY';
+      role = 'REFEREE';
+    } else {
+      teamName = customData.team1 || customData.teamA || 'HUNGARY';
+      officialName = customData.officialName || customData.playerName || customData.name || 'GABOR KISZELLY';
+      role = customData.role || customData.subText || 'REFEREE';
+    }
+
+    const teamNoc = getNocCodeForTeam(teamName) || 'HUN';
+    const flagHtml = getFlagImgHtml(teamNoc, 'height: 28px; width: auto; border-radius: 2px; transform: skewX(-12deg);');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .official-banner { position: absolute; top: 846px; left: 358px; transform: scale(1.425, 1.282); transform-origin: top left; display: flex; flex-direction: column; }
+          .team-id-banner {
+            width: 850px; height: 54px;
+            background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+          }
+          .unskew { transform: skewX(12deg); }
+          .row-left { display: flex; align-items: center; }
+          .flag-wrap { display: flex; align-items: center; margin-right: 48px; }
+          
+          .official-name-txt { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 2px; white-space: nowrap; }
+
+          .row-right { display: flex; align-items: center; }
+
+          .event-sub-bar {
+            background: linear-gradient(135deg, #091d36 0%, #0f2f57 50%, #071629 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-left: 17px;
+            margin-top: 2px;
+            width: 820px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding-left: 12px;
+          }
+          .event-sub-title {
+            font-size: 18px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="official-banner">
+          <div class="team-id-banner">
+            <div class="row-left unskew">
+              <div class="flag-wrap">${flagHtml}</div>
+              <div class="official-name-txt">${officialName}</div>
+            </div>
+            <div class="row-right unskew">
+              <div>${olympicRingsSVG}</div>
+            </div>
+          </div>
+          
+          <div class="event-sub-bar">
+            <div class="event-sub-title unskew">${role}</div>
+          </div>
         </div>
       </body>
       </html>
