@@ -2090,6 +2090,304 @@ export async function generateDiving2Fabric(
     });
   }
 
+  // ── 13. DV015 - Standings / Result (Variants A, B, C, D, E) ──
+  if (normId.includes('DV015') || normId.includes('STANDINGS') || normId.includes('RESULT')) {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b') || variantStr.includes('result_b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c') || variantStr.includes('result_c')) variant = 'c';
+    else if (variantStr.includes('_d') || variantStr.endsWith('d') || variantStr.includes('variant d') || variantStr.includes('result_d')) variant = 'd';
+    else if (variantStr.includes('_e') || variantStr.endsWith('e') || variantStr.includes('variant e') || variantStr.includes('result_e')) variant = 'e';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a') || variantStr.includes('result_a')) variant = 'a';
+
+    let defaultEvent = "MEN'S 3M SPRINGBOARD";
+    let defaultSubTitle = "PRELIMINARY - STANDINGS AFTER ROUND 6";
+    let defaultRows = [];
+
+    if (variant === 'a') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "PRELIMINARY - STANDINGS AFTER ROUND 6";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'HE CHONG', status: 'Q', score: '515.50' },
+        { rank: '2', noc: 'CHN', name: 'QIN KAI', status: 'Q', score: '502.95' },
+        { rank: '3', noc: 'MEX', name: 'YAHEL CASTILLO', status: 'Q', score: '480.65' },
+        { rank: '4', noc: 'RUS', name: 'DMITRY SAUTIN', status: 'Q', score: '474.85' },
+        { rank: '5', noc: 'FIN', name: 'JOONA PUHAKKA', status: 'Q', score: '469.45' },
+        { rank: '6', noc: 'AUS', name: 'ROBERT NEWBERY', status: 'Q', score: '465.15' },
+        { rank: '7', noc: 'USA', name: 'CHRIS COLWILL', status: 'Q', score: '464.75' },
+        { rank: '8', noc: 'UKR', name: 'ILLYA KVASHA', status: 'Q', score: '461.65' },
+        { rank: '9', noc: 'CAN', name: 'ALEXANDRE DESPATIE', status: 'Q', score: '453.60' },
+        { rank: '10', noc: 'JPN', name: 'KEN TERAUCHI', status: 'Q', score: '452.80' }
+      ];
+    } else if (variant === 'b') {
+      defaultEvent = "WOMEN'S SYNCHRONISED 10M PLATFORM";
+      defaultSubTitle = "FINAL - STANDINGS AFTER ROUND 3";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN', score: '422.28' },
+        { rank: '2', noc: 'PRK', name: 'CHOE KUM HUI / KIM UN HYANG', score: '409.28' },
+        { rank: '3', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU', score: '403.16' },
+        { rank: '4', noc: 'GER', name: 'ANNETT GAMM / NORA SUBSCHINSKI', score: '390.82' },
+        { rank: '5', noc: 'USA', name: 'MARYBETH DUNNICHAY / HALEY ISHIMATSU', score: '382.76' },
+        { rank: '6', noc: 'MEX', name: 'PAOLA ESPINOSA / TATIANA ORTIZ', score: '370.67' },
+        { rank: '7', noc: 'GBR', name: 'TONIA COUCH / STACIE POWELL', score: '351.24' },
+        { rank: '8', noc: 'CAN', name: 'MEAGHAN BENFEITO / ROSELINE FILION', score: '336.76' }
+      ];
+    } else if (variant === 'c') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'HE CHONG', score: '572.90' },
+        { rank: '2', noc: 'CAN', name: 'ALEXANDRE DESPATIE', score: '536.65' },
+        { rank: '3', noc: 'CHN', name: 'QIN KAI', score: '530.10' },
+        { rank: '4', noc: 'RUS', name: 'DMITRY SAUTIN', score: '512.65' },
+        { rank: '5', noc: 'GER', name: 'PAVLO ROZENBERG', score: '485.60' },
+        { rank: '6', noc: 'USA', name: 'TROY DUMAIS', score: '472.50' }
+      ];
+    } else if (variant === 'd') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '7', noc: 'MEX', name: 'YAHEL CASTILLO', score: '462.10' },
+        { rank: '8', noc: 'GER', name: 'PATRICK HAUSDING', score: '462.05' },
+        { rank: '9', noc: 'AUS', name: 'ROBERT NEWBERY', score: '461.05' },
+        { rank: '10', noc: 'COL', name: 'JUAN GUILLERMO URAN', score: '454.50' },
+        { rank: '11', noc: 'JPN', name: 'KEN TERAUCHI', score: '442.50' },
+        { rank: '', noc: 'USA', name: 'CHRIS COLWILL', score: 'DSQ' }
+      ];
+    } else if (variant === 'e') {
+      defaultEvent = "WOMEN'S SYNCHRONISED 10M PLATFORM";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN', score: '703.80' },
+        { rank: '2', noc: 'PRK', name: 'CHOE KUM HUI / KIM UN HYANG', score: '682.13' },
+        { rank: '3', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU', score: '671.93' },
+        { rank: '4', noc: 'GER', name: 'ANNETT GAMM / NORA SUBSCHINSKI', score: '651.36' },
+        { rank: '5', noc: 'USA', name: 'MARYBETH DUNNICHAY / HALEY ISHIMATSU', score: '637.93' },
+        { rank: '6', noc: 'CAN', name: 'MEAGHAN BENFEITO / ROSELINE FILION', score: '585.40' },
+        { rank: '7', noc: 'GBR', name: 'TONIA COUCH / STACIE POWELL', score: '561.26' },
+        { rank: '', noc: 'MEX', name: 'PAOLA ESPINOSA / TATIANA ORTIZ', score: 'DSQ' }
+      ];
+    }
+
+    const rawEvent = (customData.header || customData.event || customData.title || customData.eventName || '').trim();
+    const isGenericHeader = !rawEvent || 
+      rawEvent.toUpperCase() === 'DIVING' || 
+      rawEvent.toUpperCase().includes('DIVE 6') || 
+      rawEvent.toUpperCase().includes('10M PLATFORM - FINAL');
+    const eventTitle = (isGenericHeader ? defaultEvent : rawEvent).toUpperCase();
+
+    const rawSub = (customData.subHeader || customData.subTitle || customData.subtitle || customData.round || '').trim();
+    const isGenericSub = !rawSub || 
+      rawSub.toUpperCase() === 'JUDGES' || 
+      rawSub.toUpperCase().includes('DIVE 6') || 
+      rawSub.toUpperCase().includes('FINAL - DIVE');
+    const subTitle = (isGenericSub ? defaultSubTitle : rawSub).toUpperCase();
+
+    let maxRows = 10;
+    if (variant === 'a') maxRows = 10;
+    else if (variant === 'b') maxRows = 8;
+    else if (variant === 'c') maxRows = 6;
+    else if (variant === 'd') maxRows = 6;
+    else if (variant === 'e') maxRows = 8;
+
+    const inputRows = (customData.rows && customData.rows.length > 0)
+      ? customData.rows
+      : (customData.standings && customData.standings.length > 0)
+      ? customData.standings
+      : (customData.results && customData.results.length > 0)
+      ? customData.results
+      : null;
+
+    // Detect generic dummy standings from gamesData.js defaults and ignore them
+    const genericDummyNames = ['CAO YUAN', 'RIKUTO TAMAI', 'TOM DALEY', 'CASPAR CORER', 'OLEKSIY SEREDA', 'ROZENBERG', 'DESPATIE'];
+    const isGenericInputRows = inputRows && inputRows.length <= 5 &&
+      inputRows.some(r => genericDummyNames.some(d => (r.name || '').toUpperCase().includes(d)));
+
+    const rawRows = (!inputRows || isGenericInputRows) ? defaultRows : inputRows;
+    const rowsList = rawRows.slice(0, maxRows);
+
+    const bannerWidth = 1100;
+    const tier1Height = 54;
+    const tier2Height = 38;
+    const rowHeight = 38;
+    const rowGap = 3;
+
+    const totalHeight = tier1Height + tier2Height + 4 + (rowsList.length * rowHeight) + (Math.max(0, rowsList.length - 1) * rowGap);
+    const targetBottomY = 966; // 114px bottom clearance
+    const baseLeft = 333;
+    const baseTop = targetBottomY - totalHeight;
+
+    // 1. Tier 1: Header Dark Blue Banner (Event Title + Pictograph + Olympic Rings)
+    const t1Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+      colorStops: [
+        { offset: 0, color: gradientStart },
+        { offset: 0.5, color: gradientMid },
+        { offset: 1, color: gradientEnd }
+      ]
+    });
+
+    const t1Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft, top: baseTop, width: bannerWidth, height: tier1Height,
+      fill: t1Gradient, skewX: -12, rx: 6, ry: 6,
+      stroke: borderHighlight, strokeWidth: 1.5,
+      shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 16, offsetX: 0, offsetY: 6 })
+    }));
+    objects.push(t1Bar);
+
+    // Diving Pictograph Box
+    const pictoBox = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 8, top: baseTop + 6, width: 44, height: tier1Height - 12,
+      fill: 'rgba(255,255,255,0.15)', skewX: -12, rx: 4, ry: 4
+    }));
+    const pikeBody = new fabric.Path('M 40 78 L 40 25 C 40 12, 68 10, 72 30 L 68 48 C 65 52, 58 52, 54 46 L 50 32 C 48 24, 46 24, 46 30 L 46 78 Z', {
+      left: 12, top: 0, fill: '#ffffff', selectable: false
+    });
+    const headHeart = new fabric.Path('M 64 48 C 56 48, 54 58, 62 66 C 68 72, 74 68, 74 58 C 74 50, 70 48, 64 48 Z', {
+      left: 28, top: 18, fill: '#ffffff', selectable: false
+    });
+    const waterWaves = new fabric.Path('M 10 92 Q 22 87, 34 92 T 58 92 T 82 92', {
+      left: 0, top: 38, fill: '', stroke: '#ffffff', strokeWidth: 3, strokeLineCap: 'round', selectable: false
+    });
+    const pictoGroup = new fabric.Group([pikeBody, headHeart, waterWaves], {
+      left: baseLeft + 12, top: baseTop + 10, scaleX: 0.38, scaleY: 0.38, skewX: -12, selectable: false
+    });
+    objects.push(pictoBox, pictoGroup);
+
+    // Event Title Text
+    const headText = new fabric.Textbox(eventTitle, createProps('textbox', {
+      left: baseLeft + 65, top: baseTop + 10, fontSize: 30, fontWeight: '900', fontStyle: 'italic',
+      fill: '#ffffff', width: 850
+    }));
+    objects.push(headText);
+
+    // Olympic Rings
+    const olympicRings = createOlympicRingsGroup(baseLeft + bannerWidth - 95, baseTop + 13, 11, 2.4);
+    objects.push(olympicRings);
+
+    // 2. Tier 2: Silver Metallic Sub-Header Strip
+    const t2Top = baseTop + tier1Height + 2;
+    const t2Gradient = new fabric.Gradient({
+      type: 'linear', gradientUnits: 'pixels',
+      coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
+      colorStops: [
+        { offset: 0, color: '#ffffff' },
+        { offset: 0.5, color: '#e2e8f0' },
+        { offset: 1, color: '#cbd5e1' }
+      ]
+    });
+
+    const t2Bar = new fabric.Rect(createProps('rect', {
+      left: baseLeft + 15, top: t2Top, width: bannerWidth - 30, height: tier2Height,
+      fill: t2Gradient, skewX: -12, rx: 4, ry: 4,
+      stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1
+    }));
+    objects.push(t2Bar);
+
+    const subText = new fabric.Textbox(subTitle, createProps('textbox', {
+      left: baseLeft + 35, top: t2Top + 7, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+      fill: '#1a2b42', width: 1000
+    }));
+    objects.push(subText);
+
+    // 3. Rows
+    const rowsStartTop = t2Top + tier2Height + 2;
+    for (let i = 0; i < rowsList.length; i++) {
+      const item = rowsList[i];
+      const rTop = rowsStartTop + i * (rowHeight + rowGap);
+      const rRank = item.rank !== undefined ? String(item.rank) : '';
+      const rNoc = (item.noc || item.country || 'CHN').toUpperCase();
+      const rName = (item.name || item.athlete || item.pair || '').toUpperCase();
+      const rScore = String(item.score || item.total || item.result || '');
+      const rStatus = (item.status || item.q || '').toUpperCase();
+
+      const rowGradient = new fabric.Gradient({
+        type: 'linear', gradientUnits: 'pixels',
+        coords: { x1: 0, y1: 0, x2: bannerWidth, y2: 0 },
+        colorStops: [
+          { offset: 0, color: gradientStart },
+          { offset: 0.5, color: gradientMid },
+          { offset: 1, color: gradientEnd }
+        ]
+      });
+
+      const rowBar = new fabric.Rect(createProps('rect', {
+        left: baseLeft, top: rTop, width: bannerWidth, height: rowHeight,
+        fill: rowGradient, skewX: -12, rx: 4, ry: 4,
+        stroke: borderHighlight, strokeWidth: 1
+      }));
+      objects.push(rowBar);
+
+      // Red Rank Badge (if rank exists)
+      if (rRank) {
+        const rankBadge = new fabric.Rect(createProps('rect', {
+          left: baseLeft + 6, top: rTop + 4, width: 32, height: rowHeight - 8,
+          fill: '#d32f2f', skewX: -12, rx: 3, ry: 3
+        }));
+        const rankText = new fabric.Textbox(rRank, createProps('textbox', {
+          left: baseLeft + 6, top: rTop + 7, fontSize: 22, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 32, textAlign: 'center'
+        }));
+        objects.push(rankBadge, rankText);
+      }
+
+      // Flag Image (directly after Rank Badge)
+      const flagImg = await createFabricFlagObject(rNoc, createProps('image', {
+        left: baseLeft + (rRank ? 55 : 15), top: rTop + 6, scaleX: 0.50, scaleY: 0.50, skewX: -12
+      }));
+      if (flagImg) {
+        objects.push(flagImg);
+      }
+
+      // Athlete Name Text (with clear gap after Flag Image)
+      const nameText = new fabric.Textbox(rName, createProps('textbox', {
+        left: baseLeft + (rRank ? 175 : 135), top: rTop + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 640
+      }));
+      objects.push(nameText);
+
+      // Q Badge (if present)
+      if (rStatus === 'Q') {
+        const qBadge = new fabric.Rect(createProps('rect', {
+          left: baseLeft + bannerWidth - 220, top: rTop + 6, width: 30, height: rowHeight - 12,
+          fill: '#2e7d32', skewX: -12, rx: 3, ry: 3
+        }));
+        const qText = new fabric.Textbox('Q', createProps('textbox', {
+          left: baseLeft + bannerWidth - 220, top: rTop + 8, fontSize: 20, fontWeight: '900', fontStyle: 'italic',
+          fill: '#ffffff', width: 30, textAlign: 'center'
+        }));
+        objects.push(qBadge, qText);
+      }
+
+      // Score / Result Text
+      const scoreText = new fabric.Textbox(rScore, createProps('textbox', {
+        left: baseLeft + bannerWidth - 180, top: rTop + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
+        fill: '#ffffff', width: 160, textAlign: 'right'
+      }));
+      objects.push(scoreText);
+    }
+
+    return new fabric.Group(objects, {
+      left: baseLeft, top: baseTop,
+      originX: 'left', originY: 'top',
+      scaleX: 1.0, scaleY: 1.0,
+      subTargetCheck: true,
+      id: generateUniqueId({ type: 'divingGroup' }),
+      name: `DV015 Standings / Result Variant ${variant.toUpperCase()} (${normId})`,
+      selectable: true, hasControls: true
+    });
+  }
+
   // Return null for unbuilt templates
   return null;
 }
@@ -3334,6 +3632,239 @@ export function generateDiving2HTML(
       <body>
         <div class="top35-container">
           <div class="header-tab"><div class="unskew">${tabTitle}</div></div>
+          ${rowsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ── 13. DV015 - Standings / Result (HTML Generator) ──
+  if (normId.includes('DV015') || normId.includes('STANDINGS') || normId.includes('RESULT')) {
+    let variant = 'a';
+    const variantStr = (
+      (customData.variant || '') + ' ' + 
+      (customData.image || '') + ' ' + 
+      (customData.selectedImage || '') + ' ' + 
+      (customData.subType || '') + ' ' + 
+      (customData.subTemplate || '') + ' ' + 
+      (customData.title || '') + ' ' + 
+      normId
+    ).toLowerCase();
+
+    if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b') || variantStr.includes('result_b')) variant = 'b';
+    else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c') || variantStr.includes('result_c')) variant = 'c';
+    else if (variantStr.includes('_d') || variantStr.endsWith('d') || variantStr.includes('variant d') || variantStr.includes('result_d')) variant = 'd';
+    else if (variantStr.includes('_e') || variantStr.endsWith('e') || variantStr.includes('variant e') || variantStr.includes('result_e')) variant = 'e';
+    else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a') || variantStr.includes('result_a')) variant = 'a';
+
+    let defaultEvent = "MEN'S 3M SPRINGBOARD";
+    let defaultSubTitle = "PRELIMINARY - STANDINGS AFTER ROUND 6";
+    let defaultRows = [];
+
+    if (variant === 'a') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "PRELIMINARY - STANDINGS AFTER ROUND 6";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'HE CHONG', status: 'Q', score: '515.50' },
+        { rank: '2', noc: 'CHN', name: 'QIN KAI', status: 'Q', score: '502.95' },
+        { rank: '3', noc: 'MEX', name: 'YAHEL CASTILLO', status: 'Q', score: '480.65' },
+        { rank: '4', noc: 'RUS', name: 'DMITRY SAUTIN', status: 'Q', score: '474.85' },
+        { rank: '5', noc: 'FIN', name: 'JOONA PUHAKKA', status: 'Q', score: '469.45' },
+        { rank: '6', noc: 'AUS', name: 'ROBERT NEWBERY', status: 'Q', score: '465.15' },
+        { rank: '7', noc: 'USA', name: 'CHRIS COLWILL', status: 'Q', score: '464.75' },
+        { rank: '8', noc: 'UKR', name: 'ILLYA KVASHA', status: 'Q', score: '461.65' },
+        { rank: '9', noc: 'CAN', name: 'ALEXANDRE DESPATIE', status: 'Q', score: '453.60' },
+        { rank: '10', noc: 'JPN', name: 'KEN TERAUCHI', status: 'Q', score: '452.80' }
+      ];
+    } else if (variant === 'b') {
+      defaultEvent = "WOMEN'S SYNCHRONISED 10M PLATFORM";
+      defaultSubTitle = "FINAL - STANDINGS AFTER ROUND 3";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN', score: '422.28' },
+        { rank: '2', noc: 'PRK', name: 'CHOE KUM HUI / KIM UN HYANG', score: '409.28' },
+        { rank: '3', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU', score: '403.16' },
+        { rank: '4', noc: 'GER', name: 'ANNETT GAMM / NORA SUBSCHINSKI', score: '390.82' },
+        { rank: '5', noc: 'USA', name: 'MARYBETH DUNNICHAY / HALEY ISHIMATSU', score: '382.76' },
+        { rank: '6', noc: 'MEX', name: 'PAOLA ESPINOSA / TATIANA ORTIZ', score: '370.67' },
+        { rank: '7', noc: 'GBR', name: 'TONIA COUCH / STACIE POWELL', score: '351.24' },
+        { rank: '8', noc: 'CAN', name: 'MEAGHAN BENFEITO / ROSELINE FILION', score: '336.76' }
+      ];
+    } else if (variant === 'c') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'HE CHONG', score: '572.90' },
+        { rank: '2', noc: 'CAN', name: 'ALEXANDRE DESPATIE', score: '536.65' },
+        { rank: '3', noc: 'CHN', name: 'QIN KAI', score: '530.10' },
+        { rank: '4', noc: 'RUS', name: 'DMITRY SAUTIN', score: '512.65' },
+        { rank: '5', noc: 'GER', name: 'PAVLO ROZENBERG', score: '485.60' },
+        { rank: '6', noc: 'USA', name: 'TROY DUMAIS', score: '472.50' }
+      ];
+    } else if (variant === 'd') {
+      defaultEvent = "MEN'S 3M SPRINGBOARD";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '7', noc: 'MEX', name: 'YAHEL CASTILLO', score: '462.10' },
+        { rank: '8', noc: 'GER', name: 'PATRICK HAUSDING', score: '462.05' },
+        { rank: '9', noc: 'AUS', name: 'ROBERT NEWBERY', score: '461.05' },
+        { rank: '10', noc: 'COL', name: 'JUAN GUILLERMO URAN', score: '454.50' },
+        { rank: '11', noc: 'JPN', name: 'KEN TERAUCHI', score: '442.50' },
+        { rank: '', noc: 'USA', name: 'CHRIS COLWILL', score: 'DSQ' }
+      ];
+    } else if (variant === 'e') {
+      defaultEvent = "WOMEN'S SYNCHRONISED 10M PLATFORM";
+      defaultSubTitle = "RESULT - FINAL";
+      defaultRows = [
+        { rank: '1', noc: 'CHN', name: 'WANG XIN / CHEN RUOLIN', score: '703.80' },
+        { rank: '2', noc: 'PRK', name: 'CHOE KUM HUI / KIM UN HYANG', score: '682.13' },
+        { rank: '3', noc: 'AUS', name: 'BRIONY COLE / MELISSA WU', score: '671.93' },
+        { rank: '4', noc: 'GER', name: 'ANNETT GAMM / NORA SUBSCHINSKI', score: '651.36' },
+        { rank: '5', noc: 'USA', name: 'MARYBETH DUNNICHAY / HALEY ISHIMATSU', score: '637.93' },
+        { rank: '6', noc: 'CAN', name: 'MEAGHAN BENFEITO / ROSELINE FILION', score: '585.40' },
+        { rank: '7', noc: 'GBR', name: 'TONIA COUCH / STACIE POWELL', score: '561.26' },
+        { rank: '', noc: 'MEX', name: 'PAOLA ESPINOSA / TATIANA ORTIZ', score: 'DSQ' }
+      ];
+    }
+
+    const rawEvent = (customData.header || customData.event || customData.title || customData.eventName || '').trim();
+    const isGenericHeader = !rawEvent || 
+      rawEvent.toUpperCase() === 'DIVING' || 
+      rawEvent.toUpperCase().includes('DIVE 6') || 
+      rawEvent.toUpperCase().includes('10M PLATFORM - FINAL');
+    const eventTitle = (isGenericHeader ? defaultEvent : rawEvent).toUpperCase();
+
+    const rawSub = (customData.subHeader || customData.subTitle || customData.subtitle || customData.round || '').trim();
+    const isGenericSub = !rawSub || 
+      rawSub.toUpperCase() === 'JUDGES' || 
+      rawSub.toUpperCase().includes('DIVE 6') || 
+      rawSub.toUpperCase().includes('FINAL - DIVE');
+    const subTitle = (isGenericSub ? defaultSubTitle : rawSub).toUpperCase();
+
+    let maxRows = 10;
+    if (variant === 'a') maxRows = 10;
+    else if (variant === 'b') maxRows = 8;
+    else if (variant === 'c') maxRows = 6;
+    else if (variant === 'd') maxRows = 6;
+    else if (variant === 'e') maxRows = 8;
+
+    const inputRows = (customData.rows && customData.rows.length > 0)
+      ? customData.rows
+      : (customData.standings && customData.standings.length > 0)
+      ? customData.standings
+      : (customData.results && customData.results.length > 0)
+      ? customData.results
+      : null;
+
+    // Detect generic dummy standings from gamesData.js defaults and ignore them
+    const genericDummyNames = ['CAO YUAN', 'RIKUTO TAMAI', 'TOM DALEY', 'CASPAR CORER', 'OLEKSIY SEREDA', 'ROZENBERG', 'DESPATIE'];
+    const isGenericInputRows = inputRows && inputRows.length <= 5 &&
+      inputRows.some(r => genericDummyNames.some(d => (r.name || '').toUpperCase().includes(d)));
+
+    const rawRows = (!inputRows || isGenericInputRows) ? defaultRows : inputRows;
+    const rowsList = rawRows.slice(0, maxRows);
+
+    const totalHeight = 54 + 38 + 4 + (rowsList.length * 38) + (Math.max(0, rowsList.length - 1) * 3);
+    const baseTop = 966 - totalHeight;
+
+    const rowsHTML = rowsList.map((item, index) => {
+      const rRank = item.rank !== undefined ? String(item.rank) : '';
+      const rNoc = (item.noc || item.country || 'CHN').toUpperCase();
+      const rName = (item.name || item.athlete || item.pair || '').toUpperCase();
+      const rScore = String(item.score || item.total || item.result || '');
+      const rStatus = (item.status || item.q || '').toUpperCase();
+
+      const flagImgHtml = getFlagImgHtml(rNoc, 'height: 30px; width: auto; border-radius: 3px; transform: skewX(-12deg);');
+
+      return `
+        <div class="row-bar">
+          <div class="row-left unskew">
+            ${rRank ? `<div class="rank-badge">${rRank}</div>` : '<div style="width: 32px;"></div>'}
+            <div class="flag-icon">${flagImgHtml}</div>
+            <div class="athlete-name">${rName}</div>
+          </div>
+          <div class="row-right unskew">
+            ${rStatus === 'Q' ? '<div class="q-badge">Q</div>' : ''}
+            <div class="score-text">${rScore}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Outfit:ital,wght@0,700;1,800;1,900&display=swap');
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
+
+          .standings-container {
+            position: absolute; top: ${baseTop}px; left: 333px; width: 1100px;
+            display: flex; flex-direction: column; gap: 3px;
+          }
+          .unskew { transform: skewX(12deg); }
+
+          .t1-bar {
+            height: 54px; width: 1100px; margin-bottom: 2px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+          }
+          .t1-left { display: flex; align-items: center; gap: 16px; }
+          .picto-box {
+            background: rgba(255,255,255,0.15); width: 44px; height: 42px; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .head-title { font-size: 30px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+
+          .t2-bar {
+            height: 38px; width: 1070px; margin-left: 15px; margin-bottom: 2px;
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #cbd5e1 100%);
+            border: 1px solid rgba(0,0,0,0.2); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: flex-start;
+            padding: 0 24px;
+          }
+          .sub-title { font-size: 22px; font-weight: 900; font-style: italic; color: #1a2b42; letter-spacing: 1px; }
+
+          .row-bar {
+            height: 38px; width: 1100px;
+            background: linear-gradient(135deg, ${gradientStart} 0%, ${primaryColor} 50%, ${gradientEnd} 100%);
+            border: 1px solid rgba(255,255,255,0.35); border-radius: 4px;
+            transform: skewX(-12deg); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+          }
+          .row-left { display: flex; align-items: center; gap: 20px; }
+          .rank-badge {
+            background: #d32f2f; color: #ffffff; font-size: 22px; font-weight: 900; font-style: italic;
+            padding: 1px 10px; border-radius: 3px; width: 32px; text-align: center;
+          }
+          .flag-icon { display: flex; align-items: center; justify-content: center; width: 75px; }
+          .athlete-name { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; margin-left: 15px; }
+
+          .row-right { display: flex; align-items: center; gap: 16px; }
+          .q-badge {
+            background: #2e7d32; color: #ffffff; font-size: 20px; font-weight: 900; font-style: italic;
+            padding: 2px 10px; border-radius: 3px;
+          }
+          .score-text { font-size: 24px; font-weight: 900; font-style: italic; color: #ffffff; letter-spacing: 1px; }
+        </style>
+      </head>
+      <body>
+        <div class="standings-container">
+          <div class="t1-bar">
+            <div class="t1-left unskew">
+              <div class="picto-box">${officialDivingPictographSVG}</div>
+              <div class="head-title">${eventTitle}</div>
+            </div>
+            <div class="unskew">${olympicRingsSVG}</div>
+          </div>
+          <div class="t2-bar">
+            <div class="sub-title unskew">${subTitle}</div>
+          </div>
           ${rowsHTML}
         </div>
       </body>
