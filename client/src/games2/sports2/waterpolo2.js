@@ -95,7 +95,7 @@ export async function generateWaterPolo2Fabric(
   const venueStr = (customData.venue || customData.location || 'AQUATICS CENTRE').toUpperCase();
   const subVenueStr = (customData.subVenue || customData.subLocation || 'WATER POLO ARENA').toUpperCase();
 
-  // ── WP002 - Venue ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP002 - Venue ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP002') || normId === 'VENUE ID') {
     const baseLeft = 328;
     const baseTop = 966 - 95; // 871
@@ -177,7 +177,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP003 - Event Schedule ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP003 - Event Schedule ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP003') || normId === 'EVENT SCHEDULE') {
     const baseLeft = 328;
     const baseTop = 966 - 328; // 638 (54px tier1 + 38px tier2 + gaps & rows)
@@ -334,7 +334,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP004 - Match ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP004 - Match ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP004') || normId === 'MATCH ID') {
     const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
     const bannerWidth = 850;
@@ -471,7 +471,9 @@ export async function generateWaterPolo2Fabric(
 
       // Stats for Variant B (font size 24px)
       if (isVariantB) {
+        const capturedY474 = currentY;
         rd.stats.forEach((stVal, idx) => {
+          const currentY = capturedY474; // eslint-disable-line no-shadow
           const xPos = baseLeft + bannerWidth - 190 + idx * 50;
           const valTxt = new fabric.Textbox(String(stVal), createProps('textbox', {
             left: xPos, top: currentY + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
@@ -502,7 +504,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP005 - Group List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP005 - Group List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP005') || normId === 'GROUP LIST') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -630,7 +632,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP006 - Standings ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP006 - Standings ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP006') || normId === 'STANDINGS') {
     let variant = 'a';
     const variantStr = (
@@ -844,7 +846,9 @@ export async function generateWaterPolo2Fabric(
 
         // Stats values W L T PTS (font size 24px)
         const stats = rd.stats || [0, 0, 0, 0];
+        const capturedY847 = currentY;
         stats.forEach((stVal, idx) => {
+          const currentY = capturedY847; // eslint-disable-line no-shadow
           const xPos = baseLeft + bannerWidth - 220 + idx * 48;
           const valTxt = new fabric.Textbox(String(stVal), createProps('textbox', {
             left: xPos, top: currentY + 7, fontSize: 24, fontWeight: '900', fontStyle: 'italic',
@@ -867,7 +871,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP007 - Team ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP007 - Team ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP007') || normId === 'TEAM ID') {
     let variant = 'a';
     const variantStr = (
@@ -966,7 +970,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP008 - Team List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP008 - Team List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP008') || normId === 'TEAM LIST') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -1195,7 +1199,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP009 - Previous Results ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP009 - Previous Results ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP009') || normId === 'PREVIOUS RESULTS') {
     let variant = 'a';
     const variantStr = (
@@ -1389,7 +1393,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP010 - Player ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP010 - Player ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP010') || normId === 'PLAYER ID') {
     let variant = 'a';
     const variantStr = (
@@ -1561,7 +1565,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP011 - Major Fouls ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP011 - Major Fouls ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
     let variant = 'a';
     const variantStr = (
@@ -1705,7 +1709,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP012 - Captain/Goalkeeper ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP012 - Captain/Goalkeeper ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
     let variant = 'a';
     const variantStr = (
@@ -1834,7 +1838,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP013 - Coach ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP013 - Coach ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP013') || normId === 'COACH ID') {
     let variant = 'a';
     const variantStr = (
@@ -1964,7 +1968,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP014 - Official ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP014 - Official ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP014') || normId === 'OFFICIAL ID') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -2057,7 +2061,7 @@ export async function generateWaterPolo2Fabric(
   }
 
 
-  // ── WP015 - Officials List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP015 - Officials List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP015') || normId === 'OFFICIALS LIST') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -2093,7 +2097,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Water Polo player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -2164,7 +2168,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP016 - Player Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP016 - Player Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP016') || normId === 'PLAYER STATISTICS') {
     const isGenericDummy = !customData.playerName && !customData.name;
     let teamName = 'AUSTRALIA';
@@ -2255,7 +2259,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP017 - Match Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP017 - Match Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP017') || normId === 'MATCH STATISTICS') {
     let variant = 'a';
     const variantStr = (
@@ -2406,7 +2410,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP018 - Crunch Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP018 - Crunch Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP018') || normId === 'CRUNCH STATISTICS') {
     const baseLeft = 328;
 
@@ -2521,7 +2525,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP019 - Time Outs Crunch ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP019 - Time Outs Crunch ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP019') || normId === 'TIME OUTS CRUNCH') {
     const baseLeft = 328;
 
@@ -2634,7 +2638,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP020 - Period Breakdown ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP020 - Period Breakdown ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP020') || normId === 'PERIOD BREAKDOWN') {
     let variant = 'a';
     const variantStr = (
@@ -2694,7 +2698,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -2835,7 +2839,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP021 - Scoreboard/Result ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP021 - Scoreboard/Result ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP021') || normId === 'SCOREBOARD/RESULT' || normId === 'SCOREBOARD RESULT') {
     let variant = 'a';
     const variantStr = (
@@ -2894,7 +2898,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3020,7 +3024,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP022 - Shoot-Out Scoreboard ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP022 - Shoot-Out Scoreboard ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP022') || normId === 'SHOOT-OUT SCOREBOARD' || normId === 'SHOOTOUT SCOREBOARD') {
     let variant = 'a';
     const variantStr = (
@@ -3087,7 +3091,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3237,14 +3241,14 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP023 - Advance All to Quarter-Finals ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP023 - Advance All to Quarter-Finals ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP023') || normId === 'ADVANCE ALL TO QUARTER-FINALS' || normId === 'ADVANCE ALL') {
     const bannerWidth = 850;
     const baseLeft = 328;
     const baseTop = 966 - 422; // 544
 
     const isGenericDummy = !customData.rows;
-    let roundText = 'PRELIMINARY ROUND → QUARTER-FINALS';
+    let roundText = 'PRELIMINARY ROUND ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ QUARTER-FINALS';
     let rows = [
       { name: 'UNITED STATES', stats: '4   1   0' },
       { name: 'HUNGARY', stats: '4   0   1' },
@@ -3274,7 +3278,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3358,7 +3362,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP024 - Final Rank ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP024 - Final Rank ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP024') || normId === 'FINAL RANK') {
     let variant = 'a';
     const variantStr = (
@@ -3417,7 +3421,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3499,7 +3503,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP025 - Ceremony ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP025 - Ceremony ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP025') || normId === 'CEREMONY ID') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -3520,7 +3524,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3562,7 +3566,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP026 - Medal ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP026 - Medal ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP026') || normId === 'MEDAL ID') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -3651,7 +3655,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP027 - Medals List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP027 - Medals List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP027') || normId === 'MEDALS LIST') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -3683,7 +3687,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -3768,7 +3772,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP028 - Medal Presenter ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP028 - Medal Presenter ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP028') || normId === 'MEDAL PRESENTER ID') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -3834,7 +3838,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP029 - Flower Presenter ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP029 - Flower Presenter ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP029') || normId === 'FLOWER PRESENTER ID') {
     const bannerWidth = 850;
     const baseLeft = 328;
@@ -3900,7 +3904,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP030 - Crunch Scoreboard ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP030 - Crunch Scoreboard ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP030') || normId === 'CRUNCH SCOREBOARD') {
     const baseLeft = 310;
     const baseTop = 240;
@@ -4018,7 +4022,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP031 - Shot Clock ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP031 - Shot Clock ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP031') || normId === 'SHOT CLOCK') {
     const baseLeft = 310;
     const baseTop = 240;
@@ -4142,7 +4146,7 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP032 - Crunch Penalties ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP032 - Crunch Penalties ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP032') || normId === 'CRUNCH PENALTIES') {
     let variant = 'a';
     const variantStr = (
@@ -4347,14 +4351,14 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP033 - Bracket to Semi-Finals ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP033 - Bracket to Semi-Finals ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP033') || normId === 'BRACKET TO SEMI-FINALS' || normId === 'BRACKET SEMI FINALS') {
     const bannerWidth = 850;
     const baseLeft = 328;
     const baseTop = 422; // adjusted top
 
     const isGenericDummy = !customData.matches;
-    let roundText = 'QUARTER-FINALS → SEMI-FINALS';
+    let roundText = 'QUARTER-FINALS ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ SEMI-FINALS';
     let leftTeams = [
       'HUNGARY', 'GERMANY',
       'MONTENEGRO', 'CROATIA',
@@ -4387,7 +4391,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -4486,14 +4490,14 @@ export async function generateWaterPolo2Fabric(
     });
   }
 
-  // ── WP034 - Bracket to Gold Medal Match ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP034 - Bracket to Gold Medal Match ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP034') || normId === 'BRACKET TO GOLD MEDAL MATCH' || normId === 'BRACKET GOLD MEDAL') {
     const bannerWidth = 850;
     const baseLeft = 328;
     const baseTop = 641; // adjusted top
 
     const isGenericDummy = !customData.matches;
-    let roundText = 'SEMI-FINALS → GOLD MEDAL MATCH';
+    let roundText = 'SEMI-FINALS ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ GOLD MEDAL MATCH';
     let leftTeams = [
       'HUNGARY', 'MONTENEGRO',
       'SERBIA', 'UNITED STATES'
@@ -4522,7 +4526,7 @@ export async function generateWaterPolo2Fabric(
     objects.push(mainBar);
 
     // Player icon
-    const iconTxt = new fabric.Textbox("🤽", createProps('textbox', {
+    const iconTxt = new fabric.Textbox("ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½", createProps('textbox', {
       left: baseLeft + 30, top: baseTop + 10, fontSize: 28, width: 50
     }));
     objects.push(iconTxt);
@@ -4641,7 +4645,7 @@ export function generateWaterPolo2HTML(
   const venueStr = (customData.venue || customData.location || 'AQUATICS CENTRE').toUpperCase();
   const subVenueStr = (customData.subVenue || customData.subLocation || 'WATER POLO ARENA').toUpperCase();
 
-  // ── WP002 - Venue ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP002 - Venue ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP002') || normId === 'VENUE ID') {
     const baseTop = 966 - 95; // 871
 
@@ -4726,9 +4730,8 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP003 - Event Schedule ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP003 - Event Schedule ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP003') || normId === 'EVENT SCHEDULE') {
-    const baseTop = 966 - 328; // 638
 
     const rows = customData.rows || [
       { type: 'header', text: 'BRONZE MEDAL MATCH' },
@@ -4840,10 +4843,9 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP004 - Match ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP004 - Match ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP004') || normId === 'MATCH ID') {
     const isVariantB = normId.includes('_B') || normId.endsWith('B') || (customData.variant || '').toLowerCase() === 'b';
-    const baseTop = 966 - 176; // 790
 
     const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' || (customData.teamA || '').toUpperCase() === 'TOM DALEY' || (customData.team1 || '').toUpperCase() === 'SPAIN' || (customData.teamA || '').toUpperCase() === 'CROATIA' || (!customData.team1 && !customData.teamA);
 
@@ -5009,9 +5011,8 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP005 - Group List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP005 - Group List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP005') || normId === 'GROUP LIST') {
-    const baseTop = 966 - 340; // 626
 
     const teams = customData.rows || [
       { name: 'AUSTRALIA', noc: 'AUS' },
@@ -5131,7 +5132,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP006 - Standings ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP006 - Standings ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP006') || normId === 'STANDINGS') {
     let variant = 'a';
     const variantStr = (
@@ -5148,7 +5149,6 @@ export function generateWaterPolo2HTML(
     else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 340; // 626
 
     let defaultRows = [];
     if (variant === 'a') {
@@ -5355,7 +5355,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP007 - Team ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP007 - Team ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP007') || normId === 'TEAM ID') {
     let variant = 'a';
     const variantStr = (
@@ -5371,7 +5371,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 54; // 912
 
     const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
       (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
@@ -5439,9 +5438,8 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP008 - Team List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP008 - Team List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP008') || normId === 'TEAM LIST') {
-    const baseTop = 966 - 425; // 541
 
     const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
       (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
@@ -5658,7 +5656,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP009 - Previous Results ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP009 - Previous Results ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP009') || normId === 'PREVIOUS RESULTS') {
     let variant = 'a';
     const variantStr = (
@@ -5674,7 +5672,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseLeft = 328;
 
     const isGenericDummy = (customData.team1 || '').toUpperCase() === 'TOM DALEY' ||
       (customData.teamA || '').toUpperCase() === 'TOM DALEY' ||
@@ -5714,9 +5711,6 @@ export function generateWaterPolo2HTML(
     const rowsData = customData.rows || (variant === 'b' ? defaultRowsB : defaultRowsA);
 
     const rowCount = rowsData.length;
-    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
-    const totalHeight = 54 + 2 + 38 + 3 + rowsHeight;
-    const baseTop = 966 - totalHeight;
 
     let rowsHTML = '';
     for (let r = 0; r < rowCount; r++) {
@@ -5841,7 +5835,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP010 - Player ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP010 - Player ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP010') || normId === 'PLAYER ID') {
     let variant = 'a';
     const variantStr = (
@@ -5859,7 +5853,6 @@ export function generateWaterPolo2HTML(
     else if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseLeft = 328;
 
     // Default data mapping
     const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
@@ -6000,7 +5993,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP011 - Major Fouls ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP011 - Major Fouls ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP011') || normId === 'MAJOR FOULS ID') {
     let variant = 'a';
     const variantStr = (
@@ -6016,8 +6009,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseLeft = 328;
-    const baseTop = 966 - 94; // 872
 
     // Default data mapping
     const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
@@ -6142,7 +6133,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP012 - Captain/Goalkeeper ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP012 - Captain/Goalkeeper ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP012') || normId === 'CAPTAIN GOALKEEPER ID') {
     let variant = 'a';
     const variantStr = (
@@ -6158,8 +6149,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseLeft = 328;
-    const baseTop = 966 - 94; // 872
 
     // Default data mapping
     const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
@@ -6269,7 +6258,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP013 - Coach ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP013 - Coach ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP013') || normId === 'COACH ID') {
     let variant = 'a';
     const variantStr = (
@@ -6285,8 +6274,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseLeft = 328;
-    const baseTop = 966 - 94; // 872
 
     // Default data mapping
     const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
@@ -6399,10 +6386,8 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP014 - Official ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP014 - Official ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP014') || normId === 'OFFICIAL ID') {
-    const baseLeft = 328;
-    const baseTop = 966 - 94; // 872
 
     // Default data mapping
     const isGenericDummy = (customData.playerName || '').toUpperCase() === 'TOM DALEY' ||
@@ -6497,7 +6482,7 @@ export function generateWaterPolo2HTML(
   }
 
 
-  // ── WP015 - Officials List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP015 - Officials List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP015') || normId === 'OFFICIALS LIST') {
     const isGenericDummy = !customData.officials && !customData.rows;
     let officials = [
@@ -6509,9 +6494,6 @@ export function generateWaterPolo2HTML(
     }
 
     const rowCount = officials.length;
-    const rowsHeight = rowCount * 38 + (rowCount - 1) * 3;
-    const totalHeight = 54 + 2 + 38 + 3 + rowsHeight;
-    const baseTop = 966 - totalHeight;
 
     let rowsHTML = '';
     for (let i = 0; i < rowCount; i++) {
@@ -6577,7 +6559,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">${(customData.eventTitle || "MEN'S WATER POLO").toUpperCase()}</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -6594,7 +6576,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP016 - Player Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP016 - Player Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP016') || normId === 'PLAYER STATISTICS') {
     const isGenericDummy = !customData.playerName && !customData.name;
     let teamName = 'AUSTRALIA';
@@ -6676,7 +6658,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP017 - Match Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP017 - Match Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP017') || normId === 'MATCH STATISTICS') {
     let variant = 'a';
     const variantStr = (
@@ -6821,7 +6803,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP018 - Crunch Statistics ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP018 - Crunch Statistics ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP018') || normId === 'CRUNCH STATISTICS') {
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let title = 'PENALTY SHOT GOALS';
@@ -6843,8 +6825,6 @@ export function generateWaterPolo2HTML(
     const noc2 = getNocCodeForTeam(team2) || 'CRO';
     const flagHtml2 = getFlagImgHtml(noc2, 'height: 22px; width: auto; border-radius: 1px; transform: skewX(-12deg);');
 
-    const totalHeight = 38 + 2 + 67;
-    const baseTop = 966 - totalHeight;
 
     return `
       <!DOCTYPE html>
@@ -6916,7 +6896,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP019 - Time Outs Crunch ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP019 - Time Outs Crunch ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP019') || normId === 'TIME OUTS CRUNCH') {
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let team1 = 'HUNGARY';
@@ -7009,7 +6989,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP020 - Period Breakdown ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP020 - Period Breakdown ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP020') || normId === 'PERIOD BREAKDOWN') {
     let variant = 'a';
     const variantStr = (
@@ -7026,7 +7006,6 @@ export function generateWaterPolo2HTML(
     else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 132; // 834
 
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let roundText = 'PRELIMINARY ROUND - GROUP B';
@@ -7140,7 +7119,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7191,7 +7170,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP021 - Scoreboard/Result ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP021 - Scoreboard/Result ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP021') || normId === 'SCOREBOARD/RESULT' || normId === 'SCOREBOARD RESULT') {
     let variant = 'a';
     const variantStr = (
@@ -7207,7 +7186,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 132; // 834
 
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let roundText = 'QUARTER-FINAL';
@@ -7293,7 +7271,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7338,7 +7316,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP022 - Shoot-Out Scoreboard ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP022 - Shoot-Out Scoreboard ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP022') || normId === 'SHOOT-OUT SCOREBOARD' || normId === 'SHOOTOUT SCOREBOARD') {
     let variant = 'a';
     const variantStr = (
@@ -7355,7 +7333,6 @@ export function generateWaterPolo2HTML(
     else if (variantStr.includes('_c') || variantStr.endsWith('c') || variantStr.includes('variant c')) variant = 'c';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 132; // 834
 
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let roundText = 'QUARTER-FINAL - PENALTY SHOOT-OUT';
@@ -7464,7 +7441,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7515,12 +7492,11 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP023 - Advance All to Quarter-Finals ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP023 - Advance All to Quarter-Finals ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP023') || normId === 'ADVANCE ALL TO QUARTER-FINALS' || normId === 'ADVANCE ALL') {
-    const baseTop = 966 - 422; // 544
 
     const isGenericDummy = !customData.rows;
-    let roundText = 'PRELIMINARY ROUND → QUARTER-FINALS';
+    let roundText = 'PRELIMINARY ROUND ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ QUARTER-FINALS';
     let rows = [
       { name: 'UNITED STATES', stats: '4   1   0' },
       { name: 'HUNGARY', stats: '4   0   1' },
@@ -7607,7 +7583,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7625,7 +7601,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP024 - Final Rank ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP024 - Final Rank ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP024') || normId === 'FINAL RANK') {
     let variant = 'a';
     const variantStr = (
@@ -7641,7 +7617,6 @@ export function generateWaterPolo2HTML(
     if (variantStr.includes('_b') || variantStr.endsWith('b') || variantStr.includes('variant b')) variant = 'b';
     else if (variantStr.includes('_a') || variantStr.endsWith('a') || variantStr.includes('variant a')) variant = 'a';
 
-    const baseTop = 966 - 340; // 626
 
     const isGenericDummy = !customData.rows;
     let roundText = 'FINAL RANK';
@@ -7744,7 +7719,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7761,7 +7736,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP025 - Ceremony ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP025 - Ceremony ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP025') || normId === 'CEREMONY ID') {
     const text = customData.subText || customData.text || 'VICTORY CEREMONY';
 
@@ -7801,7 +7776,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -7815,7 +7790,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP026 - Medal ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP026 - Medal ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP026') || normId === 'MEDAL ID') {
     const isGenericDummy = !customData.teamName && !customData.team;
     let teamName = 'HUNGARY';
@@ -7897,9 +7872,8 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP027 - Medals List ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP027 - Medals List ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP027') || normId === 'MEDALS LIST') {
-    const baseTop = 966 - 217; // 749
 
     const isGenericDummy = !customData.rows;
     let roundText = 'VICTORY CEREMONY';
@@ -7993,7 +7967,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -8010,7 +7984,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP028 - Medal Presenter ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP028 - Medal Presenter ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP028') || normId === 'MEDAL PRESENTER ID') {
     const isGenericDummy = !customData.presenterName && !customData.name;
     let name = 'JACQUES ROGGE';
@@ -8066,7 +8040,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP029 - Flower Presenter ID ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP029 - Flower Presenter ID ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP029') || normId === 'FLOWER PRESENTER ID') {
     const isGenericDummy = !customData.presenterName && !customData.name;
     let name = 'MR GIANNI LONZI';
@@ -8122,7 +8096,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP030 - Crunch Scoreboard ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP030 - Crunch Scoreboard ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP030') || normId === 'CRUNCH SCOREBOARD') {
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let team1 = 'UNITED STATES';
@@ -8215,7 +8189,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP031 - Shot Clock ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP031 - Shot Clock ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP031') || normId === 'SHOT CLOCK') {
     const isGenericDummy = !customData.team1 && !customData.teamA;
     let team1 = 'UNITED STATES';
@@ -8311,7 +8285,7 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP032 - Crunch Penalties ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP032 - Crunch Penalties ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP032') || normId === 'CRUNCH PENALTIES') {
     let variant = 'a';
     const variantStr = (
@@ -8488,12 +8462,12 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP033 - Bracket to Semi-Finals ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP033 - Bracket to Semi-Finals ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP033') || normId === 'BRACKET TO SEMI-FINALS' || normId === 'BRACKET SEMI FINALS') {
     const baseTop = 966 - 422; // 544
 
     const isGenericDummy = !customData.matches;
-    let roundText = 'QUARTER-FINALS → SEMI-FINALS';
+    let roundText = 'QUARTER-FINALS ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ SEMI-FINALS';
     let leftTeams = [
       'HUNGARY', 'GERMANY',
       'MONTENEGRO', 'CROATIA',
@@ -8600,7 +8574,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
@@ -8617,12 +8591,12 @@ export function generateWaterPolo2HTML(
     `;
   }
 
-  // ── WP034 - Bracket to Gold Medal Match ──
+  // ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ WP034 - Bracket to Gold Medal Match ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
   if (normId.includes('WP034') || normId === 'BRACKET TO GOLD MEDAL MATCH' || normId === 'BRACKET GOLD MEDAL') {
     const baseTop = 966 - 258; // 708
 
     const isGenericDummy = !customData.matches;
-    let roundText = 'SEMI-FINALS → GOLD MEDAL MATCH';
+    let roundText = 'SEMI-FINALS ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ GOLD MEDAL MATCH';
     let leftTeams = [
       'HUNGARY', 'MONTENEGRO',
       'SERBIA', 'UNITED STATES'
@@ -8725,7 +8699,7 @@ export function generateWaterPolo2HTML(
         <div class="banner-container">
           <div class="header-bar">
             <div class="header-left unskew">
-              <span class="header-icon">🤽</span>
+              <span class="header-icon">ÃƒÂ°Ã…Â¸Ã‚Â¤Ã‚Â½</span>
               <span class="header-title">MEN'S WATER POLO</span>
             </div>
             <div class="unskew">${olympicRingsSVG}</div>
