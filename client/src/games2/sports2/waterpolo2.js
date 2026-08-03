@@ -168,8 +168,8 @@ export async function generateWaterPolo2Fabric(
     objects.push(olympicRings);
 
     return new fabric.Group(objects, {
-      left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      left: 289, top: 60,
+      scaleX: 1.849, scaleY: 1.323,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP002 Venue ID (${normId})`,
@@ -4338,8 +4338,8 @@ export async function generateWaterPolo2Fabric(
     }
 
     return new fabric.Group(objects, {
-      left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      left: 289, top: 60,
+      scaleX: 1.849, scaleY: 1.323,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP032 Crunch Penalties (${normId})`,
@@ -4351,7 +4351,7 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP033') || normId === 'BRACKET TO SEMI-FINALS' || normId === 'BRACKET SEMI FINALS') {
     const bannerWidth = 850;
     const baseLeft = 328;
-    const baseTop = 966 - 422; // 544
+    const baseTop = 422; // adjusted top
 
     const isGenericDummy = !customData.matches;
     let roundText = 'QUARTER-FINALS → SEMI-FINALS';
@@ -4422,11 +4422,11 @@ export async function generateWaterPolo2Fabric(
     // Rows
     let currentY = baseTop + 54 + 2 + 38 + 3;
     for (let i = 0; i < 8; i++) {
-      // Left side row
+      // Left side row - always full width
       const leftBg = new fabric.Rect({
-        left: baseLeft + 17, top: currentY, width: 380, height: 38,
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
         fill: new fabric.Gradient({
-          type: 'linear', coords: { x1: 0, y1: 0, x2: 380, y2: 0 },
+          type: 'linear', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
           colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
         }),
         skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
@@ -4445,26 +4445,29 @@ export async function generateWaterPolo2Fabric(
       }));
       objects.push(nameLeftTxt);
 
-      // Winner row
-      if (i % 2 === 0 && winners[i]) {
+      // Winner row - vertically centred between the two left rows of the pair
+      if (i % 2 === 1 && winners[i - 1]) {
+        // midpoint between top of row (i-1) and top of row i
+        const winY = currentY - Math.round((38 + 3) / 2);
         const winBg = new fabric.Rect({
-          left: baseLeft + 430, top: currentY, width: 400, height: 38,
+          left: baseLeft + 430, top: winY, width: 400, height: 38,
           fill: new fabric.Gradient({
-            type: 'linear', coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
+            type: 'linear',
+            coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
             colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
           }),
           skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
         });
         objects.push(winBg);
 
-        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const nocWin = getNocCodeForTeam(winners[i - 1]) || 'HUN';
         const flagWinObj = await createFabricFlagObject(nocWin, {
-          left: baseLeft + 450, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+          left: baseLeft + 450, top: winY + 5, scaleX: 0.38, scaleY: 0.38
         });
         if (flagWinObj) objects.push(flagWinObj);
 
-        const nameWinTxt = new fabric.Textbox(winners[i].toUpperCase(), createProps('textbox', {
-          left: baseLeft + 570, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        const nameWinTxt = new fabric.Textbox(winners[i - 1].toUpperCase(), createProps('textbox', {
+          left: baseLeft + 570, top: winY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
           fill: '#ffffff', width: 230, charSpacing: 10
         }));
         objects.push(nameWinTxt);
@@ -4475,7 +4478,7 @@ export async function generateWaterPolo2Fabric(
 
     return new fabric.Group(objects, {
       left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      scaleX: 1.464, scaleY: 1.263,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP033 Bracket to Semi-Finals (${normId})`,
@@ -4487,7 +4490,7 @@ export async function generateWaterPolo2Fabric(
   if (normId.includes('WP034') || normId === 'BRACKET TO GOLD MEDAL MATCH' || normId === 'BRACKET GOLD MEDAL') {
     const bannerWidth = 850;
     const baseLeft = 328;
-    const baseTop = 966 - 258; // 708
+    const baseTop = 641; // adjusted top
 
     const isGenericDummy = !customData.matches;
     let roundText = 'SEMI-FINALS → GOLD MEDAL MATCH';
@@ -4554,11 +4557,11 @@ export async function generateWaterPolo2Fabric(
     // Rows
     let currentY = baseTop + 54 + 2 + 38 + 3;
     for (let i = 0; i < 4; i++) {
-      // Left side row
+      // Left side row - always full width
       const leftBg = new fabric.Rect({
-        left: baseLeft + 17, top: currentY, width: 380, height: 38,
+        left: baseLeft + 17, top: currentY, width: bannerWidth - 30, height: 38,
         fill: new fabric.Gradient({
-          type: 'linear', coords: { x1: 0, y1: 0, x2: 380, y2: 0 },
+          type: 'linear', coords: { x1: 0, y1: 0, x2: bannerWidth - 30, y2: 0 },
           colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
         }),
         skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
@@ -4577,26 +4580,28 @@ export async function generateWaterPolo2Fabric(
       }));
       objects.push(nameLeftTxt);
 
-      // Winner row
-      if (i % 2 === 0 && winners[i]) {
+      // Winner row - vertically centred between the two left rows of the pair
+      if (i % 2 === 1 && winners[i - 1]) {
+        const winY = currentY - Math.round((38 + 3) / 2);
         const winBg = new fabric.Rect({
-          left: baseLeft + 430, top: currentY, width: 400, height: 38,
+          left: baseLeft + 430, top: winY, width: 400, height: 38,
           fill: new fabric.Gradient({
-            type: 'linear', coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
+            type: 'linear',
+            coords: { x1: 0, y1: 0, x2: 400, y2: 0 },
             colorStops: [{ offset: 0, color: '#0f2f57' }, { offset: 1, color: '#071629' }]
           }),
           skewX: -12, rx: 3, ry: 3, stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1
         });
         objects.push(winBg);
 
-        const nocWin = getNocCodeForTeam(winners[i]) || 'HUN';
+        const nocWin = getNocCodeForTeam(winners[i - 1]) || 'HUN';
         const flagWinObj = await createFabricFlagObject(nocWin, {
-          left: baseLeft + 450, top: currentY + 5, scaleX: 0.38, scaleY: 0.38
+          left: baseLeft + 450, top: winY + 5, scaleX: 0.38, scaleY: 0.38
         });
         if (flagWinObj) objects.push(flagWinObj);
 
-        const nameWinTxt = new fabric.Textbox(winners[i].toUpperCase(), createProps('textbox', {
-          left: baseLeft + 570, top: currentY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
+        const nameWinTxt = new fabric.Textbox(winners[i - 1].toUpperCase(), createProps('textbox', {
+          left: baseLeft + 570, top: winY + 8, fontSize: 18, fontWeight: '900', fontStyle: 'italic',
           fill: '#ffffff', width: 230, charSpacing: 10
         }));
         objects.push(nameWinTxt);
@@ -4607,7 +4612,7 @@ export async function generateWaterPolo2Fabric(
 
     return new fabric.Group(objects, {
       left: baseLeft, top: baseTop,
-      scaleX: 1.0, scaleY: 1.0,
+      scaleX: 1.468, scaleY: 1.258,
       subTargetCheck: true,
       id: generateUniqueId({ type: 'waterPoloGroup' }),
       name: `WP034 Bracket to Gold Medal Match (${normId})`,
@@ -7245,7 +7250,7 @@ export function generateWaterPolo2HTML(
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
           
-          .banner-container { position: absolute; top: 729px; left: 339px; transform: scale(1.464, 1.358); transform-origin: top left; display: flex; flex-direction: column; }
+          .banner-container { position: absolute; top: 422px; left: 328px; transform: scale(1.464, 1.263); transform-origin: top left; display: flex; flex-direction: column; }
           .header-bar {
             width: 850px; height: 54px;
             background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
@@ -7562,7 +7567,7 @@ export function generateWaterPolo2HTML(
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: ${font}; }
           
-          .banner-container { position: absolute; top: 398px; left: 303px; transform: scale(1.499, 1.346); transform-origin: top left; display: flex; flex-direction: column; }
+          .banner-container { position: absolute; top: 60px; left: 289px; transform: scale(1.849, 1.323); transform-origin: top left; display: flex; flex-direction: column; }
           .header-bar {
             width: 850px; height: 54px;
             background: linear-gradient(90deg, ${gradientStart} 0%, ${gradientMid} 45%, ${gradientEnd} 100%);
