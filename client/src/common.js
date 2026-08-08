@@ -3762,3 +3762,56 @@ export const exportEachPagetoHTML = async (canvas, setIsLoading, canvasList) => 
     setIsLoading(false); // Hide spinner
   }
 };
+
+export const saveFilecsv = async (options, data, fileHandle = null) => {
+  try {
+    const blob = data instanceof Blob
+      ? data
+      : new Blob(['\uFEFF', data], {
+        type: 'text/csv;charset=utf-8'
+      });
+
+    if (window.showSaveFilePicker) {
+      const handle =
+        fileHandle ||
+        await window.showSaveFilePicker(options);
+
+      const writable = await handle.createWritable();
+
+      await writable.write(blob);
+
+      await writable.close();
+
+      console.log(
+        "File saved successfully!",
+        handle.name
+      );
+
+      return handle;
+    }
+
+    // Browser fallback
+    const element = document.createElement("a");
+
+    element.href = URL.createObjectURL(blob);
+
+    const retVal = prompt(
+      "Enter file name to save:",
+      generalFileName() + "_FileName"
+    );
+
+    if (retVal !== null) {
+      element.download =
+        retVal + (options?.fileExtension ?? ".txt");
+
+      document.body.appendChild(element);
+      element.click();
+      element.remove();
+
+      URL.revokeObjectURL(element.href);
+    }
+
+  } catch (error) {
+    console.error("Error saving the file:", error);
+  }
+};
