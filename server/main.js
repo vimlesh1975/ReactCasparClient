@@ -462,15 +462,19 @@ let databaseConnection = 'false';
 
 async function initDB() {
   try {
-    pool = mysql.createPool({
-      host: process.env.DB_HOST || "103.196.4.141",
-      user: process.env.DB_USER || "itmaint",
-      password: process.env.DB_PASSWORD || "itddkchn",
-      database: process.env.DB_DATABASE || dbname,
+    require("dotenv").config({ override: true });
+
+    const configFromEnvFile = {
+      get host() { return process.env.DB_HOST || "103.196.4.141"; },
+      get user() { return process.env.DB_USER || "itmaint"; },
+      get password() { return process.env.DB_PASSWORD || "itddkchn"; },
+      get database() { return process.env.DB_DATABASE || dbname; },
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-    });
+    };
+
+    pool = mysql.createPool(configFromEnvFile);
 
     // Try to get a connection to verify
     const connection = await pool.getConnection();
