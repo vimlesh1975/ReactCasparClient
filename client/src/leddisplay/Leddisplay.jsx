@@ -583,9 +583,11 @@ function Leddisplay() {
       if (!options.quiet) setStatus(result.message);
 
       if (action === "play" || action === "playLoop") {
-        updateVideo(video.id, { playing: true });
+        updateVideo(video.id, { playing: true, playbackState: "playing" });
+      } else if (action === "pause") {
+        updateVideo(video.id, { playing: false, playbackState: "paused" });
       } else if (action === "stop") {
-        updateVideo(video.id, { playing: false });
+        updateVideo(video.id, { playing: false, playbackState: "stopped" });
       }
     } catch (error) {
       setStatus(error.message);
@@ -607,7 +609,7 @@ function Leddisplay() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Could not play all videos.");
-      setVideos((current) => current.map((v) => ({ ...v, playing: true })));
+      setVideos((current) => current.map((v) => ({ ...v, playing: true, playbackState: "playing" })));
       setStatus(result.message);
     } catch (error) {
       setStatus(error.message);
@@ -627,7 +629,7 @@ function Leddisplay() {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Could not stop all videos.");
-      setVideos((current) => current.map((v) => ({ ...v, playing: false })));
+      setVideos((current) => current.map((v) => ({ ...v, playing: false, playbackState: "stopped" })));
       setStatus(result.message);
     } catch (error) {
       setStatus(error.message);
@@ -904,10 +906,17 @@ function Leddisplay() {
                   <span className="videoBoxLabel">
                     <strong>{video.label}</strong>
                     <small>{getClipName(video.clip)}</small>
-                    {video.playing && <span className="playingIndicator">● Playing</span>}
+                    {video.playbackState === "playing" || (video.playing && !video.playbackState) ? (
+                      <span className="playingIndicator">● Playing</span>
+                    ) : video.playbackState === "paused" ? (
+                      <span className="pausedIndicator">❚❚ Paused</span>
+                    ) : video.playbackState === "stopped" ? (
+                      <span className="stoppedIndicator">■ Stopped</span>
+                    ) : null}
                   </span>
                   <div className="videoBoxActions">
                     <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => handleStageAction(e, "playLoop", video)}>Play</button>
+                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => handleStageAction(e, "pause", video)}>Pause</button>
                     <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => handleStageAction(e, "stop", video)}>Stop</button>
                     <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); deleteVideoBlock(video.id); }}>Delete</button>
                   </div>

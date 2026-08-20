@@ -1406,6 +1406,10 @@ app.post("/api/casparcg", async (req, res) => {
       const command = `STOP ${channel}-${layer}`;
       const reply = await sendAmcpCommand({ host, port, command });
       res.json({ message: `Sent: ${command}\n\nCasparCG replied:\n${reply}` });
+    } else if (action === "pause") {
+      const command = `PAUSE ${channel}-${layer}`;
+      const reply = await sendAmcpCommand({ host, port, command });
+      res.json({ message: `Sent: ${command}\n\nCasparCG replied:\n${reply}` });
     } else if (action === "fill") {
       const command = getFillCommand(channel, layer, box);
       const reply = await sendAmcpCommand({ host, port, command });

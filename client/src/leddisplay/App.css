@@ -180,8 +180,8 @@ input {
 }
 
 .videoBoxActions {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2px;
   width: min(120px, calc(100% - 8px));
 }
@@ -358,6 +358,24 @@ input {
   align-items: center;
   gap: 4px;
   color: #48bb78;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.pausedIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ecc94b;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.stoppedIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #fc8181;
   font-size: 0.68rem;
   font-weight: 800;
 }
