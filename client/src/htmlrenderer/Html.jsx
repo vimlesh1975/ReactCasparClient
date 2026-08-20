@@ -40,8 +40,13 @@ const observer = new MutationObserver(() => {
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';
+    document.body.style.backgroundColor = 'transparent';
+    document.documentElement.style.backgroundColor = 'transparent';
     var aa = document.getElementsByTagName('div')[0];
-    aa.style.zoom = (1920 * 100 / 1920) + '%';
+    if (aa) {
+        aa.style.zoom = (1920 * 100 / 1920) + '%';
+        aa.style.backgroundColor = 'transparent';
+    }
     observer.disconnect();
 });
 observer.observe(elementToObserve, { subtree: true, childList: true })
@@ -179,6 +184,8 @@ const Html = () => {
 
 
     useEffect(() => {
+        document.documentElement.style.backgroundColor = 'transparent';
+        document.body.style.backgroundColor = 'transparent';
         // const socket = socketIOClient('http://localhost:9000/');
         const socket = socketIOClient(socketAddress());
         socket.on("html", data => {
@@ -223,7 +230,7 @@ const Html = () => {
     }, [])
 
     return (<>
-        <div ref={refhtml}></div>
+        <div ref={refhtml} style={{ backgroundColor: 'transparent' }}></div>
         <Tsparticles2 />
     </>)
 }
