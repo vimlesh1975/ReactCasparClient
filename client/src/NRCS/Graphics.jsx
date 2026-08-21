@@ -881,6 +881,7 @@ const Graphics = () => {
     document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
     window.Scrollfromtextfile = document.createElement('div');
     Scrollfromtextfile.style.position='absolute';
+    Scrollfromtextfile.style.top=0;
     Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
     Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
     document.body.appendChild(Scrollfromtextfile);
@@ -922,6 +923,7 @@ const Graphics = () => {
      document.getElementById('divid_${templateLayers.nrcsscroll}')?.remove();
      const Scrollfromtextfile = document.createElement('div');
      Scrollfromtextfile.style.position='absolute';
+     Scrollfromtextfile.style.top=0;
      Scrollfromtextfile.style.zIndex = '${templateLayers.nrcsscroll}';
      Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.nrcsscroll}');
      document.body.appendChild(Scrollfromtextfile);
@@ -958,6 +960,7 @@ const Graphics = () => {
      document.getElementById('divid_${templateLayers.urduScroll}')?.remove();
      const Scrollfromtextfile = document.createElement('div');
      Scrollfromtextfile.style.position='absolute';
+     Scrollfromtextfile.style.top=0;
      Scrollfromtextfile.style.zIndex = '${templateLayers.urduScroll}';
      Scrollfromtextfile.setAttribute('id','divid_' + '${templateLayers.urduScroll}');
      document.body.appendChild(Scrollfromtextfile);
@@ -1006,6 +1009,7 @@ const Graphics = () => {
     document.getElementById('divid_${templateLayers.nrcsBreakingNews}')?.remove();
     window.DateTimeSwitcher = document.createElement('div');
     DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.top=0;
     DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsBreakingNews}';
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsBreakingNews}');
     document.body.appendChild(DateTimeSwitcher);
@@ -1043,6 +1047,7 @@ const Graphics = () => {
     document.getElementById('divid_${templateLayers.nrcsNewsUpdate}')?.remove();
     window.DateTimeSwitcher = document.createElement('div');
     DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.top=0;
     DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsNewsUpdate}';
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsNewsUpdate}');
     document.body.appendChild(DateTimeSwitcher);
@@ -1084,6 +1089,7 @@ const Graphics = () => {
      document.getElementById('divid_${templateLayers.nrcsDateTimeSwitcher}')?.remove();
      window.DateTimeSwitcher = document.createElement('div');
      DateTimeSwitcher.style.position='absolute';
+     DateTimeSwitcher.style.top=0;
      DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsDateTimeSwitcher}';
      DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsDateTimeSwitcher}');
      document.body.appendChild(DateTimeSwitcher);
@@ -1123,6 +1129,7 @@ const Graphics = () => {
     document.getElementById('divid_${templateLayers.nrcsTwoliner}')?.remove();
     window.Twoliner = document.createElement('div');
     Twoliner.style.position='absolute';
+    Twoliner.style.top=0;
     Twoliner.style.zIndex = '${templateLayers.nrcsTwoliner}';
     Twoliner.setAttribute('id','divid_' + '${templateLayers.nrcsTwoliner}');
     document.body.appendChild(Twoliner);
@@ -1158,6 +1165,7 @@ const Graphics = () => {
     document.getElementById('divid_${templateLayers.nrcsFullPageBreakingNews}')?.remove();
     window.DateTimeSwitcher = document.createElement('div');
     DateTimeSwitcher.style.position='absolute';
+    DateTimeSwitcher.style.top=0;
     DateTimeSwitcher.style.zIndex = '${templateLayers.nrcsFullPageBreakingNews}';
     DateTimeSwitcher.setAttribute('id','divid_' + '${templateLayers.nrcsFullPageBreakingNews}');
     document.body.appendChild(DateTimeSwitcher);
