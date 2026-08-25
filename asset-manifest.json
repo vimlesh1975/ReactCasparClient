@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ReactCasparClient/static/css/main.d2dc9a78.css",
-    "main.js": "/ReactCasparClient/static/js/main.21e33d47.js",
+    "main.css": "/ReactCasparClient/static/css/main.a99619a2.css",
+    "main.js": "/ReactCasparClient/static/js/main.cebf6745.js",
     "static/js/425.577ab60d.chunk.js": "/ReactCasparClient/static/js/425.577ab60d.chunk.js",
     "static/media/yellow_news_update.gif": "/ReactCasparClient/static/media/yellow_news_update.36605a77a3fbb808b09c.gif",
     "static/media/red_breaking_news.gif": "/ReactCasparClient/static/media/red_breaking_news.8c3b204c182e41097be5.gif",
@@ -13,12 +13,12 @@
     "static/media/doordarshan-logo.png": "/ReactCasparClient/static/media/doordarshan-logo.1fdad45c54b9e0582998.png",
     "index.html": "/ReactCasparClient/index.html",
     "static/media/canvasBg.svg": "/ReactCasparClient/static/media/canvasBg.318f03422b7360431e95.svg",
-    "main.d2dc9a78.css.map": "/ReactCasparClient/static/css/main.d2dc9a78.css.map",
-    "main.21e33d47.js.map": "/ReactCasparClient/static/js/main.21e33d47.js.map",
+    "main.a99619a2.css.map": "/ReactCasparClient/static/css/main.a99619a2.css.map",
+    "main.cebf6745.js.map": "/ReactCasparClient/static/js/main.cebf6745.js.map",
     "425.577ab60d.chunk.js.map": "/ReactCasparClient/static/js/425.577ab60d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d2dc9a78.css",
-    "static/js/main.21e33d47.js"
+    "static/css/main.a99619a2.css",
+    "static/js/main.cebf6745.js"
   ]
 }
