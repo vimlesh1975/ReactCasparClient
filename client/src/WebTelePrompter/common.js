@@ -1,9 +1,4 @@
-export const fontLists = [
-    'Arial', 'Verdana', 'Helvetica', 'Tahoma', 'Trebuchet MS',
-    'Times New Roman', 'Georgia', 'Garamond',
-    'Courier New', 'Lucida Console',
-    'Segoe UI', 'Roboto', 'San Francisco', 'Ubuntu'
-]
+export { fontLists } from "../common.js";
 export const addressforwebteleprompter = window.location.origin.includes('https://vimlesh1975.github.io') ? 'https://octopus-app-gzws3.ondigitalocean.app' : 'https://localhost:9000';
 
 export const fixdata = {

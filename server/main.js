@@ -63,17 +63,45 @@ const {
   AMCP,
 } = require("casparcg-connection");
 
-const fontList = require("font-list");
-var myFontList;
+const defaultFonts = [
+  "Algerian", "Aparajita", "Arial", "Arial Black", "Arial Narrow", 
+  "Calibri", "Cambria", "Comic Sans MS", "Courier New", "Georgia", 
+  "Impact", "Segoe UI", "Tahoma", "Times New Roman", "Trebuchet MS", "Verdana"
+];
 
-fontList
-  .getFonts({ disableQuoting: true })
-  .then((fonts) => {
-    myFontList = fonts;
-  })
-  .catch((err) => {
-    // console.log(err)
+var myFontList = defaultFonts;
+
+const fontList = require("font-list");
+const fetchSystemFonts = () => {
+  return new Promise((resolve) => {
+    const cmd = `powershell -command "[System.Reflection.Assembly]::LoadWithPartialName('System.Drawing'); (New-Object System.Drawing.Text.InstalledFontCollection).Families | Select-Object -ExpandProperty Name"`;
+    exec(cmd, { maxBuffer: 1024 * 1024 * 10 }, (err, stdout) => {
+      if (!err && stdout) {
+        const fonts = stdout
+          .split(/\r?\n/)
+          .map((f) => f.trim())
+          .filter((f) => f.length > 0);
+        if (fonts.length > 0) {
+          myFontList = fonts;
+          console.log(`✅ Loaded ${myFontList.length} system fonts.`);
+          return resolve(myFontList);
+        }
+      }
+      fontList.getFonts({ disableQuoting: true })
+        .then((fonts) => {
+          if (fonts && fonts.length > 0) {
+            myFontList = fonts;
+            console.log(`✅ Loaded ${myFontList.length} system fonts via font-list.`);
+            return resolve(myFontList);
+          }
+          resolve(defaultFonts);
+        })
+        .catch(() => resolve(defaultFonts));
+    });
   });
+};
+
+fetchSystemFonts();
 
 app.use(express.json({ limit: "50mb" }));
 app.use(
@@ -399,9 +427,11 @@ app.post("/disconnect", (req, res) => {
   res.end();
 });
 
-app.post("/getfonts", (req, res) => {
-  res.send(myFontList);
-  res.end();
+app.post("/getfonts", async (req, res) => {
+  if (!myFontList || myFontList.length === 0) {
+    await fetchSystemFonts();
+  }
+  res.json(myFontList && myFontList.length > 0 ? myFontList : defaultFonts);
 });
 
 app.post("/getmedia", (req, res) => {

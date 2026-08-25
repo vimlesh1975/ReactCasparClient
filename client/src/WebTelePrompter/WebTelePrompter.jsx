@@ -2,6 +2,8 @@
 // import './page1.css'
 
 import { fontLists, fixdata, addressforwebteleprompter } from "./common.js";
+import { address1 } from "../common.js";
+import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import NewWindow from "./components/NewWindow";
@@ -86,21 +88,24 @@ export default function Home() {
     fontSize: parseInt(fontSize * 2.5),
     lineHeight: `${Math.floor(fontSize * 1.5 * 2.5)}px`,
   }), [newPosition, fontSize]);
-
   useEffect(() => {
     fetch(`${addressforwebteleprompter}/getlocalip`)
       .then(res => res.json())
       .then(data => {
         setIp(data.ip);
-        if (!window.location.origin.includes('https://vimlesh1975.github.io/')) {
-          fetch(`https://${data.ip}:9000/getfonts`, {
-            method: 'POST',
-          })
-            .then((res) => res.json())
-            .then((data) => setFontList(data))
-            .catch((err) => console.error(err));
-        }
       })
+      .catch((err) => console.error("Error fetching local IP:", err));
+
+    if (!window.location.origin.includes('https://vimlesh1975.github.io')) {
+      axios
+        .post(address1 + "/getfonts")
+        .then((res) => {
+          if (Array.isArray(res.data) && res.data.length > 0) {
+            setFontList(res.data);
+          }
+        })
+        .catch((err) => console.error("Error fetching fonts in WebTelePrompter:", err));
+    }
   }, [])
 
   useEffect(() => {

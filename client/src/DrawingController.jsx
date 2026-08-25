@@ -2564,7 +2564,9 @@ var timer = setInterval(function() {
       axios
         .post(address1 + "/getfonts")
         .then((aa) => {
-          setFontList(aa.data);
+          if (Array.isArray(aa.data) && aa.data.length > 0) {
+            setFontList(aa.data);
+          }
         })
         .catch((aa) => {
           // console.log("Error", aa);
