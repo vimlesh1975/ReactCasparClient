@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { saveFile, saveFilecsv, templateLayers, stopGraphics, updateGraphics, startGraphics, playtoGsapCaspar, stopGsapLayer } from '../common'
-import Papa from "papaparse";
+import { useSelector, useDispatch } from 'react-redux';
+import { templateLayers, stopGraphics, updateGraphics, startGraphics, playtoGsapCaspar, stopGsapLayer } from '../common';
 import * as fabric from 'fabric';
 import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
