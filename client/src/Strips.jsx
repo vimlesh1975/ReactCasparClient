@@ -1499,8 +1499,309 @@ const Strips = () => {
         addGroupToCanvas([barBg, botLaser, neonBadge, liveText, titleText]);
     };
 
+    // 28. Luxury Royal Gold Lower Third
+    const addLuxuryGoldStrip = () => {
+        const bg = new fabric.Rect({
+            left: 120,
+            top: 860,
+            width: 1250,
+            height: 120,
+            fill: '#0a0d14',
+            rx: 4,
+            ry: 4,
+            stroke: '#d4af37',
+            strokeWidth: 2,
+            shadow: { color: 'rgba(212, 175, 55, 0.3)', blur: 20, offsetX: 0, offsetY: 0 },
+        });
+
+        const innerGoldBorder = new fabric.Rect({
+            left: 126,
+            top: 866,
+            width: 1238,
+            height: 108,
+            fill: 'transparent',
+            stroke: 'rgba(212, 175, 55, 0.4)',
+            strokeWidth: 1,
+        });
+
+        const goldBadge = new fabric.Rect({
+            left: 120,
+            top: 860,
+            width: 140,
+            height: 120,
+            fill: 'linear-gradient(135deg, #d4af37, #aa7c11)',
+            rx: 4,
+            ry: 4,
+        });
+
+        const goldIcon = new fabric.IText('👑\nGALA', {
+            left: 165,
+            top: 885,
+            fontSize: 26,
+            fontWeight: 'bold',
+            fill: '#000000',
+            textAlign: 'center',
+            fontFamily: 'Georgia, serif',
+        });
+
+        const nameText = new fabric.IText('HER EXCELLENCY AMBASSADOR', {
+            left: 285,
+            top: 880,
+            fontSize: 36,
+            fontWeight: 'bold',
+            fill: '#fef08a',
+            fontFamily: 'Georgia, serif',
+        });
+
+        const subText = new fabric.IText('Keynote Speaker | Global International Summit 2026', {
+            left: 288,
+            top: 932,
+            fontSize: 22,
+            fill: '#d4af37',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([bg, innerGoldBorder, goldBadge, goldIcon, nameText, subText]);
+    };
+
+    // 29. Esports Cyberpunk HUD Strip
+    const addEsportsHudStrip = () => {
+        const bg = new fabric.Polygon([
+            { x: 80, y: 870 },
+            { x: 1250, y: 870 },
+            { x: 1200, y: 980 },
+            { x: 40, y: 980 }
+        ], {
+            fill: '#090d16',
+            stroke: '#06b6d4',
+            strokeWidth: 2,
+            shadow: { color: '#06b6d4', blur: 20, offsetX: 0, offsetY: 0 },
+        });
+
+        const topHazardLine = new fabric.Polygon([
+            { x: 80, y: 870 },
+            { x: 1250, y: 870 },
+            { x: 1230, y: 878 },
+            { x: 60, y: 878 }
+        ], {
+            fill: '#facc15',
+        });
+
+        const rankBadge = new fabric.Rect({
+            left: 100,
+            top: 890,
+            width: 140,
+            height: 38,
+            fill: '#06b6d4',
+            rx: 4,
+            ry: 4,
+        });
+
+        const rankText = new fabric.IText('LVL 99 PRO', {
+            left: 122,
+            top: 898,
+            fontSize: 20,
+            fontWeight: 'bold',
+            fill: '#000000',
+            fontFamily: 'Impact, sans-serif',
+        });
+
+        const gamerTag = new fabric.IText('SHADOW_STRIKER // TEAM VALOR', {
+            left: 260,
+            top: 892,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Impact, sans-serif',
+        });
+
+        const statText = new fabric.IText('K/D RATIO: 4.85 | WIN STREAK: 14 | MVP MATCH SCORE: 9,450', {
+            left: 105,
+            top: 940,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#facc15',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([bg, topHazardLine, rankBadge, rankText, gamerTag, statText]);
+    };
+
+    // 30. Cinematic 2.39:1 Letterbox Strip
+    const addCinematicLetterboxStrip = () => {
+        const bg = new fabric.Rect({
+            left: 150,
+            top: 875,
+            width: 1100,
+            height: 95,
+            fill: 'rgba(0, 0, 0, 0.88)',
+            stroke: 'rgba(255, 255, 255, 0.4)',
+            strokeWidth: 1,
+        });
+
+        const chapterBox = new fabric.Rect({
+            left: 150,
+            top: 875,
+            width: 100,
+            height: 95,
+            fill: '#ffffff',
+        });
+
+        const chapterText = new fabric.IText('ACT\nIII', {
+            left: 178,
+            top: 895,
+            fontSize: 24,
+            fontWeight: 'bold',
+            fill: '#000000',
+            textAlign: 'center',
+            fontFamily: 'Georgia, serif',
+        });
+
+        const titleText = new fabric.IText('THE FINAL HORIZON', {
+            left: 275,
+            top: 890,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            letterSpacing: 4,
+            fontFamily: 'Georgia, serif',
+        });
+
+        const creditText = new fabric.IText('Directed & Produced for Global Feature Broadcast Release', {
+            left: 278,
+            top: 935,
+            fontSize: 20,
+            fill: '#94a3b8',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([bg, chapterBox, chapterText, titleText, creditText]);
+    };
+
+    // 31. Live Analytics 4-KPI Horizontal Data Strip
+    const addLiveAnalyticsKpiStrip = () => {
+        const fullBar = new fabric.Rect({
+            left: 0,
+            top: 980,
+            width: 1920,
+            height: 100,
+            fill: '#0b1120',
+            stroke: 'rgba(56, 189, 248, 0.4)',
+            strokeWidth: 1.5,
+        });
+
+        const topCyanLine = new fabric.Rect({
+            left: 0,
+            top: 980,
+            width: 1920,
+            height: 4,
+            fill: '#0284c7',
+        });
+
+        const kpi1 = new fabric.IText('👥 2.45M\nLive Viewers', {
+            left: 80,
+            top: 998,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#38bdf8',
+            textAlign: 'center',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const kpi2 = new fabric.IText('💬 89,400\nComments / Min', {
+            left: 560,
+            top: 998,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#4ade80',
+            textAlign: 'center',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const kpi3 = new fabric.IText('📊 94.2%\nAudience Rating', {
+            left: 1060,
+            top: 998,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#facc15',
+            textAlign: 'center',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const kpi4 = new fabric.IText('🔥 #1 TRENDING\nGlobal Broadcast', {
+            left: 1540,
+            top: 998,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#f43f5e',
+            textAlign: 'center',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([fullBar, topCyanLine, kpi1, kpi2, kpi3, kpi4]);
+    };
+
+    // 32. Swiss Minimalist Editorial Plate
+    const addSwissMinimalistStrip = () => {
+        const bg = new fabric.Rect({
+            left: 120,
+            top: 865,
+            width: 1100,
+            height: 110,
+            fill: '#ffffff',
+            rx: 2,
+            ry: 2,
+            shadow: { color: 'rgba(0,0,0,0.25)', blur: 25, offsetX: 0, offsetY: 8 },
+        });
+
+        const blackAccent = new fabric.Rect({
+            left: 120,
+            top: 865,
+            width: 14,
+            height: 110,
+            fill: '#000000',
+        });
+
+        const redTag = new fabric.Rect({
+            left: 150,
+            top: 880,
+            width: 95,
+            height: 26,
+            fill: '#ef4444',
+        });
+
+        const tagText = new fabric.IText('SPECIAL', {
+            left: 165,
+            top: 885,
+            fontSize: 16,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+        });
+
+        const nameText = new fabric.IText('EDITORIAL MASTER SERIES', {
+            left: 260,
+            top: 880,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#000000',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+        });
+
+        const subText = new fabric.IText('Clean Swiss Typography Layout for High-End Production', {
+            left: 152,
+            top: 932,
+            fontSize: 22,
+            fill: '#475569',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+        });
+
+        addGroupToCanvas([bg, blackAccent, redTag, tagText, nameText, subText]);
+    };
+
     const [selectedGlassIndex, setSelectedGlassIndex] = useState(0);
     const [selectedNeonIndex, setSelectedNeonIndex] = useState(0);
+    const [selectedLuxuryIndex, setSelectedLuxuryIndex] = useState(0);
     const [selectedBroadcastIndex, setSelectedBroadcastIndex] = useState(0);
 
     const glassOptions = [
@@ -1518,6 +1819,14 @@ const Strips = () => {
         { title: '🟩 Matrix Emerald Neon Ticker', desc: 'Full-width dark ticker with glowing lime laser lines', action: addMatrixEmeraldTickerStrip },
         { title: '💜 Synthwave Neon Angled Strip', desc: 'Angled synthwave banner with electric violet & cyan glow', action: addSynthwaveAngledNeonStrip },
         { title: '🔝 Neon Top Laser Header', desc: 'Full-width top header with pulsating cyan laser beam', action: addNeonTopLaserHeader },
+    ];
+
+    const luxuryOptions = [
+        { title: '👑 Luxury Royal Gold Strip', desc: 'Obsidian & metallic gold dual frame with royal badge', action: addLuxuryGoldStrip },
+        { title: '🎮 Esports Cyberpunk HUD', desc: 'Angled cyber HUD with player tag, level & live K/D stats', action: addEsportsHudStrip },
+        { title: '🎬 Cinematic 2.39:1 Letterbox', desc: 'Wide cinema-grade banner with Act chapter badge', action: addCinematicLetterboxStrip },
+        { title: '📊 4-KPI Live Analytics Strip', desc: 'Full-width ticker with Viewers, Rating & Trending metrics', action: addLiveAnalyticsKpiStrip },
+        { title: '📰 Swiss Minimalist Editorial', desc: 'High-contrast black & white Swiss typography layout', action: addSwissMinimalistStrip },
     ];
 
     const broadcastOptions = [
@@ -1551,6 +1860,12 @@ const Strips = () => {
         }
     };
 
+    const handleAddLuxury = () => {
+        if (luxuryOptions[selectedLuxuryIndex]) {
+            luxuryOptions[selectedLuxuryIndex].action();
+        }
+    };
+
     const handleAddBroadcast = () => {
         if (broadcastOptions[selectedBroadcastIndex]) {
             broadcastOptions[selectedBroadcastIndex].action();
@@ -1558,10 +1873,10 @@ const Strips = () => {
     };
 
     return (
-        <div style={{ padding: 15, fontFamily: 'sans-serif', maxWidth: 980 }}>
+        <div style={{ padding: 15, fontFamily: 'sans-serif', maxWidth: 990 }}>
             <h3 style={{ margin: '0 0 8px 0' }}>Broadcast Graphic Strips Library</h3>
             <p style={{ margin: '0 0 16px 0', fontSize: 13, color: '#666' }}>
-                Select a strip from <b>Glass Strips</b>, <b>Neon Light Strips</b>, or <b>Standard Broadcast Strips</b> below and click <b>Add</b> to place it onto the graphics canvas.
+                Select a strip style from any category below and click <b>Add</b> to place it onto the graphics canvas.
             </p>
 
             {/* 1. Glass Strips Row */}
@@ -1576,7 +1891,7 @@ const Strips = () => {
                 border: '1px solid #7dd3fc',
                 flexWrap: 'wrap'
             }}>
-                <label style={{ fontWeight: 700, fontSize: 14, color: '#0369a1', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#0369a1', minWidth: 140, display: 'flex', alignItems: 'center', gap: 6 }}>
                     💎 Glass Strips:
                 </label>
 
@@ -1639,7 +1954,7 @@ const Strips = () => {
                 boxShadow: '0 0 12px rgba(255, 0, 127, 0.2)',
                 flexWrap: 'wrap'
             }}>
-                <label style={{ fontWeight: 700, fontSize: 14, color: '#ff007f', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#ff007f', minWidth: 140, display: 'flex', alignItems: 'center', gap: 6 }}>
                     ⚡ Neon Strips:
                 </label>
 
@@ -1690,7 +2005,69 @@ const Strips = () => {
                 </span>
             </div>
 
-            {/* 3. Broadcast Strips Row */}
+            {/* 3. Luxury, 3D & Esports Row */}
+            <div style={{
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                marginBottom: 12,
+                padding: '12px 16px',
+                background: 'linear-gradient(135deg, rgba(254, 243, 199, 0.8), rgba(253, 230, 138, 0.5))',
+                borderRadius: 8,
+                border: '1px solid #d97706',
+                flexWrap: 'wrap'
+            }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#b45309', minWidth: 140, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    👑 Luxury & Esports:
+                </label>
+
+                <select
+                    value={selectedLuxuryIndex}
+                    onChange={e => setSelectedLuxuryIndex(parseInt(e.target.value))}
+                    style={{
+                        padding: '8px 12px',
+                        fontSize: 14,
+                        borderRadius: 6,
+                        border: '1px solid #d97706',
+                        minWidth: 320,
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        backgroundColor: '#ffffff',
+                    }}
+                >
+                    {luxuryOptions.map((opt, idx) => (
+                        <option key={idx} value={idx}>
+                            {opt.title}
+                        </option>
+                    ))}
+                </select>
+
+                <button
+                    onClick={handleAddLuxury}
+                    style={{
+                        padding: '8px 18px',
+                        background: 'linear-gradient(135deg, #d97706, #b45309)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: 6,
+                        fontWeight: 700,
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        boxShadow: '0 2px 4px rgba(217,119,6,0.3)',
+                    }}
+                >
+                    <FaPlus /> Add Luxury Strip
+                </button>
+
+                <span style={{ fontSize: 12, color: '#b45309', fontStyle: 'italic' }}>
+                    ({luxuryOptions[selectedLuxuryIndex]?.desc})
+                </span>
+            </div>
+
+            {/* 4. Broadcast Strips Row */}
             <div style={{
                 display: 'flex',
                 gap: 12,
@@ -1702,7 +2079,7 @@ const Strips = () => {
                 border: '1px solid #cbd5e1',
                 flexWrap: 'wrap'
             }}>
-                <label style={{ fontWeight: 700, fontSize: 14, color: '#334155', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#334155', minWidth: 140, display: 'flex', alignItems: 'center', gap: 6 }}>
                     📺 Regular Strips:
                 </label>
 
@@ -1752,7 +2129,7 @@ const Strips = () => {
                 </span>
             </div>
 
-            {/* 3. Color Controls Bar */}
+            {/* 5. Color Controls Bar */}
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '10px 14px', background: '#f8fafc', borderRadius: 6, border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
                 <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
                     <FaPalette /> Colors:
@@ -1788,6 +2165,7 @@ const Strips = () => {
 };
 
 export default Strips;
+
 
 
 
