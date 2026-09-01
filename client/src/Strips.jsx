@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import * as fabric from 'fabric';
 import { useSelector } from 'react-redux';
 import { generateUniqueId, shadowOptions } from './common';
-import { FaPlus, FaTrash, FaPalette } from "react-icons/fa";
+import { FaPlus, FaPalette } from "react-icons/fa";
 
 const Strips = () => {
     const canvas = useSelector(state => state.canvasReducer.canvas);
 
     const [primaryColor, setPrimaryColor] = useState('#00d2ff');
     const [secondaryColor, setSecondaryColor] = useState('#ff007f');
-    const [bgColor, setBgColor] = useState('rgba(15, 23, 42, 0.88)');
+    const [bgColor, setBgColor] = useState('#0f172a');
     const [textColor, setTextColor] = useState('#ffffff');
     const [accentColor, setAccentColor] = useState('#facc15');
 
@@ -970,6 +970,11 @@ const Strips = () => {
                 </label>
 
                 <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+                    Background:
+                    <input type="color" value={bgColor.startsWith('#') ? bgColor : '#0f172a'} onChange={e => setBgColor(e.target.value)} style={{ cursor: 'pointer' }} />
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
                     Sub-text:
                     <input type="color" value={accentColor} onChange={e => setAccentColor(e.target.value)} style={{ cursor: 'pointer' }} />
                 </label>
@@ -984,5 +989,6 @@ const Strips = () => {
 };
 
 export default Strips;
+
 
 
