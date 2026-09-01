@@ -1,12 +1,13 @@
 import React from 'react'
-import { endpoint, templateLayers, executeScript, stopGraphics } from '../common'
+import { endpoint, templateLayers, executeScript, stopGraphics, clieentPublicFolder } from '../common'
 
 const GenerativeArts = () => {
     const sendcode = (layerNumber) => {
-        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+        endpoint(`play ${window.chNumber}-${layerNumber} [HTML] ${clieentPublicFolder()}/xyz.html`);
         const script = `
         const gadiv=document.createElement('div');
         gadiv.style.position='absolute';
+        gadiv.style.top=0;
         gadiv.setAttribute('id','divid_' + '${layerNumber}');
         gadiv.style.zIndex = ${-layerNumber};
         document.body.appendChild(gadiv);
@@ -217,7 +218,7 @@ const GenerativeArts = () => {
         executeScript(script); //for html
 
         setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] ${clieentPublicFolder()}/xyz.html`);
         }, 250);
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
