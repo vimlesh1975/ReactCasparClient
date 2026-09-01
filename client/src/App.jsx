@@ -24,7 +24,7 @@ import Scroll from "./Scroll.jsx";
 import { videoLayers } from "./common.js";
 import Shapes from "./Shapes.jsx";
 import Games from "./Games/Games.jsx";
-import Charts from "./Charts.jsx";
+import Strips from "./Strips.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { FaPlay, FaStop } from "react-icons/fa";
 import TimeLine1 from "./TimeLine1.jsx";
@@ -498,7 +498,7 @@ const App = () => {
               <Tab className="tabHidden">Scroll</Tab>
               <Tab>Shapes</Tab>
               <Tab className="tabHidden">Games</Tab>
-              <Tab className="tabHidden">Charts</Tab>
+              <Tab>Strips</Tab>
               <Tab className="tabHidden">Path Modifier</Tab>
               <Tab className="tabHidden">Effects</Tab>
               <Tab>Crop</Tab>
@@ -588,7 +588,7 @@ const App = () => {
               <Games />
             </TabPanel>
             <TabPanel>
-              <Charts />
+              <Strips />
             </TabPanel>
 
             <TabPanel>
