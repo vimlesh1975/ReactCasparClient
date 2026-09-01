@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as fabric from 'fabric';
-import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript, templateLayers } from '../common'
+import { endpoint, tempAlert, stopGraphics, updateGraphics, executeScript, templateLayers, clieentPublicFolder } from '../common'
 import { v4 as uuidv4 } from 'uuid';
 import { FaPlay, FaStop } from "react-icons/fa";
 import { VscTrash } from "react-icons/vsc";
@@ -117,26 +117,41 @@ const CustomClient = () => {
 
         endpoint(`mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`)
         setTimeout(() => {
-            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] xyz.html`);
+            endpoint(`play ${window.chNumber}-${layerNumber} [HTML] ${clieentPublicFolder()}/xyz.html`);
         }, 250);
 
-        const script = `
+        const scriptforhtml = `
         var aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.style.top=0;
         aa.setAttribute('id','divid_' + '${layerNumber}');
         aa.style.zIndex = ${layerNumber};
-        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"')}\`;
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"').replaceAll("`", "\\`").replaceAll("$", "\\$")}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
         document.body.style.padding='0';
         aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         `
-        executeScript(script);
+        executeScript(scriptforhtml);
+
+        const scriptforcaspar = `
+        var aa = document.createElement('div');
+        aa.style.position='absolute';
+        aa.style.top=0;
+        aa.setAttribute('id','divid_' + '${layerNumber}');
+        aa.style.zIndex = ${layerNumber};
+        aa.innerHTML=\`${(canvas.toSVG(['id', 'class', 'selectable'])).replaceAll('"', '\\"').replaceAll("`", "\\`").replaceAll("$", "\\\\$")}\`;
+        document.body.appendChild(aa);
+        document.body.style.margin='0';
+        document.body.style.padding='0';
+        aa.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        `
 
         setTimeout(() => {
             endpoint(`call ${window.chNumber}-${layerNumber} "
-            ${script}
+            ${scriptforcaspar}
     "`)
         }, 300);
         setTimeout(() => {
