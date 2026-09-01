@@ -870,9 +870,657 @@ const Strips = () => {
         addGroupToCanvas([bg, clockBg, clockText, eventTitle, eventSub]);
     };
 
-    const [selectedStripIndex, setSelectedStripIndex] = useState(0);
+    // 17. Frosted Glass - Sleek Lower Third
+    const addFrostedGlassLowerThird = () => {
+        const glassBg = new fabric.Rect({
+            left: 100,
+            top: 860,
+            width: 1250,
+            height: 120,
+            fill: '#ffffff',
+            opacity: 0.12,
+            rx: 16,
+            ry: 16,
+            stroke: 'rgba(255, 255, 255, 0.55)',
+            strokeWidth: 2,
+        });
 
-    const stripOptions = [
+        const sheen = new fabric.Rect({
+            left: 102,
+            top: 862,
+            width: 1246,
+            height: 48,
+            fill: '#ffffff',
+            opacity: 0.16,
+            rx: 14,
+            ry: 14,
+        });
+
+        const accentPill = new fabric.Rect({
+            left: 115,
+            top: 875,
+            width: 12,
+            height: 90,
+            fill: primaryColor,
+            rx: 6,
+            ry: 6,
+        });
+
+        const nameText = new fabric.IText('FROSTED GLASS LOWER THIRD', {
+            left: 145,
+            top: 878,
+            fontSize: 38,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Ultra-Modern Translucent Broadcast Plate with Gloss Highlight', {
+            left: 147,
+            top: 930,
+            fontSize: 22,
+            fill: accentColor,
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([glassBg, sheen, accentPill, nameText, subText]);
+    };
+
+    // 18. Glassmorphic Dual Floating Pods
+    const addGlassDualPods = () => {
+        const namePod = new fabric.Rect({
+            left: 120,
+            top: 820,
+            width: 680,
+            height: 65,
+            fill: '#ffffff',
+            opacity: 0.15,
+            rx: 14,
+            ry: 14,
+            stroke: 'rgba(255, 255, 255, 0.6)',
+            strokeWidth: 2,
+        });
+
+        const nameSheen = new fabric.Rect({
+            left: 122,
+            top: 822,
+            width: 676,
+            height: 28,
+            fill: '#ffffff',
+            opacity: 0.2,
+            rx: 12,
+            ry: 12,
+        });
+
+        const nameText = new fabric.IText('VIMLESH KUMAR', {
+            left: 150,
+            top: 832,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const slugPod = new fabric.Rect({
+            left: 120,
+            top: 895,
+            width: 980,
+            height: 55,
+            fill: bgColor,
+            opacity: 0.55,
+            rx: 12,
+            ry: 12,
+            stroke: 'rgba(255, 255, 255, 0.35)',
+            strokeWidth: 1.5,
+        });
+
+        const slugText = new fabric.IText('Senior Broadcast Playout Engineer | Live Headquarters', {
+            left: 150,
+            top: 906,
+            fontSize: 24,
+            fill: primaryColor,
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([namePod, nameSheen, nameText, slugPod, slugText]);
+    };
+
+    // 19. Prism Glass Angled Parallelogram Lower Third
+    const addPrismGlassStrip = () => {
+        const poly = new fabric.Polygon([
+            { x: 100, y: 870 },
+            { x: 1320, y: 870 },
+            { x: 1250, y: 985 },
+            { x: 30, y: 985 }
+        ], {
+            fill: '#ffffff',
+            opacity: 0.12,
+            stroke: 'rgba(255, 255, 255, 0.55)',
+            strokeWidth: 2,
+        });
+
+        const topEdge = new fabric.Polygon([
+            { x: 100, y: 870 },
+            { x: 1320, y: 870 },
+            { x: 1290, y: 915 },
+            { x: 70, y: 915 }
+        ], {
+            fill: '#ffffff',
+            opacity: 0.18,
+        });
+
+        const leftPrism = new fabric.Polygon([
+            { x: 30, y: 985 },
+            { x: 100, y: 870 },
+            { x: 140, y: 870 },
+            { x: 70, y: 985 }
+        ], {
+            fill: primaryColor,
+        });
+
+        const titleText = new fabric.IText('PRISM GLASS BROADCAST STRIP', {
+            left: 160,
+            top: 885,
+            fontSize: 36,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Angled Frosted Glass with Crystal Clear Edge Highlights', {
+            left: 162,
+            top: 938,
+            fontSize: 22,
+            fill: secondaryColor,
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([poly, topEdge, leftPrism, titleText, subText]);
+    };
+
+    // 20. Frosted Glass Top Header Bar
+    const addFrostedTopHeader = () => {
+        const barBg = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: 1920,
+            height: 75,
+            fill: bgColor,
+            opacity: 0.6,
+            stroke: 'rgba(255, 255, 255, 0.3)',
+            strokeWidth: 1.5,
+        });
+
+        const sheen = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: 1920,
+            height: 32,
+            fill: '#ffffff',
+            opacity: 0.15,
+        });
+
+        const bottomGlow = new fabric.Rect({
+            left: 0,
+            top: 71,
+            width: 1920,
+            height: 4,
+            fill: primaryColor,
+        });
+
+        const glassBadge = new fabric.Rect({
+            left: 40,
+            top: 14,
+            width: 120,
+            height: 44,
+            fill: '#dc2626',
+            opacity: 0.85,
+            rx: 22,
+            ry: 22,
+            stroke: 'rgba(255, 255, 255, 0.5)',
+            strokeWidth: 1.5,
+        });
+
+        const liveText = new fabric.IText('● LIVE', {
+            left: 68,
+            top: 23,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const titleText = new fabric.IText('GLOBAL NEWS HEADLINES | FROSTED GLASS PLAYOUT', {
+            left: 185,
+            top: 22,
+            fontSize: 26,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([barBg, sheen, bottomGlow, glassBadge, liveText, titleText]);
+    };
+
+    // 21. Glassmorphic Breaking News Banner
+    const addGlassBreakingNews = () => {
+        const fullBar = new fabric.Rect({
+            left: 0,
+            top: 975,
+            width: 1920,
+            height: 105,
+            fill: bgColor,
+            opacity: 0.7,
+            stroke: 'rgba(255, 255, 255, 0.35)',
+            strokeWidth: 2,
+        });
+
+        const glassSheen = new fabric.Rect({
+            left: 0,
+            top: 975,
+            width: 1920,
+            height: 45,
+            fill: '#ffffff',
+            opacity: 0.15,
+        });
+
+        const topStripe = new fabric.Rect({
+            left: 0,
+            top: 975,
+            width: 1920,
+            height: 5,
+            fill: '#f59e0b',
+        });
+
+        const redGlassBadge = new fabric.Rect({
+            left: 0,
+            top: 975,
+            width: 360,
+            height: 105,
+            fill: '#dc2626',
+            opacity: 0.88,
+            stroke: 'rgba(255, 255, 255, 0.5)',
+            strokeWidth: 2,
+        });
+
+        const badgeText = new fabric.IText('⚡ BREAKING', {
+            left: 45,
+            top: 1010,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const tickerText = new fabric.IText('FROSTED GLASS BROADCAST TICKER: Ultra modern transparent graphics running live on CasparCG channels...', {
+            left: 390,
+            top: 1012,
+            fontSize: 28,
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([fullBar, glassSheen, topStripe, redGlassBadge, badgeText, tickerText]);
+    };
+
+    // 22. Glass Capsule Pill Lower Third
+    const addGlassPillBadge = () => {
+        const pillBg = new fabric.Rect({
+            left: 120,
+            top: 875,
+            width: 1150,
+            height: 95,
+            fill: '#ffffff',
+            opacity: 0.14,
+            rx: 48,
+            ry: 48,
+            stroke: 'rgba(255, 255, 255, 0.55)',
+            strokeWidth: 2,
+        });
+
+        const pillSheen = new fabric.Rect({
+            left: 124,
+            top: 878,
+            width: 1142,
+            height: 42,
+            fill: '#ffffff',
+            opacity: 0.2,
+            rx: 40,
+            ry: 40,
+        });
+
+        const glassIconCircle = new fabric.Circle({
+            left: 135,
+            top: 887,
+            radius: 35,
+            fill: primaryColor,
+            opacity: 0.85,
+            stroke: 'rgba(255, 255, 255, 0.6)',
+            strokeWidth: 2,
+        });
+
+        const iconText = new fabric.IText('💎', {
+            left: 153,
+            top: 896,
+            fontSize: 36,
+        });
+
+        const titleText = new fabric.IText('FROSTED GLASS FLOATING CAPSULE', {
+            left: 230,
+            top: 892,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Translucent Curved Border with Glow Accents', {
+            left: 232,
+            top: 935,
+            fontSize: 20,
+            fill: accentColor,
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([pillBg, pillSheen, glassIconCircle, iconText, titleText, subText]);
+    };
+
+    // 23. Cyber Neon Dual-Laser Lower Third
+    const addCyberNeonLaserStrip = () => {
+        const bg = new fabric.Rect({
+            left: 100,
+            top: 865,
+            width: 1250,
+            height: 115,
+            fill: 'rgba(8, 12, 28, 0.94)',
+            rx: 6,
+            ry: 6,
+            stroke: 'rgba(0, 243, 255, 0.4)',
+            strokeWidth: 1.5,
+        });
+
+        // Top Cyan Laser Tube with Glow
+        const topLaser = new fabric.Rect({
+            left: 100,
+            top: 865,
+            width: 1250,
+            height: 4,
+            fill: '#00f3ff',
+            shadow: { color: '#00f3ff', blur: 15, offsetX: 0, offsetY: 0 },
+        });
+
+        // Bottom Magenta Laser Tube with Glow
+        const botLaser = new fabric.Rect({
+            left: 100,
+            top: 976,
+            width: 1250,
+            height: 4,
+            fill: '#ff007f',
+            shadow: { color: '#ff007f', blur: 15, offsetX: 0, offsetY: 0 },
+        });
+
+        // Left Neon Block
+        const leftNeonPillar = new fabric.Rect({
+            left: 100,
+            top: 865,
+            width: 14,
+            height: 115,
+            fill: '#00f3ff',
+            shadow: { color: '#00f3ff', blur: 20, offsetX: 0, offsetY: 0 },
+        });
+
+        const nameText = new fabric.IText('CYBER NEON LASER STRIP', {
+            left: 140,
+            top: 880,
+            fontSize: 38,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            shadow: { color: '#00f3ff', blur: 10, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Dual Laser Tubes with High-Intensity Glow Playout', {
+            left: 142,
+            top: 932,
+            fontSize: 22,
+            fill: '#ff007f',
+            shadow: { color: '#ff007f', blur: 8, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([bg, topLaser, botLaser, leftNeonPillar, nameText, subText]);
+    };
+
+    // 24. Tokyo Neon Underglow Lower Third
+    const addTokyoUnderglowStrip = () => {
+        const bg = new fabric.Rect({
+            left: 120,
+            top: 870,
+            width: 1200,
+            height: 110,
+            fill: '#05050d',
+            rx: 8,
+            ry: 8,
+            stroke: '#ff007f',
+            strokeWidth: 2,
+            shadow: { color: '#ff007f', blur: 30, offsetX: 0, offsetY: 8 },
+        });
+
+        const neonBadge = new fabric.Rect({
+            left: 140,
+            top: 885,
+            width: 110,
+            height: 34,
+            fill: '#ff007f',
+            rx: 4,
+            ry: 4,
+            shadow: { color: '#ff007f', blur: 15, offsetX: 0, offsetY: 0 },
+        });
+
+        const badgeText = new fabric.IText('LIVE', {
+            left: 172,
+            top: 890,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const nameText = new fabric.IText('TOKYO NEON UNDERGLOW', {
+            left: 270,
+            top: 885,
+            fontSize: 34,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Electric Pink Atmospheric Glow with Cyber Accent Framing', {
+            left: 142,
+            top: 935,
+            fontSize: 22,
+            fill: '#38bdf8',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([bg, neonBadge, badgeText, nameText, subText]);
+    };
+
+    // 25. Matrix Emerald Neon Ticker Strip
+    const addMatrixEmeraldTickerStrip = () => {
+        const fullBar = new fabric.Rect({
+            left: 0,
+            top: 980,
+            width: 1920,
+            height: 100,
+            fill: 'rgba(3, 15, 8, 0.95)',
+            stroke: '#39ff14',
+            strokeWidth: 1.5,
+        });
+
+        const topLaser = new fabric.Rect({
+            left: 0,
+            top: 980,
+            width: 1920,
+            height: 4,
+            fill: '#39ff14',
+            shadow: { color: '#39ff14', blur: 20, offsetX: 0, offsetY: 0 },
+        });
+
+        const neonBadge = new fabric.Rect({
+            left: 0,
+            top: 980,
+            width: 320,
+            height: 100,
+            fill: '#15803d',
+            stroke: '#39ff14',
+            strokeWidth: 2,
+            shadow: { color: '#39ff14', blur: 15, offsetX: 0, offsetY: 0 },
+        });
+
+        const badgeText = new fabric.IText('⚡ MATRIX FEED', {
+            left: 35,
+            top: 1012,
+            fontSize: 32,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const tickerText = new fabric.IText('EMERALD NEON TICKER: Ultra-vivid green glowing broadcast telemetry streaming live across CasparCG channels...', {
+            left: 360,
+            top: 1014,
+            fontSize: 28,
+            fill: '#86efac',
+            shadow: { color: '#39ff14', blur: 8, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([fullBar, topLaser, neonBadge, badgeText, tickerText]);
+    };
+
+    // 26. Synthwave Angled Neon Parallelogram Strip
+    const addSynthwaveAngledNeonStrip = () => {
+        const poly = new fabric.Polygon([
+            { x: 100, y: 870 },
+            { x: 1320, y: 870 },
+            { x: 1250, y: 985 },
+            { x: 30, y: 985 }
+        ], {
+            fill: 'rgba(15, 8, 30, 0.95)',
+            stroke: '#b026ff',
+            strokeWidth: 2.5,
+            shadow: { color: '#b026ff', blur: 25, offsetX: 0, offsetY: 0 },
+        });
+
+        const leftLaserWing = new fabric.Polygon([
+            { x: 30, y: 985 },
+            { x: 100, y: 870 },
+            { x: 130, y: 870 },
+            { x: 60, y: 985 }
+        ], {
+            fill: '#00f3ff',
+            shadow: { color: '#00f3ff', blur: 15, offsetX: 0, offsetY: 0 },
+        });
+
+        const titleText = new fabric.IText('SYNTHWAVE NEON RETRO STRIP', {
+            left: 155,
+            top: 885,
+            fontSize: 36,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            shadow: { color: '#b026ff', blur: 12, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const subText = new fabric.IText('Electric Violet & Laser Cyan Dual Frequency Channel', {
+            left: 157,
+            top: 938,
+            fontSize: 22,
+            fill: '#00f3ff',
+            shadow: { color: '#00f3ff', blur: 8, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([poly, leftLaserWing, titleText, subText]);
+    };
+
+    // 27. Neon Top Laser Header Strip
+    const addNeonTopLaserHeader = () => {
+        const barBg = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: 1920,
+            height: 75,
+            fill: 'rgba(5, 8, 20, 0.95)',
+            stroke: 'rgba(0, 243, 255, 0.3)',
+            strokeWidth: 1,
+        });
+
+        const botLaser = new fabric.Rect({
+            left: 0,
+            top: 71,
+            width: 1920,
+            height: 4,
+            fill: '#00f3ff',
+            shadow: { color: '#00f3ff', blur: 20, offsetX: 0, offsetY: 0 },
+        });
+
+        const neonBadge = new fabric.Rect({
+            left: 40,
+            top: 15,
+            width: 120,
+            height: 42,
+            fill: 'rgba(255, 0, 127, 0.9)',
+            rx: 6,
+            ry: 6,
+            shadow: { color: '#ff007f', blur: 18, offsetX: 0, offsetY: 0 },
+        });
+
+        const liveText = new fabric.IText('⚡ LIVE', {
+            left: 65,
+            top: 22,
+            fontSize: 22,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        const titleText = new fabric.IText('NEON LASER BROADCAST NETWORK | HIGH-DEF PLAYOUT', {
+            left: 185,
+            top: 22,
+            fontSize: 26,
+            fontWeight: 'bold',
+            fill: '#ffffff',
+            shadow: { color: '#00f3ff', blur: 8, offsetX: 0, offsetY: 0 },
+            fontFamily: 'Cuprum, sans-serif',
+        });
+
+        addGroupToCanvas([barBg, botLaser, neonBadge, liveText, titleText]);
+    };
+
+    const [selectedGlassIndex, setSelectedGlassIndex] = useState(0);
+    const [selectedNeonIndex, setSelectedNeonIndex] = useState(0);
+    const [selectedBroadcastIndex, setSelectedBroadcastIndex] = useState(0);
+
+    const glassOptions = [
+        { title: '💎 Frosted Glass Lower Third', desc: 'Translucent glass plate with upper gloss sheen & accent pill', action: addFrostedGlassLowerThird },
+        { title: '🧊 Glassmorphic Dual Pods', desc: 'Dual floating frosted glass boxes for name & designation', action: addGlassDualPods },
+        { title: '✨ Prism Glass Angled Strip', desc: 'Angled frosted glass cutout with crystal edge highlights', action: addPrismGlassStrip },
+        { title: '🔝 Frosted Glass Top Header', desc: 'Full-width translucent top banner with glass LIVE badge', action: addFrostedTopHeader },
+        { title: '⚡ Glassmorphic Breaking News', desc: 'Frosted glass ticker with red acrylic breaking badge', action: addGlassBreakingNews },
+        { title: '💊 Glass Capsule Pill Strip', desc: 'Frosted rounded pill with floating cyan glass icon', action: addGlassPillBadge },
+    ];
+
+    const neonOptions = [
+        { title: '⚡ Cyber Neon Dual-Laser Strip', desc: 'Glowing Cyan & Magenta laser tubes with corner glow', action: addCyberNeonLaserStrip },
+        { title: '🏮 Tokyo Neon Underglow', desc: 'Intense Electric Pink underglow shadow with cyber framing', action: addTokyoUnderglowStrip },
+        { title: '🟩 Matrix Emerald Neon Ticker', desc: 'Full-width dark ticker with glowing lime laser lines', action: addMatrixEmeraldTickerStrip },
+        { title: '💜 Synthwave Neon Angled Strip', desc: 'Angled synthwave banner with electric violet & cyan glow', action: addSynthwaveAngledNeonStrip },
+        { title: '🔝 Neon Top Laser Header', desc: 'Full-width top header with pulsating cyan laser beam', action: addNeonTopLaserHeader },
+    ];
+
+    const broadcastOptions = [
         { title: '📺 Classic Lower Third', desc: 'Left accent bar with title & designation', action: addClassicLowerThird },
         { title: '🏷️ 2-Tier Split Lower Third', desc: 'Stacked name box and slug box', action: addDualTierLowerThird },
         { title: '⚡ Breaking News Ticker', desc: 'Full-width bottom banner with red badge', action: addBreakingNewsTicker },
@@ -891,28 +1539,179 @@ const Strips = () => {
         { title: '⏱️ Event Countdown Strip', desc: 'Clock countdown box with event headline', action: addEventCountdownStrip },
     ];
 
-    const handleAddSelected = () => {
-        if (stripOptions[selectedStripIndex]) {
-            stripOptions[selectedStripIndex].action();
+    const handleAddGlass = () => {
+        if (glassOptions[selectedGlassIndex]) {
+            glassOptions[selectedGlassIndex].action();
+        }
+    };
+
+    const handleAddNeon = () => {
+        if (neonOptions[selectedNeonIndex]) {
+            neonOptions[selectedNeonIndex].action();
+        }
+    };
+
+    const handleAddBroadcast = () => {
+        if (broadcastOptions[selectedBroadcastIndex]) {
+            broadcastOptions[selectedBroadcastIndex].action();
         }
     };
 
     return (
-        <div style={{ padding: 15, fontFamily: 'sans-serif', maxWidth: 900 }}>
-            <h3 style={{ margin: '0 0 10px 0' }}>Broadcast Graphic Strips Library</h3>
-            <p style={{ margin: '0 0 15px 0', fontSize: 13, color: '#666' }}>
-                Select any broadcast strip from the dropdown and click <b>Add to Canvas</b> to place it onto the graphics canvas.
+        <div style={{ padding: 15, fontFamily: 'sans-serif', maxWidth: 980 }}>
+            <h3 style={{ margin: '0 0 8px 0' }}>Broadcast Graphic Strips Library</h3>
+            <p style={{ margin: '0 0 16px 0', fontSize: 13, color: '#666' }}>
+                Select a strip from <b>Glass Strips</b>, <b>Neon Light Strips</b>, or <b>Standard Broadcast Strips</b> below and click <b>Add</b> to place it onto the graphics canvas.
             </p>
 
-            {/* Strip Selector & Add Action */}
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 15, padding: 12, background: '#f1f5f9', borderRadius: 8, border: '1px solid #cbd5e1', flexWrap: 'wrap' }}>
-                <label style={{ fontWeight: 600, fontSize: 14 }}>Select Strip:</label>
+            {/* 1. Glass Strips Row */}
+            <div style={{
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                marginBottom: 12,
+                padding: '12px 16px',
+                background: 'linear-gradient(135deg, rgba(240, 249, 255, 0.9), rgba(224, 242, 254, 0.6))',
+                borderRadius: 8,
+                border: '1px solid #7dd3fc',
+                flexWrap: 'wrap'
+            }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#0369a1', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    💎 Glass Strips:
+                </label>
+
                 <select
-                    value={selectedStripIndex}
-                    onChange={e => setSelectedStripIndex(parseInt(e.target.value))}
+                    value={selectedGlassIndex}
+                    onChange={e => setSelectedGlassIndex(parseInt(e.target.value))}
                     style={{
                         padding: '8px 12px',
-                        fontSize: 15,
+                        fontSize: 14,
+                        borderRadius: 6,
+                        border: '1px solid #38bdf8',
+                        minWidth: 320,
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        backgroundColor: '#ffffff',
+                    }}
+                >
+                    {glassOptions.map((opt, idx) => (
+                        <option key={idx} value={idx}>
+                            {opt.title}
+                        </option>
+                    ))}
+                </select>
+
+                <button
+                    onClick={handleAddGlass}
+                    style={{
+                        padding: '8px 18px',
+                        background: '#0284c7',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: 6,
+                        fontWeight: 700,
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        boxShadow: '0 2px 4px rgba(2,132,199,0.3)',
+                    }}
+                >
+                    <FaPlus /> Add Glass Strip
+                </button>
+
+                <span style={{ fontSize: 12, color: '#0369a1', fontStyle: 'italic' }}>
+                    ({glassOptions[selectedGlassIndex]?.desc})
+                </span>
+            </div>
+
+            {/* 2. Neon Light Strips Row */}
+            <div style={{
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                marginBottom: 12,
+                padding: '12px 16px',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 10, 40, 0.95))',
+                borderRadius: 8,
+                border: '1px solid #ff007f',
+                boxShadow: '0 0 12px rgba(255, 0, 127, 0.2)',
+                flexWrap: 'wrap'
+            }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#ff007f', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    ⚡ Neon Strips:
+                </label>
+
+                <select
+                    value={selectedNeonIndex}
+                    onChange={e => setSelectedNeonIndex(parseInt(e.target.value))}
+                    style={{
+                        padding: '8px 12px',
+                        fontSize: 14,
+                        borderRadius: 6,
+                        border: '1px solid #00f3ff',
+                        minWidth: 320,
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        backgroundColor: '#0f172a',
+                        color: '#00f3ff',
+                    }}
+                >
+                    {neonOptions.map((opt, idx) => (
+                        <option key={idx} value={idx}>
+                            {opt.title}
+                        </option>
+                    ))}
+                </select>
+
+                <button
+                    onClick={handleAddNeon}
+                    style={{
+                        padding: '8px 18px',
+                        background: 'linear-gradient(135deg, #ff007f, #b026ff)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: 6,
+                        fontWeight: 700,
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        boxShadow: '0 0 10px rgba(255,0,127,0.5)',
+                    }}
+                >
+                    <FaPlus /> Add Neon Strip
+                </button>
+
+                <span style={{ fontSize: 12, color: '#f472b6', fontStyle: 'italic' }}>
+                    ({neonOptions[selectedNeonIndex]?.desc})
+                </span>
+            </div>
+
+            {/* 3. Broadcast Strips Row */}
+            <div style={{
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                marginBottom: 16,
+                padding: '12px 16px',
+                background: '#f8fafc',
+                borderRadius: 8,
+                border: '1px solid #cbd5e1',
+                flexWrap: 'wrap'
+            }}>
+                <label style={{ fontWeight: 700, fontSize: 14, color: '#334155', minWidth: 120, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    📺 Regular Strips:
+                </label>
+
+                <select
+                    value={selectedBroadcastIndex}
+                    onChange={e => setSelectedBroadcastIndex(parseInt(e.target.value))}
+                    style={{
+                        padding: '8px 12px',
+                        fontSize: 14,
                         borderRadius: 6,
                         border: '1px solid #94a3b8',
                         minWidth: 320,
@@ -921,7 +1720,7 @@ const Strips = () => {
                         backgroundColor: '#ffffff',
                     }}
                 >
-                    {stripOptions.map((opt, idx) => (
+                    {broadcastOptions.map((opt, idx) => (
                         <option key={idx} value={idx}>
                             {opt.title}
                         </option>
@@ -929,32 +1728,32 @@ const Strips = () => {
                 </select>
 
                 <button
-                    onClick={handleAddSelected}
+                    onClick={handleAddBroadcast}
                     style={{
-                        padding: '9px 20px',
-                        background: '#2563eb',
+                        padding: '8px 18px',
+                        background: '#475569',
                         color: '#ffffff',
                         border: 'none',
                         borderRadius: 6,
                         fontWeight: 700,
-                        fontSize: 14,
+                        fontSize: 13,
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 8,
-                        boxShadow: '0 2px 4px rgba(37,99,235,0.3)',
+                        gap: 6,
+                        boxShadow: '0 2px 4px rgba(71,85,105,0.3)',
                     }}
                 >
-                    <FaPlus /> Add to Canvas
+                    <FaPlus /> Add Broadcast Strip
                 </button>
 
-                <span style={{ fontSize: 13, color: '#64748b', fontStyle: 'italic', marginLeft: 6 }}>
-                    ({stripOptions[selectedStripIndex]?.desc})
+                <span style={{ fontSize: 12, color: '#64748b', fontStyle: 'italic' }}>
+                    ({broadcastOptions[selectedBroadcastIndex]?.desc})
                 </span>
             </div>
 
-            {/* Color Controls */}
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: 10, background: '#f8fafc', borderRadius: 6, border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
+            {/* 3. Color Controls Bar */}
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '10px 14px', background: '#f8fafc', borderRadius: 6, border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
                 <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
                     <FaPalette /> Colors:
                 </span>
@@ -989,6 +1788,7 @@ const Strips = () => {
 };
 
 export default Strips;
+
 
 
 

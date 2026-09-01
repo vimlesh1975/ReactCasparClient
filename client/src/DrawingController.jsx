@@ -2675,11 +2675,19 @@ var timer = setInterval(function() {
           element.set('fill', new fabric.Gradient(aa));
           canvas.requestRenderAll();
         }
-        if (element.fill.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)$/)) {
-          const aa = convertRgbaToHex(element.fill);
-          setCurrentFillColor(aa)
-          element.set('fill', aa);
-          canvas.requestRenderAll();
+        if (typeof element.fill === "string") {
+          const match = element.fill.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)$/);
+          if (match) {
+            const hex = convertRgbaToHex(element.fill);
+            setCurrentFillColor(hex);
+            if (match[4] !== undefined && parseFloat(match[4]) < 1) {
+              const alpha = parseFloat(match[4]);
+              if (element.opacity === 1 || element.opacity === undefined) {
+                element.set('opacity', alpha);
+                setOpacity(alpha.toFixed(2));
+              }
+            }
+          }
         }
 
 
