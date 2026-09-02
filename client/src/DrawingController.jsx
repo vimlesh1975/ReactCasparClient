@@ -2301,16 +2301,21 @@ var timer = setInterval(function() {
                                                                                     document.body.appendChild(aaHorizontal1);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-        aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         window.horizontalSpeed=${horizontalSpeed};
         if(window.intervalHorizontalScroll1){clearInterval(window.intervalHorizontalScroll1)};
         var totalWidth1 = 1920;
+        var lastTime1 = performance.now();
         if (${!ltr}){
             window.scrollPos1 = totalWidth1;
             aaHorizontal1.style.left = window.scrollPos1 + 'px';
             window.intervalHorizontalScroll1=setInterval(function() {
-                window.scrollPos1 -= window.horizontalSpeed;
+                var now = performance.now();
+                var dt = (now - lastTime1) / 1000;
+                lastTime1 = now;
+                if (dt > 0.1) dt = 0.016;
+                window.scrollPos1 -= (window.horizontalSpeed * 100) * dt;
                 if (window.scrollPos1 < -${hh}){ window.scrollPos1 = totalWidth1; }
                 aaHorizontal1.style.left = window.scrollPos1 + 'px';
             }, 10);
@@ -2319,7 +2324,11 @@ var timer = setInterval(function() {
             window.scrollPos1 = -${hh};
             aaHorizontal1.style.left = window.scrollPos1 + 'px';
             window.intervalHorizontalScroll1=setInterval(function() {
-                window.scrollPos1 += window.horizontalSpeed;
+                var now = performance.now();
+                var dt = (now - lastTime1) / 1000;
+                lastTime1 = now;
+                if (dt > 0.1) dt = 0.016;
+                window.scrollPos1 += (window.horizontalSpeed * 100) * dt;
                 if (window.scrollPos1 > totalWidth1){ window.scrollPos1 = -${hh}; }
                 aaHorizontal1.style.left = window.scrollPos1 + 'px';
             }, 10);
@@ -2393,11 +2402,16 @@ var timer = setInterval(function() {
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
         if(window.intervalHorizontalScroll2){clearInterval(window.intervalHorizontalScroll2)};
         var totalWidth2 = 1920;
+        var lastTime2 = performance.now();
         if (${!ltr2}){
             window.scrollPos2 = totalWidth2;
             aaHorizontal2.style.left = window.scrollPos2 + 'px';
             window.intervalHorizontalScroll2=setInterval(function() {
-                window.scrollPos2 -= window.horizontalSpeed2;
+                var now = performance.now();
+                var dt = (now - lastTime2) / 1000;
+                lastTime2 = now;
+                if (dt > 0.1) dt = 0.016;
+                window.scrollPos2 -= (window.horizontalSpeed2 * 100) * dt;
                 if (window.scrollPos2 < -${hh}){ window.scrollPos2 = totalWidth2; }
                 aaHorizontal2.style.left = window.scrollPos2 + 'px';
             }, 10);
@@ -2406,7 +2420,11 @@ var timer = setInterval(function() {
             window.scrollPos2 = -${hh};
             aaHorizontal2.style.left = window.scrollPos2 + 'px';
             window.intervalHorizontalScroll2=setInterval(function() {
-                window.scrollPos2 += window.horizontalSpeed2;
+                var now = performance.now();
+                var dt = (now - lastTime2) / 1000;
+                lastTime2 = now;
+                if (dt > 0.1) dt = 0.016;
+                window.scrollPos2 += (window.horizontalSpeed2 * 100) * dt;
                 if (window.scrollPos2 > totalWidth2){ window.scrollPos2 = -${hh}; }
                 aaHorizontal2.style.left = window.scrollPos2 + 'px';
             }, 10);

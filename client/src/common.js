@@ -3588,16 +3588,6 @@ export const colors = [
   "#b64d38",
   "#567c8e",
   "#b64c7a",
-  "#5b7d5f",
-  "#c9496f",
-  "#5e748f",
-  "#c8643b",
-  "#637d5d",
-  "#b34e9d",
-  "#5e6a8d",
-  "#c65d7a",
-  "#9d6f43",
-  "#b34d38",
 ];
 
 export const startVerticalScroll = (
@@ -3618,33 +3608,45 @@ export const startVerticalScroll = (
     `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
   );
   const script = `
-                                                                                  window.aaVertical = document.createElement('div');
-                                                                                  aaVertical.style.position='absolute';
-                                                                                  aaVertical.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                  aaVertical.style.zIndex = ${layerNumber};
-                                                                                  aaVertical.innerHTML=\`${canvas
+    window.aaVertical = document.createElement('div');
+    aaVertical.style.position='absolute';
+    aaVertical.setAttribute('id','divid_' + '${layerNumber}');
+    aaVertical.style.zIndex = ${layerNumber};
+    aaVertical.innerHTML=\`${canvas
       .toSVG()
       .replaceAll(
         '"',
         '\\"'
       )
       .replaceAll(
-        "`",
-        "\\`"
+        "\`",
+        "\\\\\`"
       )}\`;
-                                                                                  document.body.appendChild(aaVertical);
-                                                                                  document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
-                                                                                  document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
-                                                                                  aaVertical.style.top='100%';
-                                                                                  aaVertical.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
-                                                                                  document.body.style.overflow='hidden';
-                                                                                  window.verticalSpeed=${verticalSpeed};
-      window.intervalVerticalScroll= setInterval(()=>{
-                                                                                      aaVertical.style.top = (aaVertical.getBoundingClientRect().top - verticalSpeed) + 'px';
-      }, 1);
-                                                                                  `;
+    document.body.appendChild(aaVertical);
+    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
+    document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 1920 ${hh}');
+    aaVertical.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+    document.body.style.overflow='hidden';
+    window.verticalSpeed=${verticalSpeed};
+    if(window.intervalVerticalScroll){clearInterval(window.intervalVerticalScroll)};
+    var totalHeight = 1080;
+    var lastTimeV = performance.now();
+    window.verticalScrollPos = totalHeight;
+    aaVertical.style.top = window.verticalScrollPos + 'px';
+    window.intervalVerticalScroll = setInterval(()=>{
+      var now = performance.now();
+      var dt = (now - lastTimeV) / 1000;
+      lastTimeV = now;
+      if (dt > 0.1) dt = 0.016;
+      window.verticalScrollPos -= (window.verticalSpeed * 100) * dt;
+      if (window.verticalScrollPos < -${hh}) {
+        clearInterval(window.intervalVerticalScroll);
+        window.intervalVerticalScroll = null;
+        return;
+      }
+      aaVertical.style.top = window.verticalScrollPos + 'px';
+    }, 10);
+  `;
 
   endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
 
