@@ -130,11 +130,19 @@ const OnelinerAndBreakingNews = () => {
 
         window.automationeditor[0].canvas.set({ width: 309, height: 172, ViewBox: [0, 0, 1931.25, 1075] })
         const script = `
+        var existingStyle = document.getElementById('style_${layerNumber}');
+        if (existingStyle) existingStyle.remove();
+        var style = document.createElement('style');
+        style.setAttribute('id', 'style_' + '${layerNumber}');
+        style.textContent = '@keyframes wipeIn_${layerNumber} { from { clip-path: inset(0 100% 0 0); -webkit-clip-path: inset(0 100% 0 0); opacity: 0; } to { clip-path: inset(0 0 0 0); -webkit-clip-path: inset(0 0 0 0); opacity: 1; } }';
+        document.head.appendChild(style);
+
         var aa = document.createElement('div');
         aa.style.position='absolute';
         aa.style.top=0;
         aa.setAttribute('id','divid_' + '${layerNumber}');
         aa.style.zIndex = ${layerNumber};
+        aa.style.animation = 'wipeIn_${layerNumber} 0.4s ease-out forwards';
         aa.innerHTML=\`${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}\`;
         document.body.appendChild(aa);
         document.body.style.margin='0';
