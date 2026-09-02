@@ -482,6 +482,7 @@ const DrawingController = () => {
     const script = `
         window.aaGameTimer1 = document.createElement('div');
         aaGameTimer1.style.position='absolute';
+        aaGameTimer1.style.top=0;
         aaGameTimer1.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer1.style.zIndex = ${layerNumber};
         aaGameTimer1.innerHTML=\`${canvas
@@ -591,6 +592,8 @@ const DrawingController = () => {
     const script = `
         window.aaGameTimer2 = document.createElement('div');
         aaGameTimer2.style.position='absolute';
+        aaGameTimer2.style.top=0;
+
         aaGameTimer2.setAttribute('id','divid_' + '${layerNumber}');
         aaGameTimer2.style.zIndex = ${layerNumber};
         aaGameTimer2.innerHTML=\`${canvas
@@ -1876,6 +1879,8 @@ const DrawingController = () => {
                                                         <script>
                                                             var aa = document.getElementsByTagName('div')[0];
                                                             aa.style.position='absolute';
+        aa.style.top=0;
+
                                                             document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                             document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
                                                             aa.style.zoom=(${currentscreenSize *
@@ -1958,6 +1963,8 @@ const DrawingController = () => {
                                                                     <script>
                                                                         var aa = document.getElementsByTagName('div')[0];
                                                                         aa.style.position='absolute';
+                                                                        aa.style.top=0;
+
                                                                         document.getElementsByTagName('svg')[0].style.width='${hh}';
                                                                         document.getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
                                                                         aa.style.zoom=(${currentscreenSize *
@@ -2046,6 +2053,8 @@ const DrawingController = () => {
 
                                                                                 var aa = document.getElementsByTagName('div')[0];
                                                                                 aa.style.position='absolute';
+                                                                                aa.style.top=0;
+
                                                                                 aa.style.zoom=(${currentscreenSize *
       100
       }/1920)+'%';
@@ -2094,6 +2103,7 @@ const DrawingController = () => {
                                                                                             document.body.style.overflow='hidden';
                                                                                             var aa = document.getElementsByTagName('div')[0];
                                                                                             aa.style.position='absolute';
+                                                                                            aa.style.top=0;
                                                                                             aa.style.zoom=(${currentscreenSize *
       100
       }/1920)+'%';
@@ -2273,6 +2283,7 @@ var timer = setInterval(function() {
     const script = `
                                                                                     window.aaHorizontal1 = document.createElement('div');
                                                                                     aaHorizontal1.style.position='absolute';
+                                                                                    aaHorizontal1.style.top=0;
                                                                                     aaHorizontal1.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal1.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal1.innerHTML=\`${canvas
@@ -2325,6 +2336,7 @@ var timer = setInterval(function() {
     
           const newDiv1 = document.createElement('div');
           newDiv1.style.position='absolute';
+          newDiv1.style.top=0;
           newDiv1.style.left='0px';
           newDiv1.setAttribute('id', 'divid_${templateLayers.scroll1_strip}');
 			    newDiv1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
@@ -2352,6 +2364,7 @@ var timer = setInterval(function() {
     const script = `
                                                                                     window.aaHorizontal2 = document.createElement('div');
                                                                                     aaHorizontal2.style.position='absolute';
+                                                                                    aaHorizontal2.style.top=0;
                                                                                     aaHorizontal2.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaHorizontal2.style.zIndex = ${layerNumber};
                                                                                     aaHorizontal2.innerHTML=\`${canvas
@@ -2404,6 +2417,7 @@ var timer = setInterval(function() {
     
           const newDiv2 = document.createElement('div');
           newDiv2.style.position='absolute';
+          newDiv2.style.top=0;
           newDiv2.style.left='0px';
           newDiv2.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           newDiv2.setAttribute('id', 'divid_${templateLayers.scroll2_strip}');
@@ -2431,6 +2445,7 @@ var timer = setInterval(function() {
     const script = `
                                                                                     window.aaClock = document.createElement('div');
                                                                                     aaClock.style.position='absolute';
+                                                                                    aaClock.style.top=0;
                                                                                     aaClock.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaClock.style.zIndex = ${layerNumber};
                                                                                     aaClock.innerHTML=\`${canvas
@@ -2480,6 +2495,7 @@ var timer = setInterval(function() {
     const script = `
                                                                                     window.aaUpTimer = document.createElement('div');
                                                                                     aaUpTimer.style.position='absolute';
+                                                                                    aaUpTimer.style.top=0;
                                                                                     aaUpTimer.setAttribute('id','divid_' + '${layerNumber}');
                                                                                     aaUpTimer.style.zIndex = ${layerNumber};
                                                                                     aaUpTimer.innerHTML=\`${canvas
@@ -2737,6 +2753,7 @@ var timer = setInterval(function() {
          document.getElementById('divid_${templateLayers.reactComponent}')?.remove();
          const reactComponent = document.createElement('div');
          reactComponent.style.position='absolute';
+         reactComponent.style.top=0;
          reactComponent.style.zIndex = '${templateLayers.reactComponent}';
          reactComponent.setAttribute('id','divid_' + '${templateLayers.reactComponent}');
          document.body.appendChild(reactComponent);
