@@ -50,16 +50,19 @@ const ImageSequence = ({ layer }) => {
   };
   const loadPNGSequence = async (aa) => {
     const loadedImages = [];
-    for (let i = 0; i <= aa.length; i++) {
+    for (let i = 0; i < aa.length; i++) {
       await new Promise((resolve) => {
         fabric.FabricImage.fromURL(aa[i]).then(image => {
           image.set({ opacity: 0 });
           loadedImages.push(image);
           resolve(image);
+        }).catch(err => {
+          console.error(err);
+          resolve(null);
         });
       });
     }
-    setImageObjects(loadedImages);
+    setImageObjects(loadedImages.filter(Boolean));
   };
 
 
@@ -104,13 +107,14 @@ const ImageSequence = ({ layer }) => {
     executeScript(script);
 
   }
-  const addToCanvas = (id = 'id_' + layer) => {
-    const aa5 = canvas.getObjects().find((element => element.id === 'imgSeqGroup1'));
+  const addToCanvas = (id = 'id_' + imgSequenceLayer) => {
+    const groupId = 'imgSeqGroup_' + imgSequenceLayer;
+    const aa5 = canvas.getObjects().find((element => element.id === groupId));
     if (!aa5) {
       const imageGroup = new fabric.Group(imageObjects, {
         shadow: shadowOptions,
-        id: 'imgSeqGroup1',
-        class: "class_imgSeqGroup1",
+        id: groupId,
+        class: "class_" + groupId,
         fill: "#ffffff",
         objectCaching: false,
         stroke: "#000000",
@@ -121,12 +125,11 @@ const ImageSequence = ({ layer }) => {
       canvas.setActiveObject(imageGroup);
       canvas.requestRenderAll();
     }
-
-
   };
   const showFrame = (frameIndex) => {
-    if (canvas.getObjects().some(image => image.id === 'imgSeqGroup1')) {
-      const group = canvas.getObjects().find(object => object.id === 'imgSeqGroup1')
+    const groupId = 'imgSeqGroup_' + imgSequenceLayer;
+    if (canvas.getObjects().some(image => image.id === groupId)) {
+      const group = canvas.getObjects().find(object => object.id === groupId)
       group.getObjects().forEach((image, index) => {
         image.set({ opacity: index === frameIndex ? 1 : 0 });
       });
@@ -149,17 +152,59 @@ const ImageSequence = ({ layer }) => {
   const handlePlayButtonClick = () => {
     playAnimation(currentFrame);
   };
+  const loadSampleSequence = async (seqNumber = 1) => {
+    const dir = seqNumber === 2 ? 'sample_image_sequence_2' : 'sample_image_sequence';
+    const promises = [];
+    for (let i = 1; i <= 25; i++) {
+      const frameNum = String(i).padStart(4, '0');
+      const url = `${process.env.PUBLIC_URL}/${dir}/frame_${frameNum}.png`;
+      promises.push(
+        fetch(url)
+          .then(res => res.blob())
+          .then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          }))
+      );
+    }
+    try {
+      const base64Array = await Promise.all(promises);
+      setBase64Images(base64Array);
+      loadPNGSequence(base64Array);
+    } catch (err) {
+      console.error('Error loading sample sequence:', err);
+    }
+  };
+
   return (
     <div>
       <div style={{ display: 'flex' }}>
         <div style={{ margin: 10 }}>
-          <div>
+          <div style={{ marginBottom: 8, display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
             <input
               type="file"
               webkitdirectory="true"
               multiple
               onChange={handleFolderSelect}
             />
+            <button type="button" onClick={() => loadSampleSequence(1)} style={{ backgroundColor: '#0284c7', color: 'white', cursor: 'pointer' }}>
+              Load Sample 1 (Radar)
+            </button>
+            <button type="button" onClick={() => loadSampleSequence(2)} style={{ backgroundColor: '#d97706', color: 'white', cursor: 'pointer' }}>
+              Load Sample 2 (Gold Orb)
+            </button>
+            <a href={`${process.env.PUBLIC_URL}/sample_image_sequence.zip`} download="sample_image_sequence_1.zip" style={{ textDecoration: 'none' }}>
+              <button type="button" style={{ backgroundColor: '#475569', color: 'white', cursor: 'pointer' }}>
+                Zip 1
+              </button>
+            </a>
+            <a href={`${process.env.PUBLIC_URL}/sample_image_sequence_2.zip`} download="sample_image_sequence_2.zip" style={{ textDecoration: 'none' }}>
+              <button type="button" style={{ backgroundColor: '#475569', color: 'white', cursor: 'pointer' }}>
+                Zip 2
+              </button>
+            </a>
           </div>
           <div>
             <label>Frame Rate: </label> <input style={{ width: 50 }} type='number' value={frameRate} onChange={e => setFrameRate(e.target.value)} />
