@@ -2301,24 +2301,28 @@ var timer = setInterval(function() {
                                                                                     document.body.appendChild(aaHorizontal1);
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].style.width='${hh}';
                                                                                     document.getElementById('divid_${layerNumber}').getElementsByTagName('svg')[0].setAttribute('viewBox','0 0 ${hh} 1080');
-                                                                                    aaHorizontal1.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
-                                                                                    document.body.style.overflow='hidden';
-                                                                                    window.horizontalSpeed=${horizontalSpeed};
-                                                                                    if (${!ltr}){
-                                                                                        aaHorizontal1.style.left = '100%';
-                                                                                    window.intervalHorizontalScroll1=setInterval(function() {
-                                                                                        aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left - horizontalSpeed) + 'px';
-                                                                                    if (aaHorizontal1.getBoundingClientRect().left < -${hh}){aaHorizontal1.style.left = '100%'};
-                    }, 1);
-                    }
-                                                                                    else{
-                                                                                        aaHorizontal1.style.left = -${hh}+'px';
-                                                                                    window.intervalHorizontalScroll1=setInterval(function() {
-                                                                                        aaHorizontal1.style.left = (aaHorizontal1.getBoundingClientRect().left + horizontalSpeed) + 'px';
-            if (aaHorizontal1.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal1.style.left = -${hh} +'px'};
-            }, 1);
+        aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
+        document.body.style.overflow='hidden';
+        window.horizontalSpeed=${horizontalSpeed};
+        if(window.intervalHorizontalScroll1){clearInterval(window.intervalHorizontalScroll1)};
+        var totalWidth1 = 1920;
+        if (${!ltr}){
+            window.scrollPos1 = totalWidth1;
+            aaHorizontal1.style.left = window.scrollPos1 + 'px';
+            window.intervalHorizontalScroll1=setInterval(function() {
+                window.scrollPos1 -= window.horizontalSpeed;
+                if (window.scrollPos1 < -${hh}){ window.scrollPos1 = totalWidth1; }
+                aaHorizontal1.style.left = window.scrollPos1 + 'px';
+            }, 10);
+        }
+        else{
+            window.scrollPos1 = -${hh};
+            aaHorizontal1.style.left = window.scrollPos1 + 'px';
+            window.intervalHorizontalScroll1=setInterval(function() {
+                window.scrollPos1 += window.horizontalSpeed;
+                if (window.scrollPos1 > totalWidth1){ window.scrollPos1 = -${hh}; }
+                aaHorizontal1.style.left = window.scrollPos1 + 'px';
+            }, 10);
         }
         const elementToRemove1 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll1_strip');
         if (elementToRemove1) {
@@ -2387,20 +2391,26 @@ var timer = setInterval(function() {
       }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
-                                                                                    if (${!ltr2}){
-                                                                                        aaHorizontal2.style.left = '100%';
-                    window.intervalHorizontalScroll2=setInterval(()=>{
-                                                                                        aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left - horizontalSpeed2 + 'px';
-                                                                                    if (aaHorizontal2.getBoundingClientRect().left < -${hh}){aaHorizontal2.style.left = '100%'};
-                    }, 1);
-                    }
-                                                                                    else{
-                                                                                        aaHorizontal2.style.left = -${hh}+'px';
-            window.intervalHorizontalScroll2=setInterval(()=>{
-                                                                                        aaHorizontal2.style.left = aaHorizontal2.getBoundingClientRect().left + horizontalSpeed2 + 'px';
-            if (aaHorizontal2.getBoundingClientRect().left > ${currentscreenSize}){aaHorizontal2.style.left = -${hh}+'px'};
-            }, 1);
+        if(window.intervalHorizontalScroll2){clearInterval(window.intervalHorizontalScroll2)};
+        var totalWidth2 = 1920;
+        if (${!ltr2}){
+            window.scrollPos2 = totalWidth2;
+            aaHorizontal2.style.left = window.scrollPos2 + 'px';
+            window.intervalHorizontalScroll2=setInterval(function() {
+                window.scrollPos2 -= window.horizontalSpeed2;
+                if (window.scrollPos2 < -${hh}){ window.scrollPos2 = totalWidth2; }
+                aaHorizontal2.style.left = window.scrollPos2 + 'px';
+            }, 10);
         }
+        else{
+            window.scrollPos2 = -${hh};
+            aaHorizontal2.style.left = window.scrollPos2 + 'px';
+            window.intervalHorizontalScroll2=setInterval(function() {
+                window.scrollPos2 += window.horizontalSpeed2;
+                if (window.scrollPos2 > totalWidth2){ window.scrollPos2 = -${hh}; }
+                aaHorizontal2.style.left = window.scrollPos2 + 'px';
+            }, 10);
+        }    
         const elementToRemove2 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll2_strip');
         if (elementToRemove2) {
           const svgElement2 = document.getElementById('divid_' + '${layerNumber}').querySelectorAll('svg')[0];
