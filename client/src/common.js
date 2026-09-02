@@ -2851,6 +2851,7 @@ export const sendToCasparcg = (layerNumber, canvas, currentscreenSize) => {
   const scriptforhtml = `
     var aa = document.createElement('div');
     aa.style.position='absolute';
+    aa.style.top=0;
     aa.setAttribute('id','divid_' + '${layerNumber}');
     aa.style.zIndex = ${layerNumber};
     aa.innerHTML=\`${canvas
