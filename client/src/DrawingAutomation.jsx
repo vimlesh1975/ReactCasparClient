@@ -1,7 +1,7 @@
 import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import { useEffect } from 'react'
 
-window.automationeditor = [];
+window.automationeditor = window.automationeditor || [];
 
 const DrawingAutomation = ({ i = 0 }) => {
   const { editor, onReady } = useFabricJSEditor();
@@ -10,15 +10,16 @@ const DrawingAutomation = ({ i = 0 }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      // window.automationeditor[0].canvas.setZoom(0.3)
-      window.automationeditor[0].canvas.setZoom(0.16)
+      if (window.automationeditor?.[i]?.canvas) {
+        window.automationeditor[i].canvas.setZoom(0.16);
+      }
     }, 100);
 
     return () => {
       // cleanup
     }
     //eslint-disable-next-line
-  }, [])
+  }, [editor])
 
   return (<div>
     <FabricJSCanvas className='automationcanvas' onReady={onReady} />

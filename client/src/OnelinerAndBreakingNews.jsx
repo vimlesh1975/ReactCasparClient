@@ -7,6 +7,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { VscMove } from "react-icons/vsc";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { v4 as uuidv4 } from 'uuid';
+import DrawingAutomation from './DrawingAutomation';
 // import { isEqual } from "lodash";
 
 var iii = 0;
@@ -131,6 +132,7 @@ const OnelinerAndBreakingNews = () => {
         const script = `
         var aa = document.createElement('div');
         aa.style.position='absolute';
+        aa.style.top=0;
         aa.setAttribute('id','divid_' + '${layerNumber}');
         aa.style.zIndex = ${layerNumber};
         aa.innerHTML=\`${(window.automationeditor[0].canvas.toSVG()).replaceAll('"', '\\"')}\`;
@@ -364,6 +366,11 @@ const OnelinerAndBreakingNews = () => {
                         </Droppable>
                     </DragDropContext>
                 </div>
+            </div>
+
+            <div style={{ marginTop: 20, border: '1px solid #ccc', padding: 10, display: 'none' }}>
+                <b>Automation Canvas Preview:</b>
+                <DrawingAutomation i={0} />
             </div>
 
         </div>
