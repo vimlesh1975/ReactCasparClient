@@ -3661,8 +3661,8 @@ export const startVerticalScroll = (
         '\\"'
       )
       .replaceAll(
-        "\`",
-        "\\\\\`"
+        '`',
+        '\\\\`'
       )}\`;
     document.body.appendChild(aaVertical);
     document.getElementById('divid_' + '${layerNumber}').getElementsByTagName('svg')[0].style.height='${hh}';
