@@ -477,7 +477,7 @@ const App = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div style={{ minWidth: 0, flex: 1 }}>
           <Tabs
             selectedIndex={tabindex}
             selectedTabClassName="selectedTab"

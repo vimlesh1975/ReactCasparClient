@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
 import Timer from './Timer';
 import { VscMove, VscTrash } from "react-icons/vsc";
-import { FaPlay, FaStop } from "react-icons/fa";
+import { FaPlay, FaStop, FaPlus, FaTable, FaFolderOpen, FaFileExcel, FaColumns, FaMoon, FaSun, FaSync } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const EditableTable = () => {
@@ -14,6 +14,7 @@ const EditableTable = () => {
     const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
     const dispatch = useDispatch();
+    const [darkMode, setDarkMode] = useState(true);
     const [data1, setData1] = useState([]);
     const [headers, setHeaders] = useState([]);
     const [useGspPlayer, setUseGspPlayer] = useState(true);
@@ -25,9 +26,10 @@ const EditableTable = () => {
         aa[rowIndex][key] = e.target.value;
         setData1(aa);
     };
+
     const setText = (rowIndex) => {
         const rowData = data1[rowIndex];
-        if (!rowData) return;
+        if (!rowData || !canvas) return;
         canvas.getObjects().forEach(element => {
             element.set({ objectCaching: false });
             const dataValue = rowData[element.id];
@@ -53,6 +55,7 @@ const EditableTable = () => {
     };
 
     const createTable = () => {
+        if (!canvas) return;
         const newHeaders = canvas.getObjects()
             .filter(element => (element.type === 'textbox' || element.type === 'image') && element.id != null)
             .map(element => element.id);
@@ -71,9 +74,10 @@ const EditableTable = () => {
             return acc;
         }, {});
         setData1([initialData]);
-    }
+    };
 
     const addRows = () => {
+        if (!canvas) return;
         const newRow = canvas.getObjects().reduce((acc, element) => {
             if (element.type === 'textbox' && element.id != null) {
                 acc[element.id] = element.text + data1.length;
@@ -91,10 +95,8 @@ const EditableTable = () => {
         updatedData.splice(rowIndex, 1);
         setData1(updatedData);
 
-        // Check if counter exceeds the new maximum value
         if (counter >= updatedData.length) {
-            // Adjust counter to the new maximum value
-            setCounter(updatedData.length - 1);
+            setCounter(Math.max(0, updatedData.length - 1));
         }
     };
 
@@ -158,20 +160,14 @@ const EditableTable = () => {
                         extension: extension
                     });
 
-                    // Set column width (character units) and row height (points) earlier
-                    worksheet.getColumn(colIndex + 1).width = 40; // larger width for better fit
+                    worksheet.getColumn(colIndex + 1).width = 40;
 
                     const dim = await getImageDimensions(value);
                     const imgRatio = dim.width / dim.height;
 
-                    // Actual pixel size of the cell.
-                    // Column width (chars) -> px: chars * 7 + 5 (default Calibri 11 metric).
-                    // Row height (pts) -> px: 1pt = 96/72 px at 96 DPI.
                     const colPx = worksheet.getColumn(colIndex + 1).width * 7 + 5;
                     const rowPx = addedRow.height * (96 / 72);
 
-                    // "Contain" fit: scale the image to the largest size that fits
-                    // inside the actual cell while preserving aspect ratio.
                     let finalW, finalH;
                     if (imgRatio >= colPx / rowPx) {
                         finalW = colPx;
@@ -184,14 +180,9 @@ const EditableTable = () => {
                     const wFrac = finalW / colPx;
                     const hFrac = finalH / rowPx;
 
-                    // Pixel offset (not fraction!) to center the image within the cell.
-                    // NOTE: exceljs has a known bug where fractional col/row values in
-                    // tl/br (twoCellAnchor) produce malformed drawing XML that Excel
-                    // flags as corrupt and "repairs" on open. Using nativeCol/nativeColOff
-                    // (raw EMU offsets) with an explicit ext size avoids that entirely.
                     const colPadPx = ((1 - wFrac) / 2) * colPx;
                     const rowPadPx = ((1 - hFrac) / 2) * rowPx;
-                    const EMU_PER_PIXEL = 9525; // at 96 DPI
+                    const EMU_PER_PIXEL = 9525;
                     const pxToEmu = (px) => Math.round(px * EMU_PER_PIXEL);
 
                     worksheet.addImage(imageId, {
@@ -212,7 +203,6 @@ const EditableTable = () => {
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
         const timestamp = new Date().toLocaleTimeString('en-US', { year: "numeric", month: "numeric", day: "numeric", hour12: false, hour: "numeric", minute: "numeric", second: "numeric" }).replace(/:/g, '-');
 
         if (window.showSaveFilePicker) {
@@ -322,7 +312,7 @@ const EditableTable = () => {
                 }
             }
         } catch (excelJsError) {
-            console.warn("ExcelJS load failed or binary file format, falling back to XLSX:", excelJsError);
+            console.warn("ExcelJS load failed, falling back to XLSX:", excelJsError);
         }
 
         try {
@@ -362,9 +352,7 @@ const EditableTable = () => {
                 await processExcelBuffer(arrayBuffer);
                 return;
             } catch (e) {
-                if (e.name === 'AbortError') {
-                    return;
-                }
+                if (e.name === 'AbortError') return;
                 console.warn("showOpenFilePicker failed, falling back to input element:", e);
             }
         }
@@ -402,7 +390,6 @@ const EditableTable = () => {
     };
 
     const handleImageDoubleClick = (rowIndex, key) => {
-        // Trigger the hidden file input click
         document.getElementById(`fileInput-${rowIndex}-${key}`).click();
     };
 
@@ -410,15 +397,15 @@ const EditableTable = () => {
         setText(rowIndex);
         setTimeout(() => {
             if (useGspPlayer) {
-                playtoGsapCaspar(canvas, dataLayer, currentscreenSize)
-            }
-            else {
+                playtoGsapCaspar(canvas, dataLayer, currentscreenSize);
+            } else {
                 startGraphics(canvas, dataLayer, currentscreenSize);
             }
         }, 1000);
-    }
+    };
 
     const reArrangeColumns = () => {
+        if (!canvas) return;
         const newHeaders = canvas.getObjects()
             .filter(element => (element.type === 'textbox' || element.type === 'image') && element.id != null)
             .map(element => element.id);
@@ -431,7 +418,7 @@ const EditableTable = () => {
                     if (element.type === 'image') {
                         updatedRow[header] = element.src;
                     } else if (element.type === 'textbox') {
-                        updatedRow[header] = element.text; // Default value for text elements
+                        updatedRow[header] = element.text;
                     }
                 } else {
                     updatedRow[header] = row[header];
@@ -449,139 +436,396 @@ const EditableTable = () => {
             const newRow = { ...row };
             delete newRow[columnId];
             return newRow;
-        }).filter(row => Object.keys(row).length > 0)); // Remove rows without any data
+        }).filter(row => Object.keys(row).length > 0));
         setHeaders(headers.filter(header => header !== columnId));
     };
 
     const stop = () => {
         if (useGspPlayer) {
-            stopGsapLayer(dataLayer)
-        }
-        else {
+            stopGsapLayer(dataLayer);
+        } else {
             stopGraphics(dataLayer);
         }
-    }
+    };
 
     const onDragEnd = (result) => {
-        if (!result.destination) {
-            return;
-        }
-
+        if (!result.destination) return;
         const reorderedData = Array.from(data1);
         const [movedItem] = reorderedData.splice(result.source.index, 1);
         reorderedData.splice(result.destination.index, 0, movedItem);
-
         setData1(reorderedData);
     };
 
+    // Adaptive Theme Tokens
+    const theme = {
+        cardBg: darkMode ? '#1e293b' : '#ffffff',
+        cardBorder: darkMode ? '#334155' : '#cbd5e1',
+        boxBg: darkMode ? '#0f172a' : '#f8fafc',
+        boxBorder: darkMode ? '#334155' : '#e2e8f0',
+        inputBg: darkMode ? '#0f172a' : '#ffffff',
+        inputBorder: darkMode ? '#334155' : '#cbd5e1',
+        textColor: darkMode ? '#f8fafc' : '#0f172a',
+        subTextColor: darkMode ? '#94a3b8' : '#64748b',
+        tableHeaderBg: darkMode ? '#0f172a' : '#f1f5f9',
+        rowHoverBg: darkMode ? '#1e293b88' : '#f8fafc',
+        rowActiveBg: darkMode ? '#1e3a5f' : '#e0f2fe',
+        badgeBg: darkMode ? '#334155' : '#e2e8f0',
+        badgeColor: darkMode ? '#94a3b8' : '#475569',
+    };
+
+    const cardStyle = {
+        backgroundColor: theme.cardBg,
+        borderRadius: '8px',
+        border: `1px solid ${theme.cardBorder}`,
+        padding: '12px',
+        color: theme.textColor,
+        boxShadow: darkMode ? '0 4px 6px -1px rgba(0, 0, 0, 0.2)' : '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+        boxSizing: 'border-box',
+        transition: 'all 0.2s ease',
+    };
+
+    const btnBase = {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '5px',
+        padding: '5px 10px',
+        borderRadius: '4px',
+        border: 'none',
+        fontWeight: '600',
+        fontSize: '11px',
+        cursor: 'pointer',
+        color: '#ffffff',
+        transition: 'all 0.15s ease',
+        flexShrink: 0,
+    };
+
+    const iconActionBtn = {
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '3px 5px',
+        borderRadius: '3px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    };
+
     return (
-        <div>
-            <div>
-                <button onClick={createTable}>Create Table</button>
-                <button onClick={addRows}>Add Rows</button>
-                <button onClick={createExcel}>Create Excel</button>
-                <button onClick={openExcel}>Open Excel</button>
-                <input
-                    type="file"
-                    ref={excelFileInputRef}
-                    style={{ display: 'none' }}
-                    accept=".xlsx, .xls, .csv"
-                    onChange={handleExcelFileChange}
-                />
-                <button onClick={reArrangeColumns}>Re Arrange Columns</button>
-                Layer:<input type='number' value={dataLayer} onChange={e => setDataLayer(e.target.value)} style={{ width: 50 }} />
-                <button style={{ fontSize: 25, backgroundColor: 'red' }} onClick={stop}><FaStop /></button>
-                <input
-                    type="checkbox"
-                    checked={useGspPlayer}
-                    onChange={() => setUseGspPlayer((val) => !val)}
-                /><label>Use Gsap Player</label>
+        <div
+            style={{
+                padding: '10px',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                color: theme.textColor,
+                width: '100%',
+                maxWidth: '100%',
+                minWidth: 0,
+                height: 'calc(100vh - 80px)',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+                overflow: 'hidden'
+            }}
+        >
+            {/* Inline Scrollbar Styles for Self-Contained Theming */}
+            <style>{`
+                .editable-table-scroll::-webkit-scrollbar {
+                    width: 12px;
+                    height: 12px;
+                }
+                .editable-table-scroll::-webkit-scrollbar-track {
+                    background: ${darkMode ? '#0f172a' : '#e2e8f0'};
+                    border-radius: 6px;
+                }
+                .editable-table-scroll::-webkit-scrollbar-thumb {
+                    background: ${darkMode ? '#0284c7' : '#0369a1'};
+                    border-radius: 6px;
+                    border: 2px solid ${darkMode ? '#0f172a' : '#e2e8f0'};
+                }
+                .editable-table-scroll::-webkit-scrollbar-thumb:hover {
+                    background: #38bdf8;
+                }
+                .editable-table-scroll::-webkit-scrollbar-corner {
+                    background: ${darkMode ? '#0f172a' : '#e2e8f0'};
+                }
+            `}</style>
+            
+            {/* Top Toolbar Card */}
+            <div style={{ ...cardStyle, width: '100%', maxWidth: '100%', minWidth: 0, flexShrink: 0, marginBottom: '8px', boxSizing: 'border-box' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '8px', borderBottom: `1px solid ${theme.cardBorder}`, paddingBottom: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                        <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                            <FaTable /> Data Playout & Spreadsheets
+                        </span>
+                        <span style={{ fontSize: '11px', backgroundColor: theme.badgeBg, padding: '2px 8px', borderRadius: '10px', color: theme.badgeColor, whiteSpace: 'nowrap' }}>
+                            {data1.length} Rows | {headers.length} Cols
+                        </span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        {/* Dark Mode Switch */}
+                        <label
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                fontSize: '11px',
+                                cursor: 'pointer',
+                                padding: '3px 8px',
+                                borderRadius: '16px',
+                                backgroundColor: theme.boxBg,
+                                border: `1px solid ${theme.cardBorder}`,
+                                color: theme.textColor,
+                                userSelect: 'none',
+                                whiteSpace: 'nowrap',
+                            }}
+                            title="Toggle Dark / Light Mode"
+                        >
+                            <input
+                                type="checkbox"
+                                checked={darkMode}
+                                onChange={e => setDarkMode(e.target.checked)}
+                                style={{ cursor: 'pointer' }}
+                            />
+                            {darkMode ? <FaMoon color="#38bdf8" /> : <FaSun color="#f59e0b" />}
+                            <span>{darkMode ? 'Dark' : 'Light'}</span>
+                        </label>
+
+                        <label style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', cursor: 'pointer', color: theme.textColor, whiteSpace: 'nowrap' }}>
+                            <input
+                                type="checkbox"
+                                checked={useGspPlayer}
+                                onChange={() => setUseGspPlayer(val => !val)}
+                            />
+                            Use GSAP Player
+                        </label>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: '11px', color: theme.subTextColor }}>Layer:</span>
+                            <input
+                                type="number"
+                                value={dataLayer}
+                                onChange={e => setDataLayer(parseInt(e.target.value) || 0)}
+                                style={{ width: '45px', backgroundColor: theme.inputBg, border: `1px solid ${theme.inputBorder}`, color: theme.textColor, borderRadius: '4px', padding: '2px 4px', textAlign: 'center', fontSize: '11px' }}
+                            />
+                        </div>
+
+                        <button style={{ ...btnBase, backgroundColor: '#ef4444', padding: '4px 10px' }} onClick={stop} title="Stop Graphics Playout">
+                            <FaStop /> Stop
+                        </button>
+                    </div>
+                </div>
+
+                {/* Spreadsheet Action Buttons */}
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <button style={{ ...btnBase, backgroundColor: '#0284c7' }} onClick={createTable} title="Generate headers & row from active canvas items">
+                        <FaTable /> Create Table
+                    </button>
+                    <button style={{ ...btnBase, backgroundColor: '#10b981' }} onClick={addRows} title="Append row with incremented index">
+                        <FaPlus /> Add Row
+                    </button>
+                    <button style={{ ...btnBase, backgroundColor: '#4f46e5' }} onClick={openExcel} title="Import .xlsx, .xls, or .csv spreadsheet">
+                        <FaFolderOpen /> Open Excel
+                    </button>
+                    <input
+                        type="file"
+                        ref={excelFileInputRef}
+                        style={{ display: 'none' }}
+                        accept=".xlsx, .xls, .csv"
+                        onChange={handleExcelFileChange}
+                    />
+                    <button style={{ ...btnBase, backgroundColor: '#059669' }} onClick={createExcel} title="Export data & embedded images as .xlsx spreadsheet">
+                        <FaFileExcel /> Export Excel
+                    </button>
+                    <button style={{ ...btnBase, backgroundColor: darkMode ? '#334155' : '#64748b' }} onClick={reArrangeColumns} title="Sync columns with active canvas objects">
+                        <FaColumns /> Re-Arrange Cols
+                    </button>
+                </div>
             </div>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable">
-                    {(provided) => (
-                        <div style={{ maxWidth: 900, maxHeight: 600, height: 580, overflow: 'auto' }} {...provided.droppableProps} ref={provided.innerRef}>
-                            <table border='1'>
-                                <thead>
-                                    <tr>
-                                        <th>sr</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        {headers?.map((val, i) => <th key={i}>
-                                            {val} <br />
-                                            <button onClick={() => deleteColumn(val)}><VscTrash /></button>
-                                        </th>
-                                        )}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data1.map((row, rowIndex) => (
-                                        <Draggable key={rowIndex} draggableId={String(rowIndex)} index={rowIndex}>
-                                            {(provided) => (
-                                                <tr
-                                                    key={rowIndex}
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    // {...provided.dragHandleProps}
-                                                    style={{ ...provided.draggableProps.style, backgroundColor: (counter === rowIndex) ? 'grey' : '' }}
-                                                >
-                                                    <td>{rowIndex}</td>
-                                                    <td title='Move' {...provided.dragHandleProps}><VscMove /></td>
-                                                    <td><button onClick={() => deleteData(rowIndex)}><VscTrash /></button></td>
-                                                    <td><button title='Preview' onClick={() => setText(rowIndex)}>Set</button></td>
-                                                    <td><button title='Set+Play' style={{ backgroundColor: 'darkgreen', color: 'white' }} onClick={() => {
-                                                        setAndPlay(rowIndex);
-                                                    }}><FaPlay /></button></td>
-                                                    <td><button onClick={() => {
-                                                        setText(rowIndex);
-                                                        setTimeout(() => {
-                                                            updateGraphics(canvas, dataLayer);
-                                                        }, 1000);
-                                                    }}>Update</button></td>
-                                                    {headers.map(key => (
-                                                        <td key={key}>
-                                                            {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
-                                                                <>
-                                                                    <img
-                                                                        src={row[key]}
-                                                                        alt="Profile"
-                                                                        style={{ width: 50, height: 30, cursor: 'pointer' }}
-                                                                        onClick={() => handleImageDoubleClick(rowIndex, key)}
-                                                                    />
-                                                                    <input
-                                                                        type="file"
-                                                                        id={`fileInput-${rowIndex}-${key}`}
-                                                                        style={{ display: 'none' }}
-                                                                        onChange={(e) => handleImageChange(e, rowIndex, key)}
-                                                                    />
-                                                                </>
-                                                            ) : (
-                                                                <textarea
-                                                                    cols={4}
-                                                                    rows={2}
-                                                                    value={row[key]}
-                                                                    onChange={e => handleChange(e, key, rowIndex)}
-                                                                />
-                                                            )}
-                                                        </td>
-                                                    ))}
-                                                </tr>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-            <div>
-                <Timer setAndPlay={setAndPlay} dataLength={data1.length} stop={stop} counter={counter} setCounter={setCounter} />
+            {/* Drag and Drop Data Table Card */}
+            <div style={{ ...cardStyle, width: '100%', maxWidth: '100%', minWidth: 0, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                        {(provided) => (
+                            <div
+                                className="editable-table-scroll"
+                                style={{
+                                    flex: 1,
+                                    minHeight: 0,
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    minWidth: 0,
+                                    overflowX: 'auto',
+                                    overflowY: 'auto',
+                                    scrollbarWidth: 'auto',
+                                    scrollbarColor: `${darkMode ? '#0284c7 #0f172a' : '#0369a1 #e2e8f0'}`,
+                                    backgroundColor: theme.boxBg,
+                                    border: `1px solid ${theme.boxBorder}`,
+                                    borderRadius: '6px',
+                                    boxSizing: 'border-box',
+                                    display: 'block',
+                                }}
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                            >
+                                {data1.length === 0 ? (
+                                    <div style={{ padding: '30px', textAlign: 'center', color: theme.subTextColor, fontSize: '12px' }}>
+                                        No data table created yet. Click <b>"Create Table"</b> or <b>"Open Excel"</b> to get started.
+                                    </div>
+                                ) : (
+                                    <table style={{ width: 'max-content', minWidth: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }}>
+                                        <thead>
+                                            <tr style={{ backgroundColor: theme.tableHeaderBg, borderBottom: `1px solid ${theme.cardBorder}`, color: theme.subTextColor, fontSize: '11px', position: 'sticky', top: 0, zIndex: 2 }}>
+                                                <th style={{ width: '30px', padding: '6px', textAlign: 'center' }}>#</th>
+                                                <th style={{ width: '25px', padding: '6px', textAlign: 'center' }}></th>
+                                                <th style={{ width: '30px', padding: '6px', textAlign: 'center' }}>Del</th>
+                                                <th style={{ width: '40px', padding: '6px', textAlign: 'center' }}>Set</th>
+                                                <th style={{ width: '45px', padding: '6px', textAlign: 'center' }}>Play</th>
+                                                <th style={{ width: '55px', padding: '6px', textAlign: 'center' }}>Update</th>
+                                                {headers?.map((val, i) => (
+                                                    <th key={i} style={{ padding: '6px', borderLeft: `1px solid ${theme.cardBorder}`, minWidth: '170px', width: '170px', boxSizing: 'border-box' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
+                                                            <span style={{ fontWeight: 'bold', color: '#38bdf8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{val}</span>
+                                                            <button
+                                                                style={{ ...iconActionBtn, color: '#ef4444' }}
+                                                                onClick={() => deleteColumn(val)}
+                                                                title={`Delete column ${val}`}
+                                                            >
+                                                                <VscTrash size={12} />
+                                                            </button>
+                                                        </div>
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data1.map((row, rowIndex) => (
+                                                <Draggable key={rowIndex} draggableId={String(rowIndex)} index={rowIndex}>
+                                                    {(provided, snapshot) => (
+                                                        <tr
+                                                            key={rowIndex}
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            style={{
+                                                                ...provided.draggableProps.style,
+                                                                backgroundColor: (counter === rowIndex) ? theme.rowActiveBg : (snapshot.isDragging ? (darkMode ? '#334155' : '#e2e8f0') : 'transparent'),
+                                                                borderBottom: `1px solid ${theme.cardBorder}`,
+                                                            }}
+                                                        >
+                                                            <td style={{ padding: '4px', textAlign: 'center', fontWeight: 'bold', color: theme.subTextColor }}>
+                                                                {rowIndex + 1}
+                                                            </td>
+                                                            <td style={{ padding: '4px', textAlign: 'center', cursor: 'grab' }} title="Drag to reorder row" {...provided.dragHandleProps}>
+                                                                <VscMove color={theme.subTextColor} />
+                                                            </td>
+                                                            <td style={{ padding: '4px', textAlign: 'center' }}>
+                                                                <button
+                                                                    style={{ ...iconActionBtn, color: '#ef4444' }}
+                                                                    onClick={() => deleteData(rowIndex)}
+                                                                    title="Delete Row"
+                                                                >
+                                                                    <VscTrash />
+                                                                </button>
+                                                            </td>
+                                                            <td style={{ padding: '4px', textAlign: 'center' }}>
+                                                                <button
+                                                                    style={{ ...btnBase, backgroundColor: '#0284c7', padding: '2px 6px', fontSize: '10px' }}
+                                                                    title="Preview on Canvas"
+                                                                    onClick={() => setText(rowIndex)}
+                                                                >
+                                                                    Set
+                                                                </button>
+                                                            </td>
+                                                            <td style={{ padding: '4px', textAlign: 'center' }}>
+                                                                <button
+                                                                    style={{ ...btnBase, backgroundColor: '#10b981', padding: '3px 8px', fontSize: '10px' }}
+                                                                    title="Set + Play Graphics"
+                                                                    onClick={() => setAndPlay(rowIndex)}
+                                                                >
+                                                                    <FaPlay size={9} />
+                                                                </button>
+                                                            </td>
+                                                            <td style={{ padding: '4px', textAlign: 'center' }}>
+                                                                <button
+                                                                    style={{ ...btnBase, backgroundColor: darkMode ? '#334155' : '#64748b', padding: '2px 6px', fontSize: '10px' }}
+                                                                    onClick={() => {
+                                                                        setText(rowIndex);
+                                                                        setTimeout(() => {
+                                                                            updateGraphics(canvas, dataLayer);
+                                                                        }, 1000);
+                                                                    }}
+                                                                    title="Update live graphics"
+                                                                >
+                                                                    <FaSync size={9} />
+                                                                </button>
+                                                            </td>
+
+                                                            {headers.map(key => (
+                                                                <td key={key} style={{ padding: '4px', borderLeft: `1px solid ${theme.cardBorder}`, minWidth: '170px', width: '170px', boxSizing: 'border-box' }}>
+                                                                    {typeof row[key] === 'string' && row[key].startsWith('data:image/') ? (
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                                            <img
+                                                                                src={row[key]}
+                                                                                alt="thumbnail"
+                                                                                style={{ width: '45px', height: '28px', objectFit: 'contain', border: `1px solid ${theme.cardBorder}`, borderRadius: '4px', backgroundColor: '#0f172a', cursor: 'pointer' }}
+                                                                                title="Click to replace image"
+                                                                                onClick={() => handleImageDoubleClick(rowIndex, key)}
+                                                                            />
+                                                                            <input
+                                                                                type="file"
+                                                                                id={`fileInput-${rowIndex}-${key}`}
+                                                                                style={{ display: 'none' }}
+                                                                                onChange={(e) => handleImageChange(e, rowIndex, key)}
+                                                                            />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <textarea
+                                                                            rows={2}
+                                                                            value={row[key] || ''}
+                                                                            onChange={e => handleChange(e, key, rowIndex)}
+                                                                            style={{
+                                                                                width: '100%',
+                                                                                minWidth: '160px',
+                                                                                backgroundColor: theme.inputBg,
+                                                                                border: `1px solid ${theme.inputBorder}`,
+                                                                                borderRadius: '4px',
+                                                                                color: theme.textColor,
+                                                                                padding: '3px 5px',
+                                                                                fontSize: '11px',
+                                                                                fontFamily: 'inherit',
+                                                                                resize: 'vertical',
+                                                                                boxSizing: 'border-box',
+                                                                                overflow: 'auto',
+                                                                            }}
+                                                                        />
+                                                                    )}
+                                                                </td>
+                                                            ))}
+                                                        </tr>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+
+                {/* Integrated Timer Component */}
+                <div style={{ flexShrink: 0, marginTop: '8px' }}>
+                    <Timer
+                        setAndPlay={setAndPlay}
+                        dataLength={data1.length}
+                        stop={stop}
+                        counter={counter}
+                        setCounter={setCounter}
+                        darkMode={darkMode}
+                    />
+                </div>
             </div>
         </div>
     );

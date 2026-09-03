@@ -112,35 +112,75 @@ export const groupInteractive = (canvas, bool) => {
   canvas.requestRenderAll();
 }
 
-export const importSvgCode = (ss, canvas) => {
+export const importSvgCode = (ss, canvas, targetDimension = 120) => {
   if (ss) {
     fabric.loadSVGFromString(ss).then((output) => {
-      parseSvg(output, canvas);
+      parseSvg(output, canvas, targetDimension);
     });
     canvas.requestRenderAll();
   }
 };
 
-export const parseSvg = (output, canvas) => {
-  // console.log(output);
+export const parseSvg = (output, canvas, targetDimension = 120) => {
   // eslint-disable-next-line
   const { objects, elements, options, allElements } = output;
 
   // Find extraproperty tags
-  const extrapropertyTags = allElements.filter(
+  const extrapropertyTags = (allElements || []).filter(
     (svgTag) => svgTag.tagName === "extraproperty"
   );
 
-  if (extrapropertyTags.length === 0) {
-    // console.log("No extraproperty tags found. Using default values.");
+  const validObjects = (objects || []).filter(Boolean);
+  const isStandaloneImport = extrapropertyTags.length === 0;
+
+  // For standalone SVG imports (Open Icons, Iconify, Iconfinder), compute bounding box
+  const minLeft = validObjects.length > 0 ? Math.min(...validObjects.map((o) => o.left ?? 0)) : 0;
+  const minTop = validObjects.length > 0 ? Math.min(...validObjects.map((o) => o.top ?? 0)) : 0;
+  const maxRight = validObjects.length > 0
+    ? Math.max(...validObjects.map((o) => (o.left ?? 0) + (o.width ?? 0) * (o.scaleX ?? 1)))
+    : 0;
+  const maxBottom = validObjects.length > 0
+    ? Math.max(...validObjects.map((o) => (o.top ?? 0) + (o.height ?? 0) * (o.scaleY ?? 1)))
+    : 0;
+
+  const rawWidth = maxRight - minLeft;
+  const rawHeight = maxBottom - minTop;
+  const maxDimension = Math.max(rawWidth, rawHeight, 1);
+
+  // Calculate scale multiplier to reach target dimension (default ~120px)
+  let scaleFactor = 1;
+  if (isStandaloneImport && targetDimension && targetDimension > 0) {
+    scaleFactor = targetDimension / maxDimension;
+    if (scaleFactor <= 0 || !isFinite(scaleFactor)) scaleFactor = 1;
   }
 
+  const randomLeft = Math.floor(Math.random() * 800 + 100);
+  const randomTop = Math.floor(Math.random() * 450 + 80);
+
+  const offsetX = isStandaloneImport ? (randomLeft - minLeft * scaleFactor) : 0;
+  const offsetY = isStandaloneImport ? (randomTop - minTop * scaleFactor) : 0;
+
   var textNumber = 0;
-  objects.forEach((obj, index) => {
+  validObjects.forEach((obj, index) => {
+    if (!obj) return;
     const id = generateUniqueId({ type: "id" });
+
+    const objScaleX = (obj.scaleX ?? 1) * (isStandaloneImport ? scaleFactor : 1);
+    const objScaleY = (obj.scaleY ?? 1) * (isStandaloneImport ? scaleFactor : 1);
+    const targetLeft = isStandaloneImport
+      ? ((obj.left ?? 0) * scaleFactor + offsetX)
+      : (obj.left ?? 0);
+    const targetTop = isStandaloneImport
+      ? ((obj.top ?? 0) * scaleFactor + offsetY)
+      : (obj.top ?? 0);
+
     obj.set({
       id: obj.id ?? id,
       class: obj.id ?? id,
+      left: targetLeft,
+      top: targetTop,
+      scaleX: objScaleX,
+      scaleY: objScaleY,
       objectCaching: false,
       shadow: obj.shadow ?? { ...shadowOptions, blur: 5 },
     });
@@ -163,8 +203,6 @@ export const parseSvg = (output, canvas) => {
           extrapropertyTags[textNumber]?.getAttribute("textAlign") || textAlign;
         textNumber++;
       }
-
-      console.log(width, textAlign);
 
       const currentElement = elements[index];
 
@@ -200,12 +238,15 @@ export const parseSvg = (output, canvas) => {
       });
 
       // Add the text to the canvas
-      return canvas.add(text);
+      canvas.add(text);
+      canvas.setActiveObject(text);
     } else {
       // Add non-text objects directly to the canvas
       canvas.add(obj);
+      canvas.setActiveObject(obj);
     }
   });
+  canvas.requestRenderAll();
 };
 
 export const setPrimitivePropAsSequenced = (object, propsPrimitive) => {
