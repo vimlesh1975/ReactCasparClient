@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ReactCasparClient/static/css/main.a99619a2.css",
-    "main.js": "/ReactCasparClient/static/js/main.26ee9858.js",
+    "main.js": "/ReactCasparClient/static/js/main.fca7a6a7.js",
     "static/js/425.a1ed06e2.chunk.js": "/ReactCasparClient/static/js/425.a1ed06e2.chunk.js",
     "static/media/yellow_news_update.gif": "/ReactCasparClient/static/media/yellow_news_update.36605a77a3fbb808b09c.gif",
     "static/media/red_breaking_news.gif": "/ReactCasparClient/static/media/red_breaking_news.8c3b204c182e41097be5.gif",
@@ -14,11 +14,11 @@
     "index.html": "/ReactCasparClient/index.html",
     "static/media/canvasBg.svg": "/ReactCasparClient/static/media/canvasBg.318f03422b7360431e95.svg",
     "main.a99619a2.css.map": "/ReactCasparClient/static/css/main.a99619a2.css.map",
-    "main.26ee9858.js.map": "/ReactCasparClient/static/js/main.26ee9858.js.map",
+    "main.fca7a6a7.js.map": "/ReactCasparClient/static/js/main.fca7a6a7.js.map",
     "425.a1ed06e2.chunk.js.map": "/ReactCasparClient/static/js/425.a1ed06e2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a99619a2.css",
-    "static/js/main.26ee9858.js"
+    "static/js/main.fca7a6a7.js"
   ]
 }
