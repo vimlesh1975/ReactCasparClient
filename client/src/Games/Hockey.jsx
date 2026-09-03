@@ -323,7 +323,7 @@ const Hockey = () => {
     };
 
     return (
-        <div style={{ padding: '8px', fontFamily: 'Inter, system-ui, sans-serif', color: '#f8fafc', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ padding: '8px', fontFamily: 'Inter, system-ui, sans-serif', color: '#f8fafc', width: '100%', maxHeight: 'calc(100vh - 80px)', overflowY: 'auto', boxSizing: 'border-box' }}>
             {/* Top Toolbar / Quick Global Status */}
             <div style={{ ...cardStyle, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
