@@ -1,3 +1,7 @@
+const buf = require('buffer');
+if (typeof buf.SlowBuffer === 'undefined') {
+  buf.SlowBuffer = buf.Buffer;
+}
 require("dotenv").config(); // Load environment variables from .env file
 
 
@@ -64,8 +68,8 @@ const {
 } = require("casparcg-connection");
 
 const defaultFonts = [
-  "Algerian", "Aparajita", "Arial", "Arial Black", "Arial Narrow", 
-  "Calibri", "Cambria", "Comic Sans MS", "Courier New", "Georgia", 
+  "Algerian", "Aparajita", "Arial", "Arial Black", "Arial Narrow",
+  "Calibri", "Cambria", "Comic Sans MS", "Courier New", "Georgia",
   "Impact", "Segoe UI", "Tahoma", "Times New Roman", "Trebuchet MS", "Verdana"
 ];
 
