@@ -1957,8 +1957,10 @@ export const playtoGsapCaspar = (
     .replaceAll('"', '\\"')
     .replaceAll("\\n", " \\\\n");
 
+  // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+  endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
   endpoint(
-    `play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer"`
+    `play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/CanvasPlayer.html"`
   );
   const script = `
   var aa = document.createElement('div');
@@ -1985,6 +1987,10 @@ export const playtoGsapCaspar = (
   `;
   setTimeout(() => {
     endpoint(`call ${window.chNumber}-${layerNumber} "${script}"`);
+    // Restore opacity after the html is loaded/injected
+    setTimeout(() => {
+      endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+    }, 50);
   }, 100);
 
   const scriptforHtml = `
