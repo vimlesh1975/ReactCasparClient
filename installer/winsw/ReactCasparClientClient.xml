@@ -7,6 +7,7 @@
   <env name="SSL_CRT_FILE" value="./cert.crt" />
   <env name="SSL_KEY_FILE" value="./cert.key" />
   <env name="PORT" value="10000" />
+  <env name="PATH" value="%BASE%\..\vendor\node-v26.8.1-win-x64;%PATH%" />
   <executable>%BASE%\..\vendor\node-v26.8.1-win-x64\node.exe</executable>
   <arguments>node_modules\@craco\craco\dist\bin\craco.js start</arguments>
   <workingdirectory>%BASE%\..\..\client</workingdirectory>
