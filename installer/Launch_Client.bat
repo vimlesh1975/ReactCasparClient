@@ -1,7 +1,7 @@
 @echo off
 cd /d "%~dp0\.."
 
-set "BUNDLED_NODE=%~dp0vendor\node-v23.11.1-win-x64"
+set "BUNDLED_NODE=%~dp0vendor\node-v26.8.1-win-x64"
 set "PATH=%BUNDLED_NODE%;%PATH%"
 set "BROWSER=none"
 set "HTTPS=true"
