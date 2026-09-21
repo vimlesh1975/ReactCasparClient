@@ -1844,6 +1844,10 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
   }
 
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  
+  // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+  endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+  
   endpoint(
     `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
   );
@@ -1926,6 +1930,10 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
     endpoint(`call ${window.chNumber}-${layerNumber} "
      ${scriptforcaspar}
           "`);
+    // Restore opacity after the html is loaded/injected
+    setTimeout(() => {
+      endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+    }, 50);
   }, 100);
   setTimeout(() => {
     updateGraphics(canvas, layerNumber);
