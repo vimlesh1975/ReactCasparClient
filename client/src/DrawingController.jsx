@@ -2776,7 +2776,10 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
 
   const playReactComponenetWithWebSocket = () => {
     const url = clieentPublicFolder() + `/Xyz`;
+    // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+    endpoint(`mixer ${window.chNumber}-${templateLayers.reactComponent} opacity 0`);
     endpoint(`play ${window.chNumber}-${templateLayers.reactComponent} [HTML] ${url}`);
+
     const script = `
          document.getElementById('divid_${templateLayers.reactComponent}')?.remove();
          const reactComponent = document.createElement('div');
@@ -2784,6 +2787,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
          reactComponent.style.top=0;
          reactComponent.style.zIndex = '${templateLayers.reactComponent}';
          reactComponent.setAttribute('id','divid_' + '${templateLayers.reactComponent}');
+         reactComponent.style.opacity = 0;
          document.body.appendChild(reactComponent);
          const iframe=document.createElement('iframe');
          iframe.frameBorder = '0';
@@ -2791,10 +2795,19 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
          iframe.width = '1920';
          iframe.height = '1080';
          iframe.id = 'urdu'; 
+         iframe.onload = function() {
+             setTimeout(() => {
+                 reactComponent.style.opacity = 1;
+             }, 150);
+         };
          reactComponent.appendChild(iframe);
          `
     executeScript(script);
 
+    setTimeout(() => {
+      // Restore opacity after the React app has had time to load (1.5 seconds)
+      endpoint(`mixer ${window.chNumber}-${templateLayers.reactComponent} opacity 1`);
+    }, 1000);
   }
 
   const sendsocketdata = () => {

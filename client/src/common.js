@@ -2595,6 +2595,7 @@ export const stopAllTheatreLayes = () => {
 };
 
 export const endpoint = (string) => {
+
   const data = { string: string };
   axios
     .post(address1 + "/endpoint", data)
