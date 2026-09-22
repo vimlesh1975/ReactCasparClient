@@ -1913,9 +1913,17 @@ const WebAnimator = () => {
         });
         `;
     executeScript(scriptforHTML);
+    // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+    
     endpoint(
       `play ${window.chNumber}-${layerNumber} [html] "https://localhost:10000/ReactCasparClient/Theatrejs2"`
     );
+
+    setTimeout(() => {
+      // Restore opacity after the React app has had time to load (1.5 seconds)
+      endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+    }, 1500);
     // endpoint(`call ${window.chNumber}-${layerNumber} "${scriptforCasparcg}"`)
     endpoint(`call ${window.chNumber}-${layerNumber} "
         localStorage.removeItem('theatre-0.4.persistent');
