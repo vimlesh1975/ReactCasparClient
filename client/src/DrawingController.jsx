@@ -1887,21 +1887,33 @@ const DrawingController = () => {
       100
       }/1920)+'%';
                                                             document.body.style.overflow='hidden';
-                                                            var speed=${horizontalSpeed};
+                                                            var speed = ${horizontalSpeed};
                                                             if (${!ltr}){
-                                                                aa.style.left = '100%';
-                                                            setInterval(function(){
-                                                                aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
-                                                            if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
-           }, 1);
-        }
+                                                                var currentX = window.innerWidth;
+                                                                aa.style.willChange = 'transform';
+                                                                aa.style.backfaceVisibility = 'hidden';
+                                                                aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                var animateLeft = function() {
+                                                                    currentX -= Math.round(speed * 2) || 1;
+                                                                    if (currentX < -${hh}) { currentX = window.innerWidth; }
+                                                                    aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                    requestAnimationFrame(animateLeft);
+                                                                };
+                                                                requestAnimationFrame(animateLeft);
+                                                            }
                                                             else{
-                                                                aa.style.left = '-${hh}px';
-                                                            setInterval(function(){
-                                                                aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
-             }, 1);
-        }
+                                                                var currentX = -${hh};
+                                                                aa.style.willChange = 'transform';
+                                                                aa.style.backfaceVisibility = 'hidden';
+                                                                aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                var animateRight = function() {
+                                                                    currentX += Math.round(speed * 2) || 1;
+                                                                    if (currentX > window.innerWidth) { currentX = -${hh}; }
+                                                                    aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                    requestAnimationFrame(animateRight);
+                                                                };
+                                                                requestAnimationFrame(animateRight);
+                                                            }
         const elementToRemove = document.getElementById('scroll1_strip');
 		if (elementToRemove) {
 			const svgElement = document.getElementsByTagName('svg')[0];
@@ -1971,21 +1983,33 @@ const DrawingController = () => {
       100
       }/1920)+'%';
                                                                         document.body.style.overflow='hidden';
-                                                                        var speed=${horizontalSpeed2};
+                                                                        var speed = ${horizontalSpeed2};
                                                                         if (${!ltr2}){
-                                                                            aa.style.left = '100%';
-                                                                        setInterval(function(){
-                                                                            aa.style.left = (aa.getBoundingClientRect().left - speed) + 'px';
-                                                                        if (aa.getBoundingClientRect().left < -${hh}){aa.style.left = '100%'};
-           }, 1);
-        }
+                                                                            var currentX = window.innerWidth;
+                                                                            aa.style.willChange = 'transform';
+                                                                            aa.style.backfaceVisibility = 'hidden';
+                                                                            aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                            var animateLeft = function() {
+                                                                                currentX -= Math.round(speed * 2) || 1;
+                                                                                if (currentX < -${hh}) { currentX = window.innerWidth; }
+                                                                                aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                                requestAnimationFrame(animateLeft);
+                                                                            };
+                                                                            requestAnimationFrame(animateLeft);
+                                                                        }
                                                                         else{
-                                                                            aa.style.left = '-${hh}px';
-                                                                        setInterval(function(){
-                                                                            aa.style.left = (aa.getBoundingClientRect().left + speed) + 'px';
-                if (aa.getBoundingClientRect().left >${hh}){aa.style.left = '-${hh}px'};
-             }, 1);
-        }
+                                                                            var currentX = -${hh};
+                                                                            aa.style.willChange = 'transform';
+                                                                            aa.style.backfaceVisibility = 'hidden';
+                                                                            aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                            var animateRight = function() {
+                                                                                currentX += Math.round(speed * 2) || 1;
+                                                                                if (currentX > window.innerWidth) { currentX = -${hh}; }
+                                                                                aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
+                                                                                requestAnimationFrame(animateRight);
+                                                                            };
+                                                                            requestAnimationFrame(animateRight);
+                                                                        }
         const elementToRemove = document.getElementById('scroll2_strip');
         if (elementToRemove) {
           const svgElement = document.getElementsByTagName('svg')[0];
@@ -2304,34 +2328,31 @@ var timer = setInterval(function() {
 aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
         document.body.style.overflow='hidden';
         window.horizontalSpeed=${horizontalSpeed};
-        if(window.intervalHorizontalScroll1){clearInterval(window.intervalHorizontalScroll1)};
+        if(window.reqAnimFrame1){cancelAnimationFrame(window.reqAnimFrame1)};
         var totalWidth1 = 1920;
-        var lastTime1 = performance.now();
+        aaHorizontal1.style.willChange = 'transform';
+        aaHorizontal1.style.backfaceVisibility = 'hidden';
         if (${!ltr}){
             window.scrollPos1 = totalWidth1;
-            aaHorizontal1.style.left = window.scrollPos1 + 'px';
-            window.intervalHorizontalScroll1=setInterval(function() {
-                var now = performance.now();
-                var dt = (now - lastTime1) / 1000;
-                lastTime1 = now;
-                if (dt > 0.1) dt = 0.016;
-                window.scrollPos1 -= (window.horizontalSpeed * 100) * dt;
+            aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
+            var animateLeft1 = function() {
+                window.scrollPos1 -= Math.round(window.horizontalSpeed * 2) || 1;
                 if (window.scrollPos1 < -${hh}){ window.scrollPos1 = totalWidth1; }
-                aaHorizontal1.style.left = window.scrollPos1 + 'px';
-            }, 10);
+                aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
+                window.reqAnimFrame1 = requestAnimationFrame(animateLeft1);
+            };
+            window.reqAnimFrame1 = requestAnimationFrame(animateLeft1);
         }
         else{
             window.scrollPos1 = -${hh};
-            aaHorizontal1.style.left = window.scrollPos1 + 'px';
-            window.intervalHorizontalScroll1=setInterval(function() {
-                var now = performance.now();
-                var dt = (now - lastTime1) / 1000;
-                lastTime1 = now;
-                if (dt > 0.1) dt = 0.016;
-                window.scrollPos1 += (window.horizontalSpeed * 100) * dt;
+            aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
+            var animateRight1 = function() {
+                window.scrollPos1 += Math.round(window.horizontalSpeed * 2) || 1;
                 if (window.scrollPos1 > totalWidth1){ window.scrollPos1 = -${hh}; }
-                aaHorizontal1.style.left = window.scrollPos1 + 'px';
-            }, 10);
+                aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
+                window.reqAnimFrame1 = requestAnimationFrame(animateRight1);
+            };
+            window.reqAnimFrame1 = requestAnimationFrame(animateRight1);
         }
         const elementToRemove1 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll1_strip');
         if (elementToRemove1) {
@@ -2400,34 +2421,31 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
       }/1920)+'%';
                                                                                     document.body.style.overflow='hidden';
                                                                                     window.horizontalSpeed2=${horizontalSpeed2};
-        if(window.intervalHorizontalScroll2){clearInterval(window.intervalHorizontalScroll2)};
+        if(window.reqAnimFrame2){cancelAnimationFrame(window.reqAnimFrame2)};
         var totalWidth2 = 1920;
-        var lastTime2 = performance.now();
+        aaHorizontal2.style.willChange = 'transform';
+        aaHorizontal2.style.backfaceVisibility = 'hidden';
         if (${!ltr2}){
             window.scrollPos2 = totalWidth2;
-            aaHorizontal2.style.left = window.scrollPos2 + 'px';
-            window.intervalHorizontalScroll2=setInterval(function() {
-                var now = performance.now();
-                var dt = (now - lastTime2) / 1000;
-                lastTime2 = now;
-                if (dt > 0.1) dt = 0.016;
-                window.scrollPos2 -= (window.horizontalSpeed2 * 100) * dt;
+            aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
+            var animateLeft2 = function() {
+                window.scrollPos2 -= Math.round(window.horizontalSpeed2 * 2) || 1;
                 if (window.scrollPos2 < -${hh}){ window.scrollPos2 = totalWidth2; }
-                aaHorizontal2.style.left = window.scrollPos2 + 'px';
-            }, 10);
+                aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
+                window.reqAnimFrame2 = requestAnimationFrame(animateLeft2);
+            };
+            window.reqAnimFrame2 = requestAnimationFrame(animateLeft2);
         }
         else{
             window.scrollPos2 = -${hh};
-            aaHorizontal2.style.left = window.scrollPos2 + 'px';
-            window.intervalHorizontalScroll2=setInterval(function() {
-                var now = performance.now();
-                var dt = (now - lastTime2) / 1000;
-                lastTime2 = now;
-                if (dt > 0.1) dt = 0.016;
-                window.scrollPos2 += (window.horizontalSpeed2 * 100) * dt;
+            aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
+            var animateRight2 = function() {
+                window.scrollPos2 += Math.round(window.horizontalSpeed2 * 2) || 1;
                 if (window.scrollPos2 > totalWidth2){ window.scrollPos2 = -${hh}; }
-                aaHorizontal2.style.left = window.scrollPos2 + 'px';
-            }, 10);
+                aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
+                window.reqAnimFrame2 = requestAnimationFrame(animateRight2);
+            };
+            window.reqAnimFrame2 = requestAnimationFrame(animateRight2);
         }    
         const elementToRemove2 = document.getElementById('divid_' + '${layerNumber}').querySelector('#scroll2_strip');
         if (elementToRemove2) {
