@@ -1894,7 +1894,7 @@ const DrawingController = () => {
                                                                 aa.style.backfaceVisibility = 'hidden';
                                                                 aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                 var animateLeft = function() {
-                                                                    currentX -= Math.round(speed * 2) || 1;
+                                                                    currentX -= (Number(speed) === 0 ? 0 : (Math.round(speed * 2) || 1));
                                                                     if (currentX < -${hh}) { currentX = window.innerWidth; }
                                                                     aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                     requestAnimationFrame(animateLeft);
@@ -1907,7 +1907,7 @@ const DrawingController = () => {
                                                                 aa.style.backfaceVisibility = 'hidden';
                                                                 aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                 var animateRight = function() {
-                                                                    currentX += Math.round(speed * 2) || 1;
+                                                                    currentX += (Number(speed) === 0 ? 0 : (Math.round(speed * 2) || 1));
                                                                     if (currentX > window.innerWidth) { currentX = -${hh}; }
                                                                     aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                     requestAnimationFrame(animateRight);
@@ -1990,7 +1990,7 @@ const DrawingController = () => {
                                                                             aa.style.backfaceVisibility = 'hidden';
                                                                             aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                             var animateLeft = function() {
-                                                                                currentX -= Math.round(speed * 2) || 1;
+                                                                                currentX -= (Number(speed) === 0 ? 0 : (Math.round(speed * 2) || 1));
                                                                                 if (currentX < -${hh}) { currentX = window.innerWidth; }
                                                                                 aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                                 requestAnimationFrame(animateLeft);
@@ -2003,7 +2003,7 @@ const DrawingController = () => {
                                                                             aa.style.backfaceVisibility = 'hidden';
                                                                             aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                             var animateRight = function() {
-                                                                                currentX += Math.round(speed * 2) || 1;
+                                                                                currentX += (Number(speed) === 0 ? 0 : (Math.round(speed * 2) || 1));
                                                                                 if (currentX > window.innerWidth) { currentX = -${hh}; }
                                                                                 aa.style.transform = 'translate3d(' + currentX + 'px, 0, 0)';
                                                                                 requestAnimationFrame(animateRight);
@@ -2336,7 +2336,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             window.scrollPos1 = totalWidth1;
             aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
             var animateLeft1 = function() {
-                window.scrollPos1 -= Math.round(window.horizontalSpeed * 2) || 1;
+                window.scrollPos1 -= (Number(window.horizontalSpeed) === 0 ? 0 : (Math.round(window.horizontalSpeed * 2) || 1));
                 if (window.scrollPos1 < -${hh}){ window.scrollPos1 = totalWidth1; }
                 aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
                 window.reqAnimFrame1 = requestAnimationFrame(animateLeft1);
@@ -2347,7 +2347,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             window.scrollPos1 = -${hh};
             aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
             var animateRight1 = function() {
-                window.scrollPos1 += Math.round(window.horizontalSpeed * 2) || 1;
+                window.scrollPos1 += (Number(window.horizontalSpeed) === 0 ? 0 : (Math.round(window.horizontalSpeed * 2) || 1));
                 if (window.scrollPos1 > totalWidth1){ window.scrollPos1 = -${hh}; }
                 aaHorizontal1.style.transform = 'translate3d(' + window.scrollPos1 + 'px, 0, 0)';
                 window.reqAnimFrame1 = requestAnimationFrame(animateRight1);
@@ -2429,7 +2429,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             window.scrollPos2 = totalWidth2;
             aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
             var animateLeft2 = function() {
-                window.scrollPos2 -= Math.round(window.horizontalSpeed2 * 2) || 1;
+                window.scrollPos2 -= (Number(window.horizontalSpeed2) === 0 ? 0 : (Math.round(window.horizontalSpeed2 * 2) || 1));
                 if (window.scrollPos2 < -${hh}){ window.scrollPos2 = totalWidth2; }
                 aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
                 window.reqAnimFrame2 = requestAnimationFrame(animateLeft2);
@@ -2440,7 +2440,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             window.scrollPos2 = -${hh};
             aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
             var animateRight2 = function() {
-                window.scrollPos2 += Math.round(window.horizontalSpeed2 * 2) || 1;
+                window.scrollPos2 += (Number(window.horizontalSpeed2) === 0 ? 0 : (Math.round(window.horizontalSpeed2 * 2) || 1));
                 if (window.scrollPos2 > totalWidth2){ window.scrollPos2 = -${hh}; }
                 aaHorizontal2.style.transform = 'translate3d(' + window.scrollPos2 + 'px, 0, 0)';
                 window.reqAnimFrame2 = requestAnimationFrame(animateRight2);
