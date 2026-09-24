@@ -140,7 +140,7 @@ const VerticalScrollPlayer = ({ showTemplate = false }) => {
             </button>
             S:
             <input
-                style={{ width: "40px" }}
+                style={{ width: "60px" }}
                 onChange={(e) => onVerticalSpeedChange(e)}
                 type="number"
                 min="0"

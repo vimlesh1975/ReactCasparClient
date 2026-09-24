@@ -4180,7 +4180,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             </button>
             S:
             <input
-              style={{ width: "40px" }}
+              style={{ width: "60px" }}
               onChange={(e) => onHorizontalSpeedChange(e)}
               type="number"
               min="0"
@@ -4256,7 +4256,7 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
             </button>
             S:
             <input
-              style={{ width: "40px" }}
+              style={{ width: "60px" }}
               onChange={(e) => onHorizontalSpeedChange2(e)}
               type="number"
               min="0"
