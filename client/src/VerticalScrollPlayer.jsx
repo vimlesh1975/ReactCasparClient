@@ -49,10 +49,17 @@ const VerticalScrollPlayer = ({ showTemplate = false }) => {
                                                     aa.style.zoom=(${currentscreenSize * 100
             }/1920)+'%';
                                                     document.body.style.overflow='hidden';
-                                                    var speed=${verticalSpeed};
-                                                    setInterval(function(){
-                                                        aa.style.top = (aa.getBoundingClientRect().top - speed) + 'px';
-                 }, 1);
+                                                    var speed = (Number(${verticalSpeed}) === 0 ? 0 : (Math.round(${verticalSpeed} * 2) || 1));
+                                                    aa.style.top = '0px';
+                                                    aa.style.willChange = 'transform';
+                                                    aa.style.backfaceVisibility = 'hidden';
+                                                    var currentPos = aa.getBoundingClientRect().top;
+                                                    function loop() {
+                                                        currentPos -= speed;
+                                                        aa.style.transform = 'translate3d(0px, ' + currentPos + 'px, 0px)';
+                                                        requestAnimationFrame(loop);
+                                                    }
+                                                    requestAnimationFrame(loop);
                                                 </script>
                                                 `;
         aa += `
@@ -119,7 +126,7 @@ const VerticalScrollPlayer = ({ showTemplate = false }) => {
                     );
 
                     executeScript(
-                        `if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)}`
+                        `if(window.intervalVerticalScroll){cancelAnimationFrame(window.intervalVerticalScroll)}`
                     );
                     executeScript(
                         `document.getElementById('divid_${templateLayers.verticalScroll}')?.remove()`

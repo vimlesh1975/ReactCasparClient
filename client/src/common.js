@@ -3654,13 +3654,17 @@ export const startVerticalScroll = (
   currentscreenSize,
   verticalSpeed
 ) => {
-  executeScript(`if(window.intervalVerticalScroll){clearInterval(intervalVerticalScroll)};
+  executeScript(`if(window.intervalVerticalScroll){cancelAnimationFrame(window.intervalVerticalScroll)};
       document.getElementById('divid_${layerNumber}')?.remove();
       `);
 
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   selectAll(canvas);
   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
+  
+  // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+  endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+  
   endpoint(
     `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
   );
@@ -3685,27 +3689,35 @@ export const startVerticalScroll = (
     aaVertical.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     document.body.style.overflow='hidden';
     window.verticalSpeed=${verticalSpeed};
-    if(window.intervalVerticalScroll){clearInterval(window.intervalVerticalScroll)};
+    if(window.intervalVerticalScroll){cancelAnimationFrame(window.intervalVerticalScroll)};
     var totalHeight = 1080;
     var lastTimeV = performance.now();
     window.verticalScrollPos = totalHeight;
-    aaVertical.style.top = window.verticalScrollPos + 'px';
-    window.intervalVerticalScroll = setInterval(()=>{
-      var now = performance.now();
-      var dt = (now - lastTimeV) / 1000;
-      lastTimeV = now;
-      if (dt > 0.1) dt = 0.016;
-      window.verticalScrollPos -= (window.verticalSpeed * 100) * dt;
+    aaVertical.style.top = '0px';
+    aaVertical.style.transform = 'translate3d(0px, ' + window.verticalScrollPos + 'px, 0px)';
+    
+    aaVertical.style.willChange = 'transform';
+    aaVertical.style.backfaceVisibility = 'hidden';
+    
+    function loopVerticalScroll() {
+      window.verticalScrollPos -= (Number(window.verticalSpeed) === 0 ? 0 : (Math.round(window.verticalSpeed * 2) || 1));
       if (window.verticalScrollPos < -${hh}) {
-        clearInterval(window.intervalVerticalScroll);
         window.intervalVerticalScroll = null;
         return;
       }
-      aaVertical.style.top = window.verticalScrollPos + 'px';
-    }, 10);
+      aaVertical.style.transform = 'translate3d(0px, ' + window.verticalScrollPos + 'px, 0px)';
+      window.intervalVerticalScroll = requestAnimationFrame(loopVerticalScroll);
+    }
+    window.intervalVerticalScroll = requestAnimationFrame(loopVerticalScroll);
   `;
 
-  endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
+  setTimeout(() => {
+    endpoint(`call ${window.chNumber}-${layerNumber} " ${script} "`);
+    // Restore opacity after the html is loaded/injected
+    setTimeout(() => {
+      endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+    }, 50);
+  }, 100);
 
   executeScript(script); //for html
 };

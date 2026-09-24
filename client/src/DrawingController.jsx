@@ -2301,6 +2301,9 @@ var timer = setInterval(function() {
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
+    // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+
     endpoint(
       `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
     );
@@ -2379,9 +2382,14 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
           elementToRemove1.remove();
         }             
                                                                                     `;
-    endpoint(`call ${window.chNumber}-${layerNumber} "
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${layerNumber} "
                                                                                     ${script}
                                                                                     "`);
+      setTimeout(() => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+      }, 50);
+    }, 100);
     executeScript(script);
   };
   const startHorizontalScroll2 = (layerNumber) => {
@@ -2392,6 +2400,9 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     selectAll(canvas);
     var hh = canvas.getActiveObject()?.getBoundingRect().width + 200;
+    // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+
     endpoint(
       `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
     );
@@ -2473,9 +2484,14 @@ aaHorizontal1.style.zoom=(${currentscreenSize * 100}/1920)+'%';
     
           elementToRemove2.remove();
         }                                                                                      `;
-    endpoint(`call ${window.chNumber}-${layerNumber} "
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${layerNumber} "
                                                                                     ${script}
                                                                                     "`);
+      setTimeout(() => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+      }, 50);
+    }, 100);
     executeScript(script);
   };
   const startClock = (layerNumber) => {
