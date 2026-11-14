@@ -12,7 +12,7 @@ $winSwClientExe = Join-Path $winSwRoot "ReactCasparClientClient.exe"
 
 $candidates = @(
     $env:ISCC_PATH,
-    (Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"),
+    (Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 7\ISCC.exe"),
     "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
     "${env:ProgramFiles}\Inno Setup 6\ISCC.exe"
 ) | Where-Object { $_ }
