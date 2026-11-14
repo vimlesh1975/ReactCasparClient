@@ -1759,11 +1759,11 @@ export const makeHorizontalEquidistant = (canvas) => {
 };
 
 export const startGraphics = (canvas, layerNumber, currentscreenSize, templateName = 'https://localhost:10000/ReactCasparClient/xyz.html') => {
-  executeScript(`document.getElementById('divid_${layerNumber}')?.remove();`);
+  executeScript(`document.getElementById('divid_${layerNumber}')?.remove();document.getElementById('style_divid_${layerNumber}')?.remove();`);
 
-  var inAnimation;
+  var inAnimation = "";
   if (window.inAnimationMethod === "mix") {
-    inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} div {animation-name: example;  animation-duration: .5s; }`;
+    inAnimation = `@keyframes example {from {opacity:0} to {opacity:1}} #divid_${layerNumber} {animation-name: example;  animation-duration: .5s; }`;
   } else if (
     animation
       .map((val) => val.name)
@@ -1774,85 +1774,21 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
         animation
           .map((val) => val.name)
           .findIndex((val) => val === window.inAnimationMethod)
-      ].value;
+      ].value.replace(/\bdiv\s*\{/g, `#divid_${layerNumber} {`);
   } else if (window.inAnimationMethod === "lefttoright") {
-    inAnimation = ``;
-    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-    endpoint(
-      `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
-    );
-
-    setTimeout(() => {
-      endpoint(
-        `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
-      );
-    }, 250);
-
-    const script = `
-                                                                                  var bb = document.createElement('div');
-                                                                                  bb.style.position='absolute';
-                                                                                  bb.style.top='0';
-                                                                                  bb.style.left='0';
-                                                                                  bb.style.perspective='1920px';
-                                                                                  bb.style.transformStyle='preserve-3d';
-                                                                                  document.body.appendChild(bb);
-                                                                                  var aa = document.createElement('div');
-                                                                                  aa.style.position='absolute';
-                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
-                                                                                  aa.style.zIndex = ${layerNumber};
-                                                                                  aa.innerHTML=\`${canvas
-        .toSVG()
-        .replaceAll(
-          '"',
-          '\\"'
-        )
-        .replaceAll(
-          "`",
-          "\\`"
-        )
-        .replaceAll(
-          "$",
-          "\\$"
-        )}\`;
-                                                                                  bb.appendChild(aa);
-                                                                                  document.body.style.margin='0';
-                                                                                  document.body.style.padding='0';
-                                                                                  aa.style.zoom=(${currentscreenSize *
-      100
-      }/1920)+'%';
-                                                                                  document.body.style.overflow='hidden';
-                                                                                  var style = document.createElement('style');
-                                                                                  style.textContent = '${inAnimation}';
-                                                                                  document.head.appendChild(style);
-                                                                                  `;
-    executeScript(script);
-    setTimeout(() => {
-      endpoint(`call ${window.chNumber}-${layerNumber} "
-              ${script}
-          "`);
-    }, 300);
-
-    setTimeout(() => {
-      endpoint(
-        `mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`
-      );
-    }, 800);
-    setTimeout(() => {
-      updateGraphics(canvas, layerNumber);
-    }, 1100);
-    return;
-  }
-
+  inAnimation = ``;
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-  
-  // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
-  endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
-  
   endpoint(
-    `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
+    `mixer ${window.chNumber}-${layerNumber} fill 0 0 0 1 6 ${window.animationMethod}`
   );
 
-  const scriptforhtml = `
+  setTimeout(() => {
+    endpoint(
+      `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
+    );
+  }, 250);
+
+  const script = `
                                                                                   var bb = document.createElement('div');
                                                                                   bb.style.position='absolute';
                                                                                   bb.style.top='0';
@@ -1886,12 +1822,78 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
     }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
+                                                                                  style.id = 'style_divid_' + '${layerNumber}';
                                                                                   style.textContent = '${inAnimation}';
                                                                                   document.head.appendChild(style);
                                                                                   `;
-  executeScript(scriptforhtml);
+  executeScript(script);
+  setTimeout(() => {
+    endpoint(`call ${window.chNumber}-${layerNumber} "
+              ${script}
+          "`);
+  }, 300);
 
-  const scriptforcaspar = `
+  setTimeout(() => {
+    endpoint(
+      `mixer ${window.chNumber}-${layerNumber} fill 0 0 1 1 10 ${window.animationMethod}`
+    );
+  }, 800);
+  setTimeout(() => {
+    updateGraphics(canvas, layerNumber);
+  }, 1100);
+  return;
+}
+
+canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+
+// Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
+
+endpoint(
+  `play ${window.chNumber}-${layerNumber} [HTML] ${templateName}`
+);
+
+const scriptforhtml = `
+                                                                                  var bb = document.createElement('div');
+                                                                                  bb.style.position='absolute';
+                                                                                  bb.style.top='0';
+                                                                                  bb.style.left='0';
+                                                                                  bb.style.perspective='1920px';
+                                                                                  bb.style.transformStyle='preserve-3d';
+                                                                                  document.body.appendChild(bb);
+                                                                                  var aa = document.createElement('div');
+                                                                                  aa.style.position='absolute';
+                                                                                  aa.setAttribute('id','divid_' + '${layerNumber}');
+                                                                                  aa.style.zIndex = ${layerNumber};
+                                                                                  aa.innerHTML=\`${canvas
+    .toSVG()
+    .replaceAll(
+      '"',
+      '\\"'
+    )
+    .replaceAll(
+      "`",
+      "\\`"
+    )
+    .replaceAll(
+      "$",
+      "\\$"
+    )}\`;
+                                                                                  bb.appendChild(aa);
+                                                                                  document.body.style.margin='0';
+                                                                                  document.body.style.padding='0';
+                                                                                  aa.style.zoom=(${currentscreenSize *
+  100
+  }/1920)+'%';
+                                                                                  document.body.style.overflow='hidden';
+                                                                                  var style = document.createElement('style');
+                                                                                  style.id = 'style_divid_' + '${layerNumber}';
+                                                                                  style.textContent = '${inAnimation}';
+                                                                                  document.head.appendChild(style);
+                                                                                  `;
+executeScript(scriptforhtml);
+
+const scriptforcaspar = `
                                                                                   var bb = document.createElement('div');
                                                                                   bb.style.perspective='1920px';
                                                                                   bb.style.transformStyle='preserve-3d';
@@ -1901,43 +1903,44 @@ export const startGraphics = (canvas, layerNumber, currentscreenSize, templateNa
                                                                                   aa.setAttribute('id','divid_' + '${layerNumber}');
                                                                                   aa.style.zIndex = ${layerNumber};
                                                                                   aa.innerHTML=\`${canvas
-      .toSVG()
-      .replaceAll(
-        '"',
-        '\\"'
-      )
-      .replaceAll(
-        "`",
-        "\\\\`"
-      )
-      .replaceAll(
-        "$",
-        "\\\\$"
-      )}\`;
+    .toSVG()
+    .replaceAll(
+      '"',
+      '\\"'
+    )
+    .replaceAll(
+      "`",
+      "\\\\`"
+    )
+    .replaceAll(
+      "$",
+      "\\\\$"
+    )}\`;
                                                                                   bb.appendChild(aa);
                                                                                   document.body.style.margin='0';
                                                                                   document.body.style.padding='0';
                                                                                   aa.style.zoom=(${currentscreenSize *
-    100
-    }/1920)+'%';
+  100
+  }/1920)+'%';
                                                                                   document.body.style.overflow='hidden';
                                                                                   var style = document.createElement('style');
+                                                                                  style.id = 'style_divid_' + '${layerNumber}';
                                                                                   style.textContent = '${inAnimation}';
                                                                                   document.head.appendChild(style);
                                                                                   `;
 
-  setTimeout(() => {
-    endpoint(`call ${window.chNumber}-${layerNumber} "
+setTimeout(() => {
+  endpoint(`call ${window.chNumber}-${layerNumber} "
      ${scriptforcaspar}
           "`);
-    // Restore opacity after the html is loaded/injected
-    setTimeout(() => {
-      endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
-    }, 50);
-  }, 100);
+  // Restore opacity after the html is loaded/injected
   setTimeout(() => {
-    updateGraphics(canvas, layerNumber);
-  }, 1200);
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+  }, 50);
+}, 100);
+setTimeout(() => {
+  updateGraphics(canvas, layerNumber);
+}, 1200);
 };
 
 export const playtoGsapCaspar = (
@@ -2650,7 +2653,7 @@ export const sendtohtml = (canvas, layerNumber) => {
 export const clearHtml = (layerNumber) => {
   // axios.post(htmlAddress(), { data1: '', clientId: window.clientId }).then((aa) => {
   // }).catch((aa) => { console.log('Error', aa) });
-  executeScript(`document.getElementById('divid_${layerNumber}')?.remove()`);
+  executeScript(`document.getElementById('divid_${layerNumber}')?.remove();document.getElementById('style_divid_${layerNumber}')?.remove();`);
 };
 
 export const executeScript = (str) => {
@@ -3661,10 +3664,10 @@ export const startVerticalScroll = (
   canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
   selectAll(canvas);
   var hh = canvas.getActiveObject()?.getBoundingRect().height + 200;
-  
+
   // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
   endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
-  
+
   endpoint(
     `play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`
   );
@@ -3698,6 +3701,7 @@ export const startVerticalScroll = (
     
     aaVertical.style.willChange = 'transform';
     aaVertical.style.backfaceVisibility = 'hidden';
+    aaVertical.style.animation = 'none';
     
     function loopVerticalScroll() {
       window.verticalScrollPos -= (Number(window.verticalSpeed) === 0 ? 0 : (Math.round(window.verticalSpeed * 2) || 1));
