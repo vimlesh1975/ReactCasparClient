@@ -75,6 +75,8 @@ const ImageSequence = ({ layer }) => {
     `);
   }
   const play = (layerNumber) => {
+    // Workaround for CasparCG Chromium 117+ white flash bug: hide layer before play
+    endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 0`);
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
     var bb = document.createElement('div');
@@ -92,7 +94,10 @@ const ImageSequence = ({ layer }) => {
     bb.appendChild(imgseq_${layerNumber});
     document.body.style.overflow = 'hidden';
     const base64Images = ${JSON.stringify(base64Images).replace(/"/g, "'")};
-    let i = 0;
+    if (base64Images.length > 0) {
+      imgseq_${layerNumber}.src = base64Images[0];
+    }
+    let i = base64Images.length > 1 ? 1 : 0;
     window.intervalimgseq_${layerNumber}=setInterval(() => {
       imgseq_${layerNumber}.src = base64Images[i];
       i++;
@@ -101,9 +106,15 @@ const ImageSequence = ({ layer }) => {
       }
     }, ${1000 / frameRate});
   `;
-    endpoint(`call ${window.chNumber}-${layerNumber} "
-    ${script}
-    "`);
+    setTimeout(() => {
+      endpoint(`call ${window.chNumber}-${layerNumber} "
+      ${script}
+      "`);
+      // Restore opacity after the html is loaded/injected
+      setTimeout(() => {
+        endpoint(`mixer ${window.chNumber}-${layerNumber} opacity 1`);
+      }, 50);
+    }, 100);
 
     executeScript(`
     if(window.intervalimgseq_${layerNumber}){clearInterval(window.intervalimgseq_${layerNumber})};
