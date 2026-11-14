@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 
 const ImageSequence = ({ layer }) => {
   const canvas = useSelector(state => state.canvasReducer.canvas);
+  const currentscreenSize = useSelector(state => state.currentscreenSizeReducer.currentscreenSize);
 
   const [base64Images, setBase64Images] = useState([]);
   const [imageObjects, setImageObjects] = useState([]);
@@ -77,6 +78,9 @@ const ImageSequence = ({ layer }) => {
     endpoint(`play ${window.chNumber}-${layerNumber} [HTML] https://localhost:10000/ReactCasparClient/xyz.html`);
     const script = `
     var bb = document.createElement('div');
+    bb.style.position='absolute';
+    bb.style.top='0';
+    bb.style.left='0';
     bb.style.perspective='1920px';
     bb.style.transformStyle='preserve-3d';
     document.body.appendChild(bb);
@@ -84,6 +88,7 @@ const ImageSequence = ({ layer }) => {
     imgseq_${layerNumber}.style.position = 'absolute';
     imgseq_${layerNumber}.setAttribute('id', 'divid_' + '${layerNumber}');
     imgseq_${layerNumber}.style.zIndex = ${layerNumber};
+    imgseq_${layerNumber}.style.zoom = (${currentscreenSize * 100} / 1920) + '%';
     bb.appendChild(imgseq_${layerNumber});
     document.body.style.overflow = 'hidden';
     const base64Images = ${JSON.stringify(base64Images).replace(/"/g, "'")};
@@ -101,10 +106,10 @@ const ImageSequence = ({ layer }) => {
     "`);
 
     executeScript(`
-    if(window.intervalimgseq_${layerNumber}){clearInterval(intervalimgseq_${layerNumber})};
+    if(window.intervalimgseq_${layerNumber}){clearInterval(window.intervalimgseq_${layerNumber})};
     document.getElementById('divid_${layerNumber}')?.remove();
+    ${script}
     `);
-    executeScript(script);
 
   }
   const addToCanvas = (id = 'id_' + imgSequenceLayer) => {

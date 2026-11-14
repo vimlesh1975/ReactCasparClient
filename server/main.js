@@ -348,7 +348,7 @@ app.post("/openai/models", async (req, res) => {
 // app.use(jsonParser);
 
 const port = process.env.PORT || 9000;
-const options = { cors: true };
+const options = { cors: true, maxHttpBufferSize: 50 * 1024 * 1024 };
 
 const options2 = {
   key: fs.readFileSync("cert.key"),
